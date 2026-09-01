@@ -6391,4 +6391,100 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="RoutesDrawHint" xml:space="preserve">
     <value>Dibuja en el mapa. El primer trazo fija el inicio; si sigues desde el final, el final se mueve. Vuelve al inicio y la ruta se cierra en una vuelta.</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>Comandos del chat de clan</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>El chat de equipo siempre responde a los comandos. Activa esto para responderlos también en el chat de clan y elige qué roles del clan pueden usarlos.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>Responder comandos en el chat de clan</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>Roles con permiso para usar comandos</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>Todavía ningún rol puede usar comandos: marca al menos uno arriba.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>Incluir interruptores inteligentes</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>La mayoría de los miembros del clan no tienen permisos en el armario de herramientas de tu base y no podrían controlar los dispositivos.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>Incluir códigos de la base</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>Un código de puerta publicado en el chat de clan no se puede retirar.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>A qué chat del juego llegan las alertas. No disponible mientras «Solo Discord» esté activo.</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>Mantenimiento del armario de herramientas</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>Estado del barco de carga</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>Iniciar un temporizador de 15 minutos para Oil Rig</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>Hora en el juego</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>Códigos de la base</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>Jugadores en el servidor</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>Listar los comandos disponibles</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>Novedades de la 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>Los cuatro cambios más importantes desde la 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>Chat global y de colaboradores, búsqueda de grupo con vista previa del perfil de Steam antes de responder, lista de amigos, bandeja de entrada y denuncias.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>Rutas de farmeo en el mapa</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>Dibuja rutas junto a las capas del mapa. Cada una indica su longitud en metros y cuánto se tarda esprintando, y se sincroniza con tu equipo.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>Comandos en el chat de clan</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>Los comandos ya se pueden responder en el chat de clan, con permisos por rol. Los códigos de puerta y los interruptores quedan fuera salvo que los incluyas.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>Hogar inteligente</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant puede controlar tus interruptores mediante un punto REST. Alexa incorpora puntos regionales para mejorar la detección; Google Home está listo pero pendiente de certificación.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>No volver a mostrar</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>Notas de la versión completas</value>
+  </data>
 </root>

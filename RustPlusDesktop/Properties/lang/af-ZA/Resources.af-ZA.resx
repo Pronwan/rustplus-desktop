@@ -5510,4 +5510,100 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="ProfileVacClean" xml:space="preserve">
     <value>Clean (0 bans on record)</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>Clan Chat Commands</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>Team chat always answers commands. Turn this on to answer them in clan chat as well, and pick which clan roles may use them.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>Answer commands in clan chat</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>Roles allowed to use commands</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>No role may use commands yet — tick at least one above.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>Include smart switches</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>Most clan members have no tool cupboard rights on your base and could not control the devices anyway.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>Include base codes</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>A door code posted in clan chat cannot be taken back.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>Which in-game chat receives the alerts. Unavailable while "Discord only" is on.</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>Tool cupboard upkeep</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>Cargo ship status</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>Start a 15 minute Oil Rig timer</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>In-game time</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>Base codes</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>Server player count</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>List available commands</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>What's new in 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>The four biggest changes since 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>Global and supporter chat, group finding with a Steam profile preview before you answer, a friend list, an inbox and reporting.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>Farm Routes on the Map</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>Draw routes next to the map layers. Each one reports its length in metres and how long it takes at sprint speed, and syncs to your team.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>Chat Commands in Clan Chat</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>Commands can now be answered in clan chat, granted per clan role. Door codes and switches stay out unless you include them.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>Smart Home</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant can drive your switches over a REST endpoint. Alexa gains regional endpoints for better device discovery; Google Home is built but awaits certification.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>Don't show this again</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>Full patch notes</value>
+  </data>
 </root>

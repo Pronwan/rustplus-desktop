@@ -879,4 +879,100 @@
   <data name="ProfileVacClean" xml:space="preserve">
     <value>信用良好（0 次封鎖）</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>戰隊聊天指令</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>小隊聊天一律會回應指令。開啟此項後也會在戰隊聊天中回應，並可選擇哪些戰隊職位可以使用。</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>在戰隊聊天中回應指令</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>允許使用指令的職位</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>目前沒有任何職位可以使用指令 — 請在上方至少勾選一個。</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>包含智慧開關</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>多數戰隊成員對你基地的工具櫃沒有權限，原本也無法控制裝置。</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>包含基地密碼</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>發到戰隊聊天的門密碼無法收回。</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>小隊</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>小隊</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>戰隊</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>警報要送到哪個遊戲內聊天。啟用「僅 Discord」時無法使用。</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>工具櫃維護費用</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>貨船狀態</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>開始 15 分鐘的 Oil Rig 計時</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>遊戲內時間</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>基地密碼</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>伺服器線上人數</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>列出可用指令</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>9.1 的新功能</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>自 9.0 以來最重要的四項變更</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>社群中心</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>全域聊天與贊助者聊天、可在回覆前預覽 Steam 個人資料的組隊尋找、好友清單、收件匣與檢舉功能。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>地圖上的農場路線</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>在地圖圖層旁繪製路線。每條路線顯示以公尺為單位的長度與衝刺所需時間，並與隊伍同步。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>戰隊聊天中的指令</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>指令現在也能在戰隊聊天中回應，並可依戰隊職位授權。門密碼與智慧開關預設不包含，除非你主動加入。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>智慧家庭</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant 可透過 REST 介面控制你的開關。Alexa 新增區域端點以改善裝置探索；Google Home 已完成，正在等待認證。</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>不再顯示</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>完整更新日誌</value>
+  </data>
 </root>

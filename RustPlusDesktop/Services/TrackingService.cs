@@ -164,6 +164,14 @@ public class TrackingSettings
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
     public bool SuppressVersion8Notice { get; set; } = false;
+
+    /// <summary>
+    /// Set on the first start after an upgrade that crosses a release worth announcing, cleared
+    /// when the user ticks "don't show again". Deliberately not derived from LastSeenVersion at
+    /// display time: that value is rewritten during the same start, so the upgrade is only
+    /// visible for a moment.
+    /// </summary>
+    public bool PendingWhatsNewNotice { get; set; } = false;
     public DateTime? FcmIssuedAt { get; set; }
     public DateTime? FcmExpiresAt { get; set; }
     public bool AnnounceTracking { get; set; } = false;
@@ -1093,6 +1101,11 @@ public static class TrackingService
     {
         get => _settings.SuppressVersion8Notice;
         set { _settings.SuppressVersion8Notice = value; SaveDB(); }
+    }
+    public static bool PendingWhatsNewNotice
+    {
+        get => _settings.PendingWhatsNewNotice;
+        set { _settings.PendingWhatsNewNotice = value; SaveDB(); }
     }
     public static int GetLearnedCargoFullLife(string host)
     {

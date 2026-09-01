@@ -29,7 +29,15 @@ public partial class MainWindow
     private DateTime _lastChatCommandTime = DateTime.MinValue;
     private const int ChatCommandCooldownSeconds = 2; // 2s cooldown for system stability
 
-    private async Task SendChatCommandResponseAsync(string text)
+    /// <summary>
+    /// Answers a command in the channel it was asked in.
+    ///
+    /// A reply that lands in the wrong channel is worse than no reply: the player who asked sees
+    /// nothing, and a room that did not ask gets told. So the channel travels with the command
+    /// rather than being read from the UI, which by the time a delayed answer goes out may be
+    /// showing something else entirely.
+    /// </summary>
+    private async Task SendChatCommandResponseAsync(string text, ChatChannel channel = ChatChannel.Team)
     {
         var profile = _vm.Selected;
         if (profile != null)
@@ -40,13 +48,54 @@ public partial class MainWindow
                 await Task.Delay(delayMs);
             }
         }
-        await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true);
+
+        // forceChannel, so the alert channel setting cannot redirect an answer: asking !boat in
+        // team chat while alerts are pointed at the clan used to answer the clan, leaving the
+        // person who asked with nothing and telling ninety people about a boat.
+        await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true, forceChannel: channel);
     }
 
-    private async Task ProcessChatCommands(TeamChatMessage m)
+    /// <summary>
+    /// Whether a clan-chat message may trigger commands, based on the author's clan role.
+    ///
+    /// Team chat is unconditional — being in the team is the permission. The clan is not: it can
+    /// hold a hundred accounts, so the owner grants command rights per role, and an author whose
+    /// role we cannot establish is refused rather than assumed harmless.
+    /// </summary>
+    private bool IsClanCommandAuthorAllowed(ServerProfile profile, TeamChatMessage m)
+    {
+        if (!profile.ClanChatCommandsEnabled) return false;
+
+        var member = ClanMembers.FirstOrDefault(c => c.SteamId == m.SteamId);
+        if (member == null)
+        {
+            AppendLog($"[ChatCommand] Clan command from {m.Author} ignored: author not in the last clan pull.");
+            return false;
+        }
+
+        if (!profile.IsClanRoleAllowed(member.RoleId))
+        {
+            AppendLog($"[ChatCommand] Clan command from {m.Author} ignored: role '{member.RoleName}' is not permitted.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task ProcessChatCommands(TeamChatMessage m, ChatChannel channel = ChatChannel.Team)
     {
         var profile = _vm.Selected;
         if (profile == null || !profile.ChatCommandsEnabled) return;
+
+        if (channel == ChatChannel.Clan && !IsClanCommandAuthorAllowed(profile, m)) return;
+
+        // Two settings the clan can be denied that the team never is. Both are read once here so
+        // every use below reads the same way round, and both default to denied: door codes cannot
+        // be unshared, and most clan members have no TC rights on the base a switch belongs to.
+        bool allowBaseCodes = channel != ChatChannel.Clan || profile.ClanCommandsAllowBaseCodes;
+        bool allowSwitches = channel != ChatChannel.Clan || profile.ClanCommandsAllowSwitches;
+
+        Task Reply(string text) => SendChatCommandResponseAsync(text, channel);
 
         string prefix = profile.ChatCommandPrefix;
         if (string.IsNullOrEmpty(prefix)) prefix = "!";
@@ -64,7 +113,13 @@ public partial class MainWindow
         cmd = cmd.Substring(prefix.Length); // Remove prefix for matching
         var isPromoteCommand = !string.IsNullOrWhiteSpace(profile.CmdPromote)
             && cmd == profile.CmdPromote.ToLowerInvariant();
-        if (!CanProcessLocalChatCommands(isPromoteCommand)) return;
+
+        // Chat Master elects one device per *team* to answer, so the team does not get four
+        // identical replies. A clan is not a team: its members are spread across teams that know
+        // nothing of each other, so there is no election to hold and deferring to a team's winner
+        // would leave the clan unanswered by everyone. Whoever switched clan answering on answers;
+        // if two people did, they can sort it out between themselves.
+        if (channel != ChatChannel.Clan && !CanProcessLocalChatCommands(isPromoteCommand)) return;
 
         _lastChatCommandTime = DateTime.UtcNow;
 
@@ -89,23 +144,29 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
             // Only advertised once a code exists - listing it on a server with no codes set would
             // send people to a command that answers with nothing.
-            if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && profile.HasBaseCodes)
+            if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && profile.HasBaseCodes && allowBaseCodes)
                 standardCmds.Add(prefix + profile.CmdBaseCodes);
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
-            _ = SendChatCommandResponseAsync(standardMsg);
+            _ = Reply(standardMsg);
 
             var deviceCmds = new List<string>();
-            foreach (var mapping in profile.SwitchCommandMappings)
+            if (allowSwitches)
             {
-                if (!string.IsNullOrWhiteSpace(mapping.Command) && mapping.EntityId != 0)
+                foreach (var mapping in profile.SwitchCommandMappings)
                 {
-                    var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && d.Kind == "SmartSwitch");
-                    if (dev != null) deviceCmds.Add($"[{dev.PureName}]: {prefix}{mapping.Command}");
+                    if (!string.IsNullOrWhiteSpace(mapping.Command) && mapping.EntityId != 0)
+                    {
+                        var dev = profile.AllDevices.FirstOrDefault(d => d.EntityId == mapping.EntityId && d.Kind == "SmartSwitch");
+                        if (dev != null) deviceCmds.Add($"[{dev.PureName}]: {prefix}{mapping.Command}");
+                    }
                 }
             }
-            if (profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
+            // Logic rules ride along with the switch permission: a rule triggered from chat is
+            // there to flip devices, so advertising it to a clan that may not touch switches
+            // would just be the same command under a different name.
+            if (allowSwitches && profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
             {
                 foreach (var rule in profile.LogicRules)
                 {
@@ -133,7 +194,7 @@ public partial class MainWindow
                     await Task.Delay(3000);
                     string devMsg = string.Join(" | ", deviceCmds);
                     if (devMsg.Length > 128) devMsg = devMsg.Substring(0, 125) + "...";
-                    await SendChatCommandResponseAsync(devMsg);
+                    await Reply(devMsg);
                 });
             }
 
@@ -146,7 +207,7 @@ public partial class MainWindow
         {
             string qText = _vm.ServerQueue != "0" && _vm.ServerQueue != "-" ? string.Format(Properties.Resources.ChatCmdPopQueue, _vm.ServerQueue) : "";
             string msg = string.Format(Properties.Resources.ChatCmdPopResponse, _vm.ServerPlayers, qText);
-            _ = SendChatCommandResponseAsync(msg);
+            _ = Reply(msg);
             AppendLog($"[ChatCommand] Pop executed by {m.Author}");
             return;
         }
@@ -159,7 +220,7 @@ public partial class MainWindow
             {
                 msg += $" ({_vm.TimeUntilNextPhase})";
             }
-            _ = SendChatCommandResponseAsync(msg.Trim());
+            _ = Reply(msg.Trim());
             AppendLog($"[ChatCommand] Time executed by {m.Author}");
             return;
         }
@@ -167,16 +228,26 @@ public partial class MainWindow
         // Command: AFK
         if (!string.IsNullOrWhiteSpace(profile.CmdAfk) && cmd == profile.CmdAfk.ToLowerInvariant())
         {
+            // AFK is only knowable for the team: the game reports movement for team members, and
+            // nothing at all for the rest of the clan. Answering a clan that asks would otherwise
+            // read as "these four are AFK, the other ninety are not", so the answer says whose
+            // status it is actually reporting.
+            string afkScope = channel == ChatChannel.Clan
+                ? (RustPlusDesk.Helpers.Loc.TextOrNull("ChatCmdAfkTeamScope") ?? "Team")
+                : "";
+            string afkPrefix = string.IsNullOrEmpty(afkScope) ? "AFK: " : $"AFK ({afkScope}): ";
+
             var afkMembers = TeamMembers.Where(t => t.IsAfk).ToList();
             if (afkMembers.Count == 0)
             {
                 var noOneAfkMsg = RustPlusDesk.Helpers.Loc.TextOrNull("ChatCmdNoOneAfk") ?? "No one is AFK.";
-                _ = SendChatCommandResponseAsync(noOneAfkMsg);
+                if (!string.IsNullOrEmpty(afkScope)) noOneAfkMsg = $"({afkScope}) {noOneAfkMsg}";
+                _ = Reply(noOneAfkMsg);
             }
             else
             {
                 var now = DateTime.UtcNow;
-                var parts = afkMembers.Select(t => 
+                var parts = afkMembers.Select(t =>
                 {
                     var elapsed = now - t.LastMoveTime;
                     int totalSecs = (int)elapsed.TotalSeconds;
@@ -184,7 +255,7 @@ public partial class MainWindow
                     int secs = totalSecs % 60;
                     return $"{t.Name} - {mins}:{secs:D2}";
                 }).ToList();
-                _ = SendChatCommandResponseAsync("AFK: " + string.Join(" | ", parts));
+                _ = Reply(afkPrefix + string.Join(" | ", parts));
             }
             AppendLog($"[ChatCommand] AFK executed by {m.Author}");
             return;
@@ -194,7 +265,7 @@ public partial class MainWindow
         if (cmd == profile.CmdPromote.ToLowerInvariant())
         {
             _ = real.PromoteToLeaderAsync(m.SteamId);
-            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
+            _ = Reply(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
             AppendLog($"[ChatCommand] Promote executed by {m.Author}");
             return;
         }
@@ -206,7 +277,7 @@ public partial class MainWindow
             // it was fed by the shop poll. Answer from the shared audio detections instead.
             if (Services.EventCapabilities.IsCloudSourced)
             {
-                _ = SendChatCommandResponseAsync(BuildCloudDeepSeaAnswer());
+                _ = Reply(BuildCloudDeepSeaAnswer());
                 AppendLog($"[ChatCommand] DeepSea (audio) executed by {m.Author}");
                 return;
             }
@@ -233,7 +304,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdDeepSeaStatusUnknown;
             }
-            _ = SendChatCommandResponseAsync(msg);
+            _ = Reply(msg);
             AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
             return;
         }
@@ -245,7 +316,7 @@ public partial class MainWindow
             // tells us that a cargo spawned, so the fallback answer says exactly that.
             if (Services.EventCapabilities.IsCloudSourced)
             {
-                _ = SendChatCommandResponseAsync(BuildCloudCargoAnswer());
+                _ = Reply(BuildCloudCargoAnswer());
                 AppendLog($"[ChatCommand] Cargo (audio) executed by {m.Author}");
                 return;
             }
@@ -299,7 +370,7 @@ public partial class MainWindow
                 var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
                 msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
             }
-            _ = SendChatCommandResponseAsync(msg);
+            _ = Reply(msg);
             AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
             return;
         }
@@ -311,7 +382,7 @@ public partial class MainWindow
             // without the API. Report when crates were last heard and nothing more.
             if (Services.EventCapabilities.IsCloudSourced)
             {
-                _ = SendChatCommandResponseAsync(BuildCloudOilRigAnswer());
+                _ = Reply(BuildCloudOilRigAnswer());
                 AppendLog($"[ChatCommand] OilRig (audio) executed by {m.Author}");
                 return;
             }
@@ -338,7 +409,7 @@ public partial class MainWindow
                     }
                 }
             }
-            _ = SendChatCommandResponseAsync(string.Join(" | ", parts));
+            _ = Reply(string.Join(" | ", parts));
             AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
             return;
         }
@@ -372,7 +443,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdHeliStatusUnknown;
             }
-            _ = SendChatCommandResponseAsync(msg);
+            _ = Reply(msg);
             AppendLog($"[ChatCommand] Heli executed by {m.Author}");
             return;
         }
@@ -403,7 +474,7 @@ public partial class MainWindow
             {
                 msg = Properties.Resources.ChatCmdVendorStatusUnknown;
             }
-            _ = SendChatCommandResponseAsync(msg);
+            _ = Reply(msg);
             AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
             return;
         }
@@ -419,7 +490,7 @@ public partial class MainWindow
                     string timeStr = remaining.TotalHours >= 1.0 
                         ? $"{(int)remaining.TotalHours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2}"
                         : $"{remaining.Minutes:D2}:{remaining.Seconds:D2}";
-                    _ = SendChatCommandResponseAsync($"{timer.Name}: {timeStr}");
+                    _ = Reply($"{timer.Name}: {timeStr}");
                     AppendLog($"[ChatCommand] Timer '{timer.Name}' checked by {m.Author}");
                 }
                 return;
@@ -432,13 +503,13 @@ public partial class MainWindow
         {
             if (profile.CustomTimers.Count == 0)
             {
-                _ = SendChatCommandResponseAsync("No active timers.");
+                _ = Reply("No active timers.");
             }
             else
             {
                 var timerStrings = profile.CustomTimers.Select(t => $"{profile.ChatCommandPrefix}{t.Command} : {t.RemainingTimeText}").ToList();
                 string output = string.Join(" | ", timerStrings);
-                _ = SendChatCommandResponseAsync(output);
+                _ = Reply(output);
             }
             return;
         }
@@ -446,7 +517,7 @@ public partial class MainWindow
         {
             if (profile.CustomTimers.Count >= 5)
             {
-                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
+                _ = Reply(Properties.Resources.ChatCmdTimerMaxReached ?? "Maximum of 5 timers allowed.");
                 return;
             }
 
@@ -496,6 +567,9 @@ public partial class MainWindow
                         Name = name,
                         Command = newCmd,
                         EndTimeUtc = DateTime.UtcNow.AddSeconds(totalSecs),
+                        // Warnings go back to whoever asked for the timer, not to wherever alerts
+                        // happen to be pointed.
+                        OriginChannel = channel.ToString(),
                         CreatedNotified = false,
                         Notified60 = totalMins <= 60,
                         Notified30 = totalMins <= 30,
@@ -507,7 +581,7 @@ public partial class MainWindow
                     if (profile.AlertCustomTimer)
                     {
                         var msg = string.Format(Properties.Resources.TimerCreated, profile.ChatCommandPrefix + newCmd, hours, mins, secs);
-                        _ = SendChatCommandResponseAsync(msg);
+                        _ = Reply(msg);
                     }
                     AppendLog($"[ChatCommand] Timer created by {m.Author}: {name} for {hours}h {mins}m {secs}s");
                 }
@@ -523,7 +597,7 @@ public partial class MainWindow
         }
 
         // Check Logic Engine rules
-        if (profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
+        if (allowSwitches && profile.IsLogicEngineActive && !_chatFeaturesBlockedByMaster && profile.LogicRules != null)
         {
             var matchedRule = profile.LogicRules.FirstOrDefault(r => {
                 if (!r.IsEnabled || r.TriggerType != "ChatCommand") return false;
@@ -539,7 +613,12 @@ public partial class MainWindow
         }
 
         // Command: Switches (Dynamic List)
-        var matchedSwitches = profile.SwitchCommandMappings
+        // Left unrecognised rather than answered with a refusal when the clan may not use them:
+        // "you are not allowed to use !lights" would confirm to the whole clan which switches
+        // exist and what they are called, which is most of what an attacker wanted to know.
+        var matchedSwitches = (allowSwitches
+                ? profile.SwitchCommandMappings.AsEnumerable()
+                : Enumerable.Empty<ChatCommandMapping>())
             .Where(mapping => cmd == mapping.Command?.ToLowerInvariant() && mapping.EntityId != 0)
             .ToList();
 
@@ -596,20 +675,20 @@ public partial class MainWindow
                         string stateStr = targetOn ? Properties.Resources.ChatCmdSwitchStateOn : Properties.Resources.ChatCmdSwitchStateOff;
                         if (toggledNames.Count == 1)
                         {
-                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, toggledNames[0], stateStr));
+                            _ = Reply(string.Format(Properties.Resources.ChatCmdSwitchToggled, toggledNames[0], stateStr));
                         }
                         else
                         {
                             string names = string.Join(", ", toggledNames);
                             if (names.Length > 80) names = names.Substring(0, 77) + "...";
-                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdSwitchToggled, names, stateStr));
+                            _ = Reply(string.Format(Properties.Resources.ChatCmdSwitchToggled, names, stateStr));
                         }
                         AppendLog($"[ChatCommand] Toggled {toggledNames.Count} switches to {targetOn} by {m.Author}");
                     }
                 }
                 else
                 {
-                    _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdSwitchNotPaired);
+                    _ = Reply(Properties.Resources.ChatCmdSwitchNotPaired);
                 }
             }
             return;
@@ -621,7 +700,7 @@ public partial class MainWindow
             var tcs = profile.UpkeepCommandMappings.Where(mapping => mapping.EntityId != 0).ToList();
             if (tcs.Count == 0)
             {
-                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNoTcMapped);
+                _ = Reply(Properties.Resources.ChatCmdUpkeepNoTcMapped);
             }
             else
             {
@@ -641,7 +720,7 @@ public partial class MainWindow
                         var secs = dev.UpkeepSeconds ?? 0;
                         if (secs <= 0)
                         {
-                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                            _ = Reply(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
                         }
                         else
                         {
@@ -663,7 +742,7 @@ public partial class MainWindow
                                 ? ""
                                 : string.Format(Properties.Resources.ChatCmdUpkeepNeed24h, dailyMaterials);
 
-                            _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
+                            _ = Reply(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr) + materialsSuffix);
                         }
                     }
                 }
@@ -673,7 +752,7 @@ public partial class MainWindow
         }
 
         // Command: Base Codes
-        if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && cmd == profile.CmdBaseCodes.ToLowerInvariant())
+        if (allowBaseCodes && !string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && cmd == profile.CmdBaseCodes.ToLowerInvariant())
         {
             // Half-typed rows are skipped rather than shown: a three-digit code in team chat is
             // worse than no answer, because someone will try it on a door.
@@ -685,7 +764,7 @@ public partial class MainWindow
 
             if (parts.Count == 0)
             {
-                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdNoBaseCodes);
+                _ = Reply(Properties.Resources.ChatCmdNoBaseCodes);
             }
             else
             {
@@ -698,7 +777,7 @@ public partial class MainWindow
                     parts.RemoveAt(parts.Count - 1);
                     msg = string.Join(" | ", parts) + " ...";
                 }
-                _ = SendChatCommandResponseAsync(msg);
+                _ = Reply(msg);
             }
 
             AppendLog($"[ChatCommand] BaseCodes executed by {m.Author}");
@@ -712,7 +791,7 @@ public partial class MainWindow
 
         if (matchedMappings.Count == 1)
         {
-            await ProcessUpkeepCommand(real, matchedMappings[0].EntityId, m.Author);
+            await ProcessUpkeepCommand(real, matchedMappings[0].EntityId, m.Author, channel);
             return;
         }
         else if (matchedMappings.Count > 1)
@@ -739,18 +818,18 @@ public partial class MainWindow
             }
             if (parts.Count > 0)
             {
-                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
+                _ = Reply(string.Format(Properties.Resources.ChatCmdUpkeepHeader, string.Join(" | ", parts)));
             }
             else
             {
-                _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPaired);
+                _ = Reply(Properties.Resources.ChatCmdUpkeepNotPaired);
             }
             AppendLog($"[ChatCommand] Multi-Upkeep for cmd={cmd} executed by {m.Author}");
             return;
         }
     }
 
-    private async Task ProcessUpkeepCommand(RustPlusClientReal real, uint entityId, string author)
+    private async Task ProcessUpkeepCommand(RustPlusClientReal real, uint entityId, string author, ChatChannel channel = ChatChannel.Team)
     {
         var profile = _vm.Selected;
         if (profile == null) return;
@@ -761,7 +840,7 @@ public partial class MainWindow
             var secs = dev.UpkeepSeconds ?? 0;
             if (secs <= 0)
             {
-                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcEmptyExpired, dev.PureName), channel);
             }
             else
             {
@@ -778,13 +857,13 @@ public partial class MainWindow
 
                 string timeStr = string.Join(", ", timeParts);
 
-                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr));
+                _ = SendChatCommandResponseAsync(string.Format(Properties.Resources.ChatCmdUpkeepTcTime, dev.PureName, timeStr), channel);
             }
             AppendLog($"[ChatCommand] Upkeep for {dev.Name} executed by {author}");
         }
         else
         {
-            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle);
+            _ = SendChatCommandResponseAsync(Properties.Resources.ChatCmdUpkeepNotPairedSingle, channel);
         }
     }
 

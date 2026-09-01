@@ -6282,4 +6282,100 @@
   <data name="RoutesDrawHint" xml:space="preserve">
     <value>ارسم على الخريطة. الخط الأول يحدد نقطة البداية، وإن تابعت من النهاية تحركت النهاية معك. عد إلى البداية فينغلق المسار في دورة كاملة.</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>أوامر دردشة العشيرة</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>دردشة الفريق تستجيب للأوامر دائمًا. فعّل هذا الخيار للرد عليها في دردشة العشيرة أيضًا، واختر الرتب المسموح لها باستخدامها.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>الرد على الأوامر في دردشة العشيرة</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>الرتب المسموح لها باستخدام الأوامر</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>لا توجد رتبة يُسمح لها باستخدام الأوامر بعد — حدّد رتبة واحدة على الأقل أعلاه.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>تضمين المفاتيح الذكية</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>معظم أعضاء العشيرة لا يملكون صلاحيات خزانة الأدوات في قاعدتك ولن يتمكنوا من التحكم بالأجهزة على أي حال.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>تضمين رموز القاعدة</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>رمز الباب المنشور في دردشة العشيرة لا يمكن سحبه.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>العشيرة</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>دردشة اللعبة التي تصل إليها التنبيهات. غير متاح أثناء تفعيل «ديسكورد فقط».</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>صيانة خزانة الأدوات</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>حالة سفينة الشحن</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>بدء مؤقت 15 دقيقة لـ Oil Rig</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>الوقت داخل اللعبة</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>رموز القاعدة</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>عدد اللاعبين على الخادم</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>عرض الأوامر المتاحة</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>الجديد في 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>أهم أربعة تغييرات منذ الإصدار 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>مركز المجتمع</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>دردشة عامة ودردشة للداعمين، والبحث عن فريق مع معاينة ملف Steam قبل الرد، وقائمة أصدقاء، وصندوق وارد، ونظام إبلاغ.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>مسارات الجمع على الخريطة</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>ارسم المسارات بجانب طبقات الخريطة. يعرض كل مسار طوله بالأمتار ومدته عند الركض السريع، ويُشارَك مع فريقك.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>الأوامر في دردشة العشيرة</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>صار بالإمكان الرد على الأوامر في دردشة العشيرة، بصلاحيات حسب الرتبة. تبقى رموز الأبواب والمفاتيح مستثناة ما لم تضمّها بنفسك.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>المنزل الذكي</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>يمكن لـ Home Assistant التحكم بمفاتيحك عبر نقطة REST. حصلت Alexa على نقاط إقليمية لتحسين اكتشاف الأجهزة، وGoogle Home جاهز لكنه بانتظار الاعتماد.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>عدم الإظهار مرة أخرى</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>ملاحظات الإصدار الكاملة</value>
+  </data>
 </root>

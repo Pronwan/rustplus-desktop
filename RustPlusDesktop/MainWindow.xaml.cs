@@ -649,6 +649,11 @@ public partial class MainWindow : WpfUi.FluentWindow
             return false;
         }
         
+        // Read before any branch below rewrites it. Whether this user is arriving from an older
+        // build is knowable exactly once — on the first start after the upgrade — and the
+        // what's-new notice further down needs the answer after that rewrite has happened.
+        string versionBeforeThisStart = TrackingService.LastSeenVersion;
+
         if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
         {
             // Erst-Installation: Version setzen, aber kein Popup zeigen
@@ -704,15 +709,32 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        if (!TrackingService.SuppressVersion8Notice)
+        // Everyone arriving from 9.0.4 or earlier gets the what's-new notice once. A fresh install
+        // starts on the current version and has nothing to catch up on, so it is left alone.
+        //
+        // The flag is latched here rather than re-derived on every start: LastSeenVersion has
+        // already been rewritten above, so by the next start this user looks like any other. It
+        // stays set — and the notice keeps appearing — until the "don't show again" box is ticked,
+        // which is the behaviour the previous version notice had.
+        // The version has to have actually moved. Without that test a build still numbered 9.0.4
+        // would re-latch on every single start — including the one right after the box was
+        // ticked — and the notice could never be dismissed.
+        if (!string.IsNullOrEmpty(versionBeforeThisStart)
+            && versionBeforeThisStart != appVersion
+            && IsVersionLessThanOrEqual(versionBeforeThisStart, "9.0.4"))
+        {
+            TrackingService.PendingWhatsNewNotice = true;
+        }
+
+        if (TrackingService.PendingWhatsNewNotice)
         {
             Dispatcher.InvokeAsync(() =>
             {
-                var dlg8 = new Views.Windows.Version8NoticeWindow { Owner = this };
-                dlg8.ShowDialog();
-                if (dlg8.DontShowAgain)
+                var whatsNew = new Views.Windows.WhatsNewWindow { Owner = this };
+                whatsNew.ShowDialog();
+                if (whatsNew.DontShowAgain)
                 {
-                    TrackingService.SuppressVersion8Notice = true;
+                    TrackingService.PendingWhatsNewNotice = false;
                 }
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }

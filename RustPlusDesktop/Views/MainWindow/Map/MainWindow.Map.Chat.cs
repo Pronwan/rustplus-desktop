@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using WpfUi = Wpf.Ui.Controls;
@@ -469,7 +470,13 @@ public partial class MainWindow
 
     private readonly HashSet<string> _recentAutomatedMessages = new();
 
-    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false)
+    /// <param name="forceChannel">
+    /// Overrides the configured alert channel. Passed by command replies, which belong to whoever
+    /// asked: "boat turned ON" is an automated message like any other, but it is an *answer*, and
+    /// an answer that appears in a channel nobody asked in leaves the asker staring at silence.
+    /// Alerts leave this null and follow the setting.
+    /// </param>
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false, ChatChannel? forceChannel = null)
     {
         if (skipDiscordChatForwarding)
         {
@@ -492,9 +499,17 @@ public partial class MainWindow
             return;
         }
 
+        // Alerts go to one in-game channel or the other, never both: the same raid alarm arriving
+        // twice is noise, and a clan of a hundred accounts has no business seeing what the team's
+        // TC is doing unless someone chose that deliberately. A caller that already knows where
+        // the message belongs says so and this choice does not apply.
+        var target = forceChannel ?? (_vm?.Selected?.ChatAlertsUseClanChannel == true
+            ? ChatChannel.Clan
+            : ChatChannel.Team);
+
         try
         {
-            await SendChatReliableAsync(text, ChatChannel.Team);
+            await SendChatReliableAsync(text, target);
         }
         catch { /* ignore background errors */ }
     }
@@ -631,7 +646,11 @@ public partial class MainWindow
 
         var profile = _vm?.Selected;
         string prefix = profile?.ChatCommandPrefix ?? "!";
-        bool isCommand = channel == ChatChannel.Team && m.Text.TrimStart().StartsWith(prefix);
+        // Clan messages count as commands only while clan answering is on. Without that condition
+        // a clan member writing "!!!" would have their message relabelled as a command on a server
+        // where commands never run there.
+        bool isCommand = m.Text.TrimStart().StartsWith(prefix)
+            && (channel == ChatChannel.Team || profile?.ClanChatCommandsEnabled == true);
 
         var mUtc = m.Timestamp.Kind == DateTimeKind.Utc ? m.Timestamp : m.Timestamp.ToUniversalTime();
 
@@ -670,7 +689,7 @@ public partial class MainWindow
         {
             if (!isHistorical && _rust is RustPlusClientReal)
             {
-                _ = ProcessChatCommands(m);
+                _ = ProcessChatCommands(m, channel);
             }
             
             m = new TeamChatMessage(m.Timestamp, m.Author, m.SteamId, $"[Chat Command] {m.Text}");
@@ -791,6 +810,9 @@ public partial class MainWindow
         else if (channel == ChatChannel.Clan) _unreadClanCount = 0;
         UpdateUnreadBadges();
 
+        // The two channels do not offer the same chips, so they are rebuilt on the switch rather
+        // than only when the drawer opens — the empty-state row shows them without any drawer.
+        RebuildQuickCommandChips();
         RebuildChatMessages();
         ScrollChatToBottom();
 
@@ -850,6 +872,10 @@ public partial class MainWindow
     public async Task OpenChatOverlayAsync()
     {
         EnsureChatSystemInitialized();
+
+        // Command names and the prefix can have been edited since the panel was last open, and the
+        // empty-state row shows chips before anyone touches the drawer.
+        RebuildQuickCommandChips();
 
         if (_rust is not RustPlusClientReal real)
         {
@@ -1186,12 +1212,67 @@ public partial class MainWindow
 
     // ====== QUICK COMMANDS DRAWER ======
 
+    /// <summary>One chip in the quick command bar: what it reads as, and what it types.</summary>
+    public sealed record QuickCommandChip(string Label, string Command, string Tooltip);
+
+    public System.Collections.ObjectModel.ObservableCollection<QuickCommandChip> QuickCommandChips { get; } = new();
+
+    /// <summary>
+    /// Rebuilds the chip bar for the channel now in front.
+    ///
+    /// The chips used to be seven hard-coded buttons reading "!upkeep", "!heli" and so on, which
+    /// was wrong in three separate ways: the prefix is configurable and is not always "!", the
+    /// command names are configurable too, and two of the chips named commands that do not exist —
+    /// Patrol Heli is gone from the game, and there has never been a "!switches". Building them
+    /// from the profile means a chip can only ever offer something the profile actually answers.
+    /// </summary>
+    private void RebuildQuickCommandChips()
+    {
+        QuickCommandChips.Clear();
+
+        var profile = _vm?.Selected;
+        if (profile == null) return;
+
+        string p = string.IsNullOrEmpty(profile.ChatCommandPrefix) ? "!" : profile.ChatCommandPrefix;
+
+        void Chip(string command, string tooltip) =>
+            QuickCommandChips.Add(new QuickCommandChip(p + command, p + command, tooltip));
+
+        // The first tool cupboard mapping is named "upkeep" when it is created, but the player can
+        // rename it; fall back to the all-cupboards command when nothing is paired yet.
+        string upkeep = profile.UpkeepCommandMappings
+            .FirstOrDefault(m => !string.IsNullOrWhiteSpace(m.Command) && m.EntityId != 0)?.Command
+            ?? profile.CmdUpkeepDetail;
+
+        Chip(upkeep, Loc.TextOrNull("QuickCmdUpkeepTip") ?? "Tool cupboard upkeep");
+        Chip(profile.CmdCargo, Loc.TextOrNull("QuickCmdCargoTip") ?? "Cargo ship status");
+
+        // Timers are created as "<name>,<minutes>" — a single comma-separated pair. The old chip
+        // sent "!timer 15 Oil Rig", which splits into one argument and was silently ignored.
+        QuickCommandChips.Add(new QuickCommandChip(
+            $"{p}{profile.CmdCustomTimer} 15",
+            $"{p}{profile.CmdCustomTimer} oilrig,15",
+            Loc.TextOrNull("QuickCmdTimerTip") ?? "Start a 15 minute Oil Rig timer"));
+
+        // Door codes belong to the team. A clan can hold a hundred accounts, so the clan bar
+        // offers the in-game time instead of a shortcut to the base codes.
+        if (_activeChatChannel == ChatChannel.Clan)
+            Chip(profile.CmdTime, Loc.TextOrNull("QuickCmdTimeTip") ?? "In-game time");
+        else
+            Chip(profile.CmdBaseCodes, Loc.TextOrNull("QuickCmdCodeTip") ?? "Base codes");
+
+        Chip(profile.CmdPop, Loc.TextOrNull("QuickCmdPopTip") ?? "Server player count");
+        Chip(profile.CmdList, Loc.TextOrNull("QuickCmdCommandsTip") ?? "List available commands");
+    }
+
     private void BtnToggleQuickCommands_Click(object sender, RoutedEventArgs e)
     {
         if (ChatQuickCommandsDrawer == null) return;
-        ChatQuickCommandsDrawer.Visibility = ChatQuickCommandsDrawer.Visibility == Visibility.Visible
-            ? Visibility.Collapsed
-            : Visibility.Visible;
+
+        bool opening = ChatQuickCommandsDrawer.Visibility != Visibility.Visible;
+        if (opening) RebuildQuickCommandChips();
+
+        ChatQuickCommandsDrawer.Visibility = opening ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void BtnQuickCommandChip_Click(object sender, RoutedEventArgs e)

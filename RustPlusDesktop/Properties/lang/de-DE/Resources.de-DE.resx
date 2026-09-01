@@ -6469,4 +6469,100 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="RoutesDrawHint" xml:space="preserve">
     <value>Zeichne auf der Karte. Der erste Strich setzt den Start; zeichnest du vom Ende weiter, wandert das Ende mit. Kommst du zum Start zurück, schließt sich die Route zur Runde.</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>Clan-Chat-Befehle</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>Der Team-Chat beantwortet Befehle immer. Aktiviere dies, um sie zusätzlich im Clan-Chat zu beantworten, und wähle, welche Clan-Rollen sie nutzen dürfen.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>Befehle im Clan-Chat beantworten</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>Rollen mit Befehlsberechtigung</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>Noch darf keine Rolle Befehle nutzen — hake oben mindestens eine an.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>Smart Switches einbeziehen</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>Die meisten Clan-Mitglieder haben keine Werkzeugkasten-Rechte an deiner Basis und könnten die Geräte ohnehin nicht steuern.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>Basis-Codes einbeziehen</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>Ein im Clan-Chat geposteter Türcode lässt sich nicht zurücknehmen.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>In welchen Spiel-Chat die Benachrichtigungen gehen. Nicht verfügbar, solange „Nur Discord“ aktiv ist.</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>Werkzeugkasten-Unterhalt</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>Status des Frachtschiffs</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>15-Minuten-Timer für Oil Rig starten</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>Uhrzeit im Spiel</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>Basis-Codes</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>Spielerzahl auf dem Server</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>Verfügbare Befehle auflisten</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>Neu in 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>Die vier wichtigsten Änderungen seit 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>Globaler und Supporter-Chat, Gruppensuche mit Steam-Profil-Vorschau vor dem Antworten, Freundesliste, Posteingang und Meldefunktion.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>Farm-Routen auf der Karte</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>Zeichne Routen neben den Kartenebenen. Jede zeigt ihre Länge in Metern und die Dauer im Sprint und wird mit deinem Team geteilt.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>Chat-Befehle im Clan-Chat</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>Befehle können jetzt auch im Clan-Chat beantwortet werden, freigegeben je Clan-Rolle. Türcodes und Schalter bleiben außen vor, bis du sie einbeziehst.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>Smart Home</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant kann deine Schalter über einen REST-Endpunkt steuern. Alexa bekommt regionale Endpunkte für bessere Geräteerkennung; Google Home ist fertig, wartet aber auf die Zertifizierung.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>Nicht mehr anzeigen</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>Vollständige Patch Notes</value>
+  </data>
 </root>

@@ -220,6 +220,108 @@ public class ServerProfile : INotifyPropertyChanged
         set { _chatCommandsEnabled = value; OnProp(); }
     }
 
+    /// <summary>
+    /// Whether commands are also answered when they arrive in clan chat. Team chat is always
+    /// served once commands are on; the clan is an addition to it, never a replacement.
+    /// </summary>
+    private bool _clanChatCommandsEnabled;
+    public bool ClanChatCommandsEnabled
+    {
+        get => _clanChatCommandsEnabled;
+        set { _clanChatCommandsEnabled = value; OnProp(); }
+    }
+
+    /// <summary>
+    /// Door codes in clan chat are off unless someone deliberately turns them on. A team is
+    /// people you raid with; a clan is up to a hundred accounts you may never have met, and a
+    /// code posted there cannot be taken back.
+    /// </summary>
+    private bool _clanCommandsAllowBaseCodes;
+    public bool ClanCommandsAllowBaseCodes
+    {
+        get => _clanCommandsAllowBaseCodes;
+        set { _clanCommandsAllowBaseCodes = value; OnProp(); }
+    }
+
+    /// <summary>
+    /// Likewise for switches. Most clan members have no TC authorization on the base the
+    /// switches belong to, so the command would mostly be an invitation to flip other
+    /// people's lights.
+    /// </summary>
+    private bool _clanCommandsAllowSwitches;
+    public bool ClanCommandsAllowSwitches
+    {
+        get => _clanCommandsAllowSwitches;
+        set { _clanCommandsAllowSwitches = value; OnProp(); }
+    }
+
+    /// <summary>
+    /// One row per clan role, carrying whether that role may use commands. Persisted so the
+    /// choice survives a restart, and reconciled against the live clan on every pull:
+    /// roles the clan no longer has drop out, new ones arrive switched off.
+    /// </summary>
+    private ObservableCollection<ClanRolePermission> _clanRolePermissions = new();
+    public ObservableCollection<ClanRolePermission> ClanRolePermissions
+    {
+        get => _clanRolePermissions;
+        set
+        {
+            DetachClanRolePermissions();
+            _clanRolePermissions = value ?? new();
+            AttachClanRolePermissions();
+            OnProp();
+            OnProp(nameof(HasClanRolePermissions));
+            OnProp(nameof(HasAllowedClanRole));
+        }
+    }
+
+    private void DetachClanRolePermissions()
+    {
+        if (_clanRolePermissions == null) return;
+        foreach (var r in _clanRolePermissions) r.PropertyChanged -= ClanRolePermission_PropertyChanged;
+    }
+
+    private void AttachClanRolePermissions()
+    {
+        if (_clanRolePermissions == null) return;
+        foreach (var r in _clanRolePermissions) r.PropertyChanged += ClanRolePermission_PropertyChanged;
+    }
+
+    private void ClanRolePermission_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ClanRolePermission.Allowed)) OnProp(nameof(HasAllowedClanRole));
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasClanRolePermissions => _clanRolePermissions != null && _clanRolePermissions.Count > 0;
+
+    /// <summary>
+    /// Whether any role at all may use commands. Drives the warning in the settings: clan
+    /// answering can be switched on while every role is still unticked, and without a word about
+    /// it that reads as a broken feature rather than a permission nobody granted.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasAllowedClanRole => _clanRolePermissions?.Any(r => r.Allowed) == true;
+
+    /// <summary>
+    /// Whether a clan role may issue commands. An unknown role is refused rather than allowed:
+    /// if the clan gained a role since the last pull, its members wait for the owner to grant it
+    /// instead of inheriting permission nobody granted.
+    /// </summary>
+    public bool IsClanRoleAllowed(int roleId)
+        => _clanRolePermissions?.Any(r => r.RoleId == roleId && r.Allowed) == true;
+
+    /// <summary>
+    /// Which in-game channel automated alerts go to. Either, never both: the same raid alarm in
+    /// team and clan chat at once is noise, and the clan would see the team's business.
+    /// </summary>
+    private bool _chatAlertsUseClanChannel;
+    public bool ChatAlertsUseClanChannel
+    {
+        get => _chatAlertsUseClanChannel;
+        set { _chatAlertsUseClanChannel = value; OnProp(); }
+    }
+
     [System.Text.Json.Serialization.JsonIgnore]
     public System.Collections.Generic.IEnumerable<SmartDevice> SmartSwitches 
     {
@@ -876,6 +978,20 @@ public class CustomTimer : INotifyPropertyChanged
     private DateTime _endTimeUtc;
     public DateTime EndTimeUtc { get => _endTimeUtc; set { _endTimeUtc = value; OnProp(); } }
 
+    /// <summary>
+    /// Which chat the timer was started from — "Team", "Clan", or null when it was created in the
+    /// app rather than by a chat command.
+    ///
+    /// The countdown warnings go back where the timer came from. Someone who types the command in
+    /// team chat is asking the team to be told, and it would be an odd answer to warn a hundred
+    /// clan members instead just because that is where alerts happen to be pointed. A timer made
+    /// through the UI has no such origin and follows the alert setting like every other alert.
+    ///
+    /// Stored as a string so the model stays free of the view's ChatChannel enum.
+    /// </summary>
+    private string? _originChannel;
+    public string? OriginChannel { get => _originChannel; set { _originChannel = value; OnProp(); } }
+
     private bool _enableCountdownAudio = true;
     public bool EnableCountdownAudio { get => _enableCountdownAudio; set { _enableCountdownAudio = value; OnProp(); } }
 
@@ -918,3 +1034,28 @@ public class CustomTimer : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 }
 
+
+/// <summary>
+/// A clan role as the server reports it, plus whether its members may use chat commands.
+///
+/// The role is identified by <see cref="RoleId"/> rather than by name: clan owners rename roles,
+/// and a permission that quietly moved to a different group of people because someone renamed
+/// "Recruit" would be the worst kind of surprise.
+/// </summary>
+public class ClanRolePermission : INotifyPropertyChanged
+{
+    public int RoleId { get; set; }
+
+    private string _name = "";
+    public string Name { get => _name; set { _name = value ?? ""; OnProp(); } }
+
+    /// <summary>Facepunch's own ordering, lowest first. Kept so the list reads like the clan menu.</summary>
+    public int Rank { get; set; }
+
+    private bool _allowed;
+    public bool Allowed { get => _allowed; set { if (_allowed == value) return; _allowed = value; OnProp(); } }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnProp([CallerMemberName] string? n = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+}

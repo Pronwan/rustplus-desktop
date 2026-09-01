@@ -168,7 +168,7 @@ namespace RustPlusDesk.Views
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
                 Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
-                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync", SectionCloud),
+                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync wipe tracker player backup", SectionCloud),
                 Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
                 Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
                 Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
@@ -691,8 +691,7 @@ namespace RustPlusDesk.Views
 
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
-            ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
-            ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+            SyncPlayerWipeTrackerToggles();
 
             // Team marker settings
             ChkShowProfileMarkers.IsChecked  = TrackingService.MapShowSteamMarkers;
@@ -922,14 +921,48 @@ namespace RustPlusDesk.Views
         // OnSettingChanged rewrite so these global flags only change when the user actually
         // clicks the toggles — never as a side effect of another setting or a panel reload.
         // This is why the tracker no longer switches itself off on wipe/server changes.
+        //
+        // Both flags appear twice — under General and under Connected Services — so whichever
+        // copy was clicked is the one that carries the new value, and the other has to be brought
+        // along. _syncingWipeToggles stops that write from coming straight back in as another
+        // toggle event and overwriting what the user just chose.
+        private bool _syncingWipeToggles;
+
         private void OnPlayerWipeTrackerToggled(object sender, RoutedEventArgs e)
         {
-            if (!_isSettingsInitialized) return;
+            if (!_isSettingsInitialized || _syncingWipeToggles) return;
 
-            TrackingService.PlayerWipeTrackerEnabled = ChkPlayerWipeTracker.IsChecked == true;
-            TrackingService.PlayerWipeTrackerCloudBackupEnabled = ChkPlayerWipeCloud.IsChecked == true;
+            bool tracker = ReferenceEquals(sender, ChkPlayerWipeTrackerConnected)
+                ? ChkPlayerWipeTrackerConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeTracker)
+                    ? ChkPlayerWipeTracker.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerEnabled;
 
+            bool cloud = ReferenceEquals(sender, ChkPlayerWipeCloudConnected)
+                ? ChkPlayerWipeCloudConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeCloud)
+                    ? ChkPlayerWipeCloud.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+
+            TrackingService.PlayerWipeTrackerEnabled = tracker;
+            TrackingService.PlayerWipeTrackerCloudBackupEnabled = cloud;
+
+            SyncPlayerWipeTrackerToggles();
             ParentWindow?.RefreshPlayerWipeTrackerSession();
+        }
+
+        /// <summary>Points all four switches at what the setting now says.</summary>
+        private void SyncPlayerWipeTrackerToggles()
+        {
+            _syncingWipeToggles = true;
+            try
+            {
+                ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+                ChkPlayerWipeTrackerConnected.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloudConnected.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+            }
+            finally { _syncingWipeToggles = false; }
         }
 
         private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)

@@ -24,6 +24,9 @@ public partial class ChatCommandsOverlay : UserControl
     /// Patrol Heli and Travelling Vendor have no server-wide audio cue, so on a server without
     /// event markers those commands can never answer. Hiding the rows is honest; leaving them
     /// configurable would invite players to set up a command that always replies "unknown".
+    ///
+    /// Hidden rather than deleted on purpose: a server that still sends event markers can still
+    /// answer both, and a player whose profile already has the command configured keeps it.
     /// </summary>
     private void ApplyEventCapabilities()
     {

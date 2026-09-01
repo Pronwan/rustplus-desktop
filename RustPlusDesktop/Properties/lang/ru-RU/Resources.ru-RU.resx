@@ -6391,4 +6391,100 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="RoutesDrawHint" xml:space="preserve">
     <value>Рисуйте на карте. Первый штрих задаёт начало; если продолжить от конца, конец сместится. Вернитесь к началу — и маршрут замкнётся в круг.</value>
   </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>Команды в чате клана</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>Командный чат всегда отвечает на команды. Включите это, чтобы отвечать на них и в чате клана, и выберите, каким ролям клана разрешено их использовать.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>Отвечать на команды в чате клана</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>Роли с правом использовать команды</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>Пока ни одна роль не может использовать команды — отметьте хотя бы одну выше.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>Включить умные переключатели</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>У большинства членов клана нет прав на шкаф инструментов вашей базы, и управлять устройствами они всё равно не смогут.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>Включить коды базы</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>Код двери, опубликованный в чате клана, вернуть уже нельзя.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>Команда</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>Команда</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>Клан</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>В какой игровой чат приходят оповещения. Недоступно, пока включён режим «Только Discord».</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>Содержание шкафа инструментов</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>Состояние грузового корабля</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>Запустить 15-минутный таймер Oil Rig</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>Игровое время</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>Коды базы</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>Число игроков на сервере</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>Показать доступные команды</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>Что нового в 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>Четыре главных изменения с версии 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>Общий чат и чат для поддержавших, поиск команды с предпросмотром профиля Steam до ответа, список друзей, входящие и жалобы.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>Фарм-маршруты на карте</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>Рисуйте маршруты рядом со слоями карты. Каждый показывает длину в метрах и время бега спринтом и синхронизируется с командой.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>Команды в чате клана</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>Команды теперь работают и в чате клана, с правами по ролям. Коды дверей и переключатели остаются недоступны, пока вы их не включите.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>Умный дом</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant может управлять переключателями через REST. У Alexa появились региональные точки для лучшего обнаружения устройств; Google Home готов, но ждёт сертификации.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>Больше не показывать</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>Полный список изменений</value>
+  </data>
 </root>
