@@ -717,6 +717,40 @@
                                 <ui:Button x:Name="BtnRevokeHa" Content="Revoke Token" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Click="BtnRevokeHa_Click" />
                             </StackPanel>
                         </ui:CardExpander>
+                        <ui:CardExpander Header="Google Home" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                            <StackPanel Margin="0,8,0,0">
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="Control your Rust smart switches with Google Home / Assistant. Generate a PIN, pick a server, then add the RustPlusDesktop service in the Google Home app and enter the PIN." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnGoogleHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Google Home setup info" VerticalAlignment="Top" />
+                                </Grid>
+
+                                <ui:TextBlock Text="Google Login PIN" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnGenerateGooglePIN" Content="Generate Login PIN" Icon="{ui:SymbolIcon Symbol=Key24}" HorizontalAlignment="Stretch" Height="36" Click="BtnGenerateGooglePIN_Click" />
+                                    <ui:TextBlock x:Name="TxtGooglePIN" Grid.Column="1" Text="123456" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="12,0,0,0" Foreground="{DynamicResource Accent}" />
+                                </Grid>
+
+                                <ui:TextBlock Text="Select server to sync with Google Home" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <ComboBox x:Name="CmbGoogleServer" MinHeight="32" Padding="8,4" Margin="0,0,0,12" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnLinkGoogle" Grid.Column="0" Content="Link Selected Server" Icon="{ui:SymbolIcon Symbol=Link24}" Appearance="Primary" HorizontalAlignment="Stretch" Height="36" Margin="0,0,4,0" Click="BtnLinkGoogle_Click" />
+                                    <ui:Button x:Name="BtnRevokeGoogle" Grid.Column="1" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeGoogle_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </ui:CardExpander>
 
                         <ui:ToggleSwitch x:Name="ChkTelegramIntegration" Content="{DynamicResource UiTeamPathsTracking}" Margin="0,0,0,10" Opacity="0.45" IsEnabled="False" />
                     </StackPanel>
