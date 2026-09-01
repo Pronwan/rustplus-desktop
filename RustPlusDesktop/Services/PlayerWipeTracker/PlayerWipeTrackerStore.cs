@@ -359,8 +359,8 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             if (!File.Exists(path)) return null;
             var text = File.ReadAllText(path).Trim();
             return DateTime.TryParse(text, CultureInfo.InvariantCulture,
-                DateTimeStyles.RoundtripKind | DateTimeStyles.AdjustToUniversal, out var value)
-                ? value
+                DateTimeStyles.RoundtripKind, out var value)
+                ? value.ToUniversalTime()
                 : null;
         }
         catch

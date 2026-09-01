@@ -53,9 +53,9 @@ public sealed class PlayerWipeTrackerCloudClient
                 && data.TryGetProperty("last_observed_at", out var last)
                 && last.ValueKind == JsonValueKind.String
                 && DateTime.TryParse(last.GetString(), CultureInfo.InvariantCulture,
-                    DateTimeStyles.RoundtripKind | DateTimeStyles.AdjustToUniversal, out var parsed))
+                    DateTimeStyles.RoundtripKind, out var parsed))
             {
-                return (status, parsed);
+                return (status, parsed.ToUniversalTime());
             }
         }
         catch

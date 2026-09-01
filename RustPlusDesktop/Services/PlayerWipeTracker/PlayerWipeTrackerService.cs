@@ -44,6 +44,26 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     /// </summary>
     private const int MaxObservationsPerBatch = 1000;
 
+    /// <summary>
+    /// Hard ceiling on one request body, on top of the count.
+    ///
+    /// A minute of a sprinting player is a dozen observations — a couple of kilobytes — so in
+    /// normal operation this is never reached. It exists for the abnormal case: a backlog after a
+    /// long offline stretch would otherwise go out as one 170 KB body, and this app has no
+    /// business putting that much on a home uplink in a single burst. The remainder simply goes
+    /// out on the next cycle.
+    /// </summary>
+    private const int MaxBatchBytes = 48 * 1024;
+
+    /// <summary>Rough serialized size of one observation, used to stop filling a batch.</summary>
+    private const int ApproximateObservationBytes = 180;
+
+    /// <summary>Whichever of the two limits bites first.</summary>
+    private static int EffectiveBatchSize => Math.Min(MaxObservationsPerBatch, MaxBatchBytes / ApproximateObservationBytes);
+
+    /// <summary>Set by the host so a repeated upload failure reaches the app log.</summary>
+    public Action<string>? Log { get; set; }
+
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, DateTime> _cloudLastUpload = new(StringComparer.Ordinal);
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (ulong SteamId, DateTime TimestampUtc, string PlayerName)> _cloudDirty = new(StringComparer.Ordinal);
 
@@ -453,16 +473,22 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
 
             var mark = acknowledged ?? DateTime.Parse(
                 request.Observations[^1].Timestamp, CultureInfo.InvariantCulture,
-                DateTimeStyles.RoundtripKind | DateTimeStyles.AdjustToUniversal);
+                DateTimeStyles.RoundtripKind);
             _store.SetCloudCursor(_serverKey, _wipeKey, entry.SteamId, day, mark);
 
             // A capped batch leaves a backlog behind; mark the day so the next cycle continues
             // rather than waiting for the player to move again.
-            if (request.Observations.Count >= MaxObservationsPerBatch)
+            if (request.Observations.Count >= EffectiveBatchSize)
                 _cloudDirty.TryAdd(key, entry);
         }
-        catch
+        catch (Exception ex)
         {
+            // Reported rather than swallowed. An earlier version caught this silently, and an
+            // invalid DateTimeStyles combination meant the cursor was never written — every cycle
+            // re-sent the same capped batch, the server accepted it, deduplicated it and answered
+            // 200, and nothing anywhere said a word. A failure that repeats every minute has to
+            // be visible somewhere.
+            Log?.Invoke($"[wipe-tracker] Cloud append failed for {key}: {ex.GetType().Name}: {ex.Message}");
             _cloudDirty.TryAdd(key, entry);
         }
     }
@@ -479,7 +505,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             .Where(item => DateOnly.FromDateTime(item.TimestampUtc.ToUniversalTime()) == day)
             .Where(item => cursorUtc is null || item.TimestampUtc.ToUniversalTime() > cursorUtc.Value)
             .OrderBy(item => item.TimestampUtc)
-            .Take(MaxObservationsPerBatch)
+            .Take(EffectiveBatchSize)
             .ToArray();
         if (observations.Length == 0)
             return null;

@@ -14,7 +14,16 @@ public partial class MainWindow
 {
     private readonly PlayerWipeTrackerService _playerWipeTracker = new(
         new PlayerWipeTrackerStore(Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "player-wipes")),
-        new PlayerWipeTrackerCapabilityService());
+        new PlayerWipeTrackerCapabilityService())
+    {
+        // Upload failures used to be swallowed whole. They repeat every minute when they happen,
+        // so they belong in the console where someone will see them.
+        Log = message => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.AppendLog(message);
+        }),
+    };
 
     // Wipe-map uploading is decoupled from the player wipe tracker: this owns the
     // network upload of the base map + monuments and the 3D-parsed extra monuments.
