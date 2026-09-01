@@ -4,7 +4,7 @@
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource UpdateWhatsNewTitle}"
-        Width="500" SizeToContent="Height"
+        Width="560" SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#0F1215"
@@ -48,40 +48,56 @@
                 <Border Background="#161B22" BorderBrush="#2A3040" BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
                     <StackPanel>
                         <!-- Bullet 1 -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <ui:SymbolIcon Symbol="People24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap" Width="350">
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="People24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle1}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNewDesc1}"/>
                             </TextBlock>
-                        </StackPanel>
+                        </Grid>
 
                         <!-- Bullet 2 -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <ui:SymbolIcon Symbol="Map24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap" Width="350">
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Map24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle2}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNewDesc2}"/>
                             </TextBlock>
-                        </StackPanel>
+                        </Grid>
 
                         <!-- Bullet 3 -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <ui:SymbolIcon Symbol="Comment24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap" Width="350">
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Comment24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle3}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNewDesc3}"/>
                             </TextBlock>
-                        </StackPanel>
+                        </Grid>
 
                         <!-- Bullet 4 -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <ui:SymbolIcon Symbol="Home24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap" Width="350">
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Home24" Foreground="#E8611A" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="#D0D0D0" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle4}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNewDesc4}"/>
                             </TextBlock>
-                        </StackPanel>
+                        </Grid>
                     </StackPanel>
                 </Border>
 
@@ -92,8 +108,13 @@
                 <CheckBox x:Name="ChkDontShowAgain" Content="{DynamicResource UpdateWhatsNewDontShowAgain}" IsChecked="False" Margin="0,0,0,15" Foreground="#A0A0A0" Style="{StaticResource DotCheckBox}"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <ui:Button Content="{DynamicResource UpdateWhatsNewPatchNotesBtn}" Width="150" Margin="0,0,10,0" Click="BtnPatchNotes_Click" Appearance="Secondary" Height="36" Cursor="Hand"/>
-                    <ui:Button Content="{DynamicResource GenericClose}" Width="150" Click="BtnClose_Click" Appearance="Primary" Height="36" Cursor="Hand"/>
+                    <!--
+                        MinWidth, not Width: "Vollständige Patch Notes" and its Russian and Korean
+                        equivalents are all longer than the English label, and a fixed 150 cut them
+                        off. The buttons keep their old size whenever the text fits.
+                    -->
+                    <ui:Button Content="{DynamicResource UpdateWhatsNewPatchNotesBtn}" MinWidth="150" Padding="14,0" Margin="0,0,10,0" Click="BtnPatchNotes_Click" Appearance="Secondary" Height="36" Cursor="Hand"/>
+                    <ui:Button Content="{DynamicResource GenericClose}" MinWidth="150" Padding="14,0" Click="BtnClose_Click" Appearance="Primary" Height="36" Cursor="Hand"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
