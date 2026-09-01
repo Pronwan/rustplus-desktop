@@ -24,6 +24,33 @@ namespace RustPlusDesk.Services.Cloud
         private static readonly HttpClient Http = new();
 
         /// <summary>
+        /// GET a public <c>/api/v1</c> route that does not require authentication
+        /// (e.g. feature flags, plans). Sends the client-version header and, when
+        /// available, the bearer token, but never requires it. Returns the response
+        /// body on success, or null on any failure — callers treat null as "unknown".
+        /// </summary>
+        public static async Task<string?> GetPublicAsync(string routePath)
+        {
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
+                request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+                if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
+
+                using var response = await Http.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// POST multipart form content (e.g. a map screenshot) to an authenticated
         /// <c>/api/v1</c> route. Returns false on a non-success status, mirroring the
         /// legacy upload helpers rather than throwing.

@@ -797,6 +797,8 @@ namespace RustPlusDesk.Views
 
                     PopulateGoogleServers();
                     _ = LoadGoogleSettingsAsync();
+
+                    _ = InitFeatureFlagsAsync();
                 }
             }
         }
@@ -2305,7 +2307,7 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void BtnHomeAssistantHelp_Click(object sender, RoutedEventArgs e)
+        private async void BtnHomeAssistantHelp_Click(object sender, RoutedEventArgs e)
         {
             var msg = "How to use the Home Assistant integration:\n\n" +
                       "1. Click 'Generate Token' to create your API token.\n" +
@@ -2316,7 +2318,13 @@ namespace RustPlusDesk.Views
                       "For raid/death alerts, use the Smart Home Webhook URL field with a Home Assistant webhook automation instead.\n\n" +
                       "Keep your token secret — anyone with it can control your linked switches. Use 'Revoke Token' to invalidate it.";
 
-            MessageBox.Show(msg, "Home Assistant Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+            var box = new WpfUi.MessageBox
+            {
+                Title = "Home Assistant Setup",
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK,
+            };
+            await box.ShowDialogAsync();
         }
 
         // --- Google Home integration (platform-only) ---
@@ -2512,16 +2520,78 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void BtnGoogleHelp_Click(object sender, RoutedEventArgs e)
+        private async void BtnGoogleHelp_Click(object sender, RoutedEventArgs e)
         {
             var msg = "How to use the Google Home integration:\n\n" +
                       "1. Click 'Generate Login PIN' (valid 15 minutes).\n" +
                       "2. Select the server whose smart switches you want to control and click 'Link Selected Server'.\n" +
                       "3. In the Google Home app: + → Set up a device → Works with Google, choose RustPlusDesktop, and enter the PIN.\n" +
-                      "4. Your smart switches appear in Google Home and respond to voice commands, e.g. \"Hey Google, turn on Turrets\".\n\n" +
-                      "Only smart switches are supported. For raid/death alerts use the Smart Home Webhook URL field instead.";
+                      "4. Your smart switches appear in Google Home and respond to voice commands, e.g. \"Hey Google, turn on Turrets\".\n" +
+                      "5. Smart alarms appear as occupancy/motion sensors — when a raid alarm fires they report motion in Google Home, so you can trigger Google Home automations from them.\n\n" +
+                      "You can also use the Smart Home Webhook URL field for raid/death alerts (e.g. phone notifications) in addition to this.";
 
-            MessageBox.Show(msg, "Google Home Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+            var box = new WpfUi.MessageBox
+            {
+                Title = "Google Home Setup",
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK,
+            };
+            await box.ShowDialogAsync();
+        }
+
+        // --- Global feature flags (admin on/off + status note) ---
+
+        private async Task InitFeatureFlagsAsync()
+        {
+            await Services.Cloud.CloudFeatureFlags.RefreshAsync();
+            ApplyFeatureFlags();
+        }
+
+        /// <summary>
+        /// Reflect the admin feature flags into each integration panel: show the
+        /// status note (or a default "disabled" message) and enable/disable the
+        /// panel's controls when a feature is turned off globally.
+        /// </summary>
+        private void ApplyFeatureFlags()
+        {
+            ApplyFeatureFlag("alexa", TxtAlexaStatusNote,
+                BtnGenerateAlexaPIN, CmbAlexaServer, BtnLinkAlexa, BtnRevokeAlexa);
+            // Note: the HA copy buttons are intentionally excluded — their enabled
+            // state is owned by token-presence logic (ApplyHaToken), and copying an
+            // existing token/snippet is harmless even when the feature is off.
+            ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
+                BtnGenerateHaToken, BtnRevokeHa);
+            ApplyFeatureFlag("google", TxtGoogleStatusNote,
+                BtnGenerateGooglePIN, CmbGoogleServer, BtnLinkGoogle, BtnRevokeGoogle);
+        }
+
+        private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)
+        {
+            var enabled = Services.Cloud.CloudFeatureFlags.IsEnabled(key);
+            var statusNote = Services.Cloud.CloudFeatureFlags.Note(key);
+
+            // The banner is shown only when the feature is disabled — it uses the
+            // admin status note if one is set, otherwise a default message.
+            if (!enabled)
+            {
+                note.Text = string.IsNullOrWhiteSpace(statusNote)
+                    ? "This integration is currently disabled by the administrator."
+                    : statusNote;
+                note.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                note.Visibility = Visibility.Collapsed;
+            }
+
+            // Disable interaction and dim the controls — WPF-UI's default disabled
+            // styling is too subtle on the dark theme to read as "off", so the
+            // explicit opacity makes the disabled state obvious.
+            foreach (var control in controls)
+            {
+                control.IsEnabled = enabled;
+                control.Opacity = enabled ? 1.0 : 0.4;
+            }
         }
 
         private void TxtCustomMapUrl_TextChanged(object sender, TextChangedEventArgs e)
