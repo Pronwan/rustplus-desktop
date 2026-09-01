@@ -216,6 +216,16 @@ public sealed class CloudTrackerObservation
     [JsonPropertyName("event")] public string? Event { get; init; }
 }
 
+/// <summary>A wipe archive the cloud dropped to make room for a newer one.</summary>
+public sealed record CloudPrunedArchive(string? ServerName, DateTime? WipeStartedAtUtc);
+
+/// <summary>What the cloud made of an append batch.</summary>
+public sealed record CloudAppendResult(
+    int Status,
+    DateTime? LastObservedUtc,
+    string? Reason,
+    IReadOnlyList<CloudPrunedArchive> Pruned);
+
 /// <summary>
 /// New observations for one player-day, above whatever the server last acknowledged.
 ///

@@ -6235,4 +6235,13 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>完整更新日志</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>已删除最旧的 wipe 备份</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>你的方案可保存的 wipe 备份数量有限。为给新的 wipe 腾出空间，最旧的一个已被删除：{0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>未知服务器</value>
+  </data>
 </root>

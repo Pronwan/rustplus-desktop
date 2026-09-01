@@ -5606,4 +5606,13 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>パッチノート全文</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>最も古いワイプのバックアップを削除しました</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>ご利用のプランで保存できるワイプのバックアップ数には上限があります。新しいワイプの分の空きを作るため、最も古いものを削除しました: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>不明なサーバー</value>
+  </data>
 </root>

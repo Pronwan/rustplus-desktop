@@ -6404,4 +6404,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>전체 패치 노트</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>가장 오래된 와이프 백업을 삭제했습니다</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>요금제에 저장할 수 있는 와이프 백업 수에는 제한이 있습니다. 새 와이프를 위한 공간을 확보하기 위해 가장 오래된 백업을 삭제했습니다: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>알 수 없는 서버</value>
+  </data>
 </root>

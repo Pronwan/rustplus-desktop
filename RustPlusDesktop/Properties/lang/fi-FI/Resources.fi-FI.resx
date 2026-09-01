@@ -5606,4 +5606,13 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>Full patch notes</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>Oldest wipe backup deleted</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>Your plan stores a limited number of wipe backups. To make room for the new wipe, the oldest was deleted: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>Unknown server</value>
+  </data>
 </root>

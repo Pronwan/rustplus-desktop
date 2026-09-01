@@ -6487,4 +6487,13 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>Notes de version complètes</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>Sauvegarde de wipe la plus ancienne supprimée</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>Votre formule conserve un nombre limité de sauvegardes de wipe. Pour faire de la place au nouveau wipe, la plus ancienne a été supprimée : {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>Serveur inconnu</value>
+  </data>
 </root>
