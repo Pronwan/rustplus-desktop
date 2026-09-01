@@ -1498,4 +1498,13 @@
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>完整更新日誌</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>已刪除最舊的 wipe 備份</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>你的方案可保存的 wipe 備份數量有限。為了給新的 wipe 騰出空間，最舊的一個已被刪除：{0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>未知伺服器</value>
+  </data>
 </root>

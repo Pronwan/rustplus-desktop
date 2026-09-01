@@ -6487,4 +6487,13 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>Notas de la versión completas</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>Copia de wipe más antigua eliminada</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>Tu plan guarda un número limitado de copias de wipe. Para hacer sitio al nuevo wipe se ha eliminado la más antigua: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>Servidor desconocido</value>
+  </data>
 </root>

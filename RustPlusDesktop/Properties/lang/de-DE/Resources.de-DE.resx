@@ -6565,4 +6565,13 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>Vollständige Patch Notes</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>Ältestes Wipe-Backup gelöscht</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>Dein Plan speichert eine begrenzte Anzahl Wipe-Backups. Um Platz für den neuen Wipe zu schaffen, wurde das älteste gelöscht: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>Unbekannter Server</value>
+  </data>
 </root>

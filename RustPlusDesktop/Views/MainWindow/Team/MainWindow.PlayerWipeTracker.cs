@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,42 @@ public partial class MainWindow
             if (System.Windows.Application.Current?.MainWindow is MainWindow window)
                 window.AppendLog(message);
         }),
+
+        ArchivesPruned = pruned => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.ReportPrunedWipeArchives(pruned);
+        }),
     };
+
+    /// <summary>
+    /// Tells the user which stored wipes were removed to make room for the current one.
+    ///
+    /// Named rather than counted: "an old backup was deleted" invites the question this answers,
+    /// and the wipe date is the only thing that makes it recognisable.
+    /// </summary>
+    internal void ReportPrunedWipeArchives(IReadOnlyList<Services.PlayerWipeTracker.CloudPrunedArchive> pruned)
+    {
+        if (pruned.Count == 0) return;
+
+        var names = pruned.Select(item =>
+        {
+            var server = string.IsNullOrWhiteSpace(item.ServerName)
+                ? RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedUnknownServer") ?? "Unknown server"
+                : item.ServerName!;
+            return item.WipeStartedAtUtc is { } started
+                ? $"{server} ({started.ToLocalTime():d})"
+                : server;
+        });
+
+        ShowInfoSnackbar(
+            RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedTitle") ?? "Oldest wipe backup removed",
+            string.Format(
+                RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedMessage")
+                    ?? "Your plan keeps a limited number of wipe backups. To store the new wipe, the oldest was deleted: {0}",
+                string.Join(", ", names)),
+            Wpf.Ui.Controls.ControlAppearance.Caution);
+    }
 
     // Wipe-map uploading is decoupled from the player wipe tracker: this owns the
     // network upload of the base map + monuments and the 3D-parsed extra monuments.

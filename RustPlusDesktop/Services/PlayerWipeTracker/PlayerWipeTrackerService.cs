@@ -65,6 +65,14 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public Action<string>? Log { get; set; }
 
     /// <summary>
+    /// Raised when the cloud dropped older wipe archives to fit a new one.
+    ///
+    /// Deleting somebody's stored history is not something to do quietly, even when the plan
+    /// limit makes it unavoidable, so the host is told and puts it in front of the user.
+    /// </summary>
+    public Action<IReadOnlyList<CloudPrunedArchive>>? ArchivesPruned { get; set; }
+
+    /// <summary>
     /// One upload at a time.
     ///
     /// A team poll produces an observation per player, each firing its own upload, so four of
@@ -482,17 +490,23 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 return;
             }
 
-            var (status, acknowledged, reason) = await _cloudClient.AppendDayAsync(request).ConfigureAwait(false);
-            if (status is < 200 or >= 300)
+            var result = await _cloudClient.AppendDayAsync(request).ConfigureAwait(false);
+            if (result.Status is < 200 or >= 300)
             {
-                Log?.Invoke($"[wipe-tracker] Cloud backup refused ({status})"
-                    + (string.IsNullOrWhiteSpace(reason) ? "." : $": {reason}."));
+                Log?.Invoke($"[wipe-tracker] Cloud backup refused ({result.Status})"
+                    + (string.IsNullOrWhiteSpace(result.Reason) ? "." : $": {result.Reason}."));
 
                 // Put it back so the next cycle picks the same window up again.
                 _cloudDirty.TryAdd(key, entry);
                 return;
             }
 
+            // A new wipe pushed the oldest backup out of the retained set. Someone's history was
+            // just deleted to make room, which they are entitled to hear about.
+            if (result.Pruned.Count > 0)
+                ArchivesPruned?.Invoke(result.Pruned);
+
+            var acknowledged = result.LastObservedUtc;
             var mark = acknowledged ?? DateTime.Parse(
                 request.Observations[^1].Timestamp, CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind);

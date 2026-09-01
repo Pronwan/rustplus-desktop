@@ -6378,4 +6378,13 @@
   <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
     <value>ملاحظات الإصدار الكاملة</value>
   </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>تم حذف أقدم نسخة احتياطية للوايب</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>تحتفظ خطتك بعدد محدود من النسخ الاحتياطية للوايب. لإفساح المجال للوايب الجديد، تم حذف الأقدم: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>خادم غير معروف</value>
+  </data>
 </root>
