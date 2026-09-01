@@ -530,7 +530,7 @@ public partial class MainWindow
             };
             var json = JsonSerializer.Serialize(payload);
             using var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            using var client = new System.Net.Http.HttpClient();
+            using var client = new System.Net.Http.HttpClient(new Services.TrafficTrackingHttpMessageHandler("Discord Webhook"));
             using var response = await client.PostAsync(profile.DiscordWebhookChatAlertsUrl, content);
             response.EnsureSuccessStatusCode();
         }

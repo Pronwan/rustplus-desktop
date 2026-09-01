@@ -48,7 +48,7 @@ namespace RustPlusDesk.Services
         private const string SendUrl = "https://exp.host/--/api/v2/push/send";
         private const string ReceiptUrl = "https://exp.host/--/api/v2/push/getReceipts";
 
-        private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(20) };
+        private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("FCM Self-Test")) { Timeout = TimeSpan.FromSeconds(20) };
         private static readonly object Gate = new();
 
         private static string? _pendingNonce;

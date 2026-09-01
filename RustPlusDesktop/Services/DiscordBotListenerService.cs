@@ -712,7 +712,7 @@ public class DiscordBotListenerService
                     return;
                 }
 
-                using (var httpClient = new System.Net.Http.HttpClient())
+                using (var httpClient = new System.Net.Http.HttpClient(new TrafficTrackingHttpMessageHandler("Discord Bot")))
                 {
                     var url = $"{RustPlusDesk.Services.Data.DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-bot-interactions";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);

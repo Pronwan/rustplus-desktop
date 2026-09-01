@@ -150,7 +150,7 @@ namespace RustPlusDesk.Services
         {
             try
             {
-                using var http = new System.Net.Http.HttpClient();
+                using var http = new System.Net.Http.HttpClient(new TrafficTrackingHttpMessageHandler("Updates"));
                 http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
                 http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
                 http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
@@ -326,7 +326,7 @@ namespace RustPlusDesk.Services
 
             try
             {
-                using var http = new HttpClient
+                using var http = new HttpClient(new TrafficTrackingHttpMessageHandler("Updates"))
                 {
                     // No wall-clock limit. The default is 100 seconds and it covers the whole
                     // transfer, not just the connect — so a 500 MB installer split into four
@@ -457,7 +457,7 @@ namespace RustPlusDesk.Services
             }
 
             // Same reasoning as above: this is the client that actually moves the bytes.
-            using var http = new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
+            using var http = new HttpClient(new TrafficTrackingHttpMessageHandler("Updates")) { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
             http.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("RustPlusDesk", VersionForCompare.ToString()));
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);

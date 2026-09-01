@@ -185,7 +185,7 @@ namespace RustPlusDesk.Views
 
             try
             {
-                using var http = new HttpClient();
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Clan & Steam"));
                 var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
                 var mName = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]></steamID>", RegexOptions.IgnoreCase);
                 if (mName.Success)
@@ -450,7 +450,7 @@ namespace RustPlusDesk.Views
                 }
 
                 // 2. Fetch Steam profile details (XML contains both steamID/nickname and avatar link)
-                using var http = new HttpClient();
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Clan & Steam"));
                 var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{vm.SteamId}?xml=1");
 
                 // Parse Steam ID Name (Nickname)

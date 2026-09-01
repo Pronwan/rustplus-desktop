@@ -476,4 +476,255 @@ namespace RustPlusDesk.Services
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    public class TrafficTrackingHttpMessageHandler : DelegatingHandler
+    {
+        private readonly string? _category;
+
+        public TrafficTrackingHttpMessageHandler(HttpMessageHandler innerHandler, string? category = null)
+            : base(innerHandler)
+        {
+            _category = category;
+        }
+
+        public TrafficTrackingHttpMessageHandler(string? category = null)
+            : base(new HttpClientHandler())
+        {
+            _category = category;
+        }
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var endpoint = request.RequestUri?.ToString() ?? "HTTP";
+            var category = _category ?? NetworkTrafficExtensions.DetectCategoryFromUri(request.RequestUri);
+            long bytesOut = 0;
+            if (request.Content != null)
+            {
+                try
+                {
+                    if (request.Content.Headers.ContentLength.HasValue)
+                        bytesOut = request.Content.Headers.ContentLength.Value;
+                }
+                catch { }
+            }
+
+            try
+            {
+                var response = await base.SendAsync(request, cancellationToken);
+                sw.Stop();
+                long bytesIn = 0;
+                if (response.Content != null && response.Content.Headers.ContentLength.HasValue)
+                    bytesIn = response.Content.Headers.ContentLength.Value;
+
+                NetworkTrafficMonitor.Instance.Record(
+                    category,
+                    TrafficDirection.Both,
+                    $"{request.Method} {endpoint}",
+                    bytesIn,
+                    bytesOut,
+                    sw.ElapsedMilliseconds,
+                    $"{(int)response.StatusCode} {response.StatusCode}");
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                NetworkTrafficMonitor.Instance.Record(
+                    category,
+                    TrafficDirection.Outbound,
+                    $"{request.Method} {endpoint}",
+                    0,
+                    bytesOut,
+                    sw.ElapsedMilliseconds,
+                    "Error",
+                    ex.Message);
+                throw;
+            }
+        }
+    }
+
+    public static class NetworkTrafficExtensions
+    {
+        public static async Task<HttpResponseMessage> SendTrackedAsync(
+            this HttpClient client,
+            HttpRequestMessage request,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var endpoint = request.RequestUri?.ToString() ?? "HTTP";
+            var detectedCategory = category ?? DetectCategoryFromUri(request.RequestUri);
+            long bytesOut = 0;
+            if (request.Content != null)
+            {
+                try
+                {
+                    if (request.Content.Headers.ContentLength.HasValue)
+                        bytesOut = request.Content.Headers.ContentLength.Value;
+                }
+                catch { }
+            }
+
+            try
+            {
+                var response = await client.SendAsync(request, cancellationToken);
+                sw.Stop();
+                long bytesIn = 0;
+                if (response.Content != null && response.Content.Headers.ContentLength.HasValue)
+                    bytesIn = response.Content.Headers.ContentLength.Value;
+
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Both,
+                    $"{request.Method} {endpoint}",
+                    bytesIn,
+                    bytesOut,
+                    sw.ElapsedMilliseconds,
+                    $"{(int)response.StatusCode} {response.StatusCode}");
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Outbound,
+                    $"{request.Method} {endpoint}",
+                    0,
+                    bytesOut,
+                    sw.ElapsedMilliseconds,
+                    "Error",
+                    ex.Message);
+                throw;
+            }
+        }
+
+        public static async Task<string> GetStringTrackedAsync(
+            this HttpClient client,
+            string uri,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
+            try
+            {
+                var text = await client.GetStringAsync(uri, cancellationToken);
+                sw.Stop();
+                long bytesIn = Encoding.UTF8.GetByteCount(text);
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Inbound,
+                    $"GET {uri}",
+                    bytesIn,
+                    0,
+                    sw.ElapsedMilliseconds,
+                    "200 OK",
+                    $"Received {bytesIn} bytes");
+                return text;
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Outbound,
+                    $"GET {uri}",
+                    0,
+                    0,
+                    sw.ElapsedMilliseconds,
+                    "Error",
+                    ex.Message);
+                throw;
+            }
+        }
+
+        public static async Task<byte[]> GetByteArrayTrackedAsync(
+            this HttpClient client,
+            string uri,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
+            try
+            {
+                var data = await client.GetByteArrayAsync(uri, cancellationToken);
+                sw.Stop();
+                long bytesIn = data.Length;
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Inbound,
+                    $"GET {uri}",
+                    bytesIn,
+                    0,
+                    sw.ElapsedMilliseconds,
+                    "200 OK",
+                    $"Received {bytesIn} bytes");
+                return data;
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                NetworkTrafficMonitor.Instance.Record(
+                    detectedCategory,
+                    TrafficDirection.Outbound,
+                    $"GET {uri}",
+                    0,
+                    0,
+                    sw.ElapsedMilliseconds,
+                    "Error",
+                    ex.Message);
+                throw;
+            }
+        }
+
+        public static async Task<byte[]> GetByteArrayTrackedAsync(
+            this HttpClient client,
+            Uri uri,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetByteArrayTrackedAsync(client, uri.ToString(), category, cancellationToken);
+        }
+
+        public static async Task<HttpResponseMessage> GetTrackedAsync(
+            this HttpClient client,
+            string uri,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Get, uri);
+            return await SendTrackedAsync(client, req, category, cancellationToken);
+        }
+
+        public static async Task<HttpResponseMessage> PostTrackedAsync(
+            this HttpClient client,
+            string uri,
+            HttpContent? content = null,
+            string? category = null,
+            CancellationToken cancellationToken = default)
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Post, uri) { Content = content };
+            return await SendTrackedAsync(client, req, category, cancellationToken);
+        }
+
+        public static string DetectCategoryFromUri(Uri? uri)
+        {
+            if (uri == null) return "HTTP";
+            var host = uri.Host.ToLowerInvariant();
+            if (host.Contains("battlemetrics.com")) return "BattleMetrics";
+            if (host.Contains("rustmaps.com")) return "RustMaps";
+            if (host.Contains("steamcommunity.com") || host.Contains("steampowered.com")) return "Steam Community";
+            if (host.Contains("discord.com") || host.Contains("discordapp.com")) return "Discord";
+            if (host.Contains("telegram.org")) return "Telegram";
+            if (host.Contains("rusthelp.com")) return "Game Icons";
+            if (host.Contains("supabase.co")) return "Cloud API";
+            if (host.Contains("github.com") || host.Contains("githubusercontent.com")) return "Updates & GitHub";
+            return "HTTP";
+        }
+    }
 }

@@ -123,7 +123,7 @@ namespace RustPlusDesk.Views
             if (string.IsNullOrWhiteSpace(text)) return text;
             try
             {
-                using var client = new HttpClient();
+                using var client = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Translation API"));
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={targetLang}&dt=t&q={Uri.EscapeDataString(text)}";
                 var response = await client.GetAsync(url);

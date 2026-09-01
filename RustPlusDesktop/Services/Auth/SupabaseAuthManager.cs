@@ -599,7 +599,7 @@ namespace RustPlusDesk.Services.Auth
                                $"&scopes={Uri.EscapeDataString("identify guilds guilds.members.read email")}" +
                                "&skip_http_redirect=true";
 
-                using var httpClient = new HttpClient();
+                using var httpClient = new HttpClient(new TrafficTrackingHttpMessageHandler("Cloud API"));
                 using var request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?{query}");
                 request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
@@ -1060,7 +1060,7 @@ namespace RustPlusDesk.Services.Auth
                     return;
                 }
 
-                using (var httpClient = new System.Net.Http.HttpClient())
+                using (var httpClient = new System.Net.Http.HttpClient(new TrafficTrackingHttpMessageHandler("Cloud API")))
                 {
                     var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-roles";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
@@ -1809,7 +1809,7 @@ namespace RustPlusDesk.Services.Auth
             return stillBlocked;
         }
 
-        private static readonly HttpClient Http = new();
+        private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Cloud API"));
 
         // ── cloud platform variants (Phase 11 slice 1) ─────────────────────────
         // Self-contained cloud writes routed to /api/v1 when the cloud platform is
