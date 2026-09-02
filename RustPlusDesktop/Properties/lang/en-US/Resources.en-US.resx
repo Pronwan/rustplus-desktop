@@ -6224,4 +6224,25 @@ You can find more information on the server's official website:
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>Unknown server</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>One wipe backup slot left</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>{0} of {1} wipe backups are in use. When the next wipe starts, the oldest is deleted automatically — pick a different one under Wipe Tracker · Cloud restore if you would rather keep it.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Delete backup</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Delete wipe backup</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>Permanently delete the cloud backup for {0} ({1})? This cannot be undone.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Wipe backup deleted.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>Could not delete the wipe backup.</value>
+  </data>
 </root>

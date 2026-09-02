@@ -6496,4 +6496,25 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>Servidor desconocido</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>Queda un espacio de copia de wipe</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>{0} de {1} copias de wipe en uso. Cuando empiece el próximo wipe se eliminará la más antigua automáticamente: elige otra en Wipe Tracker · Cloud restore si prefieres conservarla.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Eliminar copia</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Eliminar copia de wipe</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>¿Eliminar definitivamente la copia en la nube de {0} ({1})? Esta acción no se puede deshacer.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Copia de wipe eliminada.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>No se ha podido eliminar la copia de wipe.</value>
+  </data>
 </root>

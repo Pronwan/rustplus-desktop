@@ -6574,4 +6574,25 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>Unbekannter Server</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>Nur noch ein Wipe-Backup-Platz frei</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>{0} von {1} Wipe-Backups belegt. Beim nächsten Wipe wird das älteste automatisch gelöscht — wähle unter Wipe Tracker · Cloud restore ein anderes aus, wenn du es lieber behalten möchtest.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Backup löschen</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Wipe-Backup löschen</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>Cloud-Backup für {0} ({1}) endgültig löschen? Das lässt sich nicht rückgängig machen.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Wipe-Backup gelöscht.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>Das Wipe-Backup konnte nicht gelöscht werden.</value>
+  </data>
 </root>

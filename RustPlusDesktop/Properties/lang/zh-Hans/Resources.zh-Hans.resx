@@ -1236,4 +1236,25 @@
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>未知服务器</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>wipe 备份仅剩一个空位</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>已使用 {1} 个 wipe 备份中的 {0} 个。下一次 wipe 开始时，最旧的一个会被自动删除——若想保留它，请在 Wipe Tracker · Cloud restore 中选择删除其他备份。</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>删除备份</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>删除 wipe 备份</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>要永久删除 {0}（{1}）的云备份吗？此操作无法撤销。</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>已删除 wipe 备份。</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>无法删除该 wipe 备份。</value>
+  </data>
 </root>

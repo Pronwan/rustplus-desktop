@@ -72,6 +72,11 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     /// </summary>
     public Action<IReadOnlyList<CloudPrunedArchive>>? ArchivesPruned { get; set; }
 
+    /// <summary>Raised once when only one archive slot is left, so the user can still choose.</summary>
+    public Action<CloudArchiveUsage>? ArchiveLimitNearlyReached { get; set; }
+
+    private bool _lastSlotWarningShown;
+
     /// <summary>
     /// One upload at a time.
     ///
@@ -230,6 +235,27 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         if (!Capabilities.CanUseCloudSync)
             return Array.Empty<CloudArchiveSummary>();
         return await _cloudClient.GetArchiveSummariesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Removes one stored wipe from the cloud, freeing a slot.
+    ///
+    /// The point of offering this is choice: when the allowance is full the next wipe silently
+    /// takes the oldest, and that is rarely the one somebody would have picked.
+    /// </summary>
+    public async Task<bool> DeleteCloudArchiveAsync(string archiveId, CancellationToken cancellationToken = default)
+    {
+        if (!Capabilities.CanUseCloudSync || string.IsNullOrWhiteSpace(archiveId))
+            return false;
+
+        var status = await _cloudClient.DeleteArchiveAsync(archiveId, cancellationToken).ConfigureAwait(false);
+        var removed = status is >= 200 and < 300;
+
+        // Freeing a slot makes the "one slot left" warning meaningful again.
+        if (removed)
+            _lastSlotWarningShown = false;
+
+        return removed;
     }
 
     public async Task<CloudRestoreResult> RestoreCloudArchiveAsync(
@@ -505,6 +531,15 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             // just deleted to make room, which they are entitled to hear about.
             if (result.Pruned.Count > 0)
                 ArchivesPruned?.Invoke(result.Pruned);
+
+            // One slot left. Said once per session, and only while it is still a warning rather
+            // than a report: the point is to let someone choose which wipe goes, calmly, days
+            // before a wipe forces the decision at the worst possible moment.
+            if (result.Usage is { IsLastSlot: true } usage && !_lastSlotWarningShown)
+            {
+                _lastSlotWarningShown = true;
+                ArchiveLimitNearlyReached?.Invoke(usage);
+            }
 
             var acknowledged = result.LastObservedUtc;
             var mark = acknowledged ?? DateTime.Parse(
