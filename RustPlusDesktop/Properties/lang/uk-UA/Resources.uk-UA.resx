@@ -5646,7 +5646,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Translate message</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>Nothing to translate — the message is already in your language, or the translation service could not be reached.</value>
+    <value>This message is already in your language.</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>Translate message</value>
@@ -5704,5 +5704,11 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>The original message is no longer in the visible history.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>The translation service could not be reached. Try again in a moment.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>Translate</value>
   </data>
 </root>

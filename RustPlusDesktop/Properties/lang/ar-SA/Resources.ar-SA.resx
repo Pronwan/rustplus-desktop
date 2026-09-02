@@ -6418,7 +6418,7 @@
     <value>ترجمة الرسالة</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>لا شيء للترجمة — الرسالة بلغتك بالفعل، أو تعذّر الوصول إلى خدمة الترجمة.</value>
+    <value>هذه الرسالة بلغتك بالفعل.</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>ترجمة الرسالة</value>
@@ -6476,5 +6476,11 @@
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>الرسالة الأصلية لم تعد ضمن السجل الظاهر.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>تعذّر الوصول إلى خدمة الترجمة. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>ترجمة</value>
   </data>
 </root>

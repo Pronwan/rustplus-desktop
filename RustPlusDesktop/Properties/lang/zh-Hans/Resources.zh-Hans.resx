@@ -1267,7 +1267,7 @@
     <value>翻译消息</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>没有可翻译的内容——消息已是你的语言，或无法连接翻译服务。</value>
+    <value>这条消息已经是你的语言。</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>翻译消息</value>
@@ -1325,5 +1325,11 @@
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>原始消息已不在可见的聊天记录中。</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>无法连接翻译服务，请稍后再试。</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>翻译</value>
   </data>
 </root>

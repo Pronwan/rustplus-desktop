@@ -6527,7 +6527,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Traduire le message</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>Rien à traduire — le message est déjà dans votre langue, ou le service de traduction est injoignable.</value>
+    <value>Ce message est déjà dans votre langue.</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>Traduire le message</value>
@@ -6585,5 +6585,11 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>Le message d'origine n'est plus dans l'historique visible.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>Le service de traduction est injoignable. Réessayez dans un instant.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>Traduire</value>
   </data>
 </root>

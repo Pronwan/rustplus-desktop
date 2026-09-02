@@ -621,6 +621,28 @@
                             </StackPanel>
                         </Border>
 
+                        <!--
+                            Asked before the first translation, because it sends the message text
+                            to Google. In the panel rather than a system dialog: a modal box over
+                            the map for a question this small is a jolt, and the app has its own
+                            look for exactly this.
+                        -->
+                        <Border x:Name="ChatTranslateConsentPanel" Visibility="Collapsed" Margin="0,0,0,8"
+                                Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource ChatTranslateConsentTitle}" Foreground="{StaticResource LfgText}"
+                                           FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock Text="{DynamicResource ChatTranslateConsentBody}" Foreground="{StaticResource LfgMuted}"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <ui:Button x:Name="BtnTranslateConsentAccept" Click="BtnTranslateConsentAccept_Click" Appearance="Primary"
+                                               Content="{DynamicResource ChatTranslateConsentAccept}" Margin="0,0,8,0" />
+                                    <ui:Button x:Name="BtnTranslateConsentCancel" Click="BtnTranslateConsentCancel_Click" Appearance="Secondary"
+                                               Content="{DynamicResource ChatRulesCancel}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
                         <!--  Why the last line did not go through. One sentence, above the box.  -->
                         <TextBlock x:Name="ChatRefusal" Visibility="Collapsed" Margin="0,0,0,6"
                                    Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />

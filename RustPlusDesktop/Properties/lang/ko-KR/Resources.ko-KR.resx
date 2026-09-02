@@ -6444,7 +6444,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>메시지 번역</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>번역할 내용이 없습니다. 메시지가 이미 사용 중인 언어이거나 번역 서비스에 연결하지 못했습니다.</value>
+    <value>이 메시지는 이미 사용 중인 언어입니다.</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>메시지 번역</value>
@@ -6502,5 +6502,11 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>원본 메시지가 표시된 기록에 더 이상 없습니다.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>번역 서비스에 연결하지 못했습니다. 잠시 후 다시 시도하세요.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>번역</value>
   </data>
 </root>
