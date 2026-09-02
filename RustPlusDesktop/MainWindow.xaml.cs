@@ -493,7 +493,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         InitializeAppSettings();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
-        WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        // Skip Mica when the user has enabled "Reduce UI Effects" (helps with
+        // AMD CPU systems where DWM composition causes input lag / freezes).
+        if (!TrackingService.ReduceUiEffects)
+        {
+            WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        }
         // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         
@@ -1760,6 +1765,18 @@ public partial class MainWindow : WpfUi.FluentWindow
     private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
     private static readonly HashSet<string> sPendingDownloads = new();
     private static readonly SemaphoreSlim sDownloadSemaphore = new SemaphoreSlim(10, 10);
+
+    /// <summary>
+    /// Icons both sources answered 404 for. Remembered across restarts, because an icon that does
+    /// not exist today will not exist tomorrow either — without this the same handful is requested
+    /// on every single launch, twice each, forever.
+    ///
+    /// Only permanent answers land here. A timeout or a 500 means "not now", and those are tried
+    /// again next time.
+    /// </summary>
+    private static readonly HashSet<string> sMissingIcons = new(StringComparer.OrdinalIgnoreCase);
+    private static string? sMissingIconsPath;
+    private static readonly object sMissingIconsGate = new();
     private static bool sNewDbLoaded = false;
     private static string sNewDbSource = "(unbekannt)";
     private static readonly string s_cacheDir = System.IO.Path.Combine(
@@ -4978,8 +4995,54 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         System.Diagnostics.Debug.WriteLine(message);
     }
 
+    /// <summary>Loads the remembered 404s once, from beside the icons they belong to.</summary>
+    private static void EnsureMissingIconsLoaded(string targetPath)
+    {
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIconsPath != null) return;
+
+            try
+            {
+                var directory = System.IO.Path.GetDirectoryName(targetPath);
+                if (string.IsNullOrEmpty(directory)) return;
+
+                sMissingIconsPath = System.IO.Path.Combine(directory, ".missing-icons.txt");
+                if (File.Exists(sMissingIconsPath))
+                {
+                    foreach (var line in File.ReadAllLines(sMissingIconsPath))
+                    {
+                        if (!string.IsNullOrWhiteSpace(line)) sMissingIcons.Add(line.Trim());
+                    }
+                }
+            }
+            catch
+            {
+                // Without the list every launch simply retries, which is the old behaviour.
+            }
+        }
+    }
+
+    private static void RememberMissingIcon(string url)
+    {
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIconsPath == null || !sMissingIcons.Add(url)) return;
+
+            try { File.AppendAllText(sMissingIconsPath, url + Environment.NewLine); }
+            catch { /* remembered for this session at least */ }
+        }
+    }
+
     private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
     {
+        EnsureMissingIconsLoaded(targetPath);
+
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIcons.Contains(url)) return;
+        }
+
         lock (sPendingDownloads)
         {
             if (!sPendingDownloads.Add(url)) return;
@@ -4990,6 +5053,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _ = Task.Run(async () =>
         {
             await sDownloadSemaphore.WaitAsync().ConfigureAwait(false);
+
+            var succeeded = false;
+            var primaryGone = false;
+            var fallbackGone = false;
+
             try
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
@@ -5011,9 +5079,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
                     LogMessage($"[icon-download] Successfully downloaded optimized icon: {url}");
+                    succeeded = true;
                 }
                 else
                 {
+                    // A 404 or 410 is the source saying the icon is not there, and it will say the
+                    // same next launch. Anything else — a timeout, a 5xx — is worth retrying.
+                    if (resp != null && (resp.StatusCode == System.Net.HttpStatusCode.NotFound
+                        || resp.StatusCode == System.Net.HttpStatusCode.Gone))
+                    {
+                        primaryGone = true;
+                    }
+
                     if (resp != null)
                     {
                         LogMessage($"[icon-download] Download failed (status): {url} -> {resp.StatusCode} ({(int)resp.StatusCode})");
@@ -5041,10 +5118,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                             var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                             await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
                             LogMessage($"[icon-download] Successfully downloaded fallback icon: {fallbackUrl}");
+                            succeeded = true;
                         }
                         else if (respF != null)
                         {
                             LogMessage($"[icon-download] Fallback failed (status): {fallbackUrl} -> {respF.StatusCode} ({(int)respF.StatusCode})");
+                            if (respF.StatusCode == System.Net.HttpStatusCode.NotFound
+                                || respF.StatusCode == System.Net.HttpStatusCode.Gone)
+                            {
+                                fallbackGone = true;
+                            }
                         }
                     }
                 }
@@ -5060,12 +5143,28 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     sPendingDownloads.Remove(url);
                 }
-                UpdateIconProgress(1); // Fertig
+
+                // Both sources said the icon does not exist. Writing that down is what stops the
+                // same requests going out on every launch from now on.
+                if (!succeeded && primaryGone && (fallbackUrl == null || fallbackGone))
+                {
+                    RememberMissingIcon(url);
+                }
+
+                UpdateIconProgress(1, succeeded);
             }
         });
     }
 
-    private static void UpdateIconProgress(int deltaFinish)
+    private static int sIconDownloadsFailed;
+
+    /// <summary>
+    /// Records one finished attempt. <paramref name="succeeded"/> says whether an icon actually
+    /// arrived — this used to be called from a finally block with no idea either way, so nine
+    /// consecutive 404s were reported as "All icons downloaded (9/9)". A log line that cheerful
+    /// about a complete failure is worse than no line at all.
+    /// </summary>
+    private static void UpdateIconProgress(int deltaFinish, bool succeeded = false)
     {
         Application.Current?.Dispatcher?.BeginInvoke(() =>
         {
@@ -5074,10 +5173,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (deltaFinish > 0)
                 {
                     mw._vm.IconsDownloaded++;
+                    if (!succeeded) sIconDownloadsFailed++;
+
                     IconsUpdated?.Invoke();
                     if (mw._vm.IconsDownloaded == mw._vm.IconsTotal && mw._vm.IconsTotal > 0)
                     {
-                        mw.AppendLog($"[icon-download] All icons downloaded ({mw._vm.IconsDownloaded}/{mw._vm.IconsTotal})");
+                        var total = mw._vm.IconsTotal;
+                        var ok = total - sIconDownloadsFailed;
+                        mw.AppendLog(sIconDownloadsFailed == 0
+                            ? $"[icon-download] All icons downloaded ({ok}/{total})"
+                            : $"[icon-download] {ok}/{total} icons downloaded, {sIconDownloadsFailed} unavailable (they will not be requested again)");
+                        sIconDownloadsFailed = 0;
                     }
                 }
                 else
