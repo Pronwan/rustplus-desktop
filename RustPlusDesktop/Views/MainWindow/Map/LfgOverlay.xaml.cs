@@ -1379,6 +1379,18 @@ public partial class LfgOverlay : UserControl
 
     private async void TxtChat_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
+        // Backspace in an empty box drops the reply instead of doing nothing — the gesture people
+        // already have from every other chat. Only when the box is empty, so it never eats a
+        // keystroke someone meant for their text.
+        if (e.Key == System.Windows.Input.Key.Back
+            && _replyTarget is not null
+            && string.IsNullOrEmpty(TxtChat.Text))
+        {
+            e.Handled = true;
+            ClearReplyTarget();
+            return;
+        }
+
         if (e.Key != System.Windows.Input.Key.Enter) return;
         if (System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Shift)) return;
 
@@ -1404,13 +1416,19 @@ public partial class LfgOverlay : UserControl
         ChatRefusal.Visibility = Visibility.Collapsed;
         TxtChat.Text = "";
 
-        var result = await SocialApi.PostChatAsync(body!, _room).ConfigureAwait(true);
+        var replyTo = _replyTarget;
+        ClearReplyTarget();
+
+        var result = await SocialApi.PostChatAsync(body!, _room, replyTo?.Id).ConfigureAwait(true);
 
         if (result != ChatPostResult.Ok)
         {
             // Put the text back. Whatever the reason, the words are still worth keeping - and for
-            // a link the whole point is that they can rewrite it.
+            // a link the whole point is that they can rewrite it. The reply target comes back with
+            // it, since retyping the message and losing what it answered would be its own annoyance.
             TxtChat.Text = body;
+            _replyTarget = replyTo;
+            ShowReplyBar();
             ShowChatRefusal(result);
         }
         else
@@ -1971,6 +1989,72 @@ public partial class LfgOverlay : UserControl
         // Existing lines were rendered with the old colour; a reload is the cheapest way to see
         // the change applied to your own past messages too.
         await LoadChatAsync().ConfigureAwait(true);
+    }
+
+    // ====== REPLIES ======
+
+    /// <summary>The message the next line will answer, or null when it answers nothing.</summary>
+    private Models.ChatLine? _replyTarget;
+
+    private void ChatReply_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
+
+        _replyTarget = line;
+        ShowReplyBar();
+        TxtChat.Focus();
+        TxtChat.CaretIndex = TxtChat.Text?.Length ?? 0;
+    }
+
+    private void ChatCancelReply_Click(object sender, RoutedEventArgs e)
+    {
+        ClearReplyTarget();
+        TxtChat.Focus();
+    }
+
+    private void ShowReplyBar()
+    {
+        if (_replyTarget is null)
+        {
+            ChatReplyBar.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        ChatReplyBarName.Text = _replyTarget.SenderName;
+        ChatReplyBarExcerpt.Text = _replyTarget.Body;
+        ChatReplyBar.Visibility = Visibility.Visible;
+    }
+
+    private void ClearReplyTarget()
+    {
+        _replyTarget = null;
+        ChatReplyBar.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>
+    /// Scrolls to the message a reply answers and flashes it, so the jump is visible.
+    ///
+    /// Only the loaded window is searched. Older originals are simply not there any more, and
+    /// saying nothing happened is better than pretending to look further.
+    /// </summary>
+    private void ChatJumpToOriginal_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not string originalId || string.IsNullOrEmpty(originalId)) return;
+
+        var target = _chatLines.FirstOrDefault(line => line.Id == originalId);
+        if (target is null)
+        {
+            System.Windows.MessageBox.Show(
+                Helpers.Loc.TextOrNull("ChatReplyOriginalGone")
+                    ?? "The original message is no longer in the visible history.",
+                Helpers.Loc.TextOrNull("ChatReply") ?? "Reply",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+            return;
+        }
+
+        var container = ChatList.ItemContainerGenerator.ContainerFromItem(target) as FrameworkElement;
+        container?.BringIntoView();
     }
 
     /// <summary>Copies the message body — the one action that makes sense on your own lines too.</summary>

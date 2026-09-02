@@ -6322,4 +6322,16 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>橙色</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>回复</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>取消回复</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>消息已删除</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>原始消息已不在可见的聊天记录中。</value>
+  </data>
 </root>

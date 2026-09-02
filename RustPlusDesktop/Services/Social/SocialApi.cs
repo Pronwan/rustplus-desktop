@@ -71,6 +71,30 @@ public static class ChatRooms
 public static class SocialApi
 {
     /// <summary>
+    /// The quoted line above a reply, or null when the message answers nothing.
+    ///
+    /// A reference with no quote is kept rather than discarded: it means the original was
+    /// deleted, and the view says so instead of quietly showing an ordinary message.
+    /// </summary>
+    internal static Models.ChatReplyReference? ParseReply(JsonElement row)
+    {
+        if (!row.TryGetProperty("reply_to", out var reply) || reply.ValueKind != JsonValueKind.Object)
+            return null;
+
+        var id = Str(reply, "id");
+        if (string.IsNullOrEmpty(id)) return null;
+
+        var quote = reply.TryGetProperty("quote", out var q) && q.ValueKind == JsonValueKind.Object ? q : default;
+
+        return new Models.ChatReplyReference
+        {
+            Id = id!,
+            SenderName = Str(quote, "sender_name"),
+            Excerpt = Str(quote, "excerpt"),
+        };
+    }
+
+    /// <summary>
     /// Whether a sender id is the signed-in account. Shared by both paths that build chat lines,
     /// so a message looks the same whether it arrived by poll or over the socket.
     /// </summary>
@@ -654,6 +678,7 @@ public static class SocialApi
                         IsSupporter = isSupporter,
                         NameColor = Str(sender, "name_color"),
                         IsMine = IsOwnSender(Str(row, "sender_id") ?? Str(sender, "id")),
+                        ReplyTo = ParseReply(row),
                         Roles = roles,
                         SentAt = Date(row, "created_at"),
                         SentAtIso = Str(row, "created_at"),
@@ -707,12 +732,12 @@ public static class SocialApi
     /// waiting, one by rewriting the message. Collapsing them into "it did not work" leaves the
     /// user guessing which, and the guess is usually "the app is broken".
     /// </summary>
-    public static async Task<ChatPostResult> PostChatAsync(string body, string room = ChatRooms.Public)
+    public static async Task<ChatPostResult> PostChatAsync(string body, string room = ChatRooms.Public, string? replyToId = null)
     {
         try
         {
             bool isPremium = Auth.SupabaseAuthManager.IsPremium;
-            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, room, is_supporter = isPremium, is_premium = isPremium })
+            await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, room, reply_to = replyToId, is_supporter = isPremium, is_premium = isPremium })
                 .ConfigureAwait(false);
 
             return ChatPostResult.Ok;

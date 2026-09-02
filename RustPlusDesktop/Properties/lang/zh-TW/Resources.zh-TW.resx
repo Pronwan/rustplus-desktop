@@ -1585,4 +1585,16 @@
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>橙色</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>回覆</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>取消回覆</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>訊息已刪除</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>原始訊息已不在可見的聊天記錄中。</value>
+  </data>
 </root>
