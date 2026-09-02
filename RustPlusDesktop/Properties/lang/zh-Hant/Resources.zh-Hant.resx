@@ -1005,4 +1005,61 @@
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>無法刪除該 wipe 備份。</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>複製文字</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>使用 Google 翻譯</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>翻譯訊息</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>沒有可翻譯的內容——訊息已是你的語言，或無法連線至翻譯服務。</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>翻譯訊息</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>翻譯會將訊息文字傳送至 Google 翻譯。是否繼續？</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>你的名字顏色</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>名字顏色</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>使用預設顏色</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>訊息顏色</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>無法儲存該顏色。</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>琥珀</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>玫瑰</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>紫羅蘭</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>天藍</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>翡翠</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>青檸</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>橙色</value>
+  </data>
 </root>

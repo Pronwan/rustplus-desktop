@@ -6517,4 +6517,61 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>Не удалось удалить копию вайпа.</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>Копировать текст</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>Перевести через Google</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>Перевод сообщения</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>Переводить нечего — сообщение уже на вашем языке, либо служба перевода недоступна.</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>Перевод сообщения</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>При переводе текст сообщения отправляется в Google Переводчик. Продолжить?</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>Ваш цвет имени</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>Цвет имени</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>Использовать цвет по умолчанию</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>Цвет сообщений</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>Не удалось сохранить цвет.</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>Янтарный</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>Розовый</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>Фиолетовый</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>Небесный</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>Изумрудный</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>Лаймовый</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>Бирюзовый</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>Оранжевый</value>
+  </data>
 </root>

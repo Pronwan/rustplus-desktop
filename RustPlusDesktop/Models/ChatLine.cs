@@ -175,10 +175,92 @@ public sealed class ChatLine
 
     public Thickness GroupMargin => ShowHeader ? new Thickness(0, 10, 0, 2) : new Thickness(0, 1, 0, 1);
 
-    public Brush SenderNameBrush => IsSupporter ? SupporterNameBrush : DefaultSenderBrush;
+    /// <summary>
+    /// Whether this line is the reader's own.
+    ///
+    /// Set where the line is built rather than read from the auth service here, so the model stays
+    /// a model. It drives the context menu: reporting, blocking or befriending yourself are all
+    /// offers that make no sense, and offering them anyway makes the menu look untended.
+    /// </summary>
+    public bool IsMine { get; init; }
+
+    /// <summary>Convenience for XAML, which cannot negate a bool in a binding.</summary>
+    public bool IsNotMine => !IsMine;
+
+    /// <summary>
+    /// The supporter's chosen name colour, as one of the palette names the platform accepts, or
+    /// null for the default. Already cleared server-side when the plan has lapsed.
+    /// </summary>
+    public string? NameColor { get; init; }
+
+    public Brush SenderNameBrush => ResolveNameBrush(NameColor)
+        ?? (IsSupporter ? SupporterNameBrush : DefaultSenderBrush);
 
     private static readonly Brush SupporterNameBrush = CreateFrozenBrush(0xFF, 0xFF, 0xD1, 0x66); // Warm gold
     private static readonly Brush DefaultSenderBrush = CreateFrozenBrush(0xFF, 0x60, 0xCD, 0xFF);   // Crisp vibrant cyan
+
+    /// <summary>
+    /// The shipped name palette.
+    ///
+    /// Every one is picked to stay readable on both the dark chat surface and the light theme —
+    /// mid-range in lightness, none of them so pale they vanish on white or so dark they sink into
+    /// the bubble. A free-form colour picker would not have that property, which is why the
+    /// platform accepts these eight names and nothing else.
+    /// </summary>
+    public static readonly IReadOnlyList<(string Key, Color Color)> NameColorPalette = new[]
+    {
+        ("amber", Color.FromRgb(0xE8, 0xA3, 0x3D)),
+        ("rose", Color.FromRgb(0xF0, 0x6E, 0x8E)),
+        ("violet", Color.FromRgb(0xA9, 0x8B, 0xF5)),
+        ("sky", Color.FromRgb(0x4E, 0xB4, 0xF0)),
+        ("emerald", Color.FromRgb(0x3F, 0xC1, 0x8B)),
+        ("lime", Color.FromRgb(0x93, 0xC5, 0x3D)),
+        ("cyan", Color.FromRgb(0x35, 0xBD, 0xC4)),
+        ("orange", Color.FromRgb(0xEF, 0x8A, 0x4B)),
+    };
+
+    private static readonly Dictionary<string, Brush> NameColorBrushes = BuildNameColorBrushes();
+
+    private static Dictionary<string, Brush> BuildNameColorBrushes()
+    {
+        var map = new Dictionary<string, Brush>(StringComparer.OrdinalIgnoreCase);
+        foreach (var (key, color) in NameColorPalette)
+        {
+            var brush = new SolidColorBrush(color);
+            brush.Freeze();
+            map[key] = brush;
+        }
+        return map;
+    }
+
+    /// <summary>Null for an unset or unrecognised name, so the caller falls back.</summary>
+    public static Brush? ResolveNameBrush(string? key)
+        => !string.IsNullOrWhiteSpace(key) && NameColorBrushes.TryGetValue(key!, out var brush) ? brush : null;
+
+    /// <summary>
+    /// The same line with different text, for showing a translation in place.
+    ///
+    /// A copy rather than a mutation because the properties are init-only and the view rebinds a
+    /// fresh array on every render anyway — there is nothing to notify.
+    /// </summary>
+    public ChatLine WithBody(string body) => new()
+    {
+        Id = Id,
+        Body = body,
+        SenderId = SenderId,
+        SenderName = SenderName,
+        AvatarUrl = AvatarUrl,
+        SteamId = SteamId,
+        IsSupporter = IsSupporter,
+        NameColor = NameColor,
+        IsMine = IsMine,
+        Roles = Roles,
+        SentAt = SentAt,
+        SentAtIso = SentAtIso,
+        ShowHeader = ShowHeader,
+        IsSystemSanction = IsSystemSanction,
+        SanctionEvent = SanctionEvent,
+    };
 
     public bool IsSystemSanction { get; init; }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace RustPlusDesk.Views;
 
@@ -202,6 +203,8 @@ public partial class LfgOverlay : UserControl
             Body.Visibility = Visibility.Collapsed;
             return;
         }
+
+        ApplyNameColorControl(settings, Services.Auth.SupabaseAuthManager.IsPremium);
 
         ClosedGate.Visibility = Visibility.Collapsed;
         _hasLfgConsent = settings?.LfgConsent ?? false;
@@ -1882,6 +1885,146 @@ public partial class LfgOverlay : UserControl
     {
         ProfileSheet.Visibility = Visibility.Collapsed;
         _profileEntry = null;
+    }
+
+    // ====== SUPPORTER NAME COLOUR ======
+
+    /// <summary>One palette entry, as the swatch grid binds it.</summary>
+    private sealed record NameColorChoice(string Key, string Label, Brush Swatch, Brush Selection);
+
+    private static readonly Brush NameColorSelected = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+    private static readonly Brush NameColorUnselected = new SolidColorBrush(Colors.Transparent);
+
+    private string? _myNameColor;
+
+    /// <summary>
+    /// Shows the colour button for supporters and points it at the colour in use.
+    ///
+    /// Called wherever the settings are refreshed, since the answer changes with the plan and with
+    /// the user's own choice.
+    /// </summary>
+    private void ApplyNameColorControl(SocialSettings? settings, bool isSupporter)
+    {
+        if (BtnChatNameColor is null) return;
+
+        BtnChatNameColor.Visibility = isSupporter ? Visibility.Visible : Visibility.Collapsed;
+        if (!isSupporter) return;
+
+        _myNameColor = settings?.NameColor;
+        BtnChatNameColor.Tag = Models.ChatLine.ResolveNameBrush(_myNameColor)
+            ?? new SolidColorBrush(Color.FromRgb(0x8A, 0x95, 0xA5));
+    }
+
+    private void BtnChatNameColor_Click(object sender, RoutedEventArgs e)
+    {
+        if (ChatNameColorList is null || ChatNameColorPopup is null) return;
+
+        ChatNameColorList.ItemsSource = Models.ChatLine.NameColorPalette
+            .Select(entry =>
+            {
+                var brush = new SolidColorBrush(entry.Color);
+                brush.Freeze();
+                return new NameColorChoice(
+                    entry.Key,
+                    Helpers.Loc.TextOrNull("ChatNameColor_" + entry.Key) ?? entry.Key,
+                    brush,
+                    string.Equals(entry.Key, _myNameColor, StringComparison.OrdinalIgnoreCase)
+                        ? NameColorSelected
+                        : NameColorUnselected);
+            })
+            .ToArray();
+
+        ChatNameColorPopup.IsOpen = true;
+    }
+
+    private async void ChatNameColorSwatch_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not string key) return;
+        await ApplyNameColorChoiceAsync(key).ConfigureAwait(true);
+    }
+
+    private async void ChatNameColorReset_Click(object sender, RoutedEventArgs e)
+        => await ApplyNameColorChoiceAsync(null).ConfigureAwait(true);
+
+    private async Task ApplyNameColorChoiceAsync(string? key)
+    {
+        if (ChatNameColorPopup is not null) ChatNameColorPopup.IsOpen = false;
+
+        var ok = await SocialApi.SetNameColorAsync(key).ConfigureAwait(true);
+        if (!ok)
+        {
+            System.Windows.MessageBox.Show(
+                Helpers.Loc.TextOrNull("ChatNameColorFailed") ?? "The colour could not be saved.",
+                Helpers.Loc.TextOrNull("ChatNameColorTitle") ?? "Message colour",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        _myNameColor = key;
+        if (BtnChatNameColor is not null)
+        {
+            BtnChatNameColor.Tag = Models.ChatLine.ResolveNameBrush(key)
+                ?? new SolidColorBrush(Color.FromRgb(0x8A, 0x95, 0xA5));
+        }
+
+        // Existing lines were rendered with the old colour; a reload is the cheapest way to see
+        // the change applied to your own past messages too.
+        await LoadChatAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>Copies the message body — the one action that makes sense on your own lines too.</summary>
+    private void ChatCopyText_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || string.IsNullOrEmpty(line.Body)) return;
+
+        try { System.Windows.Clipboard.SetText(line.Body); } catch { /* clipboard can be held by another app */ }
+    }
+
+    /// <summary>
+    /// Translates one message into the app's language, in place.
+    ///
+    /// Asks for consent the first time, because this sends the message text to Google — the same
+    /// consent the patch notes ask for, and the same answer, so agreeing once covers both.
+    /// </summary>
+    private async void ChatTranslate_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || string.IsNullOrWhiteSpace(line.Body)) return;
+
+        if (!Services.TrackingService.TranslationConsentGiven)
+        {
+            var consent = System.Windows.MessageBox.Show(
+                Helpers.Loc.TextOrNull("ChatTranslateConsentBody")
+                    ?? "Translating sends the message text to Google Translate. Continue?",
+                Helpers.Loc.TextOrNull("ChatTranslateConsentTitle") ?? "Translate message",
+                System.Windows.MessageBoxButton.YesNo,
+                System.Windows.MessageBoxImage.Question);
+
+            if (consent != System.Windows.MessageBoxResult.Yes) return;
+            Services.TrackingService.TranslationConsentGiven = true;
+        }
+
+        var original = line.Body;
+        var translated = await Services.TranslationService.TranslateAsync(original).ConfigureAwait(true);
+
+        // Unchanged text means the call failed or the message was already in this language.
+        // Replacing the line with the same words would look like nothing happened, so say so.
+        if (string.Equals(translated, original, StringComparison.Ordinal))
+        {
+            System.Windows.MessageBox.Show(
+                Helpers.Loc.TextOrNull("ChatTranslateUnchanged")
+                    ?? "Nothing to translate — the message is already in your language, or the translation service could not be reached.",
+                Helpers.Loc.TextOrNull("ChatTranslateTitle") ?? "Translate message",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+            return;
+        }
+
+        var index = _chatLines.FindIndex(item => item.Id == line.Id);
+        if (index < 0) return;
+
+        _chatLines[index] = line.WithBody(translated);
+        ShowChatLines();
     }
 
     private async void ChatBlock_Click(object sender, RoutedEventArgs e)

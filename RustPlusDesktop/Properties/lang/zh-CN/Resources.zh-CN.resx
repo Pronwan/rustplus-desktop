@@ -6265,4 +6265,61 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>无法删除该 wipe 备份。</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>复制文本</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>使用 Google 翻译</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>翻译消息</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>没有可翻译的内容——消息已是你的语言，或无法连接翻译服务。</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>翻译消息</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>翻译会将消息文本发送至 Google 翻译。是否继续？</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>你的名字颜色</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>名字颜色</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>使用默认颜色</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>消息颜色</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>无法保存该颜色。</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>琥珀</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>玫瑰</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>紫罗兰</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>天蓝</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>翡翠</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>青柠</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>橙色</value>
+  </data>
 </root>

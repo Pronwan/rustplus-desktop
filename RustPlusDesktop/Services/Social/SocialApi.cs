@@ -70,6 +70,18 @@ public static class ChatRooms
 
 public static class SocialApi
 {
+    /// <summary>
+    /// Whether a sender id is the signed-in account. Shared by both paths that build chat lines,
+    /// so a message looks the same whether it arrived by poll or over the socket.
+    /// </summary>
+    internal static bool IsOwnSender(string? senderId)
+    {
+        var me = CloudAuthManager.CurrentUser?.Id;
+        return !string.IsNullOrEmpty(senderId)
+            && !string.IsNullOrEmpty(me)
+            && string.Equals(senderId, me, StringComparison.Ordinal);
+    }
+
     private static SocialSettings? _cachedSettings;
     private static DateTime _settingsCachedAt = DateTime.MinValue;
     private static readonly TimeSpan SettingsCacheDuration = TimeSpan.FromMinutes(5);
@@ -120,6 +132,18 @@ public static class SocialApi
     {
         InvalidateSettingsCache();
         return await WriteAsync("social/settings", HttpMethod.Put, new { accept_mode = Serialize(mode) }).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Sets the supporter name colour, or clears it with null.
+    ///
+    /// The platform validates the name against its own palette and refuses without a plan, so a
+    /// false here means "not allowed" as often as "did not reach" — both leave the old colour.
+    /// </summary>
+    public static async Task<bool> SetNameColorAsync(string? colorKey)
+    {
+        InvalidateSettingsCache();
+        return await WriteAsync("social/settings", HttpMethod.Put, new { name_color = colorKey }).ConfigureAwait(false);
     }
 
     /// <summary>Records that the current disclosure was read. Scope is "lfg" or "dm" or "chat".</summary>
@@ -628,6 +652,8 @@ public static class SocialApi
                         AvatarUrl = Str(sender, "avatar_url"),
                         SteamId = Str(sender, "steam_id"),
                         IsSupporter = isSupporter,
+                        NameColor = Str(sender, "name_color"),
+                        IsMine = IsOwnSender(Str(row, "sender_id") ?? Str(sender, "id")),
                         Roles = roles,
                         SentAt = Date(row, "created_at"),
                         SentAtIso = Str(row, "created_at"),
