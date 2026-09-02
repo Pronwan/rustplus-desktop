@@ -40,7 +40,7 @@
                             <TextBlock Text="v9.1 | Community Hub, Farm Routes &amp; Clan Chat Commands" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
-                                Version 9.1 opens the app up to other players: a Community Hub with global and supporter chat, group finding with Steam profile previews, a friend list and reporting. On the map, farm routes now measure themselves in metres and sprint seconds. Chat commands reach clan chat, with per-role permissions.
+                                Version 9.1 opens the app up to other players: a Community Hub with global and supporter chat, replies, translation, group finding with Steam profile previews, a friend list and reporting. On the map, farm routes now measure themselves in metres and sprint seconds. Chat commands reach clan chat, with per-role permissions. And the Player Wipe Tracker no longer saturates your upload while it backs up.
                             </TextBlock>
 
                             <!-- Community Hub -->
@@ -64,6 +64,41 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Inbox, Blocking &amp; Reporting:</Run>
                                 Requests and conversations live in their own tab with unread badges. Anyone can be blocked, and messages can be reported with a reason. Misconduct is acted on against the Steam ID.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Replies:</Run>
+                                Answer a specific message and it is quoted above yours. Click the quote to jump back to the original. If that message is later deleted, the reply keeps the quote and says so rather than losing the fact that it was an answer.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Translate a Message:</Run>
+                                Right-click any message to translate it into the language the app is running in. You are asked once before anything is sent.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Supporter Name Colours:</Run>
+                                Supporters can pick from eight colours for their name in chat, chosen to stay readable on both the dark and the light theme. The swatch sits next to the emoji button.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Tidier Right-Click Menu:</Run>
+                                Copying a message&#x2019;s text is new, and works on your own lines too. Reporting, blocking and befriending yourself are gone &#x2014; the menu on your own messages is just the entries that mean something. Right-clicking now works across the whole line rather than only over the name.
+                            </TextBlock>
+
+                            <!-- Player Wipe Tracker -->
+                            <TextBlock Text="📊 Player Wipe Tracker" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Cloud Backup No Longer Floods Your Connection:</Run>
+                                Every new observation re-sent the player&#x2019;s entire day, once per team poll, with a body that grew until midnight &#x2014; enough to saturate a home upload and put the game&#x2019;s own traffic behind it. Only new observations are sent now, once a minute and capped in size. If you saw your ping climb while RustPlus Desktop was open, this was why.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Long Days Are Backed Up Again:</Run>
+                                Past a certain size the server refused the day outright and the client treated that as final, so an active wipe stopped being backed up partway through the day &#x2014; while still using all that bandwidth. Both ends were fixed.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A New Wipe No Longer Hits a Wall:</Run>
+                                Reaching your plan&#x2019;s wipe limit used to stop the backup at the worst moment. The oldest archive is now removed to make room, and the app tells you which one went. At one slot left it warns you first, so you can delete a different one under Wipe Tracker &#x203A; Cloud restore instead.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Refusals Are Explained:</Run>
+                                When the cloud declines a backup, the reason now appears in the console instead of the tracker quietly saving nothing.
                             </TextBlock>
 
                             <!-- Farm Routes -->
