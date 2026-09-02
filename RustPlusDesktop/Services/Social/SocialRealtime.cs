@@ -244,6 +244,8 @@ public static class SocialRealtime
                 AvatarUrl = avatarUrl,
                 SteamId = steamId,
                 IsSupporter = isSupporter,
+                NameColor = sender?["name_color"]?.ToString(),
+                IsMine = SocialApi.IsOwnSender(senderId ?? sender?["id"]?.ToString()),
                 Roles = roles,
                 SentAt = sentAt,
                 SentAtIso = createdAtStr,

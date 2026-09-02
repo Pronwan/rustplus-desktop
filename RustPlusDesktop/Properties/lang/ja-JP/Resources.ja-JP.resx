@@ -5636,4 +5636,61 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>ワイプのバックアップを削除できませんでした。</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>テキストをコピー</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>Google で翻訳</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>メッセージを翻訳</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>翻訳するものがありません。メッセージはすでにあなたの言語であるか、翻訳サービスに接続できませんでした。</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>メッセージを翻訳</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>翻訳するとメッセージの本文が Google 翻訳に送信されます。続行しますか？</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>名前の色</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>名前の色</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>既定の色を使う</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>メッセージの色</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>色を保存できませんでした。</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>アンバー</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>ローズ</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>バイオレット</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>スカイ</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>エメラルド</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>ライム</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>シアン</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>オレンジ</value>
+  </data>
 </root>

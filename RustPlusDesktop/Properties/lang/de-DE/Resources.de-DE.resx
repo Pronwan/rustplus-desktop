@@ -6595,4 +6595,61 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>Das Wipe-Backup konnte nicht gelöscht werden.</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>Text kopieren</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>Mit Google übersetzen</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>Nachricht übersetzen</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>Nichts zu übersetzen — die Nachricht ist bereits in deiner Sprache, oder der Übersetzungsdienst war nicht erreichbar.</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>Nachricht übersetzen</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>Beim Übersetzen wird der Nachrichtentext an Google Übersetzer gesendet. Fortfahren?</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>Deine Namensfarbe</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>Namensfarbe</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>Standardfarbe verwenden</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>Nachrichtenfarbe</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>Die Farbe konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>Bernstein</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>Rosé</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>Violett</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>Himmelblau</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>Smaragd</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>Limette</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>Türkis</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
 </root>

@@ -333,11 +333,24 @@
                                                 <!-- Regular Chat Bubble -->
                                                 <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
                                                     <Grid.ContextMenu>
+                                                        <!--
+                                                            Copying works on anyone's message, including your own.
+                                                            Everything below it is about someone else — reporting,
+                                                            blocking or befriending yourself are offers that make no
+                                                            sense, so on your own lines the menu is just the one entry.
+                                                        -->
                                                         <ContextMenu>
-                                                            <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ChatAddFriend_Click" Tag="{Binding}" />
-                                                            <Separator />
-                                                            <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}" />
-                                                            <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}" />
+                                                            <MenuItem Header="{DynamicResource ChatCopyText}" Click="ChatCopyText_Click" Tag="{Binding}" />
+                                                            <MenuItem Header="{DynamicResource ChatTranslateWithGoogle}" Click="ChatTranslate_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ChatAddFriend_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
                                                         </ContextMenu>
                                                     </Grid.ContextMenu>
                                                     <Grid.ColumnDefinitions>
@@ -584,6 +597,97 @@
                                                 VerticalContentAlignment="Center"
                                                 TextChanged="TxtChat_TextChanged"
                                                 KeyDown="TxtChat_KeyDown" />
+                                    <!--
+                                        Sits beside the emoji button rather than in a settings page:
+                                        it changes how your messages look in this room, and this is
+                                        where you are while you care about that. Hidden entirely for
+                                        non-supporters — the platform refuses the write anyway, and a
+                                        control that only ever says no is worse than no control.
+                                    -->
+                                    <Button x:Name="BtnChatNameColor"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,34,0"
+                                            Width="28"
+                                            Height="28"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Visibility="Collapsed"
+                                            Click="BtnChatNameColor_Click"
+                                            ToolTip="{DynamicResource ChatNameColorTooltip}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                    <Ellipse x:Name="Dot" Width="13" Height="13"
+                                                             Stroke="#66FFFFFF" StrokeThickness="1"
+                                                             Fill="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                             HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <Popup x:Name="ChatNameColorPopup"
+                                           PlacementTarget="{Binding ElementName=BtnChatNameColor}"
+                                           Placement="Top"
+                                           StaysOpen="False"
+                                           AllowsTransparency="True"
+                                           PopupAnimation="Fade">
+                                        <Border Background="#1B2027" BorderBrush="#2E3742" BorderThickness="1"
+                                                CornerRadius="8" Padding="8" Margin="0,0,0,6">
+                                            <StackPanel>
+                                                <TextBlock Text="{DynamicResource ChatNameColorHeading}"
+                                                           Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                                           Margin="2,0,2,6" />
+                                                <ItemsControl x:Name="ChatNameColorList">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" MaxWidth="152" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Button Width="30" Height="30" Margin="2"
+                                                                    Background="Transparent" BorderThickness="0"
+                                                                    Cursor="Hand" Tag="{Binding Key}"
+                                                                    ToolTip="{Binding Label}"
+                                                                    Click="ChatNameColorSwatch_Click">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border x:Name="Sw" CornerRadius="15" Padding="3"
+                                                                                Background="Transparent"
+                                                                                BorderBrush="{Binding Selection}" BorderThickness="2">
+                                                                            <Ellipse Fill="{Binding Swatch}" />
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="Sw" Property="Background" Value="#22FFFFFF" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <Button Content="{DynamicResource ChatNameColorReset}"
+                                                        Click="ChatNameColorReset_Click"
+                                                        Background="Transparent" BorderThickness="0"
+                                                        Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                                        Cursor="Hand" HorizontalAlignment="Left" Margin="2,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+
                                     <Button x:Name="BtnChatEmoji"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"

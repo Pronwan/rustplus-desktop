@@ -6408,4 +6408,61 @@
   <data name="WipeDeleteArchiveFailed" xml:space="preserve">
     <value>تعذّر حذف النسخة الاحتياطية للوايب.</value>
   </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>نسخ النص</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>الترجمة بواسطة Google</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>ترجمة الرسالة</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>لا شيء للترجمة — الرسالة بلغتك بالفعل، أو تعذّر الوصول إلى خدمة الترجمة.</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>ترجمة الرسالة</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>ستُرسل الترجمة نص الرسالة إلى ترجمة Google. هل تريد المتابعة؟</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>لون اسمك</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>لون الاسم</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>استخدام اللون الافتراضي</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>لون الرسائل</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>تعذّر حفظ اللون.</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>كهرماني</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>وردي</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>بنفسجي</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>سماوي</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>زمردي</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>ليموني</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>سيان</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>برتقالي</value>
+  </data>
 </root>
