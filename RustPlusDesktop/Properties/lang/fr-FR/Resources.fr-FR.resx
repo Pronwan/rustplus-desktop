@@ -6496,4 +6496,25 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>Serveur inconnu</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>Plus qu’un emplacement de sauvegarde de wipe</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>{0} sauvegardes de wipe utilisées sur {1}. Au prochain wipe, la plus ancienne sera supprimée automatiquement — choisissez-en une autre dans Wipe Tracker · Cloud restore si vous préférez la conserver.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Supprimer la sauvegarde</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Supprimer la sauvegarde de wipe</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>Supprimer définitivement la sauvegarde cloud de {0} ({1}) ? Cette action est irréversible.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Sauvegarde de wipe supprimée.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>Impossible de supprimer la sauvegarde de wipe.</value>
+  </data>
 </root>

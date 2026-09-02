@@ -45,7 +45,7 @@ public sealed class PlayerWipeTrackerCloudClient
         if (status is < 200 or >= 300)
         {
             var reason = await ReadRefusalAsync(response, cancellationToken).ConfigureAwait(false);
-            return new CloudAppendResult(status, null, reason, Array.Empty<CloudPrunedArchive>());
+            return new CloudAppendResult(status, null, reason, Array.Empty<CloudPrunedArchive>(), null);
         }
 
         try
@@ -53,7 +53,7 @@ public sealed class PlayerWipeTrackerCloudClient
             var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             using var document = JsonDocument.Parse(body);
             if (!document.RootElement.TryGetProperty("data", out var data))
-                return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>());
+                return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>(), null);
 
             DateTime? acknowledged = null;
             if (data.TryGetProperty("last_observed_at", out var last)
@@ -85,7 +85,16 @@ public sealed class PlayerWipeTrackerCloudClient
                 }
             }
 
-            return new CloudAppendResult(status, acknowledged, null, pruned);
+            CloudArchiveUsage? usage = null;
+            if (data.TryGetProperty("archive_usage", out var usageElement)
+                && usageElement.ValueKind == JsonValueKind.Object
+                && usageElement.TryGetProperty("used", out var used) && used.TryGetInt32(out var usedValue)
+                && usageElement.TryGetProperty("limit", out var limit) && limit.TryGetInt32(out var limitValue))
+            {
+                usage = new CloudArchiveUsage(usedValue, limitValue);
+            }
+
+            return new CloudAppendResult(status, acknowledged, null, pruned, usage);
         }
         catch
         {
@@ -93,7 +102,7 @@ public sealed class PlayerWipeTrackerCloudClient
             // cursor put costs one repeated batch, and the server merges by timestamp.
         }
 
-        return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>());
+        return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>(), null);
     }
 
     /// <summary>

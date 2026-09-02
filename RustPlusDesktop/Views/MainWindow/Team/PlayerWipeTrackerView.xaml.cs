@@ -298,6 +298,7 @@ public partial class PlayerWipeTrackerView : UserControl
         ExportTab.IsEnabled = capabilities.CanExport;
         CloudTab.IsEnabled = capabilities.CanUseCloudSync;
         RestoreCloudButton.IsEnabled = capabilities.CanUseCloudSync;
+        DeleteCloudArchiveButton.IsEnabled = capabilities.CanUseCloudSync;
         ExportJsonButton.IsEnabled = capabilities.CanExport;
         ExportCsvButton.IsEnabled = capabilities.CanExport;
 
@@ -1052,6 +1053,7 @@ public partial class PlayerWipeTrackerView : UserControl
             CloudArchiveDetailsPanel.Visibility = Visibility.Collapsed;
             CloudArchiveEmptyPanel.Visibility = Visibility.Visible;
             RestoreCloudButton.IsEnabled = false;
+            DeleteCloudArchiveButton.IsEnabled = false;
             return;
         }
 
@@ -1063,6 +1065,51 @@ public partial class PlayerWipeTrackerView : UserControl
         ArchivePlayersText.Text = item.PlayerCountFormatted;
         ArchiveStorageText.Text = item.StoredSizeFormatted;
         RestoreCloudButton.IsEnabled = _tracker.Capabilities.CanUseCloudSync;
+        DeleteCloudArchiveButton.IsEnabled = _tracker.Capabilities.CanUseCloudSync;
+    }
+
+    /// <summary>
+    /// Deletes one stored wipe after confirming, and reloads the list.
+    ///
+    /// Confirmed by name and date rather than by a bare "are you sure": the archives look alike
+    /// in a list, and this is the one action here that cannot be undone.
+    /// </summary>
+    private async void DeleteCloudArchive_Click(object sender, RoutedEventArgs e)
+    {
+        if (_tracker is null || CloudArchiveSelector.SelectedItem is not CloudArchiveItem item || !_tracker.Capabilities.CanUseCloudSync)
+            return;
+
+        var confirm = System.Windows.MessageBox.Show(
+            string.Format(
+                RustPlusDesk.Helpers.Loc.TextOrNull("WipeDeleteArchiveConfirm")
+                    ?? "Permanently delete the cloud backup for {0} ({1})? This cannot be undone.",
+                item.ServerName, item.WipeDateShortFormatted),
+            RustPlusDesk.Helpers.Loc.TextOrNull("WipeDeleteArchiveTitle") ?? "Delete wipe backup",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+
+        if (confirm != System.Windows.MessageBoxResult.Yes)
+            return;
+
+        DeleteCloudArchiveButton.IsEnabled = false;
+        try
+        {
+            var deleted = await _tracker.DeleteCloudArchiveAsync(item.Archive.Id);
+            CloudStatusText.Text = deleted
+                ? RustPlusDesk.Helpers.Loc.TextOrNull("WipeDeleteArchiveDone") ?? "Wipe backup deleted."
+                : RustPlusDesk.Helpers.Loc.TextOrNull("WipeDeleteArchiveFailed") ?? "Could not delete the wipe backup.";
+
+            if (deleted)
+                await LoadCloudArchivesAsync();
+        }
+        catch (Exception ex)
+        {
+            CloudStatusText.Text = $"Delete failed: {ex.Message}";
+        }
+        finally
+        {
+            DeleteCloudArchiveButton.IsEnabled = true;
+        }
     }
 
     private async void RestoreCloud_Click(object sender, RoutedEventArgs e)

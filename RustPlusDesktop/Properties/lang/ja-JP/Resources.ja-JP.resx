@@ -5615,4 +5615,25 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>不明なサーバー</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>ワイプのバックアップ枠が残り 1 つです</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>ワイプのバックアップを {1} 件中 {0} 件使用しています。次のワイプが始まると最も古いものが自動的に削除されます。残したいものがある場合は Wipe Tracker · Cloud restore で別のものを選んで削除してください。</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>バックアップを削除</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>ワイプのバックアップを削除</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>{0}（{1}）のクラウドバックアップを完全に削除しますか？元に戻せません。</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>ワイプのバックアップを削除しました。</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>ワイプのバックアップを削除できませんでした。</value>
+  </data>
 </root>

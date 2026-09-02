@@ -30,7 +30,28 @@ public partial class MainWindow
             if (System.Windows.Application.Current?.MainWindow is MainWindow window)
                 window.ReportPrunedWipeArchives(pruned);
         }),
+
+        ArchiveLimitNearlyReached = usage => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.WarnWipeArchiveLimitNear(usage);
+        }),
     };
+
+    /// <summary>
+    /// Warns while there is still a free slot, so the choice of which wipe to drop can be made
+    /// deliberately rather than by the rule that fires when the next wipe arrives.
+    /// </summary>
+    internal void WarnWipeArchiveLimitNear(Services.PlayerWipeTracker.CloudArchiveUsage usage)
+    {
+        ShowInfoSnackbar(
+            RustPlusDesk.Helpers.Loc.TextOrNull("WipeLimitNearTitle") ?? "One wipe backup slot left",
+            string.Format(
+                RustPlusDesk.Helpers.Loc.TextOrNull("WipeLimitNearMessage")
+                    ?? "{0} of {1} wipe backups are in use. When the next wipe starts, the oldest is deleted automatically — pick a different one under Wipe Tracker · Cloud restore if you would rather keep it.",
+                usage.Used, usage.Limit),
+            Wpf.Ui.Controls.ControlAppearance.Info);
+    }
 
     /// <summary>
     /// Tells the user which stored wipes were removed to make room for the current one.

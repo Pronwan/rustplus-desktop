@@ -732,7 +732,15 @@
                                 </Border>
 
                                 <!-- Restore Action Button -->
-                                <ui:Button x:Name="RestoreCloudButton" Content="Restore Selected Archive" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" Appearance="Primary" Click="RestoreCloud_Click" Margin="0,0,0,10" HorizontalAlignment="Left" />
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <ui:Button x:Name="RestoreCloudButton" Content="Restore Selected Archive" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" Appearance="Primary" Click="RestoreCloud_Click" HorizontalAlignment="Left" />
+                                    <!--
+                                        Deleting is offered here because the alternative is having it
+                                        chosen for you: once the plan's allowance is full the next wipe
+                                        drops the oldest, which is rarely the one worth losing.
+                                    -->
+                                    <ui:Button x:Name="DeleteCloudArchiveButton" Content="{DynamicResource WipeDeleteArchiveButton}" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" Click="DeleteCloudArchive_Click" Margin="8,0,0,0" HorizontalAlignment="Left" />
+                                </StackPanel>
 
                                 <!-- Status / Feedback Text -->
                                 <Border Background="#1260CDFF" BorderBrush="#2560CDFF" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,4,0,0">

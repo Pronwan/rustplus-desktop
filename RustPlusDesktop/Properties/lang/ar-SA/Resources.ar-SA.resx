@@ -6387,4 +6387,25 @@
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>خادم غير معروف</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>تبقّى مكان واحد للنسخ الاحتياطية للوايب</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>تم استخدام {0} من {1} من النسخ الاحتياطية للوايب. عند بدء الوايب التالي سيُحذف الأقدم تلقائيًا — اختر نسخة أخرى من Wipe Tracker · Cloud restore إذا كنت تفضّل الاحتفاظ به.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>حذف النسخة الاحتياطية</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>حذف النسخة الاحتياطية للوايب</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>هل تريد حذف النسخة السحابية لـ {0} ({1}) نهائيًا؟ لا يمكن التراجع عن ذلك.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>تم حذف النسخة الاحتياطية للوايب.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>تعذّر حذف النسخة الاحتياطية للوايب.</value>
+  </data>
 </root>

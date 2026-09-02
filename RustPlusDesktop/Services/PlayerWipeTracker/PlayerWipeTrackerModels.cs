@@ -219,12 +219,20 @@ public sealed class CloudTrackerObservation
 /// <summary>A wipe archive the cloud dropped to make room for a newer one.</summary>
 public sealed record CloudPrunedArchive(string? ServerName, DateTime? WipeStartedAtUtc);
 
+/// <summary>How many wipe archives the plan allows, and how many are in use.</summary>
+public sealed record CloudArchiveUsage(int Used, int Limit)
+{
+    /// <summary>True on the last free slot — the point at which a warning is still useful.</summary>
+    public bool IsLastSlot => Limit > 1 && Used >= Limit - 1 && Used < Limit;
+}
+
 /// <summary>What the cloud made of an append batch.</summary>
 public sealed record CloudAppendResult(
     int Status,
     DateTime? LastObservedUtc,
     string? Reason,
-    IReadOnlyList<CloudPrunedArchive> Pruned);
+    IReadOnlyList<CloudPrunedArchive> Pruned,
+    CloudArchiveUsage? Usage);
 
 /// <summary>
 /// New observations for one player-day, above whatever the server last acknowledged.

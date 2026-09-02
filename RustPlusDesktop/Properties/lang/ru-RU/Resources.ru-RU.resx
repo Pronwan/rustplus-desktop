@@ -6496,4 +6496,25 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="WipePrunedUnknownServer" xml:space="preserve">
     <value>Неизвестный сервер</value>
   </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>Остался один слот для копии вайпа</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>Занято {0} из {1} копий вайпов. С началом следующего вайпа самая старая будет удалена автоматически — выберите другую в Wipe Tracker · Cloud restore, если хотите сохранить именно её.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Удалить копию</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Удалить копию вайпа</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>Удалить облачную копию для {0} ({1}) безвозвратно? Отменить это будет нельзя.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Копия вайпа удалена.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>Не удалось удалить копию вайпа.</value>
+  </data>
 </root>
