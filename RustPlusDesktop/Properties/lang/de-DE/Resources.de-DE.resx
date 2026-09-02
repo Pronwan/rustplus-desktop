@@ -6670,4 +6670,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Übersetzen</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatische Updates</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Beim Start automatisch nach Updates suchen und schnelle Delta-Patches im Hintergrund herunterladen.</value>
+  </data>
 </root>

@@ -5711,4 +5711,10 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatické aktualizace</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Při spuštění automaticky zkontroluje aktualizace a na pozadí stáhne rychlé rozdílové balíčky.</value>
+  </data>
 </root>

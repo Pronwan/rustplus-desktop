@@ -6509,4 +6509,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>번역</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>자동 업데이트</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>시작할 때 자동으로 업데이트를 확인하고 빠른 델타 패치를 백그라운드에서 다운로드합니다.</value>
+  </data>
 </root>

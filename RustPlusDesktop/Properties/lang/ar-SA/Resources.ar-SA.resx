@@ -6483,4 +6483,10 @@
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>ترجمة</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>التحديثات التلقائية</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>التحقق تلقائيًا من التحديثات عند بدء التشغيل وتنزيل حزم دلتا السريعة في الخلفية.</value>
+  </data>
 </root>

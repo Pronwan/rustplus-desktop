@@ -5711,4 +5711,10 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatische updates</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Controleer bij het opstarten automatisch op updates en download snelle deltapatches op de achtergrond.</value>
+  </data>
 </root>

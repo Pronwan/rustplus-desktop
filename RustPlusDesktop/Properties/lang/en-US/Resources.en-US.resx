@@ -6320,4 +6320,10 @@ You can find more information on the server's official website:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatic Updates</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Automatically check for updates on startup and download fast delta patches in the background.</value>
+  </data>
 </root>

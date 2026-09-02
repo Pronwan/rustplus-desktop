@@ -5711,4 +5711,10 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Actualizări automate</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Caută automat actualizări la pornire și descarcă în fundal patch-uri delta rapide.</value>
+  </data>
 </root>

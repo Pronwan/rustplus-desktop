@@ -5711,4 +5711,10 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automaattiset päivitykset</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Tarkista päivitykset automaattisesti käynnistyksen yhteydessä ja lataa nopeat delta-korjaukset taustalla.</value>
+  </data>
 </root>
