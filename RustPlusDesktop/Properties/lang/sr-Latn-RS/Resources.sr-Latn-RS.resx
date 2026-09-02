@@ -5711,4 +5711,10 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatska ažuriranja</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Automatski proveri ažuriranja pri pokretanju i preuzmi brze delta zakrpe u pozadini.</value>
+  </data>
 </root>

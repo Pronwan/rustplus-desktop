@@ -5711,4 +5711,10 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Outomatiese opdaterings</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Kyk outomaties vir opdaterings met die begin en laai vinnige delta-lappies in die agtergrond af.</value>
+  </data>
 </root>

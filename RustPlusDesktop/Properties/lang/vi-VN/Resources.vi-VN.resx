@@ -5711,4 +5711,10 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Cập nhật tự động</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Tự động kiểm tra cập nhật khi khởi động và tải các bản vá delta nhanh ở chế độ nền.</value>
+  </data>
 </root>

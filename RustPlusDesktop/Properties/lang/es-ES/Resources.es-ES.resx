@@ -6592,4 +6592,10 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Traducir</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Actualizaciones automáticas</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Busca actualizaciones automáticamente al iniciar y descarga parches delta rápidos en segundo plano.</value>
+  </data>
 </root>
