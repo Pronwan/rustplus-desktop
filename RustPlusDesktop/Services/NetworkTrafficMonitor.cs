@@ -250,6 +250,13 @@ namespace RustPlusDesk.Services
         {
             if (!IsEnabled || !IsRecording) return;
 
+            var isCloud = NetworkTrafficExtensions.IsCloudEndpointOrCategory(category, null, endpoint);
+            var effectiveCategory = isCloud && (string.IsNullOrWhiteSpace(category) || category == "HTTP" || category == "General" || category == "Player Wipe Cloud")
+                ? "Cloud API"
+                : (string.IsNullOrWhiteSpace(category) ? "General" : category);
+
+            var formattedEndpoint = NetworkTrafficExtensions.FormatEndpoint(effectiveCategory, endpoint);
+
             var now = DateTime.UtcNow;
             _speedHistory.Enqueue((now, bytesIn, bytesOut));
 
@@ -261,9 +268,9 @@ namespace RustPlusDesk.Services
             {
                 Id = Interlocked.Increment(ref _nextId),
                 Timestamp = DateTime.Now,
-                Category = string.IsNullOrWhiteSpace(category) ? "General" : category,
+                Category = effectiveCategory,
                 Direction = direction,
-                Endpoint = endpoint,
+                Endpoint = formattedEndpoint,
                 BytesIn = Math.Max(0, bytesIn),
                 BytesOut = Math.Max(0, bytesOut),
                 DurationMs = durationMs,
@@ -507,8 +514,8 @@ namespace RustPlusDesk.Services
             }
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var endpoint = request.RequestUri?.ToString() ?? "HTTP";
             var category = _category ?? NetworkTrafficExtensions.DetectCategoryFromUri(request.RequestUri);
+            var endpoint = NetworkTrafficExtensions.FormatEndpoint(category, $"{request.Method} {request.RequestUri?.ToString() ?? "HTTP"}");
             long bytesOut = 0;
             if (request.Content != null)
             {
@@ -531,7 +538,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     category,
                     TrafficDirection.Both,
-                    $"{request.Method} {endpoint}",
+                    endpoint,
                     bytesIn,
                     bytesOut,
                     sw.ElapsedMilliseconds,
@@ -545,7 +552,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     category,
                     TrafficDirection.Outbound,
-                    $"{request.Method} {endpoint}",
+                    endpoint,
                     0,
                     bytesOut,
                     sw.ElapsedMilliseconds,
@@ -558,6 +565,105 @@ namespace RustPlusDesk.Services
 
     public static class NetworkTrafficExtensions
     {
+        public static bool IsCloudEndpointOrCategory(string? category, Uri? uri = null, string? endpoint = null)
+        {
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                if (category.Equals("Cloud API", StringComparison.OrdinalIgnoreCase) ||
+                    category.Equals("Player Wipe Cloud", StringComparison.OrdinalIgnoreCase) ||
+                    category.IndexOf("Cloud", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (uri != null && uri.IsAbsoluteUri)
+            {
+                var host = uri.Host.ToLowerInvariant();
+                if (host.Contains("rustplusdesktop.cloud") || host.Contains("rustplus-desktop.fly.dev") || host.Contains("supabase.co"))
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(endpoint))
+            {
+                if (endpoint.IndexOf("rustplusdesktop.cloud", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    endpoint.IndexOf("rustplus-desktop.fly.dev", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    endpoint.IndexOf("supabase.co", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static string FormatEndpoint(string? category, string? endpoint)
+        {
+            if (string.IsNullOrWhiteSpace(endpoint))
+                return string.Empty;
+
+            var trimmed = endpoint.Trim();
+
+            // Only format endpoints related to Cloud API
+            if (!IsCloudEndpointOrCategory(category, null, trimmed))
+            {
+                return trimmed;
+            }
+
+            // Case 1: Method prefix present (e.g., "POST https://rustplusdesktop.cloud/api/v1/...")
+            var spaceIdx = trimmed.IndexOf(' ');
+            if (spaceIdx > 0)
+            {
+                var method = trimmed.Substring(0, spaceIdx).Trim();
+                var urlPart = trimmed.Substring(spaceIdx + 1).Trim();
+
+                if (Uri.TryCreate(urlPart, UriKind.Absolute, out var parsedUri))
+                {
+                    return $"{method} {parsedUri.PathAndQuery}";
+                }
+
+                if (urlPart.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || urlPart.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    var schemeSlash = urlPart.IndexOf("://", StringComparison.Ordinal);
+                    if (schemeSlash >= 0)
+                    {
+                        var pathSlash = urlPart.IndexOf('/', schemeSlash + 3);
+                        if (pathSlash >= 0)
+                        {
+                            return $"{method} {urlPart.Substring(pathSlash)}";
+                        }
+                        return $"{method} /";
+                    }
+                }
+
+                return trimmed;
+            }
+
+            // Case 2: Direct URL (e.g., "https://rustplusdesktop.cloud/api/v1/...")
+            if (Uri.TryCreate(trimmed, UriKind.Absolute, out var directUri))
+            {
+                return directUri.PathAndQuery;
+            }
+
+            if (trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                var schemeSlash = trimmed.IndexOf("://", StringComparison.Ordinal);
+                if (schemeSlash >= 0)
+                {
+                    var pathSlash = trimmed.IndexOf('/', schemeSlash + 3);
+                    if (pathSlash >= 0)
+                    {
+                        return trimmed.Substring(pathSlash);
+                    }
+                    return "/";
+                }
+            }
+
+            return trimmed;
+        }
+
         public static async Task<HttpResponseMessage> SendTrackedAsync(
             this HttpClient client,
             HttpRequestMessage request,
@@ -570,8 +676,8 @@ namespace RustPlusDesk.Services
             }
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var endpoint = request.RequestUri?.ToString() ?? "HTTP";
             var detectedCategory = category ?? DetectCategoryFromUri(request.RequestUri);
+            var endpoint = FormatEndpoint(detectedCategory, $"{request.Method} {request.RequestUri?.ToString() ?? "HTTP"}");
             long bytesOut = 0;
             if (request.Content != null)
             {
@@ -594,7 +700,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Both,
-                    $"{request.Method} {endpoint}",
+                    endpoint,
                     bytesIn,
                     bytesOut,
                     sw.ElapsedMilliseconds,
@@ -608,7 +714,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Outbound,
-                    $"{request.Method} {endpoint}",
+                    endpoint,
                     0,
                     bytesOut,
                     sw.ElapsedMilliseconds,
@@ -631,6 +737,7 @@ namespace RustPlusDesk.Services
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
+            var endpoint = FormatEndpoint(detectedCategory, $"GET {uri}");
             try
             {
                 var text = await client.GetStringAsync(uri, cancellationToken);
@@ -639,7 +746,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Inbound,
-                    $"GET {uri}",
+                    endpoint,
                     bytesIn,
                     0,
                     sw.ElapsedMilliseconds,
@@ -653,7 +760,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Outbound,
-                    $"GET {uri}",
+                    endpoint,
                     0,
                     0,
                     sw.ElapsedMilliseconds,
@@ -676,6 +783,7 @@ namespace RustPlusDesk.Services
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var detectedCategory = category ?? (Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? DetectCategoryFromUri(parsed) : "HTTP");
+            var endpoint = FormatEndpoint(detectedCategory, $"GET {uri}");
             try
             {
                 var data = await client.GetByteArrayAsync(uri, cancellationToken);
@@ -684,7 +792,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Inbound,
-                    $"GET {uri}",
+                    endpoint,
                     bytesIn,
                     0,
                     sw.ElapsedMilliseconds,
@@ -698,7 +806,7 @@ namespace RustPlusDesk.Services
                 NetworkTrafficMonitor.Instance.Record(
                     detectedCategory,
                     TrafficDirection.Outbound,
-                    $"GET {uri}",
+                    endpoint,
                     0,
                     0,
                     sw.ElapsedMilliseconds,
@@ -748,7 +856,7 @@ namespace RustPlusDesk.Services
             if (host.Contains("discord.com") || host.Contains("discordapp.com")) return "Discord";
             if (host.Contains("telegram.org")) return "Telegram";
             if (host.Contains("rusthelp.com")) return "Game Icons";
-            if (host.Contains("supabase.co")) return "Cloud API";
+            if (host.Contains("rustplusdesktop.cloud") || host.Contains("rustplus-desktop.fly.dev") || host.Contains("supabase.co")) return "Cloud API";
             if (host.Contains("github.com") || host.Contains("githubusercontent.com")) return "Updates & GitHub";
             return "HTTP";
         }

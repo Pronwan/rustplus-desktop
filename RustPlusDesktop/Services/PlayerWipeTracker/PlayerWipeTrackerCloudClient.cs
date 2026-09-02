@@ -14,7 +14,7 @@ namespace RustPlusDesk.Services.PlayerWipeTracker;
 
 public sealed class PlayerWipeTrackerCloudClient
 {
-    private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Player Wipe Cloud")) { Timeout = TimeSpan.FromSeconds(15) };
+    private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Cloud API")) { Timeout = TimeSpan.FromSeconds(15) };
     private const string BaseUrl = "https://rustplusdesktop.cloud/api/v1";
     private readonly JsonSerializerOptions _json = new(JsonSerializerDefaults.Web);
 
