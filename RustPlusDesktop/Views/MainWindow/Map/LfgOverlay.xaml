@@ -358,6 +358,8 @@
                                                             sense, so on your own lines the menu is just the one entry.
                                                         -->
                                                         <ContextMenu>
+                                                            <MenuItem Header="{DynamicResource ChatReply}" Click="ChatReply_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
                                                             <MenuItem Header="{DynamicResource ChatCopyText}" Click="ChatCopyText_Click" Tag="{Binding}" />
                                                             <MenuItem Header="{DynamicResource ChatTranslateWithGoogle}" Click="ChatTranslate_Click" Tag="{Binding}"
                                                                       Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
@@ -418,6 +420,41 @@
 
                                                     <!-- Content Column -->
                                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                        <!--
+                                                            The quoted line this message answers. Clicking it jumps to
+                                                            the original, so the reply is a way back rather than just a
+                                                            label. When the original is gone the excerpt says so —
+                                                            hiding the whole strip would erase the fact that this was
+                                                            an answer to something.
+                                                        -->
+                                                        <Button Visibility="{Binding HasReply, Converter={StaticResource BoolToVis}}"
+                                                                Click="ChatJumpToOriginal_Click" Tag="{Binding ReplyTo.Id}"
+                                                                Background="Transparent" BorderThickness="0" Padding="0"
+                                                                Cursor="Hand" HorizontalAlignment="Left" Margin="0,0,0,3">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="Rb" CornerRadius="4" Padding="5,2" Background="#14FFFFFF">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}"
+                                                                                       FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                                            <TextBlock Text="{Binding ReplyTo.DisplayName}" FontSize="10.5"
+                                                                                       Foreground="{StaticResource LfgMuted}" FontWeight="SemiBold"
+                                                                                       VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                                            <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="10.5"
+                                                                                       Foreground="{StaticResource LfgMuted}" FontStyle="Italic"
+                                                                                       VerticalAlignment="Center" MaxWidth="230"
+                                                                                       TextTrimming="CharacterEllipsis" />
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Rb" Property="Background" Value="#26FFFFFF" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+
                                                         <!-- Metadata Header (Shown only on first message of a group) -->
                                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,2"
                                                                     Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
@@ -600,6 +637,35 @@
                                     <TextBlock x:Name="ChatSlowModeText" Text="Slow Mode: 10s" Foreground="#FF3FD7FF"
                                                FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
                                 </StackPanel>
+                            </Border>
+
+                            <!--
+                                Who you are answering, above the box you type in. Backspace on an
+                                empty box clears it, the way it works everywhere else people have
+                                learned this — the × is for anyone who has not.
+                            -->
+                            <Border x:Name="ChatReplyBar" Visibility="Collapsed"
+                                    Background="#161C24" BorderBrush="#2A3340" BorderThickness="1"
+                                    CornerRadius="6,6,0,0" Padding="8,5" Margin="0,0,0,-1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}" FontSize="12"
+                                                   Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="ChatReplyBarName" Foreground="{StaticResource LfgText}"
+                                                   FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock x:Name="ChatReplyBarExcerpt" Foreground="{StaticResource LfgMuted}"
+                                                   FontSize="11" FontStyle="Italic" VerticalAlignment="Center"
+                                                   MaxWidth="220" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Click="ChatCancelReply_Click"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                            Foreground="{StaticResource LfgMuted}" Content="✕" FontSize="11"
+                                            Padding="6,0" ToolTip="{DynamicResource ChatReplyCancel}" />
+                                </Grid>
                             </Border>
 
                             <Grid x:Name="ChatComposeRow">

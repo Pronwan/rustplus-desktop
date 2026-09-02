@@ -6574,4 +6574,16 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>Оранжевый</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>Ответить</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>Отменить ответ</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>Сообщение удалено</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>Исходного сообщения больше нет в видимой истории.</value>
+  </data>
 </root>

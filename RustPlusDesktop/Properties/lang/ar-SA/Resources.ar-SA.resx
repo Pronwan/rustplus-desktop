@@ -6465,4 +6465,16 @@
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>برتقالي</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>رد</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>إلغاء الرد</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>تم حذف الرسالة</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>الرسالة الأصلية لم تعد ضمن السجل الظاهر.</value>
+  </data>
 </root>

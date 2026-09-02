@@ -6574,4 +6574,16 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>Orange</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>Répondre</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>Annuler la réponse</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>Message supprimé</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>Le message d'origine n'est plus dans l'historique visible.</value>
+  </data>
 </root>

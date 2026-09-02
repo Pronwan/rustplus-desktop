@@ -191,6 +191,27 @@ public static class SocialRealtime
         }
     }
 
+/// <summary>
+    /// The quoted line above a reply, from the broadcast payload.
+    ///
+    /// Mirrors the polled path so a message looks the same however it arrived. A reference
+    /// without a quote means the original is gone, which the view states rather than hides.
+    /// </summary>
+    private static Models.ChatReplyReference? ParseReply(JToken data)
+    {
+        var reply = data["reply_to"] as JObject;
+        var id = reply?["id"]?.ToString();
+        if (string.IsNullOrEmpty(id)) return null;
+
+        var quote = reply?["quote"] as JObject;
+        return new Models.ChatReplyReference
+        {
+            Id = id!,
+            SenderName = quote?["sender_name"]?.ToString(),
+            Excerpt = quote?["excerpt"]?.ToString(),
+        };
+    }
+
     private static Models.ChatLine? ParseChatMessage(JObject root)
     {
         try
@@ -246,6 +267,7 @@ public static class SocialRealtime
                 IsSupporter = isSupporter,
                 NameColor = sender?["name_color"]?.ToString(),
                 IsMine = SocialApi.IsOwnSender(senderId ?? sender?["id"]?.ToString()),
+                ReplyTo = ParseReply(data),
                 Roles = roles,
                 SentAt = sentAt,
                 SentAtIso = createdAtStr,

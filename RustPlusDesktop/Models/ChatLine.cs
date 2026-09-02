@@ -187,6 +187,11 @@ public sealed class ChatLine
     /// <summary>Convenience for XAML, which cannot negate a bool in a binding.</summary>
     public bool IsNotMine => !IsMine;
 
+    /// <summary>The message this one answers, or null when it answers nothing.</summary>
+    public ChatReplyReference? ReplyTo { get; init; }
+
+    public bool HasReply => ReplyTo is not null;
+
     /// <summary>
     /// The supporter's chosen name colour, as one of the palette names the platform accepts, or
     /// null for the default. Already cleared server-side when the plan has lapsed.
@@ -254,6 +259,7 @@ public sealed class ChatLine
         IsSupporter = IsSupporter,
         NameColor = NameColor,
         IsMine = IsMine,
+        ReplyTo = ReplyTo,
         Roles = Roles,
         SentAt = SentAt,
         SentAtIso = SentAtIso,
@@ -361,3 +367,27 @@ public sealed record ChatSnapshot(
     bool SupporterRoom = false,
     int MaxLength = 128);
 
+
+/// <summary>
+/// The quoted line shown above a reply.
+///
+/// The id is kept even when the quote itself is gone, because that is the difference between
+/// "this answers something that was deleted" — worth saying — and "this answers nothing".
+/// </summary>
+public sealed class ChatReplyReference
+{
+    public string Id { get; init; } = "";
+
+    public string? SenderName { get; init; }
+
+    public string? Excerpt { get; init; }
+
+    /// <summary>True once the original has been removed from the room.</summary>
+    public bool IsMissing => string.IsNullOrEmpty(Excerpt);
+
+    public string DisplayName => SenderName ?? "—";
+
+    public string DisplayText => IsMissing
+        ? (RustPlusDesk.Helpers.Loc.TextOrNull("ChatReplyDeleted") ?? "Message deleted")
+        : Excerpt!;
+}

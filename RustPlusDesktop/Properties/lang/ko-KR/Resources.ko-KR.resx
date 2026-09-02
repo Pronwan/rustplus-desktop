@@ -6491,4 +6491,16 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="ChatNameColor_orange" xml:space="preserve">
     <value>오렌지</value>
   </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>답장</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>답장 취소</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>삭제된 메시지</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>원본 메시지가 표시된 기록에 더 이상 없습니다.</value>
+  </data>
 </root>
