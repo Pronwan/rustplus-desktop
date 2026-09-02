@@ -331,8 +331,26 @@
                                         <DataTemplate>
                                             <Grid Margin="{Binding GroupMargin}">
                                                 <!-- Regular Chat Bubble -->
-                                                <Grid Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}">
-                                                    <Grid.ContextMenu>
+                                                    <!--
+                                                        A Border rather than a bare Grid, because a panel with no Background is
+                                                        invisible to hit testing: the context menu only opened where text or the
+                                                        avatar happened to be, and the gap to the right of a short message did
+                                                        nothing. Transparent still counts as a background, so the whole line is
+                                                        now clickable — and the hover tint is there to say so before you try.
+                                                    -->
+                                                    <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}"
+                                                            CornerRadius="6" Padding="4,2" Margin="-4,0,-4,0">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="Transparent" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#12FFFFFF" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    <Border.ContextMenu>
                                                         <!--
                                                             Copying works on anyone's message, including your own.
                                                             Everything below it is about someone else — reporting,
@@ -352,7 +370,8 @@
                                                             <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}"
                                                                       Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
                                                         </ContextMenu>
-                                                    </Grid.ContextMenu>
+                                                    </Border.ContextMenu>
+                                                    <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="26" />
                                                         <ColumnDefinition Width="*" />
@@ -424,7 +443,8 @@
                                                         <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,0,0,0"
                                                                                 Foreground="{StaticResource LfgText}" FontSize="12.5" EmojiSize="30" />
                                                     </StackPanel>
-                                                </Grid>
+                                                    </Grid>
+                                                    </Border>
 
                                                 <!-- System Sanction Alert Banner (Timeout / Ban / Lifted) -->
                                                 <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource BoolToVis}}"
