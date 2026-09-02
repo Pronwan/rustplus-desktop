@@ -52,6 +52,39 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# 🚀 RustPlus Desktop 9.1
+The Community Hub is here — and the Wipe Tracker no longer floods your connection.
+
+## 🌐 Community Hub
+· Global chat, plus a separate supporter room
+· Group finding with a Steam profile preview before you answer
+· Friend list by Steam ID — the message request and the friend request are two separate decisions, so nobody can be spammed into a conversation
+· Inbox with unread counts, blocking and reporting
+· Replies to individual messages, with a quote and a jump back to the original
+· Translate any message into your app language from the right-click menu
+· Supporter name colours — eight of them, readable on both the dark and light theme
+
+## 🗺️ Farm Routes on the Map
+· Draw routes, name them, colour them, show or hide them
+· Every route reports its length in metres and how long it takes at sprint speed
+· Shared with your team — a teammate's route arrives under their name in brackets
+
+## 🏰 Clan Chat Commands
+· Commands now work in clan chat too, granted per clan role
+· Door codes and smart switches stay out unless you deliberately include them
+· Answers go back to the chat the command came from
+· Chat alerts can target either team or clan chat
+
+## 📊 Player Wipe Tracker — please read
+· Cloud backup was re-sending the entire day on every observation, every 5 seconds, with a payload that grew until midnight. If your ping climbed while RustPlus Desktop was open, this was why. Only new observations go out now, once a minute.
+· Long sessions were being rejected by the server past a certain size — the backup silently stopped partway through the day while still using all that bandwidth. Fixed on both ends.
+· A new wipe no longer hits a wall: the oldest archive makes room, and you get a warning while there is still a free slot to choose differently.
+
+## 🏠 Smart Home
+· Home Assistant support over a REST endpoint
+· Alexa: additional regional endpoints in review, for more reliable device discovery outside Europe
+· Google Home is built and passes Google's full test suite — launching it requires a certification aimed at commercially available hardware. We'll keep you posted.
+
 # v9.0.0 — Cloud Platform, Clan 2.0, Wipe Tracker & Genetics 2.0
 
 A milestone release. The backend has moved to a unified cloud platform, the
