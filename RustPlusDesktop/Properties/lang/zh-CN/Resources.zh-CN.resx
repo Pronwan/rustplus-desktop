@@ -6340,4 +6340,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>翻译</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>自动更新</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>启动时自动检查更新，并在后台下载快速增量补丁。</value>
+  </data>
 </root>

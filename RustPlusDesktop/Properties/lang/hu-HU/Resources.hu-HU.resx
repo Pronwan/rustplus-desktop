@@ -5711,4 +5711,10 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatikus frissítések</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Indításkor automatikusan keresi a frissítéseket, és a háttérben letölti a gyors delta-javításokat.</value>
+  </data>
 </root>

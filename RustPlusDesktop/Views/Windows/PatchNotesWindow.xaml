@@ -33,6 +33,49 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v9.1.1 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.1.1 | Responsiveness &amp; Smarter Updates" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                A maintenance release, mostly about the app feeling immediate again. Some players saw the window take seconds to react to a hover; that had a specific cause and it is fixed. Updates now download as small delta patches in the background and install on exit, so you are not made to wait for them.
+                            </TextBlock>
+
+                            <TextBlock Text="⚡ Responsiveness" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Sidebar Hover Delays Fixed:</Run>
+                                The decorative item icon in the sidebar searched the icon cache from disk on every single hover, decoding full-size images until it found a small one. On a large cache that could cost seconds and hundreds of megabytes. It now prepares a small set once, in the background, and never touches the disk again.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Reduce UI Effects:</Run>
+                                A new setting turns off the Mica window backdrop, which Windows composes rather than the app. Worth trying if the window still feels sluggish on your machine. Requires a restart.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Icon Downloads That Stop:</Run>
+                                Icons that do not exist on the server were requested again on every launch and the failures were reported as successes. They are now remembered and the count tells the truth.
+                            </TextBlock>
+
+                            <TextBlock Text="🔄 Updates" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Background Delta Downloads:</Run>
+                                Updates are fetched in the background only when a small delta patch is available, and applied quietly when you close the app instead of interrupting a session.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Automatic Updates Can Be Turned Off:</Run>
+                                A toggle in Settings for anyone who would rather decide when to update.
+                            </TextBlock>
+
+                            <TextBlock Text="⚙ Settings" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Reorganised:</Run>
+                                Settings are grouped into labelled rows with dividers, so related options sit together instead of forming one long list.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v9.1 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

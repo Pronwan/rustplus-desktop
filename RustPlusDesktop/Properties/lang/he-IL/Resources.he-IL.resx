@@ -5711,4 +5711,10 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>עדכונים אוטומטיים</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>בדוק עדכונים אוטומטית בהפעלה והורד תיקוני דלתא מהירים ברקע.</value>
+  </data>
 </root>

@@ -5711,4 +5711,10 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Автоматичні оновлення</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Автоматично перевіряти оновлення під час запуску та завантажувати швидкі дельта-патчі у фоновому режимі.</value>
+  </data>
 </root>

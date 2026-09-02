@@ -5711,4 +5711,10 @@ Open Releases page?</value>
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Αυτόματες ενημερώσεις</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Αυτόματος έλεγχος για ενημερώσεις κατά την εκκίνηση και λήψη γρήγορων delta ενημερώσεων στο παρασκήνιο.</value>
+  </data>
 </root>

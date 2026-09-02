@@ -1080,4 +1080,10 @@
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>翻譯</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>自動更新</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>啟動時自動檢查更新，並在背景下載快速差異修補檔。</value>
+  </data>
 </root>
