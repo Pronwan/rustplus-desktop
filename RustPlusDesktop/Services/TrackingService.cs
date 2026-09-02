@@ -84,6 +84,7 @@ public class TrackingSettings
     public bool AutoStartEnabled { get; set; } = false;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
+    public bool ReduceUiEffects { get; set; } = false;
     public bool TrafficMonitorEnabled { get; set; } = true;
     // Default on: use the in-process native FCM listener instead of the bundled Node fcm-listen.
     public bool UseNativeFcmListener { get; set; } = true;
@@ -630,6 +631,12 @@ public static class TrackingService
     {
         get => _settings.HideConsole;
         set { _settings.HideConsole = value; SaveDB(); }
+    }
+
+    public static bool ReduceUiEffects
+    {
+        get => _settings.ReduceUiEffects;
+        set { _settings.ReduceUiEffects = value; SaveDB(); }
     }
 
     public static bool TrafficMonitorEnabled
