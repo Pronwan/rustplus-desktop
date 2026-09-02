@@ -1529,10 +1529,12 @@ public partial class MainWindow : WpfUi.FluentWindow
                 BtnCrosshair.ContextMenu.IsOpen = false;
             }
 
-            // Apply a pending Velopack update if available.
+            // Apply a pending Velopack update if available (silent, without relaunching).
             if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
             {
-                _updateService.StartInstaller(_updateService.PendingInstallerPath);
+                var pendingPath = _updateService.PendingInstallerPath;
+                _updateService.PendingInstallerPath = null;
+                _updateService.StartInstaller(pendingPath, restart: false);
             }
         }
         catch
@@ -6838,6 +6840,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     // --- Konfiguration ---
     private async Task AutoCheckUpdatesAsync()
     {
+        if (!TrackingService.AutoUpdateEnabled) return;
         if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
         try
         {
@@ -6865,7 +6868,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
                     _vm.IsUpdateStatusExpanded = true;
                     AppendLog($"✨ Update found: {tag}");
-                    ShowUpdateSnackbar(tag, dlUrl);
+
+                    if (_updateService.IsDeltaAvailable && !string.IsNullOrEmpty(dlUrl))
+                    {
+                        var sizeText = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+                        AppendLog($"📦 Delta update found{sizeText}. Auto-downloading in background...");
+                        _ = PerformUpdateDownloadAsync(tag, dlUrl);
+                    }
+                    else
+                    {
+                        ShowUpdateSnackbar(tag, dlUrl);
+                    }
                 });
             }
         }
@@ -7935,7 +7948,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
             _vm.IsUpdateStatusExpanded = true;
-            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), Properties.Resources.GetString("UpdateAlreadyDownloaded"), WpfUi.ControlAppearance.Info);
+            var res = System.Windows.MessageBox.Show(
+                "An update has already been downloaded and is ready to install.\n\nRestart now to apply it?\n(Selecting 'No' will install it automatically when you close the app).",
+                RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (res == MessageBoxResult.Yes)
+            {
+                AppendLog("Applying update...");
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
+                try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
+                var path = _updateService.PendingInstallerPath;
+                _updateService.PendingInstallerPath = null;
+                _updateService.StartInstaller(path, restart: true);
+                System.Windows.Application.Current.Shutdown();
+            }
             return;
         }
 
@@ -8039,9 +8067,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             AppendLog("Applying update...");
             _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
-            _updateService.StartInstaller(path);
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
-            await Task.Delay(500);
+            _updateService.PendingInstallerPath = null;
+            _updateService.StartInstaller(path, restart: true);
             System.Windows.Application.Current.Shutdown();
         }
         catch (Exception ex)

@@ -163,6 +163,8 @@ jobs:
           -p:PublishSingleFile=false
           -p:PublishReadyToRun=false
           -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:PublishDocumentationFiles=false
+          -p:GenerateDocumentationFile=false
 
       - name: Build Velopack release
         shell: pwsh
@@ -185,6 +187,7 @@ jobs:
             --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
             --packAuthors "Pronwan" `
             --packTitle "RustPlusDesk" `
+            --delta BestSize
 
           # Keep only the .nupkg and RELEASES file by removing the portable zip
           Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore

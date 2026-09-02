@@ -105,11 +105,13 @@ namespace RustPlusDesk.Services
             Version.TryParse(VersionShort, out var v) ? v : new Version(0, 0, 0);
 
         public long? LatestUpdateSize { get; private set; }
+        public bool IsDeltaAvailable { get; private set; }
 
         public async Task<(Version latest, string tag, string? downloadUrl)?> GetLatestReleaseAsync()
         {
             InitializeIfNeeded();
             LatestUpdateSize = null;
+            IsDeltaAvailable = false;
             if (_isVelopackSupported)
             {
                 try
@@ -128,10 +130,12 @@ namespace RustPlusDesk.Services
 
                     if (_pendingUpdateInfo.DeltasToTarget != null && _pendingUpdateInfo.DeltasToTarget.Any())
                     {
+                        IsDeltaAvailable = true;
                         LatestUpdateSize = _pendingUpdateInfo.DeltasToTarget.Sum(d => d.Size);
                     }
                     else
                     {
+                        IsDeltaAvailable = false;
                         LatestUpdateSize = _pendingUpdateInfo.TargetFullRelease?.Size;
                     }
 
@@ -143,6 +147,7 @@ namespace RustPlusDesk.Services
                 }
             }
 
+            IsDeltaAvailable = false;
             return await GetLatestReleaseFromGitHubAsync();
         }
 
@@ -478,7 +483,7 @@ namespace RustPlusDesk.Services
             }
         }
 
-        public void StartInstaller(string installerPath)
+        public void StartInstaller(string installerPath, bool restart = true)
         {
             InitializeIfNeeded();
             if (string.Equals(installerPath, PendingVelopackUpdateMarker, StringComparison.OrdinalIgnoreCase))
@@ -486,7 +491,7 @@ namespace RustPlusDesk.Services
                 var pending = _updateManager.UpdatePendingRestart ?? _pendingUpdateInfo?.TargetFullRelease;
                 if (pending != null)
                 {
-                    _updateManager.ApplyUpdatesAndRestart(pending);
+                    _updateManager.WaitExitThenApplyUpdates(pending, silent: true, restart: restart);
                     return;
                 }
             }

@@ -12,10 +12,22 @@
             </Style>
             <Style x:Key="SettingsNativeCard" TargetType="ui:Card">
                 <Setter Property="Margin" Value="0,0,0,16" />
-                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="Padding" Value="16,14" />
                 <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
                 <Setter Property="BorderThickness" Value="1" />
+            </Style>
+            <Style x:Key="SettingsRowDivider" TargetType="Border">
+                <Setter Property="Height" Value="1" />
+                <Setter Property="Background" Value="{DynamicResource CardBorder}" />
+                <Setter Property="Opacity" Value="0.4" />
+                <Setter Property="Margin" Value="0,10,0,10" />
+            </Style>
+            <Style x:Key="SettingsSubheader" TargetType="ui:TextBlock">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+                <Setter Property="Margin" Value="0,4,0,8" />
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -158,13 +170,17 @@
                 <ui:TextBlock Text="{DynamicResource General}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
-                        <Grid Margin="0,0,0,12">
+                        <!-- Language -->
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Text="{DynamicResource Language}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                            <ComboBox Grid.Column="1" x:Name="CmbLanguage" tutorials:Tutorial.TargetId="Settings.Language" Width="150" SelectedValuePath="Code" SelectionChanged="CmbLanguage_SelectionChanged">
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource Language}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Select application display language" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="CmbLanguage" tutorials:Tutorial.TargetId="Settings.Language" Width="160" Height="32" SelectedValuePath="Code" SelectionChanged="CmbLanguage_SelectionChanged" VerticalAlignment="Center">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -198,12 +214,66 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </Grid>
-                        
-                        <ui:ToggleSwitch x:Name="ChkAutoStart" Content="{DynamicResource LaunchWithWindows}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
 
-                        <ui:ToggleSwitch x:Name="ChkStartMinimized" Content="{DynamicResource StartMinimizedAlways}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
-                        <ui:ToggleSwitch x:Name="ChkAutoConnect" Content="{DynamicResource AutoConnectLastServer}" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource AutoConnectToolTip}" />
+                        <!-- Automatic Updates -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource AutomaticUpdates}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource AutomaticUpdatesToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAutoUpdate" AutomationProperties.Name="{DynamicResource AutomaticUpdates}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource AutomaticUpdatesToolTip}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Launch With Windows -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource LaunchWithWindows}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Automatically start Rust+ Desktop when Windows starts" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAutoStart" AutomationProperties.Name="{DynamicResource LaunchWithWindows}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Start Minimized -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource StartMinimizedAlways}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Launch the application hidden in the system tray" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkStartMinimized" AutomationProperties.Name="{DynamicResource StartMinimizedAlways}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Auto Connect -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource AutoConnectLastServer}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource AutoConnectToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAutoConnect" AutomationProperties.Name="{DynamicResource AutoConnectLastServer}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource AutoConnectToolTip}" />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
@@ -213,39 +283,145 @@
                 <ui:TextBlock Text="{DynamicResource Behavior}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
-                        <ui:ToggleSwitch x:Name="ChkCloseToTray" Content="{DynamicResource MinimizeToTray}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        <!-- Group 1: Window & Interface -->
+                        <ui:TextBlock Text="Window &amp; Interface" Style="{StaticResource SettingsSubheader}" />
 
-                        <ui:ToggleSwitch x:Name="ChkStreamerMode" Content="{DynamicResource EnableStreamerMode}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource StreamerModeToolTip}" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource MinimizeToTray}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Keep the application running in the notification area when closed" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkCloseToTray" AutomationProperties.Name="{DynamicResource MinimizeToTray}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
 
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
-                        <ui:ToggleSwitch x:Name="ChkHideConsole" Content="{DynamicResource HideSystemConsole}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource HideConsoleToolTip}" />
-                        <ui:ToggleSwitch x:Name="ChkReduceUiEffects"
-                                         Margin="0,0,0,10"
-                                         Checked="OnSettingChanged"
-                                         Unchecked="OnSettingChanged"
-                                         ToolTip="Turns off the Mica window backdrop, which is composed by Windows rather than by the app. Worth trying if the window reacts slowly to hovering or clicking. Requires a restart to take effect.">
-                            <ui:ToggleSwitch.Content>
-                                <StackPanel>
-                                    <TextBlock Text="Reduce UI Effects" />
-                                    <TextBlock Text="Turns off the Mica window backdrop — try this if the window reacts slowly. Requires restart."
-                                               FontSize="10.5"
-                                               Margin="0,2,0,0"
-                                               Foreground="{DynamicResource TextSubtle}"
-                                               TextWrapping="Wrap" />
-                                </StackPanel>
-                            </ui:ToggleSwitch.Content>
-                        </ui:ToggleSwitch>
-                        <ui:ToggleSwitch x:Name="ChkTrafficMonitor" Content="Network Traffic &amp; Bandwidth Monitor" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Enable real-time network traffic tracking, bandwidth meter, and packet inspector." />
-                        <ui:ToggleSwitch x:Name="ChkCloudSync" Content="{DynamicResource CloudSync}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource CloudSyncDesc}" />
-                        <ui:ToggleSwitch x:Name="ChkPlayerWipeTracker" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
-                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloud" Content="Player Wipe Tracker cloud backup" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." Margin="0,0,0,12" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource HideSystemConsole}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource HideConsoleToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkHideConsole" AutomationProperties.Name="{DynamicResource HideSystemConsole}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource HideConsoleToolTip}" />
+                        </Grid>
 
-                        <ui:Button x:Name="BtnOpenCrashLogs"
-                                   Content="Open Crash &amp; Freeze Logs Folder"
-                                   Icon="{ui:SymbolIcon Symbol=FolderOpen24}"
-                                   Click="BtnOpenCrashLogs_Click"
-                                   Appearance="Secondary"
-                                   ToolTip="Opens the directory where crash reports, freeze logs, and diagnostics are saved." />
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="Reduce UI Effects" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Turns off the Mica window backdrop — try this if the window reacts slowly. Requires restart." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkReduceUiEffects" AutomationProperties.Name="Reduce UI Effects" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Turns off the Mica window backdrop, which is composed by Windows rather than by the app. Worth trying if the window reacts slowly to hovering or clicking. Requires a restart to take effect." />
+                        </Grid>
+
+                        <!-- Group 2: Privacy & Network -->
+                        <Border Style="{StaticResource SettingsRowDivider}" Margin="0,14,0,10" />
+                        <ui:TextBlock Text="Privacy &amp; Connectivity" Style="{StaticResource SettingsSubheader}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource EnableStreamerMode}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource StreamerModeToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkStreamerMode" AutomationProperties.Name="{DynamicResource EnableStreamerMode}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource StreamerModeToolTip}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="Network Traffic &amp; Bandwidth Monitor" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Enable real-time network traffic tracking, bandwidth meter, and packet inspector" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkTrafficMonitor" AutomationProperties.Name="Network Traffic &amp; Bandwidth Monitor" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Enable real-time network traffic tracking, bandwidth meter, and packet inspector." />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource CloudSync}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource CloudSyncDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkCloudSync" AutomationProperties.Name="{DynamicResource CloudSync}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource CloudSyncDesc}" />
+                        </Grid>
+
+                        <!-- Group 3: Player Wipe Tracker -->
+                        <Border Style="{StaticResource SettingsRowDivider}" Margin="0,14,0,10" />
+                        <ui:TextBlock Text="Player Wipe Tracker" Style="{StaticResource SettingsSubheader}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="Player Wipe Tracker" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Tracks only visible team snapshots while RustPlus Desktop is connected" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkPlayerWipeTracker" AutomationProperties.Name="Player Wipe Tracker" VerticalAlignment="Center" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="Player Wipe Tracker Cloud Backup" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Uploads compact daily tracker documents only after you enable this setting" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkPlayerWipeCloud" AutomationProperties.Name="Player Wipe Tracker cloud backup" VerticalAlignment="Center" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
+                        </Grid>
+
+                        <!-- Group 4: Diagnostics -->
+                        <Border Style="{StaticResource SettingsRowDivider}" Margin="0,14,0,10" />
+                        <ui:TextBlock Text="Diagnostics" Style="{StaticResource SettingsSubheader}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="Crash &amp; Freeze Diagnostics" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Opens the directory where crash reports, freeze logs, and diagnostics are saved" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:Button Grid.Column="1" x:Name="BtnOpenCrashLogs"
+                                       Content="Open Logs"
+                                       Icon="{ui:SymbolIcon Symbol=FolderOpen24}"
+                                       Click="BtnOpenCrashLogs_Click"
+                                       Appearance="Secondary"
+                                       VerticalAlignment="Center"
+                                       Height="32"
+                                       ToolTip="Opens the directory where crash reports, freeze logs, and diagnostics are saved." />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
@@ -255,10 +431,31 @@
                 <ui:TextBlock Text="{DynamicResource ServerEventsSection}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
-                        <ui:ToggleSwitch x:Name="ChkListenForServerEvents" Content="{DynamicResource ListenForServerEvents}" Margin="0,0,0,6" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                        <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,12" />
-                        <ui:ToggleSwitch x:Name="ChkTrustOwnDetections" Content="{DynamicResource TrustOwnDetections}" Margin="0,0,0,6" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                        <ui:TextBlock Text="{DynamicResource TrustOwnDetectionsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource ListenForServerEvents}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkListenForServerEvents" AutomationProperties.Name="{DynamicResource ListenForServerEvents}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource TrustOwnDetections}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource TrustOwnDetectionsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkTrustOwnDetections" AutomationProperties.Name="{DynamicResource TrustOwnDetections}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
@@ -269,31 +466,70 @@
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
                         <!-- Enable Offline Death alerts -->
-                        <ui:ToggleSwitch x:Name="ChkOfflineDeathAlerts" Content="{DynamicResource EnableOfflineDeathAlerts}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-
-                        <!-- Custom sound selector -->
-                        <Grid Margin="0,0,0,10">
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Text="{DynamicResource AlertSound}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                            
-                            <ui:Button Grid.Column="1" x:Name="BtnSelectOfflineDeathSound" Content="{DynamicResource SelectEllipsis}" Icon="{ui:SymbolIcon Symbol=Folder24}" Margin="8,0,0,0" Height="28" Click="BtnSelectOfflineDeathSound_Click" />
-                            <ui:Button Grid.Column="2" x:Name="BtnResetOfflineDeathSound" Content="{DynamicResource Reset}" Icon="{ui:SymbolIcon Symbol=ArrowReset24}" Margin="8,0,0,0" Height="28" Click="BtnResetOfflineDeathSound_Click" />
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource EnableOfflineDeathAlerts}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Play alerts when killed by a player or hazard while offline" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOfflineDeathAlerts" AutomationProperties.Name="{DynamicResource EnableOfflineDeathAlerts}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
                         </Grid>
 
-                        <ui:TextBlock x:Name="TxtOfflineDeathSoundPath" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8" TextWrapping="Wrap" />
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Custom sound selector -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource AlertSound}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock x:Name="TxtOfflineDeathSoundPath" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:Button x:Name="BtnSelectOfflineDeathSound" Content="{DynamicResource SelectEllipsis}" Icon="{ui:SymbolIcon Symbol=Folder24}" Height="30" Click="BtnSelectOfflineDeathSound_Click" />
+                                <ui:Button x:Name="BtnResetOfflineDeathSound" Content="{DynamicResource Reset}" Icon="{ui:SymbolIcon Symbol=ArrowReset24}" Margin="8,0,0,0" Height="30" Appearance="Secondary" Click="BtnResetOfflineDeathSound_Click" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Loop Alert Sound toggle -->
-                        <ui:ToggleSwitch x:Name="ChkOfflineDeathSoundLoop" Content="{DynamicResource LoopAlertSound}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource LoopAlertSound}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Repeat the alert audio continuously until dismissed" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOfflineDeathSoundLoop" AutomationProperties.Name="{DynamicResource LoopAlertSound}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Discord advanced bot toggle (Supporter only) -->
-                        <ui:ToggleSwitch x:Name="ChkOfflineDeathDiscord" Content="{DynamicResource SendToDiscordRaidAlerts}" Margin="0,0,0,12" Checked="OnSettingChanged" Unchecked="OnSettingChanged" PreviewMouseDown="PremiumFeature_PreviewMouseDown" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource SendToDiscordRaidAlerts}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Send real-time offline death events directly to your Discord bot" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOfflineDeathDiscord" AutomationProperties.Name="{DynamicResource SendToDiscordRaidAlerts}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" PreviewMouseDown="PremiumFeature_PreviewMouseDown" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" Margin="0,12,0,12" />
 
                         <!-- Button to open offline deaths log popup -->
-                        <ui:Button x:Name="BtnOpenOfflineDeathsLog" Content="{DynamicResource OpenOfflineDeathsLog}" Icon="{ui:SymbolIcon Symbol=List24}" HorizontalAlignment="Stretch" Height="36" Click="BtnOpenOfflineDeathsLog_Click" />
+                        <ui:Button x:Name="BtnOpenOfflineDeathsLog" Content="{DynamicResource OpenOfflineDeathsLog}" Icon="{ui:SymbolIcon Symbol=List24}" Appearance="Secondary" HorizontalAlignment="Stretch" Height="34" Click="BtnOpenOfflineDeathsLog_Click" />
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
@@ -304,26 +540,57 @@
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
                         <!-- Enable Toast Notifications -->
-                        <ui:ToggleSwitch x:Name="ChkNotificationsToast" Content="{DynamicResource ShowToastNotifications}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-
-                        <!-- Enable Notification Sounds -->
-                        <ui:ToggleSwitch x:Name="ChkNotificationsSounds" Content="{DynamicResource PlaySoundAlerts}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-
-                        <!-- Notification Retention Period -->
-                        <Grid Margin="0,4,0,10">
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Grid.Column="0" Text="{DynamicResource NotificationRetentionPeriod}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="4,0,10,0" FontSize="12" />
-                            <Slider Grid.Column="1" x:Name="SliderNotificationsRetention" Minimum="1" Maximum="90" Value="30" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSettingChanged" VerticalAlignment="Center" />
-                            <ui:TextBlock Grid.Column="2" x:Name="TxtRetentionDays" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="60" />
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource ShowToastNotifications}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Show pop-up notification banners in the corner of your screen" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkNotificationsToast" AutomationProperties.Name="{DynamicResource ShowToastNotifications}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
                         </Grid>
 
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Enable Notification Sounds -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource PlaySoundAlerts}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Play notification chime when new messages or alerts arrive" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkNotificationsSounds" AutomationProperties.Name="{DynamicResource PlaySoundAlerts}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Notification Retention Period -->
+                        <Grid MinHeight="36" Margin="0,2,0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="65" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource NotificationRetentionPeriod}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Number of days to store notification history before purging" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <Slider Grid.Column="1" x:Name="SliderNotificationsRetention" Minimum="1" Maximum="90" Value="30" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSettingChanged" VerticalAlignment="Center" />
+                            <Border Grid.Column="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="6,3" Margin="8,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <ui:TextBlock x:Name="TxtRetentionDays" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="11" FontWeight="Medium" />
+                            </Border>
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" Margin="0,12,0,10" />
+
                         <!-- Muted Servers -->
-                        <ui:TextBlock Text="{DynamicResource MutedServers}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="4,6,0,4" />
-                        <ui:Card MinHeight="60" MaxHeight="120" Margin="4,0" Padding="6">
+                        <ui:TextBlock Text="{DynamicResource MutedServers}" Style="{StaticResource SettingsSubheader}" Margin="0,0,0,6" />
+                        <ui:Card MinHeight="60" MaxHeight="120" Padding="8,6" Background="{DynamicResource Surface}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel x:Name="PnlMutedServers" />
                             </ScrollViewer>
@@ -338,30 +605,50 @@
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
                         <!-- Image Scaling Quality Dropdown -->
-                        <Grid Margin="0,0,0,12">
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Margin="0,0,8,0" Text="{DynamicResource UiImageScalingQuality}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" ToolTip="{DynamicResource UiControlsMapImageScalingFilteringMode}" />
-                            <ComboBox Grid.Column="1" x:Name="CmbMapScalingMode" Width="200" SelectionChanged="OnSettingChanged">
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource UiImageScalingQuality}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource UiControlsMapImageScalingFilteringMode}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapScalingMode" Width="180" Height="32" SelectionChanged="OnSettingChanged" VerticalAlignment="Center">
                                 <ComboBoxItem Content="{DynamicResource UiHighQualityBicubic}" Tag="0" />
                                 <ComboBoxItem Content="{DynamicResource UiBalancedLinear}" Tag="1" />
                                 <ComboBoxItem Content="{DynamicResource UiPerformanceNearestNeighbor}" Tag="2" />
                             </ComboBox>
                         </Grid>
 
-                        <!-- GPU Caching Toggle -->
-                        <ui:ToggleSwitch x:Name="ChkMapUseCacheMode" Content="{DynamicResource UiEnableGPUBitmapCaching}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness}" />
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
-                        <!-- GPU Rendering Scale Dropdown -->
-                        <Grid Margin="0,0,0,12" x:Name="GridMapRenderScale" IsEnabled="{Binding IsChecked, ElementName=ChkMapUseCacheMode}">
+                        <!-- GPU Caching Toggle -->
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Margin="0,0,8,0" Text="{DynamicResource UiGPURenderingScale}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" ToolTip="{DynamicResource UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084}" />
-                            <ComboBox Grid.Column="1" x:Name="CmbMapRenderScale" Width="200" SelectionChanged="OnSettingChanged">
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource UiEnableGPUBitmapCaching}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkMapUseCacheMode" AutomationProperties.Name="{DynamicResource UiEnableGPUBitmapCaching}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource UiCachesMapRenderingOnTheGPUExtremelyImprovesPanningAndZoomingSmoothness}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- GPU Rendering Scale Dropdown -->
+                        <Grid MinHeight="36" x:Name="GridMapRenderScale" IsEnabled="{Binding IsChecked, ElementName=ChkMapUseCacheMode}" Margin="16,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource UiGPURenderingScale}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource UiResolutionScaleOfTheCachedGPUBitmapLowerScalesImprovePerfo767E03E084}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapRenderScale" Width="180" Height="32" SelectionChanged="OnSettingChanged" VerticalAlignment="Center">
                                 <ComboBoxItem Content="{DynamicResource UiText50Fastest}" Tag="0.5" />
                                 <ComboBoxItem Content="{DynamicResource UiText75Performance}" Tag="0.75" />
                                 <ComboBoxItem Content="{DynamicResource UiText100Native}" Tag="1.0" />
@@ -371,8 +658,20 @@
                             </ComboBox>
                         </Grid>
 
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
                         <!-- Aliased Edge Mode Toggle -->
-                        <ui:ToggleSwitch x:Name="ChkMapUseAliasedEdgeMode" Content="{DynamicResource UiDisableGridAntiAliasingAliasedEdgeMode}" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1}" />
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource UiDisableGridAntiAliasingAliasedEdgeMode}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkMapUseAliasedEdgeMode" AutomationProperties.Name="{DynamicResource UiDisableGridAntiAliasingAliasedEdgeMode}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource UiDisablesAntiAliasingOnGridLinesAndMarkersImprovesRenderingC0D2589FE1}" />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
 
@@ -380,18 +679,18 @@
                 <ui:TextBlock Text="Custom HD Map Image" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" Margin="0,8,0,0" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
-                        <ui:TextBlock Text="Use a custom high-definition map image from a URL source instead of the map coming from the server. Cached locally and automatically wiped when a server wipe is detected." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,10" />
+                        <ui:TextBlock Text="Use a custom high-definition map image from a URL source instead of the map coming from the server. Cached locally and automatically wiped when a server wipe is detected." TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,12" />
                         
-                        <ui:TextBlock Text="Custom Map Image URL" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,4" />
+                        <ui:TextBlock Text="Custom Map Image URL" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,6" />
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBox x:Name="TxtCustomMapUrl" Height="32" Padding="6,4" PlaceholderText="https://example.com/rust_map_hd.png" VerticalContentAlignment="Center" TextChanged="TxtCustomMapUrl_TextChanged" />
-                            <ui:Button Grid.Column="1" x:Name="BtnApplyCustomMapUrl" Content="Apply" Appearance="Primary" Height="32" Margin="6,0,0,0" Click="BtnApplyCustomMapUrl_Click" />
-                            <ui:Button Grid.Column="2" x:Name="BtnClearCustomMapUrl" Content="Clear" Appearance="Secondary" Height="32" Margin="6,0,0,0" Click="BtnClearCustomMapUrl_Click" />
+                            <ui:TextBox x:Name="TxtCustomMapUrl" Height="34" Padding="8,4" PlaceholderText="https://example.com/rust_map_hd.png" VerticalContentAlignment="Center" TextChanged="TxtCustomMapUrl_TextChanged" />
+                            <ui:Button Grid.Column="1" x:Name="BtnApplyCustomMapUrl" Content="Apply" Appearance="Primary" Height="34" Margin="8,0,0,0" Click="BtnApplyCustomMapUrl_Click" />
+                            <ui:Button Grid.Column="2" x:Name="BtnClearCustomMapUrl" Content="Clear" Appearance="Secondary" Height="34" Margin="8,0,0,0" Click="BtnClearCustomMapUrl_Click" />
                         </Grid>
                         <ui:TextBlock x:Name="TxtCustomMapStatus" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap" />
                     </StackPanel>
@@ -405,56 +704,101 @@
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
                         <!-- Profile Markers -->
-                        <ui:ToggleSwitch x:Name="ChkShowProfileMarkers" Margin="0,0,0,10" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
-                            <StackPanel Orientation="Horizontal">
-                                <Viewbox Width="16" Height="16" Margin="0,0,8,0" Stretch="Uniform">
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                                <Viewbox Width="18" Height="18" Margin="0,0,10,0" Stretch="Uniform" VerticalAlignment="Center">
                                     <Grid Width="40" Height="40">
                                         <Ellipse Width="38" Height="38" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" />
                                     </Grid>
                                 </Viewbox>
-                                <ui:TextBlock VerticalAlignment="Center" Text="{DynamicResource Profile}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <ui:TextBlock Text="{DynamicResource Profile}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                    <ui:TextBlock Text="Show circular team member markers on the map" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                                </StackPanel>
                             </StackPanel>
-                        </ui:ToggleSwitch>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowProfileMarkers" AutomationProperties.Name="{DynamicResource Profile}" VerticalAlignment="Center" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Player Direction Arrows -->
-                        <ui:ToggleSwitch x:Name="ChkShowPlayerArrows" Margin="0,0,0,10" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
-                            <StackPanel Orientation="Horizontal">
-                                <Viewbox Width="16" Height="16" Margin="0,0,8,0" Stretch="Uniform">
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                                <Viewbox Width="18" Height="18" Margin="0,0,10,0" Stretch="Uniform" VerticalAlignment="Center">
                                     <Grid Width="40" Height="40">
                                         <Path Data="M 20,4 L 32,32 L 8,32 Z" Fill="LimeGreen" Stroke="Black" StrokeThickness="2" />
                                     </Grid>
                                 </Viewbox>
-                                <ui:TextBlock VerticalAlignment="Center" Text="{DynamicResource PlayerDirectionArrow}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <ui:TextBlock Text="{DynamicResource PlayerDirectionArrow}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                    <ui:TextBlock Text="Show direction cone pointing where players are facing" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                                </StackPanel>
                             </StackPanel>
-                        </ui:ToggleSwitch>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowPlayerArrows" AutomationProperties.Name="{DynamicResource PlayerDirectionArrow}" VerticalAlignment="Center" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Death Markers -->
-                        <ui:ToggleSwitch x:Name="ChkShowDeathMarkers" Margin="0,0,0,10" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
-                            <StackPanel Orientation="Horizontal">
-                                <Viewbox Width="14" Height="18" Margin="0,0,8,0" Stretch="Uniform">
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                                <Viewbox Width="16" Height="20" Margin="0,0,12,0" Stretch="Uniform" VerticalAlignment="Center">
                                     <Grid Width="40" Height="56">
                                         <Path Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stroke="Black" StrokeThickness="2" Stretch="Fill" />
                                     </Grid>
                                 </Viewbox>
-                                <ui:TextBlock VerticalAlignment="Center" Text="{DynamicResource Death}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <ui:TextBlock Text="{DynamicResource Death}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                    <ui:TextBlock Text="Display tombstone markers at death locations" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                                </StackPanel>
                             </StackPanel>
-                        </ui:ToggleSwitch>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowDeathMarkers" AutomationProperties.Name="{DynamicResource Death}" VerticalAlignment="Center" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Streamer Mode -->
-                        <ui:ToggleSwitch x:Name="ChkStreamerModeMarkers" Margin="0,0,0,10" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged">
-                            <ui:TextBlock Text="{DynamicResource StreamerMode}" />
-                        </ui:ToggleSwitch>
-
-                        <!-- Player Icon Scale -->
-                        <Grid Margin="0,4,0,0">
+                        <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" />
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource StreamerMode}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Hide player names on the map overlay" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkStreamerModeMarkers" AutomationProperties.Name="{DynamicResource StreamerMode}" VerticalAlignment="Center" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Player Icon Scale -->
+                        <Grid MinHeight="36" Margin="0,2,0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="65" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource ScaleLabel}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="Adjust size of marker icons on the map" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" />
+                            </StackPanel>
                             <Slider Grid.Column="1" x:Name="SliderPlayerIconScaleOverlay" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="OnMarkerSettingChanged" VerticalAlignment="Center" />
-                            <ui:TextBlock Grid.Column="2" Text="{Binding Value, ElementName=SliderPlayerIconScaleOverlay, StringFormat={}{0:P0}}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource TextPrimary}" FontSize="12" Width="40" />
+                            <Border Grid.Column="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="6,3" Margin="8,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <ui:TextBlock Text="{Binding Value, ElementName=SliderPlayerIconScaleOverlay, StringFormat={}{0:P0}}" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="11" FontWeight="Medium" />
+                            </Border>
                         </Grid>
                     </StackPanel>
                 </ui:Card>
@@ -868,13 +1212,20 @@
                 <StackPanel x:Name="SectionThreeDMap">
                 <ui:TextBlock Text="{DynamicResource ThreeDMapSectionTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
-                    <WrapPanel>
-                        <!-- Delete 3D Map Data button -->
-                        <ui:Button Appearance="Danger" HorizontalAlignment="Left" Padding="12,6" Click="BtnDelete3DMapData_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="{DynamicResource Settings3dMapDeleteData}" ToolTip="{DynamicResource Delete3DMapDataTooltip}" />
-                        
-                        <!-- Manually Parse Map button -->
-                        <ui:Button x:Name="BtnManuallyParseMap" Appearance="Secondary" HorizontalAlignment="Left" Padding="12,6" Margin="8,0,0,0" Click="BtnManuallyParseMap_Click" Icon="{ui:SymbolIcon Symbol=FolderOpen24}" Content="{DynamicResource UiParse3DMapManually}" />
-                    </WrapPanel>
+                    <StackPanel>
+                        <ui:TextBlock Text="Manage 3D heightmap cache and manual map package imports" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,12" TextWrapping="Wrap" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!-- Delete 3D Map Data button -->
+                            <ui:Button Appearance="Danger" HorizontalAlignment="Stretch" Height="34" Margin="0,0,4,0" Click="BtnDelete3DMapData_Click" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="{DynamicResource Settings3dMapDeleteData}" ToolTip="{DynamicResource Delete3DMapDataTooltip}" />
+                            
+                            <!-- Manually Parse Map button -->
+                            <ui:Button x:Name="BtnManuallyParseMap" Appearance="Secondary" HorizontalAlignment="Stretch" Height="34" Margin="4,0,0,0" Grid.Column="1" Click="BtnManuallyParseMap_Click" Icon="{ui:SymbolIcon Symbol=FolderOpen24}" Content="{DynamicResource UiParse3DMapManually}" />
+                        </Grid>
+                    </StackPanel>
                 </ui:Card>
                 </StackPanel>
 

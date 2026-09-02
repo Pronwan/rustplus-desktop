@@ -69,6 +69,12 @@
   <data name="CheckForUpdates" xml:space="preserve">
     <value>Check for Updates</value>
   </data>
+  <data name="AutomaticUpdates" xml:space="preserve">
+    <value>Automatic Updates</value>
+  </data>
+  <data name="AutomaticUpdatesToolTip" xml:space="preserve">
+    <value>Automatically check for updates on startup and download fast delta patches in the background.</value>
+  </data>
   <data name="Downloading" xml:space="preserve">
     <value>Downloading...</value>
   </data>
