@@ -160,7 +160,7 @@ namespace RustPlusDesk.Views
         {
             _settingsSections = new[]
             {
-                Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server", SectionGeneral),
+                Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
                 Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
                 Section("server-events", "alerts", T("ServerEventsSection", "Server Events"), "server events audio detection listen oil rig cargo deep sea trust own detections confirm", SectionServerEvents),
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
@@ -620,6 +620,7 @@ namespace RustPlusDesk.Views
             
             ChkAutoStart.IsChecked = TrackingService.AutoStartEnabled;
             ChkStartMinimized.IsChecked = TrackingService.StartMinimizedEnabled;
+            ChkAutoUpdate.IsChecked = TrackingService.AutoUpdateEnabled;
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
@@ -826,6 +827,7 @@ namespace RustPlusDesk.Views
 
             TrackingService.AutoStartEnabled = ChkAutoStart.IsChecked == true;
             TrackingService.StartMinimizedEnabled = ChkStartMinimized.IsChecked == true;
+            TrackingService.AutoUpdateEnabled = ChkAutoUpdate.IsChecked == true;
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;

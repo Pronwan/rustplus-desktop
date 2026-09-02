@@ -82,6 +82,7 @@ public class TrackingSettings
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
     public bool AutoStartEnabled { get; set; } = false;
+    public bool AutoUpdateEnabled { get; set; } = true;
     public bool AutoLoadShops { get; set; } = true;
     public bool HideConsole { get; set; } = false;
     public bool ReduceUiEffects { get; set; } = false;
@@ -619,6 +620,12 @@ public static class TrackingService
             SetAutoStart(value);
             SaveDB(); 
         }
+    }
+
+    public static bool AutoUpdateEnabled
+    {
+        get => _settings.AutoUpdateEnabled;
+        set { _settings.AutoUpdateEnabled = value; SaveDB(); }
     }
 
     public static bool AutoLoadShops
