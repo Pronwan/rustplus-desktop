@@ -172,7 +172,7 @@ namespace RustPlusDesk.Views
             try
             {
                 Clipboard.SetText($"{_profile.Host}:{_profile.Port}");
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiServerAddressCopiedToClipboard"), RustPlusDesk.Properties.Resources.GetString("CodeUiCopied"), MessageBoxButton.OK, MessageBoxImage.Information);
+                MainWindow.ShowInfoSnackbarOnMain(RustPlusDesk.Properties.Resources.GetString("CodeUiCopied"), RustPlusDesk.Properties.Resources.GetString("CodeUiServerAddressCopiedToClipboard"), Wpf.Ui.Controls.ControlAppearance.Success);
             }
             catch { }
         }

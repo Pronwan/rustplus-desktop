@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ public partial class MainWindow
     private System.Windows.Threading.DispatcherTimer? _afkTimer;
     public ObservableCollection<TeamMemberVM> TeamMembers { get; } = new();
 
-    private readonly Dictionary<ulong, ImageSource> _avatarCache = new();
+    private readonly ConcurrentDictionary<ulong, ImageSource> _avatarCache = new();
 
     // Death log: detects team-member deaths across successive team-info snapshots.
     private readonly RustPlusDesk.Services.Deaths.DeathTracker _deathTracker = new();
@@ -236,7 +237,7 @@ public partial class MainWindow
     private readonly Dictionary<ulong, (bool online, bool dead)> _lastPresence = new();
     private ulong _mySteamId => (ulong.TryParse(_vm?.SteamId64, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0UL);
 
-    private readonly Dictionary<ulong, string> _steamNames = new();
+    private readonly ConcurrentDictionary<ulong, string> _steamNames = new();
     private DateTime _lastTeamRefresh = DateTime.MinValue;
     private string? _lastCloudPresenceSignature;
     private DateTime _lastPresenceUploadTime = DateTime.MinValue;
@@ -859,29 +860,6 @@ public partial class MainWindow
         }
     }
 
-    private static async Task<ImageSource?> FetchSteamAvatarAsync(ulong steamId)
-    {
-        if (steamId == 0) return null;
-        try
-        {
-            using var http = new HttpClient();
-            var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
-            string url = "";
-            var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
-            var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
-            if (mFull.Success) url = mFull.Groups[1].Value;
-            else if (mMedium.Success) url = mMedium.Groups[1].Value;
-            if (string.IsNullOrWhiteSpace(url)) return null;
-
-            var bytes = await http.GetByteArrayAsync(url);
-            return BytesToImage(bytes);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     private async Task LoadAvatarAsync(TeamMemberVM vm)
     {
         try
@@ -894,7 +872,7 @@ public partial class MainWindow
                 return;
             }
 
-            var img = await FetchSteamAvatarAsync(vm.SteamId);
+            var img = await AvatarLoader.GetOrLoadAvatarAsync(vm.SteamId);
             if (img != null)
             {
                 _avatarCache[vm.SteamId] = img;

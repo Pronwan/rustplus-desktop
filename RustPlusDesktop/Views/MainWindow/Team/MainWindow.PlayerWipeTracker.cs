@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,72 @@ public partial class MainWindow
 {
     private readonly PlayerWipeTrackerService _playerWipeTracker = new(
         new PlayerWipeTrackerStore(Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "player-wipes")),
-        new PlayerWipeTrackerCapabilityService());
+        new PlayerWipeTrackerCapabilityService())
+    {
+        // Upload failures used to be swallowed whole. They repeat every minute when they happen,
+        // so they belong in the console where someone will see them.
+        Log = message => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.AppendLog(message);
+        }),
+
+        ArchivesPruned = pruned => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.ReportPrunedWipeArchives(pruned);
+        }),
+
+        ArchiveLimitNearlyReached = usage => System.Windows.Application.Current?.Dispatcher.InvokeAsync(() =>
+        {
+            if (System.Windows.Application.Current?.MainWindow is MainWindow window)
+                window.WarnWipeArchiveLimitNear(usage);
+        }),
+    };
+
+    /// <summary>
+    /// Warns while there is still a free slot, so the choice of which wipe to drop can be made
+    /// deliberately rather than by the rule that fires when the next wipe arrives.
+    /// </summary>
+    internal void WarnWipeArchiveLimitNear(Services.PlayerWipeTracker.CloudArchiveUsage usage)
+    {
+        ShowInfoSnackbar(
+            RustPlusDesk.Helpers.Loc.TextOrNull("WipeLimitNearTitle") ?? "One wipe backup slot left",
+            string.Format(
+                RustPlusDesk.Helpers.Loc.TextOrNull("WipeLimitNearMessage")
+                    ?? "{0} of {1} wipe backups are in use. When the next wipe starts, the oldest is deleted automatically — pick a different one under Wipe Tracker · Cloud restore if you would rather keep it.",
+                usage.Used, usage.Limit),
+            Wpf.Ui.Controls.ControlAppearance.Info);
+    }
+
+    /// <summary>
+    /// Tells the user which stored wipes were removed to make room for the current one.
+    ///
+    /// Named rather than counted: "an old backup was deleted" invites the question this answers,
+    /// and the wipe date is the only thing that makes it recognisable.
+    /// </summary>
+    internal void ReportPrunedWipeArchives(IReadOnlyList<Services.PlayerWipeTracker.CloudPrunedArchive> pruned)
+    {
+        if (pruned.Count == 0) return;
+
+        var names = pruned.Select(item =>
+        {
+            var server = string.IsNullOrWhiteSpace(item.ServerName)
+                ? RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedUnknownServer") ?? "Unknown server"
+                : item.ServerName!;
+            return item.WipeStartedAtUtc is { } started
+                ? $"{server} ({started.ToLocalTime():d})"
+                : server;
+        });
+
+        ShowInfoSnackbar(
+            RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedTitle") ?? "Oldest wipe backup removed",
+            string.Format(
+                RustPlusDesk.Helpers.Loc.TextOrNull("WipePrunedMessage")
+                    ?? "Your plan keeps a limited number of wipe backups. To store the new wipe, the oldest was deleted: {0}",
+                string.Join(", ", names)),
+            Wpf.Ui.Controls.ControlAppearance.Caution);
+    }
 
     // Wipe-map uploading is decoupled from the player wipe tracker: this owns the
     // network upload of the base map + monuments and the 3D-parsed extra monuments.

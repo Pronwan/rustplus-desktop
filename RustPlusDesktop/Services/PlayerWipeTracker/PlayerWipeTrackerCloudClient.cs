@@ -14,7 +14,7 @@ namespace RustPlusDesk.Services.PlayerWipeTracker;
 
 public sealed class PlayerWipeTrackerCloudClient
 {
-    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(15) };
+    private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Cloud API")) { Timeout = TimeSpan.FromSeconds(15) };
     private const string BaseUrl = "https://rustplusdesktop.cloud/api/v1";
     private readonly JsonSerializerOptions _json = new(JsonSerializerDefaults.Web);
 
@@ -27,6 +27,115 @@ public sealed class PlayerWipeTrackerCloudClient
     {
         using var response = await SendAsync(HttpMethod.Put, "player-wipe-tracker/days", payload, cancellationToken).ConfigureAwait(false);
         return (int)response.StatusCode;
+    }
+
+    /// <summary>
+    /// Sends a batch of new observations and returns the newest timestamp the server has stored.
+    ///
+    /// The acknowledged timestamp is what the caller records as its cursor. Taking it from the
+    /// response rather than from the batch it sent means a partially merged batch — anything the
+    /// server chose to reject or deduplicate — leaves the cursor where the server actually is.
+    /// </summary>
+    public async Task<CloudAppendResult> AppendDayAsync(
+        CloudDayAppendRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await SendAsync(HttpMethod.Post, "player-wipe-tracker/days/append", request, cancellationToken).ConfigureAwait(false);
+        var status = (int)response.StatusCode;
+        if (status is < 200 or >= 300)
+        {
+            var reason = await ReadRefusalAsync(response, cancellationToken).ConfigureAwait(false);
+            return new CloudAppendResult(status, null, reason, Array.Empty<CloudPrunedArchive>(), null);
+        }
+
+        try
+        {
+            var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            using var document = JsonDocument.Parse(body);
+            if (!document.RootElement.TryGetProperty("data", out var data))
+                return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>(), null);
+
+            DateTime? acknowledged = null;
+            if (data.TryGetProperty("last_observed_at", out var last)
+                && last.ValueKind == JsonValueKind.String
+                && DateTime.TryParse(last.GetString(), CultureInfo.InvariantCulture,
+                    DateTimeStyles.RoundtripKind, out var parsed))
+            {
+                acknowledged = parsed.ToUniversalTime();
+            }
+
+            var pruned = new List<CloudPrunedArchive>();
+            if (data.TryGetProperty("pruned", out var prunedElement) && prunedElement.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in prunedElement.EnumerateArray())
+                {
+                    if (item.ValueKind != JsonValueKind.Object)
+                        continue;
+
+                    DateTime? started = null;
+                    if (item.TryGetProperty("wipe_started_at", out var startedElement)
+                        && startedElement.ValueKind == JsonValueKind.String
+                        && DateTime.TryParse(startedElement.GetString(), CultureInfo.InvariantCulture,
+                            DateTimeStyles.RoundtripKind, out var startedValue))
+                    {
+                        started = startedValue.ToUniversalTime();
+                    }
+
+                    pruned.Add(new CloudPrunedArchive(String(item, "server_name"), started));
+                }
+            }
+
+            CloudArchiveUsage? usage = null;
+            if (data.TryGetProperty("archive_usage", out var usageElement)
+                && usageElement.ValueKind == JsonValueKind.Object
+                && usageElement.TryGetProperty("used", out var used) && used.TryGetInt32(out var usedValue)
+                && usageElement.TryGetProperty("limit", out var limit) && limit.TryGetInt32(out var limitValue))
+            {
+                usage = new CloudArchiveUsage(usedValue, limitValue);
+            }
+
+            return new CloudAppendResult(status, acknowledged, null, pruned, usage);
+        }
+        catch
+        {
+            // A stored batch with an unreadable acknowledgement is still stored. Leaving the
+            // cursor put costs one repeated batch, and the server merges by timestamp.
+        }
+
+        return new CloudAppendResult(status, null, null, Array.Empty<CloudPrunedArchive>(), null);
+    }
+
+    /// <summary>
+    /// Why the server said no, in a form worth showing someone.
+    ///
+    /// A refusal here is usually a plan limit — the wipe archive count, the retention window —
+    /// and the reason travels in the body as <c>capability</c>. Discarding it left the client
+    /// silently not backing anything up with nothing anywhere saying why.
+    /// </summary>
+    private static async Task<string?> ReadRefusalAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(body))
+                return null;
+
+            using var document = JsonDocument.Parse(body);
+            var root = document.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+                return null;
+
+            if (root.TryGetProperty("capability", out var capability) && capability.ValueKind == JsonValueKind.String)
+                return $"plan limit reached: {capability.GetString()}";
+            if (root.TryGetProperty("message", out var message) && message.ValueKind == JsonValueKind.String)
+                return message.GetString();
+        }
+        catch
+        {
+            // The status code alone still gets logged.
+        }
+
+        return null;
     }
 
     public async Task<JsonDocument?> GetWipesAsync(CancellationToken cancellationToken = default)

@@ -5838,4 +5838,649 @@
   <data name="ImportFromPreviousWipe" xml:space="preserve">
     <value>من مسح سابق — معرّفات هذه الأجهزة لم تعد موجودة</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>ملاحظتك / الوصف</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>أضف ملاحظة (مثل أسلوب اللعب، الساعات، جدول المسح)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>إعلانك النشط (معاينة)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>لم تتم إضافة ملاحظة بعد</value>
+  </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>ساعات Rust</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>حالة VAC</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>سليم (0 حظر مسجل)</value>
+  </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>في انتظار قبول {0} لطلبك...</value>
+  </data>
+  <data name="ChatCmdNoBaseCodes" xml:space="preserve">
+    <value>لا توجد رموز قاعدة محفوظة.</value>
+  </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>البحث عن فريق</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>ابحث عن فريق، أو عن أعضاء لفريقك.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>حالتك</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>لا تبحث</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>تبحث عن فريق</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>تبحث عن أعضاء</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>الرسائل المباشرة</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>قبول الرسائل تلقائيًا</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>اسألني قبل القبول</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>لا تسمح بالرسائل</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>قبل أن تظهر في القائمة</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>سيتمكن اللاعبون الآخرون من رؤية اسمك وصورتك، ولغتك، وما إذا كنت متصلًا، والخادم الذي تلعب عليه، وعدد أفراد فريقك، ورابط ملفك على Steam.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>الخادم هو ما يهم حقًا: أي شخص يبحث عن فريق يرى أين تلعب. يمكنك التوقف عن الظهور في أي وقت.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>فهمت</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>يحتاج البحث عن فريق إلى ميزات السحابة. حسابك هو ما يراسله اللاعبون الآخرون، ومن دونه لا يوجد شيء يتصلون به.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>إعداد السحابة</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>ما دمت مدرجًا في القائمة، لا بد من طريقة واحدة على الأقل للوصول إليك.</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>المجتمع</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>الدردشة العامة والبحث عن فريق</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>فرق تبحث عن أعضاء</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>لاعبون يبحثون عن فريق</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>كل اللغات</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>المتصلون فقط</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>لا أحد مدرج الآن. جرّب لاحقًا، أو أضف نفسك بالأعلى.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>إرسال رسالة</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>ملف Steam</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>الرسائل</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>لا رسائل بعد. راسل أحدًا من القائمة بالأعلى.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>اكتب رسالة…</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>قبول</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>طلب</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>مرفوض</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>يريد {0} مراسلتك.</value>
+  </data>
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>رفضت هذا الطلب. لا يمكنه المراسلة مرة أخرى.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>حظر هذا اللاعب</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>الإبلاغ عن هذا اللاعب</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>مراسلة {0}</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>ألقِ التحية واذكر ما تبحث عنه…</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>الرسائل الأولى قصيرة عن قصد. إذا ردّوا، فما بعدها محادثة عادية.</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>الدردشة العامة</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>البحث عن فريق</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>راسل الجميع…</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>لم يقل أحد شيئًا بعد. ابدأ أنت.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>لا يمكنك الكتابة حتى {0}. السبب: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>لم يعد بإمكانك الكتابة هنا. السبب: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>كل من هنا يرى اسمك. ولا أحد يرى الخادم الذي تلعب عليه.</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>مركز المجتمع</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>تحدث مع الجميع، أو اعثر على من تلعب معهم.</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>الإبلاغ عن {0}</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>يقرأ المشرفون كل بلاغ. أخبرنا أي وصف هو الأقرب.</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>مضايقة أو تهديد</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>رسائل مزعجة أو إعلانات</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>احتيال أو تصيّد</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>خطاب كراهية</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>محتوى جنسي أو صادم</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>شيء آخر</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>هل من شيء آخر ينبغي أن نعرفه؟ (اختياري)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>ما الذي حدث، بكلماتك</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>الرسالة التي تبلّغ عنها</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>إرسال البلاغ</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>تم إرسال البلاغ</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>شكرًا لك. سينظر فيه أحد المشرفين. ويمكنك أيضًا حظر هذا اللاعب إن كنت تفضّل ألا تسمع منه في هذه الأثناء.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>تعذّر إرسال البلاغ. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>لم يُفتح بعد</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>تُفتح دردشة المجتمع على مراحل. ستظهر هنا حين يشمل الدور حسابك — لا خطب في جهازك.</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>قبل أن تكتب هنا</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>هذه الغرفة عامة. كل من يستخدم Rust+ Desktop يستطيع قراءة ما تكتبه.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>غير مسموح: الروابط بجميع أنواعها، والإعلانات، والبيع والمقايضة، والمضايقة والتهديد، وخطاب الكراهية، والمحتوى الجنسي أو الصادم، وانتحال صفة فريق العمل.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>يقرأ المشرفون كل بلاغ. مخالفة هذه القواعد قد تكلّفك الغرفة لفترة، أو نهائيًا — والحظر النهائي يتبع حساب Steam لا التثبيت. حساب جديد بنفس معرّف Steam لن يعيدك.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>قرأت ذلك</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>ليس الآن</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>الروابط غير مسموح بها في الغرفة العامة. أرسله في رسالة مباشرة بدلًا من ذلك.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>أرسلت ذلك للتو. امهل قليلًا.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>يمكن للحسابات الجديدة الكتابة هنا بعد انتظار قصير. هذا ما يبقي الغرفة صالحة للاستخدام.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>لم يبقَ شيء لإرساله.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>تعذّر الإرسال. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>فتح ملف Steam</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>نسخ معرّف Steam</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>عضو في Steam منذ</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>الموقع</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>يوجد حظر VAC مسجّل</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>ملف Steam هذا خاص.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>لم يستجب Steam. قد يكون الملف خاصًا، أو Steam مشغولًا.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>اللاعبون المحظورون</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>لا يستطيع أي منكما مراسلة الآخر، ولا يظهر أحدكما للآخر في الغرفة أو القوائم. ولا يُبلَّغ الطرف الآخر بذلك.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>لم تحظر أحدًا.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>إلغاء الحظر</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>حُظر في</value>
+  </data>
+  <data name="ChatScrollToBottom" xml:space="preserve">
+    <value>الانتقال إلى الأحدث</value>
+  </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>دردشة الداعمين</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>صندوق الوارد</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>تصل هنا الطلبات المتعلقة بإعلانات LFG وLFM الخاصة بك، وكذلك ردود من راسلتهم.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>غرفة للداعمين</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>غرفة أهدأ، بلا زحام الغرفة العامة. تُفتح لكل من يدعم Rust+ Desktop، وتبقى مفتوحة ما دمت كذلك.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>ادعم Rust+ Desktop</value>
+  </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>الأصدقاء</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>لا أحد في القائمة بعد. أضف شخصًا بمعرّف Steam أدناه.</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>معرّف Steam (17 رقمًا)</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>عرّف بنفسك — هذه الرسالة الوحيدة المتاحة لك</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>إرسال الطلب</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>بانتظار ردّك</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>بانتظار ردّهم</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>قبول</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>إزالة من الأصدقاء</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>سحب</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>إرسال رسالة</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>إضافة كصديق</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>غير متصل</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>ليس على خادم</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>لا يوجد حساب يستخدم معرّف Steam هذا.</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>سبق أن طلبت. امنحه فرصة للرد.</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>أنتما صديقان بالفعل.</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>رُفض ذلك الطلب.</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>تعذّر إرسال هذا الطلب.</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>تعذّر الإرسال. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>أُرسل الطلب. سيرى رسالتك ويمكنه الرد عليها.</value>
+  </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>المسارات</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>المسارات — طرق لها اسم وطول وزمن ركض</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>مسار بالأسهم — ارسم خطًا وتتبعه أسهم الاتجاه (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>مسار جديد</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>الخروج من وضع المسارات</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>حذف المسار</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>إظهار أو إخفاء على الخريطة</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>لا مسارات بعد. أنشئ واحدًا وسمِّه ثم ارسمه على الخريطة.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter للإنشاء وEscape للإلغاء. يأخذ المسار لون القلم الحالي.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>ارسم على الخريطة. الخط الأول يحدد نقطة البداية، وإن تابعت من النهاية تحركت النهاية معك. عد إلى البداية فينغلق المسار في دورة كاملة.</value>
+  </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>أوامر دردشة العشيرة</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>دردشة الفريق تستجيب للأوامر دائمًا. فعّل هذا الخيار للرد عليها في دردشة العشيرة أيضًا، واختر الرتب المسموح لها باستخدامها.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>الرد على الأوامر في دردشة العشيرة</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>الرتب المسموح لها باستخدام الأوامر</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>لا توجد رتبة يُسمح لها باستخدام الأوامر بعد — حدّد رتبة واحدة على الأقل أعلاه.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>تضمين المفاتيح الذكية</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>معظم أعضاء العشيرة لا يملكون صلاحيات خزانة الأدوات في قاعدتك ولن يتمكنوا من التحكم بالأجهزة على أي حال.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>تضمين رموز القاعدة</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>رمز الباب المنشور في دردشة العشيرة لا يمكن سحبه.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>العشيرة</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>دردشة اللعبة التي تصل إليها التنبيهات. غير متاح أثناء تفعيل «ديسكورد فقط».</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>صيانة خزانة الأدوات</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>حالة سفينة الشحن</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>بدء مؤقت 15 دقيقة لـ Oil Rig</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>الوقت داخل اللعبة</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>رموز القاعدة</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>عدد اللاعبين على الخادم</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>عرض الأوامر المتاحة</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>الجديد في 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>أهم أربعة تغييرات منذ الإصدار 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>مركز المجتمع</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>دردشة عامة ودردشة للداعمين، والبحث عن فريق مع معاينة ملف Steam قبل الرد، وقائمة أصدقاء، وصندوق وارد، ونظام إبلاغ.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>مسارات الجمع على الخريطة</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>ارسم المسارات بجانب طبقات الخريطة. يعرض كل مسار طوله بالأمتار ومدته عند الركض السريع، ويُشارَك مع فريقك.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>الأوامر في دردشة العشيرة</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>صار بالإمكان الرد على الأوامر في دردشة العشيرة، بصلاحيات حسب الرتبة. تبقى رموز الأبواب والمفاتيح مستثناة ما لم تضمّها بنفسك.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>المنزل الذكي</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>يمكن لـ Home Assistant التحكم بمفاتيحك عبر نقطة REST. حصلت Alexa على نقاط إقليمية لتحسين اكتشاف الأجهزة، وGoogle Home جاهز لكنه بانتظار الاعتماد.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>عدم الإظهار مرة أخرى</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>ملاحظات الإصدار الكاملة</value>
+  </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>تم حذف أقدم نسخة احتياطية للوايب</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>تحتفظ خطتك بعدد محدود من النسخ الاحتياطية للوايب. لإفساح المجال للوايب الجديد، تم حذف الأقدم: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>خادم غير معروف</value>
+  </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>تبقّى مكان واحد للنسخ الاحتياطية للوايب</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>تم استخدام {0} من {1} من النسخ الاحتياطية للوايب. عند بدء الوايب التالي سيُحذف الأقدم تلقائيًا — اختر نسخة أخرى من Wipe Tracker · Cloud restore إذا كنت تفضّل الاحتفاظ به.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>حذف النسخة الاحتياطية</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>حذف النسخة الاحتياطية للوايب</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>هل تريد حذف النسخة السحابية لـ {0} ({1}) نهائيًا؟ لا يمكن التراجع عن ذلك.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>تم حذف النسخة الاحتياطية للوايب.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>تعذّر حذف النسخة الاحتياطية للوايب.</value>
+  </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>نسخ النص</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>الترجمة بواسطة Google</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>ترجمة الرسالة</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>هذه الرسالة بلغتك بالفعل.</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>ترجمة الرسالة</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>ستُرسل الترجمة نص الرسالة إلى ترجمة Google. هل تريد المتابعة؟</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>لون اسمك</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>لون الاسم</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>استخدام اللون الافتراضي</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>لون الرسائل</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>تعذّر حفظ اللون.</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>كهرماني</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>وردي</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>بنفسجي</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>سماوي</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>زمردي</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>ليموني</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>سيان</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>برتقالي</value>
+  </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>رد</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>إلغاء الرد</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>تم حذف الرسالة</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>الرسالة الأصلية لم تعد ضمن السجل الظاهر.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>تعذّر الوصول إلى خدمة الترجمة. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>ترجمة</value>
+  </data>
 </root>

@@ -44,6 +44,8 @@ public partial class App : Application
     {
         VelopackApp.Build().Run();
 
+        CrashReporter.Initialize();
+
         var app = new App();
         app.InitializeComponent();
         app.Run();
@@ -51,6 +53,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        CrashReporter.Initialize(Dispatcher);
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
         base.OnStartup(e);
         _ = StartupWithSplashAsync(e.Args);
@@ -114,10 +117,12 @@ public partial class App : Application
             UpdateSplashStatus(splash, splashDispatcher, "Preparing system tray…");
             SetupTrayIcon();
 
+            // Background player tracking is retired: the server-side name randomiser made it
+            // unreliable on most servers, and its toggle is gone from Settings. Clear the stored
+            // flag once rather than leaving anyone with a poller they can no longer switch off.
             if (TrackingService.IsBackgroundTrackingEnabled)
             {
-                var (host, port, name) = TrackingService.LastServer;
-                TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
+                TrackingService.IsBackgroundTrackingEnabled = false;
             }
 
             // ── Load MainWindow invisibly on the main thread ─────────────────────────

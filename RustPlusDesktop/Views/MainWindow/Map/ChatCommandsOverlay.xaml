@@ -126,6 +126,7 @@
                              <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                              <ui:TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CmdOilRig}" Margin="0,4" VerticalAlignment="Center" />
 
+
                              <!--  Heli — hidden on servers without event markers; the row is Auto-sized,
                                    so collapsing all three cells removes it without leaving a gap.  -->
                              <TextBlock x:Name="CmdRowHeliLabel" Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
@@ -328,6 +329,63 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                        </StackPanel>
+
+                        <!--
+                            Clan Commands Section. Only shown once a clan has actually been pulled
+                            for this server: on a server where the player is in no clan the whole
+                            block would be settings for something that cannot happen.
+                        -->
+                        <StackPanel x:Name="ClanCommandsSection"
+                                    Margin="0,20,0,0"
+                                    Visibility="{Binding HasClanRolePermissions, Converter={StaticResource Vis}}">
+                            <TextBlock Text="{DynamicResource ClanCommandsCategory}" Foreground="{DynamicResource Accent}" Margin="0,0,0,2" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ClanCommandsDesc}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+
+                            <CheckBox x:Name="EnableClanCommandsCheckBox"
+                                      Content="{DynamicResource ClanCommandsEnable}"
+                                      IsChecked="{Binding ClanChatCommandsEnabled, Mode=TwoWay}"
+                                      Style="{StaticResource DotCheckBox}"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,0,8" />
+
+                            <!-- Everything below only means anything once clan answering is on. -->
+                            <StackPanel Margin="18,0,0,0" Visibility="{Binding ClanChatCommandsEnabled, Converter={StaticResource Vis}}">
+                                <TextBlock Text="{DynamicResource ClanCommandsRolesHeader}" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4" />
+
+                                <ItemsControl ItemsSource="{Binding ClanRolePermissions}" Margin="0,0,0,6">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}"
+                                                      IsChecked="{Binding Allowed, Mode=TwoWay}"
+                                                      Style="{StaticResource DotCheckBox}"
+                                                      Margin="0,3" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Clan answering can be on with every role still unticked, which
+                                     looks broken but is only ungranted. Say so rather than letting
+                                     the commands silently do nothing. -->
+                                <TextBlock Text="{DynamicResource ClanCommandsNoRoles}"
+                                           Foreground="#E0B341"
+                                           FontSize="11"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,10"
+                                           Visibility="{Binding HasAllowedClanRole, Converter={StaticResource VisInv}}" />
+
+                                <CheckBox Content="{DynamicResource ClanCommandsAllowSwitches}"
+                                          IsChecked="{Binding ClanCommandsAllowSwitches, Mode=TwoWay}"
+                                          Style="{StaticResource DotCheckBox}"
+                                          Margin="0,0,0,2" />
+                                <TextBlock Text="{DynamicResource ClanCommandsAllowSwitchesHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="18,0,0,8" />
+
+                                <CheckBox Content="{DynamicResource ClanCommandsAllowBaseCodes}"
+                                          IsChecked="{Binding ClanCommandsAllowBaseCodes, Mode=TwoWay}"
+                                          Style="{StaticResource DotCheckBox}"
+                                          Margin="0,0,0,2" />
+                                <TextBlock Text="{DynamicResource ClanCommandsAllowBaseCodesHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="18,0,0,0" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

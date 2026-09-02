@@ -217,12 +217,19 @@
 
                         <ui:ToggleSwitch x:Name="ChkStreamerMode" Content="{DynamicResource EnableStreamerMode}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource StreamerModeToolTip}" />
 
-                        <ui:ToggleSwitch x:Name="ChkBackgroundTracking" Content="{DynamicResource BackgroundTracking}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource BackgroundTrackingToolTip}" />
 
                         <ui:ToggleSwitch x:Name="ChkHideConsole" Content="{DynamicResource HideSystemConsole}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource HideConsoleToolTip}" />
+                        <ui:ToggleSwitch x:Name="ChkTrafficMonitor" Content="Network Traffic &amp; Bandwidth Monitor" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Enable real-time network traffic tracking, bandwidth meter, and packet inspector." />
                         <ui:ToggleSwitch x:Name="ChkCloudSync" Content="{DynamicResource CloudSync}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource CloudSyncDesc}" />
                         <ui:ToggleSwitch x:Name="ChkPlayerWipeTracker" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
-                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloud" Content="Player Wipe Tracker cloud backup" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloud" Content="Player Wipe Tracker cloud backup" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." Margin="0,0,0,12" />
+
+                        <ui:Button x:Name="BtnOpenCrashLogs"
+                                   Content="Open Crash &amp; Freeze Logs Folder"
+                                   Icon="{ui:SymbolIcon Symbol=FolderOpen24}"
+                                   Click="BtnOpenCrashLogs_Click"
+                                   Appearance="Secondary"
+                                   ToolTip="Opens the directory where crash reports, freeze logs, and diagnostics are saved." />
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
@@ -665,6 +672,8 @@
                                     <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnAlexaHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="{DynamicResource UiAlexaSetupInfo}" VerticalAlignment="Top" />
                                 </Grid>
                                 
+                                <TextBlock x:Name="TxtAlexaStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
+
                                 <ui:TextBlock Text="{DynamicResource UiAmazonAlexaLogin}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
                                 <Grid Margin="0,0,0,16">
                                     <Grid.ColumnDefinitions>
@@ -688,8 +697,83 @@
                                 </Grid>
                             </StackPanel>
                         </ui:CardExpander>
+                        <ui:CardExpander Header="Home Assistant" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                            <StackPanel Margin="0,8,0,0">
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="Control your Rust smart switches from Home Assistant using a REST switch. Generate an API token, then add the generated snippet to your configuration.yaml." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnHomeAssistantHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Home Assistant setup info" VerticalAlignment="Top" />
+                                </Grid>
 
-                        <ui:ToggleSwitch x:Name="ChkTelegramIntegration" Content="{DynamicResource UiTeamPathsTracking}" Margin="0,0,0,10" Opacity="0.45" IsEnabled="False" />
+                                <TextBlock x:Name="TxtHaStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
+
+                                <ui:TextBlock Text="API Token" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnGenerateHaToken" Content="Generate Token" Icon="{ui:SymbolIcon Symbol=Key24}" HorizontalAlignment="Stretch" Height="36" Click="BtnGenerateHaToken_Click" />
+                                    <ui:Button x:Name="BtnCopyHaToken" Grid.Column="1" Content="Copy" Icon="{ui:SymbolIcon Symbol=Copy24}" Height="36" Margin="8,0,0,0" IsEnabled="False" Click="BtnCopyHaToken_Click" />
+                                </Grid>
+                                <ui:TextBox x:Name="TxtHaToken" IsReadOnly="True" Height="28" Padding="6,4" Margin="0,0,0,16" FontFamily="Consolas" PlaceholderText="No token generated yet" />
+
+                                <ui:TextBlock Text="Example configuration.yaml" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <ui:TextBlock Text="Replace SERVERKEY_ENTITYID with a device id from your device list (shown as {host}-{port}_{entityId})." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,4" />
+                                <ui:TextBox x:Name="TxtHaSnippet" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" MaxHeight="180" Padding="6,4" Margin="0,0,0,8" FontFamily="Consolas" FontSize="11" />
+                                <ui:Button x:Name="BtnCopyHaSnippet" Content="Copy Snippet" Icon="{ui:SymbolIcon Symbol=Copy24}" HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,16" Click="BtnCopyHaSnippet_Click" />
+
+                                <ui:Button x:Name="BtnRevokeHa" Content="Revoke Token" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Click="BtnRevokeHa_Click" />
+                            </StackPanel>
+                        </ui:CardExpander>
+                        <ui:CardExpander Header="Google Home" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                            <StackPanel Margin="0,8,0,0">
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="Control your Rust smart switches with Google Home / Assistant, and get raid alarms as motion sensors. Generate a PIN, pick a server, then add the RustPlusDesktop service in the Google Home app and enter the PIN." Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" />
+                                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=QuestionCircle24}" Click="BtnGoogleHelp_Click" Appearance="Transparent" Foreground="{DynamicResource Accent}" BorderThickness="0" Padding="4,0" Margin="4,0,0,0" ToolTip="Google Home setup info" VerticalAlignment="Top" />
+                                </Grid>
+
+                                <TextBlock x:Name="TxtGoogleStatusNote" Visibility="Collapsed" TextWrapping="Wrap" FontSize="11" Padding="8,6" Margin="0,0,0,10" Background="#3A2A15" Foreground="#F0B75E" />
+
+                                <ui:TextBlock Text="Google Login PIN" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnGenerateGooglePIN" Content="Generate Login PIN" Icon="{ui:SymbolIcon Symbol=Key24}" HorizontalAlignment="Stretch" Height="36" Click="BtnGenerateGooglePIN_Click" />
+                                    <ui:TextBlock x:Name="TxtGooglePIN" Grid.Column="1" Text="123456" Visibility="Collapsed" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="12,0,0,0" Foreground="{DynamicResource Accent}" />
+                                </Grid>
+
+                                <ui:TextBlock Text="Select server to sync with Google Home" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <ComboBox x:Name="CmbGoogleServer" MinHeight="32" Padding="8,4" Margin="0,0,0,12" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:Button x:Name="BtnLinkGoogle" Grid.Column="0" Content="Link Selected Server" Icon="{ui:SymbolIcon Symbol=Link24}" Appearance="Primary" HorizontalAlignment="Stretch" Height="36" Margin="0,0,4,0" Click="BtnLinkGoogle_Click" />
+                                    <ui:Button x:Name="BtnRevokeGoogle" Grid.Column="1" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeGoogle_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </ui:CardExpander>
+
+                        <!--
+                            The same two flags as under General. The tracker is a connected service
+                            in every practical sense, and someone reviewing what this app sends
+                            outward looks here, not under Behaviour. Both copies write the one
+                            setting; OnPlayerWipeTrackerToggled keeps them showing the same thing.
+                        -->
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeTrackerConnected" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />
+                        <ui:ToggleSwitch x:Name="ChkPlayerWipeCloudConnected" Content="Player Wipe Tracker cloud backup" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Uploads compact daily tracker documents only after you enable this setting." />
                     </StackPanel>
                 </ui:Card>
                 <ui:Button

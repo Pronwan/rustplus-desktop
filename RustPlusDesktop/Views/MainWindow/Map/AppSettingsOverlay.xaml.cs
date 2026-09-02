@@ -153,7 +153,7 @@ namespace RustPlusDesk.Views
 
         private static string T(string key, string fallback)
         {
-            return Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+            return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
         }
 
         private void InitializeSettingsNavigation()
@@ -168,7 +168,7 @@ namespace RustPlusDesk.Views
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
                 Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
-                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync", SectionCloud),
+                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync wipe tracker player backup", SectionCloud),
                 Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
                 Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
                 Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
@@ -597,43 +597,19 @@ namespace RustPlusDesk.Views
 
         private void PopulateLanguages()
         {
+            // One list, shared with the LFG filter and the flag on a listing. They used to be
+            // three, and they disagreed.
             var langs = new List<LanguageOption>
             {
                 new() { Name = "System Default", Code = "", ImagePath = null },
-                // Region-specific codes matching %locale% Crowdin-generated folders
-                new() { Name = "English",           Code = "en-US",  ImagePath = "pack://application:,,,/Assets/Flags/en.png" },
-                new() { Name = "Deutsch",            Code = "de-DE",  ImagePath = "pack://application:,,,/Assets/Flags/de.png" },
-                new() { Name = "Français",           Code = "fr-FR",  ImagePath = "pack://application:,,,/Assets/Flags/fr.png" },
-                new() { Name = "Español",            Code = "es-ES",  ImagePath = "pack://application:,,,/Assets/Flags/es-ES.png" },
-                new() { Name = "Italiano",           Code = "it-IT",  ImagePath = "pack://application:,,,/Assets/Flags/it.png" },
-                new() { Name = "Polski",             Code = "pl-PL",  ImagePath = "pack://application:,,,/Assets/Flags/pl.png" },
-                new() { Name = "Русский",            Code = "ru-RU",  ImagePath = "pack://application:,,,/Assets/Flags/ru.png" },
-                new() { Name = "Türkçe",             Code = "tr-TR",  ImagePath = "pack://application:,,,/Assets/Flags/tr.png" },
-                new() { Name = "Português (BR)",     Code = "pt-BR",  ImagePath = "pack://application:,,,/Assets/Flags/pt-BR.png" },
-                new() { Name = "Português (PT)",     Code = "pt-PT",  ImagePath = "pack://application:,,,/Assets/Flags/pt-PT.png" },
-                new() { Name = "Nederlands",         Code = "nl-NL",  ImagePath = "pack://application:,,,/Assets/Flags/nl.png" },
-                new() { Name = "Dansk",              Code = "da-DK",  ImagePath = "pack://application:,,,/Assets/Flags/da.png" },
-                new() { Name = "Norsk",              Code = "no-NO",  ImagePath = "pack://application:,,,/Assets/Flags/no.png" },
-                new() { Name = "Svenska",            Code = "sv-SE",  ImagePath = "pack://application:,,,/Assets/Flags/sv-SE.png" },
-                new() { Name = "Suomi",              Code = "fi-FI",  ImagePath = "pack://application:,,,/Assets/Flags/fi.png" },
-                new() { Name = "Čeština",            Code = "cs-CZ",  ImagePath = "pack://application:,,,/Assets/Flags/cs.png" },
-                new() { Name = "Magyar",             Code = "hu-HU",  ImagePath = "pack://application:,,,/Assets/Flags/hu.png" },
-                new() { Name = "Română",             Code = "ro-RO",  ImagePath = "pack://application:,,,/Assets/Flags/ro.png" },
-                new() { Name = "Srpski",             Code = "sr-Latn-RS", ImagePath = "pack://application:,,,/Assets/Flags/sr.png" },
-                new() { Name = "Ελληνικά",           Code = "el-GR",  ImagePath = "pack://application:,,,/Assets/Flags/el.png" },
-                new() { Name = "Українська",         Code = "uk-UA",  ImagePath = "pack://application:,,,/Assets/Flags/uk.png" },
-                new() { Name = "Tiếng Việt",         Code = "vi-VN",  ImagePath = "pack://application:,,,/Assets/Flags/vi.png" },
-                new() { Name = "العربية",             Code = "ar-SA",  ImagePath = "pack://application:,,,/Assets/Flags/ar.png" },
-                new() { Name = "עברית",              Code = "he-IL",  ImagePath = "pack://application:,,,/Assets/Flags/he.png" },
-                new() { Name = "日本語",              Code = "ja-JP",  ImagePath = "pack://application:,,,/Assets/Flags/ja.png" },
-                new() { Name = "한국어",              Code = "ko-KR",  ImagePath = "pack://application:,,,/Assets/Flags/ko.png" },
-                new() { Name = "简体中文",            Code = "zh-CN",  ImagePath = "pack://application:,,,/Assets/Flags/zh-CN.png" },
-                new() { Name = "繁體中文",            Code = "zh-TW",  ImagePath = "pack://application:,,,/Assets/Flags/zh-TW.png" },
-                new() { Name = "简体中文 (Hans)",     Code = "zh-Hans", ImagePath = "pack://application:,,,/Assets/Flags/zh-Hans.png" },
-                new() { Name = "繁體中文 (Hant)",     Code = "zh-Hant", ImagePath = "pack://application:,,,/Assets/Flags/zh-Hant.png" },
-                new() { Name = "Català",             Code = "ca-ES",  ImagePath = "pack://application:,,,/Assets/Flags/ca.png" },
-                new() { Name = "Afrikaans",          Code = "af-ZA",  ImagePath = "pack://application:,,,/Assets/Flags/af.png" },
             };
+
+            langs.AddRange(Helpers.AppLanguages.All.Select(l => new LanguageOption
+            {
+                Name = l.Name,
+                Code = l.Code,
+                ImagePath = l.FlagPath,
+            }));
 
             CmbLanguage.ItemsSource = langs.OrderBy(l => l.Code == "" ? 1 : 0).ThenBy(l => l.Name).ToList();
         }
@@ -646,8 +622,8 @@ namespace RustPlusDesk.Views
             ChkStartMinimized.IsChecked = TrackingService.StartMinimizedEnabled;
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
-            ChkBackgroundTracking.IsChecked = TrackingService.IsBackgroundTrackingEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
+            ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
@@ -716,8 +692,7 @@ namespace RustPlusDesk.Views
 
             // Cloud Sync Setting load
             ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
-            ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
-            ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+            SyncPlayerWipeTrackerToggles();
 
             // Team marker settings
             ChkShowProfileMarkers.IsChecked  = TrackingService.MapShowSteamMarkers;
@@ -815,6 +790,16 @@ namespace RustPlusDesk.Views
             {
                 PopulateAlexaServers();
                 _ = LoadAlexaSettingsAsync();
+
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    _ = LoadHomeAssistantSettingsAsync();
+
+                    PopulateGoogleServers();
+                    _ = LoadGoogleSettingsAsync();
+
+                    _ = InitFeatureFlagsAsync();
+                }
             }
         }
 
@@ -842,8 +827,8 @@ namespace RustPlusDesk.Views
             TrackingService.StartMinimizedEnabled = ChkStartMinimized.IsChecked == true;
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
-            TrackingService.IsBackgroundTrackingEnabled = ChkBackgroundTracking.IsChecked == true;
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
+            TrackingService.TrafficMonitorEnabled = ChkTrafficMonitor.IsChecked == true;
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
             
             if (CmbMapScalingMode != null && CmbMapScalingMode.SelectedIndex >= 0)
@@ -938,14 +923,48 @@ namespace RustPlusDesk.Views
         // OnSettingChanged rewrite so these global flags only change when the user actually
         // clicks the toggles — never as a side effect of another setting or a panel reload.
         // This is why the tracker no longer switches itself off on wipe/server changes.
+        //
+        // Both flags appear twice — under General and under Connected Services — so whichever
+        // copy was clicked is the one that carries the new value, and the other has to be brought
+        // along. _syncingWipeToggles stops that write from coming straight back in as another
+        // toggle event and overwriting what the user just chose.
+        private bool _syncingWipeToggles;
+
         private void OnPlayerWipeTrackerToggled(object sender, RoutedEventArgs e)
         {
-            if (!_isSettingsInitialized) return;
+            if (!_isSettingsInitialized || _syncingWipeToggles) return;
 
-            TrackingService.PlayerWipeTrackerEnabled = ChkPlayerWipeTracker.IsChecked == true;
-            TrackingService.PlayerWipeTrackerCloudBackupEnabled = ChkPlayerWipeCloud.IsChecked == true;
+            bool tracker = ReferenceEquals(sender, ChkPlayerWipeTrackerConnected)
+                ? ChkPlayerWipeTrackerConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeTracker)
+                    ? ChkPlayerWipeTracker.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerEnabled;
 
+            bool cloud = ReferenceEquals(sender, ChkPlayerWipeCloudConnected)
+                ? ChkPlayerWipeCloudConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeCloud)
+                    ? ChkPlayerWipeCloud.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+
+            TrackingService.PlayerWipeTrackerEnabled = tracker;
+            TrackingService.PlayerWipeTrackerCloudBackupEnabled = cloud;
+
+            SyncPlayerWipeTrackerToggles();
             ParentWindow?.RefreshPlayerWipeTrackerSession();
+        }
+
+        /// <summary>Points all four switches at what the setting now says.</summary>
+        private void SyncPlayerWipeTrackerToggles()
+        {
+            _syncingWipeToggles = true;
+            try
+            {
+                ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+                ChkPlayerWipeTrackerConnected.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloudConnected.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+            }
+            finally { _syncingWipeToggles = false; }
         }
 
         private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)
@@ -987,7 +1006,6 @@ namespace RustPlusDesk.Views
       
         private void BtnDelete3DMapData_Click(object sender, RoutedEventArgs e)
         {
-            var owner = ParentWindow ?? Window.GetWindow(this);
             var result = MessageBox.Show(
                 "Delete all cached 3D map data for every server? This removes parsed map files and generated viewer JSON, but keeps app assets and icons.",
                 "Delete 3D Map Data",
@@ -999,7 +1017,7 @@ namespace RustPlusDesk.Views
             var deleted = Map3DLocalBuildService.DeleteAllCachedMapData();
             ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
             ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
-            MessageBox.Show(owner, RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), WpfUi.ControlAppearance.Success);
         }
 
         private async void BtnPurgeOrphanedCloudData_Click(object sender, RoutedEventArgs e)
@@ -1038,7 +1056,7 @@ namespace RustPlusDesk.Views
                     string msg = string.Format(formatStr, result.PurgedMapOverlays, result.PurgedBaseMarkers, result.PurgedSmartDevices, result.PurgedUserServers);
 
                     ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.TotalPurgedCount} items removed.");
-                    MessageBox.Show(owner, msg, Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", msg, WpfUi.ControlAppearance.Success);
                 }
                 else
                 {
@@ -1077,7 +1095,7 @@ namespace RustPlusDesk.Views
                     {
                         RustPlusDesk.Services.Data.BackupDataModule.CreateBackup(sfd.FileName, dialog.Password);
                         ParentWindow.AppendLog(string.Format(Properties.Resources.BackupSuccessLog, sfd.FileName));
-                        MessageBox.Show(Properties.Resources.BackupSuccessMessage, Properties.Resources.BackupSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                        ParentWindow?.ShowInfoSnackbar(Properties.Resources.BackupSuccessTitle, Properties.Resources.BackupSuccessMessage, WpfUi.ControlAppearance.Success);
                     }
                     catch (Exception ex)
                     {
@@ -1129,7 +1147,7 @@ namespace RustPlusDesk.Views
                 {
                     RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
                     ParentWindow.ReloadApplicationData();
-                    MessageBox.Show(Properties.Resources.RestoreSuccessMessage, Properties.Resources.RestoreSuccessTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.RestoreSuccessTitle, Properties.Resources.RestoreSuccessMessage, WpfUi.ControlAppearance.Success);
                 }
                 catch (System.Security.Cryptography.CryptographicException)
                 {
@@ -1361,7 +1379,7 @@ namespace RustPlusDesk.Views
                     BtnSyncFcm.Content = RustPlusDesk.Properties.Resources.GetString("UiSyncCloudConnection");
                     BtnSyncFcm.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.CloudArrowUp24 };
                     BtnSyncFcm.ClearValue(WpfUi.Button.ForegroundProperty);
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), WpfUi.ControlAppearance.Success);
                 }
                 else
                 {
@@ -1414,7 +1432,7 @@ namespace RustPlusDesk.Views
                         await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Delete, null, delParams);
                     }
                     
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), WpfUi.ControlAppearance.Success);
                     _ = LoadDiscordBotSettingsAsync();
                 }
                 catch (Exception ex)
@@ -1485,7 +1503,7 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), WpfUi.ControlAppearance.Success);
                 _ = LoadDiscordBotSettingsAsync();
             }
             catch (Exception ex)
@@ -1554,7 +1572,7 @@ namespace RustPlusDesk.Views
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
                 await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
 
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), WpfUi.ControlAppearance.Success);
             }
             catch (Exception ex)
             {
@@ -2192,7 +2210,7 @@ namespace RustPlusDesk.Views
                 }
 
                 CmbAlexaServer.SelectedItem = null;
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), MessageBoxButton.OK, MessageBoxImage.Information);
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), WpfUi.ControlAppearance.Success);
             }
             catch (Exception ex)
             {
@@ -2201,6 +2219,413 @@ namespace RustPlusDesk.Views
             finally
             {
                 BtnRevokeAlexa.IsEnabled = true;
+            }
+        }
+
+        // --- Home Assistant integration (platform-only) ---
+
+        /// <summary>Public base URL of the cloud worker that serves the /api/ha endpoints.</summary>
+        private const string HaWorkerBaseUrl = "https://worker.rustplusdesktop.cloud";
+
+        private async Task LoadHomeAssistantSettingsAsync()
+        {
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.GetTokenAsync();
+                ApplyHaToken(token);
+            }
+            catch
+            {
+                // No token yet, or the endpoint is unreachable — leave the panel in its empty state.
+                ApplyHaToken(null);
+            }
+        }
+
+        /// <summary>Reflect a token (or its absence) into the token box, copy button, and snippet.</summary>
+        private void ApplyHaToken(string? token)
+        {
+            var hasToken = !string.IsNullOrEmpty(token);
+
+            TxtHaToken.Text = hasToken ? token : string.Empty;
+            BtnCopyHaToken.IsEnabled = hasToken;
+            BtnGenerateHaToken.Content = hasToken ? "Regenerate Token" : "Generate Token";
+            TxtHaSnippet.Text = BuildHaSnippet(token);
+        }
+
+        private static string BuildHaSnippet(string? token)
+        {
+            var bearer = string.IsNullOrEmpty(token) ? "<YOUR_TOKEN>" : token;
+
+            return
+                "# Add to Home Assistant configuration.yaml\n" +
+                "switch:\n" +
+                "  - platform: rest\n" +
+                "    name: Rust Smart Switch\n" +
+                $"    resource: {HaWorkerBaseUrl}/api/ha/switch/SERVERKEY_ENTITYID\n" +
+                "    headers:\n" +
+                $"      Authorization: \"Bearer {bearer}\"\n" +
+                "    body_on: '{\"on\": true}'\n" +
+                "    body_off: '{\"on\": false}'\n" +
+                "    is_on_template: \"{{ value_json.on }}\"";
+        }
+
+        private async void BtnGenerateHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Home Assistant integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            BtnGenerateHaToken.IsEnabled = false;
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.RegenerateTokenAsync();
+                ApplyHaToken(token);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token generated. Copy it into your configuration.yaml.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to generate Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateHaToken.IsEnabled = true;
+            }
+        }
+
+        private void BtnCopyHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaToken.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaToken.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Token copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private void BtnCopyHaSnippet_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaSnippet.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaSnippet.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Configuration snippet copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private async void BtnRevokeHa_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
+
+            BtnRevokeHa.IsEnabled = false;
+            try
+            {
+                await Services.Cloud.CloudHomeAssistantAdapter.RevokeAsync();
+                ApplyHaToken(null);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token revoked.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeHa.IsEnabled = true;
+            }
+        }
+
+        private async void BtnHomeAssistantHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use the Home Assistant integration:\n\n" +
+                      "1. Click 'Generate Token' to create your API token.\n" +
+                      "2. Copy the token (or the whole example snippet).\n" +
+                      "3. In Home Assistant, open configuration.yaml and add a REST switch per device.\n" +
+                      "4. Replace SERVERKEY_ENTITYID with a device id from your device list — the format is {host}-{port}_{entityId}.\n" +
+                      "5. Restart Home Assistant. The switch appears and can be toggled; its state is read back from the Rust server.\n\n" +
+                      "For raid/death alerts, use the Smart Home Webhook URL field with a Home Assistant webhook automation instead.\n\n" +
+                      "Keep your token secret — anyone with it can control your linked switches. Use 'Revoke Token' to invalidate it.";
+
+            var box = new WpfUi.MessageBox
+            {
+                Title = "Home Assistant Setup",
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK,
+            };
+            await box.ShowDialogAsync();
+        }
+
+        // --- Google Home integration (platform-only) ---
+
+        private void PopulateGoogleServers()
+        {
+            CmbGoogleServer.Items.Clear();
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Servers != null)
+            {
+                foreach (var s in vm.Servers)
+                {
+                    if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
+                    {
+                        CmbGoogleServer.Items.Add(new ComboBoxItem
+                        {
+                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
+                            Tag = $"{s.Host}-{s.Port}"
+                        });
+                    }
+                }
+            }
+        }
+
+        private async Task LoadGoogleSettingsAsync()
+        {
+            try
+            {
+                if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+
+                var activeServerKey = await Services.Cloud.CloudSmartHomeAdapter.GetActiveServerKeyAsync();
+                if (string.IsNullOrEmpty(activeServerKey)) return;
+
+                foreach (ComboBoxItem item in CmbGoogleServer.Items)
+                {
+                    if (item.Tag?.ToString() == activeServerKey)
+                    {
+                        CmbGoogleServer.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+                // Not linked yet, or endpoint unreachable — leave the panel unselected.
+            }
+        }
+
+        private async void BtnGenerateGooglePIN_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var vm = RustPlusDesk.App.Current.MainWindow.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnGenerateGooglePIN.IsEnabled = false;
+            try
+            {
+                var random = new Random();
+                string pin = random.Next(100000, 999999).ToString();
+
+                // The PIN is platform-agnostic (it resolves to a steam id regardless of
+                // which assistant links), so this reuses the same mechanism as Alexa.
+                if (!await Services.Cloud.CloudAlexaAdapter.SetAlexaPinAsync(steamId, pin, DateTime.UtcNow.AddMinutes(15)))
+                {
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                TxtGooglePIN.Text = pin;
+                TxtGooglePIN.Visibility = Visibility.Visible;
+                BtnGenerateGooglePIN.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiPINGeneratedValidFor15m");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedGeneratePin"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateGooglePIN.IsEnabled = true;
+            }
+        }
+
+        private async void BtnLinkGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var selected = CmbGoogleServer.SelectedItem as ComboBoxItem;
+            var serverKey = selected?.Tag?.ToString();
+            if (string.IsNullOrEmpty(serverKey))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("PleaseSelectServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (ParentWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm) return;
+            var steamId = vm.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnLinkGoogle.IsEnabled = false;
+            try
+            {
+                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
+                if (serverProfile != null)
+                {
+                    // Pair the server (uploads credentials the worker uses) and point the
+                    // generic smart-home active server at it. No FCM sync needed — Google
+                    // control does not use push alarms.
+                    await Services.Cloud.CloudSmartHomeAdapter.LinkServerAsync(
+                        steamId,
+                        serverProfile.Host,
+                        serverProfile.Port,
+                        serverProfile.Name,
+                        serverProfile.PlayerToken);
+
+                    // Force a device snapshot so Google's SYNC has switches to discover.
+                    if (ulong.TryParse(steamId, out var steamIdUlong))
+                    {
+                        var currentOverlay = Services.Data.OverlayDataModule.LoadLocalOverlay(serverKey, steamIdUlong);
+                        _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
+                    }
+
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = Properties.Resources.GetString("CodeUiSuccess"),
+                        Content = "Google Home server linked. Now open the Google Home app, add the RustPlusDesktop service under 'Works with Google', and enter your PIN. Then say \"Hey Google, sync my devices\".",
+                        PrimaryButtonText = Properties.Resources.OK
+                    };
+                    await msgBox.ShowDialogAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = Properties.Resources.GetString("ErrorTitle"),
+                    Content = $"Failed to link Google Home server: {ex.Message}",
+                    PrimaryButtonText = Properties.Resources.OK
+                };
+                await msgBox.ShowDialogAsync();
+            }
+            finally
+            {
+                BtnLinkGoogle.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
+
+            BtnRevokeGoogle.IsEnabled = false;
+            try
+            {
+                await Services.Cloud.CloudSmartHomeAdapter.RevokeAsync();
+                CmbGoogleServer.SelectedItem = null;
+                ParentWindow?.ShowInfoSnackbar("Success", "Google Home access revoked.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Google Home access: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeGoogle.IsEnabled = true;
+            }
+        }
+
+        private async void BtnGoogleHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use the Google Home integration:\n\n" +
+                      "1. Click 'Generate Login PIN' (valid 15 minutes).\n" +
+                      "2. Select the server whose smart switches you want to control and click 'Link Selected Server'.\n" +
+                      "3. In the Google Home app: + → Set up a device → Works with Google, choose RustPlusDesktop, and enter the PIN.\n" +
+                      "4. Your smart switches appear in Google Home and respond to voice commands, e.g. \"Hey Google, turn on Turrets\".\n" +
+                      "5. Smart alarms appear as occupancy/motion sensors — when a raid alarm fires they report motion in Google Home, so you can trigger Google Home automations from them.\n\n" +
+                      "You can also use the Smart Home Webhook URL field for raid/death alerts (e.g. phone notifications) in addition to this.";
+
+            var box = new WpfUi.MessageBox
+            {
+                Title = "Google Home Setup",
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK,
+            };
+            await box.ShowDialogAsync();
+        }
+
+        // --- Global feature flags (admin on/off + status note) ---
+
+        private async Task InitFeatureFlagsAsync()
+        {
+            await Services.Cloud.CloudFeatureFlags.RefreshAsync();
+            ApplyFeatureFlags();
+        }
+
+        /// <summary>
+        /// Reflect the admin feature flags into each integration panel: show the
+        /// status note (or a default "disabled" message) and enable/disable the
+        /// panel's controls when a feature is turned off globally.
+        /// </summary>
+        private void ApplyFeatureFlags()
+        {
+            ApplyFeatureFlag("alexa", TxtAlexaStatusNote,
+                BtnGenerateAlexaPIN, CmbAlexaServer, BtnLinkAlexa, BtnRevokeAlexa);
+            // Note: the HA copy buttons are intentionally excluded — their enabled
+            // state is owned by token-presence logic (ApplyHaToken), and copying an
+            // existing token/snippet is harmless even when the feature is off.
+            ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
+                BtnGenerateHaToken, BtnRevokeHa);
+            ApplyFeatureFlag("google", TxtGoogleStatusNote,
+                BtnGenerateGooglePIN, CmbGoogleServer, BtnLinkGoogle, BtnRevokeGoogle);
+        }
+
+        private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)
+        {
+            var enabled = Services.Cloud.CloudFeatureFlags.IsEnabled(key);
+            var statusNote = Services.Cloud.CloudFeatureFlags.Note(key);
+
+            // The banner is shown only when the feature is disabled — it uses the
+            // admin status note if one is set, otherwise a default message.
+            if (!enabled)
+            {
+                note.Text = string.IsNullOrWhiteSpace(statusNote)
+                    ? "This integration is currently disabled by the administrator."
+                    : statusNote;
+                note.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                note.Visibility = Visibility.Collapsed;
+            }
+
+            // Disable interaction and dim the controls — WPF-UI's default disabled
+            // styling is too subtle on the dark theme to read as "off", so the
+            // explicit opacity makes the disabled state obvious.
+            foreach (var control in controls)
+            {
+                control.IsEnabled = enabled;
+                control.Opacity = enabled ? 1.0 : 0.4;
             }
         }
 
@@ -2249,6 +2674,11 @@ namespace RustPlusDesk.Views
         {
             TxtCustomMapUrl.Text = "";
             BtnApplyCustomMapUrl_Click(sender, e);
+        }
+
+        private void BtnOpenCrashLogs_Click(object sender, RoutedEventArgs e)
+        {
+            CrashReporter.OpenCrashLogsFolder();
         }
     }
 }

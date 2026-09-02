@@ -191,6 +191,12 @@ namespace RustPlusDesk.Services.Cloud
         public static void Logout()
         {
             TeamSyncWebSocketService.Shutdown();
+
+            // Shutdown tears the whole realtime connection down, so the social channels have to
+            // forget they were subscribed - otherwise signing back in finds them still "on" and
+            // never asks for them again.
+            Social.SocialRealtime.Stop();
+
             CloudServerInfo.Reset();
             CurrentToken = null;
             CurrentUser = null;

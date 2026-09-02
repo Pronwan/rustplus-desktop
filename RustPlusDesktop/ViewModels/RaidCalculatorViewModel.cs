@@ -111,6 +111,15 @@ public sealed class RaidCalculatorViewModel : INotifyPropertyChanged
     public int TargetCount => PlanItems.Sum(item => item.Quantity);
     public int RaidItemCount => PlanItems.Sum(item => item.SelectedMethod?.RequiredItems ?? 0);
     public string PlanCountCaption => $"{TargetCount} target{(TargetCount == 1 ? string.Empty : "s")}  ·  {RaidItemCount} raid item{(RaidItemCount == 1 ? string.Empty : "s")}";
+
+    /// <summary>Total raw sulfur for the whole plan — the headline number of the redesign.</summary>
+    public double TotalSulfur => PlanItems.Sum(item => item.SelectedSulfur);
+    public string TotalSulfurText => TotalSulfur.ToString("N0");
+    public string TotalRaidItemsText => RaidItemCount.ToString("N0");
+    public int HighestWorkbench => PlanItems
+        .Select(item => item.SelectedMethod?.WorkbenchLevel ?? 0)
+        .DefaultIfEmpty(0).Max();
+    public string WorkbenchText => HighestWorkbench > 0 ? $"Workbench {HighestWorkbench}" : "No bench";
     public string SmartMixCaption
     {
         get
@@ -120,6 +129,43 @@ public sealed class RaidCalculatorViewModel : INotifyPropertyChanged
         }
     }
     public string DataCaption => _data is null ? string.Empty : $"{_data.Targets.Count} targets · {_data.Sources.Count} methods · dataset {_data.GeneratedAt:yyyy-MM-dd}";
+
+    private ImageSource? _sulfurIcon;
+    private bool _sulfurIconPending;
+    private const int SulfurItemId = -1581843485;
+    /// <summary>Sulfur icon for the hero band and per-target cost badge; retries while the icon cache warms up.</summary>
+    public ImageSource? SulfurIcon
+    {
+        get
+        {
+            if (_sulfurIcon is not null) return _sulfurIcon;
+            _sulfurIcon = MainWindow.ResolveItemIcon(SulfurItemId, "sulfur", 40);
+            if (_sulfurIcon is null && !_sulfurIconPending)
+            {
+                _sulfurIconPending = true;
+                _ = RefreshSulfurIconAsync();
+            }
+            return _sulfurIcon;
+        }
+    }
+
+    private async Task RefreshSulfurIconAsync()
+    {
+        for (int attempt = 0; attempt < 12; attempt++)
+        {
+            await Task.Delay(250 + (attempt * 150));
+            ImageSource? icon = MainWindow.ResolveItemIcon(SulfurItemId, "sulfur", 40);
+            if (icon is null) continue;
+            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                _sulfurIcon = icon;
+                _sulfurIconPending = false;
+                OnPropertyChanged(nameof(SulfurIcon));
+            });
+            return;
+        }
+        _sulfurIconPending = false;
+    }
 
     public async Task InitializeAsync()
     {
@@ -213,10 +259,12 @@ public sealed class RaidCalculatorViewModel : INotifyPropertyChanged
     public string BuildSummary()
     {
         var text = new StringBuilder("**Rust raid plan**");
+        text.AppendLine().Append("Total: ").Append(TotalSulfurText).Append(" sulfur · ").Append(RaidItemCount).Append(" raid items");
         foreach (RaidPlanItemViewModel item in PlanItems)
         {
             string method = item.SelectedMethod?.DisplayText ?? "no valid method";
-            text.AppendLine().Append("• ").Append(item.Target.DisplayName).Append(" ×").Append(item.Quantity).Append(" — ").Append(method);
+            string sulfur = item.SelectedHasSulfur ? $" ({item.SelectedSulfur:N0} sulfur)" : string.Empty;
+            text.AppendLine().Append("• ").Append(item.Target.DisplayName).Append(" ×").Append(item.Quantity).Append(" — ").Append(method).Append(sulfur);
         }
         if (BoomTotals.Count > 0)
         {
@@ -282,18 +330,22 @@ public sealed class RaidCalculatorViewModel : INotifyPropertyChanged
 
     public bool IsCatalogueEmpty => FilteredTargets.Count == 0;
 
+    // Raider-first ordering: the main full wall only (BuildingSlug "wall" — not half/low/frame/high-external
+    // walls), then the main breaching doors (wooden/sheet-metal/garage/armored, not hatches or external gates),
+    // then floors, then everything else.
     private static int TargetSortPriority(RaidTarget target) => target.Category switch
     {
-        "Building structures" when target.DisplayName.Contains("Foundation", StringComparison.OrdinalIgnoreCase) => 0,
-        "Building structures" when target.DisplayName.Contains("Wall", StringComparison.OrdinalIgnoreCase) => 1,
+        "Building structures" when target.BuildingSlug == "wall" => 0,
+        "Doors & gates" when target.DisplayName.Contains("Door", StringComparison.OrdinalIgnoreCase) => 1,
         "Building structures" when target.DisplayName.Contains("Floor", StringComparison.OrdinalIgnoreCase) => 2,
-        "Building structures" when target.DisplayName.Contains("Roof", StringComparison.OrdinalIgnoreCase) => 3,
-        "Building structures" => 4,
+        "Building structures" when target.DisplayName.Contains("Foundation", StringComparison.OrdinalIgnoreCase) => 3,
+        "Building structures" when target.DisplayName.Contains("Roof", StringComparison.OrdinalIgnoreCase) => 4,
         "Doors & gates" => 5,
-        "Barricades" => 6,
-        "Traps" => 7,
-        "Deployables" => 8,
-        _ => 9
+        "Building structures" => 6,
+        "Barricades" => 7,
+        "Traps" => 8,
+        "Deployables" => 9,
+        _ => 10
     };
 
     private void Recalculate(bool save = true)
@@ -313,6 +365,11 @@ public sealed class RaidCalculatorViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(TargetCount));
         OnPropertyChanged(nameof(RaidItemCount));
         OnPropertyChanged(nameof(PlanCountCaption));
+        OnPropertyChanged(nameof(TotalSulfur));
+        OnPropertyChanged(nameof(TotalSulfurText));
+        OnPropertyChanged(nameof(TotalRaidItemsText));
+        OnPropertyChanged(nameof(HighestWorkbench));
+        OnPropertyChanged(nameof(WorkbenchText));
         if (save) QueueSave();
     }
 
@@ -370,6 +427,7 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
     }
 
     public RaidTarget Target { get; }
+    public string DisplayName => RaidTargetVisuals.FriendlyName(Target);
     public string Category => Target.Category;
     public string HealthText => $"{Target.StartHealth:0.#} HP";
     public ImageSource? Icon => GetFileIcon(RaidTargetVisuals.GetLocalIconPath(Target));
@@ -407,11 +465,49 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
             UserSelectedMethod = true;
             OnPropertyChanged();
             OnPropertyChanged(nameof(MethodWarning));
+            RaiseCostSurface();
             Changed?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public string MethodWarning => SelectedMethod is { HasCraftCost: false } ? "Crafting cost unavailable in raid-data.json" : string.Empty;
+
+    /// <summary>The most sulfur-efficient practical method — mainstream raiding tools ranked ahead of siege/situational ones.</summary>
+    public RaidMethodViewModel? CheapestMethod => Methods
+        .Where(method => method.IsSulfurRankable && !method.IsCombination)
+        .OrderByDescending(method => method.IsStandardTool)
+        .ThenBy(method => method.SulfurCost)
+        .ThenBy(method => method.RequiredItems)
+        .FirstOrDefault();
+
+    public double SelectedSulfur => SelectedMethod?.SulfurCost ?? 0;
+    public bool SelectedHasSulfur => SelectedMethod?.IsSulfurRankable == true;
+    public string SulfurBadgeText => SelectedHasSulfur ? SelectedSulfur.ToString("N0") : "—";
+
+    /// <summary>True when the picked method is (within rounding) the cheapest by sulfur — earns the "BEST" badge.</summary>
+    public bool IsUsingCheapest => SelectedHasSulfur && CheapestMethod is not null
+        && SelectedSulfur <= CheapestMethod.SulfurCost + 0.5;
+
+    public double SulfurDelta => SelectedSulfur - (CheapestMethod?.SulfurCost ?? SelectedSulfur);
+
+    /// <summary>Nudge shown when the user has picked a costlier method than the sulfur-optimal one.</summary>
+    public string CostComparisonText => !SelectedHasSulfur || CheapestMethod is null || IsUsingCheapest
+        ? string.Empty
+        : $"+{SulfurDelta:N0} sulfur vs {CheapestMethod.DisplayName}";
+
+    public bool HasCostComparison => CostComparisonText.Length > 0;
+
+    private void RaiseCostSurface()
+    {
+        OnPropertyChanged(nameof(CheapestMethod));
+        OnPropertyChanged(nameof(SelectedSulfur));
+        OnPropertyChanged(nameof(SelectedHasSulfur));
+        OnPropertyChanged(nameof(SulfurBadgeText));
+        OnPropertyChanged(nameof(IsUsingCheapest));
+        OnPropertyChanged(nameof(SulfurDelta));
+        OnPropertyChanged(nameof(CostComparisonText));
+        OnPropertyChanged(nameof(HasCostComparison));
+    }
 
     public void ApplyRecommendation(RaidComparisonMode mode)
     {
@@ -450,7 +546,14 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
         UserSelectedMethod = false;
         OnPropertyChanged(nameof(SelectedMethod));
         OnPropertyChanged(nameof(MethodWarning));
+        RaiseCostSurface();
         Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Switch this target to its most sulfur-efficient craftable method.</summary>
+    public void UseCheapest()
+    {
+        if (CheapestMethod is not null) SelectedMethod = CheapestMethod;
     }
 
     public bool SelectSource(long sourceId)
@@ -461,6 +564,7 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
         UserSelectedMethod = false;
         OnPropertyChanged(nameof(SelectedMethod));
         OnPropertyChanged(nameof(MethodWarning));
+        RaiseCostSurface();
         Changed?.Invoke(this, EventArgs.Empty);
         return true;
     }
@@ -468,13 +572,17 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
     private void RefreshMethods(long selectedSourceId, RaidComparisonMode mode)
     {
         Methods.Clear();
+        // Popular two-tool loadouts (C4 + rockets, satchels + explo, …) sit at the top, above the singles.
+        foreach (IReadOnlyList<RaidMethodResult> mix in _engine.GetCuratedMixes(Target, Quantity))
+            Methods.Add(new RaidMethodViewModel(mix));
         foreach (RaidMethodResult result in _engine.GetMethods(Target, Quantity)) Methods.Add(new RaidMethodViewModel(result));
         if (_smartSourceIds.Count > 0)
         {
             ApplySmartMix(_smartSourceIds, _smartMode);
             return;
         }
-        RaidMethodResult? recommendation = RaidCalculatorEngine.Recommend(Methods.SelectMany(method => method.Results), mode);
+        RaidMethodResult? recommendation = RaidCalculatorEngine.Recommend(
+            Methods.Where(method => !method.IsCombination).SelectMany(method => method.Results), mode);
         SetSelected(selectedSourceId != 0 ? selectedSourceId : recommendation?.Source.SourceId ?? Methods.FirstOrDefault()?.Source.SourceId ?? 0);
     }
 
@@ -484,6 +592,7 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
         UserSelectedMethod = false;
         OnPropertyChanged(nameof(SelectedMethod));
         OnPropertyChanged(nameof(MethodWarning));
+        RaiseCostSurface();
     }
 
     public event EventHandler? Changed;
@@ -492,15 +601,28 @@ public sealed class RaidPlanItemViewModel : RaidIconViewModelBase
 public sealed class RaidMethodViewModel : RaidIconViewModelBase
 {
     public RaidMethodViewModel(RaidMethodResult result) : this([result]) { }
-    public RaidMethodViewModel(IReadOnlyList<RaidMethodResult> results) => Results = results;
+    public RaidMethodViewModel(IReadOnlyList<RaidMethodResult> results)
+    {
+        Results = results;
+        ComponentIcons = results.Select(result => new RaidComponentIconViewModel(result.Source)).ToList();
+    }
 
     public IReadOnlyList<RaidMethodResult> Results { get; }
     public RaidSource Source => Results[0].Source;
     public long SingleSourceId => Results.Count == 1 ? Source.SourceId : 0;
     public bool IsCombination => Results.Count > 1;
     public ImageSource? Icon => GetIcon(Source.ItemId ?? 0, Source.ItemShortname, 24);
+    /// <summary>One icon per raid item in the method — a smart mix shows every component, not just the first.</summary>
+    public IReadOnlyList<RaidComponentIconViewModel> ComponentIcons { get; }
     public int RequiredItems => Results.Sum(result => result.RequiredItems);
     public bool HasCraftCost => Results.All(result => result.HasCraftCost);
+    public double SulfurCost => Results.Sum(result => result.SulfurCost);
+    public bool IsSulfurRankable => Results.Count > 0 && Results.All(result => result.IsSulfurRankable);
+    public bool IsStandardTool => Results.Count > 0 && Results.All(result => result.IsStandardTool);
+    public int? WorkbenchLevel => Results.Count == 1 ? Results[0].WorkbenchLevel : null;
+    public string SulfurText => IsSulfurRankable ? $"{SulfurCost:N0} sulfur" : "No sulfur cost";
+    public string? DeliveryLabel => IsCombination ? null : Results[0].DeliveryLabel;
+    public bool HasDeliveryLabel => !string.IsNullOrEmpty(DeliveryLabel);
     public string DisplayName => IsCombination ? "Smart mix" : Source.DisplayName;
     public string DisplayText => string.Join(" + ", Results.Select(result => $"{result.Source.DisplayName} ×{result.RequiredItems}"));
     public string CostText
@@ -524,31 +646,43 @@ public sealed class RaidTargetCardViewModel : RaidIconViewModelBase
     public RaidTarget Target { get; }
     public string Category => Target.Category;
     public string HealthText => $"{Target.StartHealth:0.#} HP";
-    public string CardTitle => string.IsNullOrWhiteSpace(Target.BuildingTier)
-        ? Target.DisplayName
-        : Target.DisplayName.Replace($" ({Target.BuildingTier})", string.Empty, StringComparison.Ordinal);
-    public string CardMeta => Target.BuildingTier switch
-    {
-        "TopTier" => $"Armored · {HealthText}",
-        "Twigs" => $"Twig · {HealthText}",
-        { Length: > 0 } tier => $"{tier} · {HealthText}",
-        _ => HealthText
-    };
+    // Tier now lives in the title (e.g. "Floor Frame (Twig)"), so the meta line is just the health.
+    public string CardTitle => RaidTargetVisuals.FriendlyName(Target);
+    public string CardMeta => HealthText;
     public string SearchText => $"{Target.DisplayName} {Target.ComponentType} {Target.BuildingTier} {Target.ItemCategorySlug}";
     public ImageSource? Icon => GetFileIcon(RaidTargetVisuals.GetLocalIconPath(Target));
 }
 
 internal static class RaidTargetVisuals
 {
+    /// <summary>Short tier label shown next to a target name: Twig / Wood / Stone / Metal / HQM.</summary>
+    public static string TierLabel(string? buildingTier) => buildingTier switch
+    {
+        "Twigs" => "Twig",
+        "TopTier" => "HQM",
+        { Length: > 0 } tier => tier,
+        _ => string.Empty
+    };
+
+    /// <summary>Target name with its tier appended, e.g. "Wall (Metal)" or "Floor Frame (Twig)".</summary>
+    public static string FriendlyName(RaidTarget target)
+    {
+        if (string.IsNullOrWhiteSpace(target.BuildingTier)) return target.DisplayName;
+        string baseName = target.DisplayName.Replace($" ({target.BuildingTier})", string.Empty, StringComparison.Ordinal);
+        return $"{baseName} ({TierLabel(target.BuildingTier)})";
+    }
+
     public static string? GetLocalIconPath(RaidTarget target)
     {
         if (!string.IsNullOrWhiteSpace(target.ItemShortname))
             return Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "raid-targets", $"{target.ItemShortname}.png");
 
         string? tier = GetTierSlug(target.BuildingTier);
+        // PNG, not the source WebP: WPF's WebP WIC decoder mishandles premultiplied alpha and paints a
+        // black box behind thin transparent icons (floors, frames). PNG decodes the alpha correctly.
         return tier is null || string.IsNullOrWhiteSpace(target.BuildingSlug)
             ? null
-            : Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "raid-targets", $"{tier}-{target.BuildingSlug}.webp");
+            : Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "raid-targets", $"{tier}-{target.BuildingSlug}.png");
     }
 
     private static string? GetTierSlug(string? buildingTier) => buildingTier switch
@@ -560,6 +694,18 @@ internal static class RaidTargetVisuals
         "TopTier" => "armored",
         _ => null
     };
+}
+
+public sealed class RaidComponentIconViewModel : RaidIconViewModelBase
+{
+    private readonly int _itemId;
+    private readonly string? _shortname;
+    public RaidComponentIconViewModel(RaidSource source)
+    {
+        _itemId = source.ItemId ?? 0;
+        _shortname = source.ItemShortname;
+    }
+    public ImageSource? Icon => GetIcon(_itemId, _shortname, 24);
 }
 
 public sealed class RaidResourceTotalViewModel(RaidResourceTotal resource) : RaidIconViewModelBase

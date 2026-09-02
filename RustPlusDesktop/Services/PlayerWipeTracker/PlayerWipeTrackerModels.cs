@@ -216,6 +216,44 @@ public sealed class CloudTrackerObservation
     [JsonPropertyName("event")] public string? Event { get; init; }
 }
 
+/// <summary>A wipe archive the cloud dropped to make room for a newer one.</summary>
+public sealed record CloudPrunedArchive(string? ServerName, DateTime? WipeStartedAtUtc);
+
+/// <summary>How many wipe archives the plan allows, and how many are in use.</summary>
+public sealed record CloudArchiveUsage(int Used, int Limit)
+{
+    /// <summary>True on the last free slot — the point at which a warning is still useful.</summary>
+    public bool IsLastSlot => Limit > 1 && Used >= Limit - 1 && Used < Limit;
+}
+
+/// <summary>What the cloud made of an append batch.</summary>
+public sealed record CloudAppendResult(
+    int Status,
+    DateTime? LastObservedUtc,
+    string? Reason,
+    IReadOnlyList<CloudPrunedArchive> Pruned,
+    CloudArchiveUsage? Usage);
+
+/// <summary>
+/// New observations for one player-day, above whatever the server last acknowledged.
+///
+/// The whole-day sibling below re-sends every observation since midnight on each change; this
+/// carries only the difference, which is what a live session actually produces — a handful of
+/// entries per minute rather than a document that grows until the server refuses it.
+/// </summary>
+public sealed class CloudDayAppendRequest
+{
+    [JsonPropertyName("server_key")] public string ServerKey { get; init; } = string.Empty;
+    [JsonPropertyName("wipe_key")] public string WipeKey { get; init; } = string.Empty;
+    [JsonPropertyName("wipe_started_at")] public string? WipeStartedAt { get; init; }
+    [JsonPropertyName("player_steam_id")] public string PlayerSteamId { get; init; } = string.Empty;
+    [JsonPropertyName("player_name")] public string? PlayerName { get; init; }
+    [JsonPropertyName("day")] public string Day { get; init; } = string.Empty;
+    [JsonPropertyName("schema_version")] public int SchemaVersion { get; init; } = 1;
+    [JsonPropertyName("observations")] public IReadOnlyList<CloudTrackerObservation> Observations { get; init; } = Array.Empty<CloudTrackerObservation>();
+    [JsonPropertyName("sessions")] public IReadOnlyList<string> Sessions { get; init; } = Array.Empty<string>();
+}
+
 public sealed class CloudDayUploadRequest
 {
     [JsonPropertyName("server_key")] public string ServerKey { get; init; } = string.Empty;

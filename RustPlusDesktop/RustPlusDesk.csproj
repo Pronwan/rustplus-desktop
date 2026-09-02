@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>9.0.4</Version>
+		<Version>9.1.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -255,6 +255,7 @@
 	  <None Remove="Assets\Screenshots\7.1.8\*.png" />
 	  <None Remove="Assets\Screenshots\8.0\*.png" />
 	  <None Remove="Assets\Screenshots\v9.0.0\*.png" />
+	  <None Remove="Assets\Screenshots\9.1\*.jpg" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
@@ -346,6 +347,7 @@
     <PackageReference Include="RustPlusApi" Version="2.0.0-beta.6" />
     <PackageReference Include="RustPlusApi.Camera" Version="2.0.0-beta.6" />
     <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
@@ -408,21 +410,14 @@
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)vite.config.ts" />
   </ItemGroup>
 
-  <Target Name="BuildGeneticsLabDist"
-          BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish"
-          Inputs="@(GeneticsLabSourceFiles)"
-          Outputs="$(GeneticsLabDir)dist\index.html"
-          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="BuildGeneticsLabDist" BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish" Inputs="@(GeneticsLabSourceFiles)" Outputs="$(GeneticsLabDir)dist\index.html" Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <Message Importance="high" Text="Building GeneticsLab frontend (npm run build)..." />
     <Exec Command="npm ci" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and Exists('$(GeneticsLabDir)package-lock.json')" />
     <Exec Command="npm install" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and !Exists('$(GeneticsLabDir)package-lock.json')" />
     <Exec Command="npm run build" WorkingDirectory="$(GeneticsLabDir)" />
   </Target>
 
-  <Target Name="IncludeGeneticsLabDist"
-          BeforeTargets="AssignTargetPaths"
-          DependsOnTargets="BuildGeneticsLabDist"
-          Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="IncludeGeneticsLabDist" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildGeneticsLabDist" Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
       <GeneticsLabDistFiles Include="$(GeneticsLabDir)dist\**\*.*" />
       <Content Include="@(GeneticsLabDistFiles)">
@@ -613,6 +608,7 @@
     <Resource Include="Assets\Screenshots\7.1.8\*.png" />
     <Resource Include="Assets\Screenshots\8.0\*.png" />
     <Resource Include="Assets\Screenshots\v9.0.0\*.png" />
+    <Resource Include="Assets\Screenshots\9.1\*.jpg" />
     <Resource Include="Assets\Screenshots\8.0\clan_chat.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />
     <Resource Include="Assets\Screenshots\v4_shop_hover.png" />
@@ -629,6 +625,10 @@
     <Resource Include="Assets\Screenshots\beta-5.1_7.png" />
     <Resource Include="Assets\Screenshots\Notifications.png" />
     <Resource Include="Assets\Flags\*.png" />
+    <None Include="Assets\emojis\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
     <Resource Include="Assets\icons\map-markers\assets_markers_iconmap_dollar.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

@@ -185,7 +185,7 @@ namespace RustPlusDesk.Views
 
             try
             {
-                using var http = new HttpClient();
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Clan & Steam"));
                 var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId}?xml=1");
                 var mName = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]></steamID>", RegexOptions.IgnoreCase);
                 if (mName.Success)
@@ -380,11 +380,56 @@ namespace RustPlusDesk.Views
                 {
                     _ = Task.WhenAll(avatarTasks);
                 }
+
+                ReconcileClanRolePermissions(clan);
             }
             catch (Exception ex)
             {
                 AppendLog($"[clan-load] Error: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Brings the saved per-role command permissions in line with the clan as it is now.
+        ///
+        /// Roles are the clan's, not ours: they get created, renamed and deleted while the app is
+        /// closed. So the saved list is treated as an answer to "which role ids may use commands"
+        /// and everything else — the names, the order, which roles exist at all — is taken fresh
+        /// from the server. A role that disappeared drops out rather than lingering as a granted
+        /// permission nobody can see any more, and a new one arrives switched off.
+        /// </summary>
+        private void ReconcileClanRolePermissions(ClanInfoModel clan)
+        {
+            var profile = _vm?.Selected;
+            if (profile == null || clan.Roles == null) return;
+
+            var allowedIds = profile.ClanRolePermissions
+                .Where(r => r.Allowed)
+                .Select(r => r.RoleId)
+                .ToHashSet();
+
+            var rebuilt = clan.Roles
+                .OrderBy(r => r.Rank)
+                .Select(r => new ClanRolePermission
+                {
+                    RoleId = r.RoleId,
+                    Name = string.IsNullOrWhiteSpace(r.Name) ? $"Role {r.RoleId}" : r.Name,
+                    Rank = r.Rank,
+                    Allowed = allowedIds.Contains(r.RoleId),
+                })
+                .ToList();
+
+            // Only touch the collection when something actually differs. It is bound to a list of
+            // checkboxes, and rebuilding it on every clan pull would drop a tick the moment
+            // someone set it.
+            bool unchanged = rebuilt.Count == profile.ClanRolePermissions.Count
+                && rebuilt.Zip(profile.ClanRolePermissions).All(p =>
+                    p.First.RoleId == p.Second.RoleId
+                    && p.First.Name == p.Second.Name
+                    && p.First.Allowed == p.Second.Allowed);
+            if (unchanged) return;
+
+            profile.ClanRolePermissions = new ObservableCollection<ClanRolePermission>(rebuilt);
         }
 
         private async Task LoadClanMemberProfileAsync(ClanMemberVM vm)
@@ -405,7 +450,7 @@ namespace RustPlusDesk.Views
                 }
 
                 // 2. Fetch Steam profile details (XML contains both steamID/nickname and avatar link)
-                using var http = new HttpClient();
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Clan & Steam"));
                 var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{vm.SteamId}?xml=1");
 
                 // Parse Steam ID Name (Nickname)
@@ -417,22 +462,12 @@ namespace RustPlusDesk.Views
                     vm.Name = name;
                 }
 
-                // Parse Avatar
-                string url = "";
-                var mFull = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]></avatarFull>", RegexOptions.IgnoreCase);
-                var mMedium = Regex.Match(xml, @"<avatarMedium><!\[CDATA\[(.*?)\]\]></avatarMedium>", RegexOptions.IgnoreCase);
-                if (mFull.Success) url = mFull.Groups[1].Value;
-                else if (mMedium.Success) url = mMedium.Groups[1].Value;
-
-                if (!string.IsNullOrWhiteSpace(url))
+                // Parse & Load Avatar
+                var img = await AvatarLoader.GetOrLoadAvatarAsync(vm.SteamId);
+                if (img != null)
                 {
-                    var bytes = await http.GetByteArrayAsync(url);
-                    var img = BytesToImage(bytes);
-                    if (img != null)
-                    {
-                        _avatarCache[vm.SteamId] = img;
-                        vm.Avatar = img;
-                    }
+                    _avatarCache[vm.SteamId] = img;
+                    vm.Avatar = img;
                 }
             }
             catch (Exception ex)

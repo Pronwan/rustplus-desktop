@@ -382,7 +382,7 @@ namespace RustPlusDesk.Services.Auth
 
         private static string T(string key, string fallback)
         {
-            return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+            return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
         }
         private static DateTime GetJwtExpiration(string token)
         {
@@ -599,7 +599,7 @@ namespace RustPlusDesk.Services.Auth
                                $"&scopes={Uri.EscapeDataString("identify guilds guilds.members.read email")}" +
                                "&skip_http_redirect=true";
 
-                using var httpClient = new HttpClient();
+                using var httpClient = new HttpClient(new TrafficTrackingHttpMessageHandler("Cloud API"));
                 using var request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?{query}");
                 request.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Client.Auth.CurrentSession.AccessToken);
@@ -1060,7 +1060,7 @@ namespace RustPlusDesk.Services.Auth
                     return;
                 }
 
-                using (var httpClient = new System.Net.Http.HttpClient())
+                using (var httpClient = new System.Net.Http.HttpClient(new TrafficTrackingHttpMessageHandler("Cloud API")))
                 {
                     var url = $"{DataManager.SUPABASE_URL.TrimEnd('/')}/functions/v1/discord-roles";
                     var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, url);
@@ -1809,7 +1809,7 @@ namespace RustPlusDesk.Services.Auth
             return stillBlocked;
         }
 
-        private static readonly HttpClient Http = new();
+        private static readonly HttpClient Http = new(new TrafficTrackingHttpMessageHandler("Cloud API"));
 
         // ── cloud platform variants (Phase 11 slice 1) ─────────────────────────
         // Self-contained cloud writes routed to /api/v1 when the cloud platform is
@@ -1874,7 +1874,16 @@ namespace RustPlusDesk.Services.Auth
                 // token flows authenticate an account that knows nothing about Steam,
                 // and team features are keyed by steam id.
                 var steamId = TrackingService.SteamId64;
-                await Cloud.CloudApiClient.CallApiAsync("profile/presence", HttpMethod.Post, null, new { steam_id = steamId });
+
+                // The UI language rides along with presence rather than getting a call of its
+                // own: it is the same fact about the same session, it changes about once in an
+                // install's life, and the social board is unusable without it - a listing with
+                // no language cannot be found by anybody filtering for one.
+                await Cloud.CloudApiClient.CallApiAsync("profile/presence", HttpMethod.Post, null, new
+                {
+                    steam_id = steamId,
+                    language = Helpers.AppLanguages.Current(),
+                });
             }
             catch (Exception ex)
             {
@@ -1915,7 +1924,10 @@ namespace RustPlusDesk.Services.Auth
                     DateTime.UtcNow - LastProfileTouchUtc < CloudTrafficPolicy.ProfileTouchInterval(minimized))
                     return;
 
-                await Cloud.CloudApiClient.CallApiAsync("profile/touch", HttpMethod.Post, null, new { });
+                await Cloud.CloudApiClient.CallApiAsync("profile/touch", HttpMethod.Post, null, new
+                {
+                    language = Helpers.AppLanguages.Current(),
+                });
                 LastProfileTouchIdentity = identity;
                 LastProfileTouchUtc = DateTime.UtcNow;
             }

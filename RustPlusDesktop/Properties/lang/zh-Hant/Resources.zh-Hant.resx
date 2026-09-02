@@ -852,4 +852,232 @@
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
     <value>即使應用程式最小化，也會繼續直接向伺服器查詢線上人數。</value>
   </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>你的備註 / 簡介</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>新增備註（例如遊玩風格、時數、洗白時程）...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>你的當前招募（預覽）</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>活躍</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>暫無備註</value>
+  </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust 遊戲時間</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC 狀態</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>信用良好（0 次封鎖）</value>
+  </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>戰隊聊天指令</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>小隊聊天一律會回應指令。開啟此項後也會在戰隊聊天中回應，並可選擇哪些戰隊職位可以使用。</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>在戰隊聊天中回應指令</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>允許使用指令的職位</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>目前沒有任何職位可以使用指令 — 請在上方至少勾選一個。</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>包含智慧開關</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>多數戰隊成員對你基地的工具櫃沒有權限，原本也無法控制裝置。</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>包含基地密碼</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>發到戰隊聊天的門密碼無法收回。</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>小隊</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>小隊</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>戰隊</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>警報要送到哪個遊戲內聊天。啟用「僅 Discord」時無法使用。</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>工具櫃維護費用</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>貨船狀態</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>開始 15 分鐘的 Oil Rig 計時</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>遊戲內時間</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>基地密碼</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>伺服器線上人數</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>列出可用指令</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>9.1 的新功能</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>自 9.0 以來最重要的四項變更</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>社群中心</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>全域聊天與贊助者聊天、可在回覆前預覽 Steam 個人資料的組隊尋找、好友清單、收件匣與檢舉功能。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>地圖上的農場路線</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>在地圖圖層旁繪製路線。每條路線顯示以公尺為單位的長度與衝刺所需時間，並與隊伍同步。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>戰隊聊天中的指令</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>指令現在也能在戰隊聊天中回應，並可依戰隊職位授權。門密碼與智慧開關預設不包含，除非你主動加入。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>智慧家庭</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant 可透過 REST 介面控制你的開關。Alexa 新增區域端點以改善裝置探索；Google Home 已完成，正在等待認證。</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>不再顯示</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>完整更新日誌</value>
+  </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>已刪除最舊的 wipe 備份</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>你的方案可保存的 wipe 備份數量有限。為了給新的 wipe 騰出空間，最舊的一個已被刪除：{0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>未知伺服器</value>
+  </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>wipe 備份僅剩一個空位</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>已使用 {1} 個 wipe 備份中的 {0} 個。下一次 wipe 開始時，最舊的一個會被自動刪除——若想保留它，請在 Wipe Tracker · Cloud restore 中選擇刪除其他備份。</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>刪除備份</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>刪除 wipe 備份</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>要永久刪除 {0}（{1}）的雲端備份嗎？此操作無法復原。</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>已刪除 wipe 備份。</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>無法刪除該 wipe 備份。</value>
+  </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>複製文字</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>使用 Google 翻譯</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>翻譯訊息</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>這條訊息已經是你的語言。</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>翻譯訊息</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>翻譯會將訊息文字傳送至 Google 翻譯。是否繼續？</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>你的名字顏色</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>名字顏色</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>使用預設顏色</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>訊息顏色</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>無法儲存該顏色。</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>琥珀</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>玫瑰</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>紫羅蘭</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>天藍</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>翡翠</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>青檸</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>橙色</value>
+  </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>回覆</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>取消回覆</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>訊息已刪除</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>原始訊息已不在可見的聊天記錄中。</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>無法連線至翻譯服務，請稍後再試。</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>翻譯</value>
+  </data>
 </root>

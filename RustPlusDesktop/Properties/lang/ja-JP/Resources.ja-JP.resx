@@ -5501,4 +5501,214 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="Tutorials.Step.deviceautomation.safety.Description" xml:space="preserve">
     <value>ルールを実行したり、実際のスマート デバイスを切り替えたりするチュートリアルはありません。</value>
   </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Hours</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Clean (0 bans on record)</value>
+  </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>クランチャットのコマンド</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>チームチャットでは常にコマンドに応答します。これを有効にするとクランチャットでも応答し、どのクラン役職が使用できるかを選べます。</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>クランチャットでコマンドに応答する</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>コマンドの使用を許可する役職</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>コマンドを使用できる役職がまだありません — 上で少なくとも 1 つ選択してください。</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>スマートスイッチを含める</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>多くのクランメンバーは拠点のツールカップボードの権限がなく、どのみち機器を操作できません。</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>拠点のコードを含める</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>クランチャットに投稿したドアコードは取り消せません。</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>チーム</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>チーム</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>クラン</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>アラートを送信するゲーム内チャット。「Discord のみ」が有効な間は使用できません。</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>ツールカップボードの維持費</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>カーゴシップの状況</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>Oil Rig の 15 分タイマーを開始</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>ゲーム内の時刻</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>拠点のコード</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>サーバーのプレイヤー数</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>使用できるコマンドを表示</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>9.1 の新機能</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>9.0 以降の主な変更点 4 つ</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>コミュニティハブ</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>グローバルチャットとサポーターチャット、返信前に Steam プロフィールを確認できるチーム募集、フレンドリスト、受信箱、通報機能。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>マップ上のファームルート</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>マップレイヤーの隣でルートを描けます。それぞれ距離をメートルで、所要時間をスプリント速度で表示し、チームと共有されます。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>クランチャットでのコマンド</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>コマンドをクランチャットでも処理できるようになり、クラン役職ごとに許可できます。ドアコードとスイッチは明示的に含めない限り対象外です。</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>スマートホーム</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant から REST 経由でスイッチを操作できます。Alexa は地域別エンドポイントで機器検出が改善。Google Home は完成済みですが認証待ちです。</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>今後表示しない</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>パッチノート全文</value>
+  </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>最も古いワイプのバックアップを削除しました</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>ご利用のプランで保存できるワイプのバックアップ数には上限があります。新しいワイプの分の空きを作るため、最も古いものを削除しました: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>不明なサーバー</value>
+  </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>ワイプのバックアップ枠が残り 1 つです</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>ワイプのバックアップを {1} 件中 {0} 件使用しています。次のワイプが始まると最も古いものが自動的に削除されます。残したいものがある場合は Wipe Tracker · Cloud restore で別のものを選んで削除してください。</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>バックアップを削除</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>ワイプのバックアップを削除</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>{0}（{1}）のクラウドバックアップを完全に削除しますか？元に戻せません。</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>ワイプのバックアップを削除しました。</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>ワイプのバックアップを削除できませんでした。</value>
+  </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>テキストをコピー</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>Google で翻訳</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>メッセージを翻訳</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>このメッセージはすでにあなたの言語です。</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>メッセージを翻訳</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>翻訳するとメッセージの本文が Google 翻訳に送信されます。続行しますか？</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>名前の色</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>名前の色</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>既定の色を使う</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>メッセージの色</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>色を保存できませんでした。</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>アンバー</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>ローズ</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>バイオレット</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>スカイ</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>エメラルド</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>ライム</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>シアン</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>オレンジ</value>
+  </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>返信</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>返信をやめる</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>メッセージは削除されました</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>元のメッセージは表示中の履歴にはもうありません。</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>翻訳サービスに接続できませんでした。少し待ってからもう一度お試しください。</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>翻訳</value>
+  </data>
 </root>

@@ -1,0 +1,1664 @@
+<UserControl x:Class="RustPlusDesk.Views.LfgOverlay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:conv="clr-namespace:RustPlusDesk.Converters"
+             xmlns:chat="clr-namespace:RustPlusDesk.Controls.Chat"
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="420"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="InverseBoolToVis" Invert="True" />
+        <SolidColorBrush x:Key="LfgText" Color="#FFF4F6FA" />
+        <SolidColorBrush x:Key="LfgMuted" Color="#FF94A0B3" />
+        <SolidColorBrush x:Key="LfgLine" Color="#26FFFFFF" />
+        <SolidColorBrush x:Key="LfgCard" Color="#FF111820" />
+        <SolidColorBrush x:Key="LfgAccent" Color="#FF3FD7FF" />
+
+        <Style x:Key="LfgSectionHeading" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource LfgMuted}" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <!--
+            A round box with a green dot, matching the online lights in the lists below it. The
+            filter and the thing it filters on then look like the same idea, which is what a
+            square tick next to round status lights was failing to do.
+        -->
+        <Style x:Key="SocialDotCheck" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid Width="15" Height="15" Margin="0,0,6,0" VerticalAlignment="Center">
+                                <Ellipse x:Name="Ring" Stroke="#FF5A6675" StrokeThickness="1.5" />
+                                <Ellipse x:Name="Dot" Width="7" Height="7" Fill="#FF4CC38A" Opacity="0" />
+                            </Grid>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF8894A5" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF4CC38A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--
+            Tabs, not buttons. A pill that stays lit reads as "this is switched on", which is the
+            wrong idea for choosing which of two things you are looking at - and two lit pills in
+            one panel read as two independent toggles rather than one choice each.
+        -->
+        <Style x:Key="SocialTab" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource LfgMuted}" />
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Tab" Background="Transparent" Padding="2,0,2,7"
+                                BorderBrush="Transparent" BorderThickness="0,0,0,2"
+                                RenderTransformOrigin="0.5,0.9">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="TabScale" ScaleX="1" ScaleY="1" />
+                            </Border.RenderTransform>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
+                                                             To="1.1" Duration="0:0:0.14">
+                                                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
+                                                             To="1.1" Duration="0:0:0.14">
+                                                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
+                                                             To="1" Duration="0:0:0.18" />
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
+                                                             To="1" Duration="0:0:0.18" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Tab" Property="BorderBrush" Value="{StaticResource LfgAccent}" />
+                                <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--
+            The supporters tab. The same shape as the others so it does not shout, in gold so it
+            is clearly not the same kind of room.
+        -->
+        <Style x:Key="SocialTabGold" TargetType="RadioButton" BasedOn="{StaticResource SocialTab}">
+            <Setter Property="Foreground" Value="#FFB99A5B" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Tab" Background="Transparent" Padding="2,0,2,7"
+                                BorderBrush="Transparent" BorderThickness="0,0,0,2"
+                                RenderTransformOrigin="0.5,0.9">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="TabScale" ScaleX="1" ScaleY="1" />
+                            </Border.RenderTransform>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#FFF0D08A" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
+                                                             To="1.1" Duration="0:0:0.14">
+                                                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
+                                                             To="1.1" Duration="0:0:0.14">
+                                                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
+                                                             To="1" Duration="0:0:0.18" />
+                                            <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
+                                                             To="1" Duration="0:0:0.18" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Tab" Property="BorderBrush" Value="#FFD9A22B" />
+                                <Setter Property="Foreground" Value="#FFF0D08A" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SocialDotRadio" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource LfgText}" />
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,0,0,7" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Grid Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center">
+                                <Ellipse x:Name="Ring" Stroke="#FF5A6675" StrokeThickness="1.5" />
+                                <Ellipse x:Name="Dot" Width="7" Height="7" Fill="#FF4CC38A" Opacity="0" />
+                            </Grid>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF8894A5" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="#FF4CC38A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="{StaticResource LfgCard}" CornerRadius="8" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+        <Grid Margin="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Grid Grid.Row="0" Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <!--  The panel holds a room and a board, so it is named after neither.  -->
+                    <TextBlock Text="{DynamicResource SocialHubTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                    <Grid Margin="0,0,6,0">
+                        <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
+                                   ToolTip="{DynamicResource FriendsTitle}"
+                                   Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
+                        <!--  Requests waiting on an answer, over the icon.  -->
+                        <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
+                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                Background="#FFE5484D" Padding="3,0">
+                            <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
+                                       FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                    <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
+                               ToolTip="{DynamicResource BlocksTitle}"
+                               Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" Margin="0,0,6,0" />
+                    <ui:Button x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" />
+                </StackPanel>
+            </Grid>
+
+            <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
+            <Border x:Name="CloudGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource LfgCloudRequired}" Foreground="{StaticResource LfgMuted}" FontSize="12" TextWrapping="Wrap" />
+                    <ui:Button x:Name="BtnCloudSetup" Click="BtnCloudSetup_Click" Appearance="Primary" Margin="0,12,0,0"
+                               HorizontalAlignment="Left" Content="{DynamicResource LfgCloudConnect}" />
+                </StackPanel>
+            </Border>
+
+            <!--  Rolled out in stages, and this account is not in one yet.  -->
+            <Border x:Name="ClosedGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource SocialNotOpenTitle}" Foreground="{StaticResource LfgText}"
+                               FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    <TextBlock Text="{DynamicResource SocialNotOpenBody}" Foreground="{StaticResource LfgMuted}"
+                               FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!--  Main body  -->
+            <Grid x:Name="Body" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--  Which half of Community you are in (Sticky Tabs)  -->
+                <Border Grid.Row="0" BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="SecChat" GroupName="SocialSection" IsChecked="True"
+                                     Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                     Content="{DynamicResource SocialSectionChat}" Checked="Section_Checked" />
+                        <!--
+                            The supporters' room. Gold rather than the accent, because it is the
+                            one tab that says something about the person reading it rather than
+                            about what is behind it.
+                        -->
+                        <RadioButton x:Name="SecSupporter" GroupName="SocialSection"
+                                     Style="{StaticResource SocialTabGold}" Margin="0,0,18,0"
+                                     Content="{DynamicResource SocialSectionSupporter}" Checked="Section_Checked" />
+                        <RadioButton x:Name="SecLfg" GroupName="SocialSection"
+                                     Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                     Content="{DynamicResource SocialSectionLfg}" Checked="Section_Checked" />
+
+                        <!--  Inbox, with the unread count on it when there is one.  -->
+                        <Grid>
+                            <RadioButton x:Name="SecInbox" GroupName="SocialSection"
+                                         Style="{StaticResource SocialTab}"
+                                         Content="{DynamicResource SocialSectionInbox}" Checked="Section_Checked" />
+                            <Border x:Name="InboxTabBadge" Visibility="Collapsed"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="0,-4,-14,0" MinWidth="16" Height="16" CornerRadius="8"
+                                    Background="#FFE5484D" Padding="4,0">
+                                <TextBlock x:Name="InboxTabBadgeText" Foreground="White" FontSize="9.5"
+                                           FontWeight="Bold" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!--  The public room (3-row layout: header note, scrollable chat list, sticky compose footer)  -->
+                <Grid x:Name="ChatSection" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,8"
+                               Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+
+                    <!-- Scrollable Chat Messages & Floating Scroll To Bottom Button -->
+                    <Grid Grid.Row="1" Margin="0,0,0,8">
+                        <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                      ScrollChanged="ChatScrollViewer_ScrollChanged">
+                            <StackPanel Margin="0,0,4,0">
+                                <TextBlock x:Name="ChatEmptyNotice" Visibility="Collapsed" Margin="0,0,0,10"
+                                           Text="{DynamicResource ChatEmpty}" TextWrapping="Wrap"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                                <ItemsControl x:Name="ChatList" Margin="0,0,0,6">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="{Binding GroupMargin}">
+                                                <!-- Regular Chat Bubble -->
+                                                    <!--
+                                                        A Border rather than a bare Grid, because a panel with no Background is
+                                                        invisible to hit testing: the context menu only opened where text or the
+                                                        avatar happened to be, and the gap to the right of a short message did
+                                                        nothing. Transparent still counts as a background, so the whole line is
+                                                        now clickable — and the hover tint is there to say so before you try.
+                                                    -->
+                                                    <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource InverseBoolToVis}}"
+                                                            CornerRadius="6" Padding="4,2" Margin="-4,0,-4,0">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="Transparent" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#12FFFFFF" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    <Border.ContextMenu>
+                                                        <!--
+                                                            Copying works on anyone's message, including your own.
+                                                            Everything below it is about someone else — reporting,
+                                                            blocking or befriending yourself are offers that make no
+                                                            sense, so on your own lines the menu is just the one entry.
+                                                        -->
+                                                        <ContextMenu>
+                                                            <MenuItem Header="{DynamicResource ChatReply}" Click="ChatReply_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource ChatCopyText}" Click="ChatCopyText_Click" Tag="{Binding}" />
+                                                            <MenuItem Header="{DynamicResource ChatTranslateWithGoogle}" Click="ChatTranslate_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ChatAddFriend_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource LfgBlockUser}" Click="ChatBlock_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <MenuItem Header="{DynamicResource LfgReportUser}" Click="ChatReport_Click" Tag="{Binding}"
+                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                        </ContextMenu>
+                                                    </Border.ContextMenu>
+                                                    <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="26" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- Avatar (Shown only on first message of a group) -->
+                                                    <Grid Grid.Column="0" Width="26" Height="26" Margin="0,1,0,0" VerticalAlignment="Top"
+                                                          Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
+                                                        <!-- Supporter Glow Ring -->
+                                                        <Ellipse Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                 Stroke="#FFA629" StrokeThickness="1.5"
+                                                                 Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                            <Ellipse.Effect>
+                                                                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="#FFA629" Opacity="0.85" />
+                                                            </Ellipse.Effect>
+                                                        </Ellipse>
+
+                                                        <!-- Base Avatar Circle -->
+                                                        <Grid Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <Ellipse Fill="#222B38" />
+                                                            <ui:SymbolIcon Symbol="Person24" FontSize="11" Foreground="#94A0B3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            <Ellipse>
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                                </Ellipse.Fill>
+                                                            </Ellipse>
+                                                        </Grid>
+
+                                                        <!-- Top-Right Star Badge for Premium Members -->
+                                                        <Border Width="11" Height="11"
+                                                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                                Background="#FFD700"
+                                                                BorderBrush="#FFE58F"
+                                                                BorderThickness="1"
+                                                                CornerRadius="5.5"
+                                                                Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="4" ShadowDepth="0" Color="#FFA629" Opacity="0.9" />
+                                                            </Border.Effect>
+                                                            <TextBlock Text="★" FontSize="7" FontWeight="Bold" Foreground="#4A2800"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <!-- Content Column -->
+                                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                        <!--
+                                                            The quoted line this message answers. Clicking it jumps to
+                                                            the original, so the reply is a way back rather than just a
+                                                            label. When the original is gone the excerpt says so —
+                                                            hiding the whole strip would erase the fact that this was
+                                                            an answer to something.
+                                                        -->
+                                                        <Button Visibility="{Binding HasReply, Converter={StaticResource BoolToVis}}"
+                                                                Click="ChatJumpToOriginal_Click" Tag="{Binding ReplyTo.Id}"
+                                                                Background="Transparent" BorderThickness="0" Padding="0"
+                                                                Cursor="Hand" HorizontalAlignment="Left" Margin="0,0,0,3">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="Rb" CornerRadius="4" Padding="5,2" Background="#14FFFFFF">
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}"
+                                                                                       FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                                            <TextBlock Text="{Binding ReplyTo.DisplayName}" FontSize="10.5"
+                                                                                       Foreground="{StaticResource LfgMuted}" FontWeight="SemiBold"
+                                                                                       VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                                            <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="10.5"
+                                                                                       Foreground="{StaticResource LfgMuted}" FontStyle="Italic"
+                                                                                       VerticalAlignment="Center" MaxWidth="230"
+                                                                                       TextTrimming="CharacterEllipsis" />
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Rb" Property="Background" Value="#26FFFFFF" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+
+                                                        <!-- Metadata Header (Shown only on first message of a group) -->
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,2"
+                                                                    Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
+                                                            <TextBlock Text="{Binding SenderName}" Foreground="{Binding SenderNameBrush}"
+                                                                       FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
+
+                                                            <!-- Sleek Staff Role Badge -->
+                                                            <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                                    Background="{Binding RoleBadge.BackgroundBrush}"
+                                                                    BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                                    BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="5,0,0,0"
+                                                                    VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding RoleBadge.DisplayText}"
+                                                                           Foreground="{Binding RoleBadge.ForegroundBrush}"
+                                                                           FontSize="8.5" FontWeight="SemiBold" />
+                                                            </Border>
+
+                                                            <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
+                                                                       FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center" />
+                                                        </StackPanel>
+
+                                                        <!-- Message Text & Emojis -->
+                                                        <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,0,0,0"
+                                                                                Foreground="{StaticResource LfgText}" FontSize="12.5" EmojiSize="30" />
+                                                    </StackPanel>
+                                                    </Grid>
+                                                    </Border>
+
+                                                <!-- System Sanction Alert Banner (Timeout / Ban / Lifted) -->
+                                                <Border Visibility="{Binding IsSystemSanction, Converter={StaticResource BoolToVis}}"
+                                                        Background="{Binding SanctionEvent.CardBackgroundBrush}"
+                                                        BorderBrush="{Binding SanctionEvent.CardBorderBrush}"
+                                                        BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,2,0,2">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <!-- Header: Status Title + Duration Badge + Timestamp -->
+                                                        <Grid Grid.Row="0" Margin="0,0,0,6">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                                                                <Border Background="{Binding SanctionEvent.HeaderBackgroundBrush}"
+                                                                        BorderBrush="{Binding SanctionEvent.HeaderBorderBrush}"
+                                                                        BorderThickness="1" CornerRadius="3" Padding="5,2" Margin="0,0,6,0">
+                                                                    <TextBlock Text="{Binding SanctionEvent.HeaderTitle}"
+                                                                               Foreground="{Binding SanctionEvent.HeaderForegroundBrush}"
+                                                                               FontSize="9.5" FontWeight="Bold" />
+                                                                </Border>
+
+                                                                <Border Visibility="{Binding SanctionEvent.DurationBadgeVisibility}"
+                                                                        Background="#33F59E0B" BorderBrush="#F59E0B"
+                                                                        BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
+                                                                    <TextBlock Text="{Binding SanctionEvent.DurationBadgeText}"
+                                                                               Foreground="#FFFBBF24" FontSize="9" FontWeight="SemiBold" />
+                                                                </Border>
+                                                            </StackPanel>
+
+                                                            <TextBlock Grid.Column="1" Text="{Binding SanctionEvent.TimeLabel}"
+                                                                       Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
+                                                        </Grid>
+
+                                                        <!-- Details: Target -->
+                                                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
+                                                            <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                                                            <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
+                                                                       FontSize="10.5" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
+                                                                       FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                                        </StackPanel>
+
+                                                        <!-- Reason -->
+                                                        <TextBlock Grid.Row="2" Visibility="{Binding SanctionEvent.HasReason, Converter={StaticResource BoolToVis}}"
+                                                                   Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap">
+                                                            <Run Text="Reason: " Foreground="{StaticResource LfgMuted}" />
+                                                            <Run Text="{Binding SanctionEvent.Reason}" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- Floating Scroll to Bottom Button -->
+                        <Button x:Name="BtnScrollToBottom"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,0,8"
+                                Padding="10,4"
+                                Background="#E6151F2C"
+                                BorderBrush="#333FD7FF"
+                                BorderThickness="1"
+                                Click="BtnScrollToBottom_Click"
+                                Visibility="Collapsed"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="12">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.5" />
+                                        </Border.Effect>
+                                        <StackPanel Orientation="Horizontal" Margin="6,2">
+                                            <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{StaticResource LfgAccent}" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ChatScrollToBottom}" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource LfgText}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FF1C2B3E" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#663FD7FF" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <!-- Sticky Bottom Send Message & Status Component -->
+                    <StackPanel Grid.Row="2">
+                        <!--  Why the box is gone, rather than a box that silently does nothing  -->
+                        <Border x:Name="ChatSilencedBar" Visibility="Collapsed" Margin="0,0,0,4"
+                                Background="#14FFFFFF" CornerRadius="6" Padding="10"
+                                BorderBrush="#33A93C36" BorderThickness="1">
+                            <TextBlock x:Name="ChatSilencedText" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgText}" FontSize="11" />
+                        </Border>
+
+                        <!--
+                            The rules of the room. Shown once, before the first line is ever
+                            posted, because a rule somebody was never shown is not a rule they can
+                            be held to afterwards - and this one can end in losing the room for
+                            good.
+                        -->
+                        <Border x:Name="ChatRulesPanel" Visibility="Collapsed" Margin="0,0,0,8"
+                                Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource ChatRulesTitle}" Foreground="{StaticResource LfgText}"
+                                           FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock Text="{DynamicResource ChatRulesIntro}" Foreground="{StaticResource LfgMuted}"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                                <TextBlock Text="{DynamicResource ChatRulesForbidden}" Foreground="{StaticResource LfgText}"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                                <TextBlock Text="{DynamicResource ChatRulesConsequence}" Foreground="#FFE8B4B4"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <ui:Button x:Name="BtnChatRulesAccept" Click="BtnChatRulesAccept_Click" Appearance="Primary"
+                                               Content="{DynamicResource ChatRulesAccept}" Margin="0,0,8,0" />
+                                    <ui:Button x:Name="BtnChatRulesCancel" Click="BtnChatRulesCancel_Click" Appearance="Secondary"
+                                               Content="{DynamicResource ChatRulesCancel}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!--
+                            Asked before the first translation, because it sends the message text
+                            to Google. In the panel rather than a system dialog: a modal box over
+                            the map for a question this small is a jolt, and the app has its own
+                            look for exactly this.
+                        -->
+                        <Border x:Name="ChatTranslateConsentPanel" Visibility="Collapsed" Margin="0,0,0,8"
+                                Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource ChatTranslateConsentTitle}" Foreground="{StaticResource LfgText}"
+                                           FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock Text="{DynamicResource ChatTranslateConsentBody}" Foreground="{StaticResource LfgMuted}"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <ui:Button x:Name="BtnTranslateConsentAccept" Click="BtnTranslateConsentAccept_Click" Appearance="Primary"
+                                               Content="{DynamicResource ChatTranslateConsentAccept}" Margin="0,0,8,0" />
+                                    <ui:Button x:Name="BtnTranslateConsentCancel" Click="BtnTranslateConsentCancel_Click" Appearance="Secondary"
+                                               Content="{DynamicResource ChatRulesCancel}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Why the last line did not go through. One sentence, above the box.  -->
+                        <TextBlock x:Name="ChatRefusal" Visibility="Collapsed" Margin="0,0,0,6"
+                                   Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />
+
+                        <!-- Active Compose Component (includes Slow Mode indicator & Compose input) -->
+                        <StackPanel x:Name="ChatComposeArea">
+                            <!-- Active Slow Mode indicator directly within send message component -->
+                            <Border x:Name="ChatSlowModeBar" Visibility="Collapsed" Margin="0,0,0,6"
+                                    Background="#143FD7FF" CornerRadius="6" Padding="8,4"
+                                    BorderBrush="#333FD7FF" BorderThickness="1"
+                                    HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Timer24" FontSize="13" Foreground="#FF3FD7FF" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="ChatSlowModeText" Text="Slow Mode: 10s" Foreground="#FF3FD7FF"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--
+                                Who you are answering, above the box you type in. Backspace on an
+                                empty box clears it, the way it works everywhere else people have
+                                learned this — the × is for anyone who has not.
+                            -->
+                            <Border x:Name="ChatReplyBar" Visibility="Collapsed"
+                                    Background="#161C24" BorderBrush="#2A3340" BorderThickness="1"
+                                    CornerRadius="6,6,0,0" Padding="8,5" Margin="0,0,0,-1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}" FontSize="12"
+                                                   Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="ChatReplyBarName" Foreground="{StaticResource LfgText}"
+                                                   FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock x:Name="ChatReplyBarExcerpt" Foreground="{StaticResource LfgMuted}"
+                                                   FontSize="11" FontStyle="Italic" VerticalAlignment="Center"
+                                                   MaxWidth="220" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Click="ChatCancelReply_Click"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                            Foreground="{StaticResource LfgMuted}" Content="✕" FontSize="11"
+                                            Padding="6,0" ToolTip="{DynamicResource ChatReplyCancel}" />
+                                </Grid>
+                            </Border>
+
+                            <Grid x:Name="ChatComposeRow">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <ui:TextBox x:Name="TxtChat" MaxLength="128"
+                                                Height="36"
+                                                Padding="10,0,38,0"
+                                                ClearButtonEnabled="False"
+                                                ClipToBounds="True"
+                                                PlaceholderText="{DynamicResource ChatPlaceholder}"
+                                                VerticalContentAlignment="Center"
+                                                TextChanged="TxtChat_TextChanged"
+                                                KeyDown="TxtChat_KeyDown" />
+                                    <!--
+                                        Sits beside the emoji button rather than in a settings page:
+                                        it changes how your messages look in this room, and this is
+                                        where you are while you care about that. Hidden entirely for
+                                        non-supporters — the platform refuses the write anyway, and a
+                                        control that only ever says no is worse than no control.
+                                    -->
+                                    <Button x:Name="BtnChatNameColor"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,34,0"
+                                            Width="28"
+                                            Height="28"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Visibility="Collapsed"
+                                            Click="BtnChatNameColor_Click"
+                                            ToolTip="{DynamicResource ChatNameColorTooltip}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                    <Ellipse x:Name="Dot" Width="13" Height="13"
+                                                             Stroke="#66FFFFFF" StrokeThickness="1"
+                                                             Fill="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                             HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <Popup x:Name="ChatNameColorPopup"
+                                           PlacementTarget="{Binding ElementName=BtnChatNameColor}"
+                                           Placement="Top"
+                                           StaysOpen="False"
+                                           AllowsTransparency="True"
+                                           PopupAnimation="Fade">
+                                        <Border Background="#1B2027" BorderBrush="#2E3742" BorderThickness="1"
+                                                CornerRadius="8" Padding="8" Margin="0,0,0,6">
+                                            <StackPanel>
+                                                <TextBlock Text="{DynamicResource ChatNameColorHeading}"
+                                                           Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                                           Margin="2,0,2,6" />
+                                                <ItemsControl x:Name="ChatNameColorList">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" MaxWidth="152" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Button Width="30" Height="30" Margin="2"
+                                                                    Background="Transparent" BorderThickness="0"
+                                                                    Cursor="Hand" Tag="{Binding Key}"
+                                                                    ToolTip="{Binding Label}"
+                                                                    Click="ChatNameColorSwatch_Click">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border x:Name="Sw" CornerRadius="15" Padding="3"
+                                                                                Background="Transparent"
+                                                                                BorderBrush="{Binding Selection}" BorderThickness="2">
+                                                                            <Ellipse Fill="{Binding Swatch}" />
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="Sw" Property="Background" Value="#22FFFFFF" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <Button Content="{DynamicResource ChatNameColorReset}"
+                                                        Click="ChatNameColorReset_Click"
+                                                        Background="Transparent" BorderThickness="0"
+                                                        Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                                        Cursor="Hand" HorizontalAlignment="Left" Margin="2,6,0,0" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+
+                                    <Button x:Name="BtnChatEmoji"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,6,0"
+                                            Width="28"
+                                            Height="28"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            ToolTip="Insert Emoji or Rust Item">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                    <TextBlock x:Name="Ico" Text="😊" FontSize="15"
+                                                               Opacity="0.65"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                        <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                        <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <!-- Character Counter -->
+                                    <TextBlock x:Name="TxtChatCharCount"
+                                               Text="0/128"
+                                               FontSize="9.5"
+                                               Foreground="{DynamicResource TextSubtle}"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0" />
+
+                                    <ui:Button x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                               Appearance="Primary"
+                                               Height="36" Padding="14,0"
+                                               Content="{DynamicResource LfgSend}" />
+                                </StackPanel>
+
+                                <!-- Autocomplete Popup -->
+                                <Popup x:Name="GlobalChatAutocompletePopup"
+                                       PlacementTarget="{Binding ElementName=TxtChat}"
+                                       Placement="Top"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True"
+                                       VerticalOffset="-6">
+                                    <chat:ChatEmojiAutocompletePopup x:Name="GlobalChatAutocompleteControl" />
+                                </Popup>
+
+                                <!-- Emoji & Item Picker Popup -->
+                                <Popup x:Name="GlobalChatPickerPopup"
+                                       PlacementTarget="{Binding ElementName=BtnChatEmoji}"
+                                       Placement="Top"
+                                       HorizontalOffset="-230"
+                                       VerticalOffset="-8"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True">
+                                    <chat:ChatEmojiPickerPopup x:Name="GlobalChatPickerControl" />
+                                </Popup>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <!--
+                    What somebody outside the supporters' room sees in place of it. The tab is
+                    drawn for everybody on purpose: hiding it would hide what supporting buys.
+                -->
+                <Border x:Name="SupporterGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
+                        Background="#14FFFFFF" CornerRadius="6" BorderBrush="#55D9A22B" BorderThickness="1" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource SupporterGateTitle}" Foreground="#FFF0D08A"
+                                   FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Text="{DynamicResource SupporterGateBody}" Foreground="{StaticResource LfgMuted}"
+                                   FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                        <ui:Button x:Name="BtnSupporterOffer" Click="BtnSupporterOffer_Click" Appearance="Primary"
+                                   HorizontalAlignment="Left" Margin="0,14,0,0"
+                                   Content="{DynamicResource SupporterGateAction}" />
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer x:Name="LfgSection" Grid.Row="1" Visibility="Collapsed"
+                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,4,0">
+
+                    <!--
+                        Status and inbox side by side. Six stacked rows spent more than half the
+                        panel saying two things, and the lists underneath are what people came
+                        for.
+                    -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                            <TextBlock Text="{DynamicResource LfgStatusHeading}" Style="{StaticResource LfgSectionHeading}" />
+                            <RadioButton x:Name="RbModeNone" GroupName="LfgMode" Content="{DynamicResource LfgModeNone}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5" Margin="0,0,0,5"
+                                         Checked="Mode_Checked" />
+                            <RadioButton x:Name="RbModeLfg" GroupName="LfgMode" Content="{DynamicResource LfgModeLfg}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5" Margin="0,0,0,5"
+                                         Checked="Mode_Checked" />
+                            <RadioButton x:Name="RbModeLfm" GroupName="LfgMode" Content="{DynamicResource LfgModeLfm}"
+                                         Foreground="{StaticResource LfgText}" FontSize="11.5"
+                                         Checked="Mode_Checked" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Top" MinWidth="178">
+                            <TextBlock Text="{DynamicResource LfgMessagesHeading}" Style="{StaticResource LfgSectionHeading}" />
+                            <!--
+                                Height and centred content on purpose: left to size itself the
+                                selected line sits against the top edge and reads as clipped.
+                            -->
+                            <ComboBox x:Name="CmbAcceptMode" FontSize="11.5" Height="30" Padding="8,0"
+                                      VerticalContentAlignment="Center" MaxDropDownHeight="220"
+                                      SelectionChanged="AcceptMode_Changed" />
+                            <TextBlock x:Name="AcceptOffBlockedNote" Visibility="Collapsed" Margin="1,5,0,0"
+                                       Text="{DynamicResource LfgAcceptOffBlocked}" MaxWidth="178"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="10" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!--  Note / Blurb for the active listing  -->
+                    <StackPanel x:Name="LfgNotePanel" Visibility="Collapsed" Margin="0,0,0,16">
+                        <TextBlock Text="{DynamicResource LfgNoteHeading}" Style="{StaticResource LfgSectionHeading}" />
+                        <Grid Margin="0,2,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox Grid.Column="0" x:Name="TxtBlurb" MaxLength="280"
+                                        PlaceholderText="{DynamicResource LfgNotePlaceholder}"
+                                        TextChanged="TxtBlurb_TextChanged" KeyDown="TxtBlurb_KeyDown" />
+                            <ui:Button Grid.Column="1" x:Name="BtnSaveBlurb" Click="BtnSaveBlurb_Click"
+                                       Appearance="Primary" Margin="8,0,0,0"
+                                       Content="{DynamicResource LfgNoteSave}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <!--
+                        Consent, inline rather than as a modal. It appears the moment somebody
+                        reaches for a mode and the status only commits once it is accepted, so the
+                        disclosure sits where the decision is instead of interrupting it.
+                    -->
+                    <Border x:Name="ConsentPanel" Visibility="Collapsed" Margin="0,0,0,18"
+                            Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource LfgConsentTitle}" Foreground="{StaticResource LfgText}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock Text="{DynamicResource LfgConsentBody}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+                            <TextBlock Text="{DynamicResource LfgConsentNote}" Foreground="{StaticResource LfgText}" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" />
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <ui:Button x:Name="BtnConsentAccept" Click="BtnConsentAccept_Click" Appearance="Primary"
+                                           Content="{DynamicResource LfgConsentAccept}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnConsentCancel" Click="BtnConsentCancel_Click" Appearance="Secondary"
+                                           Content="{DynamicResource LfgConsentCancel}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Preview of user's own active listing  -->
+                    <StackPanel x:Name="MyListingPreview" Visibility="Collapsed" Margin="0,0,0,16">
+                        <TextBlock Text="{DynamicResource LfgMyListingHeading}" Style="{StaticResource LfgSectionHeading}" />
+                        <Border Background="#142A6CA6" CornerRadius="6" Padding="9" BorderBrush="#332A6CA6" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  Avatar  -->
+                                <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0"
+                                      Background="Transparent" Cursor="Hand"
+                                      MouseLeftButtonUp="Preview_ProfileClick"
+                                      ToolTip="{DynamicResource ProfileOpenSteam}">
+                                    <Ellipse x:Name="PreviewSupporterRing" Stroke="#FFD9A22B" StrokeThickness="2" Visibility="Collapsed" />
+                                    <Ellipse Margin="3">
+                                        <Ellipse.Fill>
+                                            <ImageBrush x:Name="PreviewAvatar" Stretch="UniformToFill" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                             Fill="#FF4CC38A" Stroke="#FF111820" StrokeThickness="1.5" />
+                                </Grid>
+
+                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                     <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="Preview_ProfileClick"
+                                                 ToolTip="{DynamicResource ProfileOpenSteam}">
+                                         <Image x:Name="PreviewFlag" Width="15" Height="11" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                         <TextBlock x:Name="PreviewDisplayName" Foreground="{StaticResource LfgText}"
+                                                    FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                    TextTrimming="CharacterEllipsis" />
+                                         <Border Background="#334CC38A" CornerRadius="3" Padding="4,1" Margin="6,0,0,0">
+                                             <TextBlock x:Name="PreviewModeBadge" FontSize="9.5" FontWeight="SemiBold" Foreground="#FF4CC38A" />
+                                         </Border>
+                                         <Border x:Name="PreviewServerBadge" Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" Visibility="Collapsed">
+                                             <TextBlock x:Name="PreviewServerName" FontSize="9.5" Foreground="{StaticResource LfgMuted}" TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                         </Border>
+                                     </StackPanel>
+                                     <TextBlock x:Name="PreviewBlurb" Foreground="{StaticResource LfgMuted}"
+                                                FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                 </StackPanel>
+
+                                 <StackPanel x:Name="PreviewTeamSizePanel" Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0" Visibility="Collapsed">
+                                     <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
+                                                FontSize="9" HorizontalAlignment="Center" />
+                                     <TextBlock x:Name="PreviewTeamSize" Text="—" Foreground="{StaticResource LfgText}"
+                                                FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                 </StackPanel>
+
+                                 <Border Grid.Column="3" VerticalAlignment="Center" Margin="4,0,0,0"
+                                         Background="#14FFFFFF" CornerRadius="4" Padding="6,2">
+                                     <TextBlock Text="{DynamicResource LfgPreviewActiveBadge}" FontSize="10" Foreground="{StaticResource LfgMuted}" />
+                                 </Border>
+                             </Grid>
+                         </Border>
+                     </StackPanel>
+
+                     <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,0,0,14" />
+
+                     <!--  Which list  -->
+                     <Border BorderBrush="{StaticResource LfgLine}" BorderThickness="0,0,0,1" Margin="0,0,0,10">
+                         <StackPanel Orientation="Horizontal">
+                             <RadioButton x:Name="TabTeams" GroupName="LfgTab" IsChecked="True"
+                                          Style="{StaticResource SocialTab}" Margin="0,0,18,0"
+                                          Content="{DynamicResource LfgTabTeams}" Checked="Tab_Checked" />
+                             <RadioButton x:Name="TabPlayers" GroupName="LfgTab"
+                                          Style="{StaticResource SocialTab}"
+                                          Content="{DynamicResource LfgTabPlayers}" Checked="Tab_Checked" />
+                         </StackPanel>
+                     </Border>
+
+                     <!--  Filters. Without them a list stops being useful somewhere past a hundred rows.  -->
+                     <Grid Margin="0,0,0,10">
+                         <Grid.ColumnDefinitions>
+                             <ColumnDefinition Width="*" />
+                             <ColumnDefinition Width="Auto" />
+                             <ColumnDefinition Width="Auto" />
+                         </Grid.ColumnDefinitions>
+                         <ComboBox x:Name="CmbLanguage" Grid.Column="0" FontSize="11.5" Height="30" Padding="8,0"
+                                   VerticalContentAlignment="Center" MaxDropDownHeight="220"
+                                   SelectionChanged="Filter_Changed" />
+                         <CheckBox x:Name="ChkOnlineOnly" Grid.Column="1" Margin="10,0,2,0"
+                                   Style="{StaticResource SocialDotCheck}" VerticalAlignment="Center"
+                                   Content="{DynamicResource LfgFilterOnline}"
+                                   Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                         <ui:Button x:Name="BtnRefresh" Grid.Column="2" Margin="8,0,0,0" Height="28"
+                                    Appearance="Secondary" Click="BtnRefresh_Click"
+                                    ToolTip="{DynamicResource LfgFilterRefresh}"
+                                    Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+                     </Grid>
+
+                     <TextBlock x:Name="ListEmptyNotice" Visibility="Collapsed" Margin="0,4,0,12"
+                                Text="{DynamicResource LfgEmpty}" TextWrapping="Wrap"
+                                Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                     <ItemsControl x:Name="ListingList" Margin="0,0,0,4">
+                         <ItemsControl.ItemTemplate>
+                             <DataTemplate>
+                                 <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                     <Grid>
+                                         <Grid.ColumnDefinitions>
+                                             <ColumnDefinition Width="Auto" />
+                                             <ColumnDefinition Width="*" />
+                                             <ColumnDefinition Width="Auto" />
+                                             <ColumnDefinition Width="Auto" />
+                                         </Grid.ColumnDefinitions>
+
+                                         <!--  Avatar, ringed in gold for supporters. Opens the profile.  -->
+                                         <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0"
+                                               Background="Transparent" Cursor="Hand"
+                                               Tag="{Binding}" MouseLeftButtonUp="Listing_ProfileClick"
+                                               ToolTip="{DynamicResource ProfileOpenSteam}">
+                                             <Ellipse Stroke="#FFD9A22B" StrokeThickness="2"
+                                                      Visibility="{Binding IsSupporter, Converter={StaticResource BoolToVis}}" />
+                                             <Ellipse Margin="3">
+                                                 <Ellipse.Fill>
+                                                     <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                 </Ellipse.Fill>
+                                             </Ellipse>
+                                             <!--  Online light, bottom right of the avatar  -->
+                                             <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                      Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                         </Grid>
+
+                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                             <StackPanel Orientation="Horizontal" Cursor="Hand" Tag="{Binding}"
+                                                         MouseLeftButtonUp="Listing_ProfileClick" ToolTip="{DynamicResource ProfileOpenSteam}">
+                                                 <Image Source="{Binding FlagPath}" Width="15" Height="11" Margin="0,0,6,0"
+                                                        VerticalAlignment="Center" />
+                                                 <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                            FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                 <Border Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVis}}"
+                                                         Background="{Binding RoleBadge.BackgroundBrush}"
+                                                         BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                         BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                         VerticalAlignment="Center">
+                                                     <TextBlock Text="{Binding RoleBadge.DisplayText}"
+                                                                Foreground="{Binding RoleBadge.ForegroundBrush}"
+                                                                FontSize="9" FontWeight="Bold" />
+                                                 </Border>
+                                                 <Border Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                         Visibility="{Binding HasServer, Converter={StaticResource BoolToVis}}">
+                                                     <TextBlock Text="{Binding ServerName}" FontSize="9.5" Foreground="{StaticResource LfgMuted}"
+                                                                TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                                 </Border>
+                                             </StackPanel>
+                                             <TextBlock Text="{Binding Blurb}" Foreground="{StaticResource LfgMuted}"
+                                                        FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                         </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0">
+                                            <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
+                                                       FontSize="9" HorizontalAlignment="Center" />
+                                            <TextBlock Text="{Binding TeamSizeLabel}" Foreground="{StaticResource LfgText}"
+                                                       FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <ui:Button Grid.Column="3" VerticalAlignment="Center" Height="30" Width="34"
+                                                   Appearance="Secondary" Tag="{Binding}" Click="BtnOpenChat_Click"
+                                                   ToolTip="{DynamicResource LfgOpenChat}"
+                                                   Icon="{ui:SymbolIcon Symbol=Chat24}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    </StackPanel>
+                </ScrollViewer>
+                <!--
+                    The inbox. Same mechanism as before, one level up: requests and replies are
+                    not a footnote to the board they came from, and burying them under a list
+                    meant scrolling past forty strangers to reach the one who wrote to you.
+                -->
+                <!--
+                    The inbox holds two views in the same place: the list of threads, and one
+                    thread opened. Both scroll on the inside rather than as a whole, so the way
+                    back and the reply box stay where they were put.
+                -->
+                <Grid x:Name="InboxSection" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer x:Name="ThreadListView"
+                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="0,0,4,0">
+                            <TextBlock Text="{DynamicResource LfgInbox}" Style="{StaticResource LfgSectionHeading}" />
+
+                            <TextBlock x:Name="InboxEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
+                                       Text="{DynamicResource LfgInboxEmpty}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+                            <!--  Said once, while there is nothing to read instead.  -->
+                            <TextBlock x:Name="InboxHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource SocialInboxHint}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                            <ItemsControl x:Name="ThreadList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0DFFFFFF" CornerRadius="6" Padding="8" Margin="0,0,0,5"
+                                                Cursor="Hand" MouseLeftButtonUp="Thread_Click" Tag="{Binding}">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ThreadAddFriend_Click" Tag="{Binding}" />
+                                                    <Separator />
+                                                    <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuBlock_Click" Tag="{Binding}" />
+                                                    <MenuItem Header="{DynamicResource LfgReportUser}" Click="MenuReport_Click" Tag="{Binding}" />
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid Grid.Column="0" Width="28" Height="28" Margin="0,0,9,0">
+                                                    <Ellipse>
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                             Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                                </Grid>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding CounterpartName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12" FontWeight="{Binding NameWeight}"
+                                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                        <Border Background="#332A6CA6" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                Visibility="{Binding PendingBadge}">
+                                                            <TextBlock Text="{DynamicResource LfgPendingBadge}" FontSize="9"
+                                                                       Foreground="#FF7FB6E8" />
+                                                        </Border>
+                                                        <Border Background="#33A93C36" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
+                                                                Visibility="{Binding DeclinedBadge}">
+                                                            <TextBlock Text="{DynamicResource LfgDeclinedBadge}" FontSize="9"
+                                                                       Foreground="#FFE08880" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Border Background="#FF2A6CA6" CornerRadius="8" Padding="5,1" Margin="0,0,6,0"
+                                                            Visibility="{Binding UnreadBadge}">
+                                                        <TextBlock Text="{Binding UnreadLabel}" FontSize="9.5" Foreground="White" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding WhenLabel}" Foreground="{StaticResource LfgMuted}" FontSize="10" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!--  One open thread  -->
+                    <Grid x:Name="ThreadView" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:Button Grid.Column="0" x:Name="BtnThreadBack" Click="BtnThreadBack_Click"
+                                           Appearance="Secondary" Height="28" Width="32" Margin="0,0,9,0"
+                                           ToolTip="{DynamicResource LfgBack}"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowLeft24}" />
+                                <TextBlock Grid.Column="1" x:Name="ThreadTitle" VerticalAlignment="Center"
+                                           Foreground="{StaticResource LfgText}" FontSize="13" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+
+                            <StackPanel Grid.Row="1">
+
+                            <!--  A request you have not answered: the decision comes before the reply box  -->
+                            <Border x:Name="PendingBar" Visibility="Collapsed" Margin="0,0,0,10"
+                                    Background="#14FFFFFF" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock x:Name="PendingHint" Foreground="{StaticResource LfgText}" FontSize="11"
+                                               TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel x:Name="PendingActionsRow" Orientation="Horizontal">
+                                        <ui:Button x:Name="BtnAcceptRequest" Click="BtnAcceptRequest_Click" Appearance="Primary"
+                                                   Content="{DynamicResource LfgAcceptRequest}" Margin="0,0,8,0" />
+                                        <ui:Button x:Name="BtnDeclineRequest" Click="BtnDeclineRequest_Click" Appearance="Secondary"
+                                                   Content="{DynamicResource LfgDeclineRequest}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!--  Writing to somebody for the first time: no history yet, and a shorter limit  -->
+                            <TextBlock x:Name="ComposeHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource LfgComposeHint}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                            <TextBlock x:Name="DeclinedHint" Visibility="Collapsed" Margin="0,0,0,10"
+                                       Text="{DynamicResource LfgDeclinedHint}" TextWrapping="Wrap"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                            </StackPanel>
+
+                            <!--  The only part that scrolls.  -->
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled" Margin="0,0,4,0">
+                            <ItemsControl x:Name="MessageList" Margin="0,0,0,10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{Binding Bubble}" CornerRadius="8" Padding="9,6" Margin="0,0,0,5"
+                                                MaxWidth="300" HorizontalAlignment="{Binding Side}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Body}" TextWrapping="Wrap"
+                                                           Foreground="{StaticResource LfgText}" FontSize="12" />
+                                                <TextBlock Text="{Binding TimeLabel}" HorizontalAlignment="Right" Margin="0,3,0,0"
+                                                           Foreground="{StaticResource LfgMuted}" FontSize="9" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            </ScrollViewer>
+
+                            <Grid x:Name="ReplyRow" Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBox Grid.Column="0" x:Name="TxtReply" MaxLength="1000"
+                                            PlaceholderText="{DynamicResource LfgReplyPlaceholder}"
+                                            KeyDown="TxtReply_KeyDown" />
+                                <ui:Button Grid.Column="1" x:Name="BtnSend" Click="BtnSend_Click" Appearance="Primary"
+                                           Margin="8,0,0,0" Content="{DynamicResource LfgSend}" />
+                            </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <!--
+                The friends list.
+
+                A friendship is not a conversation: somebody can answer a stranger without wanting
+                them on a list, so the request that arrives carries both decisions separately and
+                this sheet only ever shows the second one.
+            -->
+            <Border x:Name="FriendsSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource FriendsTitle}" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+
+                        <ScrollViewer MaxHeight="330" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="0,0,4,0">
+                                <TextBlock x:Name="FriendsEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
+                                           Text="{DynamicResource FriendsEmpty}" TextWrapping="Wrap"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                                <!--  Waiting on you: the only rows here with a decision attached.  -->
+                                <TextBlock x:Name="FriendsIncomingHeading" Visibility="Collapsed"
+                                           Text="{DynamicResource FriendsIncoming}" Style="{StaticResource LfgSectionHeading}" />
+                                <ItemsControl x:Name="FriendRequestList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#14FFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" MinWidth="0" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0"
+                                                             VerticalAlignment="Top">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+
+                                                    <!--
+                                                        The name above, the two answers below it. Side by side they
+                                                        needed more width than the panel has, and the first thing to
+                                                        fall off the edge was the button you press.
+                                                    -->
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12.5" FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                            <ui:Button Height="26" Padding="10,0" FontSize="11"
+                                                                       Appearance="Primary" Margin="0,0,6,0"
+                                                                       Tag="{Binding}" Click="BtnFriendAccept_Click"
+                                                                       Content="{DynamicResource FriendsAccept}" />
+                                                            <ui:Button Height="26" Padding="10,0" FontSize="11"
+                                                                       Appearance="Secondary"
+                                                                       Tag="{Binding}" Click="BtnFriendDecline_Click"
+                                                                       Content="{DynamicResource FriendsDecline}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!--  Friends, with where they are when they are somewhere.  -->
+                                <ItemsControl x:Name="FriendList" Margin="0,4,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6"
+                                                    Cursor="Hand" Tag="{Binding}" MouseLeftButtonUp="Friend_Click">
+                                                <Border.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="{DynamicResource FriendsMessage}" Click="MenuFriendMessage_Click" Tag="{Binding}" />
+                                                        <MenuItem Header="{DynamicResource ProfileOpenSteam}" Click="MenuFriendProfile_Click" Tag="{Binding}" />
+                                                        <Separator />
+                                                        <MenuItem Header="{DynamicResource FriendsRemove}" Click="MenuFriendRemove_Click" Tag="{Binding}" />
+                                                        <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuFriendBlock_Click" Tag="{Binding}" />
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0">
+                                                        <Ellipse>
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                                 Fill="{Binding StatusBrush}" Stroke="#FF111820" StrokeThickness="1.5" />
+                                                    </Grid>
+
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                                   FontSize="12.5" FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding WhereLabel}" Visibility="{Binding WhereVisibility}"
+                                                                   Foreground="{StaticResource LfgMuted}" FontSize="10.5"
+                                                                   TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!--  Asked, not yet answered. Shown so nobody asks twice.  -->
+                                <TextBlock x:Name="FriendsOutgoingHeading" Visibility="Collapsed" Margin="0,6,0,0"
+                                           Text="{DynamicResource FriendsOutgoing}" Style="{StaticResource LfgSectionHeading}" />
+                                <ItemsControl x:Name="FriendOutgoingList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,2,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" MinWidth="0" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0"
+                                                           Text="{Binding DisplayName}" Foreground="{StaticResource LfgMuted}"
+                                                           FontSize="11.5" TextTrimming="CharacterEllipsis" />
+                                                <ui:Button Grid.Column="1" Height="24" Padding="8,0" FontSize="11"
+                                                           Appearance="Secondary"
+                                                           Tag="{Binding}" Click="BtnFriendWithdraw_Click"
+                                                           Content="{DynamicResource FriendsWithdraw}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!--  Adding somebody: an id and one message, which is all you get.  -->
+                        <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,12,0,12" />
+
+                        <ui:TextBox x:Name="TxtFriendSteamId" MaxLength="17"
+                                    PlaceholderText="{DynamicResource FriendsAddSteamId}" />
+                        <ui:TextBox x:Name="TxtFriendMessage" MaxLength="300" Margin="0,8,0,0"
+                                    PlaceholderText="{DynamicResource FriendsAddMessage}" />
+
+                        <TextBlock x:Name="FriendsNotice" Visibility="Collapsed" Margin="0,8,0,0"
+                                   Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <ui:Button x:Name="BtnFriendAdd" Click="BtnFriendAdd_Click" Appearance="Primary"
+                                       Content="{DynamicResource FriendsAddAction}" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnFriendsClose" Click="BtnFriendsClose_Click" Appearance="Secondary"
+                                       Content="{DynamicResource ProfileClose}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!--
+                The block list.
+
+                Blocking is the one thing here somebody can do about another person without
+                waiting for us, and it is deliberately private and immediate. That only works if
+                it can also be undone: a list you cannot see is a list you cannot leave, and a
+                block made in the middle of an argument is exactly what people want back.
+            -->
+            <Border x:Name="BlocksSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource BlocksTitle}" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Text="{DynamicResource BlocksIntro}" Foreground="{StaticResource LfgMuted}"
+                                   FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
+
+                        <TextBlock x:Name="BlocksEmptyNotice" Visibility="Collapsed" Margin="0,12,0,0"
+                                   Text="{DynamicResource BlocksEmpty}" TextWrapping="Wrap"
+                                   Foreground="{StaticResource LfgMuted}" FontSize="11" />
+
+                        <ScrollViewer MaxHeight="300" Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="BlockList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0DFFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Ellipse Grid.Column="0" Width="30" Height="30" Margin="0,0,10,0">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill" />
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
+                                                               FontSize="12.5" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                        <TextBlock Text="{DynamicResource BlocksSince}" Foreground="{StaticResource LfgMuted}"
+                                                                   FontSize="10.5" Margin="0,0,4,0" />
+                                                        <TextBlock Text="{Binding BlockedAtLabel}" Foreground="{StaticResource LfgMuted}"
+                                                                   FontSize="10.5" />
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <ui:Button Grid.Column="2" VerticalAlignment="Center" Height="28"
+                                                           Appearance="Secondary" Tag="{Binding}" Click="BtnUnblock_Click"
+                                                           Content="{DynamicResource BlocksUnblock}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <ui:Button x:Name="BtnBlocksClose" Click="BtnBlocksClose_Click" Appearance="Primary"
+                                   HorizontalAlignment="Left" Margin="0,14,0,0"
+                                   Content="{DynamicResource ProfileClose}" />
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!--
+                A Steam profile, read straight from the community page.
+
+                Only from a listing, never from a line in the public room. The room shows a name
+                and nothing else on purpose; a listing already discloses the Steam account, and
+                did so with consent. Making the room a lookup tool would quietly undo that.
+            -->
+            <Border x:Name="ProfileSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="56" Height="56" Margin="0,0,12,0">
+                                <Ellipse x:Name="ProfileSupporterRing" Visibility="Collapsed"
+                                         Stroke="#FFD9A22B" StrokeThickness="2" />
+                                <Ellipse Margin="3">
+                                    <Ellipse.Fill>
+                                        <ImageBrush x:Name="ProfileAvatar" Stretch="UniformToFill" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="ProfileName" Foreground="{StaticResource LfgText}"
+                                           FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock x:Name="ProfileSteamId" Foreground="{StaticResource LfgMuted}"
+                                           FontSize="10.5" FontFamily="Consolas" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock x:Name="ProfileBlurb" Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                   TextWrapping="Wrap" Margin="0,10,0,0" Visibility="Collapsed" />
+
+                        <StackPanel x:Name="ProfileFacts" Margin="0,10,0,0" />
+
+                        <TextBlock x:Name="ProfileNotice" Foreground="{StaticResource LfgMuted}" FontSize="11"
+                                   TextWrapping="Wrap" Margin="0,8,0,0" Visibility="Collapsed" />
+
+                        <TextBlock x:Name="ProfileVacWarning" Text="{DynamicResource ProfileVac}"
+                                   Foreground="#FFFF8A8A" FontSize="11" FontWeight="SemiBold"
+                                   Margin="0,8,0,0" Visibility="Collapsed" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <ui:Button x:Name="BtnProfileSteam" Click="BtnProfileSteam_Click" Appearance="Primary"
+                                       Content="{DynamicResource ProfileOpenSteam}" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnProfileCopy" Click="BtnProfileCopy_Click" Appearance="Secondary"
+                                       Content="{DynamicResource ProfileCopyId}" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnProfileClose" Click="BtnProfileClose_Click" Appearance="Secondary"
+                                       Content="{DynamicResource ProfileClose}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!--
+                Reporting somebody, over the whole panel.
+
+                A scrim rather than an inline block, because this is the one action here that
+                asks a moderator to spend time. Making it happen half-scrolled past the thing
+                being reported is how a queue fills up with reports nobody can act on.
+            -->
+            <Border x:Name="ReportSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
+                <Border VerticalAlignment="Center" Margin="14" Padding="16"
+                        Background="{StaticResource LfgCard}" CornerRadius="8"
+                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock x:Name="ReportHeading" Foreground="{StaticResource LfgText}"
+                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+
+                        <!--  The form  -->
+                        <StackPanel x:Name="ReportForm">
+                            <TextBlock Text="{DynamicResource ReportIntro}" Margin="0,6,0,12"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
+
+                            <StackPanel x:Name="ReportReasons" />
+
+                            <!--  What is being reported, when it is one line rather than a person  -->
+                            <StackPanel x:Name="ReportQuoted" Visibility="Collapsed" Margin="0,4,0,0">
+                                <TextBlock Text="{DynamicResource ReportQuotedLabel}" Margin="0,0,0,4"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="10" FontWeight="Bold" />
+                                <Border Background="#14FFFFFF" CornerRadius="6" Padding="9,7">
+                                    <TextBlock x:Name="ReportQuotedText" Foreground="{StaticResource LfgText}"
+                                               FontSize="11" TextWrapping="Wrap" MaxHeight="72" />
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Text="{DynamicResource ReportNoteLabel}" Margin="0,12,0,5"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="10.5" TextWrapping="Wrap" />
+                            <ui:TextBox x:Name="TxtReportNote" MaxLength="1000" MinHeight="62"
+                                        AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top"
+                                        PlaceholderText="{DynamicResource ReportNotePlaceholder}" />
+
+                            <TextBlock x:Name="ReportError" Visibility="Collapsed" Margin="0,8,0,0"
+                                       Text="{DynamicResource ReportFailed}" Foreground="#FFFF8A8A"
+                                       FontSize="11" TextWrapping="Wrap" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                <ui:Button x:Name="BtnReportSubmit" Click="BtnReportSubmit_Click" Appearance="Primary"
+                                           Content="{DynamicResource ReportSubmit}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnReportCancel" Click="BtnReportCancel_Click" Appearance="Secondary"
+                                           Content="{DynamicResource ReportCancel}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--  The receipt. Same sheet, so the answer arrives where the question was asked.  -->
+                        <StackPanel x:Name="ReportDone" Visibility="Collapsed">
+                            <TextBlock Text="{DynamicResource ReportDoneBody}" Margin="0,8,0,0"
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
+                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                <ui:Button x:Name="BtnReportBlock" Click="BtnReportBlock_Click" Appearance="Secondary"
+                                           Content="{DynamicResource LfgBlockUser}" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnReportClose" Click="BtnReportCancel_Click" Appearance="Primary"
+                                           Content="{DynamicResource ReportClose}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

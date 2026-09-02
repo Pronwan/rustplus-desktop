@@ -74,6 +74,7 @@ namespace RustPlusDesk.Services.Data
                 data.Icons,
                 data.Texts,
                 data.Devices,
+                data.Routes,
                 explicitWipe
             }))));
             var inFlightKey = $"{uploadKey}:{contentHash}";
@@ -88,7 +89,8 @@ namespace RustPlusDesk.Services.Data
 
             bool isEmpty = (data.Strokes?.Count ?? 0) == 0
                         && (data.Icons?.Count   ?? 0) == 0
-                        && (data.Texts?.Count   ?? 0) == 0;
+                        && (data.Texts?.Count   ?? 0) == 0
+                        && (data.Routes?.Count  ?? 0) == 0;
 
             var icons = data.Icons ?? new List<SavedIcon>();
             var baseIcons = icons.Where(icon => IsBaseIconPath(icon.IconPath)).ToList();
@@ -119,7 +121,13 @@ namespace RustPlusDesk.Services.Data
                 Strokes = data.Strokes ?? new List<SavedStroke>(),
                 Icons = nonBaseIcons,
                 Texts = data.Texts ?? new List<SavedText>(),
-                Devices = data.Devices ?? new List<ExportedDeviceDto>()
+                Devices = data.Devices ?? new List<ExportedDeviceDto>(),
+                // Only your own. Sharing a copy of somebody's route sends it back to them, they
+                // import it again under a new id, and the two lists grow without end.
+                Routes = (data.Routes ?? new List<SavedRoute>())
+                    .Where(r => string.IsNullOrEmpty(r.SourceId))
+                    .ToList(),
+                ImportedRouteIds = data.ImportedRouteIds ?? new List<string>()
             };
 
             // Size limit check (excluding bases/screenshots)
@@ -236,7 +244,11 @@ namespace RustPlusDesk.Services.Data
                 Strokes = uncompressedStrokes,
                 Icons = nonBaseIcons,
                 data.Texts,
-                data.Devices
+                data.Devices,
+                // Routes weigh the same as the strokes they are made of, and a long one is not
+                // free. Leaving them out here would let an overlay past the tier limit and then
+                // upload it anyway.
+                data.Routes
             };
 
             var json = JsonSerializer.Serialize(tempObj, new JsonSerializerOptions { WriteIndented = false });
@@ -295,6 +307,10 @@ namespace RustPlusDesk.Services.Data
                             data.Strokes         = mapData.Strokes  ?? data.Strokes;
                             data.Icons           = mapData.Icons    ?? data.Icons;
                             data.Texts           = mapData.Texts    ?? data.Texts;
+                            // The download end of the same pipe. Uploading routes is no use if
+                            // the fetch that brings them back leaves them in the payload.
+                            data.Routes          = mapData.Routes   ?? data.Routes;
+                            data.ImportedRouteIds = mapData.ImportedRouteIds ?? data.ImportedRouteIds;
                             data.LastUpdatedUnix = mapData.LastUpdatedUnix > 0
                                 ? mapData.LastUpdatedUnix
                                 : new DateTimeOffset(mapRow.UpdatedAt).ToUnixTimeSeconds();

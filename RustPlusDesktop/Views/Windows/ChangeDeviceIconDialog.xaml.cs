@@ -36,7 +36,7 @@ namespace RustPlusDesk.Views.Windows
         }
 
         private static string GetString(string key, string fallback)
-            => RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+            => RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
 
         private void LoadLocalizedStrings()
         {

@@ -30,8 +30,14 @@ public partial class MainWindow
 private bool _overlayToolsVisible = false;
 
     // wer ist aktuell ausgewaehlt als Zeichenwerkzeug?
-    private enum OverlayToolMode { None, Draw, Text, Icon, Erase }
+    private enum OverlayToolMode { None, Draw, Line, Arrow, Box, Circle, Route, Text, Icon, Erase }
     private OverlayToolMode _currentTool = OverlayToolMode.None;
+
+    // Anchor for the shape tools (line/arrow/box/circle): the first corner/centre of the drag.
+    private Point? _shapeAnchor;
+
+    // True while the inline text editor is open, so map keyboard shortcuts don't hijack typing.
+    private bool _isEditingOverlayText;
 
     // Color/Size Settings usw.:
     private Color _drawColor = Colors.Red;
@@ -479,7 +485,8 @@ private bool _overlayToolsVisible = false;
                 Tag = new OverlayTag
                 {
                     OwnerSteamId = _mySteamId,
-                    IsUserEditable = true
+                    IsUserEditable = true,
+                    GroupId = stroke.GroupId
                 }
             };
 
@@ -566,8 +573,8 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseDown(MouseButtonEventArgs e, Point mapPos)
     {
-        // 1) DRAW
-        if (_currentTool == OverlayToolMode.Draw &&
+        // 1) DRAW / ROUTE — both draw a freehand stroke; Route simplifies it into a path on release.
+        if ((_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route) &&
             e.LeftButton == MouseButtonState.Pressed)
         {
             _isDrawingStroke = true;
@@ -585,6 +592,30 @@ private bool _overlayToolsVisible = false;
             Overlay.Children.Add(_currentStroke);
 
             // registrieren
+            RegisterElementForOwner(_mySteamId, _currentStroke);
+            return;
+        }
+
+        // 1b) SHAPES (line / arrow / box / circle) — rendered as polylines so they reuse
+        //     the whole save/load/erase/undo/cloud pipeline with no schema change.
+        if (IsShapeTool(_currentTool) &&
+            e.LeftButton == MouseButtonState.Pressed)
+        {
+            _isDrawingStroke = true;
+            _shapeAnchor = mapPos;
+            _currentStroke = new Polyline
+            {
+                Stroke = new SolidColorBrush(_drawColor),
+                StrokeThickness = _drawThickness,
+                StrokeLineJoin = PenLineJoin.Round,
+                StrokeEndLineCap = PenLineCap.Round,
+                StrokeStartLineCap = PenLineCap.Round,
+                IsHitTestVisible = false,
+                Tag = new OverlayTag { OwnerSteamId = _mySteamId, IsUserEditable = true }
+            };
+            foreach (Point p in BuildShapePoints(_currentTool, mapPos, mapPos, IsShiftDown()))
+                _currentStroke.Points.Add(p);
+            Overlay.Children.Add(_currentStroke);
             RegisterElementForOwner(_mySteamId, _currentStroke);
             return;
         }
@@ -613,12 +644,32 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
-        // 5) Drag bestehender Elemente (wenn kein spezielles Tool aktiv ist,
-        //    oder wir explizit Drag erlauben bei Icon/Text in anderen Tools ausser Draw/Text/Icon/Erase)
+        // 5) SELECT / drag existing elements (Select tool = None).
         if (e.LeftButton == MouseButtonState.Pressed &&
             _currentTool == OverlayToolMode.None)
         {
-            TryBeginDragExistingElement(mapPos);
+            // Double-click a label to edit its text in place.
+            if (e.ClickCount == 2 && FindOwnElementAt(mapPos) is TextBlock label)
+            {
+                BeginEditText(label);
+                return;
+            }
+
+            FrameworkElement? hit = FindOwnElementAt(mapPos);
+            if (hit != null)
+            {
+                SelectElement(hit);
+                UpdateOptionsPanelVisibility();
+                // Icons/text drag to move; strokes/shapes are selectable (recolour/resize/delete) but not dragged.
+                if (hit is not Polyline)
+                    TryBeginDragExistingElement(mapPos);
+                return;
+            }
+
+            // Empty space: start a rubber-band drag-select for multiple layers.
+            DeselectElement();
+            UpdateOptionsPanelVisibility();
+            BeginMarquee(mapPos);
             return;
         }
 
@@ -682,17 +733,39 @@ private bool _overlayToolsVisible = false;
         }
 
         if (toRemove.Count > 0)
+        {
+            RecordOverlayErase(toRemove);
             SaveOwnOverlayToJson();
+        }
     }
 
     private void HandleOverlayMouseMove(MouseEventArgs e, Point mapPos)
     {
-        // Stroke weiterzeichnen
-        if (_currentTool == OverlayToolMode.Draw &&
+        // Rubber-band marquee resize
+        if (_isMarqueeSelecting)
+        {
+            UpdateMarquee(mapPos);
+            return;
+        }
+
+        // Stroke weiterzeichnen (Draw + Route)
+        if ((_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route) &&
             _isDrawingStroke &&
             _currentStroke != null)
         {
             _currentStroke.Points.Add(mapPos);
+            return;
+        }
+
+        // Shape preview: rebuild from the anchor to the cursor on every move.
+        if (IsShapeTool(_currentTool) &&
+            _isDrawingStroke &&
+            _currentStroke != null &&
+            _shapeAnchor is Point shapeAnchor)
+        {
+            _currentStroke.Points.Clear();
+            foreach (Point p in BuildShapePoints(_currentTool, shapeAnchor, mapPos, IsShiftDown()))
+                _currentStroke.Points.Add(p);
             return;
         }
 
@@ -715,10 +788,52 @@ private bool _overlayToolsVisible = false;
 
     private void HandleOverlayMouseUp(MouseButtonEventArgs e, Point mapPos)
     {
-        if (_currentTool == OverlayToolMode.Draw)
+        if (_isMarqueeSelecting)
+        {
+            EndMarquee(mapPos);
+            return;
+        }
+
+        if (IsShapeTool(_currentTool))
         {
             _isDrawingStroke = false;
+            Polyline? completed = _currentStroke;
+            Point? anchor = _shapeAnchor;
             _currentStroke = null;
+            _shapeAnchor = null;
+            if (completed != null)
+            {
+                // Drop an accidental click that never became a shape.
+                if (anchor is Point a && PointDistance(a, mapPos) < 0.75)
+                    RemoveOwnElement(completed);
+                else if (IsRouteModeActive)
+                    // A shape can be a route too. A line joins on like a pen stroke; a box or a
+                    // circle arrives already closed, which is a lap by any other name.
+                    AppendStrokeToActiveRoute(completed, closes: _currentTool is OverlayToolMode.Box or OverlayToolMode.Circle);
+                else
+                    RecordOverlayAdd(completed);
+            }
+            SaveOwnOverlayToJson();
+            return;
+        }
+
+        if (_currentTool == OverlayToolMode.Draw || _currentTool == OverlayToolMode.Route)
+        {
+            _isDrawingStroke = false;
+            Polyline? completed = _currentStroke;
+            _currentStroke = null;
+            if (completed != null)
+            {
+                if (IsRouteModeActive)
+                    // In route mode a stroke is not a stroke: it extends the route being drawn,
+                    // which owns its own geometry and its own start and end.
+                    AppendStrokeToActiveRoute(completed);
+                else if (_currentTool == OverlayToolMode.Route)
+                    // Replace the freehand stroke with evenly-spaced direction arrows.
+                    BuildArrowRouteElements(completed);
+                else
+                    RecordOverlayAdd(completed);
+            }
             SaveOwnOverlayToJson();
         }
 
@@ -729,7 +844,14 @@ private bool _overlayToolsVisible = false;
 
         if (_draggingElement != null)
         {
+            FrameworkElement moved = _draggingElement;
             _draggingElement = null;
+            if (_dragStartPos is Point start)
+            {
+                var now = new Point(Canvas.GetLeft(moved), Canvas.GetTop(moved));
+                RecordOverlayMove(moved, start, now);
+                _dragStartPos = null;
+            }
             SaveOwnOverlayToJson();
         }
     }
@@ -765,8 +887,9 @@ private bool _overlayToolsVisible = false;
             var img = new Image
             {
                 Source = new BitmapImage(new Uri(_currentIconPath, UriKind.RelativeOrAbsolute)),
-                Width = _activeIconSize,
-                Height = _activeIconSize,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 IsHitTestVisible = false
             };
@@ -812,6 +935,7 @@ private bool _overlayToolsVisible = false;
         // 6. ins Overlay
         Overlay.Children.Add(elementToPlace);
         RegisterElementForOwner(_mySteamId, elementToPlace);
+        RecordOverlayAdd(elementToPlace);
 
         // 7. speichern (nimmt BASIS-W/H, nicht die skalierten Pixel - das ist korrekt!)
         SaveOwnOverlayToJson();
@@ -862,15 +986,109 @@ private bool _overlayToolsVisible = false;
         }
     }
 
-    private void PlaceTextAt(Point mapPos)
-    {
-        var input = PromptText("Enter description:", "Add Text", "");
-        if (string.IsNullOrWhiteSpace(input))
-            return;
+    private void PlaceTextAt(Point mapPos) => OpenTextEditor(mapPos, string.Empty, null);
 
+    /// <summary>
+    /// Inline text editor. With <paramref name="replacing"/> null it creates a new label;
+    /// otherwise it edits that label's content in place (double-click / Edit).
+    /// </summary>
+    private void OpenTextEditor(Point pos, string initial, TextBlock? replacing)
+    {
+        if (_isEditingOverlayText) return;
+
+        Color color = replacing?.Foreground is SolidColorBrush fb ? fb.Color : _textColor;
+        double size = replacing?.FontSize ?? _textSize;
+        if (replacing != null) replacing.Visibility = Visibility.Collapsed;
+
+        var editor = new TextBox
+        {
+            MinWidth = 44,
+            Background = new SolidColorBrush(Color.FromArgb(0x88, 0x10, 0x10, 0x10)),
+            Foreground = new SolidColorBrush(color),
+            CaretBrush = new SolidColorBrush(color),
+            BorderBrush = new SolidColorBrush(color),
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(3, 0, 3, 0),
+            FontSize = size,
+            FontWeight = FontWeights.Bold,
+            AcceptsReturn = false,
+            Text = initial,
+            Tag = "overlay-text-editor"
+        };
+        Canvas.SetLeft(editor, pos.X);
+        Canvas.SetTop(editor, pos.Y);
+        Overlay.Children.Add(editor);
+        _isEditingOverlayText = true;
+
+        bool finished = false;
+
+        void Commit()
+        {
+            if (finished) return;
+            finished = true;
+            _isEditingOverlayText = false;
+            string text = editor.Text?.Trim() ?? string.Empty;
+            Overlay.Children.Remove(editor);
+
+            if (replacing != null)
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    // Cleared the label -> treat as delete (undoable).
+                    RemoveOwnElement(replacing);
+                    PushOverlayEdit(() => ReAddOwnElement(replacing), () => RemoveOwnElement(replacing));
+                }
+                else
+                {
+                    string old = replacing.Text;
+                    replacing.Text = text;
+                    replacing.Visibility = Visibility.Visible;
+                    if (old != text)
+                        PushOverlayEdit(() => replacing.Text = old, () => replacing.Text = text);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(text))
+            {
+                CommitOverlayText(text, pos);
+            }
+
+            SaveOwnOverlayToJson();
+            WebViewHost.Focus();
+        }
+
+        void Cancel()
+        {
+            if (finished) return;
+            finished = true;
+            _isEditingOverlayText = false;
+            Overlay.Children.Remove(editor);
+            if (replacing != null) replacing.Visibility = Visibility.Visible;
+            WebViewHost.Focus();
+        }
+
+        editor.KeyDown += (_, ke) =>
+        {
+            if (ke.Key == Key.Enter) { ke.Handled = true; Commit(); }
+            else if (ke.Key == Key.Escape) { ke.Handled = true; Cancel(); }
+        };
+        editor.LostKeyboardFocus += (_, __) => Commit();
+
+        // Focus once layout has placed the editor.
+        Dispatcher.BeginInvoke(
+            System.Windows.Threading.DispatcherPriority.Input,
+            new Action(() =>
+            {
+                editor.Focus();
+                Keyboard.Focus(editor);
+                if (initial.Length > 0) editor.SelectAll();
+            }));
+    }
+
+    private void CommitOverlayText(string text, Point mapPos)
+    {
         var tb = new TextBlock
         {
-            Text = input,
+            Text = text,
             Foreground = new SolidColorBrush(_textColor),
             FontSize = _textSize,
             FontWeight = FontWeights.Bold,
@@ -882,6 +1100,7 @@ private bool _overlayToolsVisible = false;
 
         Overlay.Children.Add(tb);
         RegisterElementForOwner(_mySteamId, tb);
+        RecordOverlayAdd(tb);
 
         SaveOwnOverlayToJson();
     }
@@ -910,6 +1129,7 @@ private bool _overlayToolsVisible = false;
                 {
                     _draggingElement = fe;
                     _dragOffset = new Point(mapPos.X - x, mapPos.Y - y);
+                    _dragStartPos = new Point(x, y);
                     break;
                 }
             }
@@ -1020,11 +1240,16 @@ private bool _overlayToolsVisible = false;
         {
             _currentTool = OverlayToolMode.None;
             _draggingElement = null;
+            DeselectElement();
             UpdateToolButtonHighlights();
             UpdateOptionsPanelVisibility();
 
             BtnToggleOverlayTools.ClearValue(Control.BackgroundProperty);
             BtnToggleOverlayTools.ClearValue(Control.BorderBrushProperty);
+            HidePanHint();
+            if (LayersPanel != null) LayersPanel.Visibility = Visibility.Collapsed;
+            if (MapControlBar != null) MapControlBar.Visibility = Visibility.Visible; // restore the map HUD
+            ApplyToolCursor();
         }
         else
         {
@@ -1039,8 +1264,24 @@ private bool _overlayToolsVisible = false;
 
             BtnToggleOverlayTools.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
             BtnToggleOverlayTools.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+            // Hide the map control bar so the drawing toolbar sits on a clean surface.
+            if (MapControlBar != null) MapControlBar.Visibility = Visibility.Collapsed;
+            UpdateToolButtonHighlights();
+            ShowPanHintIfFirstOpen();
+            ApplyToolCursor();
         }
 
+    }
+
+    // Select is the default "navigate" mode: the map pans/zooms normally and left-drag moves
+    // an existing element. It maps to OverlayToolMode.None so the rest of the code is unchanged.
+    private void ToolSelectButton_Click(object sender, RoutedEventArgs e)
+    {
+        _currentTool = OverlayToolMode.None;
+        _draggingElement = null;
+        UpdateToolButtonHighlights();
+        UpdateOptionsPanelVisibility();
+        ApplyToolCursor();
     }
 
     private void ToolDrawButton_Click(object sender, RoutedEventArgs e)
@@ -1099,6 +1340,23 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
+        // Ask with an inline popover anchored to the trash button (no modal dialog).
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = true;
+    }
+
+    private void ClearConfirmCancel_Click(object sender, RoutedEventArgs e)
+    {
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = false;
+    }
+
+    private void ClearConfirmYes_Click(object sender, RoutedEventArgs e)
+    {
+        if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = false;
+        ClearMyDrawings();
+    }
+
+    private void ClearMyDrawings()
+    {
         // 1. Alle meine Elemente vom Overlay entfernen
         if (_playerOverlayElements.TryGetValue(_mySteamId, out var mine))
         {
@@ -1123,6 +1381,9 @@ private bool _overlayToolsVisible = false;
             Overlay.Children.Remove(dead);
 
         // 3. Neues leeres Overlay lokal speichern (Devices beibehalten)
+        DeselectElement();
+        ClearOverlayHistory();
+        UpdateOptionsPanelVisibility();
         SaveOwnOverlayToJson();
 
         // 4. Expliziten Wipe in die Cloud pushen (explicitWipe=true umgeht den Wipe-Schutz)
@@ -1333,7 +1594,7 @@ private bool _overlayToolsVisible = false;
 
     private static string CloudText(string key, string fallback)
     {
-        return RustPlusDesk.Properties.Resources.ResourceManager.GetString(key) ?? fallback;
+        return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
     }
 
     private void ApplyCloudButtonState(Control button, bool syncEnabled, bool limitExceeded)
@@ -1837,24 +2098,36 @@ private bool _overlayToolsVisible = false;
             _currentTool = modeFromButton;
         }
 
-        // Wenn wir ein Tool aktivieren, abbrechen von evtl. Drag-State
+        // Wenn wir ein Tool aktivieren, abbrechen von evtl. Drag-State + Auswahl
         if (_currentTool != OverlayToolMode.None)
         {
             _draggingElement = null;
+            DeselectElement();
         }
 
         UpdateToolButtonHighlights();
         UpdateOptionsPanelVisibility();
+        ApplyToolCursor();
     }
 
     private void UpdateOptionsPanelVisibility()
     {
+        UpdateToolContextLabel();
         if (OverlayToolOptionsPanel == null) return;
 
         DrawOptionsPanel.Visibility = Visibility.Collapsed;
         TextOptionsPanel.Visibility = Visibility.Collapsed;
         IconOptionsPanel.Visibility = Visibility.Collapsed;
         EraserOptionsPanel.Visibility = Visibility.Collapsed;
+        if (SelectionOptionsPanel != null) SelectionOptionsPanel.Visibility = Visibility.Collapsed;
+
+        // Editing a selected element (Select tool) takes over the options bar.
+        if (_currentTool == OverlayToolMode.None && _selectedElement != null)
+        {
+            OverlayToolOptionsPanel.Visibility = Visibility.Visible;
+            if (SelectionOptionsPanel != null) SelectionOptionsPanel.Visibility = Visibility.Visible;
+            return;
+        }
 
         if (_currentTool == OverlayToolMode.None)
         {
@@ -1867,6 +2140,11 @@ private bool _overlayToolsVisible = false;
         switch (_currentTool)
         {
             case OverlayToolMode.Draw:
+            case OverlayToolMode.Route:
+            case OverlayToolMode.Line:
+            case OverlayToolMode.Arrow:
+            case OverlayToolMode.Box:
+            case OverlayToolMode.Circle:
                 DrawOptionsPanel.Visibility = Visibility.Visible;
                 if (SliderDrawThickness != null) SliderDrawThickness.Value = _drawThickness;
                 HighlightActiveColor(DrawOptionsPanel, _drawColor);
@@ -1922,8 +2200,8 @@ private bool _overlayToolsVisible = false;
             string tag = btn.Tag as string ?? "";
             if (tag == activePath)
             {
-                btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
-                btn.BorderBrush = Brushes.DodgerBlue;
+                btn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+                btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
                 btn.BorderThickness = new Thickness(2);
             }
             else
@@ -1957,8 +2235,8 @@ private bool _overlayToolsVisible = false;
                 {
                     if (isCustom && shape.Equals(activeShape, StringComparison.OrdinalIgnoreCase))
                     {
-                        btn.Background = new SolidColorBrush(Color.FromArgb(48, 255, 255, 255));
-                        btn.BorderBrush = Brushes.DodgerBlue;
+                        btn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+                        btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
                         btn.BorderThickness = new Thickness(2);
                     }
                     else
@@ -2219,8 +2497,8 @@ private bool _overlayToolsVisible = false;
                 // 1. Background layer: Filled with the bright color, masked by the pin background PNG.
                 var bgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = brightBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png"))
                 };
@@ -2229,8 +2507,8 @@ private bool _overlayToolsVisible = false;
                 // 2. Foreground layer: Rendered as-is (original PNG colors) to draw the black outlines and shadows natively.
                 var fgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinfg.png"))
                 };
                 grid.Children.Add(fgRect);
@@ -2240,8 +2518,8 @@ private bool _overlayToolsVisible = false;
                 // 1. Background layer (dark color, masked by circular background mask)
                 var bgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = darkBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapbackground.png"))
                 };
@@ -2250,8 +2528,8 @@ private bool _overlayToolsVisible = false;
                 // 2. Foreground layer (bright color, masked by circular foreground mask/ring)
                 var fgRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = brightBrush,
                     OpacityMask = new ImageBrush(LoadBitmapResource("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmapforeground.png"))
                 };
@@ -2261,8 +2539,8 @@ private bool _overlayToolsVisible = false;
                 string iconResPath = $"pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmap_{shape.ToLowerInvariant()}.png";
                 var iconRect = new Rectangle
                 {
-                    Width = width,
-                    Height = height,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
                     Fill = Brushes.White,
                     OpacityMask = new ImageBrush(LoadBitmapResource(iconResPath))
                 };
@@ -2355,31 +2633,28 @@ private bool _overlayToolsVisible = false;
     }
     private void UpdateToolButtonHighlights()
     {
-        // Erstmal alle zuruecksetzen
+        // Erstmal alle zuruecksetzen (dezenter Fuellton wie der Button-Style)
         foreach (var kv in _toolButtons)
         {
             var btn = kv.Value;
-            btn.Background = Brushes.Transparent;
-            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44));
+            btn.Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF));
+            btn.BorderBrush = Brushes.Transparent;
             btn.BorderThickness = new Thickness(1);
         }
 
-        // Falls gar kein Tool aktiv ist (None) -> fertig
-        if (_currentTool == OverlayToolMode.None)
-            return;
-
-        // Aktiven Button highlighten
+        // Aktiven Button highlighten (None -> Select-Button) mit Akzentfarbe
         if (_toolButtons.TryGetValue(_currentTool, out var activeBtn))
         {
-            activeBtn.Background = new SolidColorBrush(Color.FromArgb(0x33, 0x4C, 0x8D, 0xFF)); // halbtransparentes Blau
-            activeBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0x8D, 0xFF));
-            activeBtn.BorderThickness = new Thickness(2);
+            activeBtn.Background = new SolidColorBrush(Color.FromArgb(0x3A, 0x60, 0xCD, 0xFF));
+            activeBtn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF));
+            activeBtn.BorderThickness = new Thickness(1.5);
         }
     }
 
     private void SaveOwnOverlayToJson()
     {
         if (_isShowingDeepSeaMap) return;
+        RefreshLayersPanel(); // keep the layers list live on any overlay change (no-op while hidden)
         try
         {
             // 1) aktuelles Overlay aus dem Canvas bauen
@@ -2497,6 +2772,7 @@ private bool _overlayToolsVisible = false;
         public string? Note;
         public List<string> Screenshots = new();
         public string? CustomIconPath;
+        public string? GroupId;    // elements sharing this id act as one layer (e.g. an arrow route)
     }
 
     // Liest lokales Overlay (mich) als OverlaySaveData
@@ -2504,6 +2780,11 @@ private bool _overlayToolsVisible = false;
     {
         var data = new OverlaySaveData();
         data.LastUpdatedUnix = DataManager.UnixNow(); // NEU: stamp jetzt
+
+        // Routes carry their own geometry rather than appearing in the stroke list. Their visuals
+        // have no OverlayTag, so the loop below steps over them on its own.
+        data.Routes = BuildSavedRoutes();
+        data.ImportedRouteIds = _importedRouteIds.ToList();
 
         foreach (var child in Overlay.Children)
         {
@@ -2518,7 +2799,8 @@ private bool _overlayToolsVisible = false;
                         var stroke = new SavedStroke
                         {
                             Thickness = pl.StrokeThickness,
-                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF"
+                            Color = (pl.Stroke as SolidColorBrush)?.Color.ToString() ?? "#FFFFFFFF",
+                            GroupId = meta.GroupId
                         };
 
                         foreach (var p in pl.Points)
@@ -2605,8 +2887,40 @@ private bool _overlayToolsVisible = false;
 
     // baut aus einem OverlaySaveData echte UI-Elemente auf der Canvas fuer einen Spieler
     // und cached sie in _playerOverlayElements[steamId]
+    /// <summary>
+    /// Keeps routes the cloud copy does not know about.
+    ///
+    /// The same shape as the device merge above it, and for the same reason: an older payload
+    /// missing a newer kind of thing is not a payload saying that thing was deleted.
+    /// </summary>
+    private static void MergeMissingLocalRoutesInto(OverlaySaveData target, OverlaySaveData local)
+    {
+        if (local.Routes == null || local.Routes.Count == 0) return;
+
+        target.Routes ??= new List<SavedRoute>();
+
+        var known = new HashSet<string>(target.Routes.Select(r => r.Id), StringComparer.Ordinal);
+
+        foreach (SavedRoute route in local.Routes)
+            if (!string.IsNullOrWhiteSpace(route.Id) && known.Add(route.Id))
+                target.Routes.Add(route);
+
+        if (local.ImportedRouteIds is { Count: > 0 })
+        {
+            target.ImportedRouteIds ??= new List<string>();
+            foreach (string id in local.ImportedRouteIds)
+                if (!target.ImportedRouteIds.Contains(id)) target.ImportedRouteIds.Add(id);
+        }
+    }
+
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
+        // Routes are rebuilt here rather than alongside the strokes: they are their own objects
+        // with their own list, and this is the one place every overlay - mine on start-up, a
+        // teammate's on sync, a restored one from the cloud - actually comes through.
+        if (steamId == _mySteamId) ApplySavedRoutes(data.Routes, data.ImportedRouteIds);
+        else ImportTeammateRoutes(steamId, data.Routes);
+
         // falls schon Elemente fuer den Spieler existieren -> erstmal killen
         if (_playerOverlayElements.TryGetValue(steamId, out var existing))
         {
@@ -2630,7 +2944,8 @@ private bool _overlayToolsVisible = false;
                 Tag = new OverlayTag
                 {
                     OwnerSteamId = steamId,
-                    IsUserEditable = editableIfMine
+                    IsUserEditable = editableIfMine,
+                    GroupId = stroke.GroupId
                 },
                 Visibility = _visibleOverlayOwners.Contains(steamId)
                              ? Visibility.Visible
@@ -2815,10 +3130,14 @@ private bool _overlayToolsVisible = false;
             var serverKey = GetServerKey();
             var localData = OverlayDataModule.LoadLocalOverlay(serverKey, _mySteamId);
 
+            // Routes count as content. Without them an overlay that is nothing but routes reads
+            // as empty here, takes the "nothing to do" branch below, and never materialises - so
+            // the routes are saved perfectly and silently never come back.
             bool localHasContent = localData != null
                 && ((localData.Strokes?.Count ?? 0) > 0
                  || (localData.Icons?.Count   ?? 0) > 0
                  || (localData.Texts?.Count   ?? 0) > 0
+                 || (localData.Routes?.Count  ?? 0) > 0
                  || (localData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? cloudData = null;
@@ -2852,9 +3171,17 @@ private bool _overlayToolsVisible = false;
                 && ((cloudData.Strokes?.Count ?? 0) > 0
                  || (cloudData.Icons?.Count   ?? 0) > 0
                  || (cloudData.Texts?.Count   ?? 0) > 0
+                 || (cloudData.Routes?.Count  ?? 0) > 0
                  || (cloudData.Devices?.Count ?? 0) > 0);
 
             OverlaySaveData? toUse;
+
+            // A cloud copy written before routes existed simply has none, and it is newer than
+            // the local file the moment anything else syncs. Taking it whole would read "no
+            // routes" as "routes deleted" and wipe them - which is exactly what happened. What
+            // the cloud does not carry, local keeps.
+            if (cloudData != null && localData != null)
+                MergeMissingLocalRoutesInto(cloudData, localData);
 
             if (!localHasContent && cloudHasContent)
             {
@@ -3485,6 +3812,9 @@ private bool _overlayToolsVisible = false;
                     data.Icons = mapData.Icons ?? new();
                     data.Texts = mapData.Texts ?? new();
                     data.Devices = mapData.Devices ?? new();
+                    // The same omission as everywhere else: a teammate broadcasting their map
+                    // would arrive with everything except the routes.
+                    data.Routes = mapData.Routes ?? new();
                 }
             }
 
@@ -4011,13 +4341,20 @@ private bool _overlayToolsVisible = false;
         };
         Panel.SetZIndex(panel, 9999);
 
+        // Keep the picker a constant on-screen size regardless of map zoom (the Overlay canvas is
+        // scaled by the map transform, so without this the box shrinks when zoomed out).
+        double eff = GetEffectiveZoom();
+        double counterScale = eff > 0.0001 ? 1.0 / eff : 1.0;
+        panel.RenderTransformOrigin = new Point(0, 0);   // grow from the anchor corner
+        panel.RenderTransform = new ScaleTransform(counterScale, counterScale);
+
         // Position: just below & to the right of the anchor
         double anchorLeft = Canvas.GetLeft(anchorEl);
         double anchorTop  = Canvas.GetTop(anchorEl);
         double anchorH    = !double.IsNaN(anchorEl.Height) ? anchorEl.Height
                             : (anchorEl.ActualHeight > 0 ? anchorEl.ActualHeight : 32);
         Canvas.SetLeft(panel, anchorLeft + 4);
-        Canvas.SetTop(panel,  anchorTop  + anchorH + 4);
+        Canvas.SetTop(panel,  anchorTop  + (anchorH + 4) * counterScale);
 
         return (panel, dismissLayer);
     }

@@ -6027,4 +6027,647 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="FcmRepairButton" xml:space="preserve">
     <value>Jetzt neu koppeln</value>
   </data>
+  <data name="LfgButton" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTitle" xml:space="preserve">
+    <value>Team-Suche</value>
+  </data>
+  <data name="LfgSubtitle" xml:space="preserve">
+    <value>Finde ein Team – oder Mitglieder für deins.</value>
+  </data>
+  <data name="LfgStatusHeading" xml:space="preserve">
+    <value>Dein Status</value>
+  </data>
+  <data name="LfgModeNone" xml:space="preserve">
+    <value>Suche nichts</value>
+  </data>
+  <data name="LfgModeLfg" xml:space="preserve">
+    <value>Suche ein Team</value>
+  </data>
+  <data name="LfgModeLfm" xml:space="preserve">
+    <value>Suche Mitglieder</value>
+  </data>
+  <data name="LfgMessagesHeading" xml:space="preserve">
+    <value>Direktnachrichten</value>
+  </data>
+  <data name="LfgAcceptAuto" xml:space="preserve">
+    <value>Nachrichten automatisch annehmen</value>
+  </data>
+  <data name="LfgAcceptApproval" xml:space="preserve">
+    <value>Vorher nachfragen</value>
+  </data>
+  <data name="LfgAcceptOff" xml:space="preserve">
+    <value>Keine Nachrichten zulassen</value>
+  </data>
+  <data name="LfgConsentTitle" xml:space="preserve">
+    <value>Bevor du in der Liste erscheinst</value>
+  </data>
+  <data name="LfgConsentBody" xml:space="preserve">
+    <value>Andere Spieler sehen dann deinen Namen und dein Bild, deine Sprache, ob du online bist, den Server, auf dem du spielst, deine Teamgröße und einen Link zu deinem Steam-Profil.</value>
+  </data>
+  <data name="LfgConsentNote" xml:space="preserve">
+    <value>Entscheidend ist der Server: Wer nach einem Team sucht, sieht, wo du spielst. Du kannst jederzeit wieder aus der Liste verschwinden.</value>
+  </data>
+  <data name="LfgConsentAccept" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="LfgConsentCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="LfgCloudRequired" xml:space="preserve">
+    <value>Die Team-Suche braucht die Cloud-Funktionen. Andere schreiben dein Konto an – ohne Cloud gibt es nichts, womit sie sich verbinden könnten.</value>
+  </data>
+  <data name="LfgCloudConnect" xml:space="preserve">
+    <value>Cloud einrichten</value>
+  </data>
+  <data name="LfgAcceptOffBlocked" xml:space="preserve">
+    <value>Solange du in der Liste stehst, muss man dich erreichen können.</value>
+  </data>
+  <data name="LfgNoteHeading" xml:space="preserve">
+    <value>Deine Notiz / Beschreibung</value>
+  </data>
+  <data name="LfgNotePlaceholder" xml:space="preserve">
+    <value>Notiz hinzufügen (z.B. Spielstil, 2k Std, Wipe-Zeiten)...</value>
+  </data>
+  <data name="LfgNoteSave" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="LfgMyListingHeading" xml:space="preserve">
+    <value>Dein aktives Inserat (Vorschau)</value>
+  </data>
+  <data name="LfgPreviewActiveBadge" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="LfgEmptyBlurbPlaceholder" xml:space="preserve">
+    <value>Keine Notiz angegeben</value>
+  </data>
+  <data name="SocialRailName" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="SocialRailHelp" xml:space="preserve">
+    <value>Globaler Chat und Team-Suche</value>
+  </data>
+  <data name="LfgTabTeams" xml:space="preserve">
+    <value>Teams suchen Mitglieder</value>
+  </data>
+  <data name="LfgTabPlayers" xml:space="preserve">
+    <value>Spieler suchen ein Team</value>
+  </data>
+  <data name="LfgFilterLanguage" xml:space="preserve">
+    <value>Alle Sprachen</value>
+  </data>
+  <data name="LfgFilterOnline" xml:space="preserve">
+    <value>Nur Online</value>
+  </data>
+  <data name="LfgFilterRefresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="LfgEmpty" xml:space="preserve">
+    <value>Zurzeit ist niemand eingetragen. Schau später nochmal – oder trag dich oben selbst ein.</value>
+  </data>
+  <data name="LfgTeamSize" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="LfgOpenChat" xml:space="preserve">
+    <value>Nachricht schreiben</value>
+  </data>
+  <data name="LfgViewProfile" xml:space="preserve">
+    <value>Steam-Profil</value>
+  </data>
+  <data name="LfgInbox" xml:space="preserve">
+    <value>Nachrichten</value>
+  </data>
+  <data name="LfgInboxEmpty" xml:space="preserve">
+    <value>Noch keine Nachrichten. Schreib jemanden aus der Liste oben an.</value>
+  </data>
+  <data name="LfgReplyPlaceholder" xml:space="preserve">
+    <value>Nachricht schreiben …</value>
+  </data>
+  <data name="LfgSend" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="LfgBack" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="LfgAcceptRequest" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="LfgDeclineRequest" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="LfgPendingBadge" xml:space="preserve">
+    <value>Anfrage</value>
+  </data>
+  <data name="LfgDeclinedBadge" xml:space="preserve">
+    <value>Abgelehnt</value>
+  </data>
+  <data name="LfgPendingHint" xml:space="preserve">
+    <value>{0} möchte dir schreiben.</value>
+  </data>
+  <data name="LfgPendingWaitingHint" xml:space="preserve">
+    <value>Warte auf Annahme durch {0}...</value>
+  </data>
+
+  <data name="LfgDeclinedHint" xml:space="preserve">
+    <value>Du hast diese Anfrage abgelehnt. Ein zweites Mal geht nicht.</value>
+  </data>
+  <data name="LfgBlockUser" xml:space="preserve">
+    <value>Spieler blockieren</value>
+  </data>
+  <data name="LfgReportUser" xml:space="preserve">
+    <value>Spieler melden</value>
+  </data>
+  <data name="LfgComposeTitle" xml:space="preserve">
+    <value>An {0} schreiben</value>
+  </data>
+  <data name="LfgComposePlaceholder" xml:space="preserve">
+    <value>Sag Hallo und was du suchst …</value>
+  </data>
+  <data name="LfgComposeHint" xml:space="preserve">
+    <value>Erste Nachrichten sind absichtlich kurz. Wenn geantwortet wird, ist der Rest ein normales Gespräch.</value>
+  </data>
+  <data name="SocialSectionChat" xml:space="preserve">
+    <value>Globaler Chat</value>
+  </data>
+  <data name="SocialSectionLfg" xml:space="preserve">
+    <value>Team-Suche</value>
+  </data>
+  <data name="ChatPlaceholder" xml:space="preserve">
+    <value>An alle schreiben …</value>
+  </data>
+  <data name="ChatEmpty" xml:space="preserve">
+    <value>Hier wurde noch nichts gesagt. Fang an.</value>
+  </data>
+  <data name="ChatSilencedTimeout" xml:space="preserve">
+    <value>Du kannst bis {0} nicht schreiben. Grund: {1}</value>
+  </data>
+  <data name="ChatSilencedBan" xml:space="preserve">
+    <value>Du kannst hier nicht mehr schreiben. Grund: {0}</value>
+  </data>
+  <data name="ChatRules" xml:space="preserve">
+    <value>Alle hier sehen deinen Namen. Niemand sieht, auf welchem Server du spielst.</value>
+  </data>
+  <data name="SocialHubTitle" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="SocialHubSubtitle" xml:space="preserve">
+    <value>Mit allen reden – oder Leute zum Spielen finden.</value>
+  </data>
+  <data name="ReportTitle" xml:space="preserve">
+    <value>{0} melden</value>
+  </data>
+  <data name="ReportIntro" xml:space="preserve">
+    <value>Jede Meldung wird von einem Moderator gelesen. Was trifft am ehesten zu?</value>
+  </data>
+  <data name="ReportReasonHarassment" xml:space="preserve">
+    <value>Belästigung oder Drohungen</value>
+  </data>
+  <data name="ReportReasonSpam" xml:space="preserve">
+    <value>Spam oder Werbung</value>
+  </data>
+  <data name="ReportReasonScam" xml:space="preserve">
+    <value>Betrug oder Phishing</value>
+  </data>
+  <data name="ReportReasonHate" xml:space="preserve">
+    <value>Hassrede</value>
+  </data>
+  <data name="ReportReasonExplicit" xml:space="preserve">
+    <value>Sexuelle oder verstörende Inhalte</value>
+  </data>
+  <data name="ReportReasonOther" xml:space="preserve">
+    <value>Etwas anderes</value>
+  </data>
+  <data name="ReportNoteLabel" xml:space="preserve">
+    <value>Noch etwas, das wir wissen sollten? (optional)</value>
+  </data>
+  <data name="ReportNotePlaceholder" xml:space="preserve">
+    <value>Was ist passiert, in deinen Worten</value>
+  </data>
+  <data name="ReportQuotedLabel" xml:space="preserve">
+    <value>Die gemeldete Nachricht</value>
+  </data>
+  <data name="ReportSubmit" xml:space="preserve">
+    <value>Meldung senden</value>
+  </data>
+  <data name="ReportCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ReportDoneTitle" xml:space="preserve">
+    <value>Meldung gesendet</value>
+  </data>
+  <data name="ReportDoneBody" xml:space="preserve">
+    <value>Danke. Ein Moderator sieht sie sich an. Du kannst den Spieler zusätzlich blockieren, wenn du bis dahin nichts von ihm hören willst.</value>
+  </data>
+  <data name="ReportFailed" xml:space="preserve">
+    <value>Die Meldung konnte nicht gesendet werden. Bitte gleich noch einmal versuchen.</value>
+  </data>
+  <data name="ReportClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="SocialNotOpenTitle" xml:space="preserve">
+    <value>Noch nicht offen</value>
+  </data>
+  <data name="SocialNotOpenBody" xml:space="preserve">
+    <value>Der Community Chat wird schrittweise freigeschaltet. Er erscheint hier, sobald dein Konto dabei ist – bei dir ist nichts kaputt.</value>
+  </data>
+  <data name="ChatRulesTitle" xml:space="preserve">
+    <value>Bevor du hier schreibst</value>
+  </data>
+  <data name="ChatRulesIntro" xml:space="preserve">
+    <value>Dieser Raum ist öffentlich. Jeder, der Rust+ Desktop nutzt, kann mitlesen.</value>
+  </data>
+  <data name="ChatRulesForbidden" xml:space="preserve">
+    <value>Nicht erlaubt: Links jeder Art, Werbung, Handel und Verkauf, Belästigung und Drohungen, Hassrede, sexuelle oder verstörende Inhalte, und sich als Team auszugeben.</value>
+  </data>
+  <data name="ChatRulesConsequence" xml:space="preserve">
+    <value>Moderatoren lesen jede Meldung. Ein Verstoß kann dich den Raum für eine Weile kosten – oder dauerhaft. Ein dauerhafter Ausschluss hängt am Steam-Konto, nicht an der Installation: ein neues Konto auf derselben Steam-ID bringt dich nicht zurück.</value>
+  </data>
+  <data name="ChatRulesAccept" xml:space="preserve">
+    <value>Gelesen</value>
+  </data>
+  <data name="ChatRulesCancel" xml:space="preserve">
+    <value>Jetzt nicht</value>
+  </data>
+  <data name="ChatRefusedLink" xml:space="preserve">
+    <value>Links sind im öffentlichen Raum nicht erlaubt. Schick ihn stattdessen per Direktnachricht.</value>
+  </data>
+  <data name="ChatRefusedDuplicate" xml:space="preserve">
+    <value>Das hast du gerade schon geschrieben. Einen Moment noch.</value>
+  </data>
+  <data name="ChatRefusedTooNew" xml:space="preserve">
+    <value>Neue Konten können hier nach kurzer Wartezeit schreiben. Das hält den Raum benutzbar.</value>
+  </data>
+  <data name="ChatRefusedEmpty" xml:space="preserve">
+    <value>Es blieb nichts übrig, was man senden könnte.</value>
+  </data>
+  <data name="ChatRefusedFailed" xml:space="preserve">
+    <value>Konnte nicht gesendet werden. Gleich noch einmal versuchen.</value>
+  </data>
+  <data name="ProfileOpenSteam" xml:space="preserve">
+    <value>Steam-Profil öffnen</value>
+  </data>
+  <data name="ProfileCopyId" xml:space="preserve">
+    <value>Steam-ID kopieren</value>
+  </data>
+  <data name="ProfileMember" xml:space="preserve">
+    <value>Bei Steam seit</value>
+  </data>
+  <data name="ProfileLocation" xml:space="preserve">
+    <value>Ort</value>
+  </data>
+  <data name="ProfileVac" xml:space="preserve">
+    <value>VAC-Bann vermerkt</value>
+  </data>
+  <data name="ProfilePrivate" xml:space="preserve">
+    <value>Dieses Steam-Profil ist privat.</value>
+  </data>
+  <data name="ProfileUnavailable" xml:space="preserve">
+    <value>Steam hat nicht geantwortet. Das Profil ist vielleicht privat, oder Steam ist gerade ausgelastet.</value>
+  </data>
+  <data name="ProfileClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="BlocksTitle" xml:space="preserve">
+    <value>Blockierte Spieler</value>
+  </data>
+  <data name="BlocksIntro" xml:space="preserve">
+    <value>Ihr könnt euch gegenseitig nicht schreiben und taucht beim jeweils anderen weder im Chat noch in den Listen auf. Der andere erfährt nichts davon.</value>
+  </data>
+  <data name="BlocksEmpty" xml:space="preserve">
+    <value>Du hast niemanden blockiert.</value>
+  </data>
+  <data name="BlocksUnblock" xml:space="preserve">
+    <value>Aufheben</value>
+  </data>
+  <data name="BlocksSince" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
+  <data name="ProfileRustHours" xml:space="preserve">
+    <value>Rust Spielzeit</value>
+  </data>
+  <data name="ProfileVacStatus" xml:space="preserve">
+    <value>VAC-Status</value>
+  </data>
+  <data name="ProfileVacClean" xml:space="preserve">
+    <value>Einwandfrei (keine Sperren)</value>
+  </data>
+  <data name="ChatScrollToBottom" xml:space="preserve">
+    <value>Nach unten springen</value>
+  </data>
+  <data name="SocialSectionSupporter" xml:space="preserve">
+    <value>Supporter Chat</value>
+  </data>
+  <data name="SocialSectionInbox" xml:space="preserve">
+    <value>Postfach</value>
+  </data>
+  <data name="SocialInboxHint" xml:space="preserve">
+    <value>Hier landen Anfragen zu deinen LFG- und LFM-Einträgen, und die Antworten von Leuten, die du angeschrieben hast.</value>
+  </data>
+  <data name="SupporterGateTitle" xml:space="preserve">
+    <value>Ein Raum für Supporter</value>
+  </data>
+  <data name="SupporterGateBody" xml:space="preserve">
+    <value>Ein ruhigerer Raum, ohne den Betrieb des öffentlichen. Er öffnet sich für alle, die Rust+ Desktop unterstützen, und bleibt offen, solange du das tust.</value>
+  </data>
+  <data name="SupporterGateAction" xml:space="preserve">
+    <value>Rust+ Desktop unterstützen</value>
+  </data>
+  <data name="FriendsTitle" xml:space="preserve">
+    <value>Freunde</value>
+  </data>
+  <data name="FriendsEmpty" xml:space="preserve">
+    <value>Noch niemand auf der Liste. Füge unten jemanden über seine Steam-ID hinzu.</value>
+  </data>
+  <data name="FriendsAddSteamId" xml:space="preserve">
+    <value>Steam-ID (17 Ziffern)</value>
+  </data>
+  <data name="FriendsAddMessage" xml:space="preserve">
+    <value>Sag kurz, wer du bist – mehr geht nicht</value>
+  </data>
+  <data name="FriendsAddAction" xml:space="preserve">
+    <value>Anfrage senden</value>
+  </data>
+  <data name="FriendsIncoming" xml:space="preserve">
+    <value>Wartet auf deine Antwort</value>
+  </data>
+  <data name="FriendsOutgoing" xml:space="preserve">
+    <value>Wartet auf Antwort</value>
+  </data>
+  <data name="FriendsAccept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="FriendsDecline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="FriendsRemove" xml:space="preserve">
+    <value>Freund entfernen</value>
+  </data>
+  <data name="FriendsWithdraw" xml:space="preserve">
+    <value>Zurückziehen</value>
+  </data>
+  <data name="FriendsMessage" xml:space="preserve">
+    <value>Nachricht schreiben</value>
+  </data>
+  <data name="FriendsAddFriend" xml:space="preserve">
+    <value>Als Freund hinzufügen</value>
+  </data>
+  <data name="FriendsOffline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="FriendsNotInServer" xml:space="preserve">
+    <value>Auf keinem Server</value>
+  </data>
+  <data name="FriendsErrorNotFound" xml:space="preserve">
+    <value>Zu dieser Steam-ID gibt es kein Konto.</value>
+  </data>
+  <data name="FriendsErrorPending" xml:space="preserve">
+    <value>Du hast schon gefragt. Gib ihm Zeit zu antworten.</value>
+  </data>
+  <data name="FriendsErrorAlready" xml:space="preserve">
+    <value>Ihr seid bereits befreundet.</value>
+  </data>
+  <data name="FriendsErrorDeclined" xml:space="preserve">
+    <value>Diese Anfrage wurde abgelehnt.</value>
+  </data>
+  <data name="FriendsErrorRefused" xml:space="preserve">
+    <value>Diese Anfrage konnte nicht gesendet werden.</value>
+  </data>
+  <data name="FriendsErrorFailed" xml:space="preserve">
+    <value>Konnte nicht gesendet werden. Gleich noch einmal versuchen.</value>
+  </data>
+  <data name="FriendsSent" xml:space="preserve">
+    <value>Anfrage gesendet. Deine Nachricht ist angekommen und kann beantwortet werden.</value>
+  </data>
+  <data name="RoutesTitle" xml:space="preserve">
+    <value>Routen</value>
+  </data>
+  <data name="RoutesToolTip" xml:space="preserve">
+    <value>Routen — benannte Wege mit Länge und Laufzeit</value>
+  </data>
+  <data name="RoutesArrowPathTool" xml:space="preserve">
+    <value>Pfeilpfad — Weg zeichnen, Richtungspfeile folgen ihm (7)</value>
+  </data>
+  <data name="RoutesAdd" xml:space="preserve">
+    <value>Neue Route</value>
+  </data>
+  <data name="RoutesClose" xml:space="preserve">
+    <value>Routen-Modus verlassen</value>
+  </data>
+  <data name="RoutesDelete" xml:space="preserve">
+    <value>Route löschen</value>
+  </data>
+  <data name="RoutesToggleVisible" xml:space="preserve">
+    <value>Auf der Karte ein- oder ausblenden</value>
+  </data>
+  <data name="RoutesEmpty" xml:space="preserve">
+    <value>Noch keine Routen. Leg eine an, gib ihr einen Namen und zeichne sie dann auf der Karte.</value>
+  </data>
+  <data name="RoutesNameHint" xml:space="preserve">
+    <value>Enter legt an, Escape bricht ab. Die Route bekommt die Farbe, auf die der Stift eingestellt ist.</value>
+  </data>
+  <data name="RoutesDrawHint" xml:space="preserve">
+    <value>Zeichne auf der Karte. Der erste Strich setzt den Start; zeichnest du vom Ende weiter, wandert das Ende mit. Kommst du zum Start zurück, schließt sich die Route zur Runde.</value>
+  </data>
+  <data name="ClanCommandsCategory" xml:space="preserve">
+    <value>Clan-Chat-Befehle</value>
+  </data>
+  <data name="ClanCommandsDesc" xml:space="preserve">
+    <value>Der Team-Chat beantwortet Befehle immer. Aktiviere dies, um sie zusätzlich im Clan-Chat zu beantworten, und wähle, welche Clan-Rollen sie nutzen dürfen.</value>
+  </data>
+  <data name="ClanCommandsEnable" xml:space="preserve">
+    <value>Befehle im Clan-Chat beantworten</value>
+  </data>
+  <data name="ClanCommandsRolesHeader" xml:space="preserve">
+    <value>Rollen mit Befehlsberechtigung</value>
+  </data>
+  <data name="ClanCommandsNoRoles" xml:space="preserve">
+    <value>Noch darf keine Rolle Befehle nutzen — hake oben mindestens eine an.</value>
+  </data>
+  <data name="ClanCommandsAllowSwitches" xml:space="preserve">
+    <value>Smart Switches einbeziehen</value>
+  </data>
+  <data name="ClanCommandsAllowSwitchesHint" xml:space="preserve">
+    <value>Die meisten Clan-Mitglieder haben keine Werkzeugkasten-Rechte an deiner Basis und könnten die Geräte ohnehin nicht steuern.</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodes" xml:space="preserve">
+    <value>Basis-Codes einbeziehen</value>
+  </data>
+  <data name="ClanCommandsAllowBaseCodesHint" xml:space="preserve">
+    <value>Ein im Clan-Chat geposteter Türcode lässt sich nicht zurücknehmen.</value>
+  </data>
+  <data name="ChatCmdAfkTeamScope" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelTeam" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="ChatAlertsChannelClan" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="ChatAlertsChannelHint" xml:space="preserve">
+    <value>In welchen Spiel-Chat die Benachrichtigungen gehen. Nicht verfügbar, solange „Nur Discord“ aktiv ist.</value>
+  </data>
+  <data name="QuickCmdUpkeepTip" xml:space="preserve">
+    <value>Werkzeugkasten-Unterhalt</value>
+  </data>
+  <data name="QuickCmdCargoTip" xml:space="preserve">
+    <value>Status des Frachtschiffs</value>
+  </data>
+  <data name="QuickCmdTimerTip" xml:space="preserve">
+    <value>15-Minuten-Timer für Oil Rig starten</value>
+  </data>
+  <data name="QuickCmdTimeTip" xml:space="preserve">
+    <value>Uhrzeit im Spiel</value>
+  </data>
+  <data name="QuickCmdCodeTip" xml:space="preserve">
+    <value>Basis-Codes</value>
+  </data>
+  <data name="QuickCmdPopTip" xml:space="preserve">
+    <value>Spielerzahl auf dem Server</value>
+  </data>
+  <data name="QuickCmdCommandsTip" xml:space="preserve">
+    <value>Verfügbare Befehle auflisten</value>
+  </data>
+  <data name="UpdateWhatsNewTitle" xml:space="preserve">
+    <value>Neu in 9.1</value>
+  </data>
+  <data name="UpdateWhatsNewSummary" xml:space="preserve">
+    <value>Die vier wichtigsten Änderungen seit 9.0</value>
+  </data>
+  <data name="UpdateWhatsNewTitle1" xml:space="preserve">
+    <value>Community Hub</value>
+  </data>
+  <data name="UpdateWhatsNewDesc1" xml:space="preserve">
+    <value>Globaler und Supporter-Chat, Gruppensuche mit Steam-Profil-Vorschau vor dem Antworten, Freundesliste, Posteingang und Meldefunktion.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle2" xml:space="preserve">
+    <value>Farm-Routen auf der Karte</value>
+  </data>
+  <data name="UpdateWhatsNewDesc2" xml:space="preserve">
+    <value>Zeichne Routen neben den Kartenebenen. Jede zeigt ihre Länge in Metern und die Dauer im Sprint und wird mit deinem Team geteilt.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle3" xml:space="preserve">
+    <value>Chat-Befehle im Clan-Chat</value>
+  </data>
+  <data name="UpdateWhatsNewDesc3" xml:space="preserve">
+    <value>Befehle können jetzt auch im Clan-Chat beantwortet werden, freigegeben je Clan-Rolle. Türcodes und Schalter bleiben außen vor, bis du sie einbeziehst.</value>
+  </data>
+  <data name="UpdateWhatsNewTitle4" xml:space="preserve">
+    <value>Smart Home</value>
+  </data>
+  <data name="UpdateWhatsNewDesc4" xml:space="preserve">
+    <value>Home Assistant kann deine Schalter über einen REST-Endpunkt steuern. Alexa bekommt regionale Endpunkte für bessere Geräteerkennung; Google Home ist fertig, wartet aber auf die Zertifizierung.</value>
+  </data>
+  <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
+    <value>Nicht mehr anzeigen</value>
+  </data>
+  <data name="UpdateWhatsNewPatchNotesBtn" xml:space="preserve">
+    <value>Vollständige Patch Notes</value>
+  </data>
+  <data name="WipePrunedTitle" xml:space="preserve">
+    <value>Ältestes Wipe-Backup gelöscht</value>
+  </data>
+  <data name="WipePrunedMessage" xml:space="preserve">
+    <value>Dein Plan speichert eine begrenzte Anzahl Wipe-Backups. Um Platz für den neuen Wipe zu schaffen, wurde das älteste gelöscht: {0}</value>
+  </data>
+  <data name="WipePrunedUnknownServer" xml:space="preserve">
+    <value>Unbekannter Server</value>
+  </data>
+  <data name="WipeLimitNearTitle" xml:space="preserve">
+    <value>Nur noch ein Wipe-Backup-Platz frei</value>
+  </data>
+  <data name="WipeLimitNearMessage" xml:space="preserve">
+    <value>{0} von {1} Wipe-Backups belegt. Beim nächsten Wipe wird das älteste automatisch gelöscht — wähle unter Wipe Tracker · Cloud restore ein anderes aus, wenn du es lieber behalten möchtest.</value>
+  </data>
+  <data name="WipeDeleteArchiveButton" xml:space="preserve">
+    <value>Backup löschen</value>
+  </data>
+  <data name="WipeDeleteArchiveTitle" xml:space="preserve">
+    <value>Wipe-Backup löschen</value>
+  </data>
+  <data name="WipeDeleteArchiveConfirm" xml:space="preserve">
+    <value>Cloud-Backup für {0} ({1}) endgültig löschen? Das lässt sich nicht rückgängig machen.</value>
+  </data>
+  <data name="WipeDeleteArchiveDone" xml:space="preserve">
+    <value>Wipe-Backup gelöscht.</value>
+  </data>
+  <data name="WipeDeleteArchiveFailed" xml:space="preserve">
+    <value>Das Wipe-Backup konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="ChatCopyText" xml:space="preserve">
+    <value>Text kopieren</value>
+  </data>
+  <data name="ChatTranslateWithGoogle" xml:space="preserve">
+    <value>Mit Google übersetzen</value>
+  </data>
+  <data name="ChatTranslateTitle" xml:space="preserve">
+    <value>Nachricht übersetzen</value>
+  </data>
+  <data name="ChatTranslateUnchanged" xml:space="preserve">
+    <value>Diese Nachricht ist bereits in deiner Sprache.</value>
+  </data>
+  <data name="ChatTranslateConsentTitle" xml:space="preserve">
+    <value>Nachricht übersetzen</value>
+  </data>
+  <data name="ChatTranslateConsentBody" xml:space="preserve">
+    <value>Beim Übersetzen wird der Nachrichtentext an Google Übersetzer gesendet. Fortfahren?</value>
+  </data>
+  <data name="ChatNameColorTooltip" xml:space="preserve">
+    <value>Deine Namensfarbe</value>
+  </data>
+  <data name="ChatNameColorHeading" xml:space="preserve">
+    <value>Namensfarbe</value>
+  </data>
+  <data name="ChatNameColorReset" xml:space="preserve">
+    <value>Standardfarbe verwenden</value>
+  </data>
+  <data name="ChatNameColorTitle" xml:space="preserve">
+    <value>Nachrichtenfarbe</value>
+  </data>
+  <data name="ChatNameColorFailed" xml:space="preserve">
+    <value>Die Farbe konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="ChatNameColor_amber" xml:space="preserve">
+    <value>Bernstein</value>
+  </data>
+  <data name="ChatNameColor_rose" xml:space="preserve">
+    <value>Rosé</value>
+  </data>
+  <data name="ChatNameColor_violet" xml:space="preserve">
+    <value>Violett</value>
+  </data>
+  <data name="ChatNameColor_sky" xml:space="preserve">
+    <value>Himmelblau</value>
+  </data>
+  <data name="ChatNameColor_emerald" xml:space="preserve">
+    <value>Smaragd</value>
+  </data>
+  <data name="ChatNameColor_lime" xml:space="preserve">
+    <value>Limette</value>
+  </data>
+  <data name="ChatNameColor_cyan" xml:space="preserve">
+    <value>Türkis</value>
+  </data>
+  <data name="ChatNameColor_orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="ChatReply" xml:space="preserve">
+    <value>Antworten</value>
+  </data>
+  <data name="ChatReplyCancel" xml:space="preserve">
+    <value>Antwort verwerfen</value>
+  </data>
+  <data name="ChatReplyDeleted" xml:space="preserve">
+    <value>Nachricht gelöscht</value>
+  </data>
+  <data name="ChatReplyOriginalGone" xml:space="preserve">
+    <value>Die ursprüngliche Nachricht ist nicht mehr im sichtbaren Verlauf.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>Der Übersetzungsdienst war nicht erreichbar. Versuch es gleich noch einmal.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
 </root>

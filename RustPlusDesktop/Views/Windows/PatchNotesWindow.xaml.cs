@@ -118,32 +118,15 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task<string> TranslateTextAsync(string text, string targetLang)
-        {
-            if (string.IsNullOrWhiteSpace(text)) return text;
-            try
-            {
-                using var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={targetLang}&dt=t&q={Uri.EscapeDataString(text)}";
-                var response = await client.GetAsync(url);
-                if (!response.IsSuccessStatusCode) return text;
-                
-                var json = await response.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(json);
-                var arr = doc.RootElement[0];
-                var sb = new StringBuilder();
-                foreach (var item in arr.EnumerateArray())
-                {
-                    sb.Append(item[0].GetString());
-                }
-                return sb.ToString();
-            }
-            catch
-            {
-                return text;
-            }
-        }
+        /// <summary>
+        /// Now a thin call onto the shared service, which the chat uses as well.
+        ///
+        /// Kept as a method rather than inlined at the call site because this window translates a
+        /// whole page in parallel and only wants the text back — a failed element stays in its
+        /// original language, which on a page of many is the right outcome.
+        /// </summary>
+        private static async Task<string> TranslateTextAsync(string text, string targetLang)
+            => (await Services.TranslationService.TranslateAsync(text, targetLang).ConfigureAwait(false)).Text;
 
         private void FindTextElements(DependencyObject obj, List<object> elements)
         {

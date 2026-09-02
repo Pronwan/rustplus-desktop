@@ -140,9 +140,16 @@ namespace RustPlusDesk.Services.Cloud
             }
         }
 
-        /// <summary>Private channels are addressed with the `private-` prefix on the wire.</summary>
+        /// <summary>
+        /// Private channels carry the `private-` prefix on the wire and presence channels the
+        /// `presence-` one. A name that already says which kind it is passes through; anything
+        /// else is private, which every channel here was until the public room arrived.
+        /// </summary>
         private static string Normalize(string channel) =>
-            channel.StartsWith("private-", StringComparison.Ordinal) ? channel : "private-" + channel;
+            channel.StartsWith("private-", StringComparison.Ordinal)
+            || channel.StartsWith("presence-", StringComparison.Ordinal)
+                ? channel
+                : "private-" + channel;
 
         private async Task RunAsync(CancellationToken ct)
         {
@@ -336,10 +343,17 @@ namespace RustPlusDesk.Services.Cloud
                     return;
                 }
 
+                var data = new JObject { ["auth"] = auth.Auth, ["channel"] = channel };
+
+                // Presence channels sign the member payload together with the channel name, so
+                // the same string has to travel back or the server rejects the signature.
+                if (auth.ChannelData != null)
+                    data["channel_data"] = auth.ChannelData;
+
                 await SendAsync(new JObject
                 {
                     ["event"] = "pusher:subscribe",
-                    ["data"] = new JObject { ["auth"] = auth, ["channel"] = channel },
+                    ["data"] = data,
                 }, ct);
             }
             catch (Exception ex)
@@ -353,15 +367,36 @@ namespace RustPlusDesk.Services.Cloud
         /// framework's own /broadcasting/auth is session+CSRF gated, so this uses the
         /// bearer-friendly route under /api/v1.
         /// </summary>
-        private static async Task<string?> AuthorizeAsync(string channel, string socketId)
+        private static async Task<ChannelAuth?> AuthorizeAsync(string channel, string socketId)
         {
             var body = await CloudApiClient.CallApiAsync(
                 "broadcasting/auth",
                 HttpMethod.Post,
                 payload: new { socket_id = socketId, channel_name = channel });
 
-            return string.IsNullOrWhiteSpace(body) ? null : JObject.Parse(body)["auth"]?.ToString();
+            if (string.IsNullOrWhiteSpace(body)) return null;
+
+            var json = JObject.Parse(body);
+            var auth = json["auth"]?.ToString();
+            if (string.IsNullOrWhiteSpace(auth)) return null;
+
+            // A private channel answers with a signature alone; a presence channel adds the
+            // member payload that signature covers. It arrives already JSON-encoded and is taken
+            // verbatim rather than re-serialised - a re-encode that reorders one key would break
+            // the signature.
+            var channelData = json["channel_data"] switch
+            {
+                null => null,
+                { Type: JTokenType.Null } => null,
+                { Type: JTokenType.String } token => token.ToString(),
+                var token => token.ToString(Newtonsoft.Json.Formatting.None),
+            };
+
+            return new ChannelAuth(auth!, channelData);
         }
+
+        /// <summary>What the auth endpoint hands back for a single channel.</summary>
+        private sealed record ChannelAuth(string Auth, string? ChannelData);
 
         private async Task<RealtimeConnectionInfo?> EnsureConnectionInfoAsync()
         {

@@ -254,6 +254,8 @@ namespace RustPlusDesk.Services.Data
                          ?? new OverlaySaveData
                          {
                              Strokes         = canvasOverlay?.Strokes ?? new(),
+                             Routes          = canvasOverlay?.Routes ?? new(),
+                             ImportedRouteIds = canvasOverlay?.ImportedRouteIds ?? new(),
                              Icons           = canvasOverlay?.Icons   ?? new(),
                              Texts           = canvasOverlay?.Texts   ?? new(),
                              LastUpdatedUnix = DataManager.UnixNow()

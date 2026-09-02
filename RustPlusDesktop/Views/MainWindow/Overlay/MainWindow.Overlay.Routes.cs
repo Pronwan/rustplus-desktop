@@ -1,0 +1,690 @@
+using RustPlusDesk.Models;
+using RustPlusDesk.Services.Map;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
+
+namespace RustPlusDesk.Views;
+
+/// <summary>
+/// Named routes: a path you can call something, colour, hide, and measure.
+///
+/// Deliberately not the arrow-path tool. That one decorates a stroke; this one is an object with
+/// a name and a length, and the difference shows up the moment you want two of them on the same
+/// map and need to tell which is which.
+///
+/// A route owns its geometry rather than living as strokes, because everything that makes it a
+/// route — where it starts, where it ends, whether it closes — is a property of the whole path
+/// and has nowhere to live on a pile of separate lines.
+/// </summary>
+public partial class MainWindow
+{
+    /// <summary>How close the end has to come back to the start before the route becomes a lap.</summary>
+    private const double RouteCloseRadiusPx = 22.0;
+
+    private readonly ObservableCollection<MapRouteItem> _routeItems = new();
+
+    private bool _routeMode;
+
+    private string? _activeRouteId;
+
+    /// <summary>The lines and dots currently on the map, by route id, so they can be replaced.</summary>
+    private readonly Dictionary<string, List<FrameworkElement>> _routeVisuals = new(StringComparer.Ordinal);
+
+    /// <summary>What the rest of the overlay was showing before route mode hid it.</summary>
+    private readonly List<FrameworkElement> _hiddenByRouteMode = new();
+
+    /// <summary>
+    /// Teammates' route ids that have already been copied into the list.
+    ///
+    /// An imported route becomes yours: you can rename it, hide it, delete it. That last one only
+    /// means anything if the next sync does not hand it straight back, which is what this
+    /// remembers.
+    /// </summary>
+    private readonly HashSet<string> _importedRouteIds = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// True only while there is a route to draw into. Without one a stroke stays a stroke:
+    /// swallowing it because a panel happens to be open is how a drawing tool loses somebody
+    /// their work.
+    /// </summary>
+    internal bool IsRouteModeActive => _routeMode && _activeRouteId != null;
+
+    // ── Entering and leaving ────────────────────────────────────────────────
+
+    private void BtnToggleRoutes_Click(object sender, RoutedEventArgs e)
+    {
+        if (_routeMode) ExitRouteMode();
+        else EnterRouteMode();
+    }
+
+    private void BtnRoutesClose_Click(object sender, RoutedEventArgs e) => ExitRouteMode();
+
+    /// <summary>
+    /// Route mode: the routes stay, everything else on the overlay steps aside.
+    ///
+    /// Hidden rather than removed. A route is drawn over the map, and forty icons and a dozen
+    /// strokes between it and the ground make it impossible to read — but they are somebody's
+    /// work, and they come back untouched on the way out.
+    /// </summary>
+    private void EnterRouteMode()
+    {
+        if (_routeMode) return;
+        _routeMode = true;
+
+        if (RoutesList != null) RoutesList.ItemsSource = _routeItems;
+
+        HideNonRouteOverlay();
+        RedrawAllRoutes();
+
+        if (RoutesPanel != null) RoutesPanel.Visibility = Visibility.Visible;
+        if (LayersPanel != null) LayersPanel.Visibility = Visibility.Collapsed;
+
+        ApplyRouteModeChrome(true);
+        UpdateRoutesPanelState();
+    }
+
+    private void ExitRouteMode()
+    {
+        if (!_routeMode) return;
+        _routeMode = false;
+
+        if (RoutesPanel != null) RoutesPanel.Visibility = Visibility.Collapsed;
+        if (RouteNameRow != null) RouteNameRow.Visibility = Visibility.Collapsed;
+
+        ApplyRouteModeChrome(false);
+        RestoreNonRouteOverlay();
+
+        // The visible routes stay on the map. Leaving the panel is not the same as putting the
+        // routes away, and somebody who ticked two of them wants to see them while they play.
+        RedrawAllRoutes();
+    }
+
+    /// <summary>
+    /// The toolbar as route mode leaves it.
+    ///
+    /// The arrow and the arrow-path both decorate a stroke, and neither means anything once the
+    /// stroke is a route with its own start and end — leaving them in the row would be offering
+    /// two things that look like routes and are not. The pen, line, box and circle all stay,
+    /// because each of them is a perfectly good way to describe a path.
+    ///
+    /// The button itself lights up, so the mode is legible from the toolbar rather than only from
+    /// the panel it opened.
+    /// </summary>
+    private void ApplyRouteModeChrome(bool on)
+    {
+        Visibility hidden = on ? Visibility.Collapsed : Visibility.Visible;
+
+        if (ToolArrowButton != null) ToolArrowButton.Visibility = hidden;
+        if (ToolRouteButton != null) ToolRouteButton.Visibility = hidden;
+
+        if (BtnToggleRoutes != null)
+        {
+            BtnToggleRoutes.Background = on
+                ? new SolidColorBrush(Color.FromArgb(0x66, 0x3F, 0xD7, 0xFF))
+                : Brushes.Transparent;
+        }
+
+        // A tool that just disappeared cannot stay selected.
+        if (on && _currentTool is OverlayToolMode.Arrow or OverlayToolMode.Route)
+            SetCurrentTool(OverlayToolMode.Draw);
+    }
+
+    private void HideNonRouteOverlay()
+    {
+        _hiddenByRouteMode.Clear();
+        if (Overlay == null) return;
+
+        foreach (UIElement child in Overlay.Children)
+        {
+            if (child is not FrameworkElement fe) continue;
+            if (IsRouteVisual(fe)) continue;
+            if (fe.Visibility != Visibility.Visible) continue;
+
+            fe.Visibility = Visibility.Collapsed;
+            _hiddenByRouteMode.Add(fe);
+        }
+    }
+
+    private void RestoreNonRouteOverlay()
+    {
+        foreach (FrameworkElement fe in _hiddenByRouteMode)
+            fe.Visibility = Visibility.Visible;
+
+        _hiddenByRouteMode.Clear();
+    }
+
+    private bool IsRouteVisual(FrameworkElement fe)
+        => _routeVisuals.Values.Any(list => list.Contains(fe));
+
+    // ── The list ────────────────────────────────────────────────────────────
+
+    private void BtnRouteAdd_Click(object sender, RoutedEventArgs e)
+    {
+        if (RouteNameRow == null || TxtRouteName == null) return;
+
+        RouteNameRow.Visibility = Visibility.Visible;
+        TxtRouteName.Text = "";
+        TxtRouteName.Focus();
+
+        UpdateRoutesPanelState();
+    }
+
+    private void TxtRouteName_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            if (RouteNameRow != null) RouteNameRow.Visibility = Visibility.Collapsed;
+            UpdateRoutesPanelState();
+            return;
+        }
+
+        if (e.Key != Key.Enter) return;
+        e.Handled = true;
+
+        string name = (TxtRouteName?.Text ?? "").Trim();
+        if (name.Length == 0) return;
+
+        var item = new MapRouteItem
+        {
+            Id = "route-" + Guid.NewGuid().ToString("N"),
+            Name = name,
+            // The colour the pen is set to, so the line and its legend entry match without
+            // anybody having to pick twice.
+            Color = _drawColor,
+            Thickness = Math.Max(_drawThickness, 2.0),
+        };
+
+        _routeItems.Add(item);
+        _activeRouteId = item.Id;
+
+        if (RouteNameRow != null) RouteNameRow.Visibility = Visibility.Collapsed;
+
+        RefreshRouteRowStates();
+        UpdateRoutesPanelState();
+        SaveOwnOverlayToJson();
+    }
+
+    private void RouteRow_Click(object sender, MouseButtonEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not MapRouteItem item) return;
+
+        // Clicking the row you are already drawing puts the pen down rather than doing nothing.
+        _activeRouteId = _activeRouteId == item.Id ? null : item.Id;
+
+        RefreshRouteRowStates();
+        UpdateRoutesPanelState();
+    }
+
+    private void BtnRouteVisibility_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not MapRouteItem item) return;
+
+        item.Visible = !item.Visible;
+        RedrawRoute(item);
+        SaveOwnOverlayToJson();
+    }
+
+    private void BtnRouteDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not MapRouteItem item) return;
+
+        ClearRouteVisuals(item.Id);
+        _routeItems.Remove(item);
+
+        if (_activeRouteId == item.Id) _activeRouteId = null;
+
+        UpdateRoutesPanelState();
+        SaveOwnOverlayToJson();
+    }
+
+    private void RefreshRouteRowStates()
+    {
+        foreach (MapRouteItem item in _routeItems)
+            item.IsActive = item.Id == _activeRouteId;
+    }
+
+    private void UpdateRoutesPanelState()
+    {
+        if (RoutesEmptyNotice != null)
+            RoutesEmptyNotice.Visibility = _routeItems.Count == 0 && RouteNameRow?.Visibility != Visibility.Visible
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+        if (RoutesDrawHint != null)
+            RoutesDrawHint.Visibility = _activeRouteId != null && RouteNameRow?.Visibility != Visibility.Visible
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+    }
+
+    // ── Drawing ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Adds a finished stroke to the route being drawn.
+    ///
+    /// The first stroke lays the route down: its first point is the start, its last the end.
+    /// Every stroke after that continues from whichever end it began nearest to, so drawing on
+    /// from the end moves the end and drawing back from the start extends the other way. When the
+    /// end lands back on the start the route closes and becomes a lap.
+    /// </summary>
+    private void AppendStrokeToActiveRoute(Polyline stroke, bool closes = false)
+    {
+        List<Point> pts = stroke.Points.ToList();
+
+        // The stroke itself never stays: the route redraws from its own geometry.
+        RemoveOwnElement(stroke);
+        Overlay?.Children.Remove(stroke);
+
+        MapRouteItem? item = _routeItems.FirstOrDefault(r => r.Id == _activeRouteId);
+        if (item == null || pts.Count < 2) return;
+
+        if (item.Points.Count == 0)
+        {
+            item.Points.AddRange(pts);
+        }
+        else if (item.Closed)
+        {
+            // A lap has no loose end to draw on from. Saying so beats silently ignoring the
+            // stroke or, worse, breaking the loop open again.
+            return;
+        }
+        else
+        {
+            Point first = item.Points[0];
+            Point last = item.Points[^1];
+
+            double toEnd = Distance(pts[0], last);
+            double toStart = Distance(pts[0], first);
+
+            if (toStart < toEnd)
+            {
+                // Drawn backwards from the start: the new points lead into it.
+                pts.Reverse();
+                item.Points.InsertRange(0, pts);
+            }
+            else
+            {
+                item.Points.AddRange(pts);
+            }
+        }
+
+        // A box or a circle arrives closed already; a pen or a line closes by coming back to
+        // where it started.
+        if (closes && item.Points.Count > 2)
+        {
+            item.Points[^1] = item.Points[0];
+            item.Closed = true;
+        }
+        else if (item.Points.Count > 2 && Distance(item.Points[0], item.Points[^1]) <= RouteCloseRadiusPx)
+        {
+            item.Points[^1] = item.Points[0];
+            item.Closed = true;
+        }
+
+        RedrawRoute(item);
+        SaveOwnOverlayToJson();
+    }
+
+    private static double Distance(Point a, Point b)
+    {
+        double dx = b.X - a.X, dy = b.Y - a.Y;
+        return Math.Sqrt((dx * dx) + (dy * dy));
+    }
+
+    // ── Rendering ───────────────────────────────────────────────────────────
+
+    private void RedrawAllRoutes()
+    {
+        foreach (MapRouteItem item in _routeItems)
+            RedrawRoute(item);
+    }
+
+    private void ClearRouteVisuals(string routeId)
+    {
+        if (!_routeVisuals.TryGetValue(routeId, out List<FrameworkElement>? list)) return;
+
+        foreach (FrameworkElement fe in list)
+            Overlay?.Children.Remove(fe);
+
+        _routeVisuals.Remove(routeId);
+    }
+
+    private void RedrawRoute(MapRouteItem item)
+    {
+        ClearRouteVisuals(item.Id);
+        item.Recompute(MetresPerOverlayPixel());
+
+        if (Overlay == null || !item.Visible || item.Points.Count < 2) return;
+
+        var brush = new SolidColorBrush(item.Color);
+        var created = new List<FrameworkElement>();
+
+        var line = new Polyline
+        {
+            Stroke = brush,
+            StrokeThickness = item.Thickness,
+            StrokeLineJoin = PenLineJoin.Round,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeEndLineCap = PenLineCap.Round,
+            IsHitTestVisible = false,
+        };
+
+        foreach (Point p in item.Points) line.Points.Add(p);
+
+        Overlay.Children.Add(line);
+        created.Add(line);
+
+        // The start is filled and the end is hollow, so a route reads in one direction at a
+        // glance. A lap has neither: there is nowhere it starts that is not also where it ends.
+        if (!item.Closed)
+        {
+            created.Add(AddRouteDot(item.Points[0], brush, filled: true, item.Thickness));
+            created.Add(AddRouteDot(item.Points[^1], brush, filled: false, item.Thickness));
+        }
+        else
+        {
+            created.Add(AddRouteDot(item.Points[0], brush, filled: true, item.Thickness));
+        }
+
+        _routeVisuals[item.Id] = created;
+    }
+
+    private Ellipse AddRouteDot(Point at, Brush brush, bool filled, double thickness)
+    {
+        double size = Math.Clamp(thickness * 3.2, 9.0, 18.0);
+
+        var dot = new Ellipse
+        {
+            Width = size,
+            Height = size,
+            Stroke = brush,
+            StrokeThickness = Math.Max(thickness * 0.8, 1.5),
+            Fill = filled ? brush : Brushes.Transparent,
+            IsHitTestVisible = false,
+        };
+
+        Canvas.SetLeft(dot, at.X - (size / 2));
+        Canvas.SetTop(dot, at.Y - (size / 2));
+
+        Overlay!.Children.Add(dot);
+        return dot;
+    }
+
+    /// <summary>
+    /// How many metres one overlay pixel covers on the map currently shown.
+    ///
+    /// Read from what the map already knows rather than assumed from grid squares: the world size
+    /// and the pixel rectangle it occupies are both exact, and the deep sea map is the same sum
+    /// with its own span.
+    /// </summary>
+    private double MetresPerOverlayPixel()
+    {
+        if (_worldRectPx.Width <= 0) return 0;
+
+        double span = _isShowingDeepSeaMap ? DeepSeaCells * DeepSeaCellSize : _worldSizeS;
+
+        return span <= 0 ? 0 : span / _worldRectPx.Width;
+    }
+
+    // ── Saving and loading ──────────────────────────────────────────────────
+
+    private List<SavedRoute> BuildSavedRoutes()
+        => _routeItems.Select(item => new SavedRoute
+        {
+            Id = item.Id,
+            SourceId = item.SourceId,
+            Name = item.Name,
+            Color = item.Color.ToString(),
+            Thickness = item.Thickness,
+            Points = item.Points.ToList(),
+            Closed = item.Closed,
+            Visible = item.Visible,
+        }).ToList();
+
+    /// <summary>
+    /// Copies a teammate's routes into the list, once each.
+    ///
+    /// Imported rather than shown separately, so they behave like everything else here: rename,
+    /// hide, delete. The teammate's name goes in brackets so it stays obvious whose route it was
+    /// after it has been sitting in the list for a week.
+    /// </summary>
+    private void ImportTeammateRoutes(ulong steamId, List<SavedRoute>? routes)
+    {
+        if (routes == null || routes.Count == 0) return;
+
+        string who = ResolveRouteOwnerName(steamId);
+        bool added = false;
+
+        foreach (SavedRoute saved in routes)
+        {
+            if (string.IsNullOrWhiteSpace(saved.Id)) continue;
+
+            // Never import somebody else's import. Without this, a route makes a round trip
+            // through every client on the team and comes back wearing another name in brackets.
+            if (!string.IsNullOrEmpty(saved.SourceId)) continue;
+
+            // Nor one that is already here, whether we copied it before or wrote it ourselves.
+            if (_routeItems.Any(r => r.SourceId == saved.Id || r.Id == saved.Id)) continue;
+
+            // Nor the same path under a different id. Lists polluted before the loop was closed
+            // carry copies with no source recorded, and the geometry is what gives them away.
+            if (_routeItems.Any(r => IsSamePath(r, saved))) continue;
+
+            if (!_importedRouteIds.Add(saved.Id)) continue;
+
+            var item = new MapRouteItem
+            {
+                // A new id, because the copy is yours: theirs changing later must not reach in
+                // and rewrite what you have since renamed.
+                Id = "route-" + Guid.NewGuid().ToString("N"),
+                SourceId = saved.Id,
+                Name = string.IsNullOrWhiteSpace(saved.Name) ? who : $"{saved.Name} ({who})",
+                Thickness = saved.Thickness,
+                Closed = saved.Closed,
+                // Somebody else's route arrives hidden. Half a dozen teammates syncing at once
+                // would otherwise redraw the map without anybody asking.
+                Visible = false,
+                Color = ParseRouteColor(saved.Color),
+            };
+
+            item.Points.AddRange(saved.Points);
+            _routeItems.Add(item);
+            added = true;
+        }
+
+        if (!added) return;
+
+        RedrawAllRoutes();
+        UpdateRoutesPanelState();
+
+        // Deferred: this runs in the middle of rebuilding somebody else's overlay, and saving
+        // walks the same canvas that is currently being rewritten.
+        Dispatcher.BeginInvoke(new Action(SaveOwnOverlayToJson), System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Whether two routes are the same path.
+    ///
+    /// Point count and the two ends, not every point: a copy is byte-identical, and comparing
+    /// three numbers is enough to say so without walking a thousand of them per row.
+    /// </summary>
+    private static bool IsSamePath(MapRouteItem mine, SavedRoute theirs)
+    {
+        if (mine.Points.Count != theirs.Points.Count || mine.Points.Count == 0) return false;
+
+        return Distance(mine.Points[0], theirs.Points[0]) < 0.5
+            && Distance(mine.Points[^1], theirs.Points[^1]) < 0.5;
+    }
+
+    /// <summary>Whatever the teammate is called, or their id when nothing better is known.</summary>
+    private string ResolveRouteOwnerName(ulong steamId)
+    {
+        if (_steamNames.TryGetValue(steamId, out string? name) && !string.IsNullOrWhiteSpace(name))
+            return name;
+
+        return steamId.ToString();
+    }
+
+    private void ApplySavedRoutes(List<SavedRoute>? routes, List<string>? importedIds = null)
+    {
+        foreach (string id in _routeVisuals.Keys.ToList())
+            ClearRouteVisuals(id);
+
+        _routeItems.Clear();
+        _activeRouteId = null;
+
+        _importedRouteIds.Clear();
+        if (importedIds != null)
+            foreach (string id in importedIds) _importedRouteIds.Add(id);
+
+        if (routes == null) return;
+
+        // Lists that grew duplicates before the loop was closed clean themselves up on load. Two
+        // routes are the same route when they were copied from the same one, or when they are
+        // called the same and run through the same points.
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (SavedRoute saved in routes)
+        {
+            string fingerprint = !string.IsNullOrEmpty(saved.SourceId)
+                ? "src:" + saved.SourceId
+                : string.Format(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "geo:{0}|{1}|{2:0.0}|{3:0.0}",
+                    saved.Name,
+                    saved.Points.Count,
+                    saved.Points.Count > 0 ? saved.Points[0].X : 0,
+                    saved.Points.Count > 0 ? saved.Points[0].Y : 0);
+
+            if (!seen.Add(fingerprint)) continue;
+
+            var item = new MapRouteItem
+            {
+                Id = string.IsNullOrWhiteSpace(saved.Id) ? "route-" + Guid.NewGuid().ToString("N") : saved.Id,
+                SourceId = saved.SourceId,
+                Name = saved.Name,
+                Thickness = saved.Thickness,
+                Closed = saved.Closed,
+                Visible = saved.Visible,
+                Color = ParseRouteColor(saved.Color),
+            };
+
+            item.Points.AddRange(saved.Points);
+            _routeItems.Add(item);
+        }
+
+        RedrawAllRoutes();
+        UpdateRoutesPanelState();
+    }
+
+    private static Color ParseRouteColor(string? value)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(value) &&
+                ColorConverter.ConvertFromString(value) is Color parsed)
+                return parsed;
+        }
+        catch
+        {
+            // A colour we cannot read is not worth losing the route over.
+        }
+
+        return Color.FromRgb(0x3F, 0xD7, 0xFF);
+    }
+}
+
+/// <summary>One route as the legend draws it.</summary>
+public sealed class MapRouteItem : System.ComponentModel.INotifyPropertyChanged
+{
+    public string Id { get; init; } = "";
+
+    /// <summary>Set when this is a copy of a teammate's route. Null when it is your own.</summary>
+    public string? SourceId { get; init; }
+
+    private string _name = "";
+
+    public string Name
+    {
+        get => _name;
+        set { _name = value; Raise(nameof(Name)); }
+    }
+
+    public Color Color { get; set; } = Color.FromRgb(0x3F, 0xD7, 0xFF);
+
+    public double Thickness { get; set; } = 3.0;
+
+    public List<Point> Points { get; } = new();
+
+    public bool Closed { get; set; }
+
+    private bool _visible = true;
+
+    public bool Visible
+    {
+        get => _visible;
+        set { _visible = value; Raise(nameof(Visible)); Raise(nameof(EyeGlyph)); Raise(nameof(EyeOpacity)); }
+    }
+
+    private bool _isActive;
+
+    /// <summary>The one being drawn into. Only ever one, and it is the one shown in bold.</summary>
+    public bool IsActive
+    {
+        get => _isActive;
+        set { _isActive = value; Raise(nameof(IsActive)); Raise(nameof(NameWeight)); Raise(nameof(RowBackground)); }
+    }
+
+    private string _measurement = "";
+
+    /// <summary>Length and running time, already formatted.</summary>
+    public string Measurement
+    {
+        get => _measurement;
+        private set { _measurement = value; Raise(nameof(Measurement)); }
+    }
+
+    public Brush Swatch => new SolidColorBrush(Color);
+
+    public FontWeight NameWeight => IsActive ? FontWeights.Bold : FontWeights.Normal;
+
+    public Brush RowBackground => new SolidColorBrush(
+        IsActive ? Color.FromArgb(0x22, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x0D, 0xFF, 0xFF, 0xFF));
+
+    /// <summary>Segoe MDL2: an open eye, or a struck-through one.</summary>
+    public string EyeGlyph => Visible ? "\uE7B3" : "\uED1A";
+
+    public double EyeOpacity => Visible ? 1.0 : 0.45;
+
+    /// <summary>
+    /// Recomputes the length and the time it takes to run it.
+    ///
+    /// Called whenever the geometry changes, and again whenever the map does — the same route is
+    /// worth a different number of metres on a 3000 map than on a 4500 one.
+    /// </summary>
+    public void Recompute(double metresPerPixel)
+    {
+        if (Points.Count < 2 || metresPerPixel <= 0)
+        {
+            Measurement = "";
+            return;
+        }
+
+        double metres = RouteMeasure.PathLength(Points) * metresPerPixel;
+
+        Measurement = RouteMeasure.FormatDistance(metres)
+            + "  ·  "
+            + RouteMeasure.FormatDuration(RouteMeasure.SprintTime(metres));
+    }
+
+    public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+    private void Raise(string name)
+        => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(name));
+}
