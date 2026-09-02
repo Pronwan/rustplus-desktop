@@ -219,6 +219,22 @@
 
 
                         <ui:ToggleSwitch x:Name="ChkHideConsole" Content="{DynamicResource HideSystemConsole}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource HideConsoleToolTip}" />
+                        <ui:ToggleSwitch x:Name="ChkReduceUiEffects"
+                                         Margin="0,0,0,10"
+                                         Checked="OnSettingChanged"
+                                         Unchecked="OnSettingChanged"
+                                         ToolTip="Disables the Mica window backdrop and reduces shadow effects. Recommended for AMD CPUs with performance issues. Requires a restart to take effect.">
+                            <ui:ToggleSwitch.Content>
+                                <StackPanel>
+                                    <TextBlock Text="Reduce UI Effects" />
+                                    <TextBlock Text="Disables Mica backdrop &amp; shadows — helps with freezes on some AMD systems. Requires restart."
+                                               FontSize="10.5"
+                                               Margin="0,2,0,0"
+                                               Foreground="{DynamicResource TextSubtle}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </ui:ToggleSwitch.Content>
+                        </ui:ToggleSwitch>
                         <ui:ToggleSwitch x:Name="ChkTrafficMonitor" Content="Network Traffic &amp; Bandwidth Monitor" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="Enable real-time network traffic tracking, bandwidth meter, and packet inspector." />
                         <ui:ToggleSwitch x:Name="ChkCloudSync" Content="{DynamicResource CloudSync}" Margin="0,0,0,10" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource CloudSyncDesc}" />
                         <ui:ToggleSwitch x:Name="ChkPlayerWipeTracker" Content="Player Wipe Tracker" Margin="0,0,0,10" Checked="OnPlayerWipeTrackerToggled" Unchecked="OnPlayerWipeTrackerToggled" ToolTip="Tracks only visible team snapshots while RustPlus Desktop is connected." />

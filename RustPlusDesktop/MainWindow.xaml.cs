@@ -493,7 +493,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         InitializeAppSettings();
         
         // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
-        WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        // Skip Mica when the user has enabled "Reduce UI Effects" (helps with
+        // AMD CPU systems where DWM composition causes input lag / freezes).
+        if (!TrackingService.ReduceUiEffects)
+        {
+            WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        }
         // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
         ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
         

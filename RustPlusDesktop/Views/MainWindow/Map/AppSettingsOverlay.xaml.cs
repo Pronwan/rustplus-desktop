@@ -623,6 +623,7 @@ namespace RustPlusDesk.Views
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
+            ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
             
@@ -828,6 +829,7 @@ namespace RustPlusDesk.Views
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
+            TrackingService.ReduceUiEffects = ChkReduceUiEffects.IsChecked == true;
             TrackingService.TrafficMonitorEnabled = ChkTrafficMonitor.IsChecked == true;
             TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
             
