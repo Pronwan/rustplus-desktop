@@ -84,6 +84,13 @@ public sealed class RandomRustIconConverter : IValueConverter
             {
                 if (pool.Count >= PoolSize) break;
 
+                // Size is read from the PNG header first — 24 bytes — because most of this cache
+                // is not icon-sized. Roughly a third of it is 512x512 artwork, and decoding one
+                // of those costs a megabyte of unmanaged memory that is thrown away a line later.
+                // A freeze report from a user showed 2.1 GB of working set against 50 MB of
+                // managed heap, fourteen seconds after launch: that memory was discarded decodes.
+                if (!IsIconSized(path)) continue;
+
                 var icon = TryLoad(path);
                 if (icon is not null) pool.Add(icon);
             }
@@ -94,6 +101,35 @@ public sealed class RandomRustIconConverter : IValueConverter
         {
             // A decoration that cannot be built is not worth reporting. The popover simply shows
             // no icon, and nothing else in the app depends on this.
+        }
+    }
+
+    /// <summary>
+    /// Whether a PNG is icon-sized, judged from its header without decoding it.
+    ///
+    /// A PNG always opens with an 8-byte signature and an IHDR chunk whose width and height are
+    /// big-endian 32-bit values at offsets 16 and 20. Reading those costs one small read; decoding
+    /// the image to ask the same question costs width x height x 4 bytes.
+    /// </summary>
+    private static bool IsIconSized(string path)
+    {
+        try
+        {
+            Span<byte> header = stackalloc byte[24];
+            using var stream = File.OpenRead(path);
+            if (stream.Read(header) < header.Length) return false;
+
+            // Not a PNG at all: let the decoder deal with it rather than guessing here.
+            if (header[1] != 'P' || header[2] != 'N' || header[3] != 'G') return false;
+
+            var width = System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(header[16..20]);
+            var height = System.Buffers.Binary.BinaryPrimitives.ReadUInt32BigEndian(header[20..24]);
+
+            return width == RequiredIconSize && height == RequiredIconSize;
+        }
+        catch
+        {
+            return false;
         }
     }
 
