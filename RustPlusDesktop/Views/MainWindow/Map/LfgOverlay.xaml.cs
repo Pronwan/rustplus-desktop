@@ -1971,11 +1971,7 @@ public partial class LfgOverlay : UserControl
         var ok = await SocialApi.SetNameColorAsync(key).ConfigureAwait(true);
         if (!ok)
         {
-            System.Windows.MessageBox.Show(
-                Helpers.Loc.TextOrNull("ChatNameColorFailed") ?? "The colour could not be saved.",
-                Helpers.Loc.TextOrNull("ChatNameColorTitle") ?? "Message colour",
-                System.Windows.MessageBoxButton.OK,
-                System.Windows.MessageBoxImage.Warning);
+            ShowChatNotice(Helpers.Loc.TextOrNull("ChatNameColorFailed") ?? "The colour could not be saved.");
             return;
         }
 
@@ -2044,12 +2040,8 @@ public partial class LfgOverlay : UserControl
         var target = _chatLines.FirstOrDefault(line => line.Id == originalId);
         if (target is null)
         {
-            System.Windows.MessageBox.Show(
-                Helpers.Loc.TextOrNull("ChatReplyOriginalGone")
-                    ?? "The original message is no longer in the visible history.",
-                Helpers.Loc.TextOrNull("ChatReply") ?? "Reply",
-                System.Windows.MessageBoxButton.OK,
-                System.Windows.MessageBoxImage.Information);
+            ShowChatNotice(Helpers.Loc.TextOrNull("ChatReplyOriginalGone")
+                ?? "The original message is no longer in the visible history.");
             return;
         }
 
@@ -2071,44 +2063,82 @@ public partial class LfgOverlay : UserControl
     /// Asks for consent the first time, because this sends the message text to Google — the same
     /// consent the patch notes ask for, and the same answer, so agreeing once covers both.
     /// </summary>
+    /// <summary>The line waiting on the consent panel's answer, if the question was asked.</summary>
+    private Models.ChatLine? _pendingTranslation;
+
     private async void ChatTranslate_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line || string.IsNullOrWhiteSpace(line.Body)) return;
 
         if (!Services.TrackingService.TranslationConsentGiven)
         {
-            var consent = System.Windows.MessageBox.Show(
-                Helpers.Loc.TextOrNull("ChatTranslateConsentBody")
-                    ?? "Translating sends the message text to Google Translate. Continue?",
-                Helpers.Loc.TextOrNull("ChatTranslateConsentTitle") ?? "Translate message",
-                System.Windows.MessageBoxButton.YesNo,
-                System.Windows.MessageBoxImage.Question);
-
-            if (consent != System.Windows.MessageBoxResult.Yes) return;
-            Services.TrackingService.TranslationConsentGiven = true;
+            // Remembered so the answer applies to the line that prompted the question, rather
+            // than making someone right-click it again afterwards.
+            _pendingTranslation = line;
+            ChatTranslateConsentPanel.Visibility = Visibility.Visible;
+            return;
         }
 
-        var original = line.Body;
-        var translated = await Services.TranslationService.TranslateAsync(original).ConfigureAwait(true);
+        await TranslateLineAsync(line).ConfigureAwait(true);
+    }
 
-        // Unchanged text means the call failed or the message was already in this language.
-        // Replacing the line with the same words would look like nothing happened, so say so.
-        if (string.Equals(translated, original, StringComparison.Ordinal))
+    private async void BtnTranslateConsentAccept_Click(object sender, RoutedEventArgs e)
+    {
+        Services.TrackingService.TranslationConsentGiven = true;
+        ChatTranslateConsentPanel.Visibility = Visibility.Collapsed;
+
+        var line = _pendingTranslation;
+        _pendingTranslation = null;
+        if (line is not null) await TranslateLineAsync(line).ConfigureAwait(true);
+    }
+
+    private void BtnTranslateConsentCancel_Click(object sender, RoutedEventArgs e)
+    {
+        _pendingTranslation = null;
+        ChatTranslateConsentPanel.Visibility = Visibility.Collapsed;
+    }
+
+    private async Task TranslateLineAsync(Models.ChatLine line)
+    {
+        ChatRefusal.Visibility = Visibility.Collapsed;
+
+        var result = await Services.TranslationService.TranslateAsync(line.Body).ConfigureAwait(true);
+
+        // The three outcomes are genuinely different and used to be reported as one. Google
+        // answers 429 to this endpoint often enough that "we could not reach it" has to be its
+        // own sentence — telling someone their English message is already in German is worse
+        // than saying nothing.
+        if (!result.Ok)
         {
-            System.Windows.MessageBox.Show(
-                Helpers.Loc.TextOrNull("ChatTranslateUnchanged")
-                    ?? "Nothing to translate — the message is already in your language, or the translation service could not be reached.",
-                Helpers.Loc.TextOrNull("ChatTranslateTitle") ?? "Translate message",
-                System.Windows.MessageBoxButton.OK,
-                System.Windows.MessageBoxImage.Information);
+            ShowChatNotice(Helpers.Loc.TextOrNull("ChatTranslateFailed")
+                ?? "The translation service could not be reached. Try again in a moment.");
+            return;
+        }
+
+        if (result.Unchanged)
+        {
+            ShowChatNotice(Helpers.Loc.TextOrNull("ChatTranslateUnchanged")
+                ?? "This message is already in your language.");
             return;
         }
 
         var index = _chatLines.FindIndex(item => item.Id == line.Id);
         if (index < 0) return;
 
-        _chatLines[index] = line.WithBody(translated);
+        _chatLines[index] = line.WithBody(result.Text);
         ShowChatLines();
+    }
+
+    /// <summary>
+    /// One sentence above the compose box, in the app's own look.
+    ///
+    /// Reuses the bar that explains a refused message: same place, same weight, and no modal
+    /// window thrown over the map for something this small.
+    /// </summary>
+    private void ShowChatNotice(string message)
+    {
+        ChatRefusal.Text = message;
+        ChatRefusal.Visibility = Visibility.Visible;
     }
 
     private async void ChatBlock_Click(object sender, RoutedEventArgs e)

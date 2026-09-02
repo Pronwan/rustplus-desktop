@@ -37,14 +37,18 @@ public static class TranslationService
     }
 
     /// <summary>
-    /// Translates one piece of text, returning the original when anything goes wrong.
+    /// The outcome of a translation, with the failure kept separate from the result.
     ///
-    /// Failing back to the original is deliberate: a chat line that silently stays in its own
-    /// language is a far better outcome than an error where the message used to be.
+    /// Returning only the text meant a caller could not tell "already in this language" from
+    /// "the service refused us" — both came back as the original, and the app then guessed, and
+    /// guessed wrong. Google rate-limits this endpoint with a 429 often enough that the two need
+    /// to be told apart.
     /// </summary>
-    public static async Task<string> TranslateAsync(string text, string? targetLanguage = null, CancellationToken cancellationToken = default)
+    public sealed record TranslationResult(bool Ok, string Text, bool Unchanged);
+
+    public static async Task<TranslationResult> TranslateAsync(string text, string? targetLanguage = null, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(text)) return text;
+        if (string.IsNullOrWhiteSpace(text)) return new TranslationResult(true, text, true);
 
         var target = string.IsNullOrWhiteSpace(targetLanguage) ? CurrentLanguage : targetLanguage!;
 
@@ -54,7 +58,8 @@ public static class TranslationService
                 + $"?client=gtx&sl=auto&tl={Uri.EscapeDataString(target)}&dt=t&q={Uri.EscapeDataString(text)}";
 
             using var response = await Http.GetAsync(url, cancellationToken).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode) return text;
+            if (!response.IsSuccessStatusCode)
+                return new TranslationResult(false, text, true);
 
             var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             using var document = JsonDocument.Parse(json);
@@ -69,11 +74,14 @@ public static class TranslationService
             }
 
             var translated = builder.ToString();
-            return string.IsNullOrWhiteSpace(translated) ? text : translated;
+            if (string.IsNullOrWhiteSpace(translated))
+                return new TranslationResult(false, text, true);
+
+            return new TranslationResult(true, translated, string.Equals(translated, text, StringComparison.Ordinal));
         }
         catch
         {
-            return text;
+            return new TranslationResult(false, text, true);
         }
     }
 }

@@ -6605,7 +6605,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Nachricht übersetzen</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>Nichts zu übersetzen — die Nachricht ist bereits in deiner Sprache, oder der Übersetzungsdienst war nicht erreichbar.</value>
+    <value>Diese Nachricht ist bereits in deiner Sprache.</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>Nachricht übersetzen</value>
@@ -6663,5 +6663,11 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>Die ursprüngliche Nachricht ist nicht mehr im sichtbaren Verlauf.</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>Der Übersetzungsdienst war nicht erreichbar. Versuch es gleich noch einmal.</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>Übersetzen</value>
   </data>
 </root>

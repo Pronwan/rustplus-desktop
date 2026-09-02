@@ -1015,7 +1015,7 @@
     <value>翻譯訊息</value>
   </data>
   <data name="ChatTranslateUnchanged" xml:space="preserve">
-    <value>沒有可翻譯的內容——訊息已是你的語言，或無法連線至翻譯服務。</value>
+    <value>這條訊息已經是你的語言。</value>
   </data>
   <data name="ChatTranslateConsentTitle" xml:space="preserve">
     <value>翻譯訊息</value>
@@ -1073,5 +1073,11 @@
   </data>
   <data name="ChatReplyOriginalGone" xml:space="preserve">
     <value>原始訊息已不在可見的聊天記錄中。</value>
+  </data>
+  <data name="ChatTranslateFailed" xml:space="preserve">
+    <value>無法連線至翻譯服務，請稍後再試。</value>
+  </data>
+  <data name="ChatTranslateConsentAccept" xml:space="preserve">
+    <value>翻譯</value>
   </data>
 </root>
