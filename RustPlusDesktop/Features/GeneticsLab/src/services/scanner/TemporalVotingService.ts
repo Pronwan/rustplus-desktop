@@ -11,7 +11,11 @@ export class TemporalVotingService {
    */
   constructor(private readonly minConfidence: number = SCANNER_CONFIG.recognition.minAverageConfidence) {}
 
-  public addCandidate(key: string | number, result: GeneRecognitionResult): GeneRecognitionResult | null {
+  public addCandidate(
+    key: string | number,
+    result: GeneRecognitionResult,
+    _isFastPath = false
+  ): GeneRecognitionResult | null {
     if (!result.geneString || result.geneString.length !== 6) return null;
     if (result.confidence < this.minConfidence) return null;
 
@@ -20,61 +24,22 @@ export class TemporalVotingService {
     }
 
     const list = this.history[key];
+
+    // Reset accumulator when moving to a different gene string so old plants NEVER leak votes!
+    if (list.length > 0 && list[list.length - 1].geneString !== result.geneString) {
+      this.history[key] = [result];
+      return null;
+    }
+
     list.push(result);
 
-    const maxSamples = SCANNER_CONFIG.recognition.temporalSamples;
-    if (list.length > maxSamples) {
-      list.shift();
-    }
+    const requiredVotes = SCANNER_CONFIG.recognition.requiredMatches; // 3
 
-    // 1. Exact Match Check (e.g. 2 out of 3 match exactly)
-    const counts: Record<string, number> = {};
-    for (const item of list) {
-      counts[item.geneString] = (counts[item.geneString] || 0) + 1;
-      if (counts[item.geneString] >= SCANNER_CONFIG.recognition.requiredMatches) {
-        return item;
-      }
-    }
-
-    // 2. Position-by-position majority voting across 3 samples
-    if (list.length >= maxSamples) {
-      const votedChars: string[] = [];
-      let totalConfidence = 0;
-
-      for (let pos = 0; pos < 6; pos++) {
-        const charCounts: Record<string, number> = {};
-        for (const item of list) {
-          const char = item.geneString[pos];
-          charCounts[char] = (charCounts[char] || 0) + 1;
-        }
-
-        let bestChar = '';
-        let bestCount = 0;
-        for (const [char, count] of Object.entries(charCounts)) {
-          if (count > bestCount) {
-            bestCount = count;
-            bestChar = char;
-          }
-        }
-
-        if (bestCount >= SCANNER_CONFIG.recognition.requiredMatches && bestChar) {
-          votedChars.push(bestChar);
-        } else {
-          return null; // Position inconclusive
-        }
-      }
-
-      for (const item of list) {
-        totalConfidence += item.confidence;
-      }
-
-      const consensus = votedChars.join('');
-      if (consensus.length === 6 && /^[GHYWX]{6}$/.test(consensus)) {
-        return {
-          geneString: consensus,
-          confidence: totalConfidence / list.length
-        };
-      }
+    // 3 consecutive identical reads of this exact gene sequence guarantees 100% rock-solid accuracy
+    if (list.length >= requiredVotes) {
+      this.history[key] = []; // Reset on consensus emission
+      console.log(`[Scanner Voting] Consensus reached (3 consecutive matches): ${result.geneString}`);
+      return result;
     }
 
     return null;

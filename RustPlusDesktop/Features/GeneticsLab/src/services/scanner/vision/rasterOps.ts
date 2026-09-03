@@ -324,14 +324,14 @@ export interface BadgeFilterOptions {
 }
 
 export const DEFAULT_BADGE_FILTER_OPTIONS: BadgeFilterOptions = {
-  minSide: 5,
+  minSide: 3, // Allow small badges (3-14px) at low UI scales like 0.5 - 0.7
   maxSideFraction: 0.2,
-  minPixelCount: 20,
-  minFillRatio: 0.35,
-  minAspect: 0.45,
-  maxAspect: 2.4,
-  minColorStrength: 0.35,
-  maxCandidates: 48
+  minPixelCount: 6, // Allow small badges
+  minFillRatio: 0.18,
+  minAspect: 0.38,
+  maxAspect: 2.6,
+  minColorStrength: 0.14, // Allow low-contrast / antialiased small badges
+  maxCandidates: 96
 };
 
 export function filterBadgeCandidates(
@@ -375,7 +375,8 @@ export function detectBadgeCandidates(
   sizeReference?: { width: number; height: number }
 ): BadgeComponent[] {
   const mask = buildBadgeMask(frame, maskOptions);
-  const presence = cleanBadgeMask(mask);
+  // Do NOT erode small badges (openIterations = 0) so thin 1-2px badge rings at 0.5-0.7 UI scales are never deleted!
+  const presence = cleanBadgeMask(mask, 0);
   const components = findComponents(presence, mask);
   const reference = sizeReference ?? frame;
   return filterBadgeCandidates(components, reference.width, reference.height, filterOptions);

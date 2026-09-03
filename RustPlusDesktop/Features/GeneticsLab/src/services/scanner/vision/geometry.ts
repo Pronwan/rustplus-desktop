@@ -69,11 +69,11 @@ export interface RowGroupingOptions {
 export const DEFAULT_ROW_GROUPING_OPTIONS: RowGroupingOptions = {
   readingDirection: { x: 1, y: 0 },
   minDirectionalConfidence: 0.15,
-  bandFactor: 0.7,
-  maxSizeRatio: 1.7,
-  minSpacingFactor: 0.8,
-  maxSpacingFactor: 3.4,
-  maxSpacingVariation: 0.35,
+  bandFactor: 0.85,
+  maxSizeRatio: 2.0,
+  minSpacingFactor: 0.5,
+  maxSpacingFactor: 5.2, // Accommodate dashes '-' between badges in inventory panels
+  maxSpacingVariation: 0.5,
   paddingFactor: 0.28
 };
 
