@@ -6273,6 +6273,9 @@ You can find more information on the server&apos;s official website:
   <data name="ChatRefusedFailed" xml:space="preserve">
     <value>That could not be sent. Try again in a moment.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Watch the language — warning {0} of {1}. Keep it clean, or the next one is a timeout.</value>
+  </data>
   <data name="ProfileOpenSteam" xml:space="preserve">
     <value>Open Steam profile</value>
   </data>

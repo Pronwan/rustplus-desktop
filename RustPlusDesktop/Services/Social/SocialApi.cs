@@ -25,6 +25,12 @@ public enum ChatPostResult
     /// <summary>Timed out or banned. The bar above the box says until when.</summary>
     Sanctioned,
 
+    /// <summary>
+    /// Profanity, still inside the warnings. The line was refused and counted; the count travels
+    /// back so the notice can say how close the next slip is to a timeout.
+    /// </summary>
+    ProfanityWarning,
+
     /// <summary>The account is too new to post. Costs a spammer time, which is the point.</summary>
     TooNew,
 
@@ -39,6 +45,20 @@ public enum ChatPostResult
 
     /// <summary>Anything else, including not reaching the platform at all.</summary>
     Failed,
+}
+
+/// <summary>
+/// The result of trying to post a line, with the little that a refusal sometimes carries with it.
+///
+/// A plain enum lost the one number a profanity warning is about — which warning this is, and how
+/// many there are before the room stops warning. This keeps the enum for every caller that only
+/// cares whether it went through, and hangs the count off the side for the one notice that needs it.
+/// </summary>
+public readonly record struct ChatPostOutcome(ChatPostResult Result, int WarningNumber = 0, int WarningMax = 0)
+{
+    public static readonly ChatPostOutcome Ok = new(ChatPostResult.Ok);
+
+    public static ChatPostOutcome Of(ChatPostResult result) => new(result);
 }
 
 public sealed record SocialSettings(
@@ -732,7 +752,7 @@ public static class SocialApi
     /// waiting, one by rewriting the message. Collapsing them into "it did not work" leaves the
     /// user guessing which, and the guess is usually "the app is broken".
     /// </summary>
-    public static async Task<ChatPostResult> PostChatAsync(string body, string room = ChatRooms.Public, string? replyToId = null)
+    public static async Task<ChatPostOutcome> PostChatAsync(string body, string room = ChatRooms.Public, string? replyToId = null)
     {
         try
         {
@@ -740,7 +760,7 @@ public static class SocialApi
             await CloudApiClient.CallApiAsync("social/chat", HttpMethod.Post, payload: new { body, room, reply_to = replyToId, is_supporter = isPremium, is_premium = isPremium })
                 .ConfigureAwait(false);
 
-            return ChatPostResult.Ok;
+            return ChatPostOutcome.Ok;
         }
         catch (CloudApiException ex)
         {
@@ -748,19 +768,46 @@ public static class SocialApi
             // because the platform may wrap it.
             var reason = ex.Reason ?? "";
 
-            if (reason.Contains("consent_required", StringComparison.Ordinal)) return ChatPostResult.ConsentRequired;
-            if (reason.Contains("sanctioned", StringComparison.Ordinal)) return ChatPostResult.Sanctioned;
-            if (reason.Contains("account_too_new", StringComparison.Ordinal)) return ChatPostResult.TooNew;
-            if (reason.Contains("link_not_allowed", StringComparison.Ordinal)) return ChatPostResult.LinkNotAllowed;
-            if (reason.Contains("duplicate", StringComparison.Ordinal)) return ChatPostResult.Duplicate;
-            if (reason.Contains("empty", StringComparison.Ordinal)) return ChatPostResult.Empty;
+            // The filter warned rather than muted: "profanity_warning:<n>:<max>". Pull the two
+            // numbers out so the notice can count down to the timeout rather than just scolding.
+            if (reason.Contains("profanity_warning", StringComparison.Ordinal))
+            {
+                return ParseProfanityWarning(reason);
+            }
 
-            return ChatPostResult.Failed;
+            if (reason.Contains("consent_required", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.ConsentRequired);
+            if (reason.Contains("sanctioned", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.Sanctioned);
+            if (reason.Contains("account_too_new", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.TooNew);
+            if (reason.Contains("link_not_allowed", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.LinkNotAllowed);
+            if (reason.Contains("duplicate", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.Duplicate);
+            if (reason.Contains("empty", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.Empty);
+
+            return ChatPostOutcome.Of(ChatPostResult.Failed);
         }
         catch
         {
-            return ChatPostResult.Failed;
+            return ChatPostOutcome.Of(ChatPostResult.Failed);
         }
+    }
+
+    /// <summary>
+    /// Reads "profanity_warning:&lt;n&gt;:&lt;max&gt;" out of the refusal. Falls back to a bare
+    /// warning if the shape is anything but the two numbers we sent it as — a warning with no count
+    /// still warns, which is the part that matters.
+    /// </summary>
+    private static ChatPostOutcome ParseProfanityWarning(string reason)
+    {
+        var start = reason.IndexOf("profanity_warning", StringComparison.Ordinal);
+        var parts = reason[start..].Split(':');
+
+        if (parts.Length >= 3
+            && int.TryParse(parts[1], out var number)
+            && int.TryParse(new string(parts[2].TakeWhile(char.IsDigit).ToArray()), out var max))
+        {
+            return new ChatPostOutcome(ChatPostResult.ProfanityWarning, number, max);
+        }
+
+        return ChatPostOutcome.Of(ChatPostResult.ProfanityWarning);
     }
 
     /// <summary>
