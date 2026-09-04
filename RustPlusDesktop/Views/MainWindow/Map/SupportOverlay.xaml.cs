@@ -188,8 +188,17 @@ public partial class SupportOverlay : UserControl
 
     private void ComposeAttach_Click(object sender, RoutedEventArgs e)
     {
-        foreach (var path in PickFiles())
+        var (accepted, rejected) = SplitBySize(PickFiles());
+
+        foreach (var path in accepted)
             _composeAttachments.Add(new AttachmentPickVm(path));
+
+        if (rejected.Count > 0)
+        {
+            ComposeError.Text = TooLargeMessage(rejected);
+            ComposeError.Visibility = Visibility.Visible;
+        }
+
         UpdateComposeAttachHint();
     }
 
@@ -213,7 +222,7 @@ public partial class SupportOverlay : UserControl
         var body = ComposeBody.Text?.Trim() ?? "";
         if (subject.Length == 0 || body.Length == 0)
         {
-            ComposeError.Text = "A subject and some detail are needed.";
+            ComposeError.Text = RustPlusDesk.Helpers.Loc.Text("SupportNeedSubjectAndDetail", "A subject and some detail are needed.");
             ComposeError.Visibility = Visibility.Visible;
             return;
         }
@@ -235,7 +244,7 @@ public partial class SupportOverlay : UserControl
             var ok = await SupportApi.CreateTicketAsync(category, subject, body, DesktopContext(), files, sanctionId).ConfigureAwait(true);
             if (!ok)
             {
-                ComposeError.Text = "That could not be sent. Try again in a moment.";
+                ComposeError.Text = RustPlusDesk.Helpers.Loc.Text("SupportSendFailed", "That could not be sent. Try again in a moment.");
                 ComposeError.Visibility = Visibility.Visible;
                 return;
             }
@@ -286,8 +295,8 @@ public partial class SupportOverlay : UserControl
         ReplyBar.Visibility = locked ? Visibility.Collapsed : Visibility.Visible;
         ThreadClosed.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
         ThreadClosed.Text = detail.Status == "resolved"
-            ? "This ticket is resolved. Open a new ticket if you still need help."
-            : "This ticket is closed.";
+            ? RustPlusDesk.Helpers.Loc.Text("SupportTicketResolved", "This ticket is resolved. Open a new ticket if you still need help.")
+            : RustPlusDesk.Helpers.Loc.Text("SupportTicketClosed", "This ticket is closed.");
         ReplyBox.Text = "";
         _replyAttachments.Clear();
 
@@ -300,8 +309,12 @@ public partial class SupportOverlay : UserControl
 
     private void ReplyAttach_Click(object sender, RoutedEventArgs e)
     {
-        foreach (var path in PickFiles())
+        var (accepted, rejected) = SplitBySize(PickFiles());
+
+        foreach (var path in accepted)
             _replyAttachments.Add(new AttachmentPickVm(path));
+
+        if (rejected.Count > 0) ThreadStatus.Text = TooLargeMessage(rejected);
     }
 
     private void RemoveReplyAttachment_Click(object sender, RoutedEventArgs e)
@@ -352,6 +365,41 @@ public partial class SupportOverlay : UserControl
 
     // ── Helpers ─────────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Largest file we will attach. There was no ceiling at all, and the picker
+    /// offers .zip, .dmp and .mp4 — any of which runs to hundreds of megabytes.
+    /// The server takes more than this in its request validation, but its media
+    /// pipeline caps lower, so an oversized file was accepted here and then
+    /// failed somewhere the reporter could not see. Refusing it by name, before
+    /// anything is sent, is the version they can act on.
+    /// </summary>
+    private const long MaxAttachmentBytes = 3L * 1024 * 1024;
+
+    /// <summary>Splits picked paths into what we will send and what was too big.</summary>
+    private static (List<string> Accepted, List<string> Rejected) SplitBySize(IEnumerable<string> paths)
+    {
+        var accepted = new List<string>();
+        var rejected = new List<string>();
+
+        foreach (var path in paths)
+        {
+            long size;
+            try { size = new FileInfo(path).Length; }
+            catch { continue; }   // vanished between the dialog closing and this
+
+            if (size > MaxAttachmentBytes) rejected.Add(System.IO.Path.GetFileName(path));
+            else accepted.Add(path);
+        }
+
+        return (accepted, rejected);
+    }
+
+    private static string TooLargeMessage(IReadOnlyList<string> rejected) =>
+        string.Format(
+            System.Globalization.CultureInfo.CurrentCulture,
+            RustPlusDesk.Helpers.Loc.Text("SupportAttachmentTooLarge", "Not attached — {0} is larger than {1} MB."),
+            string.Join(", ", rejected),
+            MaxAttachmentBytes / (1024 * 1024));
     private static IEnumerable<string> PickFiles()
     {
         var dialog = new OpenFileDialog
@@ -488,13 +536,21 @@ public partial class SupportOverlay : UserControl
 
         public static string CategoryLabelFor(string c) => c switch
         {
-            "appeal" => "Appeal", "bug" => "Bug", "feature" => "Feature", "help" => "Help", _ => "Other",
+            "appeal" => RustPlusDesk.Helpers.Loc.Text("SupportCatAppeal", "Appeal"),
+            "bug" => RustPlusDesk.Helpers.Loc.Text("SupportCatBug", "Bug"),
+            "feature" => RustPlusDesk.Helpers.Loc.Text("SupportCatFeature", "Feature"),
+            "help" => RustPlusDesk.Helpers.Loc.Text("SupportCatHelp", "Help"),
+            _ => RustPlusDesk.Helpers.Loc.Text("SupportCatOther", "Other"),
         };
 
         public static string StatusLabelFor(string s) => s switch
         {
-            "open" => "Open", "in_progress" => "In progress", "awaiting_user" => "Awaiting you",
-            "resolved" => "Resolved", "closed" => "Closed", _ => s,
+            "open" => RustPlusDesk.Helpers.Loc.Text("SupportStatusOpen", "Open"),
+            "in_progress" => RustPlusDesk.Helpers.Loc.Text("SupportStatusInProgress", "In progress"),
+            "awaiting_user" => RustPlusDesk.Helpers.Loc.Text("SupportStatusAwaitingUser", "Awaiting you"),
+            "resolved" => RustPlusDesk.Helpers.Loc.Text("SupportStatusResolved", "Resolved"),
+            "closed" => RustPlusDesk.Helpers.Loc.Text("SupportStatusClosed", "Closed"),
+            _ => s,
         };
     }
 

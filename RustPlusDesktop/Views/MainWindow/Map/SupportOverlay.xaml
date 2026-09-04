@@ -55,7 +55,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{StaticResource SupAccent}" FontSize="20" />
-                    <TextBlock Text="Tickets" Foreground="{StaticResource SupText}" FontSize="17" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource SupportTitle}" Foreground="{StaticResource SupText}" FontSize="17" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" />
                 </StackPanel>
                 <ui:Button Grid.Column="1" x:Name="BtnClose" Appearance="Transparent" Padding="6" Click="Close_Click">
                     <ui:SymbolIcon Symbol="Dismiss24" Foreground="{StaticResource SupMuted}" />
@@ -71,7 +71,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ui:Button Grid.Row="0" x:Name="BtnNewTicket" Content="New ticket" Icon="{ui:SymbolIcon Add24}"
+                    <ui:Button Grid.Row="0" x:Name="BtnNewTicket" Content="{DynamicResource SupportNewTicket}" Icon="{ui:SymbolIcon Add24}"
                                Appearance="Primary" Height="38" Margin="0,0,0,14" HorizontalAlignment="Stretch" Click="NewTicket_Click" />
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
                         <ItemsControl x:Name="TicketsList">
@@ -100,20 +100,20 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <TextBlock x:Name="TicketsEmpty" Grid.Row="1" Text="No tickets yet." Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,32,0,0" Visibility="Collapsed" />
+                    <TextBlock x:Name="TicketsEmpty" Grid.Row="1" Text="{DynamicResource SupportNoTickets}" Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,32,0,0" Visibility="Collapsed" />
                 </Grid>
 
                 <!--  Tickets: compose  -->
                 <Grid x:Name="ComposeView" Visibility="Collapsed">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
                         <StackPanel>
-                            <TextBlock Text="CATEGORY" Style="{StaticResource SupLabel}" />
+                            <TextBlock Text="{DynamicResource SupportCategory}" Style="{StaticResource SupLabel}" />
                             <ComboBox x:Name="ComposeCategory" Foreground="{StaticResource SupText}"
                                       ItemTemplate="{StaticResource CategoryItemTemplate}"
                                       SelectionChanged="ComposeCategory_SelectionChanged" Margin="0,0,0,16" />
-                            <TextBlock Text="SUBJECT" Style="{StaticResource SupLabel}" />
+                            <TextBlock Text="{DynamicResource SupportSubject}" Style="{StaticResource SupLabel}" />
                             <ui:TextBox x:Name="ComposeSubject" MaxLength="160" Margin="0,0,0,16" />
-                            <TextBlock Text="DETAILS" Style="{StaticResource SupLabel}" />
+                            <TextBlock Text="{DynamicResource SupportDetails}" Style="{StaticResource SupLabel}" />
                             <ui:TextBox x:Name="ComposeBody" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" Margin="0,0,0,12" />
 
                             <!--  Previews of what has been attached, before it is sent.  -->
@@ -133,7 +133,7 @@
                                                     <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </Border>
-                                            <ui:Button Tag="{Binding}" Click="RemoveComposeAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="Remove">
+                                            <ui:Button Tag="{Binding}" Click="RemoveComposeAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">
                                                 <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
                                             </ui:Button>
                                         </Grid>
@@ -142,14 +142,14 @@
                             </ItemsControl>
 
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                <ui:Button x:Name="BtnComposeAttach" Content="Attach files" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Click="ComposeAttach_Click" />
+                                <ui:Button x:Name="BtnComposeAttach" Content="{DynamicResource SupportAttachFiles}" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Click="ComposeAttach_Click" />
                                 <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{StaticResource SupMuted}" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0" />
                             </StackPanel>
-                            <CheckBox x:Name="ComposeAppeal" Content="This is an appeal of my current mute" Foreground="{StaticResource SupText}" Visibility="Collapsed" Margin="0,0,0,16" />
+                            <CheckBox x:Name="ComposeAppeal" Content="{DynamicResource SupportAppeal}" Foreground="{StaticResource SupText}" Visibility="Collapsed" Margin="0,0,0,16" />
                             <TextBlock x:Name="ComposeError" Foreground="#FFE8695C" FontSize="11" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,12" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <ui:Button Content="Cancel" Appearance="Secondary" Click="ComposeCancel_Click" />
-                                <ui:Button x:Name="BtnComposeSubmit" Content="Submit" Appearance="Primary" Margin="10,0,0,0" Click="ComposeSubmit_Click" />
+                                <ui:Button Content="{DynamicResource SupportCancel}" Appearance="Secondary" Click="ComposeCancel_Click" />
+                                <ui:Button x:Name="BtnComposeSubmit" Content="{DynamicResource SupportSubmit}" Appearance="Primary" Margin="10,0,0,0" Click="ComposeSubmit_Click" />
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
@@ -163,7 +163,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Margin="0,0,0,14">
-                        <ui:Button Content="Back to tickets" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="8,4" Click="ThreadBack_Click" />
+                        <ui:Button Content="{DynamicResource SupportBackToTickets}" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="8,4" Click="ThreadBack_Click" />
                         <TextBlock x:Name="ThreadSubject" Foreground="{StaticResource SupText}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,10,0,0" />
                         <TextBlock x:Name="ThreadStatus" Foreground="{StaticResource SupMuted}" FontSize="11" Margin="0,4,0,0" />
                     </StackPanel>
@@ -225,7 +225,7 @@
                                                 <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </Border>
-                                        <ui:Button Tag="{Binding}" Click="RemoveReplyAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="Remove">
+                                        <ui:Button Tag="{Binding}" Click="RemoveReplyAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">
                                             <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
                                         </ui:Button>
                                     </Grid>
@@ -242,11 +242,11 @@
                             <ui:Button Grid.Column="0" x:Name="BtnReplyAttach" Appearance="Transparent" Padding="6" Click="ReplyAttach_Click">
                                 <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" />
                             </ui:Button>
-                            <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="Write a reply…" Margin="6,0" />
-                            <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="Send" Appearance="Primary" Click="ReplySend_Click" />
+                            <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="{DynamicResource SupportReplyPlaceholder}" Margin="6,0" />
+                            <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="{DynamicResource SupportSend}" Appearance="Primary" Click="ReplySend_Click" />
                         </Grid>
                     </StackPanel>
-                    <TextBlock Grid.Row="2" x:Name="ThreadClosed" Text="This ticket is closed." Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" Margin="0,12,0,0" Visibility="Collapsed" />
+                    <TextBlock Grid.Row="2" x:Name="ThreadClosed" Text="{DynamicResource SupportTicketClosed}" Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" Margin="0,12,0,0" Visibility="Collapsed" />
                 </Grid>
 
             </Grid>

@@ -5720,4 +5720,91 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>言葉づかいに注意してください — 警告 {0} / {1}。次は一時的な発言停止になります。</value>
   </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>チケット</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>新規チケット</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>まだチケットはありません。</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>カテゴリ</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>件名</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>ファイルを添付</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>現在のミュートに対する異議申し立てです</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>チケット一覧に戻る</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>返信を入力…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>このチケットは終了しています。</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>このチケットは解決済みです。まだお困りの場合は新しいチケットを作成してください。</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>件名と詳細を入力してください。</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>送信できませんでした。少し時間をおいて再度お試しください。</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>異議申し立て</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>不具合</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>機能要望</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>ヘルプ</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>未対応</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>対応中</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>返信待ち</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>解決済み</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>添付されていません — {0} は {1} MB を超えています。</value>
+  </data>
 </root>

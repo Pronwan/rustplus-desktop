@@ -6601,4 +6601,91 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Cuida el lenguaje: aviso {0} de {1}. Mantenlo limpio o la próxima vez será una expulsión temporal.</value>
   </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>Nuevo ticket</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>Aún no hay tickets.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>CATEGORÍA</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>ASUNTO</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>DETALLES</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>Adjuntar archivos</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>Esto es una apelación de mi silenciamiento actual</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>Volver a los tickets</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>Escribe una respuesta…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>Este ticket está cerrado.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>Este ticket está resuelto. Abre uno nuevo si aún necesitas ayuda.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>Se necesitan un asunto y algún detalle.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>No se pudo enviar. Inténtalo de nuevo en un momento.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>Apelación</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>Función</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>Ayuda</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>Abierto</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>En curso</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>Esperando tu respuesta</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>Resuelto</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>Cerrado</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>No adjuntado: {0} supera los {1} MB.</value>
+  </data>
 </root>

@@ -6642,4 +6642,91 @@ You can find more information on the server&apos;s official website:
   <data name="ChatTranslateConsentAccept" xml:space="preserve">
     <value>Translate</value>
   </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>New ticket</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>No tickets yet.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>CATEGORY</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>SUBJECT</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>DETAILS</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>Attach files</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>This is an appeal of my current mute</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>Back to tickets</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>Write a reply…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>This ticket is closed.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>This ticket is resolved. Open a new ticket if you still need help.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>A subject and some detail are needed.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>That could not be sent. Try again in a moment.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>Appeal</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>Bug</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>Feature</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>Awaiting you</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>Not attached — {0} is larger than {1} MB.</value>
+  </data>
 </root>

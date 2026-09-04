@@ -1612,4 +1612,91 @@
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>注意用詞 — 第 {0} 次警告，共 {1} 次。請保持文明，否則下次將被禁言。</value>
   </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>工單</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>新增工單</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>尚無工單。</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>分類</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>主旨</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>附加檔案</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>這是對我目前禁言的申訴</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>送出</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>返回工單列表</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>撰寫回覆…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>傳送</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>此工單已關閉。</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>此工單已解決。如果仍需協助，請新增工單。</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>需要填寫主旨和詳細內容。</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>傳送失敗，請稍後再試。</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>申訴</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>功能建議</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>說明</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>待處理</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>處理中</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>等待你的回覆</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>已解決</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>已關閉</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>未附加 — {0} 超過 {1} MB。</value>
+  </data>
 </root>
