@@ -48,6 +48,12 @@ public partial class SupportOverlay : UserControl
     /// <summary>Paths auto-attached for a bug report, tracked so switching category can drop them.</summary>
     private readonly List<string> _autoDiagnostics = new();
 
+    /// <summary>
+    /// Files this client has uploaded this session, keyed by "name|size", so a message it sent shows
+    /// its own image straight from the local copy instead of fetching it back from the server.
+    /// </summary>
+    private readonly Dictionary<string, string> _localUploads = new();
+
     public SupportOverlay()
     {
         InitializeComponent();
@@ -224,6 +230,7 @@ public partial class SupportOverlay : UserControl
         BtnComposeSubmit.IsEnabled = false;
         try
         {
+            RecordLocalUploads(_composeAttachments);
             var files = _composeAttachments.Select(a => a.Path).ToList();
             var ok = await SupportApi.CreateTicketAsync(category, subject, body, DesktopContext(), files, sanctionId).ConfigureAwait(true);
             if (!ok)
@@ -257,6 +264,12 @@ public partial class SupportOverlay : UserControl
         _openTicketId = id;
         ThreadSubject.Text = detail.Subject;
         ThreadStatus.Text = $"{TicketVm.CategoryLabelFor(detail.Category)} · {TicketVm.StatusLabelFor(detail.Status)}";
+
+        // Before the thumbnails start loading, point any attachment this client uploaded at its
+        // local file, so its image renders inline without a server fetch.
+        SeedLocalUploads(detail.Attachments);
+        foreach (var m in detail.Messages)
+            SeedLocalUploads(m.Attachments);
 
         _messages.Clear();
         _messages.Add(MessageVm.Original(detail, id));
@@ -302,6 +315,7 @@ public partial class SupportOverlay : UserControl
         BtnReplySend.IsEnabled = false;
         try
         {
+            RecordLocalUploads(_replyAttachments);
             var files = _replyAttachments.Select(a => a.Path).ToList();
             var ok = await SupportApi.ReplyAsync(_openTicketId, body.Length == 0 ? "(see attachment)" : body, files).ConfigureAwait(true);
             if (ok)
@@ -348,6 +362,24 @@ public partial class SupportOverlay : UserControl
         ["app_version"] = Helpers.VersionHelper.GetClientVersion(),
         ["os"] = Environment.OSVersion.VersionString,
     };
+
+    /// <summary>Remembers the local path of each file being sent, keyed by name + byte size.</summary>
+    private void RecordLocalUploads(IEnumerable<AttachmentPickVm> picks)
+    {
+        foreach (var p in picks)
+        {
+            try { _localUploads[$"{p.Name}|{new FileInfo(p.Path).Length}"] = p.Path; }
+            catch { /* a file that vanished is simply not remembered */ }
+        }
+    }
+
+    /// <summary>Points server attachments at their local copy (by name + size) so images show inline.</summary>
+    private void SeedLocalUploads(IReadOnlyList<TicketAttachment> attachments)
+    {
+        foreach (var a in attachments)
+            if (_localUploads.TryGetValue($"{a.Name}|{a.Size}", out var localPath))
+                SupportApi.SeedAttachmentCache(a.Id, a.Name, localPath);
+    }
 
     private static Brush MakeBrush(string hex)
     {
