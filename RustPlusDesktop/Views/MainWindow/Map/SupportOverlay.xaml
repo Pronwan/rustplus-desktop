@@ -21,6 +21,11 @@
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+
+        <!--  Category items render white on the dark dropdown; the default is dark-on-dark.  -->
+        <DataTemplate x:Key="CategoryItemTemplate">
+            <TextBlock Text="{Binding}" Foreground="{StaticResource SupText}" />
+        </DataTemplate>
     </UserControl.Resources>
 
     <Border Width="440"
@@ -30,34 +35,22 @@
         <Grid Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <Grid Grid.Row="0" Margin="16,14,12,10">
+            <Grid Grid.Row="0" Margin="16,14,12,12">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{StaticResource SupAccent}" FontSize="20" />
-                    <TextBlock Text="Support" Foreground="{StaticResource SupText}" FontSize="16" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
+                    <TextBlock Text="Tickets" Foreground="{StaticResource SupText}" FontSize="16" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
                 </StackPanel>
                 <ui:Button x:Name="BtnClose" HorizontalAlignment="Right" Appearance="Transparent" Padding="6" Click="Close_Click">
                     <ui:SymbolIcon Symbol="Dismiss24" Foreground="{StaticResource SupMuted}" />
                 </ui:Button>
             </Grid>
 
-            <!--  Tabs  -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="16,0,16,8">
-                <ToggleButton x:Name="TabTickets" Content="Tickets" IsChecked="True" Click="TabTickets_Click"
-                              Foreground="{StaticResource SupText}" Background="Transparent" BorderThickness="0" Padding="10,6" Cursor="Hand" />
-                <ToggleButton x:Name="TabNotifications" Content="Notifications" Click="TabNotifications_Click"
-                              Foreground="{StaticResource SupMuted}" Background="Transparent" BorderThickness="0" Padding="10,6" Cursor="Hand" Margin="4,0,0,0" />
-                <Border x:Name="UnreadPill" Background="{StaticResource SupAccent}" CornerRadius="9" Padding="6,1" Margin="6,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">
-                    <TextBlock x:Name="UnreadCount" Text="0" Foreground="White" FontSize="10" FontWeight="Bold" />
-                </Border>
-            </StackPanel>
-
             <!--  Content  -->
-            <Grid Grid.Row="2" Margin="0,0,0,0">
+            <Grid Grid.Row="1">
 
                 <!--  Tickets: list  -->
                 <Grid x:Name="TicketsView">
@@ -66,7 +59,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <ui:Button Grid.Row="0" x:Name="BtnNewTicket" Content="New ticket" Icon="{ui:SymbolIcon Add24}"
-                               Appearance="Primary" Margin="16,4,16,10" HorizontalAlignment="Stretch" Click="NewTicket_Click" />
+                               Appearance="Primary" Margin="16,0,16,10" HorizontalAlignment="Stretch" Click="NewTicket_Click" />
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <ItemsControl x:Name="TicketsList" Margin="12,0,12,12">
                             <ItemsControl.ItemTemplate>
@@ -97,11 +90,12 @@
                 </Grid>
 
                 <!--  Tickets: compose  -->
-                <Grid x:Name="ComposeView" Visibility="Collapsed" Margin="16,4,16,12">
+                <Grid x:Name="ComposeView" Visibility="Collapsed" Margin="16,0,16,12">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <TextBlock Text="CATEGORY" Style="{StaticResource SupHeading}" />
-                            <ComboBox x:Name="ComposeCategory" Margin="0,4,0,10" />
+                            <ComboBox x:Name="ComposeCategory" Foreground="{StaticResource SupText}"
+                                      ItemTemplate="{StaticResource CategoryItemTemplate}" Margin="0,4,0,10" />
                             <TextBlock Text="SUBJECT" Style="{StaticResource SupHeading}" />
                             <ui:TextBox x:Name="ComposeSubject" MaxLength="160" Margin="0,4,0,10" />
                             <TextBlock Text="DETAILS" Style="{StaticResource SupHeading}" />
@@ -127,7 +121,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Margin="16,4,16,8">
+                    <StackPanel Grid.Row="0" Margin="16,0,16,8">
                         <ui:Button Content="Back to tickets" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="0,4" Click="ThreadBack_Click" />
                         <TextBlock x:Name="ThreadSubject" Foreground="{StaticResource SupText}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,6,0,0" />
                         <TextBlock x:Name="ThreadStatus" Foreground="{StaticResource SupMuted}" FontSize="11" Margin="0,2,0,0" />
@@ -162,35 +156,6 @@
                         <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="Send" Appearance="Primary" Click="ReplySend_Click" />
                     </Grid>
                     <TextBlock Grid.Row="2" x:Name="ThreadClosed" Text="This ticket is closed." Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" Margin="0,0,0,14" Visibility="Collapsed" />
-                </Grid>
-
-                <!--  Notifications  -->
-                <Grid x:Name="NotificationsView" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <ui:Button Grid.Row="0" x:Name="BtnMarkAll" Content="Mark all read" Icon="{ui:SymbolIcon CheckmarkCircle24}" Appearance="Secondary" Margin="16,4,16,10" HorizontalAlignment="Right" Click="MarkAll_Click" />
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl x:Name="NotificationsList" Margin="12,0,12,12">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{Binding Background}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,8" Cursor="Hand"
-                                            MouseLeftButtonUp="NotificationRow_Click" Tag="{Binding Id}">
-                                        <StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource SupText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                            <TextBlock Text="{Binding Body}" Foreground="{StaticResource SupMuted}" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
-                                            <TextBlock Text="{Binding When}" Foreground="{StaticResource SupMuted}" FontSize="10" Margin="16,4,0,0" />
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                    <TextBlock x:Name="NotificationsEmpty" Grid.Row="1" Text="Nothing here yet." Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0" Visibility="Collapsed" />
                 </Grid>
 
             </Grid>

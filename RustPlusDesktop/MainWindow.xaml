@@ -387,13 +387,80 @@
                         ToolTip="Network Traffic &amp; Bandwidth Monitor">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <ui:SymbolIcon Symbol="DataUsage24" Foreground="{DynamicResource Accent}" FontSize="15" Margin="0,0,5,0" />
+                            <!--  Fixed width so the title bar does not jitter as the rate changes.  -->
                             <TextBlock x:Name="TxtTrafficBadge"
+                                       Width="104"
                                        FontSize="11"
                                        Foreground="#CCCCCC"
                                        VerticalAlignment="Center"
+                                       TextAlignment="Left"
                                        Text="{Binding Source={x:Static services:NetworkTrafficMonitor.Instance}, Path=BandwidthSummaryBadge}" />
                         </StackPanel>
                     </ui:Button>
+                    <!--  Notification centre. A bell with an unread badge, opening a dropdown of the
+                          same inbox the dashboard and the client share. -->
+                    <Grid VerticalAlignment="Center">
+                        <ui:Button
+                            x:Name="BtnTopNotifications"
+                            Width="36"
+                            Height="36"
+                            Margin="2,6"
+                            Padding="0"
+                            Appearance="Transparent"
+                            Click="BtnTopNotifications_Click"
+                            Icon="{ui:SymbolIcon Symbol=Alert24}"
+                            ToolTip="Notifications" />
+                        <Border x:Name="TopNotifBadge" Visibility="Collapsed"
+                                IsHitTestVisible="False"
+                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,6,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                Background="#FFE5484D" Padding="3,0">
+                            <TextBlock x:Name="TopNotifBadgeText" Foreground="White" FontSize="9"
+                                       FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Popup x:Name="NotificationsPopup" PlacementTarget="{Binding ElementName=BtnTopNotifications}"
+                               Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                            <Border Width="360" Background="#FF0C1116" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,4,8,8">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.5" Color="Black" />
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="12,10,8,8">
+                                        <TextBlock Text="Notifications" Foreground="#FFF4F6FA" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <ui:Button x:Name="BtnMarkAllRead" Content="Mark all read" Appearance="Transparent"
+                                                   FontSize="11" Padding="6,2" HorizontalAlignment="Right" Click="BtnMarkAllRead_Click" />
+                                    </Grid>
+                                    <ScrollViewer Grid.Row="1" MaxHeight="420" VerticalScrollBarVisibility="Auto">
+                                        <Grid>
+                                            <ItemsControl x:Name="TopNotificationsList" Margin="8,0,8,8">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="{Binding Background}" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Cursor="Hand"
+                                                                MouseLeftButtonUp="TopNotificationRow_Click" Tag="{Binding Id}">
+                                                            <StackPanel>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                                    <TextBlock Text="{Binding Title}" Foreground="#FFF4F6FA" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                                </StackPanel>
+                                                                <TextBlock Text="{Binding Body}" Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
+                                                                <TextBlock Text="{Binding When}" Foreground="#FF6B7280" FontSize="10" Margin="16,4,0,0" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <TextBlock x:Name="TopNotificationsEmpty" Text="Nothing here yet." Foreground="#FF94A0B3"
+                                                       HorizontalAlignment="Center" Margin="0,24,0,24" Visibility="Collapsed" />
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </Popup>
+                    </Grid>
                     <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
@@ -4422,29 +4489,18 @@
                                                VerticalAlignment="Center" />
                                 </Border>
                             </Grid>
-                            <!--  Tickets: support, appeals, bugs, and the notification centre. Opens
-                                  the same overlay as the map rail did, but always reachable — the
-                                  map bar only exists once connected. -->
-                            <Grid>
-                                <ui:Button
-                                    x:Name="RailTicketsButton"
-                                    Style="{StaticResource SidebarRailButton}"
-                                    AutomationProperties.Name="Tickets"
-                                    AutomationProperties.HelpText="Support, appeals, bug reports and notifications"
-                                    Click="BtnSupportPanel_Click"
-                                    ToolTip="Tickets"
-                                    Foreground="#FFE8683C"
-                                    Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
-                                <Border x:Name="RailTicketsBadge" Visibility="Collapsed"
-                                        IsHitTestVisible="False"
-                                        HorizontalAlignment="Right" VerticalAlignment="Top"
-                                        Margin="0,2,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                        Background="#FFE5484D" Padding="3,0">
-                                    <TextBlock x:Name="RailTicketsBadgeText" Foreground="White" FontSize="9"
-                                               FontWeight="Bold" HorizontalAlignment="Center"
-                                               VerticalAlignment="Center" />
-                                </Border>
-                            </Grid>
+                            <!--  Tickets: support, appeals, bug reports. Always reachable, unlike the
+                                  map bar which only exists once connected. Unread lives on the title-
+                                  bar bell now, so this button carries no badge of its own. -->
+                            <ui:Button
+                                x:Name="RailTicketsButton"
+                                Style="{StaticResource SidebarRailButton}"
+                                AutomationProperties.Name="Tickets"
+                                AutomationProperties.HelpText="Support, appeals and bug reports"
+                                Click="BtnSupportPanel_Click"
+                                ToolTip="Tickets"
+                                Foreground="#FFE8683C"
+                                Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
                             <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"

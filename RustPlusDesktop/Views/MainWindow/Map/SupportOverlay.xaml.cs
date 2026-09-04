@@ -13,8 +13,9 @@ using RustPlusDesk.Services.Support;
 namespace RustPlusDesk.Views;
 
 /// <summary>
-/// Support, from the client's side: file a ticket about anything, follow the thread, and read the
-/// one inbox everything lands in. A panel rather than a window so it sits where the user already is.
+/// Tickets, from the client's side: file one about anything, follow the thread, and reply. A panel
+/// rather than a window so it sits over the map. The notification centre it used to share space with
+/// now lives in the title bar, so this is only ever about tickets.
 ///
 /// It talks only to <see cref="SupportApi"/> and holds no state the server does not - every action
 /// re-reads, so what the panel shows and what the dashboard shows can never quietly disagree.
@@ -24,21 +25,18 @@ public partial class SupportOverlay : UserControl
     /// <summary>Raised when the user closes the panel, so the host can collapse it.</summary>
     public event EventHandler? CloseRequested;
 
-    /// <summary>Raised with the current unread count whenever it changes, for the rail badge.</summary>
-    public event Action<int>? UnreadChanged;
+    private static readonly Brush CardBrush = MakeBrush("#FF111820");
+    private static readonly Brush StaffBrush = MakeBrush("#FF14202B");
+    private static readonly Brush InternalBrush = MakeBrush("#33E8A33C");
 
-    private static readonly Brush CardBrush = Brush("#FF111820");
-    private static readonly Brush StaffBrush = Brush("#FF14202B");
-    private static readonly Brush InternalBrush = Brush("#33E8A33C");
-    private static readonly Brush UnreadBrush = Brush("#1AE8683C");
-    private static readonly Brush AccentDot = Brush("#FFE8683C");
-    private static readonly Brush MutedDot = Brush("#FF5C6572");
+    /// <summary>The categories to offer when the backend has not answered yet or cannot.</summary>
+    private static readonly IReadOnlyList<string> FallbackCategories = new[] { "appeal", "bug", "feature", "help", "other" };
 
     private readonly ObservableCollection<TicketVm> _tickets = new();
     private readonly ObservableCollection<MessageVm> _messages = new();
-    private readonly ObservableCollection<NotificationVm> _notifications = new();
 
-    private TicketMeta? _meta;
+    private IReadOnlyList<string> _categories = new List<string>();
+    private AppealableSanction? _appealable;
     private string? _openTicketId;
     private List<string> _composeFiles = new();
     private List<string> _replyFiles = new();
@@ -49,14 +47,13 @@ public partial class SupportOverlay : UserControl
         InitializeComponent();
         TicketsList.ItemsSource = _tickets;
         ThreadMessages.ItemsSource = _messages;
-        NotificationsList.ItemsSource = _notifications;
     }
 
-    /// <summary>Reloads everything and drops the user back on the ticket list.</summary>
+    /// <summary>Reloads the list and drops the user back on it.</summary>
     public async void Refresh()
     {
-        ShowTickets();
-        await Task.WhenAll(LoadTicketsAsync(), LoadNotificationsAsync(), LoadMetaAsync()).ConfigureAwait(true);
+        ShowTicketsList();
+        await Task.WhenAll(LoadTicketsAsync(), LoadMetaAsync()).ConfigureAwait(true);
     }
 
     // ── Loading ─────────────────────────────────────────────────────────────
@@ -70,65 +67,31 @@ public partial class SupportOverlay : UserControl
         TicketsEmpty.Visibility = _tickets.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    private async Task LoadNotificationsAsync()
-    {
-        var rows = await SupportApi.GetNotificationsAsync().ConfigureAwait(true);
-        _notifications.Clear();
-        var unread = 0;
-        foreach (var n in rows)
-        {
-            _notifications.Add(new NotificationVm(n));
-            if (!n.Read) unread++;
-        }
-        NotificationsEmpty.Visibility = _notifications.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        SetUnread(unread);
-    }
-
     private async Task LoadMetaAsync()
     {
-        _meta = await SupportApi.GetMetaAsync().ConfigureAwait(true);
-        ComposeCategory.ItemsSource = _meta.Categories.Select(TicketVm.CategoryLabelFor).ToList();
-        if (ComposeCategory.SelectedIndex < 0 && _meta.Categories.Count > 0)
+        var meta = await SupportApi.GetMetaAsync().ConfigureAwait(true);
+
+        // Backend-driven, but never empty: an unreachable meta endpoint must not leave the form with
+        // no category to pick.
+        _categories = meta.Categories.Count > 0 ? meta.Categories : FallbackCategories;
+        _appealable = meta.Appealable;
+
+        ComposeCategory.ItemsSource = _categories.Select(TicketVm.CategoryLabelFor).ToList();
+        if (ComposeCategory.SelectedIndex < 0 && _categories.Count > 0)
         {
-            var helpIndex = _meta.Categories.ToList().FindIndex(c => c == "help");
+            var helpIndex = _categories.ToList().FindIndex(c => c == "help");
             ComposeCategory.SelectedIndex = helpIndex >= 0 ? helpIndex : 0;
         }
-        ComposeAppeal.Visibility = _meta.Appealable != null ? Visibility.Visible : Visibility.Collapsed;
+        ComposeAppeal.Visibility = _appealable != null ? Visibility.Visible : Visibility.Collapsed;
     }
-
-    private void SetUnread(int count)
-    {
-        UnreadCount.Text = count > 99 ? "99+" : count.ToString();
-        UnreadPill.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        UnreadChanged?.Invoke(count);
-    }
-
-    /// <summary>
-    /// Reloads just the notification list and count, without yanking the user out of whatever ticket
-    /// they are reading. Called when a notification arrives live while the panel is open.
-    /// </summary>
-    public async void RefreshNotifications() => await LoadNotificationsAsync().ConfigureAwait(true);
 
     // ── View switching ──────────────────────────────────────────────────────
 
-    private void ShowTickets()
+    private void ShowTicketsList()
     {
-        TabTickets.IsChecked = true;
-        TabNotifications.IsChecked = false;
         TicketsView.Visibility = Visibility.Visible;
         ComposeView.Visibility = Visibility.Collapsed;
         ThreadView.Visibility = Visibility.Collapsed;
-        NotificationsView.Visibility = Visibility.Collapsed;
-    }
-
-    private void ShowNotifications()
-    {
-        TabTickets.IsChecked = false;
-        TabNotifications.IsChecked = true;
-        TicketsView.Visibility = Visibility.Collapsed;
-        ComposeView.Visibility = Visibility.Collapsed;
-        ThreadView.Visibility = Visibility.Collapsed;
-        NotificationsView.Visibility = Visibility.Visible;
     }
 
     private void ShowCompose()
@@ -136,7 +99,6 @@ public partial class SupportOverlay : UserControl
         TicketsView.Visibility = Visibility.Collapsed;
         ComposeView.Visibility = Visibility.Visible;
         ThreadView.Visibility = Visibility.Collapsed;
-        NotificationsView.Visibility = Visibility.Collapsed;
     }
 
     private void ShowThread()
@@ -144,16 +106,11 @@ public partial class SupportOverlay : UserControl
         TicketsView.Visibility = Visibility.Collapsed;
         ComposeView.Visibility = Visibility.Collapsed;
         ThreadView.Visibility = Visibility.Visible;
-        NotificationsView.Visibility = Visibility.Collapsed;
     }
 
     // ── Handlers ────────────────────────────────────────────────────────────
 
     private void Close_Click(object sender, RoutedEventArgs e) => CloseRequested?.Invoke(this, EventArgs.Empty);
-
-    private void TabTickets_Click(object sender, RoutedEventArgs e) => ShowTickets();
-
-    private void TabNotifications_Click(object sender, RoutedEventArgs e) => ShowNotifications();
 
     private void NewTicket_Click(object sender, RoutedEventArgs e)
     {
@@ -165,7 +122,7 @@ public partial class SupportOverlay : UserControl
         ShowCompose();
     }
 
-    private void ComposeCancel_Click(object sender, RoutedEventArgs e) => ShowTickets();
+    private void ComposeCancel_Click(object sender, RoutedEventArgs e) => ShowTicketsList();
 
     private void ComposeAttach_Click(object sender, RoutedEventArgs e)
     {
@@ -192,14 +149,13 @@ public partial class SupportOverlay : UserControl
             return;
         }
 
-        var categories = _meta?.Categories ?? new List<string> { "help" };
-        var category = ComposeCategory.SelectedIndex >= 0 && ComposeCategory.SelectedIndex < categories.Count
-            ? categories[ComposeCategory.SelectedIndex]
+        var category = ComposeCategory.SelectedIndex >= 0 && ComposeCategory.SelectedIndex < _categories.Count
+            ? _categories[ComposeCategory.SelectedIndex]
             : "help";
 
         string? sanctionId = null;
-        if (category == "appeal" && ComposeAppeal.IsChecked == true && _meta?.Appealable != null)
-            sanctionId = _meta.Appealable.Id;
+        if (category == "appeal" && ComposeAppeal.IsChecked == true && _appealable != null)
+            sanctionId = _appealable.Id;
 
         _busy = true;
         BtnComposeSubmit.IsEnabled = false;
@@ -212,7 +168,7 @@ public partial class SupportOverlay : UserControl
                 ComposeError.Visibility = Visibility.Visible;
                 return;
             }
-            ShowTickets();
+            ShowTicketsList();
             await LoadTicketsAsync().ConfigureAwait(true);
         }
         finally
@@ -228,7 +184,8 @@ public partial class SupportOverlay : UserControl
             await OpenTicketAsync(id).ConfigureAwait(true);
     }
 
-    private async Task OpenTicketAsync(string id)
+    /// <summary>Opens a ticket's thread. Public so the notification bell can jump straight to one.</summary>
+    public async Task OpenTicketAsync(string id)
     {
         var detail = await SupportApi.GetTicketAsync(id).ConfigureAwait(true);
         if (detail == null) return;
@@ -257,7 +214,7 @@ public partial class SupportOverlay : UserControl
         await LoadTicketsAsync().ConfigureAwait(true);
     }
 
-    private void ThreadBack_Click(object sender, RoutedEventArgs e) => ShowTickets();
+    private void ThreadBack_Click(object sender, RoutedEventArgs e) => ShowTicketsList();
 
     private void ReplyAttach_Click(object sender, RoutedEventArgs e)
     {
@@ -290,29 +247,6 @@ public partial class SupportOverlay : UserControl
         }
     }
 
-    private async void MarkAll_Click(object sender, RoutedEventArgs e)
-    {
-        await SupportApi.MarkAllNotificationsReadAsync().ConfigureAwait(true);
-        await LoadNotificationsAsync().ConfigureAwait(true);
-    }
-
-    private async void NotificationRow_Click(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is not FrameworkElement fe || fe.Tag is not string id)
-            return;
-
-        var vm = _notifications.FirstOrDefault(n => n.Id == id);
-        await SupportApi.MarkNotificationReadAsync(id).ConfigureAwait(true);
-
-        // A ticket notification opens its ticket right here rather than sending them to the web.
-        if (vm?.TicketId is string ticketId && ticketId.Length > 0)
-        {
-            await OpenTicketAsync(ticketId).ConfigureAwait(true);
-        }
-
-        await LoadNotificationsAsync().ConfigureAwait(true);
-    }
-
     // ── Helpers ─────────────────────────────────────────────────────────────
 
     private static List<string>? PickFiles()
@@ -332,7 +266,7 @@ public partial class SupportOverlay : UserControl
         ["os"] = Environment.OSVersion.VersionString,
     };
 
-    private static Brush Brush(string hex)
+    private static Brush MakeBrush(string hex)
     {
         var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!;
         brush.Freeze();
@@ -396,30 +330,5 @@ public partial class SupportOverlay : UserControl
         }
 
         public static MessageVm Original(TicketDetail d) => new("You", d.Body, d.CreatedAt?.LocalDateTime.ToString("g") ?? "");
-    }
-
-    public sealed class NotificationVm
-    {
-        public string Id { get; }
-        public string Title { get; }
-        public string Body { get; }
-        public string When { get; }
-        public string? TicketId { get; }
-        public Brush Dot { get; }
-        public Brush Background { get; }
-
-        public NotificationVm(NotificationItem n)
-        {
-            Id = n.Id;
-            Title = n.Title;
-            Body = n.Body;
-            When = n.CreatedAt?.LocalDateTime.ToString("g") ?? "";
-            Dot = n.Read ? MutedDot : AccentDot;
-            Background = n.Read ? CardBrush : UnreadBrush;
-            // Ticket notifications carry the id in their url tail: /dashboard/tickets/{id}.
-            TicketId = n.Url is { } url && url.Contains("/tickets/")
-                ? url.Substring(url.LastIndexOf('/') + 1)
-                : null;
-        }
     }
 }
