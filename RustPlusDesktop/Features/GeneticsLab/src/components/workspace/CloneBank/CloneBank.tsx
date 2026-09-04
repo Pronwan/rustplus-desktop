@@ -545,9 +545,33 @@ export const CloneBank: React.FC = () => {
             </Box>
           </Paper>
 
-          <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.65rem', mt: 0.75, display: 'block', textAlign: 'center' }}>
-            Type or paste 6-gene lines. Auto-saved on calculate.
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mt: 0.75,
+              px: 0.5
+            }}
+          >
+            <Typography variant="caption" sx={{ color: 'var(--gl-text-faint)', fontSize: '0.65rem' }}>
+              Type or paste 6-gene lines. Auto-saved on calculate.
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'var(--gl-text-faint)',
+                fontSize: '0.65rem',
+                fontFamily: 'monospace',
+                opacity: 0.75,
+                userSelect: 'none',
+                cursor: 'default'
+              }}
+              title={`Genetics Lab v${__APP_VERSION__}`}
+            >
+              v{__APP_VERSION__}
+            </Typography>
+          </Box>
         </Box>
       )}
 
