@@ -369,11 +369,14 @@ public partial class SupportOverlay : UserControl
     /// Largest file we will attach. There was no ceiling at all, and the picker
     /// offers .zip, .dmp and .mp4 — any of which runs to hundreds of megabytes.
     /// The server takes more than this in its request validation, but its media
-    /// pipeline caps lower, so an oversized file was accepted here and then
+    /// pipeline caps at ten, so an oversized file was accepted here and then
     /// failed somewhere the reporter could not see. Refusing it by name, before
-    /// anything is sent, is the version they can act on.
+    /// anything is sent, is the version they can act on. Ten matches that
+    /// server-side ceiling deliberately: a full-screen PNG screenshot runs to
+    /// several megabytes, and there should be no size the client accepts and
+    /// the server then refuses.
     /// </summary>
-    private const long MaxAttachmentBytes = 3L * 1024 * 1024;
+    private const long MaxAttachmentBytes = 10L * 1024 * 1024;
 
     /// <summary>Splits picked paths into what we will send and what was too big.</summary>
     private static (List<string> Accepted, List<string> Rejected) SplitBySize(IEnumerable<string> paths)
