@@ -26,6 +26,9 @@ public partial class SupportOverlay : UserControl
     /// <summary>Raised when the user closes the panel, so the host can collapse/switch away.</summary>
     public event EventHandler? CloseRequested;
 
+    /// <summary>Raised with the count of the user's tickets that have unread activity, for the rail badge.</summary>
+    public event Action<int>? TicketsUnreadChanged;
+
     private static readonly Brush CardBrush = MakeBrush("#FF161C24");
     private static readonly Brush StaffBrush = MakeBrush("#FF14202B");
     private static readonly Brush InternalBrush = MakeBrush("#33E8A33C");
@@ -70,6 +73,10 @@ public partial class SupportOverlay : UserControl
         foreach (var t in rows)
             _tickets.Add(new TicketVm(t));
         TicketsEmpty.Visibility = _tickets.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        // Keep the rail badge in step whenever the list is (re)loaded - including right after a
+        // ticket is opened and marked read, which is when the count should drop.
+        TicketsUnreadChanged?.Invoke(rows.Count(t => t.HasUnread));
     }
 
     private async Task LoadMetaAsync()

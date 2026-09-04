@@ -4505,18 +4505,28 @@
                                 </Border>
                             </Grid>
                             <!--  Tickets: support, appeals, bug reports. Always reachable, unlike the
-                                  map bar which only exists once connected. Unread lives on the title-
-                                  bar bell now, so this button carries no badge of its own. -->
-                            <ui:Button
-                                x:Name="RailTicketsButton"
-                                Style="{StaticResource SidebarRailButton}"
-                                AutomationProperties.Name="Tickets"
-                                AutomationProperties.HelpText="Support, appeals and bug reports"
-                                Click="CompactSidebarTab_Click"
-                                Tag="{Binding ElementName=TicketsTab}"
-                                ToolTip="Tickets"
-                                Foreground="#FFE8683C"
-                                Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
+                                  map bar which only exists once connected. Carries a count of the
+                                  user's tickets with unread activity. -->
+                            <Grid>
+                                <ui:Button
+                                    x:Name="RailTicketsButton"
+                                    Style="{StaticResource SidebarRailButton}"
+                                    AutomationProperties.Name="Tickets"
+                                    AutomationProperties.HelpText="Support, appeals and bug reports"
+                                    Click="CompactSidebarTab_Click"
+                                    Tag="{Binding ElementName=TicketsTab}"
+                                    ToolTip="Tickets"
+                                    Foreground="#FFE8683C"
+                                    Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
+                                <Border x:Name="RailTicketsBadge" Visibility="Collapsed"
+                                        IsHitTestVisible="False"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Margin="0,2,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                        Background="#FFE5484D" Padding="3,0">
+                                    <TextBlock x:Name="RailTicketsBadgeText" Foreground="White" FontSize="9"
+                                               FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
                             <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"

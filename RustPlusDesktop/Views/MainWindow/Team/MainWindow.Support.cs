@@ -43,12 +43,17 @@ public partial class MainWindow
 
         TopNotificationsList.ItemsSource = _topNotifications;
 
+        // The panel owns the ticket-unread count while it is open (it drops the moment a ticket is
+        // read); the rail badge mirrors it whether or not the panel is open.
+        SupportPanel.TicketsUnreadChanged += UpdateTicketsBadge;
+
         // Live: a ticket reply or an announcement lands on the private user channel the social layer
         // already subscribes to. The bell bumps whether or not the dropdown is open.
         SocialRealtime.EnsureStarted();
         SocialRealtime.NotificationArrived += OnSupportNotificationArrived;
 
         _ = RefreshNotificationBadgeAsync();
+        _ = RefreshTicketsBadgeAsync();
     }
 
     // ── The title-bar bell ──────────────────────────────────────────────────
@@ -75,7 +80,23 @@ public partial class MainWindow
                 _ = LoadNotificationsAsync();
             else
                 _ = RefreshNotificationBadgeAsync();
+
+            // A reply usually means a ticket just gained unread activity - keep its badge honest.
+            _ = RefreshTicketsBadgeAsync();
         });
+    }
+
+    /// <summary>Counts the user's tickets with unread activity and shows it on the rail button.</summary>
+    private async Task RefreshTicketsBadgeAsync()
+    {
+        var tickets = await SupportApi.GetTicketsAsync().ConfigureAwait(true);
+        UpdateTicketsBadge(tickets.Count(t => t.HasUnread));
+    }
+
+    private void UpdateTicketsBadge(int count)
+    {
+        RailTicketsBadgeText.Text = count > 99 ? "99+" : count.ToString();
+        RailTicketsBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private async Task LoadNotificationsAsync()
