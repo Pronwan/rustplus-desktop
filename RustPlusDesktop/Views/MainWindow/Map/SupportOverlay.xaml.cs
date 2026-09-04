@@ -439,12 +439,26 @@ public partial class SupportOverlay : UserControl
 
     // ── View models ─────────────────────────────────────────────────────────
 
+    // Status palette: each state reads at a glance instead of every pill being the same grey.
+    private static readonly Brush StatusOpenBg = MakeBrush("#243FA9FF");
+    private static readonly Brush StatusOpenFg = MakeBrush("#FF7FC1FF");
+    private static readonly Brush StatusProgBg = MakeBrush("#33E0A33C");
+    private static readonly Brush StatusProgFg = MakeBrush("#FFE7BB63");
+    private static readonly Brush StatusWaitBg = MakeBrush("#2A9B6BFF");
+    private static readonly Brush StatusWaitFg = MakeBrush("#FFB79CFF");
+    private static readonly Brush StatusDoneBg = MakeBrush("#2E3FBF6A");
+    private static readonly Brush StatusDoneFg = MakeBrush("#FF74D89B");
+    private static readonly Brush StatusClosedBg = MakeBrush("#18FFFFFF");
+    private static readonly Brush StatusClosedFg = MakeBrush("#FF7C8794");
+
     public sealed class TicketVm
     {
         public string Id { get; }
         public string Subject { get; }
         public string CategoryLabel { get; }
         public string StatusLabel { get; }
+        public Brush StatusBackground { get; }
+        public Brush StatusForeground { get; }
         public string When { get; }
         public Visibility UnreadVisibility { get; }
 
@@ -454,6 +468,15 @@ public partial class SupportOverlay : UserControl
             Subject = t.Subject;
             CategoryLabel = CategoryLabelFor(t.Category);
             StatusLabel = StatusLabelFor(t.Status);
+            (StatusBackground, StatusForeground) = t.Status switch
+            {
+                "open" => (StatusOpenBg, StatusOpenFg),
+                "in_progress" => (StatusProgBg, StatusProgFg),
+                "awaiting_user" => (StatusWaitBg, StatusWaitFg),
+                "resolved" => (StatusDoneBg, StatusDoneFg),
+                "closed" => (StatusClosedBg, StatusClosedFg),
+                _ => (StatusClosedBg, StatusClosedFg),
+            };
             When = t.LastActivityAt?.LocalDateTime.ToString("g") ?? "";
             UnreadVisibility = t.HasUnread ? Visibility.Visible : Visibility.Collapsed;
         }

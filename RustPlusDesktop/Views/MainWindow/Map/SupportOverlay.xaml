@@ -88,8 +88,9 @@
                                                 <Border Style="{StaticResource SupPill}">
                                                     <TextBlock Text="{Binding CategoryLabel}" Foreground="{StaticResource SupMuted}" FontSize="10" />
                                                 </Border>
-                                                <Border Style="{StaticResource SupPill}">
-                                                    <TextBlock Text="{Binding StatusLabel}" Foreground="{StaticResource SupMuted}" FontSize="10" />
+                                                <!--  Status carries a colour per state so open / in progress / closed read apart.  -->
+                                                <Border Background="{Binding StatusBackground}" CornerRadius="4" Padding="6,2" Margin="0,0,6,0">
+                                                    <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="10" FontWeight="SemiBold" />
                                                 </Border>
                                                 <TextBlock Text="{Binding When}" Foreground="{StaticResource SupFaint}" FontSize="10" VerticalAlignment="Center" />
                                             </StackPanel>
