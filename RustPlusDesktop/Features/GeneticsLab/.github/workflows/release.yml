@@ -10,16 +10,6 @@ on:
         description: 'Git tag to release (e.g. v1.2.0). Leave empty to use latest tag.'
         required: false
         type: string
-  workflow_call:
-    inputs:
-      tag:
-        description: 'Git tag to release'
-        required: true
-        type: string
-      version:
-        description: 'SemVer version string without v'
-        required: false
-        type: string
 
 permissions:
   contents: write
@@ -27,6 +17,7 @@ permissions:
 concurrency:
   group: release-${{ inputs.tag || github.ref }}
   cancel-in-progress: false
+
 
 jobs:
   build-and-publish:

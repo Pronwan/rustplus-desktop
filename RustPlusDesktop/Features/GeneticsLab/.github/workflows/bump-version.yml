@@ -21,11 +21,6 @@ on:
         required: true
         default: false
         type: boolean
-      publish_release:
-        description: 'Automatically trigger release after bumping'
-        required: true
-        default: true
-        type: boolean
 
 permissions:
   contents: write
@@ -39,10 +34,6 @@ jobs:
     name: Determine version and tag
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]') && !startsWith(github.event.head_commit.message, 'chore(release):')"
-    outputs:
-      bumped: ${{ steps.bump.outputs.bumped }}
-      version: ${{ steps.bump.outputs.version }}
-      tag: ${{ steps.bump.outputs.tag }}
 
     steps:
       - name: Checkout repository
@@ -75,12 +66,8 @@ jobs:
           git push origin master
           git push origin "${{ steps.bump.outputs.tag }}"
 
-  release:
-    name: Publish release
-    needs: bump
-    if: needs.bump.outputs.bumped == 'true' && github.event.inputs.dry_run != 'true' && (github.event.inputs.publish_release == 'true' || github.event.inputs.publish_release == null)
-    uses: ./.github/workflows/release.yml
-    with:
-      tag: ${{ needs.bump.outputs.tag }}
-      version: ${{ needs.bump.outputs.version }}
-    secrets: inherit
+      - name: Summary
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          echo "### ✅ Version bumped to ${{ steps.bump.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tag \`${{ steps.bump.outputs.tag }}\` pushed — release workflow will trigger automatically." >> "$GITHUB_STEP_SUMMARY"
