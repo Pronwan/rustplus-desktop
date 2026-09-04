@@ -108,7 +108,8 @@
                         <StackPanel>
                             <TextBlock Text="CATEGORY" Style="{StaticResource SupLabel}" />
                             <ComboBox x:Name="ComposeCategory" Foreground="{StaticResource SupText}"
-                                      ItemTemplate="{StaticResource CategoryItemTemplate}" Margin="0,0,0,16" />
+                                      ItemTemplate="{StaticResource CategoryItemTemplate}"
+                                      SelectionChanged="ComposeCategory_SelectionChanged" Margin="0,0,0,16" />
                             <TextBlock Text="SUBJECT" Style="{StaticResource SupLabel}" />
                             <ui:TextBox x:Name="ComposeSubject" MaxLength="160" Margin="0,0,0,16" />
                             <TextBlock Text="DETAILS" Style="{StaticResource SupLabel}" />

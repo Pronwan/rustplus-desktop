@@ -42,6 +42,9 @@ public partial class SupportOverlay : UserControl
     private string? _openTicketId;
     private bool _busy;
 
+    /// <summary>Paths auto-attached for a bug report, tracked so switching category can drop them.</summary>
+    private readonly List<string> _autoDiagnostics = new();
+
     public SupportOverlay()
     {
         InitializeComponent();
@@ -116,10 +119,56 @@ public partial class SupportOverlay : UserControl
         ComposeSubject.Text = "";
         ComposeBody.Text = "";
         _composeAttachments.Clear();
+        _autoDiagnostics.Clear();
+        // If the form opens already on the bug category, its logs come along from the start.
+        if (SelectedCategory() == "bug") AddBugDiagnostics();
         UpdateComposeAttachHint();
         ComposeAppeal.IsChecked = false;
         ComposeError.Visibility = Visibility.Collapsed;
         ShowCompose();
+    }
+
+    /// <summary>The category slug currently picked, or empty.</summary>
+    private string SelectedCategory()
+        => ComposeCategory.SelectedIndex >= 0 && ComposeCategory.SelectedIndex < _categories.Count
+            ? _categories[ComposeCategory.SelectedIndex]
+            : "";
+
+    /// <summary>
+    /// A bug report carries the client's own diagnostics automatically - a fresh log snapshot and
+    /// the latest crash report - so staff are not asking a frustrated user to find their log folder.
+    /// Attached visibly as removable chips, and dropped again if the category changes off "bug".
+    /// </summary>
+    private void ComposeCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ComposeView.Visibility != Visibility.Visible)
+            return; // ignore the programmatic selection made while the form is closed
+
+        if (SelectedCategory() == "bug") AddBugDiagnostics();
+        else RemoveBugDiagnostics();
+    }
+
+    private void AddBugDiagnostics()
+    {
+        foreach (var path in Services.CrashReporter.CollectSupportDiagnostics())
+        {
+            if (_autoDiagnostics.Contains(path) || _composeAttachments.Any(a => a.Path == path))
+                continue;
+            _composeAttachments.Add(new AttachmentPickVm(path));
+            _autoDiagnostics.Add(path);
+        }
+        UpdateComposeAttachHint();
+    }
+
+    private void RemoveBugDiagnostics()
+    {
+        foreach (var path in _autoDiagnostics.ToList())
+        {
+            var vm = _composeAttachments.FirstOrDefault(a => a.Path == path);
+            if (vm != null) _composeAttachments.Remove(vm);
+        }
+        _autoDiagnostics.Clear();
+        UpdateComposeAttachHint();
     }
 
     private void ComposeCancel_Click(object sender, RoutedEventArgs e) => ShowTicketsList();
