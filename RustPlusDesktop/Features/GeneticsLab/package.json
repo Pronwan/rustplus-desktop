@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "version:bump": "node .github/scripts/bump-version.mjs",
+    "version:preview": "node .github/scripts/bump-version.mjs --dry-run"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
