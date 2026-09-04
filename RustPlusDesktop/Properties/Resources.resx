@@ -6502,34 +6502,34 @@ You can find more information on the server&apos;s official website:
     <value>List available commands</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>What's new in 9.1</value>
+    <value>What's new in 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
-    <value>The four biggest changes since 9.0</value>
+    <value>The four biggest changes since 9.1</value>
   </data>
   <data name="UpdateWhatsNewTitle1" xml:space="preserve">
-    <value>Community Hub</value>
+    <value>Tickets</value>
   </data>
   <data name="UpdateWhatsNewDesc1" xml:space="preserve">
-    <value>Global and supporter chat, group finding with a Steam profile preview before you answer, a friend list, an inbox and reporting.</value>
+    <value>Reach us from inside the app — appeal a mute, report a bug, ask for help or suggest a feature, and reply back and forth once we answer.</value>
   </data>
   <data name="UpdateWhatsNewTitle2" xml:space="preserve">
-    <value>Farm Routes on the Map</value>
+    <value>Bug Reports That Help Themselves</value>
   </data>
   <data name="UpdateWhatsNewDesc2" xml:space="preserve">
-    <value>Draw routes next to the map layers. Each one reports its length in metres and how long it takes at sprint speed, and syncs to your team.</value>
+    <value>Choose the bug category and the app attaches a recent-log snapshot and your latest crash report for you. Add your own screenshots too.</value>
   </data>
   <data name="UpdateWhatsNewTitle3" xml:space="preserve">
-    <value>Chat Commands in Clan Chat</value>
+    <value>A Notification Bell</value>
   </data>
   <data name="UpdateWhatsNewDesc3" xml:space="preserve">
-    <value>Commands can now be answered in clan chat, granted per clan role. Door codes and switches stay out unless you include them.</value>
+    <value>Ticket replies and team announcements collect under a bell in the title bar, with a chime and a toast as each one arrives.</value>
   </data>
   <data name="UpdateWhatsNewTitle4" xml:space="preserve">
-    <value>Smart Home</value>
+    <value>A Friendlier Community Chat</value>
   </data>
   <data name="UpdateWhatsNewDesc4" xml:space="preserve">
-    <value>Home Assistant can drive your switches over a REST endpoint. Alexa gains regional endpoints for better device discovery; Google Home is built but awaits certification.</value>
+    <value>Global and supporter chat now warn first on profanity, then escalate gently. A mute is a last resort — and you can appeal it with a ticket.</value>
   </data>
   <data name="UpdateWhatsNewDontShowAgain" xml:space="preserve">
     <value>Don't show this again</value>
