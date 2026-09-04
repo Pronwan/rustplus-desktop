@@ -4731,11 +4731,7 @@
     <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:
-- طبقات الخريطة: {0}
-- علامات القواعد: {1}
-- الأجهزة الذكية: {2}
-- تسجيلات السيرفر: {3}</value>
+    <value>تم حذف البيانات السحابية لـ {0} خادم لم يعد موجودًا في قائمتك.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Discord فقط</value>
@@ -6578,5 +6574,8 @@
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>لم يُرفق — {0} أكبر من {1} ميغابايت.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>لا شيء لتنظيفه — كل خادم لديه بيانات سحابية لا يزال في قائمتك.</value>
   </data>
 </root>

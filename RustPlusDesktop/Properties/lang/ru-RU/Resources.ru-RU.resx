@@ -4734,11 +4734,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Вы уверены, что хотите просканировать Supabase и навсегда удалить все устройства, оверлеи и маркеры серверов, которых больше нет в вашем списке?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Устаревшие облачные данные успешно очищены:
-- Оверлеи карты: {0}
-- Маркеры баз: {1}
-- Умные устройства: {2}
-- Регистрации серверов: {3}</value>
+    <value>Удалены облачные данные {0} сервер(ов), которых больше нет в вашем списке.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Только Discord</value>
@@ -6687,5 +6683,8 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>Не прикреплено — {0} больше {1} МБ.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Убирать нечего — все серверы с облачными данными всё ещё в вашем списке.</value>
   </data>
 </root>

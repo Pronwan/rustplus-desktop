@@ -4809,11 +4809,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Möchtest du Supabase wirklich durchsuchen und alle Cloud-Geräte, Map-Overlays und Base Marker von Servern löschen, die sich nicht mehr in deiner Serverliste befinden?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Verwaiste Cloud-Daten erfolgreich bereinigt:
-- Map Overlays: {0}
-- Base Marker: {1}
-- Smart Devices: {2}
-- Server-Registrierungen: {3}</value>
+    <value>Cloud-Daten von {0} Server(n) entfernt, die nicht mehr in deiner Liste stehen.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Nur Discord</value>
@@ -6765,5 +6761,8 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>Nicht angehängt — {0} ist größer als {1} MB.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Nichts aufzuräumen — jeder Server mit Cloud-Daten steht noch in deiner Liste.</value>
   </data>
 </root>

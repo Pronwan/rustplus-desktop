@@ -4734,11 +4734,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>¿Estás seguro de que deseas escanear Supabase y eliminar permanentemente todos los dispositivos, capas y marcadores pertenecientes a servidores que ya no están en tu lista?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Datos obsoletos depurados con éxito:
-- Capas de mapa: {0}
-- Marcadores de base: {1}
-- Dispositivos inteligentes: {2}
-- Registros de servidor: {3}</value>
+    <value>Se han eliminado los datos en la nube de {0} servidor(es) que ya no están en tu lista.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Solo Discord</value>
@@ -6687,5 +6683,8 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>No adjuntado: {0} supera los {1} MB.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Nada que limpiar: todos los servidores con datos en la nube siguen en tu lista.</value>
   </data>
 </root>

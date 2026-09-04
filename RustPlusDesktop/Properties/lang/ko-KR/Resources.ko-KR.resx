@@ -5817,7 +5817,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>연결이 끊긴 클라우드 데이터 삭제</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>연결이 끊긴 클라우드 데이터를 성공적으로 삭제했습니다:&amp;#10;- 지도 오버레이: {0}&amp;#10;- 기지 마커: {1}&amp;#10;- 스마트 장치: {2}&amp;#10;- 서버 등록: {3}</value>
+    <value>목록에 없는 서버 {0}개의 클라우드 데이터를 삭제했습니다.</value>
   </data>
   <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
     <value>Supabase 데이터베이스를 검사하여 삭제된 서버의 장치, 오버레이 및 마커를 제거합니다.</value>
@@ -6604,5 +6604,8 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>첨부하지 않았습니다 — {0}은(는) {1}MB를 초과합니다.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>정리할 항목이 없습니다 — 클라우드 데이터가 있는 서버는 모두 목록에 있습니다.</value>
   </data>
 </root>

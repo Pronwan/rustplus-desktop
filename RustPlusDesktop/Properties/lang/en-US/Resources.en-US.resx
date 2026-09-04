@@ -4735,11 +4735,7 @@ You can find more information on the server's official website:
     <value>Are you sure you want to scan Supabase and permanently delete all cloud devices, map overlays, and base markers belonging to servers no longer in your server list?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Successfully purged orphaned cloud data:
-- Map Overlays: {0}
-- Base Markers: {1}
-- Smart Devices: {2}
-- Server Registrations: {3}</value>
+    <value>Removed the cloud data of {0} server(s) that are no longer in your list.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Discord only</value>
@@ -6328,5 +6324,8 @@ You can find more information on the server's official website:
   </data>
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Watch the language — warning {0} of {1}. Keep it clean, or the next one is a timeout.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Nothing to clean up — every server with cloud data is still in your list.</value>
   </data>
 </root>

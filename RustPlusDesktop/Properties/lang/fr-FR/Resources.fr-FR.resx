@@ -4734,11 +4734,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Voulez-vous vraiment analyser Supabase et supprimer définitivement tous les appareils, calques et repères appartenant à des serveurs qui ne sont plus dans votre liste ?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Données orphelines purgées avec succès :
-- Calques de carte : {0}
-- Repères de base : {1}
-- Appareils intelligents : {2}
-- Enregistrements de serveur : {3}</value>
+    <value>Données cloud de {0} serveur(s) supprimées — ils ne sont plus dans ta liste.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Discord uniquement</value>
@@ -6687,5 +6683,8 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>Non joint — {0} dépasse {1} Mo.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Rien à nettoyer — chaque serveur ayant des données cloud est encore dans ta liste.</value>
   </data>
 </root>
