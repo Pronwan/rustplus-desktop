@@ -94,24 +94,7 @@ jobs:
 
       - name: Extract release notes
         id: notes
-        run: |
-          VERSION="${{ steps.meta.outputs.version }}"
-          if [ -f .github/release-notes.md ]; then
-            echo "notes_file=.github/release-notes.md" >> "$GITHUB_OUTPUT"
-          elif [ -f CHANGELOG.md ]; then
-            awk -v ver="$VERSION" '
-              $0 ~ "^## \\[" ver "\\]" { found=1; print; next }
-              found && /^## \\[/ { exit }
-              found { print }
-            ' CHANGELOG.md > extracted-notes.md
-            if [ -s extracted-notes.md ]; then
-              echo "notes_file=extracted-notes.md" >> "$GITHUB_OUTPUT"
-            else
-              echo "notes_file=" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            echo "notes_file=" >> "$GITHUB_OUTPUT"
-          fi
+        run: node .github/scripts/extract-notes.mjs "${{ steps.meta.outputs.version }}"
 
       - name: Publish GitHub Release
         run: |
