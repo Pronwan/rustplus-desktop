@@ -280,9 +280,14 @@ public partial class SupportOverlay : UserControl
             _messages.Add(new MessageVm(m, id));
         }
 
-        var closed = detail.Status == "closed";
-        ReplyBar.Visibility = closed ? Visibility.Collapsed : Visibility.Visible;
-        ThreadClosed.Visibility = closed ? Visibility.Visible : Visibility.Collapsed;
+        // Resolved or closed locks the thread for the filer - the conversation is over; more to
+        // say is a new ticket.
+        var locked = detail.Status is "closed" or "resolved";
+        ReplyBar.Visibility = locked ? Visibility.Collapsed : Visibility.Visible;
+        ThreadClosed.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+        ThreadClosed.Text = detail.Status == "resolved"
+            ? "This ticket is resolved. Open a new ticket if you still need help."
+            : "This ticket is closed.";
         ReplyBox.Text = "";
         _replyAttachments.Clear();
 
