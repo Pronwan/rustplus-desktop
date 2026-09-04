@@ -1,45 +1,45 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using RustPlusDesk.Services.Support;
 
 namespace RustPlusDesk.Views;
 
 /// <summary>
-/// Tickets, from the client's side: file one about anything, follow the thread, and reply. A panel
-/// rather than a window so it sits over the map. The notification centre it used to share space with
-/// now lives in the title bar, so this is only ever about tickets.
-///
-/// It talks only to <see cref="SupportApi"/> and holds no state the server does not - every action
-/// re-reads, so what the panel shows and what the dashboard shows can never quietly disagree.
+/// Tickets, from the client's side: file one about anything, follow the thread, reply, and see the
+/// files on both sides - a screenshot you attach previews before you send it, and one on a message
+/// shows in the thread. It talks only to <see cref="SupportApi"/> and re-reads on every action.
 /// </summary>
 public partial class SupportOverlay : UserControl
 {
-    /// <summary>Raised when the user closes the panel, so the host can collapse it.</summary>
+    /// <summary>Raised when the user closes the panel, so the host can collapse/switch away.</summary>
     public event EventHandler? CloseRequested;
 
-    private static readonly Brush CardBrush = MakeBrush("#FF111820");
+    private static readonly Brush CardBrush = MakeBrush("#FF161C24");
     private static readonly Brush StaffBrush = MakeBrush("#FF14202B");
     private static readonly Brush InternalBrush = MakeBrush("#33E8A33C");
 
-    /// <summary>The categories to offer when the backend has not answered yet or cannot.</summary>
     private static readonly IReadOnlyList<string> FallbackCategories = new[] { "appeal", "bug", "feature", "help", "other" };
 
     private readonly ObservableCollection<TicketVm> _tickets = new();
     private readonly ObservableCollection<MessageVm> _messages = new();
+    private readonly ObservableCollection<AttachmentPickVm> _composeAttachments = new();
+    private readonly ObservableCollection<AttachmentPickVm> _replyAttachments = new();
 
     private IReadOnlyList<string> _categories = new List<string>();
     private AppealableSanction? _appealable;
     private string? _openTicketId;
-    private List<string> _composeFiles = new();
-    private List<string> _replyFiles = new();
     private bool _busy;
 
     public SupportOverlay()
@@ -47,6 +47,8 @@ public partial class SupportOverlay : UserControl
         InitializeComponent();
         TicketsList.ItemsSource = _tickets;
         ThreadMessages.ItemsSource = _messages;
+        ComposeAttachments.ItemsSource = _composeAttachments;
+        ReplyAttachments.ItemsSource = _replyAttachments;
     }
 
     /// <summary>Reloads the list and drops the user back on it.</summary>
@@ -70,9 +72,6 @@ public partial class SupportOverlay : UserControl
     private async Task LoadMetaAsync()
     {
         var meta = await SupportApi.GetMetaAsync().ConfigureAwait(true);
-
-        // Backend-driven, but never empty: an unreachable meta endpoint must not leave the form with
-        // no category to pick.
         _categories = meta.Categories.Count > 0 ? meta.Categories : FallbackCategories;
         _appealable = meta.Appealable;
 
@@ -116,7 +115,8 @@ public partial class SupportOverlay : UserControl
     {
         ComposeSubject.Text = "";
         ComposeBody.Text = "";
-        ComposeFiles(new List<string>());
+        _composeAttachments.Clear();
+        UpdateComposeAttachHint();
         ComposeAppeal.IsChecked = false;
         ComposeError.Visibility = Visibility.Collapsed;
         ShowCompose();
@@ -126,15 +126,22 @@ public partial class SupportOverlay : UserControl
 
     private void ComposeAttach_Click(object sender, RoutedEventArgs e)
     {
-        var picked = PickFiles();
-        if (picked != null) ComposeFiles(picked);
+        foreach (var path in PickFiles())
+            _composeAttachments.Add(new AttachmentPickVm(path));
+        UpdateComposeAttachHint();
     }
 
-    private void ComposeFiles(List<string> files)
+    private void RemoveComposeAttachment_Click(object sender, RoutedEventArgs e)
     {
-        _composeFiles = files;
-        ComposeAttachCount.Text = files.Count > 0 ? $"{files.Count} file(s)" : "";
+        if (sender is FrameworkElement fe && fe.Tag is AttachmentPickVm vm)
+        {
+            _composeAttachments.Remove(vm);
+            UpdateComposeAttachHint();
+        }
     }
+
+    private void UpdateComposeAttachHint()
+        => ComposeAttachCount.Text = _composeAttachments.Count > 0 ? $"{_composeAttachments.Count} attached" : "";
 
     private async void ComposeSubmit_Click(object sender, RoutedEventArgs e)
     {
@@ -161,7 +168,8 @@ public partial class SupportOverlay : UserControl
         BtnComposeSubmit.IsEnabled = false;
         try
         {
-            var ok = await SupportApi.CreateTicketAsync(category, subject, body, DesktopContext(), _composeFiles, sanctionId).ConfigureAwait(true);
+            var files = _composeAttachments.Select(a => a.Path).ToList();
+            var ok = await SupportApi.CreateTicketAsync(category, subject, body, DesktopContext(), files, sanctionId).ConfigureAwait(true);
             if (!ok)
             {
                 ComposeError.Text = "That could not be sent. Try again in a moment.";
@@ -195,19 +203,19 @@ public partial class SupportOverlay : UserControl
         ThreadStatus.Text = $"{TicketVm.CategoryLabelFor(detail.Category)} · {TicketVm.StatusLabelFor(detail.Status)}";
 
         _messages.Clear();
-        _messages.Add(MessageVm.Original(detail));
+        _messages.Add(MessageVm.Original(detail, id));
         foreach (var m in detail.Messages)
         {
             if (m.Kind == "system")
-                continue; // the client keeps the thread to what was actually said
-            _messages.Add(new MessageVm(m));
+                continue;
+            _messages.Add(new MessageVm(m, id));
         }
 
         var closed = detail.Status == "closed";
         ReplyBar.Visibility = closed ? Visibility.Collapsed : Visibility.Visible;
         ThreadClosed.Visibility = closed ? Visibility.Visible : Visibility.Collapsed;
         ReplyBox.Text = "";
-        _replyFiles = new List<string>();
+        _replyAttachments.Clear();
 
         ShowThread();
         await SupportApi.MarkTicketReadAsync(id).ConfigureAwait(true);
@@ -218,25 +226,32 @@ public partial class SupportOverlay : UserControl
 
     private void ReplyAttach_Click(object sender, RoutedEventArgs e)
     {
-        var picked = PickFiles();
-        if (picked != null) _replyFiles = picked;
+        foreach (var path in PickFiles())
+            _replyAttachments.Add(new AttachmentPickVm(path));
+    }
+
+    private void RemoveReplyAttachment_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.Tag is AttachmentPickVm vm)
+            _replyAttachments.Remove(vm);
     }
 
     private async void ReplySend_Click(object sender, RoutedEventArgs e)
     {
         if (_busy || _openTicketId == null) return;
         var body = ReplyBox.Text?.Trim() ?? "";
-        if (body.Length == 0) return;
+        if (body.Length == 0 && _replyAttachments.Count == 0) return;
 
         _busy = true;
         BtnReplySend.IsEnabled = false;
         try
         {
-            var ok = await SupportApi.ReplyAsync(_openTicketId, body, _replyFiles).ConfigureAwait(true);
+            var files = _replyAttachments.Select(a => a.Path).ToList();
+            var ok = await SupportApi.ReplyAsync(_openTicketId, body.Length == 0 ? "(see attachment)" : body, files).ConfigureAwait(true);
             if (ok)
             {
                 ReplyBox.Text = "";
-                _replyFiles = new List<string>();
+                _replyAttachments.Clear();
                 await OpenTicketAsync(_openTicketId).ConfigureAwait(true);
             }
         }
@@ -247,19 +262,31 @@ public partial class SupportOverlay : UserControl
         }
     }
 
+    /// <summary>Opens a sent attachment in whatever the OS uses for its type.</summary>
+    private async void MessageAttachment_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not FrameworkElement fe || fe.Tag is not MessageAttachmentVm vm)
+            return;
+
+        var path = await SupportApi.SaveAttachmentToTempAsync(vm.TicketId, vm.Id, vm.Name).ConfigureAwait(true);
+        if (path == null) return;
+
+        try { Process.Start(new ProcessStartInfo(path) { UseShellExecute = true }); }
+        catch { /* nothing we can do if the OS refuses to open it */ }
+    }
+
     // ── Helpers ─────────────────────────────────────────────────────────────
 
-    private static List<string>? PickFiles()
+    private static IEnumerable<string> PickFiles()
     {
         var dialog = new OpenFileDialog
         {
             Multiselect = true,
             Filter = "Attachments|*.png;*.jpg;*.jpeg;*.gif;*.webp;*.txt;*.log;*.json;*.zip;*.dmp;*.mp4|All files|*.*",
         };
-        return dialog.ShowDialog() == true ? dialog.FileNames.ToList() : null;
+        return dialog.ShowDialog() == true ? dialog.FileNames : Array.Empty<string>();
     }
 
-    /// <summary>The app version and OS, filed with every ticket so the first question is answered.</summary>
     private static Dictionary<string, string> DesktopContext() => new()
     {
         ["app_version"] = Helpers.VersionHelper.GetClientVersion(),
@@ -271,6 +298,55 @@ public partial class SupportOverlay : UserControl
         var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!;
         brush.Freeze();
         return brush;
+    }
+
+    private static bool IsImageMime(string? mime) => mime != null && mime.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsImagePath(string path)
+    {
+        var ext = Path.GetExtension(path).ToLowerInvariant();
+        return ext is ".png" or ".jpg" or ".jpeg" or ".gif" or ".webp" or ".bmp";
+    }
+
+    private static ImageSource? ThumbFromFile(string path)
+    {
+        try
+        {
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.DecodePixelWidth = 120;
+            bmp.UriSource = new Uri(path);
+            bmp.EndInit();
+            bmp.Freeze();
+            return bmp;
+        }
+        catch { return null; }
+    }
+
+    private static ImageSource? ThumbFromBytes(byte[] data)
+    {
+        try
+        {
+            using var ms = new MemoryStream(data);
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.DecodePixelWidth = 220;
+            bmp.StreamSource = ms;
+            bmp.EndInit();
+            bmp.Freeze();
+            return bmp;
+        }
+        catch { return null; }
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes <= 0) return "";
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024} KB";
+        return $"{bytes / 1024d / 1024d:0.0} MB";
     }
 
     // ── View models ─────────────────────────────────────────────────────────
@@ -312,13 +388,18 @@ public partial class SupportOverlay : UserControl
         public string Body { get; }
         public string When { get; }
         public Brush Background { get; }
+        public Visibility BodyVisibility { get; }
+        public ObservableCollection<MessageAttachmentVm> Attachments { get; } = new();
 
-        public MessageVm(TicketMessage m)
+        public MessageVm(TicketMessage m, string ticketId)
         {
             Author = m.Kind == "internal" ? (m.AuthorName ?? "Staff") + " · internal" : (m.AuthorName ?? "Staff");
             Body = m.Body;
             When = m.CreatedAt?.LocalDateTime.ToString("g") ?? "";
             Background = m.Kind == "internal" ? InternalBrush : (m.IsStaff ? StaffBrush : CardBrush);
+            BodyVisibility = string.IsNullOrWhiteSpace(m.Body) ? Visibility.Collapsed : Visibility.Visible;
+            foreach (var a in m.Attachments)
+                Attachments.Add(new MessageAttachmentVm(ticketId, a));
         }
 
         private MessageVm(string author, string body, string when)
@@ -327,8 +408,73 @@ public partial class SupportOverlay : UserControl
             Body = body;
             When = when;
             Background = CardBrush;
+            BodyVisibility = Visibility.Visible;
         }
 
-        public static MessageVm Original(TicketDetail d) => new("You", d.Body, d.CreatedAt?.LocalDateTime.ToString("g") ?? "");
+        public static MessageVm Original(TicketDetail d, string ticketId)
+        {
+            var vm = new MessageVm("You", d.Body, d.CreatedAt?.LocalDateTime.ToString("g") ?? "");
+            foreach (var a in d.Attachments)
+                vm.Attachments.Add(new MessageAttachmentVm(ticketId, a));
+            return vm;
+        }
+    }
+
+    /// <summary>An attachment already on a message. Image thumbnails load from the server in the background.</summary>
+    public sealed class MessageAttachmentVm : INotifyPropertyChanged
+    {
+        public string TicketId { get; }
+        public string Id { get; }
+        public string Name { get; }
+        public string SizeLabel { get; }
+        public bool IsImage { get; }
+        public Visibility ImageVisibility => IsImage ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ChipVisibility => IsImage ? Visibility.Collapsed : Visibility.Visible;
+
+        private ImageSource? _thumb;
+        public ImageSource? Thumb
+        {
+            get => _thumb;
+            private set { _thumb = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Thumb))); }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public MessageAttachmentVm(string ticketId, TicketAttachment a)
+        {
+            TicketId = ticketId;
+            Id = a.Id;
+            Name = a.Name;
+            SizeLabel = FormatSize(a.Size);
+            IsImage = IsImageMime(a.Mime) || IsImagePath(a.Name);
+            if (IsImage)
+                _ = LoadThumbAsync();
+        }
+
+        private async Task LoadThumbAsync()
+        {
+            var bytes = await SupportApi.GetAttachmentBytesAsync(TicketId, Id).ConfigureAwait(true);
+            if (bytes != null)
+                Thumb = ThumbFromBytes(bytes);
+        }
+    }
+
+    /// <summary>A file the user has picked but not yet sent - previewed locally, no round trip.</summary>
+    public sealed class AttachmentPickVm
+    {
+        public string Path { get; }
+        public string Name { get; }
+        public bool IsImage { get; }
+        public Visibility ImageVisibility => IsImage ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ChipVisibility => IsImage ? Visibility.Collapsed : Visibility.Visible;
+        public ImageSource? Thumb { get; }
+
+        public AttachmentPickVm(string path)
+        {
+            Path = path;
+            Name = System.IO.Path.GetFileName(path);
+            IsImage = IsImagePath(path);
+            Thumb = IsImage ? ThumbFromFile(path) : null;
+        }
     }
 }

@@ -112,7 +112,33 @@
                             <TextBlock Text="SUBJECT" Style="{StaticResource SupLabel}" />
                             <ui:TextBox x:Name="ComposeSubject" MaxLength="160" Margin="0,0,0,16" />
                             <TextBlock Text="DETAILS" Style="{StaticResource SupLabel}" />
-                            <ui:TextBox x:Name="ComposeBody" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" Margin="0,0,0,16" />
+                            <ui:TextBox x:Name="ComposeBody" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" Margin="0,0,0,12" />
+
+                            <!--  Previews of what has been attached, before it is sent.  -->
+                            <ItemsControl x:Name="ComposeAttachments" Margin="0,0,0,4">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,8,8">
+                                            <Border Visibility="{Binding ImageVisibility}" Width="64" Height="64" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1">
+                                                <Image Source="{Binding Thumb}" Stretch="UniformToFill" />
+                                            </Border>
+                                            <Border Visibility="{Binding ChipVisibility}" Background="{StaticResource SupCard}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,6">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </Border>
+                                            <ui:Button Tag="{Binding}" Click="RemoveComposeAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="Remove">
+                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
+                                            </ui:Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
                                 <ui:Button x:Name="BtnComposeAttach" Content="Attach files" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Click="ComposeAttach_Click" />
                                 <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{StaticResource SupMuted}" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -149,25 +175,75 @@
                                                 <TextBlock Text="{Binding Author}" Foreground="{StaticResource SupText}" FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Left" />
                                                 <TextBlock Text="{Binding When}" Foreground="{StaticResource SupFaint}" FontSize="10" HorizontalAlignment="Right" />
                                             </Grid>
-                                            <TextBlock Text="{Binding Body}" Foreground="{StaticResource SupText}" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,7,0,0" />
+                                            <TextBlock Text="{Binding Body}" Visibility="{Binding BodyVisibility}" Foreground="{StaticResource SupText}" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,7,0,0" />
+
+                                            <!--  Attachments sent with the message: screenshots inline, files as chips.  -->
+                                            <ItemsControl ItemsSource="{Binding Attachments}" Margin="0,8,0,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0,0,8,8" Cursor="Hand" Background="Transparent" Tag="{Binding}" MouseLeftButtonUp="MessageAttachment_Click" ToolTip="{Binding Name}">
+                                                            <Border Visibility="{Binding ImageVisibility}" MaxWidth="200" MaxHeight="150" MinWidth="60" MinHeight="44" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1" Background="#22000000">
+                                                                <Image Source="{Binding Thumb}" Stretch="Uniform" />
+                                                            </Border>
+                                                            <Border Visibility="{Binding ChipVisibility}" Background="#22FFFFFF" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" />
+                                                                    <TextBlock Text="{Binding SizeLabel}" Foreground="{StaticResource SupMuted}" FontSize="10" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <Grid Grid.Row="2" Margin="0,12,0,0" x:Name="ReplyBar">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <ui:Button Grid.Column="0" x:Name="BtnReplyAttach" Appearance="Transparent" Padding="6" Click="ReplyAttach_Click">
-                            <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" />
-                        </ui:Button>
-                        <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="Write a reply…" Margin="6,0" />
-                        <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="Send" Appearance="Primary" Click="ReplySend_Click" />
-                    </Grid>
+                    <StackPanel Grid.Row="2" Margin="0,12,0,0">
+                        <!--  What is about to be sent with the reply.  -->
+                        <ItemsControl x:Name="ReplyAttachments" Margin="0,0,0,8">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,8,8">
+                                        <Border Visibility="{Binding ImageVisibility}" Width="52" Height="52" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1">
+                                            <Image Source="{Binding Thumb}" Stretch="UniformToFill" />
+                                        </Border>
+                                        <Border Visibility="{Binding ChipVisibility}" Background="{StaticResource SupCard}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Border>
+                                        <ui:Button Tag="{Binding}" Click="RemoveReplyAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="Remove">
+                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
+                                        </ui:Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Grid x:Name="ReplyBar">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button Grid.Column="0" x:Name="BtnReplyAttach" Appearance="Transparent" Padding="6" Click="ReplyAttach_Click">
+                                <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" />
+                            </ui:Button>
+                            <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="Write a reply…" Margin="6,0" />
+                            <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="Send" Appearance="Primary" Click="ReplySend_Click" />
+                        </Grid>
+                    </StackPanel>
                     <TextBlock Grid.Row="2" x:Name="ThreadClosed" Text="This ticket is closed." Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" Margin="0,12,0,0" Visibility="Collapsed" />
                 </Grid>
 

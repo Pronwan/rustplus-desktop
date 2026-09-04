@@ -177,6 +177,28 @@ public static class SupportApi
         return await CloudApiClient.PostMultipartAsync($"tickets/{ticketId}/messages", content).ConfigureAwait(false);
     }
 
+    /// <summary>The raw bytes of an attachment - for a thumbnail, or to stage before opening.</summary>
+    public static Task<byte[]?> GetAttachmentBytesAsync(string ticketId, string mediaId)
+        => CloudApiClient.GetBytesAsync($"tickets/{ticketId}/attachments/{mediaId}");
+
+    /// <summary>
+    /// Downloads an attachment to a temp file and returns its path, so it can be opened in whatever
+    /// the OS uses for that type. Null if it could not be fetched.
+    /// </summary>
+    public static async Task<string?> SaveAttachmentToTempAsync(string ticketId, string mediaId, string fileName)
+    {
+        var bytes = await GetAttachmentBytesAsync(ticketId, mediaId).ConfigureAwait(false);
+        if (bytes == null)
+            return null;
+
+        var safe = string.Join("_", (fileName ?? "attachment").Split(Path.GetInvalidFileNameChars()));
+        var dir = Path.Combine(Path.GetTempPath(), "rpd-tickets");
+        Directory.CreateDirectory(dir);
+        var path = Path.Combine(dir, safe);
+        await File.WriteAllBytesAsync(path, bytes).ConfigureAwait(false);
+        return path;
+    }
+
     /// <summary>Clears this account's unread flag on a ticket.</summary>
     public static async Task MarkTicketReadAsync(string ticketId)
     {

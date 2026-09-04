@@ -101,6 +101,35 @@ namespace RustPlusDesk.Services.Cloud
         }
 
         /// <summary>
+        /// GET the raw bytes of an authenticated route - an attachment to preview or open. Returns
+        /// null on any non-success, so a missing or forbidden file simply shows nothing rather than
+        /// throwing into the UI.
+        /// </summary>
+        public static async Task<byte[]?> GetBytesAsync(string routePath)
+        {
+            if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
+                return null;
+
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
+                request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+                if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
+
+                using var response = await Http.SendAsync(request).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Call an authenticated route without throwing, returning the status code
         /// alongside the body. Needed where the caller has to act on a specific status
         /// — notably 401, which means the session token has been revoked or expired
