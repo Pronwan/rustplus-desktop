@@ -40,7 +40,7 @@ public static class SocialRealtime
     public static event Action? RequestArrived;
 
     /// <summary>A notification landed in this account's inbox — a ticket reply, an announcement.</summary>
-    public static event Action? NotificationArrived;
+    public static event Action<NotificationInfo>? NotificationArrived;
 
     private const string ChatChannel = "presence-chat.global";
 
@@ -196,10 +196,23 @@ public static class SocialRealtime
             || norm.Equals("notification", StringComparison.OrdinalIgnoreCase))
         {
             // Laravel's database/broadcast notifications arrive here on the private user channel.
-            // The panel decides what to do with it; this only says one showed up.
-            Raise(() => NotificationArrived?.Invoke());
+            // Carry the title/body/level up so the client can chime, toast, and badge it.
+            var payload = data["title"] != null || data["body"] != null
+                ? data
+                : data["data"] as JObject ?? data;
+
+            var info = new NotificationInfo(
+                payload["title"]?.ToString() ?? "Notification",
+                payload["body"]?.ToString() ?? string.Empty,
+                payload["level"]?.ToString() ?? "info",
+                payload["type"]?.ToString() ?? "notification");
+
+            Raise(() => NotificationArrived?.Invoke(info));
         }
     }
+
+    /// <summary>The parts of an inbox notification the client needs to chime and toast it.</summary>
+    public sealed record NotificationInfo(string Title, string Body, string Level, string Type);
 
 /// <summary>
     /// The quoted line above a reply, from the broadcast payload.

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Services.Social;
 using RustPlusDesk.Services.Support;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -72,10 +73,23 @@ public partial class MainWindow
         NotificationsPopup.IsOpen = true;
     }
 
-    private void OnSupportNotificationArrived()
+    private void OnSupportNotificationArrived(SocialRealtime.NotificationInfo info)
     {
         Dispatcher.Invoke(() =>
         {
+            // Chime and toast so a reply or announcement is noticed even away from the panel, then
+            // it settles into the bell with its unread count.
+            PlayNotificationSound("icq-message.wav");
+
+            var appearance = info.Level switch
+            {
+                "critical" => WpfUi.ControlAppearance.Danger,
+                "warning" => WpfUi.ControlAppearance.Caution,
+                "success" => WpfUi.ControlAppearance.Success,
+                _ => WpfUi.ControlAppearance.Info,
+            };
+            ShowInfoSnackbar(string.IsNullOrWhiteSpace(info.Title) ? "Notification" : info.Title, info.Body, appearance);
+
             if (NotificationsPopup.IsOpen)
                 _ = LoadNotificationsAsync();
             else
