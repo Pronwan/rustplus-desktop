@@ -6924,6 +6924,104 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         AddToast(item);
     }
 
+    /// <summary>
+    /// A background download finished and an update is staged. Toasts that it is ready and offers
+    /// the choice the user actually has: restart now, or let it install on close (the default that
+    /// happens either way). Mirrors the inline popover shown from the check-updates button.
+    /// </summary>
+    private void ShowUpdateReadySnackbar(string tag)
+    {
+        var item = new Controls.ToastItem
+        {
+            Title = Properties.Resources.GetString("UpdateDownloadedTitle"),
+            Icon = WpfUi.SymbolRegular.CheckmarkCircle24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Success),
+            MaxCardWidth = 360,
+            Timeout = TimeSpan.FromSeconds(12),
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+        stack.Children.Add(new TextBlock
+        {
+            Text = $"Version {tag} is ready. Restart to update now, or it installs when you close.",
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8),
+        });
+
+        var row = new StackPanel { Orientation = Orientation.Horizontal };
+        var restartBtn = new WpfUi.Button
+        {
+            Content = "Restart now",
+            Appearance = WpfUi.ControlAppearance.Primary,
+            Margin = new Thickness(0, 0, 8, 0),
+        };
+        restartBtn.Click += async (s, e) =>
+        {
+            DismissToast(item);
+            await ApplyPendingUpdateAndRestartAsync();
+        };
+        var onCloseBtn = new WpfUi.Button
+        {
+            Content = "Update on close",
+            Appearance = WpfUi.ControlAppearance.Secondary,
+        };
+        onCloseBtn.Click += (s, e) => DismissToast(item);
+        row.Children.Add(restartBtn);
+        row.Children.Add(onCloseBtn);
+        stack.Children.Add(row);
+
+        item.Content = stack;
+        AddToast(item);
+    }
+
+    /// <summary>Opens the inline "update ready" confirmation anchored under the check-updates button.</summary>
+    private void ShowUpdateReadyPopup()
+    {
+        if (UpdateReadyPopupText != null)
+        {
+            UpdateReadyPopupText.Text = string.IsNullOrEmpty(_lastDownloadTag)
+                ? "An update is downloaded and ready. Restart now to apply it, or it installs when you close the app."
+                : $"Version {_lastDownloadTag} is downloaded and ready. Restart now to apply it, or it installs when you close the app.";
+        }
+        if (UpdateReadyPopup != null)
+            UpdateReadyPopup.IsOpen = true;
+    }
+
+    private async void UpdateRestartNow_Click(object sender, RoutedEventArgs e)
+    {
+        if (UpdateReadyPopup != null) UpdateReadyPopup.IsOpen = false;
+        await ApplyPendingUpdateAndRestartAsync();
+    }
+
+    private void UpdateOnClose_Click(object sender, RoutedEventArgs e)
+    {
+        if (UpdateReadyPopup != null) UpdateReadyPopup.IsOpen = false;
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
+        _vm.IsUpdateStatusExpanded = true;
+        ShowInfoSnackbar(
+            Properties.Resources.GetString("UpdateDownloadedTitle"),
+            Properties.Resources.GetString("UpdateInstallsOnClose"),
+            WpfUi.ControlAppearance.Success);
+    }
+
+    /// <summary>
+    /// Applies the staged update and relaunches. Shared by the ready toast's "Restart now", the
+    /// inline popover's "Restart now", so the restart path lives in one place.
+    /// </summary>
+    private async Task ApplyPendingUpdateAndRestartAsync()
+    {
+        if (string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+
+        AppendLog("Applying update...");
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
+        try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
+
+        var path = _updateService.PendingInstallerPath;
+        _updateService.PendingInstallerPath = null;
+        _updateService.StartInstaller(path, restart: true);
+        System.Windows.Application.Current.Shutdown();
+    }
+
     public void ApplySettings()
     {
         if (LogPanel != null)
@@ -7934,7 +8032,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _vm.IsUpdateAvailable = false;
             _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateReady"), tag);
             _vm.IsUpdateStatusExpanded = true;
-            ShowInfoSnackbar(Properties.Resources.GetString("UpdateDownloadedTitle"), Properties.Resources.GetString("UpdateInstallsOnClose"), WpfUi.ControlAppearance.Success);
+            // The download finished on its own in the background: tell the user it is ready and let
+            // them choose to restart now, rather than silently waiting for the next close.
+            ShowUpdateReadySnackbar(tag);
         }
         catch (Exception ex)
         {
@@ -7952,22 +8052,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
             _vm.IsUpdateStatusExpanded = true;
-            var res = System.Windows.MessageBox.Show(
-                "An update has already been downloaded and is ready to install.\n\nRestart now to apply it?\n(Selecting 'No' will install it automatically when you close the app).",
-                RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"),
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
-
-            if (res == MessageBoxResult.Yes)
-            {
-                AppendLog("Applying update...");
-                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
-                try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
-                var path = _updateService.PendingInstallerPath;
-                _updateService.PendingInstallerPath = null;
-                _updateService.StartInstaller(path, restart: true);
-                System.Windows.Application.Current.Shutdown();
-            }
+            // Inline Fluent confirmation anchored under the button, rather than a blocking message box.
+            ShowUpdateReadyPopup();
             return;
         }
 

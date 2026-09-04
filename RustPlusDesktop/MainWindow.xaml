@@ -608,6 +608,68 @@
                                 Icon="{ui:SymbolIcon Symbol=Dismiss24}"
                                 ToolTip="{DynamicResource UiCancelDownload}"
                                 Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
+
+                            <!-- Inline "update is ready" confirmation, anchored under the check-updates
+                                 button. Replaces a blocking message box: restart now, or let it install
+                                 on close. -->
+                            <Popup
+                                x:Name="UpdateReadyPopup"
+                                AllowsTransparency="True"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
+                                PopupAnimation="Fade"
+                                StaysOpen="False"
+                                VerticalOffset="6">
+                                <Border
+                                    MaxWidth="320"
+                                    Margin="10"
+                                    Padding="16"
+                                    Background="{DynamicResource ApplicationBackgroundBrush}"
+                                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="18"
+                                            Direction="270"
+                                            Opacity="0.35"
+                                            ShadowDepth="3"
+                                            Color="Black" />
+                                    </Border.Effect>
+                                    <StackPanel>
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Center"
+                                                Foreground="#62D38B"
+                                                Symbol="CheckmarkCircle24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                Text="Update ready" />
+                                        </StackPanel>
+                                        <TextBlock
+                                            x:Name="UpdateReadyPopupText"
+                                            Margin="0,0,0,14"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            TextWrapping="Wrap"
+                                            Text="An update is downloaded and ready. Restart now to apply it, or it installs when you close the app." />
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <ui:Button
+                                                Margin="0,0,8,0"
+                                                Appearance="Secondary"
+                                                Click="UpdateOnClose_Click"
+                                                Content="Update on close" />
+                                            <ui:Button
+                                                Appearance="Primary"
+                                                Click="UpdateRestartNow_Click"
+                                                Content="Restart now" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
                         </Grid>
                     </Border>
                     </StackPanel>
