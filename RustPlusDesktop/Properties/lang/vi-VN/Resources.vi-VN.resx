@@ -5717,4 +5717,7 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Tự động kiểm tra cập nhật khi khởi động và tải các bản vá delta nhanh ở chế độ nền.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Chú ý lời nói — cảnh báo {0}/{1}. Giữ lịch sự, nếu không lần sau sẽ bị cấm chat tạm thời.</value>
+  </data>
 </root>

@@ -4,7 +4,7 @@
 
 **Inventory-aware breeding routes and practical farm plans for Rust.**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-00bcd4?style=flat-square)](package.json)
+[![Version](https://img.shields.io/badge/version-1.2.1-00bcd4?style=flat-square)](package.json)
 ![React](https://img.shields.io/badge/React-18.3-149eca?style=flat-square&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=flat-square&logo=typescript&logoColor=white)
 [![Tested with Vitest](https://img.shields.io/badge/tested%20with-Vitest-6e9f18?style=flat-square&logo=vitest&logoColor=white)](src/tests)

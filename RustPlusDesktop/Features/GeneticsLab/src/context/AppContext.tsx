@@ -103,6 +103,8 @@ interface AppContextType {
   setScannerPreviewEnabled: (enabled: boolean) => void;
   isStarved: boolean;
   starvationReason?: string;
+  isAutoCalibrating: boolean;
+  autoCalibrateScanner: (regionIndex?: number) => Promise<boolean>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -297,7 +299,9 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
     getScannerDiagnostics: scanner.getScannerDiagnostics,
     setScannerPreviewEnabled: scanner.setScannerPreviewEnabled,
     isStarved: scanner.isStarved,
-    starvationReason: scanner.starvationReason
+    starvationReason: scanner.starvationReason,
+    isAutoCalibrating: scanner.isAutoCalibrating,
+    autoCalibrateScanner: scanner.autoCalibrateScanner
   };
 
   return (

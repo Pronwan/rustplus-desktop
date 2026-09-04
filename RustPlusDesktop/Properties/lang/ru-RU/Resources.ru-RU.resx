@@ -4734,11 +4734,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Вы уверены, что хотите просканировать Supabase и навсегда удалить все устройства, оверлеи и маркеры серверов, которых больше нет в вашем списке?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Устаревшие облачные данные успешно очищены:
-- Оверлеи карты: {0}
-- Маркеры баз: {1}
-- Умные устройства: {2}
-- Регистрации серверов: {3}</value>
+    <value>Удалены облачные данные {0} сервер(ов), которых больше нет в вашем списке.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Только Discord</value>
@@ -6597,5 +6593,98 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Автоматически проверять обновления при запуске и загружать быстрые дельта-патчи в фоновом режиме.</value>
+  </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Следи за выражениями — предупреждение {0} из {1}. Дальше последует временная блокировка.</value>
+  </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>Обращения</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>Новое обращение</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>Пока нет обращений.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>КАТЕГОРИЯ</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>ТЕМА</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>ПОДРОБНОСТИ</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>Убрать</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>Прикрепить файлы</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>Это обжалование моей текущей блокировки чата</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>Назад к обращениям</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>Написать ответ…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>Это обращение закрыто.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>Обращение решено. Откройте новое, если помощь всё ещё нужна.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>Нужны тема и описание.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>Отправить не удалось. Попробуйте через минуту.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>Обжалование</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>Предложение</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>Помощь</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>Открыто</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>В работе</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>Ждём вашего ответа</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>Решено</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>Закрыто</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>Не прикреплено — {0} больше {1} МБ.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Убирать нечего — все серверы с облачными данными всё ещё в вашем списке.</value>
   </data>
 </root>

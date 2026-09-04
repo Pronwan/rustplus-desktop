@@ -293,12 +293,23 @@ function featureDistance(a: GlyphFeatures, b: GlyphFeatures): number {
   return shape + holePenalty;
 }
 
-export function classifyGlyphFeatures(features: GlyphFeatures): GlyphMatch | null {
-  const scored = getGlyphTemplates()
+export function classifyGlyphFeatures(
+  features: GlyphFeatures,
+  allowedGenes?: readonly GeneLetter[]
+): GlyphMatch | null {
+  let templates = getGlyphTemplates();
+  if (allowedGenes && allowedGenes.length > 0) {
+    templates = templates.filter(t => allowedGenes.includes(t.gene));
+  }
+
+  const scored = templates
     .map(template => ({ gene: template.gene, distance: featureDistance(features, template.features) }))
     .sort((a, b) => a.distance - b.distance);
 
-  if (scored.length < 2) return null;
+  if (scored.length === 0) return null;
+  if (scored.length === 1) {
+    return { gene: scored[0].gene, distance: scored[0].distance, margin: 1.0 };
+  }
 
   const [best, runnerUp] = scored;
   const margin = runnerUp.distance > 0 ? (runnerUp.distance - best.distance) / runnerUp.distance : 0;

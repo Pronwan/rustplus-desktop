@@ -5717,4 +5717,7 @@ Open Releases page?</value>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Αυτόματος έλεγχος για ενημερώσεις κατά την εκκίνηση και λήψη γρήγορων delta ενημερώσεων στο παρασκήνιο.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Πρόσεχε τη γλώσσα σου — προειδοποίηση {0} από {1}. Κράτα το κόσμιο, αλλιώς ακολουθεί προσωρινός αποκλεισμός.</value>
+  </data>
 </root>

@@ -16,7 +16,8 @@ import {
   TextField,
   Tooltip,
   Divider,
-  Stack
+  Stack,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -31,6 +32,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useScanner } from '../../context/ScannerContext.tsx';
 import { useNotification } from '../../context/NotificationContext.tsx';
 
@@ -49,7 +51,9 @@ export const ScannerCalibrationModal: React.FC = () => {
     setScannerPreviewEnabled,
     moveScannerRegion,
     scaleScannerRegion,
-    resetScannerRegions
+    resetScannerRegions,
+    isAutoCalibrating,
+    autoCalibrateScanner
   } = useScanner();
 
   const { notifySuccess, notifyError } = useNotification();
@@ -271,8 +275,29 @@ export const ScannerCalibrationModal: React.FC = () => {
               )}
             </Box>
 
-            {/* Right: Actions (Save As, Export, Import, Reset) */}
+            {/* Right: Actions (1-Click Auto Calibrate, Save As, Export, Import, Reset) */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => autoCalibrateScanner(selectedRegionIdx)}
+                disabled={isAutoCalibrating}
+                startIcon={isAutoCalibrating ? <CircularProgress size={13} color="inherit" /> : <AutoFixHighIcon sx={{ fontSize: 15 }} />}
+                sx={{
+                  backgroundColor: 'var(--gl-primary)',
+                  color: '#000',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  boxShadow: '0 0 10px rgba(0, 229, 255, 0.25)',
+                  '&:hover': {
+                    backgroundColor: 'var(--gl-primary-hover)',
+                    boxShadow: '0 0 14px rgba(0, 229, 255, 0.45)'
+                  }
+                }}
+              >
+                {isAutoCalibrating ? 'Detecting...' : '1-Click Auto Calibrate'}
+              </Button>
+
               <Button
                 size="small"
                 variant="outlined"
@@ -315,15 +340,37 @@ export const ScannerCalibrationModal: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Region Selector Tabs */}
-          <Tabs
-            value={selectedRegionIdx}
-            onChange={(_, val) => setSelectedRegionIdx(val)}
-            sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
-          >
-            <Tab value={0} label="Region 1: Inventory Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
-            <Tab value={1} label="Region 2: Planter Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
-          </Tabs>
+          {/* Region Selector Tabs & Quick Auto-Detect */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--gl-border-subtle)', pb: 0.5 }}>
+            <Tabs
+              value={selectedRegionIdx}
+              onChange={(_, val) => setSelectedRegionIdx(val)}
+              sx={{ minHeight: 32, '& .MuiTabs-indicator': { backgroundColor: 'var(--gl-primary)' } }}
+            >
+              <Tab value={0} label="Region 1: Inventory Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+              <Tab value={1} label="Region 2: Planter Tooltip" sx={{ minHeight: 32, py: 0.5, fontSize: '0.78rem', fontWeight: 700 }} />
+            </Tabs>
+
+            <Tooltip title={`Hover over a ${selectedRegionIdx === 0 ? 'plant clone in inventory' : 'planter box'} in Rust, then click to auto-align this region`}>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => autoCalibrateScanner(selectedRegionIdx)}
+                disabled={isAutoCalibrating}
+                startIcon={isAutoCalibrating ? <CircularProgress size={12} color="inherit" /> : <AutoFixHighIcon sx={{ fontSize: 14 }} />}
+                sx={{
+                  borderColor: 'var(--gl-primary)',
+                  color: 'var(--gl-primary)',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  py: 0.25,
+                  px: 1
+                }}
+              >
+                Auto-Detect {selectedRegionIdx === 0 ? 'Inventory' : 'Planter'}
+              </Button>
+            </Tooltip>
+          </Box>
 
           {/* Preview & Calibration Controls */}
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.4fr 1fr' }, gap: 2 }}>

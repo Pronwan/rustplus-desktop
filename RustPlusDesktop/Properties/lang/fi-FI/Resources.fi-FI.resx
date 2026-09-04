@@ -5717,4 +5717,7 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Tarkista päivitykset automaattisesti käynnistyksen yhteydessä ja lataa nopeat delta-korjaukset taustalla.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Varo kielenkäyttöä — varoitus {0}/{1}. Pidä se asiallisena, tai seuraavaksi tulee aikalisä.</value>
+  </data>
 </root>

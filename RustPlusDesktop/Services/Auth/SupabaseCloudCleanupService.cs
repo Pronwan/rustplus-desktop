@@ -11,14 +11,15 @@ namespace RustPlusDesk.Services.Auth
     public class PurgeResult
     {
         public bool Success { get; set; }
-        public int PurgedMapOverlays { get; set; }
-        public int PurgedBaseMarkers { get; set; }
-        public int PurgedSmartDevices { get; set; }
-        public int PurgedUserServers { get; set; }
-        public bool AlexaReset { get; set; }
-        public string? ErrorMessage { get; set; }
 
-        public int TotalPurgedCount => PurgedMapOverlays + PurgedBaseMarkers + PurgedSmartDevices + PurgedUserServers;
+        /// <summary>
+        /// How many servers had their cloud data removed. The API reports this
+        /// rather than a per-table breakdown: everything belonging to a server
+        /// goes together, so the number of servers is the whole answer.
+        /// </summary>
+        public int RemovedServers { get; set; }
+
+        public string? ErrorMessage { get; set; }
     }
 
     public static class SupabaseCloudCleanupService
@@ -96,15 +97,16 @@ namespace RustPlusDesk.Services.Auth
                     return result;
                 }
 
-                if (root.TryGetProperty("success", out var succEl) && succEl.GetBoolean() &&
-                    root.TryGetProperty("purged", out var purgedEl) && purgedEl.ValueKind == JsonValueKind.Object)
+                // The cloud answers {"status":"success","removed_servers":N}. This used
+                // to read the old Supabase edge function's {"success":true,"purged":{...}},
+                // so after the move to the Laravel API every purge reported
+                // "Unexpected response structure" — while having worked.
+                if (root.TryGetProperty("status", out var statusEl)
+                    && string.Equals(statusEl.GetString(), "success", StringComparison.OrdinalIgnoreCase))
                 {
                     result.Success = true;
-                    if (purgedEl.TryGetProperty("map_overlays", out var mo)) result.PurgedMapOverlays = mo.GetInt32();
-                    if (purgedEl.TryGetProperty("base_markers", out var bm)) result.PurgedBaseMarkers = bm.GetInt32();
-                    if (purgedEl.TryGetProperty("smart_devices", out var sd)) result.PurgedSmartDevices = sd.GetInt32();
-                    if (purgedEl.TryGetProperty("user_servers", out var us)) result.PurgedUserServers = us.GetInt32();
-                    if (purgedEl.TryGetProperty("alexa_reset", out var ar)) result.AlexaReset = ar.GetBoolean();
+                    if (root.TryGetProperty("removed_servers", out var rs) && rs.TryGetInt32(out var count))
+                        result.RemovedServers = count;
                 }
                 else
                 {

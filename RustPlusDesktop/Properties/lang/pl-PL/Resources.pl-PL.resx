@@ -5717,4 +5717,7 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Automatycznie sprawdzaj aktualizacje przy uruchamianiu i pobieraj szybkie łatki delta w tle.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Uważaj na słowa — ostrzeżenie {0} z {1}. Zachowaj kulturę, bo następnym razem będzie blokada.</value>
+  </data>
 </root>

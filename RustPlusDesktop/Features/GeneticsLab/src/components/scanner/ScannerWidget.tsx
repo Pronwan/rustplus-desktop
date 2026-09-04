@@ -5,7 +5,8 @@ import {
   Box,
   IconButton,
   Button,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -20,6 +21,7 @@ import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useApp } from '../../context/AppContext.tsx';
 import { ScannerDiagnostics } from '../../services/scanner/scannerTypes.ts';
 import { SCANNER_CONFIG } from '../../services/scanner/scannerConfig.ts';
@@ -36,7 +38,9 @@ export const ScannerWidget: React.FC = () => {
     scaleScannerRegion,
     resetScannerRegions,
     getScannerDiagnostics,
-    setScannerPreviewEnabled
+    setScannerPreviewEnabled,
+    isAutoCalibrating,
+    autoCalibrateScanner
   } = useApp();
 
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState(false);
@@ -102,7 +106,7 @@ export const ScannerWidget: React.FC = () => {
         gap: 1.25
       }}
     >
-      {/* Title */}
+      {/* Title & Actions */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography
           variant="caption"
@@ -115,9 +119,26 @@ export const ScannerWidget: React.FC = () => {
         >
           {title}
         </Typography>
-        <Tooltip title={description}>
-          <InfoOutlinedIcon sx={{ fontSize: 16, color: 'var(--gl-text-muted)', cursor: 'pointer' }} />
-        </Tooltip>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <Tooltip title={`1-Click Auto Calibrate: Hover over ${regionIndex === 0 ? 'inventory clone' : 'planter'} in Rust and click`}>
+            <IconButton
+              size="small"
+              onClick={() => autoCalibrateScanner(regionIndex)}
+              disabled={isAutoCalibrating}
+              aria-label={`Auto-calibrate ${title}`}
+              sx={{
+                p: 0.25,
+                color: 'var(--gl-primary)',
+                '&:hover': { backgroundColor: 'var(--gl-surface-hover)' }
+              }}
+            >
+              {isAutoCalibrating ? <CircularProgress size={13} color="inherit" /> : <AutoFixHighIcon sx={{ fontSize: 15 }} />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={description}>
+            <InfoOutlinedIcon sx={{ fontSize: 16, color: 'var(--gl-text-muted)', cursor: 'pointer' }} />
+          </Tooltip>
+        </Box>
       </Box>
 
       {/* Direct 6-Letter Preview Viewport (Rust Breeder Style) */}

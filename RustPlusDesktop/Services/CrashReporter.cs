@@ -209,6 +209,34 @@ namespace RustPlusDesk.Services
             return null;
         }
 
+        /// <summary>
+        /// Bundles diagnostics for a bug report: a fresh snapshot of the system state and the recent
+        /// in-app log, plus the latest crash or freeze report if one exists. Returns temp file paths
+        /// ready to attach to a support ticket. Never throws - a diagnostics failure must not stop
+        /// somebody filing the bug it was meant to describe.
+        /// </summary>
+        public static System.Collections.Generic.IReadOnlyList<string> CollectSupportDiagnostics()
+        {
+            var paths = new System.Collections.Generic.List<string>();
+            try
+            {
+                var dir = Path.Combine(Path.GetTempPath(), "rpd-tickets");
+                Directory.CreateDirectory(dir);
+
+                // A point-in-time report: version, OS, memory, threads, and the recent log tail.
+                var snapshot = Path.Combine(dir, $"client-diagnostics_{DateTime.Now:yyyyMMdd-HHmmss}.log");
+                File.WriteAllText(snapshot, BuildDiagnosticReport(null, "SupportTicket", "SUPPORT DIAGNOSTIC SNAPSHOT"), Encoding.UTF8);
+                paths.Add(snapshot);
+
+                // The most recent crash or freeze report, if the app has had one lately.
+                var crash = GetLatestCrashOrFreezeReport();
+                if (!string.IsNullOrEmpty(crash) && File.Exists(crash))
+                    paths.Add(crash);
+            }
+            catch { }
+            return paths;
+        }
+
         private static void ShowCrashDialog(Exception ex, string logFilePath, string title)
         {
             try

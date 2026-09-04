@@ -5717,4 +5717,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>בדוק עדכונים אוטומטית בהפעלה והורד תיקוני דלתא מהירים ברקע.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>שים לב לשפה — אזהרה {0} מתוך {1}. שמור על שפה נקייה, אחרת בפעם הבאה תושעה זמנית.</value>
+  </data>
 </root>

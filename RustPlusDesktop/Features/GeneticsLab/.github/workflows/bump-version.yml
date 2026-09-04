@@ -1,0 +1,73 @@
+name: Bump Version
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump override'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - 'auto'
+          - 'patch'
+          - 'minor'
+          - 'major'
+      dry_run:
+        description: 'Dry run (simulate bump without committing or tagging)'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bump-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: Determine version and tag
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && !startsWith(github.event.head_commit.message, 'chore(release):')"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Determine version and update files
+        id: bump
+        run: node .github/scripts/bump-version.mjs
+        env:
+          INPUT_BUMP_TYPE: ${{ github.event.inputs.bump_type || 'auto' }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Commit, tag, and push
+        if: steps.bump.outputs.bumped == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json README.md CHANGELOG.md
+          git diff --staged --quiet || git commit -m "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
+          git tag -a "${{ steps.bump.outputs.tag }}" -m "Release ${{ steps.bump.outputs.tag }}"
+          git push origin master
+          git push origin "${{ steps.bump.outputs.tag }}"
+
+      - name: Summary
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          echo "### ✅ Version bumped to ${{ steps.bump.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tag \`${{ steps.bump.outputs.tag }}\` pushed — release workflow will trigger automatically." >> "$GITHUB_STEP_SUMMARY"

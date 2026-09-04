@@ -4809,11 +4809,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Möchtest du Supabase wirklich durchsuchen und alle Cloud-Geräte, Map-Overlays und Base Marker von Servern löschen, die sich nicht mehr in deiner Serverliste befinden?</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>Verwaiste Cloud-Daten erfolgreich bereinigt:
-- Map Overlays: {0}
-- Base Marker: {1}
-- Smart Devices: {2}
-- Server-Registrierungen: {3}</value>
+    <value>Cloud-Daten von {0} Server(n) entfernt, die nicht mehr in deiner Liste stehen.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Nur Discord</value>
@@ -6675,5 +6671,98 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Beim Start automatisch nach Updates suchen und schnelle Delta-Patches im Hintergrund herunterladen.</value>
+  </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Achte auf deine Sprache — Verwarnung {0} von {1}. Bleib sachlich, sonst folgt eine Auszeit.</value>
+  </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>Neues Ticket</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>Noch keine Tickets.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>KATEGORIE</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>BETREFF</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>DETAILS</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>Dateien anhängen</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>Dies ist ein Einspruch gegen meine aktuelle Stummschaltung</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>Absenden</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>Zurück zu den Tickets</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>Antwort schreiben…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>Dieses Ticket ist geschlossen.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>Dieses Ticket ist erledigt. Eröffne ein neues, wenn du weiterhin Hilfe brauchst.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>Betreff und Beschreibung werden benötigt.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>Das konnte nicht gesendet werden. Versuch es gleich noch einmal.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>Einspruch</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>Funktionswunsch</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>Sonstiges</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>Offen</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>In Bearbeitung</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>Wartet auf dich</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>Erledigt</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>Geschlossen</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>Nicht angehängt — {0} ist größer als {1} MB.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>Nichts aufzuräumen — jeder Server mit Cloud-Daten steht noch in deiner Liste.</value>
   </data>
 </root>

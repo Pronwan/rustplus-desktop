@@ -1056,10 +1056,22 @@ namespace RustPlusDesk.Views
 
                 if (result.Success)
                 {
-                    string formatStr = Properties.Resources.PurgeOrphanedCloudDataSuccessMessage ?? "Purged orphaned cloud data:\n- Map Overlays: {0}\n- Base Markers: {1}\n- Smart Devices: {2}\n- Server Registrations: {3}";
-                    string msg = string.Format(formatStr, result.PurgedMapOverlays, result.PurgedBaseMarkers, result.PurgedSmartDevices, result.PurgedUserServers);
+                    // Nothing removed is the common outcome and used to read as a
+                    // silent no-op, which is what made people press it again. Say
+                    // so plainly instead: every server in the cloud is one you
+                    // still have, so there was nothing orphaned to clean up.
+                    string msg = result.RemovedServers == 0
+                        ? RustPlusDesk.Helpers.Loc.Text(
+                            "PurgeOrphanedCloudDataNothingToDo",
+                            "Nothing to clean up — every server with cloud data is still in your list.")
+                        : string.Format(
+                            System.Globalization.CultureInfo.CurrentCulture,
+                            RustPlusDesk.Helpers.Loc.Text(
+                                "PurgeOrphanedCloudDataSuccessMessage",
+                                "Removed the cloud data of {0} server(s) that are no longer in your list."),
+                            result.RemovedServers);
 
-                    ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.TotalPurgedCount} items removed.");
+                    ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.RemovedServers} server(s) removed.");
                     ParentWindow?.ShowInfoSnackbar(Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", msg, WpfUi.ControlAppearance.Success);
                 }
                 else

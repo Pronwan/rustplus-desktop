@@ -4734,11 +4734,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>您确定要扫描 Supabase 并永久删除不再位于服务器列表中所有服务器的云端设备、地图图层和基地标记吗？</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>成功清理云端残留孤立数据：
-- 地图图层：{0}
-- 基地标记：{1}
-- 智能设备：{2}
-- 服务器注册：{3}</value>
+    <value>已删除 {0} 个不在你列表中的服务器的云端数据。</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>仅限 Discord</value>
@@ -6345,5 +6341,98 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>启动时自动检查更新，并在后台下载快速增量补丁。</value>
+  </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>注意用词 — 第 {0} 次警告，共 {1} 次。请保持文明，否则下次将被禁言。</value>
+  </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>工单</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>新建工单</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>还没有工单。</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>添加附件</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>这是对我当前禁言的申诉</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>返回工单列表</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>写回复…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>该工单已关闭。</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>该工单已解决。如果仍需帮助，请新建工单。</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>需要填写主题和详情。</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>发送失败，请稍后再试。</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>申诉</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>缺陷</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>功能建议</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>待处理</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>等待你的回复</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>已解决</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>已关闭</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>未添加 — {0} 超过 {1} MB。</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>无需清理 — 所有有云端数据的服务器都还在你的列表中。</value>
   </data>
 </root>

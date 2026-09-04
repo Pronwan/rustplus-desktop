@@ -27,9 +27,18 @@ export const AboutModal: React.FC = () => {
       fullWidth
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          About Genetics Lab
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            About Genetics Lab
+          </Typography>
+          <Chip
+            size="small"
+            label={`v${__APP_VERSION__}`}
+            color="primary"
+            variant="outlined"
+            sx={{ height: 22, fontWeight: 700, fontFamily: 'monospace', fontSize: '0.75rem' }}
+          />
+        </Box>
         <IconButton aria-label="Close about dialog" size="small" onClick={() => setIsAboutModalOpen(false)}>
           <CloseIcon fontSize="small" />
         </IconButton>

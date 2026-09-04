@@ -21,12 +21,15 @@ export type ScannerEventType =
   | 'ERROR'
   | 'DIAGNOSTICS'
   | 'STARVATION_DETECTED'
-  | 'STARVATION_RESOLVED';
+  | 'STARVATION_RESOLVED'
+  | 'ACTIVE_REGION_CHANGED'
+  | 'IDLE';
 
 export interface ScannerEvent {
   type: ScannerEventType;
   regionIndex?: number;
   regionType?: ScannerRegionType;
+  activeRegion?: ScannerRegionType | null;
   previewDataUrl?: string;
   geneString?: string;
   confidence?: number;
@@ -53,6 +56,7 @@ export interface ScanCandidate {
   geneConfidences: number[];
   activityScore: number;
   valid: boolean;
+  isFastPath?: boolean;
 }
 
 export interface RegionActivity {

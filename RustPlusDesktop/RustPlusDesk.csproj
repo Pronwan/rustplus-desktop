@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>9.1.1</Version>
+		<Version>9.2.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -63,6 +63,16 @@
 	</ItemGroup>
 	
 	
+	<!-- Ticket notification chime. Copied to output (played by MediaPlayer, which needs a file
+	     path, not an embedded resource). Conditioned so the build stays green until the wav/mp3
+	     is dropped in. -->
+	<ItemGroup Condition="Exists('Assets\notification-incoming.mp3')">
+	  <None Remove="Assets\notification-incoming.mp3" />
+	  <Content Include="Assets\notification-incoming.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
 	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
 	  <None Remove="Assets\1min.mp3" />

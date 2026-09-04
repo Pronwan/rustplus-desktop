@@ -1,5 +1,6 @@
 using RustPlusDesk.Services.Social;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -1419,17 +1420,24 @@ public partial class LfgOverlay : UserControl
         var replyTo = _replyTarget;
         ClearReplyTarget();
 
-        var result = await SocialApi.PostChatAsync(body!, _room, replyTo?.Id).ConfigureAwait(true);
+        var outcome = await SocialApi.PostChatAsync(body!, _room, replyTo?.Id).ConfigureAwait(true);
 
-        if (result != ChatPostResult.Ok)
+        if (outcome.Result != ChatPostResult.Ok)
         {
             // Put the text back. Whatever the reason, the words are still worth keeping - and for
             // a link the whole point is that they can rewrite it. The reply target comes back with
             // it, since retyping the message and losing what it answered would be its own annoyance.
-            TxtChat.Text = body;
-            _replyTarget = replyTo;
-            ShowReplyBar();
-            ShowChatRefusal(result);
+            //
+            // A profanity warning is the exception: the words are exactly what was wrong, so they
+            // are not handed back to be sent again unchanged.
+            if (outcome.Result != ChatPostResult.ProfanityWarning)
+            {
+                TxtChat.Text = body;
+                _replyTarget = replyTo;
+                ShowReplyBar();
+            }
+
+            ShowChatRefusal(outcome);
         }
         else
         {
@@ -1449,8 +1457,10 @@ public partial class LfgOverlay : UserControl
     /// A single "could not send" leaves the user to guess which, and the usual guess is that the
     /// app is broken.
     /// </summary>
-    private void ShowChatRefusal(ChatPostResult result)
+    private void ShowChatRefusal(ChatPostOutcome outcome)
     {
+        var result = outcome.Result;
+
         // A sanction already has its own bar in place of the text box, drawn from the read that
         // follows this. Saying it twice would be shouting.
         if (result == ChatPostResult.Sanctioned)
@@ -1465,6 +1475,18 @@ public partial class LfgOverlay : UserControl
             _hasChatConsent = false;
             ChatRulesPanel.Visibility = Visibility.Visible;
             ChatRefusal.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        // The profanity warning is the one refusal that carries a count: which warning this is, and
+        // how many there are before the room stops warning and starts timing out.
+        if (result == ChatPostResult.ProfanityWarning)
+        {
+            var template = Properties.Resources.GetString("ChatRefusedProfanity");
+            ChatRefusal.Text = outcome.WarningMax > 0
+                ? string.Format(CultureInfo.CurrentCulture, template, outcome.WarningNumber, outcome.WarningMax)
+                : template;
+            ChatRefusal.Visibility = Visibility.Visible;
             return;
         }
 
@@ -1488,7 +1510,7 @@ public partial class LfgOverlay : UserControl
         {
             // Nothing was recorded, so posting would be refused anyway. Better to say so than to
             // let them type a line that vanishes.
-            ShowChatRefusal(ChatPostResult.Failed);
+            ShowChatRefusal(ChatPostOutcome.Of(ChatPostResult.Failed));
             return;
         }
 

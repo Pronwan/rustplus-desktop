@@ -5717,4 +5717,7 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Başlangıçta güncellemeleri otomatik olarak denetler ve hızlı delta yamalarını arka planda indirir.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Diline dikkat et — {1} uyarıdan {0}. Saygılı ol, yoksa bir sonrakinde susturulursun.</value>
+  </data>
 </root>

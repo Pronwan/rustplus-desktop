@@ -5817,7 +5817,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>연결이 끊긴 클라우드 데이터 삭제</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>연결이 끊긴 클라우드 데이터를 성공적으로 삭제했습니다:&amp;#10;- 지도 오버레이: {0}&amp;#10;- 기지 마커: {1}&amp;#10;- 스마트 장치: {2}&amp;#10;- 서버 등록: {3}</value>
+    <value>목록에 없는 서버 {0}개의 클라우드 데이터를 삭제했습니다.</value>
   </data>
   <data name="PurgeOrphanedCloudDataTooltip" xml:space="preserve">
     <value>Supabase 데이터베이스를 검사하여 삭제된 서버의 장치, 오버레이 및 마커를 제거합니다.</value>
@@ -6514,5 +6514,98 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>시작할 때 자동으로 업데이트를 확인하고 빠른 델타 패치를 백그라운드에서 다운로드합니다.</value>
+  </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>언어에 주의해 주세요 — 경고 {0}/{1}회. 계속되면 다음에는 일시 차단됩니다.</value>
+  </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>문의</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>새 문의</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>아직 문의가 없습니다.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>분류</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>제목</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>상세 내용</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>파일 첨부</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>현재 채팅 차단에 대한 이의 제기입니다</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>제출</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>문의 목록으로</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>답장 작성…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>보내기</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>종료된 문의입니다.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>해결된 문의입니다. 도움이 더 필요하면 새 문의를 열어 주세요.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>제목과 내용을 입력해 주세요.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>전송하지 못했습니다. 잠시 후 다시 시도해 주세요.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>이의 제기</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>오류</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>기능 제안</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>도움말</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>기타</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>접수됨</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>처리 중</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>답변 대기</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>해결됨</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>종료됨</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>첨부하지 않았습니다 — {0}은(는) {1}MB를 초과합니다.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>정리할 항목이 없습니다 — 클라우드 데이터가 있는 서버는 모두 목록에 있습니다.</value>
   </data>
 </root>

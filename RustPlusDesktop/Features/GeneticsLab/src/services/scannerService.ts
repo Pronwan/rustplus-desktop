@@ -15,9 +15,15 @@ import { FrameStabilityDetector } from './scanner/FrameStabilityDetector.ts';
 import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { PlantScanDeduplicator } from './scanner/PlantScanDeduplicator.ts';
 import { ScannerStarvationDetector } from './scanner/ScannerStarvationDetector.ts';
+import { AutoCalibrator, AutoCalibrateResult } from './scanner/AutoCalibrator.ts';
+import { DesktopTemplateRecognizer } from './scanner/DesktopTemplateRecognizer.ts';
+import { DesktopSlotExtractor } from './scanner/DesktopSlotExtractor.ts';
 
 export * from './scanner/scannerTypes.ts';
 export * from './scanner/scannerConfig.ts';
+export * from './scanner/AutoCalibrator.ts';
+export * from './scanner/DesktopTemplateRecognizer.ts';
+export * from './scanner/DesktopSlotExtractor.ts';
 
 export class ScannerService {
   private listeners: ScannerEventListener[] = [];
@@ -187,18 +193,7 @@ export class ScannerService {
         setTimeout(done, 1200);
       });
 
-      // Warm up Tesseract OCR workers if not already warm. We wait up to 15s for
-      // the (potentially large, first-time) asset download to finish so the very
-      // first scan can read immediately. If it's still not warm after that, we go
-      // ahead and start the scanner anyway — warmup keeps running in the
-      // background (the scan loop waits for isWarm() before OCR), so reads begin
-      // as soon as the download completes instead of stranding in "Initializing…".
-      if (!this.recognizer.isWarm()) {
-        await Promise.race([
-          warmupPromise,
-          new Promise<void>((res) => setTimeout(res, 15000))
-        ]);
-      }
+      // Fast-path template recognizer starts instantly without Tesseract warmup delay!
 
       this.isScanning = true;
       this.isInitializing = false;
@@ -219,8 +214,26 @@ export class ScannerService {
   }
 
 
+  private lastScanExecuteTime = 0;
+
   private startScanLoop(): void {
     if (!this.isScanning) return;
+
+    // Use requestVideoFrameCallback if available to synchronize directly with GPU compositor frames
+    if (this.videoElement && 'requestVideoFrameCallback' in this.videoElement) {
+      const onFrame = () => {
+        if (!this.isScanning) return;
+        const now = performance.now();
+        if (now - this.lastScanExecuteTime >= 15) {
+          this.lastScanExecuteTime = now;
+          this.scanFrame();
+        }
+        if (this.isScanning && this.videoElement && 'requestVideoFrameCallback' in this.videoElement) {
+          (this.videoElement as any).requestVideoFrameCallback(onFrame);
+        }
+      };
+      (this.videoElement as any).requestVideoFrameCallback(onFrame);
+    }
 
     try {
       const tickerBlob = new Blob([`
@@ -241,7 +254,11 @@ export class ScannerService {
       this.tickerWorker = new Worker(URL.createObjectURL(tickerBlob));
       this.tickerWorker.onmessage = () => {
         if (this.isScanning) {
-          this.scanFrame();
+          const now = performance.now();
+          if (now - this.lastScanExecuteTime >= SCANNER_CONFIG.performance.scanIntervalMs - 3) {
+            this.lastScanExecuteTime = now;
+            this.scanFrame();
+          }
         }
       };
       this.tickerWorker.postMessage('START');
@@ -266,7 +283,7 @@ export class ScannerService {
     }
     this.lastTickTime = startTime;
 
-    if (this.videoElement.currentTime !== this.lastVideoTime) {
+    if (this.videoElement.readyState >= 2) {
       if (this.lastVideoFrameTime > 0) {
         this.lastVideoFrameGap = startTime - this.lastVideoFrameTime;
       }
@@ -290,12 +307,10 @@ export class ScannerService {
       this.lastFpsCalcTime = now;
     }
 
-    // Preview is skipped entirely unless a consumer (the calibration panel) is showing it
-    // and the page is actually visible. Recognition below is unaffected by this gate.
-    const previewVisible =
-      this.previewEnabled && (typeof document === 'undefined' || document.visibilityState === 'visible');
+    // Preview is emitted whenever previewEnabled is true, independent of document.visibilityState,
+    // so background windows, overlays, and multi-monitor setups receive real-time preview streams.
     const shouldEmitPreview =
-      previewVisible && now - this.lastPreviewEmitTime >= SCANNER_CONFIG.performance.previewIntervalMs;
+      this.previewEnabled && now - this.lastPreviewEmitTime >= SCANNER_CONFIG.performance.previewIntervalMs;
     if (shouldEmitPreview) {
       this.lastPreviewEmitTime = now;
     }
@@ -306,11 +321,13 @@ export class ScannerService {
       type: ScannerRegionType;
       xPx: number;
       yPx: number;
+      wPx: number;
       hPx: number;
       geneWPx: number;
       gapWPx: number;
       signature: number;
       activityScore: number;
+      roiData?: Uint8ClampedArray;
     }[] = [];
 
     for (let rIdx = 0; rIdx < this.regions.length; rIdx++) {
@@ -345,16 +362,26 @@ export class ScannerService {
       this.activityScores[rIdx] = score;
 
       if (score < SCANNER_CONFIG.recognition.activeRegionThreshold) {
+        const wasVisible = this.deduplicator.isRegionCurrentlyVisible(rIdx);
         this.deduplicator.markRegionDismissed(rIdx);
+        if (wasVisible) {
+          this.emit({ type: 'IDLE', regionIndex: rIdx });
+        }
         continue;
       }
 
       const signature = this.changeDetector.computeSignature(roiCtx, wPx, hPx);
       const hasChanged = this.changeDetector.hasChanged(rIdx, signature);
-      const isStable = this.stabilityDetector.registerFrame(rIdx, signature);
+      // Fast-Path: when tooltip activity is present, use fastStableDurationMs (15ms)
+      const isStable = this.stabilityDetector.registerFrame(
+        rIdx,
+        signature,
+        SCANNER_CONFIG.performance.roiChangeThreshold,
+        SCANNER_CONFIG.performance.fastStableDurationMs
+      );
       const lastOcr = this.lastOcrTimestamps[rIdx] || 0;
 
-      if ((hasChanged && isStable) || now - lastOcr > 200) {
+      if ((hasChanged && isStable) || isStable || now - lastOcr > 120) {
         const geneWPx = Math.round(wPx * reg.GENE_WIDTH_TO_WIDTH_RATIO);
         const totalGeneW = geneWPx * 6;
         const gapWPx = Math.max(0, (wPx - totalGeneW) / 5);
@@ -364,17 +391,29 @@ export class ScannerService {
           type: rIdx === 0 ? 'inventory' : 'planter',
           xPx,
           yPx,
+          wPx,
           hPx,
           geneWPx,
           gapWPx,
           signature,
-          activityScore: score
+          activityScore: score,
+          roiData
         });
       }
     }
 
+    if (activeCandidates.length === 0 && this.activeRegionType !== 'none') {
+      this.activeRegionType = 'none';
+      this.emit({
+        type: 'ACTIVE_REGION_CHANGED',
+        activeRegion: null,
+        regionIndex: undefined
+      });
+    }
+
     // Step 2: Arbitrated Multi-Region Recognition
-    if (activeCandidates.length > 0 && this.recognizer.isWarm() && !this.isOcrInProgress) {
+    // Fast-path template recognition does not even need Tesseract to be warm!
+    if (activeCandidates.length > 0 && !this.isOcrInProgress) {
       this.isOcrInProgress = true;
       this.scanCount++;
 
@@ -431,11 +470,13 @@ export class ScannerService {
       type: ScannerRegionType;
       xPx: number;
       yPx: number;
+      wPx: number;
       hPx: number;
       geneWPx: number;
       gapWPx: number;
       signature: number;
       activityScore: number;
+      roiData?: Uint8ClampedArray;
     }[]
   ): Promise<void> {
     if (!this.videoElement) return;
@@ -447,35 +488,32 @@ export class ScannerService {
     for (const item of regionsToScan) {
       this.lastOcrTimestamps[item.rIdx] = Date.now();
 
-      // Primary: High-speed single-pass stitched row recognition (~20ms)
-      const stitchedStrip = GeneImagePreprocessor.prepareStitchedGeneStrip(
-        this.videoElement,
-        item.xPx,
-        item.yPx,
-        item.geneWPx,
-        item.gapWPx,
-        item.hPx
-      );
+      let result: { geneString: string; confidence: number; slotConfidences?: number[] } | null = null;
+      let isFastPath = false;
 
-      this.setPipelineStage('row-ocr');
-      const rowStartTime = performance.now();
-      let result = await this.recognizer.recognizeRow(stitchedStrip);
-      rowOcrLatency += performance.now() - rowStartTime;
-
-      // Fallback: Slot recognition if single-pass was ambiguous
-      if (!result) {
-        const slotCanvases = GeneImagePreprocessor.prepareSlotCrops(
-          this.videoElement,
-          item.xPx,
-          item.yPx,
+      // FAST-PATH: Sub-0.2ms In-Memory Template Matcher & Chromatic Color Guard
+      if (item.roiData) {
+        this.setPipelineStage('template-match');
+        const templateResult = DesktopTemplateRecognizer.recognizeFromRoi(
+          item.roiData,
+          item.wPx,
+          item.hPx,
           item.geneWPx,
-          item.gapWPx,
-          item.hPx
+          item.gapWPx
         );
-        this.setPipelineStage('slot-ocr');
-        const slotStartTime = performance.now();
-        result = await this.recognizer.recognizeSlots(slotCanvases);
-        slotOcrLatency += performance.now() - slotStartTime;
+
+        if (
+          templateResult &&
+          templateResult.confidence >= SCANNER_CONFIG.recognition.minConfidence
+        ) {
+          result = {
+            geneString: templateResult.geneString,
+            confidence: templateResult.confidence,
+            slotConfidences: templateResult.slotConfidences
+          };
+          rowOcrLatency += templateResult.latencyMs;
+          isFastPath = true;
+        }
       }
 
       if (result && result.geneString) {
@@ -486,7 +524,8 @@ export class ScannerService {
           confidence: result.confidence,
           geneConfidences: result.slotConfidences || [],
           activityScore: item.activityScore,
-          valid: true
+          valid: true,
+          isFastPath
         });
       }
     }
@@ -498,27 +537,48 @@ export class ScannerService {
 
     if (candidates.length === 0) {
       this.setPipelineStage('no-result');
+      if (this.activeRegionType !== 'none') {
+        this.activeRegionType = 'none';
+        this.emit({
+          type: 'ACTIVE_REGION_CHANGED',
+          activeRegion: null,
+          regionIndex: undefined
+        });
+      }
       return;
     }
 
+    // Step 2b: Identify which region actually detected real gene slots
+    const detectedCandidate = candidates.slice().sort((a, b) => b.confidence - a.confidence)[0];
+    const detectedRegionType: 'none' | ScannerRegionType = detectedCandidate.regionType;
+    const detectedRegionIndex = detectedCandidate.regionIndex;
+
+    if (detectedRegionType !== this.activeRegionType) {
+      this.activeRegionType = detectedRegionType;
+      this.emit({
+        type: 'ACTIVE_REGION_CHANGED',
+        activeRegion: detectedRegionType,
+        regionIndex: detectedRegionIndex
+      });
+    }
+
     // Step 3: Confirm and emit each region independently.
-    // Inventory and planter are distinct sources that are frequently active at the same
-    // time (the planter slots are almost always on screen). They must NOT arbitrate for a
-    // single winner — otherwise hovering an inventory plant while the planter is visible
-    // makes the two regions cancel each other out and nothing gets scanned.
     let emittedAny = false;
     let confirmedAny = false;
     const emittedGenesThisCycle = new Set<string>();
 
     for (const candidate of candidates) {
       this.latestConfidence = candidate.confidence;
-      this.activeRegionType = candidate.regionType;
 
-      // Step 4: Temporal confirmation (per-region history)
-      const votedResult = this.votingService.addCandidate(candidate.regionIndex, {
-        geneString: candidate.genes,
-        confidence: candidate.confidence
-      });
+      // Step 4: Temporal confirmation (per-region history with instant fast-path)
+      const votedResult = this.votingService.addCandidate(
+        candidate.regionIndex,
+        {
+          geneString: candidate.genes,
+          confidence: candidate.confidence
+        },
+        candidate.isFastPath
+      );
 
       if (!votedResult) continue;
       confirmedAny = true;
@@ -537,7 +597,11 @@ export class ScannerService {
         signature
       );
 
-      if (!shouldEmit) continue;
+      if (!shouldEmit) {
+        continue;
+      }
+
+      console.log(`[Scanner EMIT] >>> SAPLING-FOUND: ${votedResult.geneString} (conf: ${Math.round(votedResult.confidence)}%)`);
 
       this.acceptedCount++;
       this.pendingUiGene = votedResult.geneString;
@@ -591,8 +655,8 @@ export class ScannerService {
 
     if (srcW <= 0 || srcH <= 0) return;
 
-    // Target preview resolution for crisp high-DPI display
-    const targetW = 440;
+    // Target preview resolution for crisp high-DPI display without CPU lag
+    const targetW = 360;
     const scale = targetW / srcW;
     const targetH = Math.round(srcH * scale);
 
@@ -661,7 +725,7 @@ export class ScannerService {
       type: 'PREVIEW',
       regionIndex: rIdx,
       regionType: rIdx === 0 ? 'inventory' : 'planter',
-      previewDataUrl: pCanvas.toDataURL('image/webp', 0.9)
+      previewDataUrl: pCanvas.toDataURL('image/jpeg', 0.68)
     });
   }
 
@@ -807,6 +871,37 @@ export class ScannerService {
 
   public getRegions(): ScannerRegion[] {
     return this.regions;
+  }
+
+  public getVideoElement(): HTMLVideoElement | null {
+    return this.videoElement;
+  }
+
+  /**
+   * Runs 1-Click Auto Calibration using the live video stream from screen capture.
+   */
+  public async autoCalibrate(preferredRegionIndex?: number): Promise<AutoCalibrateResult> {
+    if (!this.videoElement || this.videoElement.videoWidth === 0) {
+      return {
+        success: false,
+        regionIndex: preferredRegionIndex ?? 0,
+        message: 'Screen capture is not active. Please start the scanner first.'
+      };
+    }
+
+    const res = await AutoCalibrator.calibrateFromVideo(
+      this.videoElement,
+      preferredRegionIndex,
+      this.recognizer
+    );
+
+    if (res.success && res.region) {
+      const updatedRegions = [...this.regions];
+      updatedRegions[res.regionIndex] = res.region;
+      this.setRegions(updatedRegions);
+    }
+
+    return res;
   }
 
   public stop(): void {

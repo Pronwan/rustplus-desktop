@@ -4731,11 +4731,7 @@
     <value>هل أنت متأكد من أنك تريد فحص Supabase والحذف النهائي لجميع الأجهزة والطبقات والعلامات التابعة لسيرفرات لم تعد في قائمتك؟</value>
   </data>
   <data name="PurgeOrphanedCloudDataSuccessMessage" xml:space="preserve">
-    <value>تم تنظيف البيانات السحابية المهجورة بنجاح:
-- طبقات الخريطة: {0}
-- علامات القواعد: {1}
-- الأجهزة الذكية: {2}
-- تسجيلات السيرفر: {3}</value>
+    <value>تم حذف البيانات السحابية لـ {0} خادم لم يعد موجودًا في قائمتك.</value>
   </data>
   <data name="UiDiscordWebhookExclusive" xml:space="preserve">
     <value>Discord فقط</value>
@@ -6488,5 +6484,98 @@
   </data>
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>التحقق تلقائيًا من التحديثات عند بدء التشغيل وتنزيل حزم دلتا السريعة في الخلفية.</value>
+  </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>انتبه لألفاظك — تحذير {0} من {1}. حافظ على اللياقة، وإلا فالمرة القادمة إيقاف مؤقت.</value>
+  </data>
+  <data name="SupportTitle" xml:space="preserve">
+    <value>التذاكر</value>
+  </data>
+  <data name="SupportNewTicket" xml:space="preserve">
+    <value>تذكرة جديدة</value>
+  </data>
+  <data name="SupportNoTickets" xml:space="preserve">
+    <value>لا توجد تذاكر بعد.</value>
+  </data>
+  <data name="SupportCategory" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="SupportSubject" xml:space="preserve">
+    <value>الموضوع</value>
+  </data>
+  <data name="SupportDetails" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="SupportRemove" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="SupportAttachFiles" xml:space="preserve">
+    <value>إرفاق ملفات</value>
+  </data>
+  <data name="SupportAppeal" xml:space="preserve">
+    <value>هذا اعتراض على كتم صوتي الحالي</value>
+  </data>
+  <data name="SupportCancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="SupportSubmit" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="SupportBackToTickets" xml:space="preserve">
+    <value>العودة إلى التذاكر</value>
+  </data>
+  <data name="SupportReplyPlaceholder" xml:space="preserve">
+    <value>اكتب ردًا…</value>
+  </data>
+  <data name="SupportSend" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="SupportTicketClosed" xml:space="preserve">
+    <value>هذه التذكرة مغلقة.</value>
+  </data>
+  <data name="SupportTicketResolved" xml:space="preserve">
+    <value>تم حل هذه التذكرة. افتح تذكرة جديدة إذا كنت لا تزال بحاجة إلى مساعدة.</value>
+  </data>
+  <data name="SupportNeedSubjectAndDetail" xml:space="preserve">
+    <value>مطلوب موضوع وبعض التفاصيل.</value>
+  </data>
+  <data name="SupportSendFailed" xml:space="preserve">
+    <value>تعذّر الإرسال. حاول مرة أخرى بعد قليل.</value>
+  </data>
+  <data name="SupportCatAppeal" xml:space="preserve">
+    <value>اعتراض</value>
+  </data>
+  <data name="SupportCatBug" xml:space="preserve">
+    <value>خلل</value>
+  </data>
+  <data name="SupportCatFeature" xml:space="preserve">
+    <value>ميزة</value>
+  </data>
+  <data name="SupportCatHelp" xml:space="preserve">
+    <value>مساعدة</value>
+  </data>
+  <data name="SupportCatOther" xml:space="preserve">
+    <value>أخرى</value>
+  </data>
+  <data name="SupportStatusOpen" xml:space="preserve">
+    <value>مفتوحة</value>
+  </data>
+  <data name="SupportStatusInProgress" xml:space="preserve">
+    <value>قيد المعالجة</value>
+  </data>
+  <data name="SupportStatusAwaitingUser" xml:space="preserve">
+    <value>بانتظار ردك</value>
+  </data>
+  <data name="SupportStatusResolved" xml:space="preserve">
+    <value>تم الحل</value>
+  </data>
+  <data name="SupportStatusClosed" xml:space="preserve">
+    <value>مغلقة</value>
+  </data>
+  <data name="SupportAttachmentTooLarge" xml:space="preserve">
+    <value>لم يُرفق — {0} أكبر من {1} ميغابايت.</value>
+  </data>
+  <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
+    <value>لا شيء لتنظيفه — كل خادم لديه بيانات سحابية لا يزال في قائمتك.</value>
   </data>
 </root>
