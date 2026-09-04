@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.2.0) (2026-09-04)
+
+### 🚀 Features
+
+* feat(ui): display version in About modal title and under gene input ([1ed6cf8](https://github.com/JawadYzbk/rust-genetics-lab/commit/1ed6cf8771481a050e3a1cecc2bf4df6bcae246b))
+
+### ⚡ Performance Improvements
+
+* perf(ci): accelerate GitHub Actions with multi-layer caching and single-pass build ([71bd522](https://github.com/JawadYzbk/rust-genetics-lab/commit/71bd522bfb22864f7c0b8bfd29411b71102e5e96))
+
+### ♻️ Code Refactoring
+
+* refactor(ci): decouple version bumping and release publishing into standalone workflows ([7e0c066](https://github.com/JawadYzbk/rust-genetics-lab/commit/7e0c06653e4233e2c619c24632b746401fbab820))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.1.0...v1.2.0
+All notable changes to this project will be documented in this file.
+
 ## [1.1.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.1.0) (2026-09-04)
 
 ### 🚀 Features
