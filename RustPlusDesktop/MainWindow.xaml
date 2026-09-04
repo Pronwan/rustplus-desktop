@@ -4824,10 +4824,9 @@
                         x:Name="LfgPanel"
                         Visibility="Collapsed" />
 
-                    <!--  Support: tickets and the notification centre  -->
+                    <!--  Support: tickets. Fills this column like the other overlays.  -->
                     <views:SupportOverlay
                         x:Name="SupportPanel"
-                        HorizontalAlignment="Right"
                         Visibility="Collapsed" />
                 </Grid>
             </Border>
