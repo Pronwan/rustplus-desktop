@@ -3043,6 +3043,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool geneticsSelected = MainTabs.SelectedItem == GeneticsLabTab;
         bool wipeTrackerSelected = MainTabs.SelectedItem == PlayerWipeTrackerTab;
         bool deathStatsSelected = MainTabs.SelectedItem == DeathStatsTab;
+        bool ticketsSelected = MainTabs.SelectedItem == TicketsTab;
         RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
         GeneticsLabPanel.Visibility = geneticsSelected ? Visibility.Visible : Visibility.Collapsed;
         PlayerWipeTrackerPanel.Visibility = wipeTrackerSelected ? Visibility.Visible : Visibility.Collapsed;
@@ -3050,8 +3051,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
         if (wipeTrackerSelected) OpenPlayerWipeTrackerWorkspace();
         if (deathStatsSelected) OpenDeathStatsWorkspace();
-        ServerContextPanel.Visibility = (recyclerSelected || geneticsSelected || wipeTrackerSelected || deathStatsSelected) ? Visibility.Collapsed : Visibility.Visible;
-        if (!raidSelected && !recyclerSelected && !geneticsSelected && !wipeTrackerSelected && !deathStatsSelected)
+        // Tickets is an inline tab like Recycler: re-read on open, and it takes the workspace over
+        // the map without touching the device/servers panel beside it.
+        if (ticketsSelected) SupportPanel.Refresh();
+        ServerContextPanel.Visibility = (recyclerSelected || geneticsSelected || wipeTrackerSelected || deathStatsSelected || ticketsSelected) ? Visibility.Collapsed : Visibility.Visible;
+        if (!raidSelected && !recyclerSelected && !geneticsSelected && !wipeTrackerSelected && !deathStatsSelected && !ticketsSelected)
             _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
 
         if (MainTabs.SelectedItem == NotificationsTab)

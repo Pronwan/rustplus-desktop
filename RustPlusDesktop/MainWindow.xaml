@@ -4114,6 +4114,21 @@
                                 CloseRequested="RecyclerCalculator_CloseRequested" />
                         </TabItem>
 
+                        <!--  ===== TICKETS =====  hosted as a tab like Recycler so the left panel stays  -->
+                        <TabItem x:Name="TicketsTab" Style="{StaticResource PrettyTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="ChatHelp24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Tickets" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <views:SupportOverlay
+                                x:Name="SupportPanel"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                CloseRequested="SupportPanel_CloseRequested" />
+                        </TabItem>
+
                         <TabItem x:Name="ConsoleHelperTab" Style="{StaticResource PrettyTabItem}">
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
@@ -4497,7 +4512,8 @@
                                 Style="{StaticResource SidebarRailButton}"
                                 AutomationProperties.Name="Tickets"
                                 AutomationProperties.HelpText="Support, appeals and bug reports"
-                                Click="BtnSupportPanel_Click"
+                                Click="CompactSidebarTab_Click"
+                                Tag="{Binding ElementName=TicketsTab}"
                                 ToolTip="Tickets"
                                 Foreground="#FFE8683C"
                                 Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
@@ -4824,10 +4840,6 @@
                         x:Name="LfgPanel"
                         Visibility="Collapsed" />
 
-                    <!--  Support: tickets. Fills this column like the other overlays.  -->
-                    <views:SupportOverlay
-                        x:Name="SupportPanel"
-                        Visibility="Collapsed" />
                 </Grid>
             </Border>
 

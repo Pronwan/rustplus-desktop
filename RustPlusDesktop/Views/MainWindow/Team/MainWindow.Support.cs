@@ -22,21 +22,13 @@ public partial class MainWindow
     private readonly ObservableCollection<NotificationRowVm> _topNotifications = new();
 
     /// <summary>
-    /// Opens the Tickets panel from the left rail — support, appeals, bug reports. A panel rather
-    /// than a window, like LFG, so it sits over the map the user is already looking at.
+    /// The Tickets rail button switches to the Tickets tab (see CompactSidebarTab_Click), so it
+    /// sits in the workspace like Recycler rather than floating over the device panel. Selecting the
+    /// tab refreshes it via MainTabs_SelectionChanged; closing it returns to Devices.
     /// </summary>
-    private void BtnSupportPanel_Click(object sender, RoutedEventArgs e)
+    private void SupportPanel_CloseRequested(object sender, EventArgs e)
     {
-        if (SupportPanel.Visibility == Visibility.Visible)
-        {
-            SupportPanel.Visibility = Visibility.Collapsed;
-            return;
-        }
-
-        EnsureSupportWired();
-
-        SupportPanel.Refresh();
-        SupportPanel.Visibility = Visibility.Visible;
+        MainTabs.SelectedItem = DevicesTabItem;
     }
 
     /// <summary>
@@ -50,7 +42,6 @@ public partial class MainWindow
         _supportWired = true;
 
         TopNotificationsList.ItemsSource = _topNotifications;
-        SupportPanel.CloseRequested += (_, __) => SupportPanel.Visibility = Visibility.Collapsed;
 
         // Live: a ticket reply or an announcement lands on the private user channel the social layer
         // already subscribes to. The bell bumps whether or not the dropdown is open.
@@ -128,12 +119,13 @@ public partial class MainWindow
         var vm = _topNotifications.FirstOrDefault(n => n.Id == id);
         await SupportApi.MarkNotificationReadAsync(id).ConfigureAwait(true);
 
-        // A ticket notification opens its ticket in the panel rather than sending the user to the web.
+        // A ticket notification opens its ticket in the Tickets tab rather than sending the user to
+        // the web. Selecting the tab refreshes the list; then jump straight into the ticket.
         if (vm?.TicketId is string ticketId && ticketId.Length > 0)
         {
             NotificationsPopup.IsOpen = false;
             EnsureSupportWired();
-            SupportPanel.Visibility = Visibility.Visible;
+            MainTabs.SelectedItem = TicketsTab;
             await SupportPanel.OpenTicketAsync(ticketId).ConfigureAwait(true);
         }
 
