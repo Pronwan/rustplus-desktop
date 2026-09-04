@@ -91,6 +91,7 @@ public partial class MainWindow
     public async Task RefreshSocialAvailabilityAsync()
     {
         EnsureLfgWired();
+        EnsureSupportWired();
 
         // The account may have just changed; the count belongs to whoever is signed in now.
         _ = Services.Social.SocialUnread.RefreshAsync();

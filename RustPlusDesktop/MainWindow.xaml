@@ -3263,6 +3263,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{DynamicResource ScaleLabel}" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#AAA" FontSize="10" />
                                                 <Slider Grid.Column="1" x:Name="SliderPlayerIconSize" Minimum="0.5" Maximum="1.5" Value="1.0" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="SliderPlayerIconSize_ValueChanged" VerticalAlignment="Center" MinWidth="30" />
@@ -3302,6 +3303,44 @@
                                                               Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                                               Width="13" Height="13" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,5,0" />
                                                         <TextBlock Text="{DynamicResource LfgButton}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"
+                                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <!-- Support: tickets and the notification centre. Same rail, same style as LFG. -->
+                                                <Button Grid.Column="4" x:Name="BtnSupportPanel" Click="BtnSupportPanel_Click"
+                                                        Margin="6,0,0,0" Height="24" Padding="7,0" Cursor="Hand"
+                                                        ToolTip="Support">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Background" Value="Transparent"/>
+                                                            <Setter Property="BorderThickness" Value="1"/>
+                                                            <Setter Property="BorderBrush" Value="#444"/>
+                                                            <Setter Property="Foreground" Value="#CCC"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="#222"/>
+                                                                    <Setter Property="BorderBrush" Value="#E8683C"/>
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <!-- A help/question glyph. -->
+                                                        <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                              Width="13" Height="13" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                        <TextBlock x:Name="SupportUnreadBadge" Text="Support" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"
                                                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
                                                     </StackPanel>
                                                 </Button>
@@ -4743,6 +4782,12 @@
                     <!--  Looking for Group Overlay  -->
                     <views:LfgOverlay
                         x:Name="LfgPanel"
+                        Visibility="Collapsed" />
+
+                    <!--  Support: tickets and the notification centre  -->
+                    <views:SupportOverlay
+                        x:Name="SupportPanel"
+                        HorizontalAlignment="Right"
                         Visibility="Collapsed" />
                 </Grid>
             </Border>

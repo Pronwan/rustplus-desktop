@@ -39,6 +39,9 @@ public static class SocialRealtime
     /// <summary>Somebody wants to open a thread and is waiting to be let in.</summary>
     public static event Action? RequestArrived;
 
+    /// <summary>A notification landed in this account's inbox — a ticket reply, an announcement.</summary>
+    public static event Action? NotificationArrived;
+
     private const string ChatChannel = "presence-chat.global";
 
     /// <summary>
@@ -188,6 +191,13 @@ public static class SocialRealtime
             || norm.Equals("social.request", StringComparison.OrdinalIgnoreCase))
         {
             Raise(() => RequestArrived?.Invoke());
+        }
+        else if (norm.EndsWith("BroadcastNotificationCreated", StringComparison.OrdinalIgnoreCase)
+            || norm.Equals("notification", StringComparison.OrdinalIgnoreCase))
+        {
+            // Laravel's database/broadcast notifications arrive here on the private user channel.
+            // The panel decides what to do with it; this only says one showed up.
+            Raise(() => NotificationArrived?.Invoke());
         }
     }
 
