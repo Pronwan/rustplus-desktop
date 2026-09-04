@@ -81,10 +81,9 @@ namespace RustPlusDesk.Views
         private void GeneticsLabTabContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) =>
             UpdatePerformanceMode();
 
-        // Boost only while the tab is visible AND the scanner is actively running. This keeps
-        // the scanner's realtime performance intact while ensuring heavy gene calculations
-        // (visible but not scanning) run at normal priority and don't stutter the whole PC.
-        private void UpdatePerformanceMode() => SetPerformanceMode(IsVisible && _isScannerActive);
+        // Boost whenever the scanner is actively running (even in background behind Rust)
+        // or when visible. This keeps background capture and audio playback 100% unthrottled.
+        private void UpdatePerformanceMode() => SetPerformanceMode(_isScannerActive || IsVisible);
 
         private void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
@@ -142,7 +141,8 @@ namespace RustPlusDesk.Views
                 Directory.CreateDirectory(webViewDataFolder);
 
                 var envOptions = new CoreWebView2EnvironmentOptions(
-                    additionalBrowserArguments: "--disable-background-timer-throttling " +
+                    additionalBrowserArguments: "--autoplay-policy=no-user-gesture-required " +
+                                                "--disable-background-timer-throttling " +
                                                 "--disable-backgrounding-occluded-windows " +
                                                 "--disable-renderer-backgrounding " +
                                                 "--disable-background-media-suspend " +
