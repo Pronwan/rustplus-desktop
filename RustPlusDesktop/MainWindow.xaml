@@ -431,8 +431,12 @@
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0" Margin="12,10,8,8">
                                         <TextBlock Text="Notifications" Foreground="#FFF4F6FA" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                        <ui:Button x:Name="BtnMarkAllRead" Content="Mark all read" Appearance="Transparent"
-                                                   FontSize="11" Padding="6,2" HorizontalAlignment="Right" Click="BtnMarkAllRead_Click" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <ui:Button x:Name="BtnMarkAllRead" Content="Mark all read" Appearance="Transparent"
+                                                       FontSize="11" Padding="6,2" Click="BtnMarkAllRead_Click" />
+                                            <ui:Button x:Name="BtnClearNotifications" Content="Clear all" Appearance="Transparent"
+                                                       FontSize="11" Padding="6,2" Margin="4,0,0,0" Click="BtnClearNotifications_Click" />
+                                        </StackPanel>
                                     </Grid>
                                     <ScrollViewer Grid.Row="1" MaxHeight="420" VerticalScrollBarVisibility="Auto">
                                         <Grid>
@@ -441,14 +445,23 @@
                                                     <DataTemplate>
                                                         <Border Background="{Binding Background}" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Cursor="Hand"
                                                                 MouseLeftButtonUp="TopNotificationRow_Click" Tag="{Binding Id}">
-                                                            <StackPanel>
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                                                    <TextBlock Text="{Binding Title}" Foreground="#FFF4F6FA" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                            <Grid>
+                                                                <StackPanel Margin="0,0,18,0">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                                        <TextBlock Text="{Binding Title}" Foreground="#FFF4F6FA" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{Binding Body}" Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
+                                                                    <ui:Button Visibility="{Binding CtaVisibility}" Content="{Binding CtaLabel}" Appearance="Primary"
+                                                                               FontSize="11" Padding="10,3" Margin="16,6,0,0" HorizontalAlignment="Left"
+                                                                               Tag="{Binding}" Click="NotificationCta_Click" />
+                                                                    <TextBlock Text="{Binding When}" Foreground="#FF6B7280" FontSize="10" Margin="16,4,0,0" />
                                                                 </StackPanel>
-                                                                <TextBlock Text="{Binding Body}" Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
-                                                                <TextBlock Text="{Binding When}" Foreground="#FF6B7280" FontSize="10" Margin="16,4,0,0" />
-                                                            </StackPanel>
+                                                                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="2"
+                                                                           Tag="{Binding}" Click="NotificationDismiss_Click" ToolTip="Dismiss">
+                                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FF6B7280" FontSize="12" />
+                                                                </ui:Button>
+                                                            </Grid>
                                                         </Border>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>

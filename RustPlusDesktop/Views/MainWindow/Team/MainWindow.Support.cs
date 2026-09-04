@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -186,6 +187,32 @@ public partial class MainWindow
         await LoadNotificationsAsync().ConfigureAwait(true);
     }
 
+    private async void BtnClearNotifications_Click(object sender, RoutedEventArgs e)
+    {
+        await SupportApi.ClearAllNotificationsAsync().ConfigureAwait(true);
+        _topNotifications.Clear();
+        TopNotificationsEmpty.Visibility = Visibility.Visible;
+        UpdateNotificationBadge(0);
+    }
+
+    private async void NotificationDismiss_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement fe || fe.Tag is not NotificationRowVm vm)
+            return;
+
+        await SupportApi.DismissNotificationAsync(vm.Id).ConfigureAwait(true);
+        await LoadNotificationsAsync().ConfigureAwait(true);
+    }
+
+    private void NotificationCta_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.Tag is NotificationRowVm { Url: { Length: > 0 } url })
+        {
+            try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); }
+            catch { /* the OS declined to open the link */ }
+        }
+    }
+
     private async void TopNotificationRow_Click(object sender, MouseButtonEventArgs e)
     {
         if (sender is not FrameworkElement fe || fe.Tag is not string id)
@@ -222,6 +249,9 @@ public partial class MainWindow
         public string Body { get; }
         public string When { get; }
         public string? TicketId { get; }
+        public string? Url { get; }
+        public string? CtaLabel { get; }
+        public Visibility CtaVisibility => !string.IsNullOrEmpty(Url) && !string.IsNullOrEmpty(CtaLabel) ? Visibility.Visible : Visibility.Collapsed;
         public Brush Dot { get; }
         public Brush Background { get; }
 
@@ -231,6 +261,8 @@ public partial class MainWindow
             Title = n.Title;
             Body = n.Body;
             When = n.CreatedAt?.LocalDateTime.ToString("g") ?? "";
+            Url = n.Url;
+            CtaLabel = n.CtaLabel;
             Dot = n.Read ? NotifMutedDot : NotifAccentDot;
             Background = n.Read ? NotifReadBg : NotifUnreadBg;
             // Ticket notifications carry the id in their url tail: /dashboard/tickets/{id}.
