@@ -42,17 +42,32 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
-      - name: Verify build quality gate
-        run: npm run build
+      - name: Cache TypeScript build info
+        uses: actions/cache@v4
+        with:
+          path: tsconfig.tsbuildinfo
+          key: tsbuildinfo-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'tsconfig.json') }}
+          restore-keys: |
+            tsbuildinfo-${{ runner.os }}-
+
+      - name: Install dependencies (fast)
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
 
       - name: Determine version and update files
         id: bump
@@ -62,12 +77,14 @@ jobs:
           INPUT_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-      - name: Build production assets with updated version
-        if: steps.bump.outputs.bumped == 'true' && github.event.inputs.dry_run != 'true'
+      - name: Build and package production assets
+        if: steps.bump.outputs.bumped == 'true'
         run: |
           npm run build
-          cd dist && zip -r ../genetics-lab-dist-v${{ steps.bump.outputs.version }}.zip . && cd ..
-          cp "genetics-lab-dist-v${{ steps.bump.outputs.version }}.zip" genetics-lab-dist.zip
+          if [ "${{ github.event.inputs.dry_run || 'false' }}" != "true" ]; then
+            cd dist && zip -r -1 ../genetics-lab-dist-v${{ steps.bump.outputs.version }}.zip . && cd ..
+            cp "genetics-lab-dist-v${{ steps.bump.outputs.version }}.zip" genetics-lab-dist.zip
+          fi
 
       - name: Commit, tag, and push
         if: steps.bump.outputs.bumped == 'true' && github.event.inputs.dry_run != 'true'
