@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.2.1) (2026-09-04)
+
+### 🐛 Bug Fixes
+
+* fix(ci): replace awk in release notes extraction with node script ([1ff66dd](https://github.com/JawadYzbk/rust-genetics-lab/commit/1ff66dd11ade359c432bfd171437c84e9878b058))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.2.0...v1.2.1
+All notable changes to this project will be documented in this file.
+
 ## [1.2.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.2.0) (2026-09-04)
 
 ### 🚀 Features
