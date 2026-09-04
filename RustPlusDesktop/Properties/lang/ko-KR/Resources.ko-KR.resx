@@ -6515,4 +6515,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>시작할 때 자동으로 업데이트를 확인하고 빠른 델타 패치를 백그라운드에서 다운로드합니다.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>언어에 주의해 주세요 — 경고 {0}/{1}회. 계속되면 다음에는 일시 차단됩니다.</value>
+  </data>
 </root>

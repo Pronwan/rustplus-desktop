@@ -5717,4 +5717,7 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Indításkor automatikusan keresi a frissítéseket, és a háttérben letölti a gyors delta-javításokat.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Vigyázz a szavaidra – {0}. figyelmeztetés a {1}-ból. Maradj kulturált, különben időkorlát következik.</value>
+  </data>
 </root>

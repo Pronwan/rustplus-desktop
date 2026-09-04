@@ -5717,4 +5717,7 @@ Pode encontrar mais informações no site oficial do servidor:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Procura atualizações automaticamente no arranque e transfere patches delta rápidos em segundo plano.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Cuidado com a linguagem — aviso {0} de {1}. Mantém o respeito, ou a próxima será uma suspensão.</value>
+  </data>
 </root>

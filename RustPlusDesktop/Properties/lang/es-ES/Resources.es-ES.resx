@@ -6598,4 +6598,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Busca actualizaciones automáticamente al iniciar y descarga parches delta rápidos en segundo plano.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Cuida el lenguaje: aviso {0} de {1}. Mantenlo limpio o la próxima vez será una expulsión temporal.</value>
+  </data>
 </root>

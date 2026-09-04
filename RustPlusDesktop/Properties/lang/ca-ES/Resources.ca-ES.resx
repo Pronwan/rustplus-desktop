@@ -5717,4 +5717,7 @@ Podeu trobar més informació al lloc web oficial del servidor:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Comprova automàticament si hi ha actualitzacions en iniciar i baixa pedaços delta ràpids en segon pla.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Vigila el llenguatge: advertiment {0} de {1}. Mantén-lo net o la propera vegada serà una expulsió temporal.</value>
+  </data>
 </root>

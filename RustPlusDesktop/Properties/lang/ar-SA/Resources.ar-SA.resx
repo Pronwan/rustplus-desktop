@@ -6489,4 +6489,7 @@
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>التحقق تلقائيًا من التحديثات عند بدء التشغيل وتنزيل حزم دلتا السريعة في الخلفية.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>انتبه لألفاظك — تحذير {0} من {1}. حافظ على اللياقة، وإلا فالمرة القادمة إيقاف مؤقت.</value>
+  </data>
 </root>

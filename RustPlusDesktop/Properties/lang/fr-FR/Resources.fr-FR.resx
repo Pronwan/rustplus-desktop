@@ -6598,4 +6598,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Rechercher automatiquement les mises à jour au démarrage et télécharger les correctifs delta rapides en arrière-plan.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Surveille ton langage — avertissement {0} sur {1}. Reste correct, sinon la prochaine fois c’est une exclusion temporaire.</value>
+  </data>
 </root>

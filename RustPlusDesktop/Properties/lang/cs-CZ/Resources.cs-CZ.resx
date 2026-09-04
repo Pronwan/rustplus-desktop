@@ -5717,4 +5717,7 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Při spuštění automaticky zkontroluje aktualizace a na pozadí stáhne rychlé rozdílové balíčky.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Mírni výrazy – varování {0} z {1}. Drž se slušnosti, jinak přijde dočasný zákaz.</value>
+  </data>
 </root>

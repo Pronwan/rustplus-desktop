@@ -1609,4 +1609,7 @@
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>啟動時自動檢查更新，並在背景下載快速差異修補檔。</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>注意用詞 — 第 {0} 次警告，共 {1} 次。請保持文明，否則下次將被禁言。</value>
+  </data>
 </root>

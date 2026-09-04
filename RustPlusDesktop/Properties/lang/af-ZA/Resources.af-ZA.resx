@@ -5717,4 +5717,7 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Kyk outomaties vir opdaterings met die begin en laai vinnige delta-lappies in die agtergrond af.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Let op jou taal — waarskuwing {0} van {1}. Hou dit skoon, anders volg ’n tydstraf.</value>
+  </data>
 </root>

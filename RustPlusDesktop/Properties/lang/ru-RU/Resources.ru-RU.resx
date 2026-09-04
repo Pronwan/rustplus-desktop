@@ -6598,4 +6598,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Автоматически проверять обновления при запуске и загружать быстрые дельта-патчи в фоновом режиме.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Следи за выражениями — предупреждение {0} из {1}. Дальше последует временная блокировка.</value>
+  </data>
 </root>

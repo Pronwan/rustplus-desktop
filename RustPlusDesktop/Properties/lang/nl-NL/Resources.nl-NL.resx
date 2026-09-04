@@ -5717,4 +5717,7 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Controleer bij het opstarten automatisch op updates en download snelle deltapatches op de achtergrond.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Let op je taalgebruik — waarschuwing {0} van {1}. Hou het netjes, anders volgt een time-out.</value>
+  </data>
 </root>

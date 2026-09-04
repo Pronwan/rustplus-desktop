@@ -1338,4 +1338,7 @@
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>启动时自动检查更新，并在后台下载快速增量补丁。</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>注意用词 — 第 {0} 次警告，共 {1} 次。请保持文明，否则下次将被禁言。</value>
+  </data>
 </root>

@@ -5717,4 +5717,7 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Caută automat actualizări la pornire și descarcă în fundal patch-uri delta rapide.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Atenție la limbaj — avertisment {0} din {1}. Păstrează un ton decent, altfel urmează o suspendare temporară.</value>
+  </data>
 </root>

@@ -6326,4 +6326,7 @@ You can find more information on the server's official website:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Automatically check for updates on startup and download fast delta patches in the background.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Watch the language — warning {0} of {1}. Keep it clean, or the next one is a timeout.</value>
+  </data>
 </root>

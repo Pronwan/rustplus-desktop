@@ -5717,4 +5717,7 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Se automatisk etter oppdateringer ved oppstart, og last ned raske delta-oppdateringer i bakgrunnen.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Pass på språket — advarsel {0} av {1}. Hold det ryddig, ellers blir det en utestengelse.</value>
+  </data>
 </root>

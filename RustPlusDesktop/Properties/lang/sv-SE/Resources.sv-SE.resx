@@ -5717,4 +5717,7 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="AutomaticUpdatesToolTip" xml:space="preserve">
     <value>Sök automatiskt efter uppdateringar vid start och hämta snabba delta-korrigeringar i bakgrunden.</value>
   </data>
+  <data name="ChatRefusedProfanity" xml:space="preserve">
+    <value>Se upp med språket — varning {0} av {1}. Håll det snyggt, annars blir det en utestängning.</value>
+  </data>
 </root>
