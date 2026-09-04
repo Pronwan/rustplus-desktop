@@ -88,7 +88,15 @@ public partial class MainWindow
                 "success" => WpfUi.ControlAppearance.Success,
                 _ => WpfUi.ControlAppearance.Info,
             };
-            ShowInfoSnackbar(string.IsNullOrWhiteSpace(info.Title) ? "Notification" : info.Title, info.Body, appearance);
+
+            // A distinct icon and a source tag so a support/announcement toast reads apart from an
+            // in-game Rust+ notification at a glance - not just another blue "info" bubble.
+            var isAnnouncement = info.Type == "announcement";
+            var icon = isAnnouncement ? WpfUi.SymbolRegular.Megaphone24 : WpfUi.SymbolRegular.ChatHelp24;
+            var tag = isAnnouncement ? "Announcement" : "Support";
+            var title = string.IsNullOrWhiteSpace(info.Title) ? tag : $"{tag} · {info.Title}";
+
+            ShowInfoSnackbar(title, info.Body, appearance, icon);
 
             if (NotificationsPopup.IsOpen)
                 _ = LoadNotificationsAsync();

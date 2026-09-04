@@ -7158,13 +7158,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             mw.ShowInfoSnackbar(title, message, appearance);
     }
 
-    internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance)
+    internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance, WpfUi.SymbolRegular? icon = null)
     {
         AddToast(new Controls.ToastItem
         {
             Title = title,
             Message = message,
-            Icon = WpfUi.SymbolRegular.Info24,
+            Icon = icon ?? WpfUi.SymbolRegular.Info24,
             AccentBrush = ToastAccentBrush(appearance),
             MaxCardWidth = 500,
             Timeout = TimeSpan.FromSeconds(8),
