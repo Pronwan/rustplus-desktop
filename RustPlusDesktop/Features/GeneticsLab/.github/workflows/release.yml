@@ -1,0 +1,130 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to release (e.g. v1.2.0). Leave empty to use latest tag.'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Git tag to release'
+        required: true
+        type: string
+      version:
+        description: 'SemVer version string without v'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    name: Build assets and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Determine tag and version
+        id: meta
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          if [ -z "$TAG" ] || [ "$TAG" = "master" ]; then
+            TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          fi
+          if [ -z "$TAG" ]; then
+            echo "Error: No tag specified or found."
+            exit 1
+          fi
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Releasing tag: $TAG (version $VERSION)"
+
+      - name: Checkout repository at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.meta.outputs.tag }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Cache TypeScript build info
+        uses: actions/cache@v4
+        with:
+          path: tsconfig.tsbuildinfo
+          key: tsbuildinfo-${{ runner.os }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'tsconfig.json') }}
+          restore-keys: |
+            tsbuildinfo-${{ runner.os }}-
+
+      - name: Install dependencies (fast)
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Package release assets
+        run: |
+          cd dist && zip -r -1 "../genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" . && cd ..
+          cp "genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" genetics-lab-dist.zip
+
+      - name: Extract release notes
+        id: notes
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          if [ -f .github/release-notes.md ]; then
+            echo "notes_file=.github/release-notes.md" >> "$GITHUB_OUTPUT"
+          elif [ -f CHANGELOG.md ]; then
+            awk -v ver="$VERSION" '
+              $0 ~ "^## \\[" ver "\\]" { found=1; print; next }
+              found && /^## \\[/ { exit }
+              found { print }
+            ' CHANGELOG.md > extracted-notes.md
+            if [ -s extracted-notes.md ]; then
+              echo "notes_file=extracted-notes.md" >> "$GITHUB_OUTPUT"
+            else
+              echo "notes_file=" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "notes_file=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish GitHub Release
+        run: |
+          NOTES_FLAG=""
+          if [ -n "${{ steps.notes.outputs.notes_file }}" ] && [ -f "${{ steps.notes.outputs.notes_file }}" ]; then
+            NOTES_FLAG="--notes-file ${{ steps.notes.outputs.notes_file }}"
+          else
+            NOTES_FLAG="--generate-notes"
+          fi
+          gh release create "${{ steps.meta.outputs.tag }}" \
+            "genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" \
+            "genetics-lab-dist.zip" \
+            --title "${{ steps.meta.outputs.tag }}" \
+            $NOTES_FLAG
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

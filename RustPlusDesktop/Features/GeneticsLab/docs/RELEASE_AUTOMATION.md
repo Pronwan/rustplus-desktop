@@ -4,32 +4,48 @@ Rust Genetics Lab uses an automated version bumping and release pipeline built o
 
 ---
 
-## 🚀 How It Works
+## 🚀 Decoupled Workflow Architecture
 
-1. **Automatic on Push to `master`**:
-   - Every time code is pushed or merged into `master`, the workflow runs.
-   - It analyzes all commits since the last semver tag (`v*.*.*`).
-   - If commits contain:
-     - `BREAKING CHANGE:` or `feat!:` / `fix!:` ➡️ **Major bump** (`X.0.0`)
-     - `feat:` or `feat(...)` ➡️ **Minor bump** (`1.X.0`)
-     - `fix:`, `perf:`, `refactor:`, `revert:` ➡️ **Patch bump** (`1.0.X`)
-     - Only `docs:`, `chore:`, `test:`, `ci:`, `style:` ➡️ **Skipped** (no release generated)
-   - If a bump is warranted:
-     - Bumps `package.json` and `package-lock.json`.
-     - Updates the version badge in `README.md`.
-     - Prepends structured release notes to `CHANGELOG.md`.
-     - Commits changes as `chore(release): vX.Y.Z [skip ci]`.
-     - Creates an annotated Git tag `vX.Y.Z` and pushes to `master`.
-     - Creates an official GitHub Release with categorised release notes.
+Version bumping and release publishing are decoupled into two dedicated, standalone GitHub Actions workflows:
 
-2. **Manual Trigger (`workflow_dispatch`)**:
-   - Navigate to **Actions** ➡️ **Auto Version Bump & Release** ➡️ **Run workflow**.
-   - Select bump type override:
-     - `auto`: Automatically determine bump from commit history (default).
-     - `patch`: Force patch bump.
-     - `minor`: Force minor bump.
-     - `major`: Force major bump.
-   - Check `dry_run` to preview the bump and release notes without committing or publishing.
+### 1. `Bump Version` (`.github/workflows/bump-version.yml`)
+- **Trigger**: Automatic on push to `master` (excluding release commits with `[skip ci]`), or manual `workflow_dispatch`.
+- **Purpose**:
+  - Analyzes Conventional Commits since the last semver tag (`v*.*.*`).
+  - Calculates the next SemVer (`major`, `minor`, or `patch`).
+  - Updates `package.json`, `package-lock.json`, `README.md`, and `CHANGELOG.md`.
+  - Commits `chore(release): vX.Y.Z [skip ci]`.
+  - Creates and pushes git tag `vX.Y.Z`.
+  - Can run in `dry_run` mode or with bump type overrides.
+  - Automatically triggers the `Release` workflow if `publish_release` is enabled (default: true).
+
+### 2. `Release` (`.github/workflows/release.yml`)
+- **Trigger**:
+  - Automatically on any tag push (`push: tags: ['v*']`).
+  - Manually via `workflow_dispatch` with a tag input (e.g. `v1.2.0`).
+  - Reusable via `workflow_call` invoked by `bump-version.yml`.
+- **Purpose**:
+  - Checks out the code at the tagged commit.
+  - Restores cached `node_modules` and TypeScript build info for instant execution.
+  - Builds the production bundle (`npm run build`).
+  - Archives `dist/` into `genetics-lab-dist-v<version>.zip` and `genetics-lab-dist.zip`.
+  - Extracts the changelog section for that tag.
+  - Publishes the GitHub Release with the attached assets.
+
+---
+
+## 🛠️ Manual & Local Usage
+
+1. **Manual Tag Release (Git Tag)**:
+   ```bash
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+   The `Release` workflow will build and publish the release automatically.
+
+2. **Manual Trigger via GitHub UI**:
+   - **Bump Version**: Actions ➡️ `Bump Version` ➡️ Run workflow (select `auto`, `patch`, `minor`, or `major`, and optional `dry_run`).
+   - **Publish Release**: Actions ➡️ `Release` ➡️ Run workflow (enter tag name or leave blank for latest).
 
 3. **Local Preview & Execution**:
    - **Preview next release without modifying files**:
