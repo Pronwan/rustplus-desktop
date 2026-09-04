@@ -19,6 +19,7 @@ import { useScanner } from '../../../context/ScannerContext.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.ts';
 import { AudioService } from '../../../services/audioService.ts';
+import { ScanningRegionsView } from '../../scanner/ScanningRegionsView.tsx';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
 
@@ -57,7 +58,7 @@ export const CloneBank: React.FC = () => {
   const { isCalculating, highlightedGroup, selectedMap, options } = useCalculation();
   const { isScannerActive, startScanner } = useScanner();
 
-  const [activeTab, setActiveTab] = useState<'current' | 'saved'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'saved' | 'scanner'>('current');
   const [clearAnchorEl, setClearAnchorEl] = useState<HTMLElement | null>(null);
   const [activeLineIdx, setActiveLineIdx] = useState<number | null>(null);
 
@@ -78,9 +79,12 @@ export const CloneBank: React.FC = () => {
     }
   }, [localText]);
 
-  // Sync localText when external geneInputText changes (e.g. sample loaded, saved set loaded, scanner added)
-  useEffect(() => {
+  // Sync localText immediately when external geneInputText changes (e.g. scanner added, sample loaded)
+  useLayoutEffect(() => {
     setLocalText(geneInputText);
+    if (textareaRef.current && textareaRef.current.value !== geneInputText) {
+      textareaRef.current.value = geneInputText;
+    }
   }, [geneInputText]);
 
   // Compute every source-list position used by the exact selected route,
@@ -198,28 +202,33 @@ export const CloneBank: React.FC = () => {
           </Typography>
         </Box>
 
-        {!isScannerActive && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => startScanner()}
-            startIcon={<AutoAwesomeIcon sx={{ fontSize: 13 }} />}
-            sx={{
-              py: 0.15,
-              px: 0.75,
-              fontSize: '0.68rem',
-              fontWeight: 700,
-              borderColor: 'var(--gl-surface-hover)',
-              color: 'var(--gl-text-secondary)',
-              minWidth: 'auto'
-            }}
-          >
-            Scan
-          </Button>
-        )}
+        <Button
+          variant={activeTab === 'scanner' ? 'contained' : 'outlined'}
+          size="small"
+          onClick={() => {
+            setActiveTab('scanner');
+            if (!isScannerActive) {
+              startScanner();
+            }
+          }}
+          startIcon={<AutoAwesomeIcon sx={{ fontSize: 13 }} />}
+          sx={{
+            py: 0.15,
+            px: 0.75,
+            fontSize: '0.68rem',
+            fontWeight: 700,
+            backgroundColor: activeTab === 'scanner' ? 'var(--gl-primary)' : 'transparent',
+            color: activeTab === 'scanner' ? '#000' : 'var(--gl-text-secondary)',
+            borderColor: 'var(--gl-primary)',
+            minWidth: 'auto',
+            boxShadow: activeTab === 'scanner' ? '0 0 8px rgba(0, 229, 255, 0.3)' : 'none'
+          }}
+        >
+          {isScannerActive ? 'Live Scanner' : 'Scan'}
+        </Button>
       </Box>
 
-      {/* Tabs: CURRENT | SAVED */}
+      {/* Tabs: CURRENT | SAVED | SCANNER REGIONS */}
       <Box sx={{ borderBottom: '1px solid var(--gl-surface)', mb: 1 }}>
         <Tabs
           value={activeTab}
@@ -248,6 +257,18 @@ export const CloneBank: React.FC = () => {
               fontSize: '0.72rem',
               fontWeight: 800,
               color: activeTab === 'saved' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
+            }}
+          />
+          <Tab
+            value="scanner"
+            label="SCANNER REGIONS"
+            sx={{
+              minHeight: 28,
+              py: 0.15,
+              px: 1,
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              color: activeTab === 'scanner' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
             }}
           />
         </Tabs>
@@ -627,6 +648,13 @@ export const CloneBank: React.FC = () => {
               })}
             </Box>
           )}
+        </Box>
+      )}
+
+      {/* TAB 3: LIVE SCANNING REGIONS & AUTO-CALIBRATION OUTSIDE WITHOUT MODAL */}
+      {activeTab === 'scanner' && (
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', pr: 0.5, pt: 0.5 }}>
+          <ScanningRegionsView compact />
         </Box>
       )}
     </Paper>

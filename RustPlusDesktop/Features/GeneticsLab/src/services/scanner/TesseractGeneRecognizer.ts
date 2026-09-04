@@ -145,9 +145,11 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
       const raw = rawText.toUpperCase().replace(/[^GHYWX]/g, '');
       this.lastRawRead = { text: rawText, confidence: res.data.confidence || 0 };
 
+      console.log(`[Scanner Tesseract] Raw text: "${rawText}", Cleaned: "${raw}", Conf: ${res.data.confidence}`);
+
       if (raw.length === 6 && /^[GHYWX]{6}$/.test(raw)) {
         const confidence = res.data.confidence || 88;
-        if (confidence >= minConfidence) {
+        if (confidence >= Math.min(minConfidence, 65)) {
           return {
             geneString: raw,
             confidence,
@@ -157,7 +159,8 @@ export class TesseractGeneRecognizer implements GeneRecognizer {
         }
       }
       return null;
-    } catch {
+    } catch (err) {
+      console.warn('[Scanner Tesseract] recognize error:', err);
       return null;
     }
   }

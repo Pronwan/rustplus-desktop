@@ -40,18 +40,13 @@ export class PlantScanDeduplicator {
     }
 
     // Candidate has identical genetics to the last accepted plant.
-    // Verify if the visual signature changed by > 5% (meaning the user hovered a different item with the same genes)
-    if (lastSig !== undefined) {
-      const sigDiff = Math.abs(currentRoiSignature - lastSig) / Math.max(1, lastSig);
-      if (sigDiff > 0.05) {
-        // Visual signature indicates a new item instance
-        this.lastAcceptedSignatures[key] = currentRoiSignature;
-        return true;
-      }
-    }
-
-    // Same plant still continuously displayed
+    // Suppress re-emitting the same plant while it is continuously visible.
+    // This prevents background graphic flicker from re-triggering duplicate sounds!
     return false;
+  }
+
+  public isRegionCurrentlyVisible(key: string | number): boolean {
+    return !!this.isPlantCurrentlyVisible[key];
   }
 
   /**

@@ -7,7 +7,8 @@ export class FrameStabilityDetector {
   public registerFrame(
     key: string | number,
     signature: number,
-    threshold = SCANNER_CONFIG.performance.roiChangeThreshold
+    threshold = SCANNER_CONFIG.performance.roiChangeThreshold,
+    customDurationMs?: number
   ): boolean {
     const now = Date.now();
     const lastSig = this.lastObservedSignature[key];
@@ -28,7 +29,8 @@ export class FrameStabilityDetector {
 
     // Image remained stable, check if stable duration threshold is reached
     const elapsed = now - (this.stableSince[key] || now);
-    return elapsed >= SCANNER_CONFIG.performance.stableDurationMs;
+    const requiredDuration = customDurationMs ?? SCANNER_CONFIG.performance.stableDurationMs;
+    return elapsed >= requiredDuration;
   }
 
   public reset(key?: string | number): void {

@@ -4,7 +4,8 @@ import type { CameraScannerService } from '../services/cameraScannerService.ts';
 import type {
   CameraCaptureResult,
   CameraScannerEvent,
-  CameraScannerState
+  CameraScannerState,
+  ScannerRegionType
 } from '../services/scanner/scannerTypes.ts';
 import {
   createIdleCameraState,
@@ -45,8 +46,12 @@ export interface ScannerContextValue {
   getScannerDiagnostics: () => any;
   setScannerPreviewEnabled: (enabled: boolean) => void;
   acknowledgeGeneHandled: (geneString: string) => void;
+  activeRegion: ScannerRegionType | null;
+  activeRegionIndex: number | null;
   isStarved: boolean;
   starvationReason?: string;
+  isAutoCalibrating: boolean;
+  autoCalibrateScanner: (regionIndex?: number) => Promise<boolean>;
 
   /* Phone camera scanner (beta). Entirely separate from the desktop capture path above. */
   isCameraScannerSupported: boolean;
@@ -89,6 +94,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [correctionCandidate, setCorrectionCandidate] = useState<{ genes: string; confidence: number; slotConfidences?: number[] } | null>(null);
   const [isStarved, setIsStarved] = useState(false);
   const [starvationReason, setStarvationReason] = useState<string | undefined>(undefined);
+  const [isAutoCalibrating, setIsAutoCalibrating] = useState(false);
+  const [activeRegion, setActiveRegion] = useState<ScannerRegionType | null>(null);
+  const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(null);
 
   const scannerService = useMemo(() => new ScannerService(), []);
 
@@ -116,9 +124,10 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     soundPrefRef.current = !!opts.sounds;
   }, []);
 
-  // Last gene we reacted to, so holding the cursor on one plant (which fires
-  // SAPLING-FOUND repeatedly) only pops / duplicate-beeps once per distinct plant.
+  const lastProcessedGenesPerRegionRef = useRef<Record<number, string | null>>({});
+  const lastProcessedTimeRef = useRef<number>(0);
   const lastProcessedGeneRef = useRef<string | null>(null);
+  const hasInitialPreviewRef = useRef<Record<number, boolean>>({});
 
   const activeProfile = useMemo(() => {
     return profiles.find(p => p.id === activeProfileId) || profiles[0];
@@ -248,6 +257,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, [activeProfileId, scannerService, notifyWarning, notifyInfo]);
 
+  // Preload audio buffer for 0ms latency audio feedback
+  useEffect(() => {
+    AudioService.preload().catch(() => {});
+  }, []);
+
   // Scanner Event Listener
   useEffect(() => {
     const postScannerState = (active: boolean) => {
@@ -264,14 +278,14 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setScannerStatusMessage('Initializing OCR engine… (first run downloads the recognizer, ~15s)');
         postScannerState(true);
       } else if (evt.type === 'STARTED') {
-        lastProcessedGeneRef.current = null;
+        lastProcessedGenesPerRegionRef.current = {};
         setIsScannerInitializing(false);
         setIsScannerActive(true);
         setScannerStatusMessage('Scanner active. Hover over plant clones in Rust.');
         postScannerState(true);
         notifySuccess('Scanner started. Hover over clones in Rust.');
       } else if (evt.type === 'STOPPED') {
-        lastProcessedGeneRef.current = null;
+        lastProcessedGenesPerRegionRef.current = {};
         setIsScannerActive(false);
         setIsScannerInitializing(false);
         setIsStarved(false);
@@ -284,36 +298,55 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else if (evt.type === 'STARVATION_RESOLVED') {
         setIsStarved(false);
         setStarvationReason(undefined);
+      } else if (evt.type === 'ACTIVE_REGION_CHANGED') {
+        setActiveRegion(evt.activeRegion ?? null);
+        setActiveRegionIndex(evt.regionIndex ?? null);
       } else if (evt.type === 'PREVIEW') {
         if (evt.previewDataUrl && typeof evt.regionIndex === 'number') {
-          setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
+          // Direct DOM injection for 30-60 FPS zero-starvation real-time preview (bypasses React rerender overhead)
+          const img = document.getElementById(`scanner-preview-img-${evt.regionIndex}`) as HTMLImageElement;
+          if (img) {
+            img.src = evt.previewDataUrl;
+            img.style.display = 'block';
+          }
+          if (!hasInitialPreviewRef.current[evt.regionIndex]) {
+            hasInitialPreviewRef.current[evt.regionIndex] = true;
+            setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
+          }
         }
       } else if (evt.type === 'SAPLING-FOUND') {
         if (evt.geneString) {
+          console.log('[ScannerContext] Received SAPLING-FOUND:', evt.geneString, evt.confidence);
           setLastScannedGenes(evt.geneString);
           setLastConfidence(evt.confidence || 90);
 
-          // Only react when the hovered plant changes, so one plant doesn't
-          // replay sounds/notifications on every scan frame.
-          if (lastProcessedGeneRef.current !== evt.geneString) {
-            lastProcessedGeneRef.current = evt.geneString;
+          const now = Date.now();
+          const isSameGene = lastProcessedGeneRef.current === evt.geneString;
+          const timeSinceLast = now - lastProcessedTimeRef.current;
 
-            const added = addClone(evt.geneString, {
-              source: 'scanner',
-              quantity: 1
-            });
-
-            if (added) {
-              // New clone → satisfying "pop".
-              AudioService.playPop(soundPrefRef.current);
-              notifySuccess(`Scanned Clone: ${evt.geneString} (${Math.round(evt.confidence || 0)}% conf)`);
-            } else {
-              // Duplicate (already in the list) → its own generated cue, once.
-              AudioService.playDuplicate(soundPrefRef.current);
-              notifyInfo(`Duplicate [${evt.geneString}] — already in your list.`);
-            }
+          // STRICT DEBOUNCE: While sitting on the exact same plant, NEVER play duplicate sound repeatedly!
+          if (isSameGene && timeSinceLast < 2500) {
+            return;
           }
+
+          lastProcessedGeneRef.current = evt.geneString;
+          lastProcessedTimeRef.current = now;
+
+          const added = addClone(evt.geneString, {
+            source: 'scanner',
+            quantity: 1
+          });
+
+          if (added) {
+            AudioService.playPop(soundPrefRef.current);
+          } else {
+            AudioService.playDuplicate(soundPrefRef.current);
+          }
+
+          scannerService.acknowledgeGeneHandled(evt.geneString);
         }
+      } else if (evt.type === 'IDLE') {
+        // Idle event from scanner
       } else if (evt.type === 'ERROR') {
         setIsScannerActive(false);
         setIsScannerInitializing(false);
@@ -333,6 +366,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {
     try {
+      // Warm, start silent keep-alive, and resume audio pipeline on user click for continuous background playback
+      AudioService.startKeepAlive();
+      AudioService.preload().catch(() => {});
       // Desktop capture and camera capture must never own a stream at the same time.
       cameraServiceRef.current?.stop();
       setIsCameraScannerOpen(false);
@@ -408,6 +444,48 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const acknowledgeGeneHandled = useCallback((geneString: string) => {
     scannerService.acknowledgeGeneHandled(geneString);
   }, [scannerService]);
+
+  const autoCalibrateScanner = useCallback(async (regionIndex?: number): Promise<boolean> => {
+    // Ensure screen capture stream is active
+    if (!scannerService.getVideoElement() || scannerService.getVideoElement()?.videoWidth === 0) {
+      notifyInfo('Screen capture is not active. Please select your Rust screen to start capture.');
+      const started = await scannerService.start();
+      if (!started) {
+        return false;
+      }
+      // Give video stream 300ms to deliver first frame
+      await new Promise(res => setTimeout(res, 300));
+    }
+
+    setIsAutoCalibrating(true);
+    try {
+      const res = await scannerService.autoCalibrate(regionIndex);
+      if (res.success && res.region) {
+        // Sync active profile in context
+        const currentRegions = scannerService.getRegions();
+        setProfiles(prev => {
+          const idx = prev.findIndex(p => p.id === activeProfileId);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = { ...updated[idx], regions: currentRegions.map(r => ({ ...r })) };
+            StorageService.saveScannerProfiles(updated);
+            return updated;
+          }
+          return prev;
+        });
+        notifySuccess(res.message);
+        return true;
+      } else {
+        notifyWarning(res.message);
+        return false;
+      }
+    } catch (err: any) {
+      notifyError(`Auto-calibration failed: ${err?.message || err}`);
+      return false;
+    } finally {
+      setIsAutoCalibrating(false);
+    }
+  }, [scannerService, activeProfileId, notifySuccess, notifyWarning, notifyInfo, notifyError]);
 
   /* ---------------------------------------------------------------- *
    * Phone camera scanner lifecycle
@@ -575,8 +653,12 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
         getScannerDiagnostics,
         setScannerPreviewEnabled,
         acknowledgeGeneHandled,
+        activeRegion,
+        activeRegionIndex,
         isStarved,
         starvationReason,
+        isAutoCalibrating,
+        autoCalibrateScanner,
         isCameraScannerSupported,
         isCameraSecureOrigin,
         isCameraScannerOpen,

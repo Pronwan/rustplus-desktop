@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { StorageService, TargetConfiguration, BreedingSession, BreedingSessionStep, FarmProject, StoredGeneSet } from '../services/storageService.ts';
 import { SavedClone, CloneUtils } from '../domain/genetics/Clone.ts';
 import { Sapling } from '../domain/genetics/Sapling.ts';
@@ -160,12 +161,14 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const existing = geneInputTextRef.current.split('\n').map(normalizeGene).filter(Boolean);
     if (existing.includes(clean)) return false; // dedup: already scanned
 
-    setGeneInputTextState((prev) => {
-      // Re-check inside the updater to guard against rapid back-to-back scans.
-      const lines = prev.split('\n').map(normalizeGene).filter(Boolean);
-      if (lines.includes(clean)) return prev;
-      const trimmed = prev.trim();
-      return trimmed ? `${trimmed}\n${clean}` : clean;
+    // Immediately update ref so any immediate subsequent frame knows it's already in the bank!
+    const trimmed = geneInputTextRef.current.trim();
+    const updated = trimmed ? `${trimmed}\n${clean}` : clean;
+    geneInputTextRef.current = updated;
+
+    // flushSync guarantees immediate synchronous DOM repaint even if the window is in the background
+    flushSync(() => {
+      setGeneInputTextState(updated);
     });
     return true;
   }, []);
