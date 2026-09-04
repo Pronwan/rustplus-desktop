@@ -68,9 +68,10 @@ public partial class MainWindow
         UpdateSupportBadge(unread);
     }
 
-    /// <summary>Puts the unread count on the rail button — "Support" alone, or "Support • n".</summary>
+    /// <summary>Puts the unread count on the Tickets rail button, as a small badge over its icon.</summary>
     private void UpdateSupportBadge(int count)
     {
-        SupportUnreadBadge.Text = count > 0 ? $"Support • {(count > 99 ? "99+" : count.ToString())}" : "Support";
+        RailTicketsBadgeText.Text = count > 99 ? "99+" : count.ToString();
+        RailTicketsBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 }
