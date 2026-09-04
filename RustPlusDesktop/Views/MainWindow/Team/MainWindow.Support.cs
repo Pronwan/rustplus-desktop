@@ -79,7 +79,7 @@ public partial class MainWindow
         {
             // Chime and toast so a reply or announcement is noticed even away from the panel, then
             // it settles into the bell with its unread count.
-            PlayNotificationSound("icq-message.wav");
+            PlayTicketChime();
 
             var appearance = info.Level switch
             {
@@ -98,6 +98,38 @@ public partial class MainWindow
             // A reply usually means a ticket just gained unread activity - keep its badge honest.
             _ = RefreshTicketsBadgeAsync();
         });
+    }
+
+    private System.Windows.Media.MediaPlayer? _ticketChimePlayer;
+
+    /// <summary>
+    /// Plays the distinct ticket chime (Assets/notification-incoming.mp3) via MediaPlayer, since
+    /// SoundPlayer only handles WAV. Falls back to the shared notification sound if the file is not
+    /// present, so there is always a chime.
+    /// </summary>
+    private void PlayTicketChime()
+    {
+        try
+        {
+            var path = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "notification-incoming.mp3");
+            if (!System.IO.File.Exists(path))
+            {
+                PlayNotificationSound("icq-message.wav");
+                return;
+            }
+
+            if (_ticketChimePlayer == null)
+            {
+                _ticketChimePlayer = new System.Windows.Media.MediaPlayer();
+                _ticketChimePlayer.Open(new Uri(path, UriKind.Absolute));
+            }
+            _ticketChimePlayer.Position = TimeSpan.Zero;
+            _ticketChimePlayer.Play();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[TicketChime] {ex.Message}");
+        }
     }
 
     /// <summary>Counts the user's tickets with unread activity and shows it on the rail button.</summary>
