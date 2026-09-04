@@ -476,7 +476,11 @@ public partial class SupportOverlay : UserControl
         }
     }
 
-    /// <summary>An attachment already on a message. Image thumbnails load from the server in the background.</summary>
+    /// <summary>
+    /// An attachment already on a message. An image shows as a thumbnail once it has loaded (cached
+    /// locally on first fetch); until then - and if it cannot be fetched at all - it shows as a file
+    /// chip, so there is never a blank box where a picture should be.
+    /// </summary>
     public sealed class MessageAttachmentVm : INotifyPropertyChanged
     {
         public string TicketId { get; }
@@ -484,14 +488,23 @@ public partial class SupportOverlay : UserControl
         public string Name { get; }
         public string SizeLabel { get; }
         public bool IsImage { get; }
-        public Visibility ImageVisibility => IsImage ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ChipVisibility => IsImage ? Visibility.Collapsed : Visibility.Visible;
+
+        // The image box appears only once there is actually a thumbnail to put in it; the chip
+        // covers every other moment - a non-image, a still-loading image, or one that failed.
+        public Visibility ImageVisibility => _thumb != null ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ChipVisibility => _thumb != null ? Visibility.Collapsed : Visibility.Visible;
 
         private ImageSource? _thumb;
         public ImageSource? Thumb
         {
             get => _thumb;
-            private set { _thumb = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Thumb))); }
+            private set
+            {
+                _thumb = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Thumb)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ImageVisibility)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChipVisibility)));
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -509,7 +522,7 @@ public partial class SupportOverlay : UserControl
 
         private async Task LoadThumbAsync()
         {
-            var bytes = await SupportApi.GetAttachmentBytesAsync(TicketId, Id).ConfigureAwait(true);
+            var bytes = await SupportApi.GetAttachmentCachedAsync(TicketId, Id, Name).ConfigureAwait(true);
             if (bytes != null)
                 Thumb = ThumbFromBytes(bytes);
         }

@@ -181,6 +181,37 @@ public static class SupportApi
     public static Task<byte[]?> GetAttachmentBytesAsync(string ticketId, string mediaId)
         => CloudApiClient.GetBytesAsync($"tickets/{ticketId}/attachments/{mediaId}");
 
+    private static string CacheDir => Path.Combine(Path.GetTempPath(), "rpd-tickets", "cache");
+
+    /// <summary>
+    /// Attachment bytes, saved locally on first fetch and served from that cache afterwards - so a
+    /// thumbnail draws instantly on the next open and survives a dropped connection. Falls back to a
+    /// plain fetch if the cache cannot be written.
+    /// </summary>
+    public static async Task<byte[]?> GetAttachmentCachedAsync(string ticketId, string mediaId, string fileName)
+    {
+        try
+        {
+            Directory.CreateDirectory(CacheDir);
+            var safe = string.Join("_", ($"{mediaId}_{fileName}").Split(Path.GetInvalidFileNameChars()));
+            var path = Path.Combine(CacheDir, safe);
+
+            if (File.Exists(path) && new FileInfo(path).Length > 0)
+                return await File.ReadAllBytesAsync(path).ConfigureAwait(false);
+
+            var bytes = await GetAttachmentBytesAsync(ticketId, mediaId).ConfigureAwait(false);
+            if (bytes is { Length: > 0 })
+            {
+                try { await File.WriteAllBytesAsync(path, bytes).ConfigureAwait(false); } catch { /* cache is best-effort */ }
+            }
+            return bytes;
+        }
+        catch
+        {
+            return await GetAttachmentBytesAsync(ticketId, mediaId).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>
     /// Downloads an attachment to a temp file and returns its path, so it can be opened in whatever
     /// the OS uses for that type. Null if it could not be fetched.
