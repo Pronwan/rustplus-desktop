@@ -488,7 +488,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         MainTabs.SelectionChanged += MainTabs_SelectionChanged;
         
         PlayersTab?.SetMainWindow(this);
-        
+        ApplyPlayersTabVisibility();
+
         UpdateLanguageFlag();
         InitializeAppSettings();
         
@@ -3039,6 +3040,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.Source != MainTabs) return;
+
+        UpdateRailFolderHighlights();
 
         bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
         bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;

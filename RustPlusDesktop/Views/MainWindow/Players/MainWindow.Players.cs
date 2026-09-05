@@ -21,6 +21,25 @@ public partial class MainWindow
     private Point _trackedGroupDragStartPoint;
     private Expander? _draggedTrackedGroup;
 
+    /// <summary>
+    /// Shows or hides the Players tab's sidebar rail entry based on the opt-in
+    /// "Show Players tab" setting. If the tab is hidden while it is the current
+    /// selection, falls back to the Devices tab so the user is not left on a
+    /// tab that no longer has a rail button.
+    /// </summary>
+    public void ApplyPlayersTabVisibility()
+    {
+        bool show = TrackingService.ShowPlayersTab;
+
+        // If the tab is being hidden while it is the current selection, fall back to Devices
+        // before the rail is rebuilt (the Players rail entry is about to disappear).
+        if (!show && PlayersTabItem != null && PlayersTabItem.IsSelected && DevicesTabItem != null)
+            DevicesTabItem.IsSelected = true;
+
+        // The Players tab is a catalog entry gated by ShowPlayersTab; rebuild so it appears/disappears.
+        RebuildRail();
+    }
+
     public void BtnHowToTrack_Click(object sender, RoutedEventArgs e)
     {
         HowToTrackWindow.Show(this);

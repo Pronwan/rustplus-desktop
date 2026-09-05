@@ -4473,7 +4473,13 @@
                             </Grid>
                         </ui:Button>
 
-                        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                        <!--
+                            Row 1 tabs are populated at runtime by the data-driven rail builder
+                            (MainWindow.Rail.cs): drag-to-reorder, Discord-style folders, group/ungroup.
+                            The static children below are a design-time fallback and are cleared and
+                            rebuilt from the persisted RailLayout on startup.
+                        -->
+                        <StackPanel x:Name="RailItemsHost" Grid.Row="1" HorizontalAlignment="Center">
                             <Grid>
                                 <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource DevicesTab}" AutomationProperties.HelpText="{DynamicResource UiMonitorAndControlPairedSmartDevices}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
@@ -4496,6 +4502,13 @@
                                 <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource CamerasTab}" AutomationProperties.HelpText="{DynamicResource UiViewAndControlPairedCCTVCameras}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailCamerasButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailCamerasButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailCamerasButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <!-- Players: opt-in from Settings (Show Players tab). Hidden by default. -->
+                            <Grid x:Name="PlayersRailEntry" Visibility="Collapsed">
+                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
@@ -4619,6 +4632,10 @@
                                 Icon="{ui:SymbolIcon Symbol=Settings24}"
                                 ToolTip="{DynamicResource Settings}" />
                         </StackPanel>
+
+                        <!-- Drag overlay for rail reordering/foldering: ghost + insertion indicator.
+                             Spans the rail, ignores hit-testing so drags pass through. -->
+                        <Canvas x:Name="RailDragOverlay" Grid.RowSpan="3" IsHitTestVisible="False" Panel.ZIndex="100" />
                     </Grid>
 
                     <!--  Profit Trades Overlay  -->

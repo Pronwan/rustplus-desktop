@@ -94,7 +94,12 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
         if (preferences.AutoStartBasicTutorial && !preferences.FirstRunPromptDismissed)
         {
             TutorialOverlay.ShowWelcome();
+            return;
         }
+
+        // Existing users (past the first-run welcome) are offered the new sidebar-folders
+        // tour once, on the first launch that includes the feature.
+        await OfferNewFeatureTutorialOnceAsync("sidebar-folders");
     }
 
     private async Task OfferNewFeatureTutorialOnceAsync(string tutorialId)

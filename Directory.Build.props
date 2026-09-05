@@ -1,0 +1,24 @@
+<Project>
+  <!--
+    Repo-wide build settings. Applies to every project in the tree (app, tests, MapParser).
+    Goal: fast local iteration without changing Release output.
+  -->
+  <PropertyGroup>
+    <!-- Keep the Roslyn compiler server warm and let VS skip redundant work. -->
+    <UseSharedCompilation>true</UseSharedCompilation>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <!-- Reference assemblies: dependent projects (e.g. the test project) don't rebuild when only
+         a method body changes in a referenced project. -->
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <!--
+    Debug only: skip compiling the ~30 localized satellite assemblies. The neutral (English)
+    resources are compiled into the main assembly, so the app runs normally; non-English languages
+    fall back to English during local Debug runs. Release still builds every language.
+    This is one of the biggest local-build speedups for this repo.
+  -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+</Project>
