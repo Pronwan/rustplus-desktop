@@ -12,13 +12,4 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
 
-  <!--
-    Debug only: skip compiling the ~30 localized satellite assemblies. The neutral (English)
-    resources are compiled into the main assembly, so the app runs normally; non-English languages
-    fall back to English during local Debug runs. Release still builds every language.
-    This is one of the biggest local-build speedups for this repo.
-  -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-  </PropertyGroup>
 </Project>

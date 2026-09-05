@@ -231,9 +231,14 @@ public partial class MainWindow
             Margin = new Thickness(0),
             Padding = new Thickness(0),
         };
-        System.Windows.Automation.AutomationProperties.SetName(collapsedButton, node.Name ?? ToolsFolderDefaultName);
-        System.Windows.Automation.AutomationProperties.SetHelpText(collapsedButton,
-            TryFindResource("SidebarFolderHelp") as string ?? "Click to open this folder. Drag tabs in or out to organise it.");
+        bool isDefaultTools = node.FolderId == RailCatalog.DefaultFolderId;
+
+        if (isDefaultTools)
+            collapsedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.NameProperty, "SidebarToolsFolder");
+        else
+            System.Windows.Automation.AutomationProperties.SetName(collapsedButton, node.Name ?? (TryFindResource("SidebarNewFolder") as string ?? "New folder"));
+
+        collapsedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.HelpTextProperty, "SidebarFolderHelp");
 
         var preview = new UniformGrid { Rows = 2, Columns = 2 };
         foreach (var info in childInfos.Take(4))
@@ -265,9 +270,13 @@ public partial class MainWindow
             Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Folder24, FontSize = 20 },
             Foreground = FolderHeaderIconBrush,
         };
-        System.Windows.Automation.AutomationProperties.SetName(expandedButton, node.Name ?? ToolsFolderDefaultName);
-        System.Windows.Automation.AutomationProperties.SetHelpText(expandedButton,
-            TryFindResource("SidebarFolderCollapseHelp") as string ?? "Click to close this folder.");
+
+        if (isDefaultTools)
+            expandedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.NameProperty, "SidebarToolsFolder");
+        else
+            System.Windows.Automation.AutomationProperties.SetName(expandedButton, node.Name ?? (TryFindResource("SidebarNewFolder") as string ?? "New folder"));
+
+        expandedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.HelpTextProperty, "SidebarFolderCollapseHelp");
         expandedGrid.Children.Add(expandedButton);
         expandedGrid.Children.Add(BuildFolderPopover(expandedButton));
         headerGrid.Children.Add(expandedGrid);

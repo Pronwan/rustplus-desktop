@@ -955,6 +955,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                RebuildRail();
                 RebuildChatMessages();
                 RefreshEventDock();
                 SyncAlertMenuItems();

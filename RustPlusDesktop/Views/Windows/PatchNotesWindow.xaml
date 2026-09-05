@@ -33,7 +33,72 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v9.2.0 PATCH NOTES -->
+                    <!-- NEW v9.2.1 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.2.1 | Sidebar Folders, Drag &amp; Drop &amp; Bundled Icons" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                                This release brings full customization to your workspace with sidebar drag-and-drop and Discord-style folders. Group your favourite utilities together, tuck away calculators you only use occasionally, and reorder tabs freely. We have also bundled over 480 item icons directly into the app so startup is instant, made update restarts actionable with a single click, and kept the Genetics Lab scanner running unthrottled in the background.
+                            </TextBlock>
+
+                            <TextBlock Text="📁 Sidebar Folders &amp; Drag-and-Drop" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Move Any Tab:</Run>
+                                Every icon on the sidebar rail can now be dragged up or down. Arrange your most important views at the top and put secondary tools right where you want them.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Discord-Style Tab Folders:</Run>
+                                Drag any tab directly onto another tab to combine them into a neat folder capsule. Drop tabs inside existing folders to add them, or drag them back out onto the rail anytime to ungroup. Your layout is saved automatically.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Fluid Fold and Unfold Animations:</Run>
+                                Folders expand and collapse smoothly with accordion sliding animations. A 2×2 mini-icon preview lets you recognize what is inside a folded folder at a glance.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Tidier Default Tools Folder:</Run>
+                                Calculators and utilities (Genetics Lab, Wipe Tracker, Death Stats, Raid Calculator, Recycler, and Console Helper) are now gathered into a tidy "Tools" folder, keeping the main rail clean.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Interactive 4-Step Tutorial:</Run>
+                                A brand-new guided tutorial highlights each action step-by-step with visual spotlights, localized across all 32 languages.
+                            </TextBlock>
+
+                            <TextBlock Text="🎨 Bundled Icons" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Zero Startup Delays:</Run>
+                                Over 480 40×40 Rust item icons are now built directly into the app package. The app no longer needs to download hundreds of icons on first launch or after cache wipes.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Automatic Cache Optimization:</Run>
+                                Legacy oversized icons are quietly cleaned up, saving disk space and memory. A developer-only sync option keeps the bundled icon pack current when Rust updates.
+                            </TextBlock>
+
+                            <TextBlock Text="🔄 Smarter Updates" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Restart Now or on Close:</Run>
+                                When an update finishes downloading in the background, an actionable notification banner gives you the choice to restart immediately with one click or wait until you close the app.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Inline Update Popover:</Run>
+                                Checking for updates when one is already staged now shows a sleek inline flyout anchored to the button instead of a blocking modal prompt.
+                            </TextBlock>
+
+                            <TextBlock Text="🌿 Genetics Lab" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Unthrottled Background Capture:</Run>
+                                Scanner capture performance mode stays active even when Rust is focused in full screen or when the window is behind other apps.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Seamless Audio:</Run>
+                                Audio playback policies have been updated so scanner audio cues trigger without requiring a preliminary window click.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
+                    <!-- PREVIOUS v9.2.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
