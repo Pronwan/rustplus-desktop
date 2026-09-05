@@ -1204,6 +1204,11 @@
                         
                         <!-- Purge Orphaned Cloud Data Button -->
                         <ui:Button x:Name="BtnPurgeOrphanedCloudData" Content="{DynamicResource PurgeOrphanedCloudData}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Delete24}" HorizontalAlignment="Stretch" Height="36" Margin="0,8,0,0" Click="BtnPurgeOrphanedCloudData_Click" ToolTip="{DynamicResource PurgeOrphanedCloudDataTooltip}" />
+
+                        <!-- Developer: Download & Pack Missing Icons (Debug only) -->
+                        <Grid x:Name="RowDevDownloadIcons" Margin="0,8,0,0" Visibility="Collapsed">
+                            <ui:Button x:Name="BtnDownloadItemIcons" Content="[DEV] Download &amp; Pack Missing Icons" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" HorizontalAlignment="Stretch" Height="36" Click="BtnDownloadItemIcons_Click" ToolTip="Downloads any missing item icons and updates the bundled icon pack in the application folder (Debug only)." />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

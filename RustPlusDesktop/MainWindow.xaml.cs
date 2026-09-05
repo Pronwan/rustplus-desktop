@@ -981,7 +981,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             AppendLog("[items-new] loading deferred item catalog");
             EnsureNewItemDbLoaded();
             AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
-            StartIconAutoDownload();
         }, DispatcherPriority.ApplicationIdle);
 
         _ = Task.Run(async () =>
@@ -991,7 +990,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             {
                 EnsureNewItemDbLoaded(force: true);
                 AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
-                StartIconAutoDownload();
             }, DispatcherPriority.ApplicationIdle);
         });
     }
@@ -1474,6 +1472,10 @@ public partial class MainWindow : WpfUi.FluentWindow
     private static readonly string sIconCacheDir =
         System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                "RustPlusDesk", "icons");
+
+    // Bundled icon pack in the build/application folder (Assets/icons/items)
+    private static readonly string sBundledIconDir =
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icons", "items");
 
     // === Layers ===
     // Optional: externe Ergänzungen laden (Datei neben der EXE)
@@ -4933,17 +4935,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     public static System.Windows.Media.ImageSource? ResolveRustHelpIcon(string? rusthelpUrl, int decodePx = 32)
     {
         // Keep one high-resolution download on disk; decode-size variants stay in memory.
+        // 40px is the only size the app renders; keeping the cache at 40px saves space and feeds the
+        // sidebar hover decoration (which only accepts 40x40 files). Downloads are normalised to 40x40.
         string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
-            ? $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl!)}&w=256&q=90"
+            ? Build40OptimizedUrl(rusthelpUrl!)
             : null;
 
-        // 1) Versuche Optimierte URL
+        // 1) Versuche Optimierte URL (im lokalen Cache oder im gebündelten Paket)
         if (optimizedUrl != null)
         {
             string cacheKey = $"{optimizedUrl}|{decodePx}";
             if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
-            var path = GetIconCachePath(optimizedUrl);
-            if (System.IO.File.Exists(path))
+            var path = TryFindExistingIconFile(optimizedUrl);
+            if (path != null)
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
                 if (img != null) { sIconCache[cacheKey] = img; return img; }
@@ -4955,19 +4959,80 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             string cacheKey = $"{rusthelpUrl}|{decodePx}";
             if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
-            var path = GetIconCachePath(rusthelpUrl);
-            if (System.IO.File.Exists(path))
+            var path = TryFindExistingIconFile(rusthelpUrl);
+            if (path != null)
             {
                 var img = TryLoadBitmapFromFile(path, decodePx);
                 if (img != null) { sIconCache[cacheKey] = img; return img; }
             }
         }
 
-        // 3) Nichts da -> Download (Optimiert bevorzugt, Original als Fallback)
+        // 3) Nichts da -> 40px-optimierte URL laden, 40px-Cloudflare-Resize als Fallback (beide klein).
         if (optimizedUrl != null)
-            QueueIconDownload(optimizedUrl, GetIconCachePath(optimizedUrl), rusthelpUrl);
-        else if (rusthelpUrl != null)
-            QueueIconDownload(rusthelpUrl, GetIconCachePath(rusthelpUrl), null);
+            QueueIconDownload(optimizedUrl, GetIconCachePath(optimizedUrl), Build40FallbackUrl(rusthelpUrl!));
+
+        return null;
+    }
+
+    public static string Build40OptimizedUrl(string rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl)) return string.Empty;
+        if (rawUrl.Contains("/_next/image")) return rawUrl;
+        return $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rawUrl)}&w=40&q=90";
+    }
+
+    public static string? Build40FallbackUrl(string? rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl)) return null;
+        if (rawUrl.Contains("/cdn-cgi/image/")) return rawUrl;
+
+        if (rawUrl.Contains("/_next/image") && Uri.TryCreate(rawUrl, UriKind.Absolute, out var nextUri))
+        {
+            var query = System.Web.HttpUtility.ParseQueryString(nextUri.Query);
+            var innerUrl = query["url"];
+            if (!string.IsNullOrWhiteSpace(innerUrl))
+            {
+                rawUrl = innerUrl;
+            }
+        }
+
+        if (Uri.TryCreate(rawUrl, UriKind.Absolute, out var uri))
+        {
+            return $"{uri.Scheme}://{uri.Authority}/cdn-cgi/image/width=40,format=png{uri.PathAndQuery}";
+        }
+
+        return rawUrl;
+    }
+
+    private static string? TryFindExistingIconFile(string url)
+    {
+        var hash = Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(url))).ToLowerInvariant() + ".png";
+
+        // 1) Local user cache (%LOCALAPPDATA%\RustPlusDesk\icons)
+        var localPath = System.IO.Path.Combine(sIconCacheDir, hash);
+        if (System.IO.File.Exists(localPath)) return localPath;
+
+        // 2) Bundled icon pack in application folder (Assets/icons/items)
+        if (!string.IsNullOrEmpty(sBundledIconDir))
+        {
+            var bundledPath = System.IO.Path.Combine(sBundledIconDir, hash);
+            if (System.IO.File.Exists(bundledPath)) return bundledPath;
+        }
+
+        // 3) Direct icons folder beside executable fallback
+        var exeIconsPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", hash);
+        if (System.IO.File.Exists(exeIconsPath)) return exeIconsPath;
+
+#if DEBUG
+        // 4) Development source directory fallback when running in debug
+        try
+        {
+            var devSourcePath = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items", hash));
+            if (System.IO.File.Exists(devSourcePath)) return devSourcePath;
+        }
+        catch { /* best effort */ }
+#endif
 
         return null;
     }
@@ -5014,6 +5079,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (string.IsNullOrEmpty(directory)) return;
 
                 sMissingIconsPath = System.IO.Path.Combine(directory, ".missing-icons.txt");
+
+                // Pre-load from bundled pack if available
+                if (!string.IsNullOrEmpty(sBundledIconDir))
+                {
+                    var bundledMissing = System.IO.Path.Combine(sBundledIconDir, ".missing-icons.txt");
+                    if (File.Exists(bundledMissing))
+                    {
+                        foreach (var line in File.ReadAllLines(bundledMissing))
+                        {
+                            if (!string.IsNullOrWhiteSpace(line)) sMissingIcons.Add(line.Trim());
+                        }
+                    }
+                }
+
                 if (File.Exists(sMissingIconsPath))
                 {
                     foreach (var line in File.ReadAllLines(sMissingIconsPath))
@@ -5037,10 +5116,61 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             try { File.AppendAllText(sMissingIconsPath, url + Environment.NewLine); }
             catch { /* remembered for this session at least */ }
+
+#if DEBUG
+            try
+            {
+                var devSourceDir = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items"));
+                if (Directory.Exists(devSourceDir))
+                {
+                    var devMissing = System.IO.Path.Combine(devSourceDir, ".missing-icons.txt");
+                    File.AppendAllText(devMissing, url + Environment.NewLine);
+                }
+            }
+            catch { /* best effort */ }
+#endif
         }
     }
 
-    private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl)
+    private static void SyncDownloadedIcon(string targetPath, byte[] data)
+    {
+        try
+        {
+            var fileName = System.IO.Path.GetFileName(targetPath);
+            if (string.IsNullOrEmpty(fileName)) return;
+
+            if (!string.IsNullOrEmpty(sBundledIconDir))
+            {
+                Directory.CreateDirectory(sBundledIconDir);
+                var bundledTarget = System.IO.Path.Combine(sBundledIconDir, fileName);
+                if (!File.Exists(bundledTarget))
+                {
+                    File.WriteAllBytes(bundledTarget, data);
+                }
+            }
+
+#if DEBUG
+            try
+            {
+                var devSourceDir = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items"));
+                if (Directory.Exists(devSourceDir))
+                {
+                    var devTarget = System.IO.Path.Combine(devSourceDir, fileName);
+                    if (!File.Exists(devTarget))
+                    {
+                        File.WriteAllBytes(devTarget, data);
+                    }
+                }
+            }
+            catch { /* best effort */ }
+#endif
+        }
+        catch { /* best effort */ }
+    }
+
+    private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl, bool isBulk = false)
     {
         EnsureMissingIconsLoaded(targetPath);
 
@@ -5054,7 +5184,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (!sPendingDownloads.Add(url)) return;
         }
 
-        UpdateIconProgress(-1); // Total erhöhen
+        if (!isBulk)
+        {
+            UpdateIconProgress(-1); // Total erhöhen nur bei Einzel-Downloads
+        }
 
         _ = Task.Run(async () =>
         {
@@ -5083,7 +5216,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (resp != null && resp.IsSuccessStatusCode)
                 {
                     var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    data = Services.IconNormalizer.To40(data);
                     await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    SyncDownloadedIcon(targetPath, data);
                     LogMessage($"[icon-download] Successfully downloaded optimized icon: {url}");
                     succeeded = true;
                 }
@@ -5122,7 +5257,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         if (respF != null && respF.IsSuccessStatusCode)
                         {
                             var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                            data = Services.IconNormalizer.To40(data); // shrink the 512px original to 40px
                             await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                            SyncDownloadedIcon(targetPath, data);
                             LogMessage($"[icon-download] Successfully downloaded fallback icon: {fallbackUrl}");
                             succeeded = true;
                         }
@@ -5163,6 +5300,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
     private static int sIconDownloadsFailed;
+    private static volatile bool sIsBulkDownloadEnqueuing = false;
 
     /// <summary>
     /// Records one finished attempt. <paramref name="succeeded"/> says whether an icon actually
@@ -5182,7 +5320,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     if (!succeeded) sIconDownloadsFailed++;
 
                     IconsUpdated?.Invoke();
-                    if (mw._vm.IconsDownloaded == mw._vm.IconsTotal && mw._vm.IconsTotal > 0)
+                    if (!sIsBulkDownloadEnqueuing && mw._vm.IconsTotal > 0 && mw._vm.IconsDownloaded >= mw._vm.IconsTotal)
                     {
                         var total = mw._vm.IconsTotal;
                         var ok = total - sIconDownloadsFailed;
@@ -5200,13 +5338,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         });
     }
 
-    private static void StartIconAutoDownload()
+    public static void StartIconManualDownload()
     {
         _ = Task.Run(async () =>
         {
             try
             {
-                await Task.Delay(1000).ConfigureAwait(false);
+                // One-time housekeeping: drop any old 256/512px icons so the cache is 40px-only.
+                int removed = Services.IconNormalizer.CleanupNon40(sIconCacheDir);
+                if (removed > 0) LogMessage($"[icon-download] Cleaned up {removed} oversized (non-40px) cached icons");
 
                 List<ItemInfo> items;
                 lock (sItemsById)
@@ -5220,36 +5360,66 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     if (string.IsNullOrWhiteSpace(ii.IconUrl)) continue;
 
                     string rusthelpUrl = ii.IconUrl;
-                    string optimizedUrl = $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rusthelpUrl)}&w=40&q=90";
-                    string path = GetIconCachePath(optimizedUrl);
+                    string optimizedUrl = Build40OptimizedUrl(rusthelpUrl);
 
-                    if (!System.IO.File.Exists(path))
+                    var existing = TryFindExistingIconFile(optimizedUrl);
+                    if (existing == null)
                     {
-                        toDownload.Add((optimizedUrl, path, rusthelpUrl));
+                        string path = GetIconCachePath(optimizedUrl);
+                        toDownload.Add((optimizedUrl, path, Build40FallbackUrl(rusthelpUrl)));
                     }
                 }
 
-                if (toDownload.Count > 0)
+                if (toDownload.Count == 0)
                 {
                     Application.Current?.Dispatcher?.Invoke(() =>
                     {
                         if (Application.Current?.MainWindow is MainWindow mw)
                         {
-                            mw._vm.IconsTotal = 0;
-                            mw._vm.IconsDownloaded = 0;
-                            mw.AppendLog($"[icon-download] Auto-downloading {toDownload.Count} missing icons...");
+                            mw.AppendLog($"[icon-download] All {items.Count} icons are already present in cache/pack.");
                         }
                     });
-
-                    foreach (var (url, path, fallback) in toDownload)
-                    {
-                        QueueIconDownload(url, path, fallback);
-                    }
+                    return;
                 }
+
+                Application.Current?.Dispatcher?.Invoke(() =>
+                {
+                    if (Application.Current?.MainWindow is MainWindow mw)
+                    {
+                        sIsBulkDownloadEnqueuing = true;
+                        mw._vm.IconsTotal = toDownload.Count;
+                        mw._vm.IconsDownloaded = 0;
+                        sIconDownloadsFailed = 0;
+                        mw.AppendLog($"[icon-download] Downloading {toDownload.Count} missing icons and updating icon pack...");
+                    }
+                });
+
+                foreach (var (url, path, fallback) in toDownload)
+                {
+                    QueueIconDownload(url, path, fallback, isBulk: true);
+                }
+
+                sIsBulkDownloadEnqueuing = false;
+
+                Application.Current?.Dispatcher?.Invoke(() =>
+                {
+                    if (Application.Current?.MainWindow is MainWindow mw)
+                    {
+                        if (mw._vm.IconsTotal > 0 && mw._vm.IconsDownloaded >= mw._vm.IconsTotal)
+                        {
+                            var total = mw._vm.IconsTotal;
+                            var ok = total - sIconDownloadsFailed;
+                            mw.AppendLog(sIconDownloadsFailed == 0
+                                ? $"[icon-download] All icons downloaded ({ok}/{total})"
+                                : $"[icon-download] {ok}/{total} icons downloaded, {sIconDownloadsFailed} unavailable (they will not be requested again)");
+                            sIconDownloadsFailed = 0;
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[icon-download] Auto-download error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[icon-download] Manual download error: {ex.Message}");
             }
         });
     }

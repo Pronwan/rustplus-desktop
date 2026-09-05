@@ -627,6 +627,12 @@ namespace RustPlusDesk.Views
             ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+
+#if DEBUG
+            RowDevDownloadIcons.Visibility = Visibility.Visible;
+#else
+            RowDevDownloadIcons.Visibility = Visibility.Collapsed;
+#endif
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
             var fcmMention = TrackingService.DiscordWebhookMention ?? "";
@@ -1089,6 +1095,12 @@ namespace RustPlusDesk.Views
         {
             ParentWindow?.ManuallyImportMapFile();
         }
+        private void BtnDownloadItemIcons_Click(object sender, RoutedEventArgs e)
+        {
+            RustPlusDesk.Views.MainWindow.StartIconManualDownload();
+            ParentWindow?.ShowInfoSnackbar("Icon Pack", "Checking and downloading missing icons...", WpfUi.ControlAppearance.Info);
+        }
+
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
         {
             if (ParentWindow == null) return;

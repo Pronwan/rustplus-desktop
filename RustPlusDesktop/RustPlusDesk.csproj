@@ -373,7 +373,17 @@
     <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
   </PropertyGroup>
 
-  <Target Name="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <!-- Source inputs for the MapParser publish, so it only re-publishes when MapParser actually
+       changes (a self-contained single-file compressed publish is expensive to run every build). -->
+  <ItemGroup>
+    <MapParserSource Include="$(MSBuildProjectDirectory)\..\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\MapParser\**\*.json"
+                     Exclude="$(MSBuildProjectDirectory)\..\MapParser\bin\**;$(MSBuildProjectDirectory)\..\MapParser\obj\**;$(MSBuildProjectDirectory)\..\MapParser\node_modules\**" />
+  </ItemGroup>
+
+  <Target Name="BuildMapParserRuntime"
+          Inputs="@(MapParserSource)"
+          Outputs="$(MapParserPublishedExe)"
+          Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
@@ -724,8 +734,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Remove="Assets\Images\**\*;Assets\Screenshots\**\*" />
-    <Content Include="Assets\Images\**\*;Assets\Screenshots\**\*">
+    <Resource Remove="Assets\Images\**\*;Assets\Screenshots\**\*;Assets\icons\items\**\*" />
+    <Content Include="Assets\Images\**\*;Assets\Screenshots\**\*;Assets\icons\items\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
