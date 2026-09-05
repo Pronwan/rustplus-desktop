@@ -5720,4 +5720,46 @@ Podeu trobar més informació al lloc web oficial del servidor:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Vigila el llenguatge: advertiment {0} de {1}. Mantén-lo net o la propera vegada serà una expulsió temporal.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Eines</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Fes clic per obrir aquesta carpeta. Arrossega pestanyes a dins o a fora per organitzar-la.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Fes clic per tancar aquesta carpeta.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nova carpeta</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Arrossegar i deixar anar de la barra lateral</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Aprèn com arrossegar pestanyes individuals per reordenar la barra lateral, crear carpetes i personalitzar el teu disseny.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reordenar pestanyes</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Fes clic i mantén premuda qualsevol pestanya, i arrossega-la cap amunt o cap avall per canviar-ne la posició.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Crear carpetes</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Arrossega una pestanya directament sobre una altra per agrupar-les en una carpeta nova.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Plegar i desplegar</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Fes clic a una carpeta per plegar-la o desplegar-la fluidament. Les pestanyes agrupades llisquen en obrir-se.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Afegir o treure pestanyes</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Arrossega pestanyes cap a una carpeta per afegir-les, o treu-les cap a la barra per desagrupar-les.</value>
+  </data>
 </root>

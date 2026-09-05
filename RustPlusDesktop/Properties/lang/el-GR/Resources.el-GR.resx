@@ -5720,4 +5720,46 @@ Open Releases page?</value>
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Πρόσεχε τη γλώσσα σου — προειδοποίηση {0} από {1}. Κράτα το κόσμιο, αλλιώς ακολουθεί προσωρινός αποκλεισμός.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Εργαλεία</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Κάντε κλικ για να ανοίξετε αυτόν τον φάκελο. Σύρετε καρτέλες μέσα ή έξω για οργάνωση.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Κάντε κλικ για να κλείσετε αυτόν τον φάκελο.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Νέος φάκελος</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Μεταφορά &amp; Απόθεση Πλευρικής Γραμμής</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Μάθετε πώς να μεταφέρετε μεμονωμένες καρτέλες για να αναδιατάξετε την πλευρική γραμμή, να δημιουργήσετε φακέλους και να προσαρμόσετε τη διάταξη.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Αναδιάταξη καρτελών</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Κάντε κλικ και κρατήστε πατημένη οποιαδήποτε καρτέλα, σύρετέ την πάνω ή κάτω για να αλλάξετε τη θέση της.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Δημιουργία φακέλων</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Σύρετε μια καρτέλα πάνω σε μια άλλη για να τις ενώσετε σε έναν ολοκαίνουργιο φάκελο.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Ανάπτυξη και σύμπτυξη</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Κάντε κλικ σε έναν φάκελο για ομαλό άνοιγμα ή κλείσιμο. Οι ομαδοποιημένες καρτέλες εμφανίζονται με άνεση.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Προσθήκη ή αφαίρεση καρτελών</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Σύρετε καρτέλες μέσα σε έναν φάκελο ή τραβήξτε τις πίσω στην πλευρική γραμμή για να τις καταργήσετε από την ομάδα.</value>
+  </data>
 </root>

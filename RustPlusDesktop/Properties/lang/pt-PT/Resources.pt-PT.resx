@@ -5720,4 +5720,46 @@ Pode encontrar mais informações no site oficial do servidor:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Cuidado com a linguagem — aviso {0} de {1}. Mantém o respeito, ou a próxima será uma suspensão.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Ferramentas</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Clique para abrir esta pasta. Arraste separadores para dentro ou para fora para organizá-la.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Clique para fechar esta pasta.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nova pasta</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Arrastar e largar da barra lateral</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Aprenda a arrastar e largar separadores individuais para reorganizar a barra lateral, criar pastas e personalizar o layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reorganizar separadores</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Clique e mantenha premido qualquer separador e arraste para cima ou para baixo para o reposicionar.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Criar pastas</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Arraste um separador diretamente sobre outro para combiná-los numa nova pasta e organizar as ferramentas.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Expandir e recolher</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Clique numa pasta para recolher ou expandir suavemente. Os separadores agrupados deslizam ao abrir.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Adicionar ou remover separadores</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Arraste separadores para dentro de uma pasta para adicioná-los ou retire-os para a barra para desagrupar.</value>
+  </data>
 </root>

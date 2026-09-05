@@ -6687,4 +6687,46 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Убирать нечего — все серверы с облачными данными всё ещё в вашем списке.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Нажмите, чтобы открыть папку. Перетаскивайте вкладки для организации.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Нажмите, чтобы свернуть папку.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Новая папка</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Перетаскивание на боковой панели</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Узнайте, как перетаскивать вкладки, менять их порядок, создавать папки и настраивать панель под себя.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Изменение порядка вкладок</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Зажмите любую вкладку и перетащите её вверх или вниз, чтобы изменить её положение на панели.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Создание папок</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Перетащите одну вкладку прямо на другую, чтобы объединить их в новую папку.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Сворачивание и разворачивание</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Нажмите на папку, чтобы плавно открыть или закрыть её. Сгруппированные вкладки аккуратно выдвигаются.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Добавление и извлечение вкладок</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Перетаскивайте вкладки внутрь папки для группировки или вытягивайте обратно на панель, чтобы разгруппировать.</value>
+  </data>
 </root>

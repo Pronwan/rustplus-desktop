@@ -5720,4 +5720,46 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Let op jou taal — waarskuwing {0} van {1}. Hou dit skoon, anders volg ’n tydstraf.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Gereedskap</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Klik om hierdie vouer oop te maak. Sleep oortjies in of uit om dit te organiseer.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Klik om hierdie vouer toe te maak.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nuwe vouer</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Kantbalk Sleep &amp; Los</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Leer hoe om individuele oortjies te sleep en te los om jou kantbalk te herrangskik, vouers te skep en jou uitleg aan te pas.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Herrangskik oortjies</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klik en hou enige oortjie in, en sleep dit op of af om sy posisie op die kantbalk te verander.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Skep vouers</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Sleep 'n oortjie direk bo-oor 'n ander oortjie om hulle in 'n splinternuwe vouer saam te voeg.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Vou oop en toe</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klik op enige vouer om dit vlot oop of toe te vou. Gegroepeerde oortjies gly glad uit wanneer nodig.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Voeg oortjies by of verwyder</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Sleep oortjies reguit in 'n vouer in om hulle by te voeg, of sleep hulle terug na die kantbalk om hulle te ontgroepeer.</value>
+  </data>
 </root>

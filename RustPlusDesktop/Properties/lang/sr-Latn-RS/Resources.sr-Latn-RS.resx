@@ -5720,4 +5720,46 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Pazi na jezik — upozorenje {0} od {1}. Drži se pristojnosti, inače sledi privremena zabrana.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Alatke</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Kliknite da otvorite ovu fasciklu. Prevucite kartice unutra ili napolje da je organizujete.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Kliknite da zatvorite ovu fasciklu.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nova fascikla</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Prevlačenje i ispuštanje na bočnoj traci</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Saznajte kako da prevučete pojedinačne kartice da biste preuredili bočnu traku, napravili fascikle i prilagodili raspored.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Promena redosleda kartica</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Kliknite i držite bilo koju karticu, a zatim je prevucite nagore ili nadole da promenite njenu poziciju.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Kreiranje fascikli</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Prevucite karticu direktno preko druge kartice da biste ih spojili u novu fasciklu.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Otvaranje i zatvaranje</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Kliknite na fasciklu da je glatko otvorite ili zatvorite. Grupisane kartice se glatko otvaraju.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Dodavanje ili uklanjanje kartica</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Prevucite kartice u fasciklu da ih dodate, ili ih izvucite nazad na traku da ih razgrupišete.</value>
+  </data>
 </root>

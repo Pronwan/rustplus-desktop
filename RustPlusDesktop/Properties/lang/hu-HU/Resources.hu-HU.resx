@@ -5720,4 +5720,46 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Vigyázz a szavaidra – {0}. figyelmeztetés a {1}-ból. Maradj kulturált, különben időkorlát következik.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Eszközök</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Kattintson a mappa megnyitásához. Lapok behúzásával rendezheti.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Kattintson a mappa bezárásához.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Új mappa</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Oldalsáv Fogd és Vidd</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Ismerd meg, hogyan rendezheted át az egyes lapokat, hozhatsz létre mappákat és alakíthatod ki saját elrendezésedet.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Lapok átrendezése</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Kattints és tartsd lenyomva bármelyik lapot, majd húzd fel vagy le a pozíció módosításához a sávon.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Mappák létrehozása</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Húzz egy lapot közvetlenül egy másikra, hogy egy vadonatúj mappába vond össze őket.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Kinyitás és összecsukás</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Kattints a mappára a zökkenőmentes kinyitáshoz vagy becsukáshoz. A csoportosított lapok finoman előbukkannak.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Lapok hozzáadása vagy eltávolítása</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Húzz lapokat a mappába a hozzáadásukhoz, vagy húzd ki őket a sávra a csoportosítás felbontásához.</value>
+  </data>
 </root>

@@ -5720,4 +5720,46 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>שים לב לשפה — אזהרה {0} מתוך {1}. שמור על שפה נקייה, אחרת בפעם הבאה תושעה זמנית.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>כלים</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>לחץ כדי לפתוח תיקייה זו. גרור כרטיסיות פנימה או החוצה לארגון.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>לחץ כדי לסגור תיקייה זו.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>תיקייה חדשה</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>גרירה ושחרור בסרגל הצד</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>למדו כיצד לגרור כרטיסיות בודדות כדי לסדר מחדש את סרגל הצד, ליצור תיקיות ולהתאים את פריסת העבודה.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>סידור מחדש של כרטיסיות</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>לחצו והחזיקו כל כרטיסייה וגררו אותה למעלה או למטה כדי למקם אותה מחדש בסרגל.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>יצירת תיקיות</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>גררו כרטיסייה ישירות על גבי כרטיסייה אחרת כדי לאחד אותן לתיקייה חדשה ומסודרת.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>פתיחה וכיווץ</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>לחצו על תיקייה כדי לפתוח או לקפל אותה בצורה חלקה. הכרטיסיות המקובצות מחליקות החוצה.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>הוספה והסרה של כרטיסיות</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>גררו כרטיסיות ישירות לתוך תיקייה כדי להוסיף אותן, או גררו החוצה לסרגל כדי לפרק את הקבוצה.</value>
+  </data>
 </root>

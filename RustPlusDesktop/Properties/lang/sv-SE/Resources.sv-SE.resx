@@ -5720,4 +5720,46 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Se upp med språket — varning {0} av {1}. Håll det snyggt, annars blir det en utestängning.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Verktyg</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Klicka för att öppna mappen. Dra flikar in eller ut för att organisera den.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Klicka för att stänga mappen.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Ny mapp</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Sidofält Dra &amp; Släpp</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Lär dig hur du drar och släpper enskilda flikar för att ordna sidofältet, skapa mappar och anpassa din layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Ordna om flikar</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klicka och håll ned valfri flik och dra den uppåt eller nedåt för att ändra dess position på fältet.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Skapa mappar</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Dra en flik direkt till en annan flik för att kombinera dem i en helt ny mapp.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Fäll ut och ihop</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klicka på en mapp för att smidigt fälla ut eller ihop den. Grupperade flikar glider fram vid behov.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Lägg till eller ta bort flikar</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Dra flikar direkt in i en mapp för att lägga till dem, eller dra ut dem till sidofältet för att dela upp dem.</value>
+  </data>
 </root>

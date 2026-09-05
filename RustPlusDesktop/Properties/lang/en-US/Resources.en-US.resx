@@ -889,22 +889,34 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
     <value>New folder</value>
   </data>
   <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
-    <value>Sidebar folders</value>
+    <value>Sidebar Drag &amp; Drop</value>
   </data>
   <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
-    <value>You can now group sidebar tabs into folders and arrange them however you like. Take a quick look?</value>
+    <value>Learn how to drag and drop single tabs to reorder your sidebar, create folders, and customize your layout.</value>
   </data>
-  <data name="Tutorials.Step.folders.intro.Title" xml:space="preserve">
-    <value>Your tools, tidied away</value>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reorder tabs</value>
   </data>
-  <data name="Tutorials.Step.folders.intro.Description" xml:space="preserve">
-    <value>The calculators and utilities now live in this Tools folder. Click it to open, and click again to collapse.</value>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Click and hold any single tab, then drag it up or down to reposition it on the rail. Drop it anywhere to customize your navigation layout.</value>
   </data>
-  <data name="Tutorials.Step.folders.manage.Title" xml:space="preserve">
-    <value>Arrange it your way</value>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Create folders</value>
   </data>
-  <data name="Tutorials.Step.folders.manage.Description" xml:space="preserve">
-    <value>Drag any tab to reorder it. Drop a tab onto another to make a folder, drop it onto a folder to add it, or drag it out to ungroup. Your layout is saved automatically.</value>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Drag any tab directly onto another tab to combine them into a brand-new folder. This keeps your sidebar clean and lets you group related tabs together.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Fold and unfold</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Click any folder to smoothly fold or unfold it. Grouped tabs expand out when you need them, and collapse back down to save space.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Add or remove tabs</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Drag tabs straight into a folder to add them, or drag them back out onto the sidebar rail to ungroup them anytime. Your layout is saved automatically.</value>
   </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Hide System Console (Declutter)</value>
@@ -6360,5 +6372,8 @@ You can find more information on the server's official website:
   </data>
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Nothing to clean up — every server with cloud data is still in your list.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Click to close this folder.</value>
   </data>
 </root>

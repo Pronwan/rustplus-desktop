@@ -5720,4 +5720,46 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Cuidado com a linguagem — aviso {0} de {1}. Mantenha o respeito, ou a próxima será uma suspensão.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Ferramentas</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Clique para abrir esta pasta. Arraste abas para dentro ou fora para organizá-la.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Clique para fechar esta pasta.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nova pasta</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Arrastar e soltar da barra lateral</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Aprenda a arrastar e soltar abas individuais para reorganizar a barra lateral, criar pastas e personalizar seu layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reorganizar abas</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Clique e segure qualquer aba e arraste para cima ou para baixo para reposicioná-la na barra.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Criar pastas</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Arraste uma aba diretamente sobre outra para combiná-las em uma nova pasta e manter tudo organizado.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Expandir e recolher</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Clique em uma pasta para recolher ou expandir com animação suave. As abas agrupadas deslizam quando abertas.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Adicionar ou remover abas</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Arraste abas para dentro de uma pasta para adicioná-las ou arraste de volta para a barra para desagrupá-las.</value>
+  </data>
 </root>

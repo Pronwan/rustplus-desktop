@@ -6578,4 +6578,46 @@
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>لا شيء لتنظيفه — كل خادم لديه بيانات سحابية لا يزال في قائمتك.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>انقر لفتح هذا المجلد. اسحب علامات التبويب للداخل أو الخارج لتنظيمه.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>انقر لإغلاق هذا المجلد.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>مجلد جديد</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>السحب والإفلات للشريط الجانبي</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>تعلم كيفية سحب وإفلات علامات التبويب المنفردة لإعادة ترتيب الشريط الجانبي وإنشاء مجلدات وتخصيص مساحة عملك.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>إعادة ترتيب التبويبات</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>انقر مع الاستمرار على أي تبويب ثم اسحبه لأعلى أو لأسفل لتغيير موضعه على الشريط الجانبي.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>إنشاء مجلدات</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>اسحب أي تبويب مباشرة فوق تبويب آخر لدمجهما في مجلد جديد والحفاظ على تنظيم شريطك.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>طي وبسط المجلدات</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>انقر على أي مجلد لبسطه أو طيه بسلاسة. تنزلق التبويبات المجمعة للخارج لتسهيل الوصول إليها.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>إضافة أو إزالة التبويبات</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>اسحب التبويبات مباشرة إلى داخل المجلد لإضافتها، أو اسحبها للخارج لإعادتها إلى الشريط الجانبي في أي وقت.</value>
+  </data>
 </root>

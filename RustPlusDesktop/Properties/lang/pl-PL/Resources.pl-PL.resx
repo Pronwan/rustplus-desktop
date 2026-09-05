@@ -5720,4 +5720,46 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Uważaj na słowa — ostrzeżenie {0} z {1}. Zachowaj kulturę, bo następnym razem będzie blokada.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Narzędzia</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Kliknij, aby otworzyć ten folder. Przeciągaj karty, aby go uporządkować.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Kliknij, aby zwinąć ten folder.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nowy folder</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Przeciąganie na pasku bocznym</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Dowiedz się, jak przeciągać pojedyncze karty, tworzyć foldery i dostosowywać pasek boczny do własnych potrzeb.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Zmień kolejność kart</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Kliknij i przytrzymaj dowolną kartę, a następnie przeciągnij ją w górę lub w dół, aby zmienić jej pozycję.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Twórz foldery</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Upuść jedną kartę na drugą, aby połączyć je w nowy folder i uporządkować przestrzeń roboczą.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Zwijaj i rozwijaj</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Kliknij folder, aby płynnie go rozwinąć lub zwinąć. Zgrupowane karty wysuwają się automatycznie.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Dodawaj lub usuwaj karty</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Przeciągaj karty do folderu, aby je dodać, lub wyciągaj je z powrotem na pasek, aby je rozgrupować.</value>
+  </data>
 </root>

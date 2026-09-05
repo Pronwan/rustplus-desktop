@@ -5720,4 +5720,46 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Varo kielenkäyttöä — varoitus {0}/{1}. Pidä se asiallisena, tai seuraavaksi tulee aikalisä.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Työkalut</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Napsauta avataksesi kansion. Järjestä vetämällä välilehtiä sisään tai ulos.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Napsauta sulkeaksesi kansion.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Uusi kansio</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Sivupalkin vetäminen ja pudottaminen</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Opi siirtämään yksittäisiä välilehtiä, luomaan kansioita ja mukauttamaan sivupalkin asettelua vetämällä ja pudottamalla.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Järjestä välilehdet</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Napsauta ja pidä välilehteä painettuna ja siirrä sitä ylös tai alas vaihtaaksesi sen paikkaa palkissa.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Luo kansioita</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Vedä välilehti toisen välilehden päälle yhdistääksesi ne upouudeksi kansioksi.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Avaa ja sulje kansioita</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Napsauta kansiota avataksesi tai sulkeaksesi sen pehmeällä animaatiolla. Ryhmitellyt välilehdet liukuvat esiin.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Lisää tai poista välilehtiä</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Vedä välilehtiä kansioon tai vedä ne takaisin sivupalkkiin purkaaksesi ryhmittelyn milloin tahansa.</value>
+  </data>
 </root>

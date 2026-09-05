@@ -62,6 +62,8 @@ public partial class MainWindow
         _railFolderVisuals.Clear();
         RailItemsHost.Children.Clear();
 
+        bool firstTabTagged = false;
+        bool secondTabTagged = false;
         foreach (var node in _railLayout.Nodes)
         {
             if (node.IsFolder)
@@ -72,7 +74,18 @@ public partial class MainWindow
             else if (node.TabId is { } tabId && RailCatalog.Find(tabId) is { } info)
             {
                 if (!IsRailTabVisible(info)) continue;
-                RailItemsHost.Children.Add(BuildTabEntry(info));
+                var entry = BuildTabEntry(info);
+                if (!firstTabTagged)
+                {
+                    Features.Tutorials.Tutorial.SetTargetId(entry, "Sidebar.SingleTab");
+                    firstTabTagged = true;
+                }
+                else if (!secondTabTagged)
+                {
+                    Features.Tutorials.Tutorial.SetTargetId(entry, "Sidebar.SecondTab");
+                    secondTabTagged = true;
+                }
+                RailItemsHost.Children.Add(entry);
             }
         }
 
@@ -83,7 +96,7 @@ public partial class MainWindow
     private FrameworkElement BuildTabEntry(RailTabInfo info, string? parentFolderId = null)
     {
         var dragRef = new RailDragRef { TabId = info.Id, ParentFolderId = parentFolderId };
-        var grid = new Grid { Tag = dragRef };
+        var grid = new Grid { Tag = dragRef, Width = 48 };
         var button = BuildRailButton(info);
         dragRef.GhostSource = button;
         grid.Children.Add(button);

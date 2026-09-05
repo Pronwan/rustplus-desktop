@@ -5807,4 +5807,46 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>添付されていません — {0} は {1} MB を超えています。</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>クリックしてこのフォルダーを開きます。タブをドラッグして整理できます。</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>クリックしてこのフォルダーを閉じます。</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>新しいフォルダー</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>サイドバードラッグ＆ドロップ</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>タブをドラッグ＆ドロップして並び替えたり、フォルダを作成してサイドバーを自由にカスタマイズしましょう。</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>タブの並び替え</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>タブをクリックしたまま上下にドラッグして、サイドバー上の位置を自由に移動できます。</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>フォルダの作成</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>タブを別のタブの上に直接ドラッグすると、まとめて新しいフォルダを作成できます。</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>折りたたみと展開</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>フォルダをクリックするとスムーズに開閉します。グループ化されたタブが滑らかに展開されます。</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>タブの追加と取り出し</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>タブをフォルダにドラッグして追加したり、外のサイドバーへドラッグして解除できます。</value>
+  </data>
 </root>

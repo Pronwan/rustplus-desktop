@@ -5720,4 +5720,46 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Diline dikkat et — {1} uyarıdan {0}. Saygılı ol, yoksa bir sonrakinde susturulursun.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Araçlar</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Bu klasörü açmak için tıklayın. Düzenlemek için sekmeleri içeri veya dışarı sürükleyin.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Bu klasörü kapatmak için tıklayın.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Yeni klasör</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Kenar Çubuğu Sürükle ve Bırak</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Kenar çubuğunuzu yeniden düzenlemek, klasörler oluşturmak ve düzeninizi özelleştirmek için sekmeleri nasıl sürükleyip bırakacağınızı öğrenin.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Sekmeleri yeniden sırala</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Herhangi bir sekmeyi basılı tutup yukarı veya aşağı sürükleyerek çubuktaki konumunu değiştirin.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Klasör oluştur</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Sekmeleri yeni bir klasörde birleştirmek için bir sekmeyi doğrudan diğerinin üzerine bırakın.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Katla ve aç</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klasörü sorunsuz bir şekilde açıp kapatmak için tıklayın. Gruplanmış sekmeler ihtiyaç duyduğunuzda kayarak açılır.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Sekme ekle veya çıkar</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Sekmeleri eklemek için doğrudan klasöre sürükleyin veya gruptan çıkarmak için tekrar kenar çubuğuna sürükleyin.</value>
+  </data>
 </root>

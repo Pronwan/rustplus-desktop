@@ -6435,4 +6435,46 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>无需清理 — 所有有云端数据的服务器都还在你的列表中。</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>点击打开此文件夹。可拖入或拖出标签页进行整理。</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>点击折叠此文件夹。</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>新建文件夹</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>侧边栏拖拽排列</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>了解如何通过拖拽独立标签页重新排布侧边栏、创建文件夹以及定制你的界面布局。</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>重新排列标签页</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>点击并按住任意独立标签页，上下拖拽即可调整其在侧边栏上的位置。</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>创建文件夹</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>将任意标签页直接拖到另一个标签页上，即可将它们合并到一个全新的文件夹中。</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>折叠与展开</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>点击任意文件夹即可平滑展开或折叠。收纳的标签页会在展开时流畅滑出。</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>添加或移出标签页</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>将标签页直接拖入文件夹即可收纳，拖出文件夹放回侧边栏即可随时取消分组。</value>
+  </data>
 </root>

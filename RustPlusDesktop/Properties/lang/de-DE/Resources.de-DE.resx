@@ -6765,4 +6765,46 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Nichts aufzuräumen — jeder Server mit Cloud-Daten steht noch in deiner Liste.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Werkzeuge</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Klicken, um diesen Ordner zu öffnen. Tabs hinein- oder herausziehen, um ihn zu organisieren.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Klicken, um diesen Ordner zu schließen.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Neuer Ordner</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Seitenleiste Drag &amp; Drop</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Erfahre, wie du einzelne Tabs per Drag-and-Drop neu anordnest, Ordner erstellst und dein Layout anpasst.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Tabs neu anordnen</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klicke und halte einen beliebigen Tab und ziehe ihn nach oben oder unten, um ihn auf der Leiste neu zu positionieren.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Ordner erstellen</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Ziehe einen Tab direkt auf einen anderen Tab, um beide in einem neuen Ordner zusammenzufassen.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Ein- und ausklappen</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klicke auf einen beliebigen Ordner, um ihn flüssig ein- oder auszuklappen. Gruppierte Tabs fahren sanft aus.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Tabs hinzufügen oder entfernen</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Ziehe Tabs direkt in einen Ordner hinein oder ziehe sie heraus zurück auf die Leiste, um die Gruppierung aufzuheben.</value>
+  </data>
 </root>

@@ -5720,4 +5720,46 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Atenție la limbaj — avertisment {0} din {1}. Păstrează un ton decent, altfel urmează o suspendare temporară.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Instrumente</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Faceți clic pentru a deschide acest dosar. Trageți file înăuntru sau afară pentru a-l organiza.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Faceți clic pentru a închide acest dosar.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Dosar nou</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Tragere și fixare în bara laterală</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Află cum să tragi și să fixezi file individuale pentru a reordona bara laterală, a crea dosare și a personaliza spațiul de lucru.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reordonare file</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Fă clic și ține apăsat pe orice filă, apoi trage-o în sus sau în jos pentru a-i schimba poziția pe bară.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Creare dosare</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Trage o filă direct peste o alta pentru a le uni într-un dosar nou și a păstra bara organizată.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Extindere și restrângere</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Fă clic pe un dosar pentru a-l deschide sau închide fluid. Filele grupate glisează ușor la vedere.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Adăugare sau eliminare file</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Trage filele direct într-un dosar pentru a le include, sau trage-le înapoi pe bară pentru a le degrupa.</value>
+  </data>
 </root>

@@ -5720,4 +5720,46 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Pass på språket — advarsel {0} av {1}. Hold det ryddig, ellers blir det en utestengelse.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Verktøy</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Klikk for å åpne denne mappen. Dra faner inn eller ut for å organisere den.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Klikk for å lukke denne mappen.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Ny mappe</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Sidelinje Dra &amp; Slipp</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Lær hvordan du drar og slipper enkeltfaner for å omorganisere sidelinjen, opprette mapper og tilpasse oppsettet ditt.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Endre rekkefølge på faner</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klikk og hold på en fane, og dra den opp eller ned for å flytte den på sidelinjen.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Opprett mapper</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Dra en fane direkte over en annen fane for å slå dem sammen til en splitter ny mappe.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Utvid og skjul mapper</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klikk på en mappe for at åpne eller lukke den med en myk animasjon. Fanene glir pent frem.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Legg til eller fjern faner</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Dra faner inn i en mappe for å legge dem til, eller dra dem ut igjen på sidelinjen for å løse opp gruppen.</value>
+  </data>
 </root>

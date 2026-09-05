@@ -5720,4 +5720,46 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Attento al linguaggio — avviso {0} di {1}. Mantieniti civile, altrimenti la prossima volta scatta una sospensione.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Strumenti</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Fai clic per aprire questa cartella. Trascina le schede per organizzarla.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Fai clic per chiudere questa cartella.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nuova cartella</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Trascina e rilascia della barra laterale</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Scopri come trascinare le singole schede per riordinare la barra laterale, creare cartelle e personalizzare il layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Riordina le schede</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Fai clic e tieni premuta una scheda, quindi trascinala verso l'alto o verso il basso per riposizionarla.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Crea cartelle</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Trascina una scheda direttamente sopra un'altra per unirle in una nuova cartella e tenere tutto in ordine.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Espandi e comprimi</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Fai clic su qualsiasi cartella per aprirla o chiuderla con un'animazione fluida. Le schede raggruppate scivolano fuori.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Aggiungi o rimuovi schede</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Trascina le schede dentro una cartella per aggiungerle o trascinale fuori sulla barra per separarle.</value>
+  </data>
 </root>

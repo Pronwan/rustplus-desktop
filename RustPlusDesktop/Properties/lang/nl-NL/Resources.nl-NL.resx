@@ -5720,4 +5720,46 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Let op je taalgebruik — waarschuwing {0} van {1}. Hou het netjes, anders volgt een time-out.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Gereedschap</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Klik om deze map te openen. Sleep tabbladen in of uit om te ordenen.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Klik om deze map te sluiten.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nieuwe map</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Zijbalk Slepen &amp; Neerzetten</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Ontdek hoe je afzonderlijke tabbladen versleept om je zijbalk opnieuw in te delen, mappen te maken en je layout aan te passen.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Tabbladen rangschikken</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klik en houd een tabblad vast en sleep het omhoog of omlaag om de volgorde op de balk aan te passen.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Mappen maken</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Sleep een tabblad direct op een ander tabblad om ze samen te voegen in een gloednieuwe map.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>In- en uitklappen</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Klik op een map om deze soepel in of uit te klappen. Gegroepeerde tabbladen schuiven overzichtelijk open.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Tabbladen toevoegen of verwijderen</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Sleep tabbladen rechtstreeks in een map of sleep ze eruit terug naar de balk om de groepering op te heffen.</value>
+  </data>
 </root>

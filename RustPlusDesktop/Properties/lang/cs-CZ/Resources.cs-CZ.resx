@@ -5720,4 +5720,46 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Mírni výrazy – varování {0} z {1}. Drž se slušnosti, jinak přijde dočasný zákaz.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Nástroje</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Kliknutím otevřete tuto složku. Přetahováním záložek ji můžete uspořádat.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Kliknutím zavřete tuto složku.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nová složka</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Přetahování na bočním panelu</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Zjistěte, jak přetahováním jednotlivých záložek uspořádat boční panel, vytvářet složky a přizpůsobit si rozvržení.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Změna pořadí záložek</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Klikněte a podržte libovolnou záložku a přetažením nahoru nebo dolů změňte její umístění na panelu.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Vytváření složek</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Přetáhněte záložku přímo na jinou záložku a spojte je do zbrusu nové složky.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Rozbalení a sbalení</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Kliknutím na složku ji plynule rozbalíte nebo sbalíte. Seskupené záložky se hladce vysunou.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Přidání a odebrání záložek</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Záložky přetáhněte do složky pro jejich přidání, nebo je vytáhněte zpět na panel pro oddělení.</value>
+  </data>
 </root>

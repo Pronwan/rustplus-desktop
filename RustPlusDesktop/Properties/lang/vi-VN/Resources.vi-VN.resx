@@ -5720,4 +5720,46 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="ChatRefusedProfanity" xml:space="preserve">
     <value>Chú ý lời nói — cảnh báo {0}/{1}. Giữ lịch sự, nếu không lần sau sẽ bị cấm chat tạm thời.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Công cụ</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Nhấp để mở thư mục này. Kéo các tab vào hoặc ra để sắp xếp.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Nhấp để đóng thư mục này.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Thư mục mới</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Kéo &amp; Thả Thanh Bên</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Tìm hiểu cách kéo thả các tab đơn lẻ để sắp xếp lại thanh bên, tạo thư mục và tùy chỉnh bố cục của bạn.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Sắp xếp lại các tab</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Nhấp và giữ tab bất kỳ, sau đó kéo lên hoặc xuống để thay đổi vị trí của tab trên thanh bên.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Tạo thư mục</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Kéo một tab thả trực tiếp lên một tab khác để kết hợp chúng thành một thư mục hoàn toàn mới.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Mở rộng và thu gọn</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Nhấp vào thư mục bất kỳ để mở hoặc đóng mượt mà. Các tab được nhóm sẽ trượt ra khi cần.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Thêm hoặc bớt tab</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Kéo các tab vào thư mục để lưu trữ, hoặc kéo chúng trở lại thanh bên để hủy nhóm bất kỳ lúc nào.</value>
+  </data>
 </root>

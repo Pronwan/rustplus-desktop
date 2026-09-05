@@ -6687,4 +6687,46 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Rien à nettoyer — chaque serveur ayant des données cloud est encore dans ta liste.</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Outils</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Cliquez pour ouvrir ce dossier. Glissez des onglets pour l&#x27;organiser.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Cliquez pour fermer ce dossier.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>Nouveau dossier</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Glisser-déposer de la barre latérale</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Découvrez comment glisser-déposer des onglets pour réorganiser votre barre latérale, créer des dossiers et personnaliser votre espace.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Réorganiser les onglets</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Cliquez et maintenez n'importe quel onglet, puis faites-le glisser vers le haut ou le bas pour changer sa position.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Créer des dossiers</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Glissez un onglet directement sur un autre pour les regrouper dans un tout nouveau dossier.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Plier et déplier</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Cliquez sur un dossier pour le déplier ou le replier avec fluidité. Les onglets groupés s'ouvrent au besoin.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Ajouter ou retirer des onglets</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Glissez des onglets directement dans un dossier pour les ajouter, ou ressortez-les sur la barre pour les dissocier.</value>
+  </data>
 </root>
