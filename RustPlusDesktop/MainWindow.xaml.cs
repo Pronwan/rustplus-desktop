@@ -3306,7 +3306,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var current = _overlayAlarms[_overlayAlarmIndex];
         
         string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
-        AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
+        AlarmOverlayServerTxt.Text = srvName;
+
+        // When the alarm went off, not when the push reached us — the same time the
+        // notification list shows, so the two never disagree. On its own line: server
+        // names run long, and sharing one with the name pushed the time out of sight.
+        var alarmAt = current.Notification.EventTime ?? current.Notification.Timestamp;
+        AlarmOverlayTimeTxt.Text = alarmAt.Date == DateTime.Today
+            ? alarmAt.ToString("t")
+            : alarmAt.ToString("g");
         // The title is what Rust actually sent for this alarm — the upper line the player set
         // on it. Preferring it over a paired device name, and both over the word "Smart Alarm",
         // means the overlay says which alarm went off instead of merely that one did.

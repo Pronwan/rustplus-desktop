@@ -10135,7 +10135,10 @@
                         <ui:Button Grid.Column="3" Padding="4" Appearance="Transparent" Click="AlarmOverlayClose_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
                     </Grid>
 
-                    <TextBlock x:Name="AlarmOverlayServerTxt" Grid.Row="1" Margin="0,0,0,4" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource UiServerName1430}" />
+                    <StackPanel Grid.Row="1" Margin="0,0,0,4">
+                        <TextBlock x:Name="AlarmOverlayServerTxt" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource UiServerName1430}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock x:Name="AlarmOverlayTimeTxt" Margin="0,2,0,0" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
                     <TextBlock x:Name="AlarmOverlayNameTxt" Grid.Row="2" Margin="0,0,0,2" FontSize="16" FontWeight="Bold" Text="{DynamicResource UiCustomAlarmName}" TextWrapping="Wrap" />
                     <TextBlock x:Name="AlarmOverlayMsgTxt" Grid.Row="3" Margin="0,0,0,12" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{DynamicResource AlarmActivated}" TextWrapping="Wrap" />
 
