@@ -1470,4 +1470,10 @@
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>将标签页直接拖入文件夹即可收纳，拖出文件夹放回侧边栏即可随时取消分组。</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa 关联已失效</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon 不再接受与 Rust+ Desktop 的连接，突袭警报无法送达 Alexa。语音控制仍可正常使用。请打开 Alexa 应用，停用 Rust+ Desktop 技能后重新关联。</value>
+  </data>
 </root>

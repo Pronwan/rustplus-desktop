@@ -5765,4 +5765,10 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Usunąć gracza {0} z drużyny?</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Połączenie z Alexą wygasło</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon nie akceptuje już połączenia z Rust+ Desktop, więc alarmy o rajdzie przestały docierać do Alexy. Sterowanie głosowe działa dalej. Otwórz aplikację Alexa, wyłącz umiejętność Rust+ Desktop i połącz ją ponownie.</value>
+  </data>
 </root>

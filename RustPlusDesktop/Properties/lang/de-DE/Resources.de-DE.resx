@@ -6810,4 +6810,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0} aus dem Team entfernen?</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa-Verknüpfung abgelaufen</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon akzeptiert die Verbindung zu Rust+ Desktop nicht mehr, deshalb erreichen Raid-Alarme Alexa nicht mehr. Die Sprachsteuerung ist nicht betroffen. Öffne die Alexa-App, deaktiviere den Rust+ Desktop Skill und verknüpfe ihn erneut.</value>
+  </data>
 </root>

@@ -5765,4 +5765,10 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Remover {0} da equipe?</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Vínculo com a Alexa expirado</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>A Amazon não aceita mais a conexão com o Rust+ Desktop, então os alarmes de raid deixaram de chegar à Alexa. O controle por voz continua funcionando. Abra o aplicativo Alexa, desative a skill do Rust+ Desktop e vincule novamente.</value>
+  </data>
 </root>

@@ -5765,4 +5765,10 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0} adlı oyuncu takımdan çıkarılsın mı?</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa bağlantısının süresi doldu</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon artık Rust+ Desktop bağlantısını kabul etmiyor, bu yüzden baskın alarmları Alexa'ya ulaşmıyor. Sesli kontrol çalışmaya devam ediyor. Alexa uygulamasını açın, Rust+ Desktop becerisini devre dışı bırakın ve yeniden bağlayın.</value>
+  </data>
 </root>

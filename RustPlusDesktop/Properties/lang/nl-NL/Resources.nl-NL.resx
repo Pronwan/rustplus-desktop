@@ -5765,4 +5765,10 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0} uit het team verwijderen?</value>
   </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa-koppeling verlopen</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon accepteert de verbinding met Rust+ Desktop niet meer, waardoor raid-alarmen Alexa niet meer bereiken. Spraakbediening werkt gewoon door. Open de Alexa-app, schakel de Rust+ Desktop-skill uit en koppel deze opnieuw.</value>
+  </data>
 </root>
