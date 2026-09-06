@@ -92,6 +92,8 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
         SocialRealtime.FriendRequestArrived += OnFriendRequestArrived;
+        SocialRealtime.FriendRequestSettled += OnFriendRequestSettled;
+        SocialRealtime.ConversationSettled += OnConversationSettled;
         SocialUnread.Changed += ShowUnread;
 
         // Whatever it already knows, before anything is loaded.
@@ -111,6 +113,8 @@ public partial class LfgOverlay : UserControl
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
         SocialRealtime.FriendRequestArrived -= OnFriendRequestArrived;
+        SocialRealtime.FriendRequestSettled -= OnFriendRequestSettled;
+        SocialRealtime.ConversationSettled -= OnConversationSettled;
         SocialUnread.Changed -= ShowUnread;
     }
 
@@ -118,6 +122,10 @@ public partial class LfgOverlay : UserControl
 
     private void OnChatMessageReceived(Models.ChatLine line)
     {
+        // Both rooms share one connection, so a line for the room the user is not looking at must be
+        // dropped rather than appended - otherwise supporter lines surface in the public feed and
+        // the reverse.
+        if (!string.Equals(line.Room, _room, StringComparison.OrdinalIgnoreCase)) return;
         if (_chatLines.Any(l => l.Id == line.Id)) return;
         _chatLines.Add(line);
         if (_chatLines.Count > ChatWindow)
@@ -165,6 +173,12 @@ public partial class LfgOverlay : UserControl
     private void OnRequestArrived() => _ = LoadInboxAsync();
 
     private void OnFriendRequestArrived() => _ = LoadFriendsAsync();
+
+    // A request we sent was just answered on the other side: refresh so the outgoing/pending row
+    // settles without the user having to reload.
+    private void OnFriendRequestSettled() => _ = LoadFriendsAsync();
+
+    private void OnConversationSettled() => _ = LoadInboxAsync();
 
     private async void OnMessageArrived(string conversationId)
     {
@@ -1475,6 +1489,20 @@ public partial class LfgOverlay : UserControl
             _hasChatConsent = false;
             ChatRulesPanel.Visibility = Visibility.Visible;
             ChatRefusal.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        // Slow mode: not an error but a wait. Show the remaining seconds and arm the send-button
+        // countdown so the box says how long rather than just refusing.
+        if (result == ChatPostResult.SlowMode)
+        {
+            var seconds = Math.Max(0, outcome.RemainingSeconds);
+            var template = Properties.Resources.GetString("ChatSlowModeWait");
+            ChatRefusal.Text = !string.IsNullOrEmpty(template)
+                ? string.Format(CultureInfo.CurrentCulture, template, seconds)
+                : template;
+            ChatRefusal.Visibility = Visibility.Visible;
+            if (seconds > 0) StartSendCooldown(seconds);
             return;
         }
 

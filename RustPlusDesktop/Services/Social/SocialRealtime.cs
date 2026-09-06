@@ -36,8 +36,20 @@ public static class SocialRealtime
     /// <summary>Somebody would like to be on your friends list.</summary>
     public static event Action? FriendRequestArrived;
 
+    /// <summary>
+    /// A friend request you sent was answered. Lets the requester's client move the row out of
+    /// "outgoing" without waiting for a manual reload.
+    /// </summary>
+    public static event Action? FriendRequestSettled;
+
     /// <summary>Somebody wants to open a thread and is waiting to be let in.</summary>
     public static event Action? RequestArrived;
+
+    /// <summary>
+    /// A thread you opened was accepted or declined. Lets the opener's client settle it out of
+    /// "pending" in real time.
+    /// </summary>
+    public static event Action? ConversationSettled;
 
     /// <summary>A notification landed in this account's inbox — a ticket reply, an announcement.</summary>
     public static event Action<NotificationInfo>? NotificationArrived;
@@ -147,7 +159,7 @@ public static class SocialRealtime
         if (norm.EndsWith("ChatMessagePosted", StringComparison.OrdinalIgnoreCase)
             || norm.Equals("chat.message", StringComparison.OrdinalIgnoreCase))
         {
-            var msg = ParseChatMessage(data);
+            var msg = ParseChatMessage(data, channel);
             if (msg != null)
             {
                 Raise(() => ChatMessageReceived?.Invoke(msg));
@@ -197,6 +209,18 @@ public static class SocialRealtime
             // Checked before the thread request below, whose suffix test would otherwise
             // swallow it - "FriendRequestReceived" ends in "RequestReceived" too.
             Raise(() => FriendRequestArrived?.Invoke());
+        }
+        else if (norm.Equals("social.friend_settled", StringComparison.OrdinalIgnoreCase)
+            || norm.EndsWith("FriendRequestSettled", StringComparison.OrdinalIgnoreCase))
+        {
+            // Checked before the thread-request suffix test below: "FriendRequestSettled" ends in
+            // "RequestSettled" too.
+            Raise(() => FriendRequestSettled?.Invoke());
+        }
+        else if (norm.Equals("social.conversation_settled", StringComparison.OrdinalIgnoreCase)
+            || norm.EndsWith("ConversationSettled", StringComparison.OrdinalIgnoreCase))
+        {
+            Raise(() => ConversationSettled?.Invoke());
         }
         else if (norm.EndsWith("RequestArrived", StringComparison.OrdinalIgnoreCase)
             || norm.Equals("social.request", StringComparison.OrdinalIgnoreCase))
@@ -264,13 +288,24 @@ public static class SocialRealtime
         };
     }
 
-    private static Models.ChatLine? ParseChatMessage(JObject root)
+    private static Models.ChatLine? ParseChatMessage(JObject root, string? channel = null)
     {
         try
         {
             var data = root["message"] as JObject ?? root["data"] as JObject ?? root;
             var id = data["id"]?.ToString();
             if (string.IsNullOrWhiteSpace(id)) return null;
+
+            // Which room the line belongs to. Prefer the payload's own field; fall back to the
+            // channel it arrived on so a supporter line never lands in the public feed or vice
+            // versa. Without this both rooms share one connection and cross-contaminate.
+            var room = data["room"]?.ToString();
+            if (string.IsNullOrWhiteSpace(room))
+            {
+                room = channel != null && channel.IndexOf("supporter", StringComparison.OrdinalIgnoreCase) >= 0
+                    ? "supporter"
+                    : "public";
+            }
 
             var body = data["body"]?.ToString() ?? "";
             var senderId = data["sender_id"]?.ToString();
@@ -312,6 +347,7 @@ public static class SocialRealtime
             {
                 Id = id,
                 Body = body,
+                Room = room!,
                 SenderId = senderId ?? sender?["id"]?.ToString(),
                 SenderName = senderName,
                 AvatarUrl = avatarUrl,

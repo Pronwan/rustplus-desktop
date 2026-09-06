@@ -6213,6 +6213,9 @@ You can find more information on the server&apos;s official website:
   <data name="ChatSlowModeIndicator" xml:space="preserve">
     <value>Slow Mode: {0}s</value>
   </data>
+  <data name="ChatSlowModeWait" xml:space="preserve">
+    <value>Slow mode is on. Wait {0}s before sending again.</value>
+  </data>
   <data name="ChatSilencedTimeout" xml:space="preserve">
     <value>You cannot post until {0}. Reason: {1}</value>
   </data>

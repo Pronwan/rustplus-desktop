@@ -153,6 +153,13 @@ public sealed class ChatLine
 
     public string Body { get; init; } = "";
 
+    /// <summary>
+    /// Which room the line belongs to — "public" or "supporter". The client sits on both channels,
+    /// so the view filters incoming lines by this before appending; without it the two rooms leak
+    /// into each other.
+    /// </summary>
+    public string Room { get; init; } = "public";
+
     public string? SenderId { get; init; }
 
     public string SenderName { get; init; } = "—";
