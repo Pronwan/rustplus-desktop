@@ -40,7 +40,7 @@
                             <TextBlock Text="v9.2.1 | Sidebar Folders, Drag &amp; Drop &amp; Bundled Icons" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
-                                This release brings full customization to your workspace with sidebar drag-and-drop and Discord-style folders. Group your favourite utilities together, tuck away calculators you only use occasionally, and reorder tabs freely. We have also bundled over 480 item icons directly into the app so startup is instant, made update restarts actionable with a single click, and kept the Genetics Lab scanner running unthrottled in the background.
+                                This release brings full customization to your workspace with sidebar drag-and-drop and Discord-style folders. Group your favourite utilities together, tuck away calculators you only use occasionally, and reorder tabs freely. We have also bundled over 480 item icons directly into the app so startup is instant, made update restarts actionable with a single click, and kept the Genetics Lab scanner running unthrottled in the background. And team leaders can finally kick a member from the team — Facepunch added it to the Rust+ API only days ago.
                             </TextBlock>
 
                             <TextBlock Text="📁 Sidebar Folders &amp; Drag-and-Drop" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
@@ -93,6 +93,16 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Seamless Audio:</Run>
                                 Audio playback policies have been updated so scanner audio cues trigger without requiring a preliminary window click.
+                            </TextBlock>
+
+                            <TextBlock Text="👥 Team" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Kick a Member From the Team:</Run>
+                                Right-click anyone in your team list and remove them, next to Promote to Leader. Facepunch only added this to the Rust+ API a few days ago — until now the app could ask, but the game had no way to answer. Leader only, and it asks before it does it: getting somebody back in needs an invite from inside the game.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Pairing Tells You More When It Goes Wrong:</Run>
+                                The Steam login link is now written to the log before the browser opens, so it can be opened by hand when no browser appears.
                             </TextBlock>
                         </StackPanel>
                     </Border>
