@@ -21,16 +21,15 @@ It is open source so anyone can verify there is **no malware or hidden component
 
 
 
-The **Rust+ Desktop App** is a Windows application built on the official Rust+ Companion API.  
+The **Rust+ Desktop App** is a Windows application built on the Rust+ Companion API. It utilizes the [RustPlusAPI by @HandyS11 ](https://github.com/HandyS11/RustPlusApi). 
 
-It lets you pair Rust servers, monitor in-game events, control Smart Devices, and view dynamic map markers — all on your PC.
-By now it's more than 'just' Rust Plus. It's Rust² you could say... That's why this is our new icon ;) Was about time.
-![Update](./RustPlusDesktop/Assets/Images/icon.png)  
+It lets you pair Rust servers, monitor in-game events, control Smart Devices, and view dynamic map markers — all on your PC. 
+Via Cloud access you can share devices, map overlays, wipe statistics and more with your entire team. Smart Home Integration via
+Alexa and Google Home allows you to control your devices hands-free and receive raid alerts more reliably. Additionally we offer 
+REST and Discord integrations as well as Telegram Calls via [CallMeBot](https://www.callmebot.com/) to make sure you'll never get offlined again :)
 
-
-The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, RustPlusAPI, etc.), so you don’t have to install dependencies manually.
-
-
+The app ships as a single installer (bundling .NET, Node.js (will soon be removed), WebView2 runtime, RustPlusAPI, etc.), 
+so you don’t have to install dependencies manually.
 
 ---
 
