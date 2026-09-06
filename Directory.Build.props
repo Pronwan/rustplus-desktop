@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    Repo-wide build settings. Applies to every project in the tree (app, tests, MapParser).
+    Goal: fast local iteration without changing Release output.
+  -->
+  <PropertyGroup>
+    <!-- Keep the Roslyn compiler server warm and let VS skip redundant work. -->
+    <UseSharedCompilation>true</UseSharedCompilation>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <!-- Reference assemblies: dependent projects (e.g. the test project) don't rebuild when only
+         a method body changes in a referenced project. -->
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+</Project>

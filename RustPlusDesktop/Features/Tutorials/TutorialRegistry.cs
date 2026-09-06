@@ -96,6 +96,12 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("basics.notifications", "Notifications.Center", "notifications", TutorialPlacement.Right),
             Step("basics.tutorials", "Tutorials.NavigationItem", "devices", TutorialPlacement.Top)),
 
+        Def("sidebar-folders", 15, "Getting Started", recommended: false, newFeature: true,
+            Step("folders.reorder", "Sidebar.SingleTab", "devices", TutorialPlacement.Right),
+            Step("folders.create", "Sidebar.SecondTab", "devices", TutorialPlacement.Right),
+            Step("folders.unfold", "Sidebar.ToolsFolder", "devices", TutorialPlacement.Right),
+            Step("folders.organize", "Sidebar.ToolsFolder", "devices", TutorialPlacement.Right)),
+
         Def("account-cloud", 20, "Getting Started", false,
             Step("account.profile", "Settings.Cloud", "settings", TutorialPlacement.Right),
             Step("account.cloud", "Settings.Cloud", "settings", TutorialPlacement.Right),

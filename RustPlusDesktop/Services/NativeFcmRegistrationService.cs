@@ -73,7 +73,20 @@ namespace RustPlusDesk.Services
                 Credentials credentials = await registration.AcquireCredentialsAsync(ct).ConfigureAwait(false);
 
                 log("[fcm-native] Linking Steam account with Rust+ (confirm the login in the browser) …");
-                string rustPlusAuthToken = await registration.RegisterWithRustPlusAsync(credentials, ct).ConfigureAwait(false);
+                // beta.8 hands the Steam login URL to the caller before opening a browser, so it
+                // can be recovered when the browser never appears — which is most of what pairing
+                // support has ever been about.
+                // beta.8 changed two things here. The login URL is handed to the caller before a
+                // browser is opened, so it can be recovered when none appears — which is most of
+                // what pairing support has ever been about. And the call now returns the Steam
+                // identity rather than a bare token, carrying the Steam64 ID alongside it.
+                var login = await registration.RegisterWithRustPlusAsync(
+                    credentials,
+                    url => log($"[fcm-native] Steam login URL (open it by hand if no browser opened): {url}"),
+                    ct).ConfigureAwait(false);
+
+                string rustPlusAuthToken = login.Token;
+                log($"[fcm-native] Signed in as {login.SteamId}.");
 
                 WriteNodeCompatibleConfig(configPath, credentials, rustPlusAuthToken);
                 log("[fcm-native] Native registration completed and config written.");

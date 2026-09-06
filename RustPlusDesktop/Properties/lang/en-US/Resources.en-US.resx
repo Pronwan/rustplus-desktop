@@ -873,6 +873,51 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="BackgroundTrackingToolTip" xml:space="preserve">
     <value>Keeps polling the server for its player count while the app is minimized.</value>
   </data>
+  <data name="ShowPlayersTab" xml:space="preserve">
+    <value>Show Players tab</value>
+  </data>
+  <data name="ShowPlayersTabDesc" xml:space="preserve">
+    <value>Adds the Players tab to the sidebar for browsing online players and tracking targets.</value>
+  </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>Click to open this folder. Drag tabs in or out to organise it.</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>New folder</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>Sidebar Drag &amp; Drop</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>Learn how to drag and drop single tabs to reorder your sidebar, create folders, and customize your layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>Reorder tabs</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>Click and hold any single tab, then drag it up or down to reposition it on the rail. Drop it anywhere to customize your navigation layout.</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>Create folders</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>Drag any tab directly onto another tab to combine them into a brand-new folder. This keeps your sidebar clean and lets you group related tabs together.</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>Fold and unfold</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>Click any folder to smoothly fold or unfold it. Grouped tabs expand out when you need them, and collapse back down to save space.</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>Add or remove tabs</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>Drag tabs straight into a folder to add them, or drag them back out onto the sidebar rail to ungroup them anytime. Your layout is saved automatically.</value>
+  </data>
   <data name="HideSystemConsole" xml:space="preserve">
     <value>Hide System Console (Declutter)</value>
   </data>
@@ -6327,5 +6372,11 @@ You can find more information on the server's official website:
   </data>
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Nothing to clean up — every server with cloud data is still in your list.</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>Click to close this folder.</value>
+  </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Remove {0} from the team?</value>
   </data>
 </root>

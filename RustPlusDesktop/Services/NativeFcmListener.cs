@@ -313,15 +313,16 @@ namespace RustPlusDesk.Services
             try
             {
                 var data = message.Data;
+                if (data == null) return;
                 var body = data.Body;
 
-                long approxBytes = System.Text.Encoding.UTF8.GetByteCount(data?.Title ?? "") +
-                                  System.Text.Encoding.UTF8.GetByteCount(data?.Message ?? "") + 128;
+                long approxBytes = System.Text.Encoding.UTF8.GetByteCount(data.Title ?? "") +
+                                  System.Text.Encoding.UTF8.GetByteCount(data.Message ?? "") + 128;
                 NetworkTrafficMonitor.Instance.RecordInbound(
                     "FCM Push",
-                    $"FCM: {data?.ChannelId ?? "Notification"}",
+                    $"FCM: {data.ChannelId ?? "Notification"}",
                     approxBytes,
-                    details: data?.Title ?? data?.Message ?? "");
+                    details: data.Title ?? data.Message ?? "");
 
                 // Our own probe coming back. Claimed first so it can never be mistaken for a
                 // pairing, an alarm, or an unhandled channel.

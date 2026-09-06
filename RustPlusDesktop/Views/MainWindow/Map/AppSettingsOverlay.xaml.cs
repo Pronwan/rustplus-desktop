@@ -623,10 +623,18 @@ namespace RustPlusDesk.Views
             ChkAutoUpdate.IsChecked = TrackingService.AutoUpdateEnabled;
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
+            ChkShowPlayersTab.IsChecked = TrackingService.ShowPlayersTab;
+            ChkBackgroundTracking.IsChecked = TrackingService.ShowPlayersTab && TrackingService.IsBackgroundTrackingEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
             ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+
+#if DEBUG
+            RowDevDownloadIcons.Visibility = Visibility.Visible;
+#else
+            RowDevDownloadIcons.Visibility = Visibility.Collapsed;
+#endif
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
             var fcmMention = TrackingService.DiscordWebhookMention ?? "";
@@ -830,6 +838,18 @@ namespace RustPlusDesk.Views
             TrackingService.AutoUpdateEnabled = ChkAutoUpdate.IsChecked == true;
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
+
+            // Players tab and background tracking are coupled: tracking can only run while the tab
+            // is shown, so hiding the tab forces tracking off (and its toggle back off in the UI).
+            bool showPlayers = ChkShowPlayersTab.IsChecked == true;
+            if (!showPlayers && ChkBackgroundTracking.IsChecked == true)
+            {
+                ChkBackgroundTracking.IsChecked = false; // re-enters OnSettingChanged once; idempotent
+            }
+            TrackingService.ShowPlayersTab = showPlayers;
+            TrackingService.IsBackgroundTrackingEnabled = showPlayers && ChkBackgroundTracking.IsChecked == true;
+            ParentWindow?.ApplyPlayersTabVisibility();
+
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
             TrackingService.ReduceUiEffects = ChkReduceUiEffects.IsChecked == true;
             TrackingService.TrafficMonitorEnabled = ChkTrafficMonitor.IsChecked == true;
@@ -1089,6 +1109,12 @@ namespace RustPlusDesk.Views
         {
             ParentWindow?.ManuallyImportMapFile();
         }
+        private void BtnDownloadItemIcons_Click(object sender, RoutedEventArgs e)
+        {
+            RustPlusDesk.Views.MainWindow.StartIconManualDownload();
+            ParentWindow?.ShowInfoSnackbar("Icon Pack", "Checking and downloading missing icons...", WpfUi.ControlAppearance.Info);
+        }
+
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
         {
             if (ParentWindow == null) return;

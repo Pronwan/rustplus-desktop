@@ -78,6 +78,8 @@ public class TrackingSettings
     public double MapMonumentOpacity { get; set; } = 1.0;
     public double MapGridOpacity { get; set; } = 0.7;
     public bool BackgroundTrackingEnabled { get; set; } = true;
+    // Off by default: the Players tab (and its background tracking) is opt-in from Settings.
+    public bool ShowPlayersTab { get; set; } = false;
     public bool CloseToTrayEnabled { get; set; } = false;
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
@@ -148,6 +150,8 @@ public class TrackingSettings
     public bool TelegramCallIncType { get; set; } = false;
     public Dictionary<string, bool> GroupStates { get; set; } = new();
     public Dictionary<string, List<string>> GroupOrder { get; set; } = new();
+    /// <summary>Sidebar rail arrangement (tab order + Discord-style folders). Empty until first seeded.</summary>
+    public Sidebar.RailLayoutData RailLayout { get; set; } = new();
     public bool AnnounceCargoDocking { get; set; } = false;
     public bool AnnounceCargoEgress { get; set; } = false;
     public bool AnnounceCargoArrival { get; set; } = false;
@@ -583,6 +587,47 @@ public static class TrackingService
     {
         get => _settings.BackgroundTrackingEnabled;
         set { _settings.BackgroundTrackingEnabled = value; SaveDB(); }
+    }
+
+    /// <summary>
+    /// Opt-in: show the Players tab in the sidebar. Background tracking is coupled to this —
+    /// it only runs when the tab is shown, so hiding the tab also forces tracking off.
+    /// </summary>
+    public static bool ShowPlayersTab
+    {
+        get => _settings.ShowPlayersTab;
+        set { _settings.ShowPlayersTab = value; SaveDB(); }
+    }
+
+    /// <summary>
+    /// Returns the persisted sidebar rail layout, seeding the shipped default (core tabs +
+    /// a "Tools" folder) on first use and reconciling it against the current tab catalog so
+    /// tabs added/removed by app updates stay consistent. Persists when it changes.
+    /// </summary>
+    public static Sidebar.RailLayoutData GetRailLayout(string toolsFolderName)
+    {
+        bool changed = false;
+        var layout = _settings.RailLayout;
+        if (layout is null || layout.IsEmpty)
+        {
+            layout = Sidebar.RailCatalog.BuildDefault(toolsFolderName);
+            _settings.RailLayout = layout;
+            changed = true;
+        }
+        else if (Sidebar.RailCatalog.Reconcile(layout))
+        {
+            changed = true;
+        }
+
+        if (changed) SaveDB();
+        return layout;
+    }
+
+    /// <summary>Persists the rail layout after the user reorders, groups, or ungroups.</summary>
+    public static void SaveRailLayout(Sidebar.RailLayoutData layout)
+    {
+        _settings.RailLayout = layout;
+        SaveDB();
     }
 
     public static bool CloseToTrayEnabled

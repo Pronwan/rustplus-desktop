@@ -608,6 +608,68 @@
                                 Icon="{ui:SymbolIcon Symbol=Dismiss24}"
                                 ToolTip="{DynamicResource UiCancelDownload}"
                                 Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
+
+                            <!-- Inline "update is ready" confirmation, anchored under the check-updates
+                                 button. Replaces a blocking message box: restart now, or let it install
+                                 on close. -->
+                            <Popup
+                                x:Name="UpdateReadyPopup"
+                                AllowsTransparency="True"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=BtnCheckUpdates}"
+                                PopupAnimation="Fade"
+                                StaysOpen="False"
+                                VerticalOffset="6">
+                                <Border
+                                    MaxWidth="320"
+                                    Margin="10"
+                                    Padding="16"
+                                    Background="{DynamicResource ApplicationBackgroundBrush}"
+                                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="18"
+                                            Direction="270"
+                                            Opacity="0.35"
+                                            ShadowDepth="3"
+                                            Color="Black" />
+                                    </Border.Effect>
+                                    <StackPanel>
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Center"
+                                                Foreground="#62D38B"
+                                                Symbol="CheckmarkCircle24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                Text="Update ready" />
+                                        </StackPanel>
+                                        <TextBlock
+                                            x:Name="UpdateReadyPopupText"
+                                            Margin="0,0,0,14"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            TextWrapping="Wrap"
+                                            Text="An update is downloaded and ready. Restart now to apply it, or it installs when you close the app." />
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <ui:Button
+                                                Margin="0,0,8,0"
+                                                Appearance="Secondary"
+                                                Click="UpdateOnClose_Click"
+                                                Content="Update on close" />
+                                            <ui:Button
+                                                Appearance="Primary"
+                                                Click="UpdateRestartNow_Click"
+                                                Content="Restart now" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
                         </Grid>
                     </Border>
                     </StackPanel>
@@ -3072,6 +3134,12 @@
                                                               Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
                                                     </MenuItem.Icon>
                                                 </MenuItem>
+                                                <MenuItem Click="Team_Kick_Click" Header="{DynamicResource KickFromTeam}">
+                                                    <MenuItem.Icon>
+                                                        <Path Data="M15 13c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zM1 9v2h6V9H1z"
+                                                              Fill="{DynamicResource TextPrimary}" Width="13" Height="13" Stretch="Uniform" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                             </ContextMenu>
                                         </ListBox.Resources>
 
@@ -4411,7 +4479,13 @@
                             </Grid>
                         </ui:Button>
 
-                        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                        <!--
+                            Row 1 tabs are populated at runtime by the data-driven rail builder
+                            (MainWindow.Rail.cs): drag-to-reorder, Discord-style folders, group/ungroup.
+                            The static children below are a design-time fallback and are cleared and
+                            rebuilt from the persisted RailLayout on startup.
+                        -->
+                        <StackPanel x:Name="RailItemsHost" Grid.Row="1" HorizontalAlignment="Center">
                             <Grid>
                                 <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource DevicesTab}" AutomationProperties.HelpText="{DynamicResource UiMonitorAndControlPairedSmartDevices}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
@@ -4434,6 +4508,13 @@
                                 <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource CamerasTab}" AutomationProperties.HelpText="{DynamicResource UiViewAndControlPairedCCTVCameras}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailCamerasButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailCamerasButton}" PopupAnimation="Fade" StaysOpen="True">
                                     <ContentControl Content="{Binding ElementName=RailCamerasButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
+                                </Popup>
+                            </Grid>
+                            <!-- Players: opt-in from Settings (Show Players tab). Hidden by default. -->
+                            <Grid x:Name="PlayersRailEntry" Visibility="Collapsed">
+                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
+                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
+                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
                                 </Popup>
                             </Grid>
                             <Grid>
@@ -4557,6 +4638,10 @@
                                 Icon="{ui:SymbolIcon Symbol=Settings24}"
                                 ToolTip="{DynamicResource Settings}" />
                         </StackPanel>
+
+                        <!-- Drag overlay for rail reordering/foldering: ghost + insertion indicator.
+                             Spans the rail, ignores hit-testing so drags pass through. -->
+                        <Canvas x:Name="RailDragOverlay" Grid.RowSpan="3" IsHitTestVisible="False" Panel.ZIndex="100" />
                     </Grid>
 
                     <!--  Profit Trades Overlay  -->

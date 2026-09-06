@@ -45,6 +45,13 @@ public static class SocialRealtime
     private const string ChatChannel = "presence-chat.global";
 
     /// <summary>
+    /// The public announcements channel. Everyone-audience announcements are pushed here as they go
+    /// out, so the client toasts and badges one live instead of waiting for the next inbox refresh.
+    /// Staff- and supporters-only announcements are deliberately not broadcast here.
+    /// </summary>
+    private const string AnnouncementsChannel = "announcements";
+
+    /// <summary>
     /// The supporters' room. Subscribed unconditionally: the server refuses it for accounts it
     /// is not for, which is the same answer asking first would have given and one round trip
     /// cheaper. A refusal is logged and nothing else happens.
@@ -107,6 +114,7 @@ public static class SocialRealtime
 
         _ = RealtimeClient.Shared.UnsubscribeAsync(ChatChannel);
         _ = RealtimeClient.Shared.UnsubscribeAsync(SupporterChannel);
+        _ = RealtimeClient.Shared.UnsubscribeAsync(AnnouncementsChannel);
     }
 
     private static async Task SubscribeAsync(string userChannel)
@@ -122,6 +130,9 @@ public static class SocialRealtime
             // whenever somebody closed a panel would describe nothing useful.
             await RealtimeClient.Shared.SubscribeAsync(ChatChannel).ConfigureAwait(false);
             await RealtimeClient.Shared.SubscribeAsync(SupporterChannel).ConfigureAwait(false);
+
+            // Public, no auth: a platform announcement to everyone arrives here the moment it is sent.
+            await RealtimeClient.Shared.SubscribeAsync(AnnouncementsChannel).ConfigureAwait(false);
         }
         catch
         {
@@ -206,6 +217,24 @@ public static class SocialRealtime
                 payload["body"]?.ToString() ?? string.Empty,
                 payload["level"]?.ToString() ?? "info",
                 payload["type"]?.ToString() ?? "notification");
+
+            Raise(() => NotificationArrived?.Invoke(info));
+        }
+        else if (norm.Equals("announcement.published", StringComparison.OrdinalIgnoreCase)
+            || norm.EndsWith("AnnouncementPublished", StringComparison.OrdinalIgnoreCase))
+        {
+            // An everyone-audience announcement on the public channel. Route it through the same
+            // arrival path as an inbox notification so it chimes, toasts, and bumps the bell now,
+            // instead of only surfacing when the user next opens the app.
+            var payload = data["title"] != null || data["body"] != null
+                ? data
+                : data["data"] as JObject ?? data;
+
+            var info = new NotificationInfo(
+                payload["title"]?.ToString() ?? "Announcement",
+                payload["body"]?.ToString() ?? string.Empty,
+                payload["level"]?.ToString() ?? "info",
+                "announcement");
 
             Raise(() => NotificationArrived?.Invoke(info));
         }

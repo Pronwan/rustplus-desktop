@@ -1699,4 +1699,46 @@
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>未附加 — {0} 超過 {1} MB。</value>
   </data>
+  <data name="SidebarToolsFolder" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="SidebarFolderHelp" xml:space="preserve">
+    <value>點擊開啟此資料夾。可拖入或拖出分頁進行整理。</value>
+  </data>
+  <data name="SidebarFolderCollapseHelp" xml:space="preserve">
+    <value>點擊折疊此資料夾。</value>
+  </data>
+  <data name="SidebarNewFolder" xml:space="preserve">
+    <value>新增資料夾</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Title" xml:space="preserve">
+    <value>側邊欄拖曳排列</value>
+  </data>
+  <data name="Tutorials.sidebar-folders.Description" xml:space="preserve">
+    <value>了解如何透過拖曳單獨分頁重新排列側邊欄、建立資料夾以及自訂你的介面佈局。</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Title" xml:space="preserve">
+    <value>重新排列分頁</value>
+  </data>
+  <data name="Tutorials.Step.folders.reorder.Description" xml:space="preserve">
+    <value>點擊並按住任何單獨分頁，上下拖曳即可調整其在側邊欄上的位置。</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Title" xml:space="preserve">
+    <value>建立資料夾</value>
+  </data>
+  <data name="Tutorials.Step.folders.create.Description" xml:space="preserve">
+    <value>將任何分頁直接拖曳到另一個分頁上，即可將它們合併到全新的資料夾中。</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Title" xml:space="preserve">
+    <value>折疊與展開</value>
+  </data>
+  <data name="Tutorials.Step.folders.unfold.Description" xml:space="preserve">
+    <value>點擊任何資料夾即可平滑展開或折疊。收納的分頁會在展開時順暢滑出。</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Title" xml:space="preserve">
+    <value>新增或移出分頁</value>
+  </data>
+  <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
+    <value>將分頁直接拖入資料夾即可收納，拖出資料夾放回側邊欄即可隨時解除分組。</value>
+  </data>
 </root>

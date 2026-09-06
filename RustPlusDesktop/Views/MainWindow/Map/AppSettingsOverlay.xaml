@@ -300,6 +300,36 @@
 
                         <Border Style="{StaticResource SettingsRowDivider}" />
 
+                        <!-- Show Players Tab (opt-in) -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource ShowPlayersTab}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource ShowPlayersTabDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowPlayersTab" AutomationProperties.Name="{DynamicResource ShowPlayersTab}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource ShowPlayersTabDesc}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Background Player Tracking: only meaningful while the Players tab is shown -->
+                        <Grid MinHeight="36" Margin="16,0,0,0" IsEnabled="{Binding IsChecked, ElementName=ChkShowPlayersTab}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource BackgroundTracking}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource BackgroundTrackingToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkBackgroundTracking" AutomationProperties.Name="{DynamicResource BackgroundTracking}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource BackgroundTrackingToolTip}" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
                         <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -1204,6 +1234,11 @@
                         
                         <!-- Purge Orphaned Cloud Data Button -->
                         <ui:Button x:Name="BtnPurgeOrphanedCloudData" Content="{DynamicResource PurgeOrphanedCloudData}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Delete24}" HorizontalAlignment="Stretch" Height="36" Margin="0,8,0,0" Click="BtnPurgeOrphanedCloudData_Click" ToolTip="{DynamicResource PurgeOrphanedCloudDataTooltip}" />
+
+                        <!-- Developer: Download & Pack Missing Icons (Debug only) -->
+                        <Grid x:Name="RowDevDownloadIcons" Margin="0,8,0,0" Visibility="Collapsed">
+                            <ui:Button x:Name="BtnDownloadItemIcons" Content="[DEV] Download &amp; Pack Missing Icons" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" HorizontalAlignment="Stretch" Height="36" Click="BtnDownloadItemIcons_Click" ToolTip="Downloads any missing item icons and updates the bundled icon pack in the application folder (Debug only)." />
+                        </Grid>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

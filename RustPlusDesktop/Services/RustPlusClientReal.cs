@@ -339,47 +339,21 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         return true;
     }
 
+    /// <summary>
+    /// Removes a member from the team. Leader only, enforced by the game.
+    ///
+    /// This used to hunt through AppRequest's properties for a field whose name
+    /// looked like a kick, because the Rust+ protocol had no such message and the
+    /// hope was that one would appear. It has: Facepunch added it, and RustPlusApi
+    /// exposes it from 2.0.0-beta.8. So this asks the library directly, and a
+    /// failure now means the server refused rather than that the call did not
+    /// exist.
+    /// </summary>
     public async Task<bool> KickTeamMemberAsync(ulong steamId, CancellationToken ct = default)
     {
         if (_api is null) throw new InvalidOperationException("Nicht verbunden.");
 
-        var asm = typeof(RustPlus).Assembly;
-        var reqType = asm.GetTypes().FirstOrDefault(t => t.Name.Equals("AppRequest", StringComparison.OrdinalIgnoreCase));
-        if (reqType is null) return false;
-
-        var req = Activator.CreateInstance(reqType)!;
-
-        var kickProp = reqType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .FirstOrDefault(p => {
-                var n = p.Name.ToLowerInvariant();
-                return (n.Contains("kick") || n.Contains("remove")) && (n.Contains("team") || n.Contains("member"));
-            });
-        if (kickProp is null) return false;
-
-        var body = Activator.CreateInstance(kickProp.PropertyType)!;
-        var idP = body.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .FirstOrDefault(pp => {
-                var n = pp.Name.ToLowerInvariant();
-                return n.Contains("steam") || n.Contains("player") || n.Contains("member");
-            });
-        if (idP is null) return false;
-
-        try
-        {
-            if (idP.PropertyType == typeof(ulong)) idP.SetValue(body, steamId);
-            else if (idP.PropertyType == typeof(long)) idP.SetValue(body, unchecked((long)steamId));
-            else if (idP.PropertyType == typeof(string)) idP.SetValue(body, steamId.ToString());
-            else idP.SetValue(body, Convert.ChangeType(steamId, idP.PropertyType));
-        }
-        catch { return false; }
-
-        kickProp.SetValue(req, body);
-
-        var send = FindSendRequestAsync(_api.GetType(), reqType);
-        if (send is null) return false;
-
-        var taskObj = send.Invoke(_api, BuildSendRequestArgs(send, req));
-        if (taskObj is Task t) await t.ConfigureAwait(false);
+        await _api.KickFromTeamAsync(steamId, ct).ConfigureAwait(false);
         return true;
     }
 

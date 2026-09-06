@@ -117,10 +117,18 @@ public partial class App : Application
             UpdateSplashStatus(splash, splashDispatcher, "Preparing system tray…");
             SetupTrayIcon();
 
-            // Background player tracking is retired: the server-side name randomiser made it
-            // unreliable on most servers, and its toggle is gone from Settings. Clear the stored
-            // flag once rather than leaving anyone with a poller they can no longer switch off.
-            if (TrackingService.IsBackgroundTrackingEnabled)
+            // Background player tracking is coupled to the (opt-in) Players tab: resume the poller
+            // only when the tab is shown AND tracking is enabled. If the tab is hidden, force the
+            // flag off so nobody is left with a poller they have no UI to switch off.
+            if (TrackingService.ShowPlayersTab)
+            {
+                if (TrackingService.IsBackgroundTrackingEnabled)
+                {
+                    var (host, port, name) = TrackingService.LastServer;
+                    TrackingService.StartPolling(host ?? "", port, name ?? "", TrackingService.LastBMId);
+                }
+            }
+            else if (TrackingService.IsBackgroundTrackingEnabled)
             {
                 TrackingService.IsBackgroundTrackingEnabled = false;
             }
