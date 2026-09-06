@@ -5762,4 +5762,7 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Trascina le schede dentro una cartella per aggiungerle o trascinale fuori sulla barra per separarle.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Rimuovere {0} dalla squadra?</value>
+  </data>
 </root>

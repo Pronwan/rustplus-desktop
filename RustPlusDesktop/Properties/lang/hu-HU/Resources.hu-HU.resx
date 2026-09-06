@@ -5762,4 +5762,7 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Húzz lapokat a mappába a hozzáadásukhoz, vagy húzd ki őket a sávra a csoportosítás felbontásához.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Eltávolítod {0} játékost a csapatból?</value>
+  </data>
 </root>

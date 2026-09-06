@@ -6729,4 +6729,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Arrastra pestañas al interior de una carpeta para añadirlas, o sácalas de nuevo a la barra para desagruparlas.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>¿Quitar a {0} del equipo?</value>
+  </data>
 </root>

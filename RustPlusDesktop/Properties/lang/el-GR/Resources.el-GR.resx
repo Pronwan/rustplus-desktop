@@ -5762,4 +5762,7 @@ Open Releases page?</value>
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Σύρετε καρτέλες μέσα σε έναν φάκελο ή τραβήξτε τις πίσω στην πλευρική γραμμή για να τις καταργήσετε από την ομάδα.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Να αφαιρεθεί ο/η {0} από την ομάδα;</value>
+  </data>
 </root>

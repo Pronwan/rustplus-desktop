@@ -5762,4 +5762,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Prevucite kartice u fasciklu da ih dodate, ili ih izvucite nazad na traku da ih razgrupišete.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Ukloniti igrača {0} iz tima?</value>
+  </data>
 </root>

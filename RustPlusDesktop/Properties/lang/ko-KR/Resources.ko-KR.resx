@@ -6650,4 +6650,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>탭을 폴더 안으로 드래그해 추가하거나, 폴더 밖으로 드래그해 레일로 꺼낼 수 있습니다.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>{0}을(를) 팀에서 내보낼까요?</value>
+  </data>
 </root>

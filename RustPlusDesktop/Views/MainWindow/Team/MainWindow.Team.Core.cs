@@ -994,13 +994,36 @@ public partial class MainWindow
         return false;
     }
 
+    /// <summary>
+    /// Removes a member from the team. Same gate as promoting — the game only
+    /// accepts it from the leader — but with a confirmation in front of it,
+    /// because this one cannot be taken back by whoever pressed it: getting
+    /// someone in again needs an invite from inside the game.
+    /// </summary>
     private async void Team_Kick_Click(object sender, RoutedEventArgs e)
     {
         var vm = VMFromSender(sender);
         if (vm == null) return;
         if (!IAmLeaderNow()) { AppendLog("Only Leader can kick."); return; }
         if (vm.SteamId == _mySteamId) return;
-        try { if (_real is RustPlusClientReal real) await real.KickTeamMemberAsync(vm.SteamId); }
+
+        var confirm = MessageBox.Show(
+            Window.GetWindow(this),
+            string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                RustPlusDesk.Helpers.Loc.Text("KickFromTeamConfirm", "Remove {0} from the team?"),
+                vm.Name),
+            RustPlusDesk.Helpers.Loc.Text("KickFromTeam", "Kick from Team"),
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        try
+        {
+            if (_real is RustPlusClientReal real) await real.KickTeamMemberAsync(vm.SteamId);
+            AppendLog($"[team] kick requested for {vm.Name}.");
+        }
         catch (Exception ex) { AppendLog("[team] kick error: " + ex.Message); }
     }
 

@@ -5762,4 +5762,7 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Dra faner inn i en mappe for å legge dem til, eller dra dem ut igjen på sidelinjen for å løse opp gruppen.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Fjerne {0} fra laget?</value>
+  </data>
 </root>

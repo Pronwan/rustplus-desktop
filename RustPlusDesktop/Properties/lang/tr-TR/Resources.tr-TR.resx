@@ -5762,4 +5762,7 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Sekmeleri eklemek için doğrudan klasöre sürükleyin veya gruptan çıkarmak için tekrar kenar çubuğuna sürükleyin.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>{0} adlı oyuncu takımdan çıkarılsın mı?</value>
+  </data>
 </root>

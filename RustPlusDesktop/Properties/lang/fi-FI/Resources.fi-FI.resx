@@ -5762,4 +5762,7 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Vedä välilehtiä kansioon tai vedä ne takaisin sivupalkkiin purkaaksesi ryhmittelyn milloin tahansa.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Poistetaanko {0} joukkueesta?</value>
+  </data>
 </root>

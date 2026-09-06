@@ -5762,4 +5762,7 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Arraste abas para dentro de uma pasta para adicioná-las ou arraste de volta para a barra para desagrupá-las.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Remover {0} da equipe?</value>
+  </data>
 </root>

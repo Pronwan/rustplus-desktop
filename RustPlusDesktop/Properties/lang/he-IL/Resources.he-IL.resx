@@ -5762,4 +5762,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>גררו כרטיסיות ישירות לתוך תיקייה כדי להוסיף אותן, או גררו החוצה לסרגל כדי לפרק את הקבוצה.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>להסיר את {0} מהצוות?</value>
+  </data>
 </root>

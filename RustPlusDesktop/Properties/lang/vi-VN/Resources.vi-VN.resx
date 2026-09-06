@@ -5762,4 +5762,7 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Kéo các tab vào thư mục để lưu trữ, hoặc kéo chúng trở lại thanh bên để hủy nhóm bất kỳ lúc nào.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Xoá {0} khỏi đội?</value>
+  </data>
 </root>

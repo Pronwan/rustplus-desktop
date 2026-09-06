@@ -6376,4 +6376,7 @@ You can find more information on the server's official website:
   <data name="SidebarFolderCollapseHelp" xml:space="preserve">
     <value>Click to close this folder.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Remove {0} from the team?</value>
+  </data>
 </root>

@@ -5762,4 +5762,7 @@ Du kan finde mere information på serverens officielle hjemmeside:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Træk faner direkte ind i en mappe for at tilføje dem, eller træk dem ud på bjælken for at ophæve grupperingen.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Fjern {0} fra holdet?</value>
+  </data>
 </root>

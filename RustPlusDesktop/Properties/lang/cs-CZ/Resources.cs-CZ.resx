@@ -5762,4 +5762,7 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Záložky přetáhněte do složky pro jejich přidání, nebo je vytáhněte zpět na panel pro oddělení.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Odebrat hráče {0} z týmu?</value>
+  </data>
 </root>

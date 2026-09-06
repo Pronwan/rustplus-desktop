@@ -5762,4 +5762,7 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Sleep tabbladen rechtstreeks in een map of sleep ze eruit terug naar de balk om de groepering op te heffen.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>{0} uit het team verwijderen?</value>
+  </data>
 </root>

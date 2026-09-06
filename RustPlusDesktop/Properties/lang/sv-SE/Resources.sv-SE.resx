@@ -5762,4 +5762,7 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Dra flikar direkt in i en mapp för att lägga till dem, eller dra ut dem till sidofältet för att dela upp dem.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Ta bort {0} från laget?</value>
+  </data>
 </root>

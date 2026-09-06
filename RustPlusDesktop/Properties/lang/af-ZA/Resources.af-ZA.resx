@@ -5762,4 +5762,7 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Sleep oortjies reguit in 'n vouer in om hulle by te voeg, of sleep hulle terug na die kantbalk om hulle te ontgroepeer.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Verwyder {0} uit die span?</value>
+  </data>
 </root>

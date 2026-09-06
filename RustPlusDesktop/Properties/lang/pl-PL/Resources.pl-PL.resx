@@ -5762,4 +5762,7 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Przeciągaj karty do folderu, aby je dodać, lub wyciągaj je z powrotem na pasek, aby je rozgrupować.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Usunąć gracza {0} z drużyny?</value>
+  </data>
 </root>

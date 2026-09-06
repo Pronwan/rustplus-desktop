@@ -6807,4 +6807,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Ziehe Tabs direkt in einen Ordner hinein oder ziehe sie heraus zurück auf die Leiste, um die Gruppierung aufzuheben.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>{0} aus dem Team entfernen?</value>
+  </data>
 </root>

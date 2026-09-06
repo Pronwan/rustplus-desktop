@@ -6729,4 +6729,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Перетаскивайте вкладки внутрь папки для группировки или вытягивайте обратно на панель, чтобы разгруппировать.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Удалить {0} из команды?</value>
+  </data>
 </root>

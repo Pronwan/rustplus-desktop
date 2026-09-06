@@ -6729,4 +6729,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>Glissez des onglets directement dans un dossier pour les ajouter, ou ressortez-les sur la barre pour les dissocier.</value>
   </data>
+  <data name="KickFromTeamConfirm" xml:space="preserve">
+    <value>Retirer {0} de l’équipe ?</value>
+  </data>
 </root>
