@@ -6339,7 +6339,7 @@
     <value>عرض الأوامر المتاحة</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>الجديد في 9.1</value>
+    <value>الجديد في 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>أهم أربعة تغييرات منذ الإصدار 9.0</value>
@@ -6622,5 +6622,11 @@
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>إزالة {0} من الفريق؟</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>انتهت صلاحية الربط مع Alexa</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>لم تعد أمازون تقبل الاتصال بـ Rust+ Desktop، لذلك لم تعد تنبيهات الغارات تصل إلى Alexa. لا يزال التحكم الصوتي يعمل. افتح تطبيق Alexa، وعطّل مهارة Rust+ Desktop ثم اربطها من جديد.</value>
   </data>
 </root>

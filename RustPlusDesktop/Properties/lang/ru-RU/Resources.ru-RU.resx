@@ -6448,7 +6448,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Показать доступные команды</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>Что нового в 9.1</value>
+    <value>Что нового в 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>Четыре главных изменения с версии 9.0</value>
@@ -6731,5 +6731,11 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Удалить {0} из команды?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Связь с Alexa больше не действует</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon больше не принимает подключение к Rust+ Desktop, поэтому оповещения о рейде перестали доходить до Alexa. Голосовое управление продолжает работать. Откройте приложение Alexa, отключите навык Rust+ Desktop и свяжите его заново.</value>
   </data>
 </root>

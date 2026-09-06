@@ -643,6 +643,9 @@ public partial class MainWindow : WpfUi.FluentWindow
             // Auto-check for updates
             _ = Task.Run(async () => await AutoCheckUpdatesAsync());
 
+            // Say something when Alexa has quietly stopped receiving alarms.
+            _ = Task.Run(async () => await WarnIfAlexaLinkBrokenAsync());
+
             UpdatePairingGuideSnackbar();
             UpdateCloudSyncUI();
         }));
@@ -2623,8 +2626,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
-        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind
-        if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
+        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind.
+        //
+        // Judged by when the alarm happened, not by when it reached us. Those were
+        // the same value until the push carried its own time, which is why this
+        // filter existed for a long while without ever being able to fire: a queued
+        // push from two hours ago arrived stamped "now".
+        var eventTime = n.EventTime ?? n.Timestamp;
+        if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
 
         // Learn the alarm's in-game text before anything can drop this notification.
         //
@@ -2637,10 +2646,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TryLearnAlarmTitle(n);
 
         // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
+        // Deliberately still the arrival time. One alarm reaches this method twice —
+        // once over the WebSocket, once as a push — and the two are recognised as one
+        // because they arrive in the same second. They do not share an event time.
         string dedupKey = $"{n.Server}|{n.Message}|{n.Timestamp:yyyyMMddHHmmss}";
         if (_alarmHistoryDedup.Contains(dedupKey)) return;
         _alarmHistoryDedup.Add(dedupKey);
         if (_alarmHistoryDedup.Count > 100) _alarmHistoryDedup.RemoveAt(0);
+
+        // And the same question across restarts, which the list above cannot answer
+        // because it is empty exactly when the backlog arrives. Only for pushes: a
+        // WebSocket event is live by definition and has nothing to be stale about.
+        if (source == "FCM"
+            && !SeenAlarmStore.MarkIfNew(n.FcmNotificationId ?? $"{n.Server}|{n.Message}", eventTime))
+        {
+            AppendLog($"[alarm] Already shown at {eventTime:HH:mm:ss} — not repeating it.");
+            return;
+        }
 
         if (n.Message == "Your base is under attack!")
         {
@@ -2815,7 +2837,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         )
         {
             EntityId = n.EntityId,
-            Timestamp = n.Timestamp,
+            Timestamp = eventTime,
             FcmNotificationId = n.FcmNotificationId
         };
         NotificationCenterService.AddNotification(notif);
@@ -3085,6 +3107,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (!TrackingService.OfflineDeathAlertsEnabled) return;
 
+        // Deliberately no age filter here, unlike the alarm path. An offline death is
+        // old by definition — the player was away when it happened, which is why the
+        // push sat in Google's queue at all. Refusing it for being old would refuse
+        // every genuine one.
+        //
+        // What it does need is to be counted once. The history has no duplicate check
+        // of its own and simply inserts, so a push replayed at every start used to add
+        // another entry for the same death each time.
+        if (!SeenAlarmStore.MarkIfNew($"death|{d.ServerName}|{d.AttackerName}", d.Timestamp))
+        {
+            AppendLog($"[FCM] Offline death from {d.Timestamp:dd.MM. HH:mm} already recorded — ignoring the repeat.");
+            return;
+        }
+
         AppendLog($"[FCM] Offline Death Notification received: You were killed by {d.AttackerName} on {d.ServerName}");
 
         // Save to local history
@@ -3273,7 +3309,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var current = _overlayAlarms[_overlayAlarmIndex];
         
         string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
-        AlarmOverlayServerTxt.Text = $"{srvName} - {current.Notification.Timestamp:HH:mm}";
+        AlarmOverlayServerTxt.Text = srvName;
+
+        // When the alarm went off, not when the push reached us — the same time the
+        // notification list shows, so the two never disagree. On its own line: server
+        // names run long, and sharing one with the name pushed the time out of sight.
+        var alarmAt = current.Notification.EventTime ?? current.Notification.Timestamp;
+        AlarmOverlayTimeTxt.Text = alarmAt.Date == DateTime.Today
+            ? alarmAt.ToString("t")
+            : alarmAt.ToString("g");
         // The title is what Rust actually sent for this alarm — the upper line the player set
         // on it. Preferring it over a paired device name, and both over the word "Smart Alarm",
         // means the overlay says which alarm went off instead of merely that one did.
@@ -7428,6 +7472,46 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (Application.Current?.MainWindow is MainWindow mw)
             mw.ShowInfoSnackbar(title, message, appearance);
+    }
+
+    /// <summary>
+    /// Tells the player, once per start, that Alexa is no longer receiving their alarms.
+    ///
+    /// This cannot be repaired from here and it cannot be repaired by the cloud worker
+    /// either: only a fresh grant from Amazon restores it, and only the user can give
+    /// one. So the single useful thing to do is say so plainly, and say what to do — the
+    /// alternative is a raid alarm that silently never arrives.
+    ///
+    /// The toast is pinned rather than timed. It describes something that stays broken
+    /// until acted on, and one that fades after eight seconds is one nobody reads.
+    /// </summary>
+    private async Task WarnIfAlexaLinkBrokenAsync()
+    {
+        try
+        {
+            if (!await Services.Cloud.CloudAlexaAdapter.IsLinkBrokenAsync()) return;
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                AppendLog("[alexa] The Amazon account link is no longer valid — asking the user to link again.");
+                AddToast(new Controls.ToastItem
+                {
+                    Title = Helpers.Loc.Text("AlexaLinkExpiredTitle", "Alexa link expired"),
+                    Message = Helpers.Loc.Text("AlexaLinkExpiredMessage",
+                        "Amazon no longer accepts the connection to Rust+ Desktop, so raid alarms have stopped reaching Alexa. "
+                        + "Voice control still works. Open the Alexa app, disable the Rust+ Desktop skill and link it again."),
+                    Icon = WpfUi.SymbolRegular.Warning24,
+                    AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Caution),
+                    MaxCardWidth = 520,
+                    Timeout = TimeSpan.Zero,
+                });
+            });
+        }
+        catch
+        {
+            // Signed out, offline, or the platform is having a moment. None of those are
+            // evidence that the link is broken, and none are worth a word to the player.
+        }
     }
 
     internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance, WpfUi.SymbolRegular? icon = null)

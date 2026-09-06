@@ -17,6 +17,7 @@ namespace RustPlusDesk.Models;
         string? Ip = null,
         int? Port = null,
         string? Title = null,
-        string? FcmNotificationId = null
+        string? FcmNotificationId = null,
+        DateTime? EventTime = null
     );
 

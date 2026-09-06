@@ -1192,7 +1192,7 @@
     <value>列出可用指令</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>9.1 的新功能</value>
+    <value>9.2 的新功能</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>自 9.0 以来最重要的四项变更</value>
@@ -1469,5 +1469,11 @@
   </data>
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>将标签页直接拖入文件夹即可收纳，拖出文件夹放回侧边栏即可随时取消分组。</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa 关联已失效</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon 不再接受与 Rust+ Desktop 的连接，突袭警报无法送达 Alexa。语音控制仍可正常使用。请打开 Alexa 应用，停用 Rust+ Desktop 技能后重新关联。</value>
   </data>
 </root>

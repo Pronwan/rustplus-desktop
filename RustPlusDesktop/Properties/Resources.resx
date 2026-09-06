@@ -6213,6 +6213,9 @@ You can find more information on the server&apos;s official website:
   <data name="ChatSlowModeIndicator" xml:space="preserve">
     <value>Slow Mode: {0}s</value>
   </data>
+  <data name="ChatSlowModeWait" xml:space="preserve">
+    <value>Slow mode is on. Wait {0}s before sending again.</value>
+  </data>
   <data name="ChatSilencedTimeout" xml:space="preserve">
     <value>You cannot post until {0}. Reason: {1}</value>
   </data>
@@ -6782,5 +6785,11 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Remove {0} from the team?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa link expired</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon no longer accepts the connection to Rust+ Desktop, so raid alarms have stopped reaching Alexa. Voice control still works. Open the Alexa app, disable the Rust+ Desktop skill and link it again.</value>
   </data>
 </root>

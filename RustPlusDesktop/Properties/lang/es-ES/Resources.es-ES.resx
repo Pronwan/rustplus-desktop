@@ -6448,7 +6448,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Listar los comandos disponibles</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>Novedades de la 9.1</value>
+    <value>Novedades de la 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>Los cuatro cambios más importantes desde la 9.0</value>
@@ -6731,5 +6731,11 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>¿Quitar a {0} del equipo?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Vínculo con Alexa caducado</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon ya no acepta la conexión con Rust+ Desktop, por lo que las alarmas de asalto han dejado de llegar a Alexa. El control por voz sigue funcionando. Abre la aplicación Alexa, desactiva la skill de Rust+ Desktop y vuelve a vincularla.</value>
   </data>
 </root>

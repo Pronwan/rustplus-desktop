@@ -50,6 +50,42 @@ namespace RustPlusDesk.Services.Cloud
         }
 
         /// <summary>
+        /// Whether this account once linked Alexa and the link has since stopped working.
+        ///
+        /// Amazon invalidates a refresh token whenever a newer grant supersedes it — the
+        /// skill disabled and re-enabled, the account linked again elsewhere. Nothing about
+        /// that is visible from the app: voice control keeps working, because commands
+        /// travel the other way and never touch this token. Only the proactive half dies,
+        /// which is to say the raid alarms, which is the half nobody notices until a raid.
+        ///
+        /// The cloud worker clears the stored tokens when Amazon refuses them, so an
+        /// account that has an active server but no tokens is one whose link needs redoing.
+        /// An account that never linked has no active server, and is not asked to mend
+        /// something it never had.
+        /// </summary>
+        public static async Task<bool> IsLinkBrokenAsync()
+        {
+            var body = await CloudApiClient.CallApiAsync("me/alexa", HttpMethod.Get);
+
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("data", out var data) ||
+                data.ValueKind != JsonValueKind.Object)
+            {
+                return false;
+            }
+
+            if (!data.TryGetProperty("active_server_id", out var activeEl) ||
+                activeEl.ValueKind != JsonValueKind.String ||
+                string.IsNullOrEmpty(activeEl.GetString()))
+            {
+                return false;
+            }
+
+            return data.TryGetProperty("has_tokens", out var tokensEl)
+                && tokensEl.ValueKind == JsonValueKind.False;
+        }
+
+        /// <summary>
         /// Register (idempotently) the per-user pairing for a server so the platform
         /// holds its encrypted player token — this is what makes the server appear in
         /// the web dashboard and its smart devices controllable from the cloud.

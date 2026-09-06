@@ -6369,7 +6369,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>사용 가능한 명령어 목록</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>9.1의 새로운 기능</value>
+    <value>9.2의 새로운 기능</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>9.0 이후 가장 중요한 변경 사항 4가지</value>
@@ -6652,5 +6652,11 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0}을(를) 팀에서 내보낼까요?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa 연결이 만료되었습니다</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon이 Rust+ Desktop 연결을 더 이상 허용하지 않아 습격 알림이 Alexa에 전달되지 않습니다. 음성 제어는 계속 작동합니다. Alexa 앱을 열고 Rust+ Desktop 스킬을 비활성화한 뒤 다시 연결해 주세요.</value>
   </data>
 </root>

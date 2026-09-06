@@ -5571,7 +5571,7 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
     <value>List available commands</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>What's new in 9.1</value>
+    <value>What's new in 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>The four biggest changes since 9.0</value>
@@ -5764,5 +5764,11 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0} adlı oyuncu takımdan çıkarılsın mı?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa bağlantısının süresi doldu</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon artık Rust+ Desktop bağlantısını kabul etmiyor, bu yüzden baskın alarmları Alexa'ya ulaşmıyor. Sesli kontrol çalışmaya devam ediyor. Alexa uygulamasını açın, Rust+ Desktop becerisini devre dışı bırakın ve yeniden bağlayın.</value>
   </data>
 </root>

@@ -6526,7 +6526,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Verfügbare Befehle auflisten</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>Neu in 9.1</value>
+    <value>Neu in 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>Die vier wichtigsten Änderungen seit 9.0</value>
@@ -6809,5 +6809,11 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>{0} aus dem Team entfernen?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa-Verknüpfung abgelaufen</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon akzeptiert die Verbindung zu Rust+ Desktop nicht mehr, deshalb erreichen Raid-Alarme Alexa nicht mehr. Die Sprachsteuerung ist nicht betroffen. Öffne die Alexa-App, deaktiviere den Rust+ Desktop Skill und verknüpfe ihn erneut.</value>
   </data>
 </root>

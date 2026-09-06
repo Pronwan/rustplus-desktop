@@ -308,6 +308,38 @@ namespace RustPlusDesk.Services
 
         // ---- Dispatch: one uniform parse of the full FcmMessage into app events ----
 
+        /// <summary>
+        /// When a push was actually sent, in local time.
+        ///
+        /// Google holds pushes for a listener that is away and delivers the backlog
+        /// the moment it reconnects, so the moment we receive one says nothing about
+        /// when it happened. The library hands us <c>SentAt</c> and we were simply
+        /// discarding it.
+        ///
+        /// The kind is normalised rather than trusted: a value read as local when it
+        /// is UTC would be hours out, which is worse than the arrival time it
+        /// replaces. Anything that lands in the future, or absurdly far in the past,
+        /// is not believed at all — an alarm wrongly aged is an alarm silently
+        /// dropped, and that is the one outcome worth avoiding here.
+        /// </summary>
+        private static DateTime EventTimeOf(FcmMessage message)
+        {
+            var sent = message.SentAt;
+            if (sent == default) return DateTime.Now;
+
+            var local = sent.Kind switch
+            {
+                DateTimeKind.Local => sent,
+                DateTimeKind.Utc => sent.ToLocalTime(),
+                _ => DateTime.SpecifyKind(sent, DateTimeKind.Utc).ToLocalTime(),
+            };
+
+            var age = DateTime.Now - local;
+            if (age < TimeSpan.FromMinutes(-5) || age > TimeSpan.FromDays(30)) return DateTime.Now;
+
+            return local;
+        }
+
         private void HandleMessage(FcmMessage message)
         {
             try
@@ -335,10 +367,17 @@ namespace RustPlusDesk.Services
                     var attacker = deathMatch.Groups["attacker"].Value.Trim().Trim('\'', '"');
                     var server = !string.IsNullOrWhiteSpace(body?.Name) ? body!.Name
                                : (!string.IsNullOrWhiteSpace(data.Message) ? data.Message : "-");
+                    // When it happened, not when we heard about it. A death push is
+                    // queued by definition — the player was away, which is the whole
+                    // point — so the arrival time is always the moment the app opened
+                    // and never the moment they died. It is this value that goes into
+                    // the stored history.
+                    var deathAt = EventTimeOf(message);
                     OfflineDeathReceived?.Invoke(this,
-                        new OfflineDeathNotification(DateTime.Now, server, attacker,
+                        new OfflineDeathNotification(deathAt, server, attacker,
                             NullIfEmpty(body?.Ip), NonZero(body?.Port)));
-                    _log($"[fcm-native] Offline Death | {server} | {attacker}");
+                    _log($"[fcm-native] Offline Death | {server} | {attacker} " +
+                         $"| died {deathAt:dd.MM. HH:mm:ss}");
                     return;
                 }
 
@@ -353,6 +392,7 @@ namespace RustPlusDesk.Services
                         var msg = !string.IsNullOrWhiteSpace(data.Message) ? data.Message : (title ?? "");
                         var device = (body?.EntityName ?? "Alarm")
                                      + (body?.EntityId is { } eid ? $"#{eid}" : "");
+                        var alarmAt = EventTimeOf(message);
                         AlarmReceived?.Invoke(this, new AlarmNotification(
                             DateTime.Now,
                             body?.Name ?? "-",
@@ -362,8 +402,10 @@ namespace RustPlusDesk.Services
                             NullIfEmpty(body?.Ip),
                             NonZero(body?.Port),
                             title,
-                            NullIfEmpty(message.PersistentId)));
-                        _log($"[fcm-native] Alarm | {body?.Name ?? "-"} | {device} | \"{msg}\"");
+                            NullIfEmpty(message.PersistentId),
+                            alarmAt));
+                        _log($"[fcm-native] Alarm | {body?.Name ?? "-"} | {device} | \"{msg}\" " +
+                             $"| sent {alarmAt:HH:mm:ss} ({(int)(DateTime.Now - alarmAt).TotalSeconds}s ago)");
                         break;
 
                     case "chat":

@@ -5571,7 +5571,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>List available commands</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>What's new in 9.1</value>
+    <value>What's new in 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>The four biggest changes since 9.0</value>

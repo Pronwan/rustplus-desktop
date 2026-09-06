@@ -6448,7 +6448,7 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Lister les commandes disponibles</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>Nouveautés de la 9.1</value>
+    <value>Nouveautés de la 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>Les quatre changements majeurs depuis la 9.0</value>
@@ -6731,5 +6731,11 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
   </data>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Retirer {0} de l’équipe ?</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Lien Alexa expiré</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon n'accepte plus la connexion à Rust+ Desktop : les alertes de raid ne parviennent plus à Alexa. La commande vocale continue de fonctionner. Ouvrez l'application Alexa, désactivez la skill Rust+ Desktop puis reliez-la à nouveau.</value>
   </data>
 </root>

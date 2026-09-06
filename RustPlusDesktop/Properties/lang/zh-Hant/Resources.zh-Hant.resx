@@ -940,7 +940,7 @@
     <value>列出可用指令</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>9.1 的新功能</value>
+    <value>9.2 的新功能</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>自 9.0 以來最重要的四項變更</value>
@@ -1217,5 +1217,11 @@
   </data>
   <data name="Tutorials.Step.folders.organize.Description" xml:space="preserve">
     <value>將分頁直接拖入資料夾即可收納，拖出資料夾放回側邊欄即可隨時解除分組。</value>
+  </data>
+  <data name="AlexaLinkExpiredTitle" xml:space="preserve">
+    <value>Alexa 連結已失效</value>
+  </data>
+  <data name="AlexaLinkExpiredMessage" xml:space="preserve">
+    <value>Amazon 不再接受與 Rust+ Desktop 的連線，突襲警報無法送達 Alexa。語音控制仍可正常使用。請開啟 Alexa 應用程式，停用 Rust+ Desktop 技能後重新連結。</value>
   </data>
 </root>

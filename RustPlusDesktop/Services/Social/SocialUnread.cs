@@ -34,6 +34,13 @@ public static class SocialUnread
     private static DispatcherTimer? _timer;
     private static bool _reading;
 
+    /// <summary>
+    /// Set when a refresh is requested while one is already running. The in-flight read finishes,
+    /// then runs exactly one more to catch whatever changed after it started reading - so a burst of
+    /// pushes converges on the true count immediately rather than waiting for the slow timer.
+    /// </summary>
+    private static bool _dirty;
+
     /// <summary>Begins counting. Safe to call repeatedly; only the first call does anything.</summary>
     public static void Start()
     {
@@ -50,6 +57,9 @@ public static class SocialUnread
 
         SocialRealtime.MessageArrived += conversationId => _ = RefreshAsync();
         SocialRealtime.RequestArrived += () => _ = RefreshAsync();
+        // A pending friend request changes what is waiting too; without this the badge only moved on
+        // messages and the two-minute timer.
+        SocialRealtime.FriendRequestArrived += () => _ = RefreshAsync();
 
         _timer = new DispatcherTimer { Interval = PollInterval };
         _timer.Tick += (_, __) => _ = RefreshAsync();
@@ -61,9 +71,10 @@ public static class SocialUnread
     /// <summary>
     /// Re-reads the inbox and publishes the total.
     ///
-    /// Overlapping reads are dropped rather than queued: a burst of pushes in one conversation
-    /// would otherwise become a burst of identical requests, and the last one to return would win
-    /// anyway.
+    /// Overlapping reads are collapsed rather than queued: a burst of pushes marks the read dirty
+    /// instead of firing a request each, and the in-flight read runs one follow-up when it lands so
+    /// the count settles on the truth immediately - without turning a busy conversation into a
+    /// stream of identical requests.
     /// </summary>
     public static async Task RefreshAsync()
     {
@@ -75,8 +86,16 @@ public static class SocialUnread
 
         lock (Gate)
         {
-            if (_reading) return;
+            if (_reading)
+            {
+                // A read is already running; note that its result may already be stale and let it
+                // pick this up when it finishes rather than starting a second one now.
+                _dirty = true;
+                return;
+            }
+
             _reading = true;
+            _dirty = false;
         }
 
         try
@@ -86,7 +105,16 @@ public static class SocialUnread
         }
         finally
         {
-            lock (Gate) _reading = false;
+            bool runAgain;
+            lock (Gate)
+            {
+                _reading = false;
+                runAgain = _dirty;
+                _dirty = false;
+            }
+
+            // Something arrived mid-read. Run exactly once more to catch it.
+            if (runAgain) _ = RefreshAsync();
         }
     }
 

@@ -43,6 +43,12 @@ public enum ChatPostResult
     /// <summary>Nothing usable was left after cleaning.</summary>
     Empty,
 
+    /// <summary>
+    /// Sent inside the slow-mode window. Carries the seconds still to wait so the send button can
+    /// count down instead of showing a generic failure.
+    /// </summary>
+    SlowMode,
+
     /// <summary>Anything else, including not reaching the platform at all.</summary>
     Failed,
 }
@@ -54,7 +60,7 @@ public enum ChatPostResult
 /// many there are before the room stops warning. This keeps the enum for every caller that only
 /// cares whether it went through, and hangs the count off the side for the one notice that needs it.
 /// </summary>
-public readonly record struct ChatPostOutcome(ChatPostResult Result, int WarningNumber = 0, int WarningMax = 0)
+public readonly record struct ChatPostOutcome(ChatPostResult Result, int WarningNumber = 0, int WarningMax = 0, int RemainingSeconds = 0)
 {
     public static readonly ChatPostOutcome Ok = new(ChatPostResult.Ok);
 
@@ -775,6 +781,13 @@ public static class SocialApi
                 return ParseProfanityWarning(reason);
             }
 
+            // Slow mode: "slow_mode:<seconds>". Pull the remaining wait out so the caller can start
+            // the send-button countdown instead of showing a bare "could not be sent".
+            if (reason.Contains("slow_mode", StringComparison.Ordinal))
+            {
+                return ParseSlowMode(reason);
+            }
+
             if (reason.Contains("consent_required", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.ConsentRequired);
             if (reason.Contains("sanctioned", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.Sanctioned);
             if (reason.Contains("account_too_new", StringComparison.Ordinal)) return ChatPostOutcome.Of(ChatPostResult.TooNew);
@@ -808,6 +821,25 @@ public static class SocialApi
         }
 
         return ChatPostOutcome.Of(ChatPostResult.ProfanityWarning);
+    }
+
+    /// <summary>
+    /// Reads "slow_mode:&lt;seconds&gt;" out of the refusal. Falls back to a zero-second slow-mode
+    /// outcome when the shape is anything else — the caller still knows to say "slow down", it just
+    /// cannot count down.
+    /// </summary>
+    private static ChatPostOutcome ParseSlowMode(string reason)
+    {
+        var start = reason.IndexOf("slow_mode", StringComparison.Ordinal);
+        var parts = reason[start..].Split(':');
+
+        if (parts.Length >= 2
+            && int.TryParse(new string(parts[1].TakeWhile(char.IsDigit).ToArray()), out var seconds))
+        {
+            return new ChatPostOutcome(ChatPostResult.SlowMode, RemainingSeconds: seconds);
+        }
+
+        return ChatPostOutcome.Of(ChatPostResult.SlowMode);
     }
 
     /// <summary>
