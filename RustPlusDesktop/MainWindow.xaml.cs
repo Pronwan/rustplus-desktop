@@ -2623,8 +2623,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
     {
-        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind
-        if ((DateTime.Now - n.Timestamp).TotalMinutes > 5) return;
+        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind.
+        //
+        // Judged by when the alarm happened, not by when it reached us. Those were
+        // the same value until the push carried its own time, which is why this
+        // filter existed for a long while without ever being able to fire: a queued
+        // push from two hours ago arrived stamped "now".
+        var eventTime = n.EventTime ?? n.Timestamp;
+        if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
 
         // Learn the alarm's in-game text before anything can drop this notification.
         //
@@ -2637,10 +2643,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TryLearnAlarmTitle(n);
 
         // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
+        // Deliberately still the arrival time. One alarm reaches this method twice —
+        // once over the WebSocket, once as a push — and the two are recognised as one
+        // because they arrive in the same second. They do not share an event time.
         string dedupKey = $"{n.Server}|{n.Message}|{n.Timestamp:yyyyMMddHHmmss}";
         if (_alarmHistoryDedup.Contains(dedupKey)) return;
         _alarmHistoryDedup.Add(dedupKey);
         if (_alarmHistoryDedup.Count > 100) _alarmHistoryDedup.RemoveAt(0);
+
+        // And the same question across restarts, which the list above cannot answer
+        // because it is empty exactly when the backlog arrives. Only for pushes: a
+        // WebSocket event is live by definition and has nothing to be stale about.
+        if (source == "FCM"
+            && !SeenAlarmStore.MarkIfNew(n.FcmNotificationId ?? $"{n.Server}|{n.Message}", eventTime))
+        {
+            AppendLog($"[alarm] Already shown at {eventTime:HH:mm:ss} — not repeating it.");
+            return;
+        }
 
         if (n.Message == "Your base is under attack!")
         {
@@ -2815,7 +2834,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         )
         {
             EntityId = n.EntityId,
-            Timestamp = n.Timestamp,
+            Timestamp = eventTime,
             FcmNotificationId = n.FcmNotificationId
         };
         NotificationCenterService.AddNotification(notif);
@@ -3084,6 +3103,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void HandleOfflineDeath(OfflineDeathNotification d)
     {
         if (!TrackingService.OfflineDeathAlertsEnabled) return;
+
+        // Deliberately no age filter here, unlike the alarm path. An offline death is
+        // old by definition — the player was away when it happened, which is why the
+        // push sat in Google's queue at all. Refusing it for being old would refuse
+        // every genuine one.
+        //
+        // What it does need is to be counted once. The history has no duplicate check
+        // of its own and simply inserts, so a push replayed at every start used to add
+        // another entry for the same death each time.
+        if (!SeenAlarmStore.MarkIfNew($"death|{d.ServerName}|{d.AttackerName}", d.Timestamp))
+        {
+            AppendLog($"[FCM] Offline death from {d.Timestamp:dd.MM. HH:mm} already recorded — ignoring the repeat.");
+            return;
+        }
 
         AppendLog($"[FCM] Offline Death Notification received: You were killed by {d.AttackerName} on {d.ServerName}");
 
