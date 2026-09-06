@@ -6369,7 +6369,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>사용 가능한 명령어 목록</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>9.1의 새로운 기능</value>
+    <value>9.2의 새로운 기능</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>9.0 이후 가장 중요한 변경 사항 4가지</value>

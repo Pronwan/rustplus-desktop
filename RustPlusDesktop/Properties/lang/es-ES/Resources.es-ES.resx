@@ -6448,7 +6448,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Listar los comandos disponibles</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>Novedades de la 9.1</value>
+    <value>Novedades de la 9.2</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>Los cuatro cambios más importantes desde la 9.0</value>

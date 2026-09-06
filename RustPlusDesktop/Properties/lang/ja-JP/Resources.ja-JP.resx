@@ -5571,7 +5571,7 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
     <value>使用できるコマンドを表示</value>
   </data>
   <data name="UpdateWhatsNewTitle" xml:space="preserve">
-    <value>9.1 の新機能</value>
+    <value>9.2 の新機能</value>
   </data>
   <data name="UpdateWhatsNewSummary" xml:space="preserve">
     <value>9.0 以降の主な変更点 4 つ</value>
