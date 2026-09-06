@@ -52,6 +52,23 @@ The app ships as a single installer (bundling .NET, Node.js, WebView2 runtime, R
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# Rust+ Desktop 9.2.2
+
+Alarms now tell you when they actually happened, and stop repeating themselves.
+
+##🔔 Alarms & Notifications**
+• **The time shown is the time it happened** — Google holds notifications while the app is closed and delivers them the moment it reopens. Every one of them used to be stamped with the moment it arrived, so a raid from two hours ago looked like it was happening right now.
+• **No more replays at startup** — alarms you have already seen are remembered between sessions. The same alarm at a later time is a second raid, and still comes through.
+• **Offline deaths counted once** — a queued death notification used to add another entry to your history at every start, each with the wrong time.
+• **Alarm popup fits long server names** — the time has a line of its own instead of being pushed out of view.
+
+##🔗 Smart Home**
+• **A warning when the Alexa link dies** — Amazon invalidates the connection whenever the skill is disabled or linked again elsewhere. Voice control keeps working, so the only sign was that raid alerts silently stopped arriving. The app now says so on startup and tells you how to relink.
+
+##💬 Community**
+• **Chat and unread fixes** — supporter and public messages no longer leak into each other's feed, slow mode shows the remaining wait instead of a generic failure, and the unread badge settles on the right number after a burst of messages or a pending friend request.
+
+
 # 🚀 RustPlus Desktop 9.1
 The Community Hub is here — and the Wipe Tracker no longer floods your connection.
 
