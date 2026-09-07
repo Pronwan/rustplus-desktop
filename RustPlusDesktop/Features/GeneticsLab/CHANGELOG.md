@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.3.0) (2026-09-07)
+
+### 🚀 Features
+
+* feat(routes): improve route grouping, default presets, and clone readiness feedback ([74f9165](https://github.com/JawadYzbk/rust-genetics-lab/commit/74f9165e131fb4679173cf160f1431c3546b4c89))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.2.1...v1.3.0
+All notable changes to this project will be documented in this file.
+
 ## [1.2.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.2.1) (2026-09-04)
 
 ### 🐛 Bug Fixes
