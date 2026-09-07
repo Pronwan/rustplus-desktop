@@ -53,7 +53,12 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[WebView2] Environment pre-warm skipped: {ex.Message}");
+            // Debug.WriteLine is compiled away in a release build, so a shipped app
+            // would have said nothing at all. This is the earliest moment the
+            // machine can tell us the embedded browser is unusable, and it is worth
+            // hearing: every web view in the app fails afterwards, and the errors
+            // they raise then are far less specific than this one.
+            AppendLog($"[WebView2] Environment pre-warm failed: {Services.WebView2Diagnostics.Explain(ex)}");
         }
     }
 

@@ -464,6 +464,8 @@ namespace RustPlusDesk.Views
             catch (Exception ex)
             {
                 AppendLog($"[3D Map] Preparation failed: {ex.Message}");
+                AppendLog($"[3D Map] {Services.WebView2Diagnostics.Explain(ex)}");
+                RestoreMap2DAfterFailedOpen();
             }
             finally
             {
@@ -547,6 +549,49 @@ namespace RustPlusDesk.Views
             HeatmapAvailabilityPopup.IsOpen = false;
         }
 
+        /// <summary>
+        /// Puts the 2D map back after the 3D view failed to open.
+        ///
+        /// The switch to 3D happens before the browser is asked for, so a failure
+        /// used to leave the host panel visible and empty, the map image hidden,
+        /// and _isMap3DActive still false — which meant the button back to 2D had
+        /// nothing to switch back from, and the player was left staring at black
+        /// with no way out but a restart.
+        /// </summary>
+        private void RestoreMap2DAfterFailedOpen()
+        {
+            if (_isMap3DActive) return;
+
+            try
+            {
+                CloseMap3DView();
+                Map3DHost.Visibility = Visibility.Collapsed;
+                ImgMap.Visibility = Visibility.Visible;
+                UpdateRustMapsUi();
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// The browser process behind the 3D view died while it was open.
+        ///
+        /// Something outside the app can end it at any moment — a crash of its own,
+        /// security software, memory pressure. Nothing here can prevent that, but
+        /// leaving the panel up afterwards shows a black rectangle that looks like
+        /// the map failed to render, which sends people looking in the wrong place.
+        /// </summary>
+        private void Map3DProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                AppendLog($"[3D Map] The browser process ended unexpectedly ({e.ProcessFailedKind}). Returning to the 2D map.");
+                AppendLog($"[3D Map] {Services.WebView2Diagnostics.Explain(null)}");
+
+                _isMap3DActive = false;
+                RestoreMap2DAfterFailedOpen();
+            });
+        }
+
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
         {
             _currentMapFolderPath = result.FolderPath;
@@ -583,6 +628,7 @@ namespace RustPlusDesk.Views
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
             await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
+            _map3DWebView.CoreWebView2.ProcessFailed += Map3DProcessFailed;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
             _map3DWebView.CoreWebView2.WebResourceRequested += _map3DResourceRequestHandler;
