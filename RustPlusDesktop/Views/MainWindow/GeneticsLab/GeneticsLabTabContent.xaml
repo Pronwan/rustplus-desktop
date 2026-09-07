@@ -42,7 +42,7 @@
                 <Border x:Name="LoadingOverlay" Background="#FF121418" Visibility="Visible">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ui:ProgressRing IsIndeterminate="True" Width="48" Height="48" Margin="0,0,0,16" />
-                        <TextBlock Text="Loading Genetics Lab..." FontSize="14" FontWeight="SemiBold" Foreground="#8C96A8" HorizontalAlignment="Center" />
+                        <TextBlock Text="Loading Genetics Lab..." FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Border>
             </Grid>

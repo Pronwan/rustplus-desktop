@@ -1,4 +1,4 @@
-<Window x:Class="RustPlusDesk.Views.Windows.EmailLoginWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.EmailLoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -6,12 +6,14 @@
         Width="460" SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#0F1215"
         Foreground="White"
         FontFamily="Segoe UI"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round"
         Closed="Window_Closed">
 
-    <Window.Resources>
+    <ui:FluentWindow.Resources>
         <Style x:Key="TabToggle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#888"/>
@@ -116,20 +118,24 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
-    <Border Background="#0F1215" CornerRadius="10">
-        <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource EmailLoginWindowTitle}" ShowMaximize="False" ShowMinimize="False"/>
+
+        <StackPanel Grid.Row="1">
             <!-- Header -->
-            <Border Background="#1A1D21" CornerRadius="10,10,0,0" Padding="20,16">
+            <Border Background="#1A1D21" Padding="20,16">
                 <Grid>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="Person24" FontSize="18" Foreground="#E8612C" Margin="0,0,10,0" VerticalAlignment="Center"/>
                         <TextBlock x:Name="TxtHeaderTitle" Text="{DynamicResource CloudAccountTitle}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="&#x00D7;" Style="{StaticResource GhostBtn}" HorizontalAlignment="Right"
-                            Width="28" Height="28" FontSize="16" FontWeight="Bold"
-                            Click="BtnClose_Click"/>
                 </Grid>
             </Border>
 
@@ -202,8 +208,8 @@
                         BorderBrush="#2A6B3A" BorderThickness="1">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <ui:SymbolIcon Symbol="Mail24" FontSize="16" Foreground="#4CAF50" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="TxtAwaitTitle" Text="{DynamicResource EmailConfirmationSentTitle}" FontSize="13" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center"/>
+                            <ui:SymbolIcon Symbol="Mail24" FontSize="16" Foreground="{DynamicResource SuccessBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtAwaitTitle" Text="{DynamicResource EmailConfirmationSentTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <TextBlock x:Name="TxtAwaitMsg" FontSize="12" Foreground="#CCC" TextWrapping="Wrap" Margin="0,0,0,10"
                                    Text="{DynamicResource EmailConfirmationSentMessage}"/>
@@ -231,5 +237,5 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-    </Border>
-</Window>
+    </Grid>
+</ui:FluentWindow>

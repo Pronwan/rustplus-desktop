@@ -6,7 +6,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows;
 
-public partial class CloudAccountWindow : Window
+public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
 {
     private readonly MainWindow _owner;
 

@@ -5,7 +5,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class HotkeyCaptureWindow : Window
+    public partial class HotkeyCaptureWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string? Gesture { get; private set; }
 
@@ -58,15 +58,6 @@ namespace RustPlusDesk.Views.Windows
             Gesture = GlobalHotkeyManager.Format(key, ctrl, alt, shift, win);
             TxtGesture.Text = Gesture;
             e.Handled = true;
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

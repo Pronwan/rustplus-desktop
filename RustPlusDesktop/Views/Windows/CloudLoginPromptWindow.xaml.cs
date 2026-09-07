@@ -1,10 +1,9 @@
 using System;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class CloudLoginPromptWindow : Window
+    public partial class CloudLoginPromptWindow : Wpf.Ui.Controls.FluentWindow
     {
         private MainWindow? _owner;
 
@@ -47,11 +46,6 @@ namespace RustPlusDesk.Views.Windows
             BtnSkip.Content = T("CloudLoginPromptNoThanksButton", "No thanks");
         }
 
-        private void DragHandle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed) DragMove();
-        }
-
         private async void BtnDiscord_Click(object sender, RoutedEventArgs e)
         {
             BtnDiscord.IsEnabled = false;
@@ -90,6 +84,5 @@ namespace RustPlusDesk.Views.Windows
         }
 
         private void BtnSkip_Click(object sender, RoutedEventArgs e) => Close();
-        private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
     }
 }

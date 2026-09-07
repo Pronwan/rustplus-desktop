@@ -216,7 +216,7 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="Panel.ZIndex" Value="1" />
-                            <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
+                            <Setter TargetName="Bd" Property="Background" Value="#3360CDFF" />
                             <Setter Property="Foreground" Value="White" />
                             <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}" />
                         </Trigger>
@@ -307,7 +307,7 @@
                     <Border
                         Height="1"
                         Margin="6,4,6,4"
-                        Background="#22FFFFFF" />
+                        Background="{DynamicResource WhiteA22}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

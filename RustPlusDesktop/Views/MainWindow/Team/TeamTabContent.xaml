@@ -130,7 +130,7 @@
                                                         <Border
                                                             x:Name="Bd"
                                                             Width="16" Height="16"
-                                                            Background="#1AFFFFFF"
+                                                            Background="{DynamicResource WhiteA1A}"
                                                             BorderBrush="#30FFFFFF"
                                                             BorderThickness="1"
                                                             CornerRadius="8"
@@ -176,7 +176,7 @@
                                         Margin="2"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Bottom"
-                                        Background="#4CAF50"
+                                        Background="{DynamicResource SuccessBrush}"
                                         BorderBrush="{DynamicResource ControlFillColorSecondaryBrush}"
                                         BorderThickness="1"
                                         CornerRadius="6"

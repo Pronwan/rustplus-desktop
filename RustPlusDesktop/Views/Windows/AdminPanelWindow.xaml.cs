@@ -11,7 +11,7 @@ using RustPlusDesk.Services.Auth;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class AdminPanelWindow : Window
+    public partial class AdminPanelWindow : Wpf.Ui.Controls.FluentWindow
     {
         private ObservableCollection<AdminUserViewModel> _users = new ObservableCollection<AdminUserViewModel>();
 

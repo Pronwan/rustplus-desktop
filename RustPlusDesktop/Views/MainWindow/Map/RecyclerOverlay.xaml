@@ -174,7 +174,7 @@
                                                 PreviewMouseRightButtonDown="ItemCard_RightClick"
                                                 ToolTipService.InitialShowDelay="200">
                                             <ToolTipService.ToolTip>
-                                                <ToolTip Content="{Binding DisplayName}" Background="#1F2228" Foreground="White" BorderBrush="#25FFFFFF" />
+                                                <ToolTip Content="{Binding DisplayName}" Background="#1F2228" Foreground="White" BorderBrush="{DynamicResource WhiteA25}" />
                                             </ToolTipService.ToolTip>
                                             <Grid>
                                                 <Grid.RowDefinitions>
@@ -333,7 +333,7 @@
                     <Border HorizontalAlignment="Left"
                             Padding="10,5"
                             Background="#28FFFFFF"
-                            BorderBrush="#20FFFFFF"
+                            BorderBrush="{DynamicResource WhiteA20}"
                             BorderThickness="1"
                             CornerRadius="8">
                         <StackPanel Orientation="Horizontal">

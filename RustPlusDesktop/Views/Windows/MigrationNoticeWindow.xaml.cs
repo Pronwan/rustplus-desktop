@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace RustPlusDesk.Views;
 
-public partial class MigrationNoticeWindow : Window
+public partial class MigrationNoticeWindow : Wpf.Ui.Controls.FluentWindow
 {
     public bool HasMadeChoice { get; private set; } = false;
     public bool CloudSyncAccepted { get; private set; } = false;
@@ -31,12 +31,6 @@ public partial class MigrationNoticeWindow : Window
         var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();
         cloudWindow.Owner = this;
         cloudWindow.ShowDialog();
-    }
-
-    private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
-            DragMove();
     }
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

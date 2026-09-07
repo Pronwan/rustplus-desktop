@@ -230,7 +230,7 @@
                         <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                 Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                Background="#FFE5484D" Padding="3,0">
+                                Background="{DynamicResource DangerBrush}" Padding="3,0">
                             <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
                                        FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -245,7 +245,7 @@
 
             <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
             <Border x:Name="CloudGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
-                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                    Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource LfgCloudRequired}" Foreground="{StaticResource LfgMuted}" FontSize="12" TextWrapping="Wrap" />
                     <ui:Button x:Name="BtnCloudSetup" Click="BtnCloudSetup_Click" Appearance="Primary" Margin="0,12,0,0"
@@ -255,7 +255,7 @@
 
             <!--  Rolled out in stages, and this account is not in one yet.  -->
             <Border x:Name="ClosedGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
-                    Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
+                    Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="{StaticResource LfgLine}" BorderThickness="1" Padding="14">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource SocialNotOpenTitle}" Foreground="{StaticResource LfgText}"
                                FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
@@ -297,7 +297,7 @@
                             <Border x:Name="InboxTabBadge" Visibility="Collapsed"
                                     HorizontalAlignment="Right" VerticalAlignment="Top"
                                     Margin="0,-4,-14,0" MinWidth="16" Height="16" CornerRadius="8"
-                                    Background="#FFE5484D" Padding="4,0">
+                                    Background="{DynamicResource DangerBrush}" Padding="4,0">
                                 <TextBlock x:Name="InboxTabBadgeText" Foreground="White" FontSize="9.5"
                                            FontWeight="Bold" HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
@@ -405,7 +405,7 @@
                                                         <!-- Top-Right Star Badge for Premium Members -->
                                                         <Border Width="11" Height="11"
                                                                 HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                                Background="#FFD700"
+                                                                Background="{DynamicResource GoldBrush}"
                                                                 BorderBrush="#FFE58F"
                                                                 BorderThickness="1"
                                                                 CornerRadius="5.5"
@@ -433,7 +433,7 @@
                                                                 Cursor="Hand" HorizontalAlignment="Left" Margin="0,0,0,3">
                                                             <Button.Template>
                                                                 <ControlTemplate TargetType="Button">
-                                                                    <Border x:Name="Rb" CornerRadius="4" Padding="5,2" Background="#14FFFFFF">
+                                                                    <Border x:Name="Rb" CornerRadius="4" Padding="5,2" Background="{DynamicResource WhiteA14}">
                                                                         <StackPanel Orientation="Horizontal">
                                                                             <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}"
                                                                                        FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center" />
@@ -589,7 +589,7 @@
                     <StackPanel Grid.Row="2">
                         <!--  Why the box is gone, rather than a box that silently does nothing  -->
                         <Border x:Name="ChatSilencedBar" Visibility="Collapsed" Margin="0,0,0,4"
-                                Background="#14FFFFFF" CornerRadius="6" Padding="10"
+                                Background="{DynamicResource WhiteA14}" CornerRadius="6" Padding="10"
                                 BorderBrush="#33A93C36" BorderThickness="1">
                             <TextBlock x:Name="ChatSilencedText" TextWrapping="Wrap"
                                        Foreground="{StaticResource LfgText}" FontSize="11" />
@@ -602,7 +602,7 @@
                             good.
                         -->
                         <Border x:Name="ChatRulesPanel" Visibility="Collapsed" Margin="0,0,0,8"
-                                Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                                Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource ChatRulesTitle}" Foreground="{StaticResource LfgText}"
                                            FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
@@ -628,7 +628,7 @@
                             look for exactly this.
                         -->
                         <Border x:Name="ChatTranslateConsentPanel" Visibility="Collapsed" Margin="0,0,0,8"
-                                Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                                Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource ChatTranslateConsentTitle}" Foreground="{StaticResource LfgText}"
                                            FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap" />
@@ -872,7 +872,7 @@
                     drawn for everybody on purpose: hiding it would hide what supporting buys.
                 -->
                 <Border x:Name="SupporterGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
-                        Background="#14FFFFFF" CornerRadius="6" BorderBrush="#55D9A22B" BorderThickness="1" Padding="16">
+                        Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="#55D9A22B" BorderThickness="1" Padding="16">
                     <StackPanel>
                         <TextBlock Text="{DynamicResource SupporterGateTitle}" Foreground="#FFF0D08A"
                                    FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" />
@@ -950,7 +950,7 @@
                         disclosure sits where the decision is instead of interrupting it.
                     -->
                     <Border x:Name="ConsentPanel" Visibility="Collapsed" Margin="0,0,0,18"
-                            Background="#14FFFFFF" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
+                            Background="{DynamicResource WhiteA14}" CornerRadius="6" BorderBrush="{StaticResource LfgAccent}" BorderThickness="1" Padding="12">
                         <StackPanel>
                             <TextBlock Text="{DynamicResource LfgConsentTitle}" Foreground="{StaticResource LfgText}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" />
                             <TextBlock Text="{DynamicResource LfgConsentBody}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0" />
@@ -1017,7 +1017,7 @@
                                  </StackPanel>
 
                                  <Border Grid.Column="3" VerticalAlignment="Center" Margin="4,0,0,0"
-                                         Background="#14FFFFFF" CornerRadius="4" Padding="6,2">
+                                         Background="{DynamicResource WhiteA14}" CornerRadius="4" Padding="6,2">
                                      <TextBlock Text="{DynamicResource LfgPreviewActiveBadge}" FontSize="10" Foreground="{StaticResource LfgMuted}" />
                                  </Border>
                              </Grid>
@@ -1251,7 +1251,7 @@
 
                             <!--  A request you have not answered: the decision comes before the reply box  -->
                             <Border x:Name="PendingBar" Visibility="Collapsed" Margin="0,0,0,10"
-                                    Background="#14FFFFFF" CornerRadius="6" Padding="10">
+                                    Background="{DynamicResource WhiteA14}" CornerRadius="6" Padding="10">
                                 <StackPanel>
                                     <TextBlock x:Name="PendingHint" Foreground="{StaticResource LfgText}" FontSize="11"
                                                TextWrapping="Wrap" Margin="0,0,0,8" />
@@ -1339,7 +1339,7 @@
                                 <ItemsControl x:Name="FriendRequestList">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="#14FFFFFF" CornerRadius="6" Padding="9" Margin="0,0,0,6">
+                                            <Border Background="{DynamicResource WhiteA14}" CornerRadius="6" Padding="9" Margin="0,0,0,6">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
@@ -1621,7 +1621,7 @@
                             <StackPanel x:Name="ReportQuoted" Visibility="Collapsed" Margin="0,4,0,0">
                                 <TextBlock Text="{DynamicResource ReportQuotedLabel}" Margin="0,0,0,4"
                                            Foreground="{StaticResource LfgMuted}" FontSize="10" FontWeight="Bold" />
-                                <Border Background="#14FFFFFF" CornerRadius="6" Padding="9,7">
+                                <Border Background="{DynamicResource WhiteA14}" CornerRadius="6" Padding="9,7">
                                     <TextBlock x:Name="ReportQuotedText" Foreground="{StaticResource LfgText}"
                                                FontSize="11" TextWrapping="Wrap" MaxHeight="72" />
                                 </Border>

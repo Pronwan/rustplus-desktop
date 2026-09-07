@@ -29,7 +29,7 @@
                     <!--  For steps that explain something outside the app, where there is no
                           on-screen target to point at — in-game wiring, for instance.  -->
                     <Border x:Name="StepImageBorder" Margin="0,12,0,0" CornerRadius="7" ClipToBounds="True"
-                            Background="#14000000" BorderBrush="#22FFFFFF" BorderThickness="1"
+                            Background="#14000000" BorderBrush="{DynamicResource WhiteA22}" BorderThickness="1"
                             Visibility="Collapsed">
                         <Image x:Name="StepImage" MaxHeight="260" Stretch="Uniform" StretchDirection="DownOnly" />
                     </Border>

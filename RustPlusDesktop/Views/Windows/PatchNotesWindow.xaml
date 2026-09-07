@@ -1,4 +1,4 @@
-<Window x:Class="RustPlusDesk.Views.PatchNotesWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.PatchNotesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
@@ -6,11 +6,21 @@
         xmlns:views="clr-namespace:RustPlusDesk.Views"
         Title="{DynamicResource PatchNotes}"
         Width="720" Height="620"
-        Background="{DynamicResource AppBg}"
         Foreground="{DynamicResource TextPrimary}"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
 
-    <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="{DynamicResource Radius}" Padding="14" Margin="8">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource PatchNotes}" ShowMaximize="False" ShowMinimize="False"/>
+
+    <Border Grid.Row="1" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="{DynamicResource Radius}" Padding="14" Margin="8">
         <Grid>
             <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
@@ -39,7 +49,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.2.2 | Honest Alarm Times &amp; Alexa Link Warning" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 Alarms now tell you when they happened rather than when the app opened, and the ones you already saw stop coming back at every start. The app also speaks up when Alexa has quietly stopped receiving your raid alerts.
                             </TextBlock>
 
@@ -80,7 +90,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.2.1 | Sidebar Folders, Drag &amp; Drop &amp; Bundled Icons" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 This release brings full customization to your workspace with sidebar drag-and-drop and Discord-style folders. Group your favourite utilities together, tuck away calculators you only use occasionally, and reorder tabs freely. We have also bundled over 480 item icons directly into the app so startup is instant, made update restarts actionable with a single click, and kept the Genetics Lab scanner running unthrottled in the background. And team leaders can finally kick a member from the team — Facepunch added it to the Rust+ API only days ago.
                             </TextBlock>
 
@@ -155,7 +165,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.2.0 | Tickets, Notifications &amp; a Friendlier Chat" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 You can now reach us from inside the app. A new Tickets tab lets you appeal a mute, report a bug with screenshots and logs attached for you, ask for help, or suggest a feature — and reply back and forth once we answer, without leaving Rust+. A bell in the title bar collects replies and announcements as they arrive, with a chime and a toast so you never miss one. And the community chat now keeps things civil for everyone.
                             </TextBlock>
 
@@ -206,7 +216,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.1.1 | Responsiveness &amp; Smarter Updates" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 A maintenance release, mostly about the app feeling immediate again. Some players saw the window take seconds to react to a hover; that had a specific cause and it is fixed. Updates now download as small delta patches in the background and install on exit, so you are not made to wait for them.
                             </TextBlock>
 
@@ -249,7 +259,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.1 | Community Hub, Farm Routes &amp; Clan Chat Commands" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 Version 9.1 opens the app up to other players: a Community Hub with global and supporter chat, replies, translation, group finding with Steam profile previews, a friend list and reporting. On the map, farm routes now measure themselves in metres and sprint seconds. Chat commands reach clan chat, with per-role permissions. And the Player Wipe Tracker no longer saturates your upload while it backs up.
                             </TextBlock>
 
@@ -453,7 +463,7 @@
                         <StackPanel>
                             <TextBlock Text="v9.0.0 | Cloud Sync, Clan 2.0, Wipe Tracker &amp; Genetics 2.0" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 Version 9.0.0 is a massive milestone release featuring an overhauled Clan System with accurate in-game banner rendering and large banner showcase, native in-process FCM notifications, an overhauled native Player Wipe Tracker with Cloud wipe map syncing, a revolutionary Genetics Lab 2.0 solver architecture with live camera OCR scanning, fully rebuilt native CCTV camera controls with an analog joystick, built-in Rust Console Helper &amp; Overlays, Team Base Codes sharing, and end-to-end performance and stability improvements.
                             </TextBlock>
 
@@ -603,7 +613,7 @@
                                 <Run FontWeight="Bold">&#x2022; Two changes, because one is not enough:</Run>
                                 Oil Rig now needs a clearly higher score than the other cues, since it has the narrowest margin of the three. And a genuine announcement is only ever reported once &#x2014; twice if both rigs fire together &#x2014; so anything still matching after that is treated as a continuous sound and ignored until it stops. Score alone could not separate them: machinery matches at a fresh alignment every time and slips straight past the duplicate check.
                             </TextBlock>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" Foreground="{DynamicResource TextBodyBrush}">
                                 The higher bar has a price worth naming: the faintest Oil Rig cue we ever confirmed would no longer clear it. Missing one distant announcement is the better trade, because the rig calls again on its cycle &#x2014; while an exhausted limit silences everything for an hour.
                             </TextBlock>
                         </StackPanel>
@@ -658,7 +668,7 @@
                                 <Run FontWeight="Bold">&#x2022; Oil Rig triggers no longer call your phone:</Run>
                                 A Smart Alarm used as an oil rig trigger stopped raising a raid alert in the app, but the cloud service knew nothing about it and still placed a Telegram call for a crate hack. Which alarms are rig triggers is now shared with it, along with the text each alarm sends, so a crate hack reaches Discord labelled as one and leaves the phone alone.
                             </TextBlock>
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" Foreground="{DynamicResource TextBodyBrush}">
                                 Thanks to <Run FontWeight="Bold">Makuko</Run> for finding the server-switching bug and sending in the analysis.
                             </TextBlock>
                         </StackPanel>
@@ -689,7 +699,7 @@
                         <StackPanel>
                             <TextBlock Text="v8.0.0 | Smart Home, Automation &amp; QoL" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
                             
-                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="#D0D0D0">
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
                                 Version 8.0.0 is one of the biggest Rust+ Desktop updates so far, bringing a redesigned interface, new calculators, improved integrations, guided tutorials, major 3D map optimisations, and many stability fixes.
                             </TextBlock>
 
@@ -2012,4 +2022,5 @@
         </Grid>
         </Grid>
     </Border>
-</Window>
+    </Grid>
+</ui:FluentWindow>

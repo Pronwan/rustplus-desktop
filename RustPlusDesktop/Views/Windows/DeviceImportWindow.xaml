@@ -31,7 +31,7 @@
         <!-- Custom TitleBar -->
         <Border Grid.Row="0"
                 Background="#0F1013"
-                BorderBrush="#1AFFFFFF"
+                BorderBrush="{DynamicResource WhiteA1A}"
                 BorderThickness="0,0,0,1">
             <ui:TitleBar Title="{DynamicResource ImportDevicesTitle}"
                          Background="Transparent"
@@ -191,7 +191,7 @@
                                                 <Border Grid.Column="1"
                                                         Width="36"
                                                         Height="36"
-                                                        Background="#14FFFFFF"
+                                                        Background="{DynamicResource WhiteA14}"
                                                         CornerRadius="6"
                                                         Padding="6"
                                                         Margin="0,0,12,0"

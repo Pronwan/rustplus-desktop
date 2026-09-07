@@ -41,7 +41,7 @@
             <DataTemplate x:Key="ToastCardTemplate" DataType="{x:Type controls:ToastItem}">
                 <Border x:Name="Card"
                         Background="#E6101418"
-                        BorderBrush="#25FFFFFF"
+                        BorderBrush="{DynamicResource WhiteA25}"
                         BorderThickness="1"
                         CornerRadius="8"
                         Margin="0,0,0,10"
@@ -316,8 +316,8 @@
         <!--  Custom TitleBar for Guaranteed Visibility in Mica/Dark Mode  -->
         <Border
             Grid.Row="0"
-            Background="#0F1013"
-            BorderBrush="#1AFFFFFF"
+            Background="{DynamicResource AppBg}"
+            BorderBrush="{DynamicResource WhiteA1A}"
             BorderThickness="0,0,0,1">
             <ui:TitleBar
                 x:Name="AppTitleBar"
@@ -414,7 +414,7 @@
                                 IsHitTestVisible="False"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                 Margin="0,6,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                Background="#FFE5484D" Padding="3,0">
+                                Background="{DynamicResource DangerBrush}" Padding="3,0">
                             <TextBlock x:Name="TopNotifBadgeText" Foreground="White" FontSize="9"
                                        FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -443,7 +443,7 @@
                                             <ItemsControl x:Name="TopNotificationsList" Margin="8,0,8,8">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Background="{Binding Background}" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Cursor="Hand"
+                                                        <Border Background="{Binding Background}" BorderBrush="{DynamicResource WhiteA1A}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Cursor="Hand"
                                                                 MouseLeftButtonUp="TopNotificationRow_Click" Tag="{Binding Id}">
                                                             <Grid>
                                                                 <StackPanel Margin="0,0,18,0">
@@ -451,7 +451,7 @@
                                                                         <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                                         <TextBlock Text="{Binding Title}" Foreground="#FFF4F6FA" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                                                                     </StackPanel>
-                                                                    <TextBlock Text="{Binding Body}" Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
+                                                                    <TextBlock Text="{Binding Body}" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
                                                                     <ui:Button Visibility="{Binding CtaVisibility}" Content="{Binding CtaLabel}" Appearance="Primary"
                                                                                FontSize="11" Padding="10,3" Margin="16,6,0,0" HorizontalAlignment="Left"
                                                                                Tag="{Binding}" Click="NotificationCta_Click" />
@@ -466,7 +466,7 @@
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
-                                            <TextBlock x:Name="TopNotificationsEmpty" Text="Nothing here yet." Foreground="#FF94A0B3"
+                                            <TextBlock x:Name="TopNotificationsEmpty" Text="Nothing here yet." Foreground="{DynamicResource TextMutedBrush}"
                                                        HorizontalAlignment="Center" Margin="0,24,0,24" Visibility="Collapsed" />
                                         </Grid>
                                     </ScrollViewer>
@@ -715,7 +715,7 @@
                 Margin="0,0,0,0"
                 Padding="0"
                 Background="{DynamicResource Surface}"
-                BorderBrush="#1AFFFFFF"
+                BorderBrush="{DynamicResource WhiteA1A}"
                 BorderThickness="0,0,1,0"
                 ClipToBounds="True"
                 CornerRadius="0"
@@ -762,7 +762,7 @@
                                     Height="28"
                                     Margin="0,0,8,0">
                                     <Border
-                                        Background="#1AFFFFFF"
+                                        Background="{DynamicResource WhiteA1A}"
                                         ClipToBounds="True"
                                         CornerRadius="14">
                                         <Grid>
@@ -993,7 +993,7 @@
                                                 Margin="4,0,0,0"
                                                 Padding="4,1"
                                                 Background="#33EF5350"
-                                                BorderBrush="#EF5350"
+                                                BorderBrush="{DynamicResource DangerBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="4"
                                                 VerticalAlignment="Center"
@@ -1418,7 +1418,7 @@
                                             Width="8"
                                             Height="8"
                                             VerticalAlignment="Center"
-                                            Fill="#4CAF50">
+                                            Fill="{DynamicResource SuccessBrush}">
                                             <Ellipse.Effect>
                                                 <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#4CAF50" Opacity="0.6" />
                                             </Ellipse.Effect>
@@ -1444,8 +1444,8 @@
                                                 </Style>
                                             </Ellipse.Style>
                                         </Ellipse>
-                                        <TextBlock Text="{DynamicResource UiListening}" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                        <TextBlock Text="FCM" FontSize="10" FontWeight="SemiBold" Foreground="#4CAF50" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <TextBlock Text="{DynamicResource UiListening}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <TextBlock Text="FCM" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="5,0,0,0" />
                                     </StackPanel>
                                 </StackPanel>
 
@@ -3187,7 +3187,7 @@
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Bottom"
                                                                 Margin="0,0,-2,-2"
-                                                                Fill="#4CAF50"
+                                                                Fill="{DynamicResource SuccessBrush}"
                                                                 Stroke="Black"
                                                                 Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
 
@@ -3554,7 +3554,7 @@
                                                                 ClipToBounds="True" 
                                                                 Margin="0,0,0,12"
                                                                 Background="{Binding ClanColorBrush}"
-                                                                BorderBrush="#40FFFFFF" 
+                                                                BorderBrush="{DynamicResource WhiteA40}" 
                                                                 BorderThickness="1.5"
                                                                 Visibility="{Binding HasClanLogo, Converter={StaticResource Vis}}">
                                                             <Image Source="{Binding ClanLogoImage}" 
@@ -3567,7 +3567,7 @@
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
                                                             <Border Width="32" Height="32" CornerRadius="6" Margin="0,0,8,0"
                                                                     Background="{Binding ClanColorBrush}"
-                                                                    BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                                    BorderBrush="{DynamicResource WhiteA40}" BorderThickness="1"
                                                                     Visibility="{Binding HasClanLogo, Converter={StaticResource VisInv}}">
                                                                 <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
                                                                       Fill="White" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -3582,7 +3582,7 @@
                                                                 <TextBlock Text="{Binding ClanMotd}" 
                                                                            Foreground="#FFE6ECF2" FontSize="12" TextWrapping="Wrap" FontStyle="Italic" LineHeight="16" />
                                                                 <TextBlock Text="{Binding ClanMotdAuthorText}" 
-                                                                           Foreground="#FF8E9AA7" FontSize="10" Margin="0,5,0,0" />
+                                                                           Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,5,0,0" />
                                                             </StackPanel>
                                                         </Border>
                                                         
@@ -3602,32 +3602,32 @@
                                                             </Grid.ColumnDefinitions>
                                                             
                                                             <!-- Score -->
-                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Score" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Score" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ClanScoreText}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
                                                             <!-- Members -->
-                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Members" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Members" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ClanMembersRatio}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
                                                             <!-- Roles -->
-                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Roles" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Roles" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ClanRolesSummary}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" TextTrimming="CharacterEllipsis" MaxWidth="170" />
 
                                                             <!-- Pending Invites -->
-                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Invites" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Invites" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ClanInvitesCount, StringFormat='{}{0} Pending'}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
 
                                                             <!-- Created -->
-                                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Created" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Created" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ClanCreatedText}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                             
                                                             <!-- Founder -->
-                                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Founder" Foreground="#FF8E9AA7" FontSize="11" Margin="0,3,10,3" />
+                                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Founder" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,3,10,3" />
                                                             <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ClanCreatorText}" 
                                                                        Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,3,0,3" />
                                                         </Grid>
@@ -3644,14 +3644,14 @@
                                                 <!-- Logo or Shield with in-game Banner Color Background -->
                                                 <Border Grid.Column="0" Width="34" Height="34" CornerRadius="6" ClipToBounds="True" Margin="0,0,10,0" VerticalAlignment="Center"
                                                         Background="{Binding ClanColorBrush, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                        BorderBrush="{DynamicResource WhiteA40}" BorderThickness="1"
                                                         Visibility="{Binding HasClanLogo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}">
                                                     <Image Source="{Binding ClanLogoImage, RelativeSource={RelativeSource AncestorType=Window}}" 
                                                            Stretch="Uniform" Margin="2" RenderOptions.BitmapScalingMode="HighQuality" />
                                                 </Border>
                                                 <Border Grid.Column="0" Width="34" Height="34" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center"
                                                         Background="{Binding ClanColorBrush, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        BorderBrush="#40FFFFFF" BorderThickness="1"
+                                                        BorderBrush="{DynamicResource WhiteA40}" BorderThickness="1"
                                                         Visibility="{Binding HasClanLogo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisInv}}">
                                                     <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
                                                           Fill="White" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -3660,12 +3660,12 @@
                                                     <TextBlock Text="{Binding ClanName, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='Clan Loading...'}" 
                                                                Foreground="White" FontWeight="Bold" FontSize="14" TextTrimming="CharacterEllipsis" />
                                                     <TextBlock Text="{Binding ClanMotd, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                                               Foreground="#FF8E9AA7" FontSize="11" FontStyle="Italic" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                                               Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontStyle="Italic" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
                                                                Visibility="{Binding HasClanMotd, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}" />
                                                 </StackPanel>
                                                 <!-- Info Icon -->
                                                 <Path Grid.Column="2" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" 
-                                                      Fill="#FF8E9AA7" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="6,0,2,0" />
+                                                      Fill="{DynamicResource TextMutedBrush}" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="6,0,2,0" />
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -3725,12 +3725,12 @@
                                                                     <ToolTip Background="#FF101824" BorderBrush="#FF2A3F5D" BorderThickness="1" Padding="12">
                                                                         <StackPanel Width="230">
                                                                             <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="White" />
-                                                                            <TextBlock Text="{Binding RoleName, StringFormat='Role: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
-                                                                            <TextBlock Text="{Binding RolePermissions, StringFormat='Permissions: {0}'}" Foreground="#FF6C7A89" FontSize="10" Margin="0,2,0,0" TextWrapping="Wrap" />
-                                                                            <TextBlock Text="{Binding SteamId, StringFormat='Steam ID: {0}'}" Foreground="#FF8E9AA7" FontSize="10" Margin="0,2,0,0" />
-                                                                            <TextBlock Text="{Binding JoinedText, StringFormat='Joined: {0}'}" Foreground="#FF8E9AA7" FontSize="10" Margin="0,2,0,0" />
-                                                                            <TextBlock Text="{Binding Notes, StringFormat='Note: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" />
-                                                                            <TextBlock Text="{Binding LastSeenText, StringFormat='Last Seen: {0}'}" Foreground="#FF8E9AA7" FontSize="11" Margin="0,4,0,0" />
+                                                                            <TextBlock Text="{Binding RoleName, StringFormat='Role: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,4,0,0" />
+                                                                            <TextBlock Text="{Binding RolePermissions, StringFormat='Permissions: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                                                            <TextBlock Text="{Binding SteamId, StringFormat='Steam ID: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+                                                                            <TextBlock Text="{Binding JoinedText, StringFormat='Joined: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+                                                                            <TextBlock Text="{Binding Notes, StringFormat='Note: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" />
+                                                                            <TextBlock Text="{Binding LastSeenText, StringFormat='Last Seen: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="0,4,0,0" />
                                                                         </StackPanel>
                                                                     </ToolTip>
                                                                 </Border.ToolTip>
@@ -3748,7 +3748,7 @@
                                                                         </Border>
                                                                         
                                                                         <!-- Online dot -->
-                                                                        <Ellipse Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2" Fill="#4CAF50" Stroke="Black" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                                                        <Ellipse Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2" Fill="{DynamicResource SuccessBrush}" Stroke="Black" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
                                                                         <!-- Offline dot -->
                                                                         <Ellipse Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2" Fill="#666" Stroke="Black" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
                                                                     </Grid>
@@ -3763,13 +3763,13 @@
                                                                         </StackPanel>
                                                                         
                                                                         <!-- Role (Trimmed) -->
-                                                                        <TextBlock Text="{Binding RoleName}" Foreground="#FF9BA4B5" FontSize="9" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" MaxWidth="120" />
+                                                                        <TextBlock Text="{Binding RoleName}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" MaxWidth="120" />
                                                                         
                                                                         <!-- Notes (Trimmed) -->
                                                                         <TextBlock Text="{Binding Notes}" Foreground="#6C7A89" FontSize="8" FontStyle="Italic" TextTrimming="CharacterEllipsis" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}" Margin="0,1,0,0" MaxWidth="120" />
                                                                         
                                                                         <!-- Last Seen -->
-                                                                        <TextBlock Text="{Binding LastSeenText, StringFormat='seen: {0}'}" Foreground="#FF6C7A89" FontSize="8" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" MaxWidth="120" />
+                                                                        <TextBlock Text="{Binding LastSeenText, StringFormat='seen: {0}'}" Foreground="{DynamicResource TextMutedBrush}" FontSize="8" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" MaxWidth="120" />
                                                                     </StackPanel>
                                                                 </Grid>
                                                             </Border>
@@ -3813,12 +3813,12 @@
                                                                                 </Grid.ColumnDefinitions>
                                                                                 
                                                                                 <!-- Status Dot -->
-                                                                                <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="#4CAF50" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
+                                                                                <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="{DynamicResource SuccessBrush}" Visibility="{Binding IsOnline, Converter={StaticResource Vis}}" />
                                                                                 <Ellipse Grid.Column="0" Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0" Fill="#666" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}" />
                                                                                 
                                                                                 <!-- Rank Icon (shield) -->
                                                                                 <Path Grid.Column="1" Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" 
-                                                                                      Fill="#FF9BA4B5" Width="11" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                                                      Fill="{DynamicResource TextMutedBrush}" Width="11" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                                                 
                                                                                 <!-- Name & Team Icon -->
                                                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -3828,7 +3828,7 @@
                                                                                 </StackPanel>
                                                                                 
                                                                                 <!-- Role -->
-                                                                                <TextBlock Grid.Column="3" Text="{Binding RoleName}" Foreground="#FF6C7A89" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                                                                <TextBlock Grid.Column="3" Text="{Binding RoleName}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                                                             </Grid>
                                                                             
                                                                             <!-- Expanded Detail Section (visible on Selection) -->
@@ -3837,28 +3837,28 @@
                                                                                 <StackPanel>
                                                                                     <!-- Steam ID -->
                                                                                     <Grid Margin="0,2,0,2">
-                                                                                        <TextBlock Text="Steam ID:" Foreground="#FF6C7A89" FontSize="9" />
-                                                                                        <TextBlock Text="{Binding SteamId}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                        <TextBlock Text="Steam ID:" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding SteamId}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" HorizontalAlignment="Right" />
                                                                                     </Grid>
                                                                                     <!-- Joined -->
                                                                                     <Grid Margin="0,2,0,2">
-                                                                                        <TextBlock Text="Joined:" Foreground="#FF6C7A89" FontSize="9" />
-                                                                                        <TextBlock Text="{Binding JoinedText}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                        <TextBlock Text="Joined:" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding JoinedText}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" HorizontalAlignment="Right" />
                                                                                     </Grid>
                                                                                     <!-- Permissions -->
                                                                                     <Grid Margin="0,2,0,2">
-                                                                                        <TextBlock Text="Permissions:" Foreground="#FF6C7A89" FontSize="9" />
-                                                                                        <TextBlock Text="{Binding RolePermissions}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                                                                        <TextBlock Text="Permissions:" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding RolePermissions}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" MaxWidth="160" />
                                                                                     </Grid>
                                                                                     <!-- Last Seen -->
                                                                                     <Grid Margin="0,2,0,2" Visibility="{Binding IsOnline, Converter={StaticResource VisInv}}">
-                                                                                        <TextBlock Text="Last Seen:" Foreground="#FF6C7A89" FontSize="9" />
-                                                                                        <TextBlock Text="{Binding LastSeenText}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" />
+                                                                                        <TextBlock Text="Last Seen:" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" />
+                                                                                        <TextBlock Text="{Binding LastSeenText}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" HorizontalAlignment="Right" />
                                                                                     </Grid>
                                                                                     <!-- Notes -->
                                                                                     <Grid Margin="0,2,0,2" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}">
-                                                                                        <TextBlock Text="Note:" Foreground="#FF6C7A89" FontSize="9" VerticalAlignment="Top" />
-                                                                                        <TextBlock Text="{Binding Notes}" Foreground="#FF9BA4B5" FontSize="9" HorizontalAlignment="Right" TextWrapping="Wrap" MaxWidth="180" FontStyle="Italic" />
+                                                                                        <TextBlock Text="Note:" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" VerticalAlignment="Top" />
+                                                                                        <TextBlock Text="{Binding Notes}" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" HorizontalAlignment="Right" TextWrapping="Wrap" MaxWidth="180" FontStyle="Italic" />
                                                                                     </Grid>
                                                                                 </StackPanel>
                                                                             </Border>
@@ -3881,7 +3881,7 @@
                                         </Grid.ColumnDefinitions>
                                         
                                         <!-- Last pull timestamp -->
-                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="10" Foreground="#FF6C7A89">
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource TextMutedBrush}">
                                             <Run Text="Last pull: " />
                                             <Run Text="{Binding LastClanPullTime, RelativeSource={RelativeSource AncestorType=Window}, TargetNullValue='-'}" />
                                         </TextBlock>
@@ -4107,7 +4107,7 @@
                                     
                                     <!-- Red Badge for Unread Count -->
                                     <Border x:Name="NotificationsBadge"
-                                            Background="#EF5350"
+                                            Background="{DynamicResource DangerBrush}"
                                             CornerRadius="7"
                                             Padding="4,1,4,1"
                                             Margin="5,0,0,0"
@@ -4485,7 +4485,11 @@
                             The static children below are a design-time fallback and are cleared and
                             rebuilt from the persisted RailLayout on startup.
                         -->
-                        <StackPanel x:Name="RailItemsHost" Grid.Row="1" HorizontalAlignment="Center">
+                        <ScrollViewer Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Padding="0,0,0,4">
+                        <StackPanel x:Name="RailItemsHost" HorizontalAlignment="Center">
                             <Grid>
                                 <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource DevicesTab}" AutomationProperties.HelpText="{DynamicResource UiMonitorAndControlPairedSmartDevices}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
                                 <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
@@ -4565,6 +4569,7 @@
                                 </Popup>
                             </Grid>
                         </StackPanel>
+                        </ScrollViewer>
 
                         <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
                             <!--
@@ -4592,7 +4597,7 @@
                                         IsHitTestVisible="False"
                                         HorizontalAlignment="Right" VerticalAlignment="Top"
                                         Margin="0,2,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                        Background="#FFE5484D" Padding="3,0">
+                                        Background="{DynamicResource DangerBrush}" Padding="3,0">
                                     <TextBlock x:Name="RailSocialBadgeText" Foreground="White" FontSize="9"
                                                FontWeight="Bold" HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
@@ -4616,7 +4621,7 @@
                                         IsHitTestVisible="False"
                                         HorizontalAlignment="Right" VerticalAlignment="Top"
                                         Margin="0,2,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                        Background="#FFE5484D" Padding="3,0">
+                                        Background="{DynamicResource DangerBrush}" Padding="3,0">
                                     <TextBlock x:Name="RailTicketsBadgeText" Foreground="White" FontSize="9"
                                                FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
@@ -4699,7 +4704,7 @@
                                     <!-- Search input -->
                                     <Border Grid.Column="0"
                                             Background="#14171C"
-                                            BorderBrush="#25FFFFFF"
+                                            BorderBrush="{DynamicResource WhiteA25}"
                                             BorderThickness="1"
                                             CornerRadius="6"
                                             Height="32"
@@ -5102,7 +5107,7 @@
                                                         Text="{Binding Value, ElementName=SliderLayerGridOpacity, StringFormat={}{0:0%}}" />
                                                 </Grid>
 
-                                                <Border Margin="0,4,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
+                                                <Border Margin="0,4,0,12" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0" />
                                                 <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Monuments}" />
                                                 <Grid Margin="0,0,0,10">
                                                     <Grid.ColumnDefinitions>
@@ -5171,7 +5176,7 @@
                                                     </StackPanel>
                                                 </ui:Button>
 
-                                                <Border Margin="0,14,0,12" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0" />
+                                                <Border Margin="0,14,0,12" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0" />
                                                 <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Shops}" />
                                                 <CheckBox
                                                     x:Name="ChkLayerAutoLoadShops"
@@ -5297,7 +5302,7 @@
                                          <Border
                                              Grid.Column="1"
                                              Width="1"
-                                             Background="#20FFFFFF"
+                                             Background="{DynamicResource WhiteA20}"
                                              Margin="0,4"
                                              VerticalAlignment="Stretch" />
 
@@ -5385,7 +5390,7 @@
                                                                                   </Grid>
                                                                                  
                                                                                  <!-- Horizontal Separator -->
-                                                                                 <Border BorderBrush="#15FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10" />
+                                                                                 <Border BorderBrush="{DynamicResource WhiteA15}" BorderThickness="0,0,0,1" Margin="0,0,0,10" />
 
                                                                                  <!--
                                                                                      Which in-game channel the alerts go to, sitting on the
@@ -5433,7 +5438,7 @@
                                                                                  <!-- Categorized Items Host -->
                                                                                  <StackPanel IsItemsHost="True" Orientation="Horizontal" />
 
-                                                                                 <Border BorderBrush="#15FFFFFF" BorderThickness="0,1,0,0" Margin="0,10,0,10" />
+                                                                                 <Border BorderBrush="{DynamicResource WhiteA15}" BorderThickness="0,1,0,0" Margin="0,10,0,10" />
 
                                                                                  <!-- Full-width generic alarm fallback settings -->
                                                                                  <Grid Margin="8,0,8,2">
@@ -5577,7 +5582,7 @@
                                                                      <Setter.Value>
                                                                          <ControlTemplate TargetType="MenuItem">
                                                                              <Border
-                                                                                 BorderBrush="#15FFFFFF"
+                                                                                 BorderBrush="{DynamicResource WhiteA15}"
                                                                                  BorderThickness="{TemplateBinding BorderThickness}"
                                                                                  Margin="0,0,12,0"
                                                                                  Padding="0,0,12,0">
@@ -5691,7 +5696,7 @@
                                                                      <Setter.Value>
                                                                          <ControlTemplate TargetType="MenuItem">
                                                                              <Border
-                                                                                 BorderBrush="#15FFFFFF"
+                                                                                 BorderBrush="{DynamicResource WhiteA15}"
                                                                                  BorderThickness="{TemplateBinding BorderThickness}"
                                                                                  Margin="0,0,12,0"
                                                                                  Padding="0,0,12,0">
@@ -5830,7 +5835,7 @@
                                                                       <Setter.Value>
                                                                           <ControlTemplate TargetType="MenuItem">
                                                                               <Border
-                                                                                 BorderBrush="#15FFFFFF"
+                                                                                 BorderBrush="{DynamicResource WhiteA15}"
                                                                                  BorderThickness="{TemplateBinding BorderThickness}"
                                                                                  Margin="0"
                                                                                  Padding="0">
@@ -5881,7 +5886,7 @@
                                                                      <Setter.Value>
                                                                          <ControlTemplate TargetType="MenuItem">
                                                                              <Border
-                                                                                 BorderBrush="#15FFFFFF"
+                                                                                 BorderBrush="{DynamicResource WhiteA15}"
                                                                                  BorderThickness="{TemplateBinding BorderThickness}"
                                                                                  Margin="0"
                                                                                  Padding="0">
@@ -5944,7 +5949,7 @@
                                                              </MenuItem.Header>
                                                          </MenuItem>
 
-                                                         <Separator Background="#20FFFFFF" Margin="8,8,8,4" />
+                                                         <Separator Background="{DynamicResource WhiteA20}" Margin="8,8,8,4" />
                                                          
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
@@ -5989,13 +5994,13 @@
                                                                              x:Name="TxtChatAlertWebhook"
                                                                              Height="26"
                                                                              Padding="6,3"
-                                                                             Background="#1AFFFFFF"
+                                                                             Background="{DynamicResource WhiteA1A}"
                                                                              BorderBrush="#33FFFFFF"
                                                                              Foreground="White"
                                                                              ToolTip="{DynamicResource UiDiscordWebhookURL}"
                                                                              IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}"
                                                                              Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" Padding="4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
+                                                                         <ui:Button Grid.Column="1" x:Name="BtnClearChatAlertsWebhook" Margin="4,0,0,0" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearChatAlertsWebhook_Click" Appearance="Transparent" Foreground="{DynamicResource DangerBrush}" Padding="4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                                                                      </Grid>
                                                                      
                                                                      <TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,4,0,4" />
@@ -6132,6 +6137,9 @@
                                 BorderBrush="#3AFFFFFF"
                                 BorderThickness="1"
                                 CornerRadius="8">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.4" Color="Black" />
+                                </Border.Effect>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <Style TargetType="Button">
@@ -6187,7 +6195,7 @@
                                         BorderBrush="#557FA5B5"
                                         Foreground="White"
                                         Content="{DynamicResource UiText2D}" />
-                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource WhiteA20}" />
                                     <Button
                                         x:Name="BtnOpen3DMap"
                                         tutorials:Tutorial.TargetId="Map.Open3D"
@@ -6197,7 +6205,7 @@
                                         MouseLeave="BtnOpen3DMap_MouseLeave"
                                         AutomationProperties.Name="{DynamicResource UiShowLocal3DMap}"
                                         Content="3D" />
-                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="#20FFFFFF" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource WhiteA20}" />
                                     <Button
                                         x:Name="BtnMiniMap"
                                         Width="46"
@@ -6232,7 +6240,7 @@
                                     Stretch="Uniform" />
                             </ui:Button>
 
-                            <Border Width="1" Height="18" Margin="8,0,4,0" VerticalAlignment="Center" Background="#28FFFFFF" />
+                            <Border Width="1" Height="18" Margin="8,0,4,0" VerticalAlignment="Center" Background="{DynamicResource CardBorder}" />
 
                             <ui:Button
                                 x:Name="BtnCrosshair"
@@ -6772,12 +6780,12 @@
                                                 <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <StackPanel Grid.Column="2" Margin="16,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="#8D98A8" Symbol="People20" />
+                                                    <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="{DynamicResource TextMutedBrush}" Symbol="People20" />
                                                     <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerPlayers}" />
                                                 </StackPanel>
                                                 <Grid Grid.Column="3" Width="18" Margin="8,0,0,0">
-                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="#8D98A8" Symbol="ChevronRight20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="#8D98A8" Symbol="ChevronDown20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}" />
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" Symbol="ChevronRight20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" Symbol="ChevronDown20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}" />
                                                 </Grid>
                                             </Grid>
                                         </CheckBox>
@@ -6792,12 +6800,12 @@
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="#8D98A8" Symbol="Clock20" />
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextMutedBrush}" Symbol="Clock20" />
                                                             <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="#AAB4C2" Text="{Binding TimeUntilNextPhase}" />
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="1" Margin="14,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="#8D98A8" Symbol="Hourglass20" />
-                                                            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="#8D98A8" Text="{DynamicResource Queue}" />
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextMutedBrush}" Symbol="Hourglass20" />
+                                                            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Text="{DynamicResource Queue}" />
                                                             <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" FontSize="11" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerQueue}" />
                                                         </StackPanel>
                                                         <ui:Button
@@ -6880,7 +6888,7 @@
                                             Click="BtnRefetchRustMaps_Click"
                                             ToolTip="{DynamicResource UiForceRefetchMap}"
                                             VerticalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="ArrowCounterclockwise20" FontSize="11" Foreground="#8D98A8" />
+                                            <ui:SymbolIcon Symbol="ArrowCounterclockwise20" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
                                         </ui:Button>
                                         </Grid>
                                         <ui:Button
@@ -6921,7 +6929,7 @@
 
                                         <!-- Heatmap Button -->
                                         <Grid Margin="0,2,0,0">
-                                            <Border x:Name="HeatmapActiveGlow" Background="#FF8A00" Opacity="0.18" CornerRadius="4" Visibility="Collapsed" />
+                                            <Border x:Name="HeatmapActiveGlow" Background="{DynamicResource WarnOrangeBrush}" Opacity="0.18" CornerRadius="4" Visibility="Collapsed" />
                                             <ui:Button
                                                 x:Name="BtnToggleHeatmap"
                                                 tutorials:Tutorial.TargetId="Map.Heatmaps"
@@ -7031,7 +7039,7 @@
                                                                          <Border Background="Transparent" />
 
                                                                          <!-- Hover glow layer -->
-                                                                        <Border x:Name="HoverGlow" CornerRadius="8" Background="#FF8A00" Opacity="0" IsHitTestVisible="False" />
+                                                                        <Border x:Name="HoverGlow" CornerRadius="8" Background="{DynamicResource WarnOrangeBrush}" Opacity="0" IsHitTestVisible="False" />
 
                                                                          <!-- Icon content (no label) -->
                                                                         <Border CornerRadius="8" Padding="0">
@@ -7044,11 +7052,11 @@
                                                                         </Border>
 
                                                                         <!-- Selection indicator ring -->
-                                                                        <Border x:Name="SelectedRing" CornerRadius="8" BorderThickness="2" BorderBrush="#FF8A00"
+                                                                        <Border x:Name="SelectedRing" CornerRadius="8" BorderThickness="2" BorderBrush="{DynamicResource WarnOrangeBrush}"
                                                                                 Opacity="0" IsHitTestVisible="False" />
                                                                         <!-- Checkmark badge -->
                                                                         <Border x:Name="CheckBadge" VerticalAlignment="Top" HorizontalAlignment="Right"
-                                                                                Width="14" Height="14" CornerRadius="7" Background="#FF8A00"
+                                                                                Width="14" Height="14" CornerRadius="7" Background="{DynamicResource WarnOrangeBrush}"
                                                                                 Margin="0,-3,-3,0" IsHitTestVisible="False" Opacity="0">
                                                                             <TextBlock Text="✓" FontSize="9" Foreground="White"
                                                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -7141,7 +7149,7 @@
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Column="0" Text="◉" FontSize="14" Foreground="#FF8A00" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                            <TextBlock Grid.Column="0" Text="◉" FontSize="14" Foreground="{DynamicResource WarnOrangeBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                             <StackPanel Grid.Column="1">
                                                                 <TextBlock Text="{DynamicResource UiProceduralHeatmaps}" FontSize="14" FontWeight="Bold" Foreground="#F2F2F2" />
                                                                 <TextBlock Text="{DynamicResource UiSelectALayerToViewSpawnDensity}" FontSize="10" Foreground="#9AA4B6" Margin="0,1,0,0" />
@@ -7159,8 +7167,8 @@
                                                         <ui:Button Grid.Column="1" Padding="8,6" Appearance="Secondary" Tag="clear"
                                                                    Click="BtnHeatmapIcon_Click" Height="30" VerticalAlignment="Top">
                                                             <StackPanel Orientation="Horizontal">
-                                                                <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="#FF8A00" Margin="0,0,4,0" />
-                                                                <TextBlock Text="{DynamicResource Clear}" FontSize="11" FontWeight="SemiBold" Foreground="#FF8A00" />
+                                                                <ui:SymbolIcon Symbol="Dismiss20" FontSize="12" Foreground="{DynamicResource WarnOrangeBrush}" Margin="0,0,4,0" />
+                                                                <TextBlock Text="{DynamicResource Clear}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource WarnOrangeBrush}" />
                                                             </StackPanel>
                                                         </ui:Button>
                                                     </Grid>
@@ -7419,7 +7427,7 @@
                                     Margin="0,6,0,0"
                                     Padding="6"
                                     Background="#AA16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    BorderBrush="{DynamicResource WhiteA40}"
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
@@ -7458,7 +7466,7 @@
                                 Padding="0"
                                 Height="38"
                                 Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
+                                BorderBrush="{DynamicResource WhiteA40}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top">
                                 <Grid>
@@ -7501,7 +7509,7 @@
                                                     VerticalAlignment="Center"
                                                     FontFamily="Segoe MDL2 Assets"
                                                     FontSize="14"
-                                                    Foreground="#8D98A8"
+                                                    Foreground="{DynamicResource TextMutedBrush}"
                                                     Text="&#xE77B;">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
@@ -7558,7 +7566,7 @@
                                                 VerticalAlignment="Center"
                                                 FontFamily="Segoe MDL2 Assets"
                                                 FontSize="10"
-                                                Foreground="#8D98A8"
+                                                Foreground="{DynamicResource TextMutedBrush}"
                                                 Text="&#xE70D;" />
                                         </StackPanel>
                                         <ui:Button.ContextMenu>
@@ -7576,7 +7584,7 @@
                                 Padding="0"
                                 Height="38"
                                 Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
+                                BorderBrush="{DynamicResource WhiteA40}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top">
                                 <Grid>
@@ -7592,7 +7600,7 @@
                                             <TextBlock
                                                 FontFamily="Segoe MDL2 Assets"
                                                 FontSize="14"
-                                                Foreground="#8D98A8"
+                                                Foreground="{DynamicResource TextMutedBrush}"
                                                 Text="&#xE707;" 
                                                 VerticalAlignment="Center"/>
                                             <TextBlock
@@ -7613,7 +7621,7 @@
                                 Padding="0"
                                 Height="38"
                                 Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
+                                BorderBrush="{DynamicResource WhiteA40}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top"
                                 Visibility="Collapsed">
@@ -7657,7 +7665,7 @@
                                 Margin="0,10,0,0"
                                 Padding="8"
                                 Background="#AA16181C"
-                                BorderBrush="#40FFFFFF"
+                                BorderBrush="{DynamicResource WhiteA40}"
                                 BorderThickness="1"
                                 CornerRadius="12"
                                 Appearance="Transparent"
@@ -7667,7 +7675,7 @@
                             </ui:Button>
                             
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
-                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#AA16181C" BorderBrush="#40FFFFFF" BorderThickness="1">
+                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#AA16181C" BorderBrush="{DynamicResource WhiteA40}" BorderThickness="1">
                                     <ui:Card.Resources>
                                         <Style x:Key="WpfUiToggleButtonStyle" TargetType="ToggleButton">
                                             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
@@ -7871,7 +7879,7 @@
                             Margin="15,70,0,15"
                             Panel.ZIndex="1050"
                             Background="#E5101217"
-                            BorderBrush="#40FFFFFF"
+                            BorderBrush="{DynamicResource WhiteA40}"
                             BorderThickness="0"
                             CornerRadius="12"
                             Visibility="Collapsed">
@@ -7908,7 +7916,7 @@
                                         Style="{StaticResource GhostButton}"
                                         Click="BtnToggleMonumentsPanel_Click"
                                         Content="&#x2715;"
-                                        Foreground="#8D98A8"
+                                        Foreground="{DynamicResource TextMutedBrush}"
                                         FontSize="12"/>
                                 </Grid>
                                 
@@ -7986,7 +7994,7 @@
                             VerticalAlignment="Top"
                             Panel.ZIndex="1100"
                             Background="#1A1D21"
-                            BorderBrush="#40FFFFFF"
+                            BorderBrush="{DynamicResource WhiteA40}"
                             BorderThickness="1"
                             CornerRadius="10"
                             Visibility="Collapsed"
@@ -8037,7 +8045,7 @@
                             VerticalAlignment="Center"
                             Panel.ZIndex="1200"
                             Background="#1A1D21"
-                            BorderBrush="#40FFFFFF"
+                            BorderBrush="{DynamicResource WhiteA40}"
                             BorderThickness="1"
                             CornerRadius="14"
                             Visibility="Collapsed">
@@ -8106,7 +8114,7 @@
                                 </Grid>
 
                                 <!-- Bottom Note Area -->
-                                <Border Grid.Row="2" Margin="0,12,0,0" Padding="10" Background="#121417" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="8">
+                                <Border Grid.Row="2" Margin="0,12,0,0" Padding="10" Background="#121417" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="1" CornerRadius="8">
                                     <ScrollViewer MaxHeight="80" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                         <TextBlock x:Name="TxtBaseGalleryNote" Foreground="White" FontSize="13" TextWrapping="Wrap" LineHeight="18"/>
                                     </ScrollViewer>
@@ -8135,7 +8143,7 @@
                                     Panel.ZIndex="5"
                                     Height="540"
                                     Background="#D916181C"
-                                    BorderBrush="#25FFFFFF"
+                                    BorderBrush="{DynamicResource WhiteA25}"
                                     BorderThickness="1"
                                     CornerRadius="12"
                                     RenderTransformOrigin="0.5,1"
@@ -8159,7 +8167,7 @@
                                         </Grid.RowDefinitions>
 
                                         <!--  Header / Drag / Close Area  -->
-                                        <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="#15FFFFFF">
+                                        <Border Grid.Row="0" Background="#401E2126" CornerRadius="12,12,0,0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource WhiteA15}">
                                             <Grid>
                                                 <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
                                                     <TextBlock VerticalAlignment="Center" FontSize="11" Text="&#x1F6D2; " />
@@ -8237,7 +8245,7 @@
                                     Height="26"
                                     HorizontalAlignment="Right"
                                     Background="#16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    BorderBrush="{DynamicResource WhiteA40}"
                                     BorderThickness="1,1,1,0"
                                     CornerRadius="8,8,0,0">
                                     <Button
@@ -8641,7 +8649,7 @@
                                                                     <!-- Top-Right Star Badge for Premium Members -->
                                                                     <Border Width="11" Height="11"
                                                                             HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                                            Background="#FFD700"
+                                                                            Background="{DynamicResource GoldBrush}"
                                                                             BorderBrush="#FFE58F"
                                                                             BorderThickness="1"
                                                                             CornerRadius="5.5"
@@ -8658,7 +8666,7 @@
                                                                 <StackPanel Grid.Column="1" x:Name="BubbleStack" VerticalAlignment="Top">
                                                                     <!-- Metadata Header: Sender Name & Time -->
                                                                     <StackPanel x:Name="MetaStack" Orientation="Horizontal" Margin="4,0,4,3">
-                                                                        <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="#60CDFF" Text="{Binding Author}" />
+                                                                        <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource Accent}" Text="{Binding Author}" />
                                                                         <!-- Bot / Command badge -->
                                                                         <Border x:Name="BotBadge" Visibility="{Binding IsBotOrCommand, Converter={StaticResource BoolToVisibility}}" Background="#254660" BorderBrush="#3B6B91" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
                                                                             <TextBlock Text="BOT" FontSize="8.5" FontWeight="Bold" Foreground="#FF3FD7FF" />
@@ -8696,7 +8704,7 @@
                                                                     <!-- Top-Right Star Badge for Premium Members -->
                                                                     <Border Width="11" Height="11"
                                                                             HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                                            Background="#FFD700"
+                                                                            Background="{DynamicResource GoldBrush}"
                                                                             BorderBrush="#FFE58F"
                                                                             BorderThickness="1"
                                                                             CornerRadius="5.5"
@@ -8916,7 +8924,7 @@
                                     Height="26"
                                     HorizontalAlignment="Left"
                                     Background="#16181C"
-                                    BorderBrush="#40FFFFFF"
+                                    BorderBrush="{DynamicResource WhiteA40}"
                                     BorderThickness="1,1,1,0"
                                     CornerRadius="8,8,0,0">
                                     <Button
@@ -9042,7 +9050,7 @@
                                         <Path Fill="White" Data="M5,3 L5,18.5 L9.2,14.3 L12,20.5 L14.3,19.4 L11.4,13.4 L17,13.4 Z" />
                                     </Button>
 
-                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="{DynamicResource WhiteA40}" VerticalAlignment="Center" />
 
                                     <!--  Pen — 2  -->
                                     <Button x:Name="ToolDrawButton" Tag="2" tutorials:Tutorial.TargetId="Map.Drawing" Width="32" Height="32" Margin="2,0" Click="ToolDrawButton_Click" ToolTip="{DynamicResource DrawToolTip}">
@@ -9089,7 +9097,7 @@
                                         <Image Width="19" Height="19" Source="pack://application:,,,/Assets/icons/eraser.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
 
-                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="{DynamicResource WhiteA40}" VerticalAlignment="Center" />
 
                                     <!--  Undo / Redo (Ctrl+Z / Ctrl+Y)  -->
                                     <Button x:Name="BtnUndoOverlay" Width="32" Height="32" Margin="2,0" Click="BtnUndo_Click" ToolTip="Undo  ·  Ctrl+Z">
@@ -9099,7 +9107,7 @@
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7A6;" FontSize="15" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
 
-                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="{DynamicResource WhiteA40}" VerticalAlignment="Center" />
 
                                     <!--  Layers  -->
                                     <Button
@@ -9173,7 +9181,7 @@
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72C;" FontSize="15" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
 
-                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="#40FFFFFF" VerticalAlignment="Center" />
+                                    <Rectangle Width="1" Height="20" Margin="6,0" Fill="{DynamicResource WhiteA40}" VerticalAlignment="Center" />
 
                                     <!--  Close the drawing tools (also restores the map control bar)  -->
                                     <Button
@@ -9205,13 +9213,13 @@
                                         Visibility="Collapsed"
                                         Click="BtnAdminPanel_Click"
                                         ToolTip="{DynamicResource UiAdminPanel}">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA18;" FontSize="15" Foreground="#60CDFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA18;" FontSize="15" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
                                 </StackPanel>
 
                                 <!-- Active-tool identity: ties the context bar together and teaches the shortcut -->
                                 <Border x:Name="ToolContextBar" Visibility="Collapsed" Margin="0,8,0,0" Padding="8,3" HorizontalAlignment="Left" Background="#1A60CDFF" CornerRadius="5">
-                                    <TextBlock x:Name="ToolContextLabel" FontSize="10.5" FontWeight="SemiBold" Foreground="#60CDFF" />
+                                    <TextBlock x:Name="ToolContextLabel" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                 </Border>
 
                                 <!-- First-run hint: the core "you can still navigate" message -->
@@ -9297,7 +9305,7 @@
                                         <TextBlock Text="{Binding ElementName=SliderDrawThickness, Path=Value, StringFormat={}{0:F0}px}" Width="35" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
-                                        <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="DrawColorButton_Click" Tag="#EF5350"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="{DynamicResource DangerBrush}" Click="DrawColorButton_Click" Tag="#EF5350"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="DrawColorButton_Click" Tag="#66BB6A"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="DrawColorButton_Click" Tag="#42A5F5"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="DrawColorButton_Click" Tag="#FFCA28"/>
@@ -9313,7 +9321,7 @@
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#FFFFFF" Click="TextColorButton_Click" Tag="#FFFFFF"/>
-                                        <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="TextColorButton_Click" Tag="#EF5350"/>
+                                        <Button Style="{StaticResource ColorCircleButton}" Background="{DynamicResource DangerBrush}" Click="TextColorButton_Click" Tag="#EF5350"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="TextColorButton_Click" Tag="#66BB6A"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="TextColorButton_Click" Tag="#42A5F5"/>
                                         <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="TextColorButton_Click" Tag="#FFCA28"/>
@@ -9380,14 +9388,14 @@
 
                                     <!-- Selection editing (Select tool, an element is clicked) -->
                                     <StackPanel x:Name="SelectionOptionsPanel" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock Text="Selected" VerticalAlignment="Center" Foreground="#60CDFF" FontSize="11" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                        <TextBlock Text="Selected" VerticalAlignment="Center" Foreground="{DynamicResource Accent}" FontSize="11" FontWeight="SemiBold" Margin="0,0,10,0"/>
                                         <TextBlock x:Name="SelectionSizeLabel" Text="Size" VerticalAlignment="Center" Foreground="Gray" FontSize="11" Margin="0,0,6,0"/>
                                         <Slider x:Name="SelectionSizeSlider" Width="100" Minimum="1" Maximum="64" VerticalAlignment="Center" TickFrequency="1" IsSnapToTickEnabled="True"
                                                 ValueChanged="SelectionSizeSlider_ValueChanged" GotMouseCapture="SelectionSizeSlider_GotMouseCapture" LostMouseCapture="SelectionSizeSlider_LostMouseCapture"/>
                                         <TextBlock Text="{Binding ElementName=SelectionSizeSlider, Path=Value, StringFormat={}{0:F0}}" Width="26" VerticalAlignment="Center" Foreground="White" FontSize="11" Margin="4,0,10,0"/>
                                         <Rectangle Width="1" Height="14" Fill="#30FFFFFF" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         <StackPanel x:Name="SelectionColorRow" Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Button Style="{StaticResource ColorCircleButton}" Background="#EF5350" Click="SelectionColorButton_Click" Tag="#EF5350"/>
+                                            <Button Style="{StaticResource ColorCircleButton}" Background="{DynamicResource DangerBrush}" Click="SelectionColorButton_Click" Tag="#EF5350"/>
                                             <Button Style="{StaticResource ColorCircleButton}" Background="#66BB6A" Click="SelectionColorButton_Click" Tag="#66BB6A"/>
                                             <Button Style="{StaticResource ColorCircleButton}" Background="#42A5F5" Click="SelectionColorButton_Click" Tag="#42A5F5"/>
                                             <Button Style="{StaticResource ColorCircleButton}" Background="#FFCA28" Click="SelectionColorButton_Click" Tag="#FFCA28"/>
@@ -9474,7 +9482,7 @@
 
                                 <TextBlock x:Name="RoutesEmptyNotice" Grid.Row="0" Visibility="Collapsed"
                                            Margin="0,30,0,0" Text="{DynamicResource RoutesEmpty}"
-                                           Foreground="#FF94A0B3" FontSize="11" TextWrapping="Wrap" />
+                                           Foreground="{DynamicResource TextMutedBrush}" FontSize="11" TextWrapping="Wrap" />
 
                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled">
@@ -9497,7 +9505,7 @@
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                             <TextBlock Text="{Binding Name}" Foreground="#FFF4F6FA" FontSize="12"
                                                                        FontWeight="{Binding NameWeight}" TextTrimming="CharacterEllipsis" />
-                                                            <TextBlock Text="{Binding Measurement}" Foreground="#FF94A0B3"
+                                                            <TextBlock Text="{Binding Measurement}" Foreground="{DynamicResource TextMutedBrush}"
                                                                        FontSize="10.5" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
                                                         </StackPanel>
 
@@ -9523,15 +9531,15 @@
 
                                 <!--  Naming a new route. Inline, because a dialog for one field is a dialog too many.  -->
                                 <StackPanel Grid.Row="2" x:Name="RouteNameRow" Visibility="Collapsed" Margin="0,8,0,0">
-                                    <TextBox x:Name="TxtRouteName" MaxLength="40" Background="#22FFFFFF"
+                                    <TextBox x:Name="TxtRouteName" MaxLength="40" Background="{DynamicResource WhiteA22}"
                                              Foreground="#FFF4F6FA" BorderBrush="#3AFFFFFF" BorderThickness="1"
                                              Padding="6,4" KeyDown="TxtRouteName_KeyDown" />
-                                    <TextBlock Text="{DynamicResource RoutesNameHint}" Foreground="#FF94A0B3"
+                                    <TextBlock Text="{DynamicResource RoutesNameHint}" Foreground="{DynamicResource TextMutedBrush}"
                                                FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="2" x:Name="RoutesDrawHint" Visibility="Collapsed" Margin="0,8,0,0"
-                                           Text="{DynamicResource RoutesDrawHint}" Foreground="#FF94A0B3"
+                                           Text="{DynamicResource RoutesDrawHint}" Foreground="{DynamicResource TextMutedBrush}"
                                            FontSize="10.5" TextWrapping="Wrap" />
                             </Grid>
                         </Border>
@@ -9656,7 +9664,7 @@
                                 <!--  Header  -->
                                 <Grid Margin="14,11,10,9">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="#60CDFF" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
                                         <TextBlock Margin="9,0,0,0" VerticalAlignment="Center" FontSize="13.5" FontWeight="SemiBold" Foreground="White" Text="Layers" />
                                     </StackPanel>
                                     <Button Style="{StaticResource LyrIconBtn}" HorizontalAlignment="Right" Click="CloseLayersPanel_Click" ToolTip="Close">
@@ -9668,7 +9676,7 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="13,0,13,9">
                                     <Button Style="{StaticResource LyrChip}" Margin="0,0,6,0" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="#60CDFF" VerticalAlignment="Center" />
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
                                             <TextBlock Margin="6,0,0,0" FontSize="11" FontWeight="SemiBold" Foreground="White" Text="Group" />
                                         </StackPanel>
                                     </Button>
@@ -9913,7 +9921,7 @@
                             Margin="0,-16,0,24"
                             FontSize="13"
                             FontWeight="SemiBold"
-                            Foreground="#FFFF4B4B"
+                            Foreground="{DynamicResource DangerBrush}"
                             Text="{Binding LoginOverlayMessage}"
                             TextAlignment="Center"
                             TextWrapping="Wrap"
@@ -10040,7 +10048,7 @@
                                 Fill="#26FF4B4B" />
                             <ui:SymbolIcon
                                 FontSize="32"
-                                Foreground="#FFFF4B4B"
+                                Foreground="{DynamicResource DangerBrush}"
                                 Symbol="Delete24" />
                         </Grid>
 
@@ -10080,8 +10088,8 @@
                                 Padding="12"
                                 HorizontalAlignment="Stretch"
                                 Appearance="Primary"
-                                Background="#FFFF4B4B"
-                                BorderBrush="#FFFF4B4B"
+                                Background="{DynamicResource DangerBrush}"
+                                BorderBrush="{DynamicResource DangerBrush}"
                                 Click="BtnConfirmDelete_Click"
                                 Content="{DynamicResource DeleteAction}" />
                         </Grid>

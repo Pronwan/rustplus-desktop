@@ -42,7 +42,7 @@
                     <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="14" />
                     <ui:TextBlock Text="{DynamicResource Settings}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                 </StackPanel>
-                <ui:Button x:Name="BtnCloseSettings" Appearance="Transparent" Content="✕" Width="26" Height="26" Padding="0" FontSize="12" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnCloseSettings_Click" />
+                <ui:Button x:Name="BtnCloseSettings" Appearance="Transparent" Icon="{ui:SymbolIcon Dismiss24}" Width="26" Height="26" Padding="0" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnCloseSettings_Click" />
             </Grid>
         </Border>
 
@@ -868,7 +868,7 @@
                     <StackPanel Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                             <ui:TextBlock Text="{DynamicResource UiDiscordWebhookChatAlerts}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="#FF5555" BorderThickness="0" Padding="4,0" Margin="0,0,4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
+                            <ui:Button x:Name="BtnClearSettingsWebhook" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnClearSettingsWebhook_Click" Appearance="Transparent" Foreground="{DynamicResource DangerBrush}" BorderThickness="0" Padding="4,0" Margin="0,0,4,0" ToolTip="{DynamicResource UiClearWebhookURL}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" />
                             <ui:TextBox Width="130" Margin="0,0,4,0" Height="24" Padding="4,2" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" Text="{Binding Selected.DiscordWebhookChatAlertsUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TxtSettingsDiscordWebhook_TextChanged" />
                             <ui:ToggleSwitch Content="{DynamicResource UiTTS}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsTts, Mode=TwoWay}" Margin="4,0,0,0" Foreground="{DynamicResource TextPrimary}" ToolTip="{DynamicResource UiTextToSpeechForWebhook}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center" />
                             <ui:ToggleSwitch Content="{DynamicResource UiDiscordWebhookExclusive}" IsChecked="{Binding Selected.DiscordWebhookChatAlertsExclusive, Mode=TwoWay}" Margin="8,0,0,0" Foreground="{DynamicResource TextPrimary}" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}" VerticalAlignment="Center">
@@ -913,7 +913,7 @@
 
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                     <ui:Button x:Name="BtnSyncFcm" Content="{DynamicResource UiSyncCloudConnection}" Icon="{ui:SymbolIcon Symbol=CloudArrowUp24}" Click="BtnSyncFcm_Click" Margin="0,0,8,0" />
-                                    <ui:Button x:Name="BtnRevokeFcm" Content="{DynamicResource UiRevokeAccess}" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnRevokeFcm_Click" Appearance="Secondary" Foreground="#FF5555" />
+                                    <ui:Button x:Name="BtnRevokeFcm" Content="{DynamicResource UiRevokeAccess}" Icon="{ui:SymbolIcon Symbol=Delete24}" Click="BtnRevokeFcm_Click" Appearance="Secondary" Foreground="{DynamicResource DangerBrush}" />
                                 </StackPanel>
 
                                 <ui:TextBlock Text="{DynamicResource UiTelegramCallViaCallMeBot}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Margin="0,8,0,4" />
@@ -1083,7 +1083,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <ui:Button x:Name="BtnLinkAlexa" Grid.Column="0" Content="{DynamicResource UiLinkSelectedServer}" Icon="{ui:SymbolIcon Symbol=Link24}" Appearance="Primary" HorizontalAlignment="Stretch" Height="36" Margin="0,0,4,0" Click="BtnLinkAlexa_Click" />
-                                    <ui:Button x:Name="BtnRevokeAlexa" Grid.Column="1" Content="{DynamicResource UiRevokeAccess}" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeAlexa_Click" />
+                                    <ui:Button x:Name="BtnRevokeAlexa" Grid.Column="1" Content="{DynamicResource UiRevokeAccess}" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeAlexa_Click" />
                                 </Grid>
                             </StackPanel>
                         </ui:CardExpander>
@@ -1116,7 +1116,7 @@
                                 <ui:TextBox x:Name="TxtHaSnippet" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" MaxHeight="180" Padding="6,4" Margin="0,0,0,8" FontFamily="Consolas" FontSize="11" />
                                 <ui:Button x:Name="BtnCopyHaSnippet" Content="Copy Snippet" Icon="{ui:SymbolIcon Symbol=Copy24}" HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,16" Click="BtnCopyHaSnippet_Click" />
 
-                                <ui:Button x:Name="BtnRevokeHa" Content="Revoke Token" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Click="BtnRevokeHa_Click" />
+                                <ui:Button x:Name="BtnRevokeHa" Content="Revoke Token" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Stretch" Height="36" Click="BtnRevokeHa_Click" />
                             </StackPanel>
                         </ui:CardExpander>
                         <ui:CardExpander Header="Google Home" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
@@ -1151,7 +1151,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <ui:Button x:Name="BtnLinkGoogle" Grid.Column="0" Content="Link Selected Server" Icon="{ui:SymbolIcon Symbol=Link24}" Appearance="Primary" HorizontalAlignment="Stretch" Height="36" Margin="0,0,4,0" Click="BtnLinkGoogle_Click" />
-                                    <ui:Button x:Name="BtnRevokeGoogle" Grid.Column="1" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="#FF5555" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeGoogle_Click" />
+                                    <ui:Button x:Name="BtnRevokeGoogle" Grid.Column="1" Content="Revoke Access" Icon="{ui:SymbolIcon Symbol=Delete24}" Appearance="Secondary" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Stretch" Height="36" Margin="4,0,0,0" Click="BtnRevokeGoogle_Click" />
                                 </Grid>
                             </StackPanel>
                         </ui:CardExpander>

@@ -4,7 +4,7 @@ using System.Windows.Navigation;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class CloudFeaturesWindow : Window
+    public partial class CloudFeaturesWindow : Wpf.Ui.Controls.FluentWindow
     {
         public CloudFeaturesWindow()
         {

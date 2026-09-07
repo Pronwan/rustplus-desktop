@@ -1,4 +1,4 @@
-<Window x:Class="RustPlusDesk.Views.Windows.CloudAccountWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.CloudAccountWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -8,10 +8,12 @@
         MinHeight="620"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
-        Background="#0F1215"
         Foreground="White"
-        FontFamily="Segoe UI Variable Display, Segoe UI">
-    <Window.Resources>
+        FontFamily="Segoe UI Variable Display, Segoe UI"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <ui:FluentWindow.Resources>
         <Style x:Key="Card" TargetType="Border">
             <Setter Property="Margin" Value="0,0,0,12" />
             <Setter Property="Padding" Value="16" />
@@ -44,16 +46,24 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderBrush" Value="#36FFFFFF" />
         </Style>
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource CloudAccountTitle}" ShowMaximize="False" ShowMinimize="False"/>
+
+    <Grid Grid.Row="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Padding="22,18" Background="#15191E" BorderBrush="#20FFFFFF" BorderThickness="0,0,0,1">
+        <Border Padding="22,18" Background="#15191E" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -195,11 +205,12 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Padding="22,14" Background="#15191E" BorderBrush="#20FFFFFF" BorderThickness="0,1,0,0">
+        <Border Grid.Row="2" Padding="22,14" Background="#15191E" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0">
             <Grid>
                 <ui:Button x:Name="BtnLogout" HorizontalAlignment="Left" MinWidth="92" Height="32" Content="{DynamicResource UiLogOut}" Appearance="Secondary" Click="BtnLogout_Click" />
                 <ui:Button HorizontalAlignment="Right" MinWidth="92" Height="32" Content="{DynamicResource Close}" Appearance="Primary" Click="BtnClose_Click" />
             </Grid>
         </Border>
     </Grid>
-</Window>
+    </Grid>
+</ui:FluentWindow>

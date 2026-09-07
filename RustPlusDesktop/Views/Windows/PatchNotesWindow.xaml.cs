@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace RustPlusDesk.Views
 {
-    public partial class PatchNotesWindow : Window
+    public partial class PatchNotesWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string CurrentVersionFormatted => $"v{RustPlusDesk.Helpers.VersionHelper.GetClientVersion()}";
 

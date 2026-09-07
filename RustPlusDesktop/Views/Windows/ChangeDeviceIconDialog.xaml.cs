@@ -8,7 +8,7 @@ using ShopSearchCtrl = RustPlusDesk.Views.ShopSearchControl;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class ChangeDeviceIconDialog : Window
+    public partial class ChangeDeviceIconDialog : Wpf.Ui.Controls.FluentWindow
     {
         public int? SelectedIconId { get; private set; }
         public string? SelectedIconShortName { get; private set; }

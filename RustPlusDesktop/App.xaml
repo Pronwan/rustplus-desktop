@@ -14,17 +14,98 @@
             <!-- Converters -->
             <converters:TimerRemainingConverter x:Key="TimerRemainingConverter" />
 
-        <!-- WinUI 3 Aligned Palette -->
-        <SolidColorBrush x:Key="AppBg"         Color="#1A1D21"/>
-        <SolidColorBrush x:Key="Surface"       Color="#202428"/>
-        <SolidColorBrush x:Key="SurfaceAlt"    Color="#282C34"/>
-        <SolidColorBrush x:Key="CardBorder"    Color="#30FFFFFF"/>
-        <SolidColorBrush x:Key="Accent"        Color="#60CDFF"/>
-        <SolidColorBrush x:Key="AccentDark"    Color="#003D6B"/>
+        <!-- ============================================================
+             DESIGN TOKENS - single source of truth (Fluent modernization, Phase 0)
+             Brand colors are defined once here as Color resources. The custom
+             token brushes below are backed by them, so a value changes in exactly
+             one place, and the *Color keys can also be reused in Color="" and
+             gradient-stop contexts where a brush cannot.
+             See docs/UI-Review-Fluent-Audit.md.
+             ============================================================ -->
+        <!-- Values reconciled with Views/MainWindow/SharedResources.xaml so the whole
+             app (dialogs, Fluent controls AND the main window) shares ONE palette. -->
+        <Color x:Key="AppBgColor">#0F1013</Color>
+        <Color x:Key="SurfaceColor">#181B1F</Color>
+        <Color x:Key="SurfaceAltColor">#1F2229</Color>
+        <Color x:Key="CardBorderColor">#28FFFFFF</Color>
+        <Color x:Key="AccentColor">#60CDFF</Color>
+        <Color x:Key="AccentDarkColor">#1A4D6B</Color>
+        <Color x:Key="TextPrimaryColor">#F0F3F7</Color>
+        <Color x:Key="TextSubtleColor">#8C96A8</Color>
 
-        <SolidColorBrush x:Key="TextPrimary"   Color="#F2F2F2"/>
-        <SolidColorBrush x:Key="TextSubtle"    Color="#9D9D9D"/>
+        <!-- Custom token brushes (values unchanged - now Color-backed) -->
+        <SolidColorBrush x:Key="AppBg"         Color="{StaticResource AppBgColor}"/>
+        <SolidColorBrush x:Key="Surface"       Color="{StaticResource SurfaceColor}"/>
+        <SolidColorBrush x:Key="SurfaceAlt"    Color="{StaticResource SurfaceAltColor}"/>
+        <SolidColorBrush x:Key="CardBorder"    Color="{StaticResource CardBorderColor}"/>
+        <SolidColorBrush x:Key="Accent"        Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="AccentDark"    Color="{StaticResource AccentDarkColor}"/>
+
+        <SolidColorBrush x:Key="TextPrimary"   Color="{StaticResource TextPrimaryColor}"/>
+        <SolidColorBrush x:Key="TextSubtle"    Color="{StaticResource TextSubtleColor}"/>
         <CornerRadius    x:Key="Radius">8</CornerRadius>
+
+        <!-- ============================================================
+             WPF-UI (Fluent) theme brush overrides.
+             These are direct Application resources and therefore win over the
+             merged ThemesDictionary for DynamicResource lookups, so Fluent
+             controls (ui:Card, ui:TextBlock, FluentWindow backdrops, etc.)
+             adopt the SAME brand surfaces/text as the custom-styled plain
+             controls - unifying the two design systems onto one palette.
+             Values equal the brand tokens above, so custom controls are
+             unchanged. Accent is intentionally left to the WPF-UI default.
+             ============================================================ -->
+        <SolidColorBrush x:Key="ApplicationBackgroundBrush"            Color="{StaticResource AppBgColor}"/>
+        <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush"   Color="{StaticResource SurfaceColor}"/>
+        <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="{StaticResource SurfaceAltColor}"/>
+        <SolidColorBrush x:Key="CardStrokeColorDefaultBrush"           Color="{StaticResource CardBorderColor}"/>
+        <SolidColorBrush x:Key="TextFillColorPrimaryBrush"             Color="{StaticResource TextPrimaryColor}"/>
+        <SolidColorBrush x:Key="TextFillColorSecondaryBrush"           Color="{StaticResource TextSubtleColor}"/>
+
+        <!-- ============================================================
+             SEMANTIC TOKENS (Phase 3). Values equal the most common existing
+             literals, so replacing those literals with these tokens is
+             net-zero visually while making status colors themeable and
+             consistent. New keys - no existing style shadows them.
+             ============================================================ -->
+        <Color x:Key="SuccessColor">#4CAF50</Color>
+        <Color x:Key="DangerColor">#EF5350</Color>
+        <Color x:Key="BrandOrangeColor">#E8611A</Color>
+        <Color x:Key="TextBodyColor">#D0D0D0</Color>
+        <SolidColorBrush x:Key="SuccessBrush"     Color="{StaticResource SuccessColor}"/>
+        <SolidColorBrush x:Key="DangerBrush"      Color="{StaticResource DangerColor}"/>
+        <SolidColorBrush x:Key="BrandOrangeBrush" Color="{StaticResource BrandOrangeColor}"/>
+        <SolidColorBrush x:Key="TextBodyBrush"    Color="{StaticResource TextBodyColor}"/>
+
+        <!-- Dark utility palette (values kept as-is; tokenized for reuse/theming) -->
+        <Color x:Key="SurfaceDeepColor">#0D1117</Color>
+        <Color x:Key="SurfacePanelColor">#161B22</Color>
+        <Color x:Key="BorderStrongColor">#30363D</Color>
+        <Color x:Key="TextMutedColor">#8B949E</Color>
+        <Color x:Key="TextBrightColor">#F0F6FC</Color>
+        <SolidColorBrush x:Key="SurfaceDeepBrush"  Color="{StaticResource SurfaceDeepColor}"/>
+        <SolidColorBrush x:Key="SurfacePanelBrush" Color="{StaticResource SurfacePanelColor}"/>
+        <SolidColorBrush x:Key="BorderStrongBrush" Color="{StaticResource BorderStrongColor}"/>
+        <SolidColorBrush x:Key="TextMutedBrush"    Color="{StaticResource TextMutedColor}"/>
+        <SolidColorBrush x:Key="TextBrightBrush"   Color="{StaticResource TextBrightColor}"/>
+
+        <!-- Translucent white overlay scale (hover/border tints). Values unchanged;
+             tokenized so the whole set is consistent and adjustable in one place. -->
+        <SolidColorBrush x:Key="WhiteA14" Color="#14FFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA15" Color="#15FFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA1A" Color="#1AFFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA20" Color="#20FFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA22" Color="#22FFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA25" Color="#25FFFFFF"/>
+        <SolidColorBrush x:Key="WhiteA40" Color="#40FFFFFF"/>
+
+        <!-- Additional semantic accents (values unchanged; tokenized) -->
+        <Color x:Key="InfoBlueColor">#58A6FF</Color>
+        <Color x:Key="GoldColor">#FFD700</Color>
+        <Color x:Key="WarnOrangeColor">#FF8A00</Color>
+        <SolidColorBrush x:Key="InfoBlueBrush"  Color="{StaticResource InfoBlueColor}"/>
+        <SolidColorBrush x:Key="GoldBrush"      Color="{StaticResource GoldColor}"/>
+        <SolidColorBrush x:Key="WarnOrangeBrush" Color="{StaticResource WarnOrangeColor}"/>
 
         <Style TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
@@ -674,8 +755,8 @@
             <Setter Property="Height" Value="32"/>
         </Style>
 
-        <!-- CheckBox dunkel -->
-        <Style TargetType="CheckBox">
+        <!-- CheckBox: inherit WPF-UI Fluent checkbox visuals, keep brand foreground -->
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
         </Style>
 

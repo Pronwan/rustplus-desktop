@@ -188,9 +188,9 @@
                 <Grid Grid.Row="6">
                     <Border HorizontalAlignment="Right"
                             CornerRadius="10"
-                            Background="#1AFFFFFF"
+                            Background="{DynamicResource WhiteA1A}"
                             BorderThickness="1"
-                            BorderBrush="#22FFFFFF"
+                            BorderBrush="{DynamicResource WhiteA22}"
                             Padding="10,3">
                         <TextBlock x:Name="VersionText"
                                    Text="v0.0.0"
@@ -207,7 +207,7 @@
 
             <!-- Hairline border overlay: drawn on top so its 1px stroke sits inside
                  the card without insetting the layers beneath it. -->
-            <Border BorderThickness="1" BorderBrush="#22FFFFFF"
+            <Border BorderThickness="1" BorderBrush="{DynamicResource WhiteA22}"
                     IsHitTestVisible="False" />
         </Grid>
     </Border>

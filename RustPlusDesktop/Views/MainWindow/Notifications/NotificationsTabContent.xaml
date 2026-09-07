@@ -77,7 +77,7 @@
             <StackPanel>
                 <!-- Row 1: Filters -->
                 <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8" tutorials:Tutorial.TargetId="Notifications.Filters">
-                    <TextBlock Text="{DynamicResource NotificationsFilter}" VerticalAlignment="Center" Foreground="#8C96A8" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource NotificationsFilter}" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" Margin="4,0,8,0" FontWeight="SemiBold"/>
                     <RadioButton x:Name="RadAll" Content="{DynamicResource NotificationsAll}" IsChecked="True" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadAlarms" Content="{DynamicResource NotificationsAlarms}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
                     <RadioButton x:Name="RadDeaths" Content="{DynamicResource NotificationsDeaths}" Checked="Filter_Changed" Style="{StaticResource PillRadioButton}" Margin="0,0,4,0"/>
@@ -125,7 +125,7 @@
                         VerticalAlignment="Center" 
                         HorizontalAlignment="Center"
                         Visibility="Collapsed">
-                <ui:SymbolIcon Symbol="Mail24" FontSize="48" Foreground="#8C96A8" Margin="0,0,0,12"/>
+                <ui:SymbolIcon Symbol="Mail24" FontSize="48" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,12"/>
                 <TextBlock Text="{DynamicResource NoNotificationsTitle}" 
                            FontSize="16" 
                            FontWeight="SemiBold" 
@@ -133,7 +133,7 @@
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="{DynamicResource NoNotificationsSubtitle}" 
                            FontSize="12" 
-                           Foreground="#8C96A8" 
+                           Foreground="{DynamicResource TextMutedBrush}" 
                            Margin="0,4,0,0" 
                            HorizontalAlignment="Center"/>
             </StackPanel>
@@ -258,7 +258,7 @@
                                     
                                     <!-- Unread blue dot -->
                                     <Ellipse Width="6" Height="6" 
-                                             Fill="#60CDFF" 
+                                             Fill="{DynamicResource Accent}" 
                                              Stroke="#FF243247" 
                                              StrokeThickness="1"
                                              HorizontalAlignment="Right" 
@@ -280,7 +280,7 @@
                                     <!-- Message body -->
                                     <TextBlock Text="{Binding Message}" 
                                                FontSize="11" 
-                                               Foreground="#8C96A8" 
+                                               Foreground="{DynamicResource TextMutedBrush}" 
                                                Margin="0,3,0,0" 
                                                TextTrimming="None"
                                                TextWrapping="Wrap"/>
@@ -324,7 +324,7 @@
                                                 Width="28" Height="28"
                                                 Padding="0"
                                                 VerticalAlignment="Center">
-                                         <ui:SymbolIcon Symbol="Delete24" FontSize="14" Foreground="#8C96A8"/>
+                                         <ui:SymbolIcon Symbol="Delete24" FontSize="14" Foreground="{DynamicResource TextMutedBrush}"/>
                                      </ui:Button>
                                 </Grid>
 
@@ -338,7 +338,7 @@
                                         <TextBlock
                                             FontSize="9"
                                             FontWeight="SemiBold"
-                                            Foreground="#60CDFF"
+                                            Foreground="{DynamicResource Accent}"
                                             TextTrimming="CharacterEllipsis"
                                             Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource VisInv}}">
                                             <TextBlock.Text>
@@ -351,7 +351,7 @@
                                         <TextBlock
                                             FontSize="9"
                                             FontWeight="SemiBold"
-                                            Foreground="#8C96A8"
+                                            Foreground="{DynamicResource TextMutedBrush}"
                                             Text="{DynamicResource UiSERVERHIDDEN}"
                                             Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
                                     </Grid>

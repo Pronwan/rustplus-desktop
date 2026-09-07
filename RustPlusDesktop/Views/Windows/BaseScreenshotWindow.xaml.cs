@@ -8,7 +8,7 @@ using RustPlusDesk.Services.Auth;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class BaseScreenshotWindow : Window
+    public partial class BaseScreenshotWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string? Base64Result { get; private set; }
 
@@ -31,12 +31,6 @@ namespace RustPlusDesk.Views.Windows
             TxtPasteHint.Text = T("BaseScreenshotPasteHint", "or press CTRL+V to paste a screenshot");
             BtnSave.Content = T("Save", "Save");
             BtnCancel.Content = T("Cancel", "Cancel");
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            try { DragMove(); } catch { }
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

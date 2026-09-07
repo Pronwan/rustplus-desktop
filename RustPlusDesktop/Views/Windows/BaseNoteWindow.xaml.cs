@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class BaseNoteWindow : Window
+    public partial class BaseNoteWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string? NoteResult { get; private set; }
 
@@ -31,12 +31,6 @@ namespace RustPlusDesk.Views.Windows
             TxtTitle.Text = T("BaseNoteTitle", "Base Note");
             BtnSave.Content = T("Save", "Save");
             BtnCancel.Content = T("Cancel", "Cancel");
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            try { DragMove(); } catch { }
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

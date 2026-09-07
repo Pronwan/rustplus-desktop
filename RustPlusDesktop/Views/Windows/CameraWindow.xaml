@@ -91,7 +91,7 @@
                         <!-- Analog joystick: drag the ball; look/move speed scales with distance -->
                         <Grid x:Name="MovementPad" Width="118" Height="118" Cursor="SizeAll" Background="Transparent">
                             <Ellipse Width="118" Height="118" Fill="#16FFFFFF" Stroke="#3AFFFFFF" StrokeThickness="1.5"/>
-                            <Ellipse Width="72" Height="72" Stroke="#22FFFFFF" StrokeThickness="1"/>
+                            <Ellipse Width="72" Height="72" Stroke="{DynamicResource WhiteA22}" StrokeThickness="1"/>
                             <Ellipse Width="6" Height="6" Fill="#3AFFFFFF"/>
                             <Canvas x:Name="JoyCanvas" Width="118" Height="118">
                                 <Border x:Name="JoyThumb" Width="48" Height="48" CornerRadius="24"

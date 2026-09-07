@@ -95,11 +95,11 @@
                     <Border Width="40" Height="40" CornerRadius="8"
                             Background="#22EF5350" BorderBrush="#44EF5350" BorderThickness="1"
                             Margin="0,0,12,0" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="DismissCircle24" FontSize="20" Foreground="#EF5350" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="DismissCircle24" FontSize="20" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <StackPanel VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="DEATH LOG &amp; ANALYTICS" FontSize="10.5" FontWeight="Bold" Foreground="#EF5350" Margin="0,0,0,2" />
+                            <TextBlock Text="DEATH LOG &amp; ANALYTICS" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}" Margin="0,0,0,2" />
                         </StackPanel>
                         <TextBlock Text="Death Stats" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock Text="Where and when your team dies, analyzed from the local death log." FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,1,0,0" />
@@ -183,7 +183,7 @@
                                     <TextBlock Text="{Binding Total}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,4,0,0" />
                                 </StackPanel>
                                 <Border Grid.Column="1" Width="36" Height="36" CornerRadius="18" Background="#20EF5350" VerticalAlignment="Center">
-                                    <ui:SymbolIcon Symbol="DismissCircle24" FontSize="18" Foreground="#EF5350" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <ui:SymbolIcon Symbol="DismissCircle24" FontSize="18" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                             </Grid>
                         </ui:Card>

@@ -1,16 +1,16 @@
-<Window x:Class="RustPlusDesk.Views.HotkeysWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.HotkeysWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource Hotkeys}"
         Width="660" Height="520"
         WindowStartupLocation="CenterOwner"
-        AllowsTransparency="True"
-        WindowStyle="None"
-        Background="Transparent"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
 
-    <Window.Resources>
+    <ui:FluentWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
         <!-- Smooth Animated Label on Button Hover -->
@@ -112,39 +112,25 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
-    <Border Background="{DynamicResource SurfaceAlt}" 
-            BorderBrush="{DynamicResource CardBorder}" 
-            BorderThickness="2" 
-            CornerRadius="12">
-        <Grid Margin="20">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource Hotkeys}" ShowMaximize="False" ShowMinimize="False"/>
+
+        <Grid Grid.Row="1" Margin="20,4,20,20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Title & Close -->
                 <RowDefinition Height="Auto"/> <!-- Description -->
                 <RowDefinition Height="Auto"/> <!-- Options (Delay / Mode) -->
                 <RowDefinition Height="*"/>    <!-- DataGrid -->
                 <RowDefinition Height="Auto"/> <!-- Footer Buttons -->
             </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <DockPanel Grid.Row="0" Margin="0,0,0,6">
-                <TextBlock Text="{DynamicResource Hotkeys}" 
-                           FontSize="18" FontWeight="SemiBold" 
-                           Foreground="{DynamicResource TextPrimary}"
-                           VerticalAlignment="Center"/>
-                <Button Content="✕" 
-                        HorizontalAlignment="Right" 
-                        Click="BtnClose_Click"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Foreground="{DynamicResource TextSubtle}"
-                        FontSize="16"
-                        Cursor="Hand"
-                        VerticalAlignment="Center"/>
-            </DockPanel>
-
-            <TextBlock Grid.Row="1" 
+            <TextBlock Grid.Row="0"
                        Text="{DynamicResource AssignGlobalHotkeys}"
                        Foreground="{DynamicResource TextSubtle}"
                        FontSize="12"
@@ -152,7 +138,7 @@
                        Margin="0,0,0,12"/>
 
             <!-- Options Card -->
-            <Border Grid.Row="2" 
+            <Border Grid.Row="1" 
                     Style="{StaticResource Card}" 
                     Background="{DynamicResource Surface}" 
                     BorderBrush="{DynamicResource CardBorder}" 
@@ -199,7 +185,7 @@
             </Border>
 
             <!-- DataGrid Container -->
-            <Border Grid.Row="3" 
+            <Border Grid.Row="2" 
                     Background="{DynamicResource Surface}" 
                     BorderBrush="{DynamicResource CardBorder}" 
                     BorderThickness="1" 
@@ -372,7 +358,7 @@
             </Border>
 
             <!-- Footer Buttons -->
-            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Content="{DynamicResource CloseDeactivate}"
                            Width="160" Margin="0,0,8,0"
                            Appearance="Secondary"
@@ -383,5 +369,5 @@
                            Click="BtnCloseActivate_Click"/>
             </StackPanel>
         </Grid>
-    </Border>
-</Window>
+    </Grid>
+</ui:FluentWindow>

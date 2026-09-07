@@ -190,7 +190,7 @@
                                                             <Border Visibility="{Binding ImageVisibility}" MaxWidth="200" MaxHeight="150" MinWidth="60" MinHeight="44" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1" Background="#22000000">
                                                                 <Image Source="{Binding Thumb}" Stretch="Uniform" />
                                                             </Border>
-                                                            <Border Visibility="{Binding ChipVisibility}" Background="#22FFFFFF" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
+                                                            <Border Visibility="{Binding ChipVisibility}" Background="{DynamicResource WhiteA22}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
                                                                     <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" />

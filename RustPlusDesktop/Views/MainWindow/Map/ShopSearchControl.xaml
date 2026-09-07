@@ -206,7 +206,7 @@
             <!-- Magnified Glassy Search Box inside capsule Border -->
             <Border Grid.Column="0"
                     Background="#1A1D24"
-                    BorderBrush="#25FFFFFF"
+                    BorderBrush="{DynamicResource WhiteA25}"
                     BorderThickness="1"
                     CornerRadius="8"
                     Height="36"
@@ -422,7 +422,7 @@
             Grid.Row="4"
             Margin="10,2,10,2"
             Background="#12151B"
-            BorderBrush="#25FFFFFF"
+            BorderBrush="{DynamicResource WhiteA25}"
             BorderThickness="1"
             CornerRadius="6"
             Cursor="Hand"
@@ -467,7 +467,7 @@
             Grid.Row="5"
             Margin="10,0,10,4"
             Background="#0D1015"
-            BorderBrush="#20FFFFFF"
+            BorderBrush="{DynamicResource WhiteA20}"
             BorderThickness="1,0,1,1"
             CornerRadius="0,0,6,6"
             Visibility="Collapsed">

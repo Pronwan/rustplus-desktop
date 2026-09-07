@@ -10,10 +10,36 @@ using System.Windows.Shapes;
 
 namespace RustPlusDesk.Views
 {
-    public class GalleryItem
+    public class GalleryItem : Freezable
     {
-        public string ImagePath { get; set; } = "";
-        public string Description { get; set; } = "";
+        protected override Freezable CreateInstanceCore() => new GalleryItem();
+
+        public static readonly DependencyProperty ImagePathProperty =
+            DependencyProperty.Register(nameof(ImagePath), typeof(string), typeof(GalleryItem), new PropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty DescriptionProperty =
+            DependencyProperty.Register(nameof(Description), typeof(string), typeof(GalleryItem), new PropertyMetadata(string.Empty, OnDescriptionChanged));
+
+        private static void OnDescriptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is GalleryItem item && item.ParentGallery != null)
+            {
+                item.ParentGallery.UpdateGallery();
+            }
+        }
+
+        public string ImagePath
+        {
+            get => (string)GetValue(ImagePathProperty);
+            set => SetValue(ImagePathProperty, value);
+        }
+
+        public string Description
+        {
+            get => (string)GetValue(DescriptionProperty);
+            set => SetValue(DescriptionProperty, value);
+        }
+
         internal ImageGallery? ParentGallery { get; set; }
     }
 
@@ -22,10 +48,18 @@ namespace RustPlusDesk.Views
     {
         private int _currentIndex = 0;
 
-        public List<GalleryItem> Items { get; } = new List<GalleryItem>();
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register(nameof(Items), typeof(FreezableCollection<GalleryItem>), typeof(ImageGallery));
+
+        public FreezableCollection<GalleryItem> Items
+        {
+            get => (FreezableCollection<GalleryItem>)GetValue(ItemsProperty);
+            set => SetValue(ItemsProperty, value);
+        }
 
         public ImageGallery()
         {
+            SetValue(ItemsProperty, new FreezableCollection<GalleryItem>());
             InitializeComponent();
             Loaded += ImageGallery_Loaded;
         }

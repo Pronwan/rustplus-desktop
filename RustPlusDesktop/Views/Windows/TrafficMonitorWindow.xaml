@@ -1,4 +1,4 @@
-<Window x:Class="RustPlusDesk.Views.Windows.TrafficMonitorWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.TrafficMonitorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -7,17 +7,27 @@
         Width="1200" Height="740"
         MinWidth="920" MinHeight="560"
         WindowStartupLocation="CenterScreen"
-        Background="#0D1117"
-        Foreground="#F0F6FC">
+        Foreground="{DynamicResource TextBrightBrush}"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
 
-    <Window.Resources>
+    <ui:FluentWindow.Resources>
         <!-- Dark ScrollViewer Style -->
         <Style TargetType="ScrollBar">
             <Setter Property="Background" Value="#161B22"/>
         </Style>
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Network Traffic &amp; Bandwidth Monitor" ShowMaximize="True" ShowMinimize="True"/>
+
+    <Grid Grid.Row="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Header / Title -->
             <RowDefinition Height="Auto"/> <!-- Stat Cards -->
@@ -27,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="18,12">
+        <Border Grid.Row="0" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="0,0,0,1" Padding="18,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -36,12 +46,12 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Background="#1F6FEB22" BorderBrush="#58A6FF" BorderThickness="1" CornerRadius="8" Padding="6" Margin="0,0,10,0">
-                        <ui:SymbolIcon Symbol="DataUsage24" Foreground="#58A6FF" FontSize="20" />
+                    <Border Background="#1F6FEB22" BorderBrush="{DynamicResource InfoBlueBrush}" BorderThickness="1" CornerRadius="8" Padding="6" Margin="0,0,10,0">
+                        <ui:SymbolIcon Symbol="DataUsage24" Foreground="{DynamicResource InfoBlueBrush}" FontSize="20" />
                     </Border>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Network Traffic &amp; Bandwidth Inspector" FontSize="16" FontWeight="Bold" Foreground="#F0F6FC"/>
-                        <TextBlock Text="Real-time inbound/outbound packets, protocol consumption, and bandwidth metrics in Megabits (Mbps) &amp; Megabytes (MB/s)" FontSize="11" Foreground="#8B949E" Margin="0,2,0,0"/>
+                        <TextBlock Text="Network Traffic &amp; Bandwidth Inspector" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextBrightBrush}"/>
+                        <TextBlock Text="Real-time inbound/outbound packets, protocol consumption, and bandwidth metrics in Megabits (Mbps) &amp; Megabytes (MB/s)" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2,0,0"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -54,15 +64,15 @@
                                      Unchecked="ToggleFeatureEnable_Unchecked"
                                      Margin="0,0,20,0"
                                      VerticalAlignment="Center"/>
-                    <TextBlock Text="Speed Unit:" VerticalAlignment="Center" FontSize="12" Foreground="#8B949E" Margin="0,0,8,0"/>
-                    <RadioButton x:Name="RbUnitBits" Content="Mbps / Kbps" IsChecked="True" Checked="UnitRadio_Checked" Foreground="#F0F6FC" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <RadioButton x:Name="RbUnitBytes" Content="MB/s / KB/s" Checked="UnitRadio_Checked" Foreground="#F0F6FC" VerticalAlignment="Center"/>
+                    <TextBlock Text="Speed Unit:" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,8,0"/>
+                    <RadioButton x:Name="RbUnitBits" Content="Mbps / Kbps" IsChecked="True" Checked="UnitRadio_Checked" Foreground="{DynamicResource TextBrightBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <RadioButton x:Name="RbUnitBytes" Content="MB/s / KB/s" Checked="UnitRadio_Checked" Foreground="{DynamicResource TextBrightBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Stat Cards -->
-        <Border Grid.Row="1" Background="#0D1117" BorderBrush="#21262D" BorderThickness="0,0,0,1" Padding="16,10">
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceDeepBrush}" BorderBrush="#21262D" BorderThickness="0,0,0,1" Padding="16,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -73,69 +83,69 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Download Speed -->
-                <Border Grid.Column="0" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
+                <Border Grid.Column="0" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="ArrowDownload24" Foreground="#58A6FF" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="DOWNLOAD SPEED" FontSize="10" FontWeight="Bold" Foreground="#8B949E" VerticalAlignment="Center"/>
+                            <ui:SymbolIcon Symbol="ArrowDownload24" Foreground="{DynamicResource InfoBlueBrush}" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="DOWNLOAD SPEED" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock x:Name="TxtDownSpeed" Text="{Binding CurrentDownloadSpeedDisplay}" FontSize="18" FontWeight="Bold" Foreground="#58A6FF" Margin="0,4,0,0"/>
-                        <TextBlock x:Name="TxtDownSpeedSub" Text="{Binding CurrentDownloadSpeedSubDisplay}" FontSize="10" Foreground="#8B949E" Margin="0,1,0,0"/>
+                        <TextBlock x:Name="TxtDownSpeed" Text="{Binding CurrentDownloadSpeedDisplay}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource InfoBlueBrush}" Margin="0,4,0,0"/>
+                        <TextBlock x:Name="TxtDownSpeedSub" Text="{Binding CurrentDownloadSpeedSubDisplay}" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,1,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Upload Speed -->
-                <Border Grid.Column="1" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
+                <Border Grid.Column="1" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="ArrowUpload24" Foreground="#FFA657" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="UPLOAD SPEED" FontSize="10" FontWeight="Bold" Foreground="#8B949E" VerticalAlignment="Center"/>
+                            <TextBlock Text="UPLOAD SPEED" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <TextBlock x:Name="TxtUpSpeed" Text="{Binding CurrentUploadSpeedDisplay}" FontSize="18" FontWeight="Bold" Foreground="#FFA657" Margin="0,4,0,0"/>
-                        <TextBlock x:Name="TxtUpSpeedSub" Text="{Binding CurrentUploadSpeedSubDisplay}" FontSize="10" Foreground="#8B949E" Margin="0,1,0,0"/>
+                        <TextBlock x:Name="TxtUpSpeedSub" Text="{Binding CurrentUploadSpeedSubDisplay}" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,1,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Total Inbound -->
-                <Border Grid.Column="2" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
+                <Border Grid.Column="2" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="DataUsage24" Foreground="#7EE787" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="TOTAL INBOUND" FontSize="10" FontWeight="Bold" Foreground="#8B949E" VerticalAlignment="Center"/>
+                            <TextBlock Text="TOTAL INBOUND" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <TextBlock x:Name="TxtTotalIn" Text="{Binding TotalInboundDisplay}" FontSize="18" FontWeight="Bold" Foreground="#7EE787" Margin="0,4,0,0"/>
-                        <TextBlock x:Name="TxtTotalInBits" Text="{Binding TotalInboundBitsDisplay}" FontSize="10" Foreground="#8B949E" Margin="0,1,0,0"/>
+                        <TextBlock x:Name="TxtTotalInBits" Text="{Binding TotalInboundBitsDisplay}" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,1,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Total Outbound -->
-                <Border Grid.Column="3" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
+                <Border Grid.Column="3" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,8,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="ArrowSync24" Foreground="#D2A8FF" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="TOTAL OUTBOUND" FontSize="10" FontWeight="Bold" Foreground="#8B949E" VerticalAlignment="Center"/>
+                            <TextBlock Text="TOTAL OUTBOUND" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <TextBlock x:Name="TxtTotalOut" Text="{Binding TotalOutboundDisplay}" FontSize="18" FontWeight="Bold" Foreground="#D2A8FF" Margin="0,4,0,0"/>
-                        <TextBlock x:Name="TxtTotalOutBits" Text="{Binding TotalOutboundBitsDisplay}" FontSize="10" Foreground="#8B949E" Margin="0,1,0,0"/>
+                        <TextBlock x:Name="TxtTotalOutBits" Text="{Binding TotalOutboundBitsDisplay}" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,1,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Total Requests -->
-                <Border Grid.Column="4" Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="12,8">
+                <Border Grid.Column="4" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="List24" Foreground="#FF7B72" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="TOTAL PACKETS" FontSize="10" FontWeight="Bold" Foreground="#8B949E" VerticalAlignment="Center"/>
+                            <TextBlock Text="TOTAL PACKETS" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <TextBlock x:Name="TxtTotalRequests" Text="{Binding TotalRequestsDisplay}" FontSize="18" FontWeight="Bold" Foreground="#FF7B72" Margin="0,4,0,0"/>
-                        <TextBlock Text="Recorded" FontSize="10" Foreground="#8B949E" Margin="0,1,0,0"/>
+                        <TextBlock Text="Recorded" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,1,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Border>
 
         <!-- Toolbar & Filters -->
-        <Border Grid.Row="2" Background="#161B22" Padding="16,10" BorderBrush="#21262D" BorderThickness="0,0,0,1">
+        <Border Grid.Row="2" Background="{DynamicResource SurfacePanelBrush}" Padding="16,10" BorderBrush="#21262D" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/> <!-- Actions: Record, Clear, Export -->
@@ -154,7 +164,7 @@
                                Padding="10,6"
                                Margin="0,0,8,0">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse x:Name="RecDot" Width="8" Height="8" Fill="#FF5555" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <Ellipse x:Name="RecDot" Width="8" Height="8" Fill="{DynamicResource DangerBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
                             <TextBlock x:Name="TxtRecordStatus" Text="Pause Recording" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ui:Button>
@@ -185,14 +195,14 @@
 
                 <!-- Direction Filter -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                    <TextBlock Text="Direction:" VerticalAlignment="Center" FontSize="12" Foreground="#8B949E" Margin="0,0,6,0"/>
+                    <TextBlock Text="Direction:" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,6,0"/>
                     <ComboBox x:Name="CmbDirectionFilter"
                               Width="100"
                               SelectedIndex="0"
                               SelectionChanged="FilterChanged"
-                              Background="#0D1117"
-                              Foreground="#F0F6FC"
-                              BorderBrush="#30363D">
+                              Background="{DynamicResource SurfaceDeepBrush}"
+                              Foreground="{DynamicResource TextBrightBrush}"
+                              BorderBrush="{DynamicResource BorderStrongBrush}">
                         <ComboBoxItem Content="All" />
                         <ComboBoxItem Content="↓ Inbound" />
                         <ComboBoxItem Content="↑ Outbound" />
@@ -201,14 +211,14 @@
 
                 <!-- Category Filter -->
                 <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                    <TextBlock Text="Category:" VerticalAlignment="Center" FontSize="12" Foreground="#8B949E" Margin="0,0,6,0"/>
+                    <TextBlock Text="Category:" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,6,0"/>
                     <ComboBox x:Name="CmbCategoryFilter"
                               Width="150"
                               SelectedIndex="0"
                               SelectionChanged="FilterChanged"
-                              Background="#0D1117"
-                              Foreground="#F0F6FC"
-                              BorderBrush="#30363D">
+                              Background="{DynamicResource SurfaceDeepBrush}"
+                              Foreground="{DynamicResource TextBrightBrush}"
+                              BorderBrush="{DynamicResource BorderStrongBrush}">
                         <ComboBoxItem Content="All Categories" />
                         <ComboBoxItem Content="Rust+ Protobuf" />
                         <ComboBoxItem Content="FCM Push" />
@@ -223,9 +233,9 @@
                          Grid.Column="4"
                          Width="180"
                          Padding="8,5"
-                         Background="#0D1117"
-                         Foreground="#F0F6FC"
-                         BorderBrush="#30363D"
+                         Background="{DynamicResource SurfaceDeepBrush}"
+                         Foreground="{DynamicResource TextBrightBrush}"
+                         BorderBrush="{DynamicResource BorderStrongBrush}"
                          TextChanged="TxtSearchFilter_TextChanged"
                          Tag="Search requests..."
                          Margin="0,0,12,0" />
@@ -236,13 +246,13 @@
                           Content="Auto-scroll"
                           IsChecked="True"
                           VerticalAlignment="Center"
-                          Foreground="#8B949E"
+                          Foreground="{DynamicResource TextMutedBrush}"
                           FontSize="12" />
             </Grid>
         </Border>
 
         <!-- Category Breakdown Strip -->
-        <Border Grid.Row="3" Background="#0D1117" Padding="16,8" BorderBrush="#21262D" BorderThickness="0,0,0,1">
+        <Border Grid.Row="3" Background="{DynamicResource SurfaceDeepBrush}" Padding="16,8" BorderBrush="#21262D" BorderThickness="0,0,0,1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                 <ItemsControl x:Name="CategoryBreakdownItems">
                     <ItemsControl.ItemsPanel>
@@ -252,13 +262,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#161B22" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                            <Border Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Category}" FontWeight="SemiBold" FontSize="11" Foreground="#F0F6FC" Margin="0,0,6,0"/>
-                                    <Border Background="#30363D" CornerRadius="4" Padding="4,1" Margin="0,0,6,0">
-                                        <TextBlock Text="{Binding FormattedTotalBytes}" FontSize="10" FontWeight="Bold" Foreground="#58A6FF"/>
+                                    <TextBlock Text="{Binding Category}" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextBrightBrush}" Margin="0,0,6,0"/>
+                                    <Border Background="{DynamicResource BorderStrongBrush}" CornerRadius="4" Padding="4,1" Margin="0,0,6,0">
+                                        <TextBlock Text="{Binding FormattedTotalBytes}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource InfoBlueBrush}"/>
                                     </Border>
-                                    <TextBlock Text="{Binding FormattedPercentage}" FontSize="10" Foreground="#8B949E"/>
+                                    <TextBlock Text="{Binding FormattedPercentage}" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -284,11 +294,11 @@
                       IsReadOnly="True"
                       SelectionMode="Single"
                       SelectionChanged="TrafficGrid_SelectionChanged"
-                      Background="#0D1117"
-                      Foreground="#F0F6FC"
-                      RowBackground="#0D1117"
-                      AlternatingRowBackground="#161B22"
-                      BorderBrush="#30363D"
+                      Background="{DynamicResource SurfaceDeepBrush}"
+                      Foreground="{DynamicResource TextBrightBrush}"
+                      RowBackground="{DynamicResource SurfaceDeepBrush}"
+                      AlternatingRowBackground="{DynamicResource SurfacePanelBrush}"
+                      BorderBrush="{DynamicResource BorderStrongBrush}"
                       BorderThickness="0"
                       GridLinesVisibility="Horizontal"
                       HorizontalGridLinesBrush="#21262D">
@@ -349,10 +359,10 @@
             </DataGrid>
 
             <!-- Splitter -->
-            <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" Background="#30363D" Cursor="SizeNS"/>
+            <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" Background="{DynamicResource BorderStrongBrush}" Cursor="SizeNS"/>
 
             <!-- Inspector Panel -->
-            <Border Grid.Row="2" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="14,10">
+            <Border Grid.Row="2" Background="{DynamicResource SurfacePanelBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="0,1,0,0" Padding="14,10">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -362,8 +372,8 @@
                     <!-- Inspector Header -->
                     <Grid Grid.Row="0" Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="Info24" Foreground="#58A6FF" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Packet Inspector" FontWeight="Bold" FontSize="13" Foreground="#F0F6FC" VerticalAlignment="Center"/>
+                            <ui:SymbolIcon Symbol="Info24" Foreground="{DynamicResource InfoBlueBrush}" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Packet Inspector" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource TextBrightBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <ui:Button x:Name="BtnCopyDetails"
@@ -381,7 +391,7 @@
                             <TextBlock x:Name="TxtInspectorPlaceholder"
                                        Text="Select a packet/request in the table above to view full details."
                                        FontStyle="Italic"
-                                       Foreground="#8B949E"
+                                       Foreground="{DynamicResource TextMutedBrush}"
                                        Margin="0,10,0,0"/>
 
                             <Grid x:Name="InspectorDetailsGrid" Visibility="Collapsed">
@@ -397,24 +407,24 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Timestamp:" Foreground="#8B949E" Margin="0,2"/>
-                                <TextBlock x:Name="InspTimestamp" Grid.Row="0" Grid.Column="1" Foreground="#F0F6FC" Margin="0,2"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Timestamp:" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2"/>
+                                <TextBlock x:Name="InspTimestamp" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource TextBrightBrush}" Margin="0,2"/>
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Endpoint / Type:" Foreground="#8B949E" Margin="0,2"/>
-                                <TextBlock x:Name="InspEndpoint" Grid.Row="1" Grid.Column="1" Foreground="#58A6FF" FontWeight="SemiBold" Margin="0,2"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Endpoint / Type:" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2"/>
+                                <TextBlock x:Name="InspEndpoint" Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource InfoBlueBrush}" FontWeight="SemiBold" Margin="0,2"/>
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Direction &amp; Size:" Foreground="#8B949E" Margin="0,2"/>
-                                <TextBlock x:Name="InspSize" Grid.Row="2" Grid.Column="1" Foreground="#F0F6FC" Margin="0,2"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Direction &amp; Size:" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2"/>
+                                <TextBlock x:Name="InspSize" Grid.Row="2" Grid.Column="1" Foreground="{DynamicResource TextBrightBrush}" Margin="0,2"/>
 
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Status / Latency:" Foreground="#8B949E" Margin="0,2"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Status / Latency:" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2"/>
                                 <TextBlock x:Name="InspStatus" Grid.Row="3" Grid.Column="1" Foreground="#7EE787" Margin="0,2"/>
 
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Details &amp; Payload:" Foreground="#8B949E" Margin="0,2"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Details &amp; Payload:" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2"/>
                                 <TextBox x:Name="InspDetails" Grid.Row="4" Grid.Column="1"
                                          IsReadOnly="True"
-                                         Background="#0D1117"
-                                         Foreground="#F0F6FC"
-                                         BorderBrush="#30363D"
+                                         Background="{DynamicResource SurfaceDeepBrush}"
+                                         Foreground="{DynamicResource TextBrightBrush}"
+                                         BorderBrush="{DynamicResource BorderStrongBrush}"
                                          TextWrapping="Wrap"
                                          AcceptsReturn="True"
                                          MaxHeight="80"
@@ -426,4 +436,5 @@
             </Border>
         </Grid>
     </Grid>
-</Window>
+    </Grid>
+</ui:FluentWindow>

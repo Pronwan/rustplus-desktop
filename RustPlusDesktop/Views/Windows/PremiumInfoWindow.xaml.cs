@@ -1,10 +1,9 @@
 using System.Windows;
-using System.Windows.Input;
 using System.Diagnostics;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class PremiumInfoWindow : Window
+    public partial class PremiumInfoWindow : Wpf.Ui.Controls.FluentWindow
     {
         private const string PatreonUrl = "https://www.patreon.com/cw/Pronwan/membership";
 
@@ -56,12 +55,6 @@ namespace RustPlusDesk.Views.Windows
             Result = PremiumInfoResult.StopSync;
             DialogResult = true;
             Close();
-        }
-        
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            this.DragMove();
         }
     }
 
