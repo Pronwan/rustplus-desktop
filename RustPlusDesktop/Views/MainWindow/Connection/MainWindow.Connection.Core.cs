@@ -39,27 +39,22 @@ public partial class MainWindow
 
     private async Task EnsureWebView2Async()
     {
-        var dataFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "RustPlusDesk", "WebView2");
-        Directory.CreateDirectory(dataFolder);
+        try
+        {
+            var dataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk", "WebView2");
+            Directory.CreateDirectory(dataFolder);
 
-        var env = await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
-        _webView = new WebView2();
-        WebViewHost.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0B3A4A"));
-        WebViewHost.Children.Add(_webView);
-        Panel.SetZIndex(_webView, 0);           // WebView standardmaessig unten
-
-        await _webView.EnsureCoreWebView2Async(env);
-        _webView.DefaultBackgroundColor = System.Drawing.Color.Transparent;
-        _webView.CoreWebView2.Settings.AreDevToolsEnabled = true;
-        _webView.Visibility = Visibility.Collapsed;
-
-        // Optional: etwas "normaleren" UA setzen
-        _webView.CoreWebView2.Settings.UserAgent =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
-
+            // Pre-warm the CoreWebView2 environment in the background so that features
+            // using embedded web views (such as the 3D Map and Genetics Lab) initialize
+            // quickly when opened, without attaching a dummy control to the visual tree.
+            await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WebView2] Environment pre-warm skipped: {ex.Message}");
+        }
     }
 
 

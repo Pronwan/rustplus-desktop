@@ -69,7 +69,6 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
-    private WebView2? _webView;
     private IPairingListener _pairing;
     private readonly Dictionary<uint, DateTime> _entityPairSeen = new();
     private string? _lastPairSig;
@@ -974,7 +973,14 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Let WPF present the first usable frame before initializing the embedded
         // browser and parsing catalogs that are not required to construct the shell.
         await Dispatcher.Yield(DispatcherPriority.ContextIdle);
-        _ = EnsureWebView2Async();
+        try
+        {
+            await EnsureWebView2Async();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WebView2] EnsureWebView2Async error: {ex.Message}");
+        }
 
         // Whether the Community entry belongs in the rail at all. Asked once on start and again
         // whenever the account changes; a stored token means the auth event has already fired by

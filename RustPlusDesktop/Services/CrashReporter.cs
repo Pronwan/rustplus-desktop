@@ -85,7 +85,8 @@ namespace RustPlusDesk.Services
                 // Routine background socket closures, cancelled tasks, or thread aborts are normal cleanup
                 var baseEx = e.Exception?.GetBaseException();
                 if (baseEx is OperationCanceledException or TaskCanceledException or ObjectDisposedException ||
-                    (baseEx is System.Net.Sockets.SocketException se && (se.SocketErrorCode == System.Net.Sockets.SocketError.OperationAborted || se.SocketErrorCode == System.Net.Sockets.SocketError.Interrupted)))
+                    (baseEx is System.Net.Sockets.SocketException se && (se.SocketErrorCode == System.Net.Sockets.SocketError.OperationAborted || se.SocketErrorCode == System.Net.Sockets.SocketError.Interrupted)) ||
+                    (baseEx is COMException ce && ((uint)ce.HResult == 0x8007139F || (uint)ce.HResult == 0x80004005)))
                 {
                     return;
                 }

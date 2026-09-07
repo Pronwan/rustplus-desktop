@@ -121,8 +121,6 @@ public partial class MainWindow
 
     private void ShowMapBasic(BitmapSource bmp)
     {
-        if (_webView != null) _webView.Visibility = Visibility.Collapsed;
-
         _mapBaseBmp = bmp;
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
         if (_mapView != null) _mapView.Visibility = Visibility.Visible;
