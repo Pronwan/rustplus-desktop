@@ -704,6 +704,311 @@
       "params": [
         { "name": "reason", "type": "text", "label": "Reason", "default": "Maintenance" }
       ]
+    },
+    {
+      "id": "viewmodel-fat-slim",
+      "category": "client",
+      "group": "Combat",
+      "featured": true,
+      "title": "Toggle Wide / Slim Viewmodel",
+      "description": "Switches the weapon model between the wide default and a slimmer one that covers less of the screen — most noticeable on the AK. Each press shows on screen which of the two you are now on.",
+      "command": "~meta.exec \"vm_fov_scale 1\" \"showtoast 1 fat\";meta.exec \"vm_fov_scale 0\" \"showtoast 2 skinny\"",
+      "bindable": true,
+      "rawBind": true,
+      "defaultBind": "c",
+      "params": [],
+      "i18n": {
+        "de-DE": {
+          "title": "Breites / schmales Waffenmodell umschalten",
+          "description": "Schaltet das Waffenmodell zwischen der breiten Standardansicht und einer schmaleren um, die weniger vom Bildschirm verdeckt — bei der AK am deutlichsten. Jeder Druck zeigt am Bildschirm, in welchem der beiden Modi du gerade bist."
+        },
+        "fr-FR": {
+          "title": "Modèle d’arme large / fin",
+          "description": "Bascule le modèle de l’arme entre la vue large par défaut et une version plus fine qui masque moins l’écran — surtout visible sur l’AK. Chaque pression affiche à l’écran le mode actif."
+        },
+        "es-ES": {
+          "title": "Alternar modelo de arma ancho / estrecho",
+          "description": "Cambia el modelo del arma entre la vista ancha por defecto y otra más estrecha que tapa menos pantalla — se nota sobre todo con el AK. Cada pulsación muestra en pantalla en cuál de los dos estás."
+        },
+        "pt-BR": {
+          "title": "Alternar modelo de arma largo / estreito",
+          "description": "Alterna o modelo da arma entre a visão larga padrão e uma mais estreita, que cobre menos da tela — mais perceptível na AK. Cada toque mostra na tela em qual dos dois você está."
+        },
+        "ru-RU": {
+          "title": "Широкая / узкая модель оружия",
+          "description": "Переключает модель оружия между широким видом по умолчанию и более узким, который меньше закрывает экран — заметнее всего на АК. Каждое нажатие показывает на экране текущий режим."
+        },
+        "tr-TR": {
+          "title": "Geniş / ince silah modeli",
+          "description": "Silah modelini varsayılan geniş görünüm ile ekranı daha az kapatan ince görünüm arasında değiştirir — en çok AK’de fark edilir. Her basışta hangi modda olduğun ekranda görünür."
+        },
+        "pl-PL": {
+          "title": "Przełącz szeroki / wąski model broni",
+          "description": "Przełącza model broni między domyślnym szerokim a węższym, który zasłania mniej ekranu — najbardziej widoczne przy AK. Każde naciśnięcie pokazuje na ekranie, w którym trybie jesteś."
+        },
+        "zh-CN": {
+          "title": "切换宽 / 窄武器模型",
+          "description": "在默认的宽武器模型和遮挡更少的窄模型之间切换——在 AK 上最明显。每次按键都会在屏幕上显示当前处于哪种模式。"
+        }
+      }
+    },
+    {
+      "id": "audio-toggle-readout",
+      "category": "client",
+      "group": "Audio",
+      "featured": false,
+      "title": "Volume Toggle with On-Screen Readout",
+      "description": "Jumps between two volume levels and prints the new one on screen, so you can tell at a glance which one you are on. Built for dropping the volume fast while recycling, flying, or eating in base — and for putting it back without guessing.",
+      "command": "~meta.exec \"showtoast 3 audio:{loud}\" \"audio.master {loud}\";meta.exec \"showtoast 3 audio:{quiet}\" \"audio.master {quiet}\"",
+      "bindable": true,
+      "rawBind": true,
+      "defaultBind": "m",
+      "params": [
+        {
+          "name": "loud",
+          "type": "float",
+          "label": "Normal",
+          "default": "0.8",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "name": "quiet",
+          "type": "float",
+          "label": "Quiet",
+          "default": "0.1",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "i18n": {
+        "de-DE": {
+          "title": "Lautstärke umschalten mit Anzeige",
+          "description": "Springt zwischen zwei Lautstärken und zeigt die neue am Bildschirm an, damit du auf einen Blick weißt, wo du gerade stehst. Gedacht zum schnellen Leiserstellen beim Recyceln, Fliegen oder Essen in der Base — und zum Zurückstellen ohne Raten."
+        },
+        "fr-FR": {
+          "title": "Basculer le volume avec affichage",
+          "description": "Alterne entre deux niveaux de volume et affiche le nouveau à l’écran, pour savoir d’un coup d’œil où vous en êtes. Pensé pour baisser vite le son en recyclant, en volant ou en mangeant à la base — et le remonter sans deviner."
+        },
+        "es-ES": {
+          "title": "Alternar volumen con indicador",
+          "description": "Salta entre dos niveles de volumen y muestra el nuevo en pantalla, para saber de un vistazo en cuál estás. Pensado para bajar el sonido rápido mientras reciclas, vuelas o comes en la base — y subirlo sin adivinar."
+        },
+        "pt-BR": {
+          "title": "Alternar volume com indicação na tela",
+          "description": "Alterna entre dois níveis de volume e mostra o novo na tela, para você saber num relance em qual está. Feito para baixar o som rápido enquanto recicla, voa ou come na base — e voltar sem adivinhar."
+        },
+        "ru-RU": {
+          "title": "Переключение громкости с показом",
+          "description": "Переключается между двумя уровнями громкости и показывает новый на экране, чтобы сразу видеть, где вы. Удобно быстро приглушить звук при переработке, полёте или еде на базе — и вернуть обратно без угадывания."
+        },
+        "tr-TR": {
+          "title": "Ekran göstergeli ses seviyesi değiştirme",
+          "description": "İki ses seviyesi arasında geçiş yapar ve yenisini ekranda gösterir, böylece hangisinde olduğunu bir bakışta görürsün. Geri dönüşüm yaparken, uçarken veya üste yemek yerken sesi hızla kısmak — ve tahmin etmeden geri açmak için."
+        },
+        "pl-PL": {
+          "title": "Przełącz głośność z podglądem",
+          "description": "Przeskakuje między dwoma poziomami głośności i wyświetla nowy na ekranie, więc od razu wiesz, gdzie jesteś. Do szybkiego ściszenia przy recyklingu, lataniu lub jedzeniu w bazie — i przywrócenia bez zgadywania."
+        },
+        "zh-CN": {
+          "title": "音量切换并显示当前值",
+          "description": "在两个音量之间切换，并在屏幕上显示新的音量，一眼就能看出当前状态。适合在回收、开小飞机或在家吃东西时快速降低音量，之后无需猜测即可调回。"
+        }
+      }
+    },
+    {
+      "id": "tc-craft-cancel",
+      "category": "client",
+      "group": "Crafting",
+      "featured": false,
+      "title": "Craft and Cancel a Tool Cupboard",
+      "description": "Queues a Tool Cupboard, cancels it, and queues it again in a single press. Also posts a line in your own chat that reads like a server message, so you can see it fired — nobody else sees it. Set the Steam ID to your own for the name to look right.",
+      "command": "craft.add -97956382 1;craft.cancel -97956382 1;craft.add -97956382 1;chat.add 0 {steamid} \"Crafting Tool Cupboard!\"",
+      "bindable": true,
+      "rawBind": true,
+      "defaultBind": "t",
+      "params": [
+        {
+          "name": "steamid",
+          "type": "text",
+          "label": "Your Steam ID",
+          "default": "0"
+        }
+      ],
+      "i18n": {
+        "de-DE": {
+          "title": "Werkzeugkiste anlegen und abbrechen",
+          "description": "Stellt eine Werkzeugkiste in die Warteschlange, bricht sie ab und stellt sie erneut hinein — alles mit einem Tastendruck. Schreibt außerdem eine Zeile in deinen eigenen Chat, die wie eine Servermeldung aussieht, damit du siehst, dass es ausgelöst hat; sonst sieht sie niemand. Trag deine eigene Steam-ID ein, damit der Name stimmt."
+        },
+        "fr-FR": {
+          "title": "Lancer et annuler une armoire à outils",
+          "description": "Met une armoire à outils en file d’attente, l’annule, puis la remet — le tout en une pression. Écrit aussi une ligne dans votre propre chat qui ressemble à un message du serveur, pour voir que ça a fonctionné ; personne d’autre ne la voit. Indiquez votre Steam ID pour que le nom soit correct."
+        },
+        "es-ES": {
+          "title": "Fabricar y cancelar un armario de herramientas",
+          "description": "Pone un armario de herramientas en cola, lo cancela y lo vuelve a poner, todo con una pulsación. Además escribe una línea en tu propio chat que parece un mensaje del servidor, para que veas que se ejecutó; nadie más la ve. Pon tu Steam ID para que el nombre se vea bien."
+        },
+        "pt-BR": {
+          "title": "Fabricar e cancelar um armário de ferramentas",
+          "description": "Coloca um armário de ferramentas na fila, cancela e coloca de novo — tudo em um toque. Também escreve uma linha no seu próprio chat parecida com uma mensagem do servidor, para você ver que funcionou; mais ninguém vê. Coloque seu Steam ID para o nome aparecer certo."
+        },
+        "ru-RU": {
+          "title": "Создать и отменить шкаф инструментов",
+          "description": "Ставит шкаф инструментов в очередь, отменяет и ставит снова — одним нажатием. Также выводит в ваш собственный чат строку, похожую на сообщение сервера, чтобы вы видели, что сработало; больше её никто не видит. Укажите свой Steam ID, чтобы имя отображалось правильно."
+        },
+        "tr-TR": {
+          "title": "Alet dolabı üret ve iptal et",
+          "description": "Bir alet dolabını sıraya alır, iptal eder ve tekrar sıraya alır — hepsi tek tuşla. Ayrıca kendi sohbetine sunucu mesajı gibi görünen bir satır yazar, böylece çalıştığını görürsün; başka kimse görmez. Adın doğru görünsün diye kendi Steam ID’ni gir."
+        },
+        "pl-PL": {
+          "title": "Stwórz i anuluj szafkę narzędziową",
+          "description": "Dodaje szafkę narzędziową do kolejki, anuluje ją i dodaje ponownie — jednym naciśnięciem. Wypisuje też linię na twoim własnym czacie, wyglądającą jak wiadomość serwera, żebyś widział, że zadziałało; nikt inny jej nie widzi. Wpisz własne Steam ID, żeby nazwa wyglądała poprawnie."
+        },
+        "zh-CN": {
+          "title": "制作并取消工具柜",
+          "description": "一次按键即可将工具柜加入制作队列、取消，然后再次加入。同时在你自己的聊天框中写入一行看起来像服务器消息的文字，方便确认已触发——其他人看不到。填入你自己的 Steam ID，显示的名称才正确。"
+        }
+      }
+    },
+    {
+      "id": "alt-free-look-zoom",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Free Look with Extra Zoom",
+      "description": "Hold the key to look around without turning your body, with the view pulled in tighter at the same time. Combined with the normal aim zoom it gives you a second, closer step.",
+      "command": "+altlook;+headlerp 6775;headlerp 0",
+      "bindable": true,
+      "rawBind": true,
+      "defaultBind": "leftalt",
+      "params": [],
+      "i18n": {
+        "de-DE": {
+          "title": "Freie Sicht mit zusätzlichem Zoom",
+          "description": "Taste halten, um dich umzusehen, ohne dich zu drehen — gleichzeitig wird die Ansicht enger gezogen. Zusammen mit dem normalen Zielzoom ergibt das eine zweite, nähere Stufe."
+        },
+        "fr-FR": {
+          "title": "Vue libre avec zoom supplémentaire",
+          "description": "Maintenez la touche pour regarder autour de vous sans tourner le corps, avec une vue resserrée en même temps. Combiné au zoom de visée habituel, cela donne un second niveau, plus proche."
+        },
+        "es-ES": {
+          "title": "Vista libre con zoom adicional",
+          "description": "Mantén la tecla para mirar alrededor sin girar el cuerpo, con la vista más cerrada al mismo tiempo. Junto con el zoom de apuntado normal te da un segundo nivel, más cercano."
+        },
+        "pt-BR": {
+          "title": "Visão livre com zoom extra",
+          "description": "Segure a tecla para olhar ao redor sem virar o corpo, com a visão mais fechada ao mesmo tempo. Junto com o zoom de mira normal, dá um segundo nível, mais próximo."
+        },
+        "ru-RU": {
+          "title": "Свободный обзор с дополнительным зумом",
+          "description": "Удерживайте клавишу, чтобы осмотреться, не поворачивая тело, — обзор при этом становится теснее. Вместе с обычным зумом прицела это даёт вторую, более близкую ступень."
+        },
+        "tr-TR": {
+          "title": "Ek yakınlaştırmalı serbest bakış",
+          "description": "Tuşu basılı tutarak vücudunu döndürmeden etrafına bak; aynı anda görüş daha da yakınlaşır. Normal nişan yakınlaştırmasıyla birlikte ikinci, daha yakın bir kademe verir."
+        },
+        "pl-PL": {
+          "title": "Swobodne rozglądanie z dodatkowym zbliżeniem",
+          "description": "Przytrzymaj klawisz, aby rozejrzeć się bez obracania postaci, przy jednoczesnym zbliżeniu widoku. Razem ze zwykłym zbliżeniem celowania daje drugi, bliższy stopień."
+        },
+        "zh-CN": {
+          "title": "自由视角加额外缩放",
+          "description": "按住按键即可在不转身的情况下环顾四周，同时视野被拉近。与普通瞄准缩放配合使用，可获得第二级更近的视角。"
+        }
+      }
+    },
+    {
+      "id": "lookatradius-toggle",
+      "category": "client",
+      "group": "Quality of life",
+      "featured": false,
+      "title": "Toggle Placement Reach",
+      "description": "Switches how loosely the game decides what you are pointing at. Zero makes it strict, which is what you want when upgrading building parts that sit awkwardly behind others. The new value is shown on screen.",
+      "command": "~meta.exec \"showtoast 3 lookatradius:0\" \"client.lookatradius 0\";meta.exec \"showtoast 3 lookatradius:1\" \"client.lookatradius 1\"",
+      "bindable": true,
+      "rawBind": true,
+      "defaultBind": "leftarrow",
+      "params": [],
+      "i18n": {
+        "de-DE": {
+          "title": "Zielgenauigkeit beim Bauen umschalten",
+          "description": "Schaltet um, wie großzügig das Spiel entscheidet, worauf du zeigst. Null macht es genau — genau das willst du, wenn du Bauteile aufwertest, die ungünstig hinter anderen liegen. Der neue Wert wird am Bildschirm angezeigt."
+        },
+        "fr-FR": {
+          "title": "Basculer la précision de visée sur les constructions",
+          "description": "Change la tolérance avec laquelle le jeu décide ce que vous visez. Zéro rend la visée stricte, ce qu’il faut pour améliorer des pièces de construction mal placées derrière d’autres. La nouvelle valeur s’affiche à l’écran."
+        },
+        "es-ES": {
+          "title": "Alternar precisión de apuntado al construir",
+          "description": "Cambia lo permisivo que es el juego al decidir a qué estás apuntando. Cero lo hace estricto, que es lo que quieres al mejorar piezas de construcción mal situadas detrás de otras. El nuevo valor se muestra en pantalla."
+        },
+        "pt-BR": {
+          "title": "Alternar precisão de mira ao construir",
+          "description": "Muda o quão tolerante o jogo é ao decidir para o que você está apontando. Zero deixa preciso, que é o que você quer ao melhorar peças de construção mal posicionadas atrás de outras. O novo valor aparece na tela."
+        },
+        "ru-RU": {
+          "title": "Переключение точности наведения при строительстве",
+          "description": "Меняет то, насколько свободно игра определяет, на что вы указываете. Ноль делает наведение точным — именно это нужно при улучшении строительных элементов, неудобно расположенных за другими. Новое значение показывается на экране."
+        },
+        "tr-TR": {
+          "title": "İnşada nişan hassasiyetini değiştir",
+          "description": "Oyunun neye işaret ettiğine ne kadar geniş karar verdiğini değiştirir. Sıfır bunu kesinleştirir; başkalarının arkasında zor konumda duran yapı parçalarını yükseltirken tam da bunu istersin. Yeni değer ekranda gösterilir."
+        },
+        "pl-PL": {
+          "title": "Przełącz precyzję celowania przy budowaniu",
+          "description": "Zmienia, jak swobodnie gra decyduje, na co wskazujesz. Zero czyni celowanie precyzyjnym — dokładnie tego chcesz przy ulepszaniu elementów budowli schowanych za innymi. Nowa wartość pojawia się na ekranie."
+        },
+        "zh-CN": {
+          "title": "切换建造时的指向精度",
+          "description": "改变游戏判断你所指目标的宽松程度。设为 0 时更精确，正适合升级那些被其他部件挡住、位置刁钻的建筑构件。新数值会显示在屏幕上。"
+        }
+      }
+    },
+    {
+      "id": "console-combatlog-outgoing",
+      "category": "client",
+      "group": "Combat",
+      "featured": false,
+      "title": "Combat Log, Outgoing Damage Only",
+      "description": "Opens the console showing only the damage you dealt, without the incoming lines. Useful for telling a teammate how much health the player who killed you had left, without the rest of the log getting in the way.",
+      "command": "consoletoggle;combatlog_outgoing",
+      "bindable": true,
+      "defaultBind": "f2",
+      "params": [],
+      "i18n": {
+        "de-DE": {
+          "title": "Kampfprotokoll, nur ausgeteilter Schaden",
+          "description": "Öffnet die Konsole und zeigt nur den Schaden, den du ausgeteilt hast, ohne die eingehenden Zeilen. Praktisch, um dem Team zu sagen, wie viel Leben derjenige noch hatte, der dich getötet hat — ohne dass der Rest des Protokolls dazwischenfunkt."
+        },
+        "fr-FR": {
+          "title": "Journal de combat, dégâts infligés seulement",
+          "description": "Ouvre la console en n’affichant que les dégâts que vous avez infligés, sans les lignes reçues. Pratique pour dire à un coéquipier combien de vie il restait à celui qui vous a tué, sans que le reste du journal gêne."
+        },
+        "es-ES": {
+          "title": "Registro de combate, solo daño infligido",
+          "description": "Abre la consola mostrando solo el daño que has hecho, sin las líneas de daño recibido. Útil para decirle a un compañero cuánta vida le quedaba al que te mató, sin que estorbe el resto del registro."
+        },
+        "pt-BR": {
+          "title": "Registro de combate, só dano causado",
+          "description": "Abre o console mostrando apenas o dano que você causou, sem as linhas de dano recebido. Útil para dizer ao time quanta vida sobrou para quem te matou, sem o resto do registro atrapalhando."
+        },
+        "ru-RU": {
+          "title": "Боевой журнал, только нанесённый урон",
+          "description": "Открывает консоль и показывает только урон, который нанесли вы, без входящих строк. Удобно, чтобы сказать напарнику, сколько здоровья осталось у убившего вас, не отвлекаясь на остальное."
+        },
+        "tr-TR": {
+          "title": "Savaş kaydı, yalnızca verilen hasar",
+          "description": "Konsolu açar ve yalnızca senin verdiğin hasarı gösterir, gelen satırlar olmadan. Seni öldüren oyuncunun ne kadar canı kaldığını takım arkadaşına söylerken, kaydın geri kalanı yolunu tıkamaz."
+        },
+        "pl-PL": {
+          "title": "Dziennik walki, tylko zadane obrażenia",
+          "description": "Otwiera konsolę pokazującą tylko obrażenia, które zadałeś, bez linii otrzymanych. Przydatne, gdy chcesz powiedzieć koledze z drużyny, ile życia zostało temu, kto cię zabił, bez reszty dziennika w drodze."
+        },
+        "zh-CN": {
+          "title": "战斗记录，仅显示输出伤害",
+          "description": "打开控制台，只显示你造成的伤害，不显示受到的伤害。方便告诉队友杀死你的人还剩多少血，不会被其余记录干扰。"
+        }
+      }
     }
   ]
 }

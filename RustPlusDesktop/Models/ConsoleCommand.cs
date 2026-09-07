@@ -142,6 +142,14 @@ public sealed class ConsoleCommandParam : INotifyPropertyChanged
 }
 
 /// <summary>
+/// <summary>One command's title and description in a single language.</summary>
+public sealed class ConsoleCommandText
+{
+    [JsonPropertyName("title")] public string? Title { get; set; }
+    [JsonPropertyName("description")] public string? Description { get; set; }
+}
+
+/// <summary>
 /// A console command as shipped in console-commands.json, plus whatever the user has changed:
 /// parameter values and the key it should be bound to. Both are persisted separately from the
 /// catalogue, so shipping new commands never overwrites someone's binds.
@@ -152,12 +160,43 @@ public sealed class ConsoleCommandDef : INotifyPropertyChanged
     [JsonPropertyName("category")] public string Category { get; set; } = "client";
     [JsonPropertyName("group")] public string Group { get; set; } = "";
     [JsonPropertyName("featured")] public bool Featured { get; set; }
-    [JsonPropertyName("title")] public string Title { get; set; } = "";
-    [JsonPropertyName("description")] public string Description { get; set; } = "";
+    [JsonPropertyName("title")] public string TitleEn { get; set; } = "";
+    [JsonPropertyName("description")] public string DescriptionEn { get; set; } = "";
+    [JsonPropertyName("i18n")] public Dictionary<string, ConsoleCommandText>? Translations { get; set; }
     [JsonPropertyName("command")] public string Command { get; set; } = "";
     [JsonPropertyName("bindable")] public bool Bindable { get; set; }
+
+    /// <summary>
+    /// Some commands carry quotes Rust needs — meta.exec takes two quoted arguments —
+    /// and the wrapping below would turn them into apostrophes and break the bind.
+    /// Those ship their own quoting and are emitted verbatim.
+    /// </summary>
+    [JsonPropertyName("rawBind")] public bool RawBind { get; set; }
     [JsonPropertyName("defaultBind")] public string? DefaultBind { get; set; }
     [JsonPropertyName("params")] public List<ConsoleCommandParam> Params { get; set; } = new();
+
+    /// <summary>What the list shows, in the language the app is running in.</summary>
+    [JsonIgnore] public string Title => Translated(t => t.Title) ?? TitleEn;
+
+    [JsonIgnore] public string Description => Translated(t => t.Description) ?? DescriptionEn;
+
+    /// <summary>
+    /// The translated text for the current language, or null to fall back to English.
+    ///
+    /// Falling back per field rather than per command means a half-translated entry
+    /// still shows its translated title, and only the sentence nobody got to stays
+    /// English — which is better than an English title beside a translated one.
+    /// </summary>
+    private string? Translated(Func<ConsoleCommandText, string?> pick)
+    {
+        if (Translations == null || Translations.Count == 0) return null;
+
+        var language = Helpers.AppLanguages.Current();
+        if (language == null || !Translations.TryGetValue(language, out var text) || text == null) return null;
+
+        var value = pick(text);
+        return string.IsNullOrWhiteSpace(value) ? null : value;
+    }
 
     private string? _bindKey;
 
@@ -206,9 +245,14 @@ public sealed class ConsoleCommandDef : INotifyPropertyChanged
         get
         {
             var cmd = ResolvedCommand;
+            var key = HasBind ? BindKey : "<key>";
+
+            // Already quoted the way Rust wants it; touching it would break it.
+            if (RawBind) return $"bind {key} {cmd}";
+
             bool needsQuotes = cmd.Contains(';') || cmd.Contains(' ');
             var body = needsQuotes && !cmd.StartsWith("\"") ? $"\"{cmd.Replace("\"", "'")}\"" : cmd;
-            return $"bind {(HasBind ? BindKey : "<key>")} {body}";
+            return $"bind {key} {body}";
         }
     }
 
