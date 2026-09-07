@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
   Button,
-  Paper
+  Paper,
+  Chip
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { useCalculation } from '../../../context/CalculationContext.tsx';
 import { useFlipGrid } from '../../../utils/useFlipGrid.ts';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
@@ -16,6 +19,7 @@ import { RouteToolbar } from './RouteToolbar.tsx';
 import { RouteCard } from './RouteCard.tsx';
 import { RouteComparisonModal } from './RouteComparisonModal.tsx';
 import { MissingCloneAdvisor } from '../TargetDesigner/MissingCloneAdvisor.tsx';
+import { analyzeMissingDonors } from '../../../domain/genetics/missingGenes.ts';
 
 const PAGE_SIZE = 8;
 export const nextRoutePageSize = (current: number, total: number) => Math.min(current + PAGE_SIZE, total);
@@ -25,15 +29,25 @@ export const RouteGrid: React.FC = () => {
     filteredAndSortedRoutes,
     selectedGroup,
     isCalculating,
+    hasCalculated,
     results,
     runSimulation,
-    sortBy
+    sortBy,
+    options
   } = useCalculation();
-  const { sourceSaplings, selectedPlant } = useWorkspace();
+  const { sourceSaplings, clones, selectedPlant, targetConfig, setTargetConfig } = useWorkspace();
   const { isScannerActive, isScannerInitializing } = useScanner();
 
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
+  // Analyze donor strength for the current target to identify bottlenecks when no routes are found
+  const { slotAnalysis } = useMemo(() => {
+    return analyzeMissingDonors(clones, targetConfig.targetGenetics);
+  }, [clones, targetConfig.targetGenetics]);
+
+  const criticalSlots = useMemo(() => slotAnalysis.filter(s => s.weaknessLevel === 'critical'), [slotAnalysis]);
+  const moderateSlots = useMemo(() => slotAnalysis.filter(s => s.weaknessLevel === 'moderate'), [slotAnalysis]);
 
   // Reset visible count when results or sorting changes
   useEffect(() => {
@@ -84,40 +98,151 @@ export const RouteGrid: React.FC = () => {
           </Typography>
         </Box>
       ) : results.length === 0 ? (
-        /* Empty State: Not yet calculated */
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            p: 5,
-            backgroundColor: 'var(--gl-panel-bg)',
-            border: '1.5px dashed var(--gl-border)',
-            borderRadius: '6px',
-            textAlign: 'center'
-          }}
-        >
-          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 1 }}>
-            Ready To Find Breeding Routes
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', mb: 2.5, maxWidth: 420 }}>
-            {hasClones
-              ? `You have ${sourceSaplings.length} plants in your list. Choose your target above and click Calculate Routes.`
-              : 'Type or paste at least 2 plants in the Gene Inputs panel on the left to start finding optimal crossbreeding combinations.'}
-          </Typography>
-
-          <Button
-            variant="contained"
-            size="medium"
-            disabled={!hasClones || isScannerBusy}
-            onClick={() => runSimulation()}
-            startIcon={<PlayArrowIcon sx={{ fontSize: 18 }} />}
-            sx={{ fontWeight: 800, px: 3, backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', '&:hover': { backgroundColor: 'var(--gl-primary-hover)' } }}
+        hasCalculated ? (
+          /* Empty State: Calculation finished with 0 results -> Simple clean message */
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              p: { xs: 3, sm: 4 },
+              backgroundColor: 'var(--gl-panel-bg)',
+              border: '1px solid rgba(255, 152, 0, 0.35)',
+              borderRadius: '8px',
+              textAlign: 'center'
+            }}
           >
-            {isScannerBusy ? 'Stop Scanner To Calculate' : 'Calculate Routes'}
-          </Button>
-        </Box>
+            <Box
+              sx={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                backgroundColor: 'rgba(255, 152, 0, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 1.5,
+                color: 'var(--gl-warning)'
+              }}
+            >
+              <WarningAmberIcon sx={{ fontSize: 24 }} />
+            </Box>
+
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 800,
+                color: 'var(--gl-text-primary)',
+                mb: 0.75,
+                fontSize: '1rem'
+              }}
+            >
+              No Viable Routes Found
+            </Typography>
+
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'var(--gl-text-muted)',
+                maxWidth: 460,
+                lineHeight: 1.6,
+                mb: 2.5,
+                fontSize: '0.84rem'
+              }}
+            >
+              <strong style={{ color: 'var(--gl-text-primary)', fontWeight: 700 }}>You need more clones.</strong> Your current plant list cannot breed target <strong>[{targetConfig.targetGenetics.replace(/\*+$/, '') || targetConfig.targetGenetics}]</strong>. Add more or better clones with green genes (G / Y) to your clone bank, or try Best Possible match mode.
+            </Typography>
+
+            <Box sx={{ display: 'flex', gap: 1.25, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setIsAdvisorOpen(true)}
+                startIcon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  backgroundColor: 'var(--gl-warning)',
+                  color: '#000',
+                  fontWeight: 800,
+                  px: 2,
+                  '&:hover': { backgroundColor: 'var(--gl-warning-hover)' }
+                }}
+              >
+                Clone Advisor
+              </Button>
+
+              {targetConfig.matchMode !== 'best-possible' && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => {
+                    setTargetConfig(prev => ({ ...prev, matchMode: 'best-possible' }));
+                    runSimulation();
+                  }}
+                  startIcon={<RefreshIcon sx={{ fontSize: 16 }} />}
+                  sx={{
+                    color: 'var(--gl-primary)',
+                    borderColor: 'var(--gl-primary)',
+                    fontWeight: 800,
+                    px: 2
+                  }}
+                >
+                  Try Best Possible
+                </Button>
+              )}
+
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => runSimulation()}
+                startIcon={<PlayArrowIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  color: 'var(--gl-text-secondary)',
+                  borderColor: 'var(--gl-border)',
+                  fontWeight: 800,
+                  px: 2
+                }}
+              >
+                Recalculate
+              </Button>
+            </Box>
+          </Box>
+        ) : (
+          /* Empty State: Not yet calculated */
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              p: 5,
+              backgroundColor: 'var(--gl-panel-bg)',
+              border: '1.5px dashed var(--gl-border)',
+              borderRadius: '6px',
+              textAlign: 'center'
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)', mb: 1 }}>
+              Ready To Find Breeding Routes
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', mb: 2.5, maxWidth: 420 }}>
+              {hasClones
+                ? `You have ${sourceSaplings.length} plants in your list. Choose your target above and click Calculate Routes.`
+                : 'Type or paste at least 2 plants in the Gene Inputs panel on the left to start finding optimal crossbreeding combinations.'}
+            </Typography>
+
+            <Button
+              variant="contained"
+              size="medium"
+              disabled={!hasClones || isScannerBusy}
+              onClick={() => runSimulation()}
+              startIcon={<PlayArrowIcon sx={{ fontSize: 18 }} />}
+              sx={{ fontWeight: 800, px: 3, backgroundColor: 'var(--gl-primary)', color: 'var(--gl-on-accent)', '&:hover': { backgroundColor: 'var(--gl-primary-hover)' } }}
+            >
+              {isScannerBusy ? 'Stop Scanner To Calculate' : 'Calculate Routes'}
+            </Button>
+          </Box>
+        )
       ) : filteredAndSortedRoutes.length === 0 ? (
         /* Empty State: Filters returned no match */
         <Box
@@ -133,7 +258,7 @@ export const RouteGrid: React.FC = () => {
             No Routes Match Current Target / Filter
           </Typography>
           <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', display: 'block', mb: 2 }}>
-            Try changing the Target Match Mode to "At Least" or "Best Possible", or resetting inventory filters.
+            The solver found {results.length} breeding combinations, but none match your active target mode ({targetConfig.matchMode.toUpperCase()}) or inventory filters. Try changing Target Match Mode to "At Least" or "Best Possible", or resetting inventory filters.
           </Typography>
           <Button
             variant="outlined"

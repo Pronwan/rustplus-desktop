@@ -28,13 +28,21 @@ export interface ScoredRoute {
 }
 
 /**
+ * Minimum number of routes required before grouping similar routes is applied.
+ * When route count is low (<= 25), all individual routes are displayed so the user
+ * can see all available clone combinations without them being collapsed.
+ */
+export const MIN_ROUTES_TO_GROUP = 25;
+
+/**
  * Quality signature used to collapse near-identical routes. Two routes with the
- * same score, chance, generations, clone count, plant count and inventory status
- * are treated as equivalent — only one representative card is shown.
+ * same result genotype, score, chance, generations, clone count, plant count and
+ * inventory status are treated as equivalent — only one representative card is shown.
  */
 const routeSignature = (r: ScoredRoute): string => {
   const a = r.analysis;
   return [
+    r.group.resultSaplingGeneString,
     r.bestMap.score,
     Math.round(a.probabilityPercent),
     a.generationCount,
@@ -46,6 +54,7 @@ const routeSignature = (r: ScoredRoute): string => {
 
 interface CalculationContextType {
   isCalculating: boolean;
+  hasCalculated: boolean;
   progress: ProgressState | null;
   results: GeneticsMapGroup[];
   scoredRoutes: ScoredRoute[];
@@ -103,8 +112,14 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [results, setResults] = useState<GeneticsMapGroup[]>([]);
   const [progress, setProgress] = useState<ProgressState | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [hasCalculated, setHasCalculated] = useState(false);
   const [calculationStatusMessage, setCalculationStatusMessage] = useState('');
   const announcedGenerationRef = useRef(1);
+
+  // Reset calculated flag if inputs or target configuration change
+  useEffect(() => {
+    setHasCalculated(false);
+  }, [geneInputText, targetConfig.targetGenetics, targetConfig.matchMode]);
 
   const [sortBy, setSortBy] = useState<RouteSortOption>('recommended');
   const [inventoryFilterMode, setInventoryFilterMode] = useState<'all' | 'available-only' | 'partial-or-better'>('all');
@@ -158,7 +173,8 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       };
     }
     updateOptions(opts);
-    notifyInfo(`Calculation preset: ${preset.toUpperCase()}`);
+    const label = preset === 'fast' ? '1 Generation' : preset === 'balanced' ? '2 Generations' : '3 Generations';
+    notifyInfo(`Calculation preset: ${label}`);
   }, [updateOptions, notifyInfo]);
 
   // Orchestrator Event Listener
@@ -186,13 +202,17 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
       } else if (event.type === 'DONE') {
         setAnalysisEpoch(e => e + 1);
+        setHasCalculated(true);
         if (event.mapGroups) {
           setResults(event.mapGroups);
-          setCalculationStatusMessage(
-            event.mapGroups.length > 0
-              ? `Calculation complete. ${event.mapGroups.length} viable breeding routes retained.`
-              : 'Calculation complete. No viable routes found with the current plants.'
-          );
+          if (event.mapGroups.length === 0) {
+            setCalculationStatusMessage('Calculation complete. No viable routes found with current plants. More or better clones needed.');
+            notifyWarning('No breeding routes found for this target. You need more or better clones with green genes in the required positions.');
+          } else {
+            setCalculationStatusMessage(
+              `Calculation complete. ${event.mapGroups.length} viable breeding routes retained.`
+            );
+          }
         }
         setIsCalculating(false);
         setProgress(null);
@@ -202,7 +222,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => {
       unsubscribe();
     };
-  }, [orchestrator, options.numberOfGenerations]);
+  }, [orchestrator, options.numberOfGenerations, notifyWarning]);
 
   // Selected route map
   const selectedMap = useMemo(() => {
@@ -284,8 +304,11 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Collapse equal-quality routes into a single representative (keeps the flood
   // of identical "Score 98 · 100% · GEN.1 · 3 clones" cards down to one each).
+  // When route count is low (<= MIN_ROUTES_TO_GROUP), do not group so users can see all options.
   const filteredAndSortedRoutes = useMemo(() => {
-    if (!groupSimilar) return filteredRoutes;
+    if (!groupSimilar || filteredRoutes.length <= MIN_ROUTES_TO_GROUP) {
+      return filteredRoutes;
+    }
 
     const clusters: ScoredRoute[] = [];
     const bySignature = new Map<string, ScoredRoute>();
@@ -336,6 +359,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
 
     setIsCalculating(true);
+    setHasCalculated(false);
     announcedGenerationRef.current = 1;
     setCalculationStatusMessage('Calculation started. Generation 1 is being prepared.');
     setProgress({
@@ -368,6 +392,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     orchestrator.cancelSimulation();
     setIsCalculating(false);
     setProgress(null);
+    setHasCalculated(true);
     const sorted = orchestrator.getSortedResults();
     setResults(sorted);
     setCalculationStatusMessage(`Calculation cancelled. Displaying ${sorted.length} partial results.`);
@@ -402,6 +427,7 @@ export const CalculationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     <CalculationContext.Provider
       value={{
         isCalculating,
+        hasCalculated,
         progress,
         results,
         scoredRoutes,

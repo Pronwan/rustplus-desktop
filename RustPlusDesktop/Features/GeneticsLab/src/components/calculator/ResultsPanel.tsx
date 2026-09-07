@@ -317,9 +317,13 @@ export const ResultsPanel: React.FC = () => {
 
       {/* Results List */}
       {filteredResults.length === 0 ? (
-        <Box sx={{ textAlign: 'center', py: 6 }}>
-          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace' }}>
-            {isCalculating ? 'Simulating crossbreeding combinations...' : 'No breeding results to display.'}
+        <Box sx={{ textAlign: 'center', py: 6, px: 2 }}>
+          <Typography variant="body2" sx={{ color: 'var(--gl-text-muted)', fontFamily: 'monospace', maxWidth: 460, mx: 'auto', lineHeight: 1.6 }}>
+            {isCalculating
+              ? 'Simulating crossbreeding combinations...'
+              : results.length === 0
+              ? 'No viable breeding results found. You need more or better clones with green genes (G / Y) to breed this target.'
+              : 'No breeding results match your active filters. Try clearing gene count or slot filters.'}
           </Typography>
         </Box>
       ) : (
