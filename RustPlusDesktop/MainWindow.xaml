@@ -4240,7 +4240,13 @@
                                 <Setter Property="Height" Value="44" />
                                 <Setter Property="Margin" Value="0,0,0,6" />
                                 <Setter Property="Padding" Value="0" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
                                 <Setter Property="Appearance" Value="Transparent" />
+                                <!-- No resting outline: the button box only appears on hover (WPF-UI fills the background on MouseOver). -->
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
                                 <Setter Property="AutomationProperties.HelpText" Value="Opens a sidebar workspace" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Tag.IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
@@ -4587,8 +4593,11 @@
                                     AutomationProperties.HelpText="{DynamicResource SocialRailHelp}"
                                     Click="BtnSocial_Click"
                                     ToolTip="{DynamicResource SocialRailName}"
-                                    Foreground="#FF8B7BE8"
-                                    Icon="{ui:SymbolIcon Symbol=ChatMultiple24}" />
+                                    Foreground="#FF8B7BE8">
+                                    <Viewbox Width="24" Height="24">
+                                        <ui:SymbolIcon Symbol="ChatMultiple24" />
+                                    </Viewbox>
+                                </ui:Button>
                                 <!--
                                     Unread messages, over the bubble. IsHitTestVisible off so the
                                     badge cannot swallow the click it is sitting on.
@@ -4615,8 +4624,11 @@
                                     Click="CompactSidebarTab_Click"
                                     Tag="{Binding ElementName=TicketsTab}"
                                     ToolTip="Tickets"
-                                    Foreground="#FFE8683C"
-                                    Icon="{ui:SymbolIcon Symbol=ChatHelp24}" />
+                                    Foreground="#FFE8683C">
+                                    <Viewbox Width="24" Height="24">
+                                        <ui:SymbolIcon Symbol="ChatHelp24" />
+                                    </Viewbox>
+                                </ui:Button>
                                 <Border x:Name="RailTicketsBadge" Visibility="Collapsed"
                                         IsHitTestVisible="False"
                                         HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -4633,15 +4645,21 @@
                                 Style="{StaticResource SidebarRailButton}"
                                 AutomationProperties.Name="{DynamicResource UiPinSidebar}"
                                 Click="BtnToggleSidebarPin_Click"
-                                Icon="{ui:SymbolIcon Symbol=Pin24}"
-                                ToolTip="{DynamicResource UiKeepSidebarUnfolded}" />
+                                ToolTip="{DynamicResource UiKeepSidebarUnfolded}">
+                                <Viewbox Width="24" Height="24">
+                                    <ui:SymbolIcon Symbol="Pin24" />
+                                </Viewbox>
+                            </ui:Button>
                             <ui:Button
                                 Style="{StaticResource SidebarRailButton}"
                                 Margin="0"
                                 AutomationProperties.Name="{DynamicResource Settings}"
                                 Click="BtnSettings_Click"
-                                Icon="{ui:SymbolIcon Symbol=Settings24}"
-                                ToolTip="{DynamicResource Settings}" />
+                                ToolTip="{DynamicResource Settings}">
+                                <Viewbox Width="24" Height="24">
+                                    <ui:SymbolIcon Symbol="Settings24" />
+                                </Viewbox>
+                            </ui:Button>
                         </StackPanel>
 
                         <!-- Drag overlay for rail reordering/foldering: ghost + insertion indicator.

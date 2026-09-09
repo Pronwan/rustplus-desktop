@@ -124,10 +124,12 @@ public partial class MainWindow
         else
             System.Windows.Automation.AutomationProperties.SetHelpText(button, info.HelpFallback);
 
+        // Render as Content (not the Icon slot): the WPF-UI Button.Icon presenter
+        // caps the glyph size, so a Viewbox gives every icon the same larger size.
         if (info.GeometryPath is { } geo)
             button.Content = BuildGeometryIcon(geo, button);
         else
-            button.Icon = new WpfUi.SymbolIcon { Symbol = info.Symbol };
+            button.Content = BuildSymbolIcon(info.Symbol, button);
 
         return button;
     }
@@ -137,7 +139,15 @@ public partial class MainWindow
     {
         var path = new Path { Data = Geometry.Parse(geometry), Stretch = Stretch.Uniform };
         path.SetBinding(Shape.FillProperty, new Binding(nameof(Control.Foreground)) { Source = owner });
-        return new Viewbox { Width = 16, Height = 16, Child = path };
+        return new Viewbox { Width = 24, Height = 24, Child = path };
+    }
+
+    /// <summary>Fluent glyph sized via a Viewbox so it matches the geometry icons.</summary>
+    private static Viewbox BuildSymbolIcon(WpfUi.SymbolRegular symbol, WpfUi.Button owner)
+    {
+        var icon = new WpfUi.SymbolIcon { Symbol = symbol };
+        icon.SetBinding(Control.ForegroundProperty, new Binding(nameof(Control.Foreground)) { Source = owner });
+        return new Viewbox { Width = 24, Height = 24, Child = icon };
     }
 
     private Popup BuildRailPopover(FrameworkElement target)
@@ -196,12 +206,12 @@ public partial class MainWindow
 
         var folderRef = new RailDragRef { FolderId = node.FolderId };
 
+        // Keep the tinted capsule fill behind the grouped icons, but no border
+        // stroke around it (thickness 0) — hover highlights come from each button.
         var bgBrush = new SolidColorBrush(node.Expanded
             ? Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
             : Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
-        var borderBrush = new SolidColorBrush(node.Expanded
-            ? Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF)
-            : Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
+        var borderBrush = new SolidColorBrush(Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
 
         var container = new Border
         {
@@ -209,7 +219,7 @@ public partial class MainWindow
             CornerRadius = new CornerRadius(16),
             Background = bgBrush,
             BorderBrush = borderBrush,
-            BorderThickness = new Thickness(1),
+            BorderThickness = new Thickness(0),
             Padding = new Thickness(0, 3, 0, 3),
             Margin = new Thickness(0, 0, 0, 6),
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -278,6 +288,17 @@ public partial class MainWindow
 
         expandedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.HelpTextProperty, "SidebarFolderCollapseHelp");
         expandedGrid.Children.Add(expandedButton);
+        // Thin rule under the folder glyph, separating it from its children.
+        // Lives in the expanded header so it only shows while the folder is open.
+        expandedGrid.Children.Add(new Border
+        {
+            Height = 1,
+            Width = 24,
+            Background = Frozen(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            IsHitTestVisible = false,
+        });
         expandedGrid.Children.Add(BuildFolderPopover(expandedButton));
         headerGrid.Children.Add(expandedGrid);
 
@@ -330,7 +351,7 @@ public partial class MainWindow
         if (c.Node.Expanded)
         {
             c.ContainerBackgroundBrush.Color = Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
-            c.ContainerBorderBrush.Color = Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
+            c.ContainerBorderBrush.Color = Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF);
 
             c.CollapsedVisual.Visibility = Visibility.Collapsed;
             c.CollapsedVisual.Opacity = 0.0;
@@ -431,7 +452,7 @@ public partial class MainWindow
             var fadeInExpanded = new DoubleAnimation(c.ExpandedVisual.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(160)));
 
             var bgAnim = new ColorAnimation(c.ContainerBackgroundBrush.Color, Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(200)));
-            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(200)));
+            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(200)));
 
             heightAnim.Completed += (_, _) =>
             {
@@ -458,7 +479,7 @@ public partial class MainWindow
                 c.ContainerBackgroundBrush.Color = Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
                 c.ContainerBackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, null);
 
-                c.ContainerBorderBrush.Color = Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
+                c.ContainerBorderBrush.Color = Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF);
                 c.ContainerBorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, null);
 
                 c.Tray.IsHitTestVisible = true;
