@@ -272,24 +272,69 @@ namespace RustPlusDesk
         {
             if (SettingsPopup.IsOpen) return;
 
-            double gap = 12;
-            double panelWidth = 220;   // overlay is 180 wide plus its padding and border
+            const double gap = 12;
+            const double panelWidth = 220;    // overlay is 180 wide plus its padding and border
+            const double panelHeight = 460;   // tall enough now that the layer switches are in
 
-            // To the right of the map unless that runs off the screen, then to the left.
-            double offsetX = _mapWidth + gap;
-            if (!double.IsNaN(Left) && Left + offsetX + panelWidth > SystemParameters.VirtualScreenWidth)
-                offsetX = -(panelWidth + gap);
+            double mapLeft = Canvas.GetLeft(MapContainer);
+            if (double.IsNaN(mapLeft)) mapLeft = 0;
+
+            var screen = ScreenBoundsFor(this);
+
+            // Beside the map, on the mini-map's own monitor. Spilling onto the next screen was
+            // the old behaviour and it put the panel on a display the user was not looking at.
+            double offsetX = mapLeft + _mapWidth + gap;
+            if (Left + offsetX + panelWidth > screen.Right)
+                offsetX = mapLeft - panelWidth - gap;
+            if (Left + offsetX < screen.Left)
+                offsetX = Math.Max(screen.Left - Left, mapLeft + _mapWidth + gap);
+
+            double offsetY = 0;
+            if (Top + offsetY + panelHeight > screen.Bottom)
+                offsetY = Math.Min(0, screen.Bottom - panelHeight - Top);
+            if (Top + offsetY < screen.Top)
+                offsetY = screen.Top - Top;
 
             SettingsPopup.HorizontalOffset = offsetX;
-            SettingsPopup.VerticalOffset = 0;
+            SettingsPopup.VerticalOffset = offsetY;
             SettingsPopup.IsOpen = true;
-            SettingsHoverBorder.Visibility = Visibility.Collapsed;
         }
 
-        public void CloseSettings()
+        public void CloseSettings() => SettingsPopup.IsOpen = false;
+
+        /// <summary>
+        /// The working area of the monitor the window sits on, in the same device-independent
+        /// units as <see cref="Window.Left"/>.
+        ///
+        /// SystemParameters describes the whole virtual desktop, which is why the panel used to
+        /// open on the neighbouring screen: "does it fit before the right edge" was asking about
+        /// the far edge of the last monitor, not the one the mini-map is on.
+        /// </summary>
+        private static Rect ScreenBoundsFor(Window window)
         {
-            SettingsPopup.IsOpen = false;
-            SettingsHoverBorder.Visibility = Visibility.Visible;
+            try
+            {
+                var origin = new System.Drawing.Point(
+                    (int)(double.IsNaN(window.Left) ? 0 : window.Left),
+                    (int)(double.IsNaN(window.Top) ? 0 : window.Top));
+
+                var area = System.Windows.Forms.Screen.FromPoint(origin).WorkingArea;
+
+                // Screen reports physical pixels; Window.Left is device-independent.
+                double scale = 1.0;
+                var source = PresentationSource.FromVisual(window);
+                if (source?.CompositionTarget != null)
+                    scale = source.CompositionTarget.TransformToDevice.M11;
+                if (scale <= 0) scale = 1.0;
+
+                return new Rect(area.Left / scale, area.Top / scale, area.Width / scale, area.Height / scale);
+            }
+            catch
+            {
+                return new Rect(
+                    SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
+                    SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+            }
         }
 
         /// <summary>
@@ -438,6 +483,23 @@ namespace RustPlusDesk
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
+
+            PositionChrome();
+        }
+
+        /// <summary>Parks the add and settings buttons on the map tile's top-right corner.</summary>
+        private void PositionChrome()
+        {
+            if (SettingsHoverBorder == null) return;
+
+            double mapLeft = Canvas.GetLeft(MapContainer);
+            double mapTop = Canvas.GetTop(MapContainer);
+            if (double.IsNaN(mapLeft)) mapLeft = 0;
+            if (double.IsNaN(mapTop)) mapTop = 0;
+
+            const double stripWidth = 72;   // two icon buttons plus the gap between them
+            Canvas.SetLeft(SettingsHoverBorder, mapLeft + _mapWidth - stripWidth - 10);
+            Canvas.SetTop(SettingsHoverBorder, mapTop + 10);
         }
 
         private Rect MeasureDockBounds()

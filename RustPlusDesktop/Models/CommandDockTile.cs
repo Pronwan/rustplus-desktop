@@ -60,6 +60,15 @@ namespace RustPlusDesk.Models
     {
         public List<CommandDockTile> Tiles { get; set; } = new();
 
+        /// <summary>
+        /// Where a newly added tile goes: below the map by default, beside it when set.
+        ///
+        /// Only the auto-placement follows this. Dragging puts a tile anywhere, including left
+        /// of or above the map — that is how a bar along the top or the left edge of the screen
+        /// gets built, and the window resizes around whatever shape comes out.
+        /// </summary>
+        public bool GrowRight { get; set; }
+
         /// <summary>Cell size and gap in device-independent pixels.</summary>
         public const double CellSize = 74;
         public const double CellGap = 8;

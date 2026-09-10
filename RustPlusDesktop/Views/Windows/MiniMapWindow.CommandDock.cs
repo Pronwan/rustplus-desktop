@@ -33,7 +33,6 @@ namespace RustPlusDesk
         private readonly Dictionary<string, FrameworkElement> _tileElements = new();
         private readonly List<Action> _tileRefreshers = new();
         private DispatcherTimer? _dockTimer;
-        private bool _isEditMode;
         private CommandDockTilePicker? _picker;
 
         private const string DockCacheKey = "minimap_dock";
@@ -61,20 +60,21 @@ namespace RustPlusDesk
             (CommandDockLayout.PixelsToCells(_mapWidth), CommandDockLayout.PixelsToCells(_mapHeight));
 
         /// <summary>
-        /// A tile's pixel rect. Cell (0,0) is the map tile's top-left, and columns to the right
-        /// of the map start after it — so the grid stays whole while the map changes size.
+        /// A tile's pixel rect. Cell (0,0) is the map tile's top-left; cells past the map's own
+        /// span continue after it, and negative cells run left of and above it. So the grid
+        /// stays whole while the map changes size, and a bar can be built on any side.
         /// </summary>
         private Rect CellRect(CommandDockTile tile)
         {
             var (mapCols, mapRows) = MapCellSpan();
 
-            double x = tile.Col < mapCols
-                ? CommandDockLayout.CellOffset(tile.Col)
-                : _mapWidth + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Col - mapCols);
+            double x = tile.Col >= mapCols
+                ? _mapWidth + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Col - mapCols)
+                : CommandDockLayout.CellOffset(tile.Col);
 
-            double y = tile.Row < mapRows
-                ? CommandDockLayout.CellOffset(tile.Row)
-                : _mapHeight + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Row - mapRows);
+            double y = tile.Row >= mapRows
+                ? _mapHeight + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Row - mapRows)
+                : CommandDockLayout.CellOffset(tile.Row);
 
             return new Rect(x, y,
                 CommandDockLayout.CellsToPixels(tile.ColSpan),
@@ -94,8 +94,10 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Places a new tile like a desktop icon: first free run of cells, scanned down the
-        /// column to the right of the map, then further columns, then below the map.
+        /// Places a new tile like a desktop icon: the first free run of cells, scanned in the
+        /// direction the dock is set to grow, with the other direction as the fallback once that
+        /// side is full. Only auto-placement follows the setting — a drag reaches any cell,
+        /// including the ones left of and above the map.
         /// </summary>
         private void AssignFreeCell(CommandDockTile tile)
         {
@@ -122,18 +124,30 @@ namespace RustPlusDesk
                 return true;
             }
 
-            // Right of the map first — a vertical quickbar beside the map is the arrangement
-            // this is meant to make easy — then the rows underneath it.
-            for (int col = mapCols; col < mapCols + 6; col++)
-                for (int row = 0; row < mapRows + 6; row++)
+            // Below the map by default: it keeps the dock as narrow as the map, which is what
+            // sits well beside a game. Growing to the right is the opt-in, for a quickbar.
+            bool right = _dock.GrowRight;
+
+            if (right)
+            {
+                for (int col = mapCols; col < mapCols + 8; col++)
+                    for (int row = 0; row < mapRows + 8; row++)
+                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
+            }
+
+            for (int row = mapRows; row < mapRows + 16; row++)
+                for (int col = 0; col < Math.Max(mapCols, 1) + 8; col++)
                     if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
 
-            for (int row = mapRows; row < mapRows + 12; row++)
-                for (int col = 0; col < mapCols + 6; col++)
-                    if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
+            if (!right)
+            {
+                for (int col = mapCols; col < mapCols + 8; col++)
+                    for (int row = 0; row < mapRows + 8; row++)
+                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
+            }
 
-            tile.Col = mapCols;
-            tile.Row = mapRows;
+            tile.Col = right ? mapCols : 0;
+            tile.Row = right ? 0 : mapRows;
         }
 
         // ── Building ────────────────────────────────────────────────────────────
@@ -145,7 +159,6 @@ namespace RustPlusDesk
 
             _tileElements.Clear();
             _tileRefreshers.Clear();
-            _tileGrips.Clear();
 
             foreach (var tile in _dock.Tiles.ToList())
             {
@@ -171,7 +184,6 @@ namespace RustPlusDesk
                 }
             }
 
-            ApplyEditModeChrome();
             RefreshTiles();
             LayoutDock();
         }
@@ -404,7 +416,6 @@ namespace RustPlusDesk
 
             shell.MouseLeftButtonUp += async (_, e) =>
             {
-                if (_isEditMode) return;
                 e.Handled = true;
 
                 var device = FindDevice(tile.EntityId);
@@ -646,7 +657,6 @@ namespace RustPlusDesk
 
             shell.MouseLeftButtonUp += (_, e) =>
             {
-                if (_isEditMode) return;
                 e.Handled = true;
                 if (!CanRunRule(tile, out string? _)) return;
                 if (tile.RuleId != null) DockHost?.RunDockRule(tile.RuleId);
@@ -785,38 +795,11 @@ namespace RustPlusDesk
 
         // ── Edit mode ───────────────────────────────────────────────────────────
 
-        private void BtnAddTile_Click(object sender, RoutedEventArgs e)
-        {
-            SetEditMode(true);
-            ShowPicker();
-        }
-
-        private void SetEditMode(bool on)
-        {
-            if (_isEditMode == on) return;
-            _isEditMode = on;
-            ApplyEditModeChrome();
-        }
-
-        private void ApplyEditModeChrome()
-        {
-            foreach (var el in _tileElements.Values)
-            {
-                if (el is not Border border) continue;
-
-                border.Cursor = _isEditMode ? Cursors.SizeAll : Cursors.Arrow;
-                if (_isEditMode)
-                    border.BorderBrush = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF));
-            }
-
-            foreach (var grip in _tileGrips.Values)
-                grip.Visibility = _isEditMode ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private readonly Dictionary<string, FrameworkElement> _tileGrips = new();
+        private void BtnAddTile_Click(object sender, RoutedEventArgs e) => ShowPicker();
 
         /// <summary>
-        /// The corner handle that changes a tile's cell span in edit mode.
+        /// The corner handle that changes a tile's cell span. Shown while the tile is hovered,
+        /// so resizing needs no mode — the same as moving and removing.
         ///
         /// It is wrapped into the tile after the tile built its own content, so every kind gets
         /// one without each builder having to make room for it. Chat keeps a floor of two cells
@@ -839,13 +822,52 @@ namespace RustPlusDesk
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
                 Cursor = Cursors.SizeNWSE,
-                Visibility = _isEditMode ? Visibility.Visible : Visibility.Collapsed,
+                Visibility = Visibility.Collapsed,
+            };
+
+            // Removing is a button, not a right-click. Right-click still pans the map, and a
+            // tile that vanished because the cursor happened to be over it would be worse than
+            // any amount of saved pixels.
+            var remove = new Border
+            {
+                Width = 16,
+                Height = 16,
+                CornerRadius = new CornerRadius(8),
+                Margin = new Thickness(0, -6, -6, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Background = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)),
+                Cursor = Cursors.Hand,
+                Visibility = Visibility.Collapsed,
+                Child = new TextBlock
+                {
+                    Text = "\uE711",  // cancel
+                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                    FontSize = 9,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            };
+            ToolTipService.SetToolTip(remove, Loc.Text("CommandDockRemoveTile", "Remove tile"));
+            remove.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
+            remove.MouseLeftButtonUp += (_, e) => { e.Handled = true; RemoveTile(tile.Id); };
+
+            shell.MouseEnter += (_, __) =>
+            {
+                grip.Visibility = Visibility.Visible;
+                remove.Visibility = Visibility.Visible;
+            };
+            shell.MouseLeave += (_, __) =>
+            {
+                grip.Visibility = Visibility.Collapsed;
+                remove.Visibility = Visibility.Collapsed;
             };
             // The edit hints live on the grip, not the tile: the tile's own tooltip is live data
             // that its refresher rewrites every second, and would swallow anything set here.
             ToolTipService.SetToolTip(grip,
                 Loc.Text("CommandDockResizeHint", "Drag to resize") + "\n" +
-                Loc.Text("CommandDockEditHint", "Drag to move · right-click to remove"));
+                Loc.Text("CommandDockEditHint", "Drag to move · × to remove"));
 
             bool sizing = false;
             Point start = default;
@@ -890,58 +912,102 @@ namespace RustPlusDesk
             };
 
             host.Children.Add(grip);
+            host.Children.Add(remove);
             shell.Child = host;
-            _tileGrips[tile.Id] = grip;
+
+            // The tile's drag handler consults these so a press that started on one of them is
+            // not turned into a tile drag.
+            _tileHandles[tile.Id] = new[] { (FrameworkElement)grip, remove };
         }
 
+        private readonly Dictionary<string, FrameworkElement[]> _tileHandles = new();
+
+        private bool PressedOnHandle(string tileId, object? originalSource)
+        {
+            if (!_tileHandles.TryGetValue(tileId, out var handles)) return false;
+
+            for (var node = originalSource as DependencyObject; node != null;)
+            {
+                if (node is FrameworkElement fe && Array.IndexOf(handles, fe) >= 0) return true;
+                node = node is Visual or System.Windows.Media.Media3D.Visual3D
+                    ? VisualTreeHelper.GetParent(node)
+                    : (node as FrameworkContentElement)?.Parent;
+            }
+
+            return false;
+        }
+
+        /// <summary>Below this many pixels a press is a click, above it a drag.</summary>
+        private const double DragThreshold = 5;
+
         /// <summary>
-        /// The mouse handling every tile needs, attached once per tile after its own handlers.
+        /// Moving, resizing and removing work whenever the tile is hovered — there is no mode to
+        /// enter. Which means one press has to serve both a click and a drag, so it is only a
+        /// drag once the mouse has actually travelled: a switch tile still toggles on a plain
+        /// click, and nudging it a few pixels no longer swallows the toggle.
         ///
-        /// A press on a tile is always swallowed. The window drags itself on MouseLeftButtonDown
-        /// and DragMove blocks until the button comes back up, eating the MouseUp with it — so a
-        /// tile that did not stop the press would never see the click that toggles its switch.
+        /// The press is always swallowed either way. The window drags itself on
+        /// MouseLeftButtonDown and DragMove blocks until the button comes back up, eating the
+        /// MouseUp with it — a tile that let the press through would never see its own click.
         /// </summary>
         private void AttachTileInteraction(Border border, string tileId)
         {
             Point grabOffset = default;
+            bool pressed = false;
             bool dragging = false;
 
-            border.MouseLeftButtonDown += (_, e) =>
+            border.PreviewMouseLeftButtonDown += (_, e) =>
             {
-                e.Handled = true;   // never let the press reach the window's DragMove
-                if (!_isEditMode) return;
+                // The resize grip and the remove button are children of this border, so this
+                // tunnelling handler sees their presses first. Handling one here would suppress
+                // their own bubbling handlers entirely and neither would ever work.
+                if (PressedOnHandle(tileId, e.OriginalSource)) return;
 
+                pressed = true;
+                dragging = false;
                 grabOffset = e.GetPosition(border);
-                dragging = true;
                 border.CaptureMouse();
+                e.Handled = true;   // never let the press reach the window's DragMove
             };
 
-            border.MouseMove += (_, e) =>
+            border.PreviewMouseMove += (_, e) =>
             {
-                if (!dragging) return;
+                if (!pressed) return;
+
                 var p = e.GetPosition(DockCanvas);
+
+                if (!dragging)
+                {
+                    var moved = e.GetPosition(border) - grabOffset;
+                    if (Math.Abs(moved.X) < DragThreshold && Math.Abs(moved.Y) < DragThreshold) return;
+                    dragging = true;
+                    Panel.SetZIndex(border, 1000);   // over its neighbours while it travels
+                }
+
                 Canvas.SetLeft(border, p.X - grabOffset.X);
                 Canvas.SetTop(border, p.Y - grabOffset.Y);
             };
 
-            border.MouseLeftButtonUp += (_, e) =>
+            border.PreviewMouseLeftButtonUp += (_, e) =>
             {
-                // Also swallowed when not dragging: otherwise the release bubbles to the window
-                // and re-centres the map behind the tile the user just pressed.
-                e.Handled = true;
-                if (!dragging) return;
+                if (!pressed) return;
+                pressed = false;
+                border.ReleaseMouseCapture();
+
+                if (!dragging) return;   // a click: let the tile's own handler have it
 
                 dragging = false;
-                border.ReleaseMouseCapture();
+                Panel.SetZIndex(border, 0);
+                e.Handled = true;        // a drag must not also toggle the switch it landed on
                 SnapTileToGrid(tileId, border);
             };
 
-            border.MouseRightButtonUp += (_, e) =>
-            {
-                if (!_isEditMode) return;
-                e.Handled = true;
-                RemoveTile(tileId);
-            };
+            // Registered with handledEventsToo: the tile's own click handler has already marked
+            // the release handled, and this still has to stop it reaching the window, where it
+            // would re-centre the map behind the tile.
+            border.AddHandler(UIElement.MouseLeftButtonUpEvent,
+                new MouseButtonEventHandler((_, e) => e.Handled = true), true);
+
         }
 
         /// <summary>Turns a dropped pixel position back into the nearest free cell.</summary>
@@ -965,11 +1031,15 @@ namespace RustPlusDesk
 
             static int PixelToCell(double pixels, double mapExtent, int mapCells)
             {
+                double step = CommandDockLayout.CellSize + CommandDockLayout.CellGap;
+
+                // Negative cells are allowed: they are how a bar gets built along the left edge
+                // or across the top, which the map's own footprint would otherwise block.
                 if (pixels < mapExtent)
-                    return Math.Max(0, (int)Math.Round(pixels / (CommandDockLayout.CellSize + CommandDockLayout.CellGap)));
+                    return (int)Math.Round(pixels / step);
 
                 double past = pixels - mapExtent - CommandDockLayout.CellGap;
-                return mapCells + Math.Max(0, (int)Math.Round(past / (CommandDockLayout.CellSize + CommandDockLayout.CellGap)));
+                return mapCells + Math.Max(0, (int)Math.Round(past / step));
             }
         }
 
@@ -980,7 +1050,9 @@ namespace RustPlusDesk
             for (int c = tile.Col; c < tile.Col + tile.ColSpan; c++)
                 for (int r = tile.Row; r < tile.Row + tile.RowSpan; r++)
                 {
-                    if (c < mapCols && r < mapRows) return true;
+                    // The map's own footprint. Both bounds matter: a negative cell is left of
+                    // or above the map, not on it, and dropping there has to be allowed.
+                    if (c >= 0 && c < mapCols && r >= 0 && r < mapRows) return true;
 
                     foreach (var other in _dock.Tiles)
                     {
@@ -1000,6 +1072,18 @@ namespace RustPlusDesk
             RebuildTiles();
         }
 
+        /// <summary>Which way auto-placement grows. Down is the default; right is the quickbar.</summary>
+        public bool DockGrowsRight
+        {
+            get => _dock.GrowRight;
+            set
+            {
+                if (_dock.GrowRight == value) return;
+                _dock.GrowRight = value;
+                SaveDock();
+            }
+        }
+
         public void AddTile(CommandDockTile tile)
         {
             AssignFreeCell(tile);
@@ -1016,7 +1100,7 @@ namespace RustPlusDesk
             {
                 _picker = new CommandDockTilePicker { Owner = this };
                 _picker.OnPicked = AddTile;
-                _picker.OnClosed = () => { _picker = null; SetEditMode(false); };
+                _picker.OnClosed = () => _picker = null;
             }
 
             _picker.Host = DockHost;

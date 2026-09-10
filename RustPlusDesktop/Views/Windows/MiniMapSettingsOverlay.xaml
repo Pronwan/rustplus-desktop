@@ -64,6 +64,15 @@
                 <CheckBox x:Name="ChkLayerIcons"    Content="{DynamicResource MiniMapLayerIcons}"    Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerPlayers"  Content="{DynamicResource MiniMapLayerPlayers}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}"/>
             </StackPanel>
+
+            <!--  Where a newly added tile lands. Dragging overrules this and reaches every side
+                  of the map, including left of it and above it.  -->
+            <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
+            <TextBlock Text="{DynamicResource CommandDockGrowth}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <ComboBox x:Name="CmbGrowth" SelectionChanged="CmbGrowth_SelectionChanged">
+                <ComboBoxItem Content="{DynamicResource CommandDockGrowDown}"/>
+                <ComboBoxItem Content="{DynamicResource CommandDockGrowRight}"/>
+            </ComboBox>
         </StackPanel>
     </Border>
 </UserControl>

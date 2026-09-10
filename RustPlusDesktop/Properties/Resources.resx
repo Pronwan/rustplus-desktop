@@ -6820,7 +6820,7 @@ You can find more information on the server&apos;s official website:
     <value>Pick a tile to place it on the dock. It lands in the first free spot next to the map.</value>
   </data>
   <data name="CommandDockEditHint" xml:space="preserve">
-    <value>Drag to move · right-click to remove</value>
+    <value>Drag to move · × to remove</value>
   </data>
   <data name="CommandDockSectionClock" xml:space="preserve">
     <value>Clock</value>
@@ -6887,5 +6887,17 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Drag to resize</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>New tiles go</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Below the map</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Beside the map</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Remove tile</value>
   </data>
 </root>

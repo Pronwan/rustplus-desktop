@@ -6841,7 +6841,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Wähle eine Kachel aus, um sie auf dem Dock zu platzieren. Sie landet auf dem ersten freien Platz neben der Karte.</value>
   </data>
   <data name="CommandDockEditHint" xml:space="preserve">
-    <value>Ziehen zum Verschieben · Rechtsklick zum Entfernen</value>
+    <value>Ziehen zum Verschieben · × zum Entfernen</value>
   </data>
   <data name="CommandDockSectionClock" xml:space="preserve">
     <value>Uhr</value>
@@ -6908,5 +6908,17 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Ziehen zum Skalieren</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>Neue Kacheln erscheinen</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Unter der Karte</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Neben der Karte</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Kachel entfernen</value>
   </data>
 </root>

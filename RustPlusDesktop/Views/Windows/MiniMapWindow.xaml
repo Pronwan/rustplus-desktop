@@ -92,52 +92,64 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Settings Hover Area -->
-                <Border x:Name="SettingsHoverBorder" Background="Transparent" Opacity="0">
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="10" Panel.ZIndex="10">
-                        <ui:Button x:Name="BtnAddTile"
-                                   Padding="4"
-                                   Margin="0,0,4,0"
-                                   Appearance="Transparent"
-                                   Background="#88000000"
-                                   Foreground="White"
-                                   Click="BtnAddTile_Click"
-                                   ToolTip="{DynamicResource CommandDockAddTile}"
-                                   Icon="{ui:SymbolIcon Symbol=Add24}"/>
-                        <ui:Button x:Name="BtnSettings"
-                                   Padding="4"
-                                   Appearance="Transparent"
-                                   Background="#88000000"
-                                   Foreground="White"
-                                   Click="BtnSettings_Click"
-                                   tutorials:Tutorial.TargetId="MiniMap.Settings"
-                                   Icon="{ui:SymbolIcon Symbol=Settings24}"/>
-                    </StackPanel>
-                </Border>
             </Grid>
+        </Canvas>
+
+        <!--  The two buttons live above the dock, not inside the map tile: a tile placed over
+              the map's top-right corner used to cover them. Their position is set in code from
+              the map tile's corner, since that is what the user reads as "the mini-map".  -->
+        <Canvas x:Name="ChromeLayer">
+            <Border x:Name="SettingsHoverBorder" Opacity="0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <!--  Driven by the whole window, not by the button strip: with the
+                                  map texture off there is nothing to aim at, and the buttons
+                                  have to appear from anywhere inside the dock.  -->
+                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <!--  Held for over a second, then faded slowly: the
+                                                  path from the map to the button leaves the
+                                                  window on a transparent map, and a 0.2s fade
+                                                  was gone before the cursor arrived.  -->
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" BeginTime="0:0:1.4" Duration="0:0:1.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button x:Name="BtnAddTile"
+                               Padding="4"
+                               Margin="0,0,4,0"
+                               Appearance="Transparent"
+                               Background="#AA000000"
+                               Foreground="White"
+                               Click="BtnAddTile_Click"
+                               ToolTip="{DynamicResource CommandDockAddTile}"
+                               Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                    <ui:Button x:Name="BtnSettings"
+                               Padding="4"
+                               Appearance="Transparent"
+                               Background="#AA000000"
+                               Foreground="White"
+                               Click="BtnSettings_Click"
+                               tutorials:Tutorial.TargetId="MiniMap.Settings"
+                               Icon="{ui:SymbolIcon Symbol=Settings24}"/>
+                </StackPanel>
+            </Border>
         </Canvas>
 
         <!--  Settings live in a popup, not in this window. The size slider resizes the window

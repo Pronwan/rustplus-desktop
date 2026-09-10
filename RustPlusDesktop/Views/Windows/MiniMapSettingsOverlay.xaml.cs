@@ -44,6 +44,10 @@ namespace RustPlusDesk.Views
                     ParentWindow?.ApplyLoadedSettings(defaults);
                 }
 
+                // The dock layout is the window's, not part of MiniMapSettings — it is saved
+                // and loaded with the tiles it describes.
+                CmbGrowth.SelectedIndex = ParentWindow?.DockGrowsRight == true ? 1 : 0;
+
                 // Apply current labels
                 UpdateOpacityLabel(SliOpacity.Value);
                 UpdateSizeLabel(SliSize.Value);
@@ -82,6 +86,12 @@ namespace RustPlusDesk.Views
             ChkLayerDrawings.IsChecked = settings.ShowDrawings;
             ChkLayerIcons.IsChecked = settings.ShowIcons;
             ChkLayerPlayers.IsChecked = settings.ShowPlayers;
+        }
+
+        private void CmbGrowth_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isInitializing || ParentWindow == null) return;
+            ParentWindow.DockGrowsRight = CmbGrowth.SelectedIndex == 1;
         }
 
         private void ChkLayer_Changed(object sender, RoutedEventArgs e)
