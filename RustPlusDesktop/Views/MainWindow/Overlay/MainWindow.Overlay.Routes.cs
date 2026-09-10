@@ -141,14 +141,20 @@ public partial class MainWindow
         _hiddenByRouteMode.Clear();
         if (Overlay == null) return;
 
-        foreach (UIElement child in Overlay.Children)
+        // Icons and players sit on their own canvases since the mini-map got per-layer
+        // mirroring. Route mode declutters the whole map, so it still has to reach all three.
+        foreach (var layer in new[] { Overlay, IconLayer, PlayerLayer })
         {
-            if (child is not FrameworkElement fe) continue;
-            if (IsRouteVisual(fe)) continue;
-            if (fe.Visibility != Visibility.Visible) continue;
+            if (layer == null) continue;
+            foreach (UIElement child in layer.Children)
+            {
+                if (child is not FrameworkElement fe) continue;
+                if (IsRouteVisual(fe)) continue;
+                if (fe.Visibility != Visibility.Visible) continue;
 
-            fe.Visibility = Visibility.Collapsed;
-            _hiddenByRouteMode.Add(fe);
+                fe.Visibility = Visibility.Collapsed;
+                _hiddenByRouteMode.Add(fe);
+            }
         }
     }
 

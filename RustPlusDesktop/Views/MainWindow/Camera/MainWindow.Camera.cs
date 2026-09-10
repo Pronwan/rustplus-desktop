@@ -230,41 +230,58 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             return;
         }
 
-        Point pHost;
-        try
-        {
-            Point pOverlay = WorldToImagePx(mapX, mapY);
-            pHost = Overlay.TransformToVisual(WebViewHost).Transform(pOverlay);
-
-            // Add the VisualBrush parent layout offset (Grid Rows and Margins) dynamically
-            try
-            {
-                var offset = VisualTreeHelper.GetOffset(WebViewHost);
-                pHost.X += offset.X;
-                pHost.Y += offset.Y;
-            }
-            catch { }
-        }
-        catch
-        {
-            pHost = new Point(WebViewHost.ActualWidth * 0.5, WebViewHost.ActualHeight * 0.5);
-        }
+        // The mini-map mirrors the scene's layers one by one now, and a VisualBrush viewbox is
+        // in its own visual's coordinate space — which for those layers is map-pixel space, not
+        // the host's. WorldToImagePx already lands there, so no transform to the host is needed
+        // for the centre; only the cut-out size still has to come across.
+        Point pScene = WorldToImagePx(mapX, mapY);
 
         double hostW = Math.Max(1, WebViewHost.ActualWidth);
         double hostH = Math.Max(1, WebViewHost.ActualHeight);
 
         // Quadratischen Ausschnitt wählen
-        double side = Math.Min(hostW, hostH) * (MINI_VIEW_FRACTION * Math.Pow(GetEffectiveZoom(), 0.0025));
+        double sideHost = Math.Min(hostW, hostH) * (MINI_VIEW_FRACTION * Math.Pow(GetEffectiveZoom(), 0.0025));
+
+        // Host pixels per map pixel, so the mini-map keeps showing the same amount of ground as
+        // it did when it mirrored the host directly.
+        double sceneToHost = 1.0;
+        try
+        {
+            if (_scene != null)
+            {
+                // TransformToVisual hands back a GeneralTransform, which has no matrix to read.
+                // Mapping the unit square gives the same scale without assuming a matrix shape.
+                var t = _scene.TransformToVisual(WebViewHost);
+                var origin = t.Transform(new Point(0, 0));
+                var unitX = t.Transform(new Point(1, 0));
+                var unitY = t.Transform(new Point(0, 1));
+
+                double det = Math.Abs(
+                    (unitX.X - origin.X) * (unitY.Y - origin.Y) -
+                    (unitX.Y - origin.Y) * (unitY.X - origin.X));
+
+                if (det > 1e-9) sceneToHost = Math.Sqrt(det);
+            }
+        }
+        catch { }
+
+        double side = sideHost / Math.Max(1e-6, sceneToHost);
 
         // Um den Punkt zentrieren - OHNE CLAMPING, damit der Spieler IMMER 100% in der Mitte bleibt!
-        double vx = pHost.X - side / 2.0;
-        double vy = pHost.Y - side / 2.0;
+        double vx = pScene.X - side / 2.0;
+        double vy = pScene.Y - side / 2.0;
 
         _miniMap.SetViewbox(new Rect(vx, vy, side, side), _isSmoothingFollow);
     }
 
+    /// <summary>The five scene layers the mini-map mirrors, or nulls before a map is loaded.</summary>
+    private MiniMapLayers CurrentMiniMapLayers()
+        => new(ImgMap, GridLayer, Overlay, IconLayer, PlayerLayer);
+
+    /// <summary>Repoints the mini-map's brushes after the scene was rebuilt for a new map.</summary>
+    private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
+
     private MiniMapWindow? _miniMap;
-    private VisualBrush? _miniMapBrush;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
     public void EnsureMiniMapOpen()
     {
@@ -298,23 +315,12 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
         {
             
-            // WICHTIG: mapRoot muss dein existierendes Karten-Root-Element sein!
-            // Beispiele: SceneGrid, MapRootGrid, OverlayHostGrid – je nach deinem x:Name.
-            var mapRoot = WebViewHost;
-            var vb = new VisualBrush(mapRoot)
-            {
-                // Wir schneiden selbst zu, daher:
-                Stretch = Stretch.None,
-                ViewboxUnits = BrushMappingMode.Absolute
-            };
-            _miniMapBrush = vb;
-
-
-            _miniMap = new MiniMapWindow(mapRoot)
+            _miniMap = new MiniMapWindow(CurrentMiniMapLayers())
             {
                 Left = SystemParameters.WorkArea.Right - 280,
                 Top = SystemParameters.WorkArea.Top + 20,
-                DataContext = _vm
+                DataContext = _vm,
+                DockHost = this
             };
 
             _miniMap.OnClicked = () =>

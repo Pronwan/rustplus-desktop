@@ -6816,4 +6816,97 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon akzeptiert die Verbindung zu Rust+ Desktop nicht mehr, deshalb erreichen Raid-Alarme Alexa nicht mehr. Die Sprachsteuerung ist nicht betroffen. Öffne die Alexa-App, deaktiviere den Rust+ Desktop Skill und verknüpfe ihn erneut.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>Ebenen</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>Kartentextur</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>Raster</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>Zeichnungen</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>Symbole</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>Spieler</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>Kachel hinzufügen</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>Wähle eine Kachel aus, um sie auf dem Dock zu platzieren. Sie landet auf dem ersten freien Platz neben der Karte.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>Ziehen zum Verschieben · Rechtsklick zum Entfernen</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>Uhr</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>Geräte</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>Digitaluhr</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>Serverzeit mit Tag-/Nachtphase</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>Analoguhr</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>Zifferblatt, das der Serverzeit folgt</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Rust-Uhr</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>Serverzeit in der Schrift des Spiels</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>Zwei Kacheln breit, im Bearbeitungsmodus skalierbar</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>nicht gekoppelt</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>Ausgelöst</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>Scharf</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>Diese Regel existiert nicht mehr.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Logic-Engine-Mechanik oder Regel aktivieren</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>Diese Regel nutzt den Command-Dock-Trigger nicht mehr.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>Startet per Klick</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>Noch nutzt keine Regel den Command-Dock-Trigger. Setze den Trigger einer Regel auf Command Dock, um sie von hier aus zu starten.</value>
+  </data>
+  <data name="UiCommandDockTrigger" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>Ziehen zum Skalieren</value>
+  </data>
 </root>

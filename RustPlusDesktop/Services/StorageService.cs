@@ -32,5 +32,19 @@ public static class StorageService
     }
 }
 
-public record MiniMapSettings(int ShapeIndex, double Size, double Opacity, bool ShowTime, bool ShowPop = false);
+/// <summary>
+/// Mini-map appearance. The layer flags below are additive with defaults of true, so a settings
+/// file written before they existed still loads and keeps showing everything it used to.
+/// </summary>
+public record MiniMapSettings(
+    int ShapeIndex,
+    double Size,
+    double Opacity,
+    bool ShowTime,
+    bool ShowPop = false,
+    bool ShowTexture = true,
+    bool ShowGrid = true,
+    bool ShowDrawings = true,
+    bool ShowIcons = true,
+    bool ShowPlayers = true);
 

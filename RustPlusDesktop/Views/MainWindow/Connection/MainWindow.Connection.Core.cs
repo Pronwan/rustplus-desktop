@@ -391,7 +391,7 @@ public partial class MainWindow
                 _lastChatSendUtc = DateTime.MinValue;
 
                 foreach (var el in _shopEls.Values)
-                    Overlay.Children.Remove(el);
+                    RemoveFromMapLayers(el);
                 _shopEls.Clear();
             }
             else
@@ -417,7 +417,7 @@ public partial class MainWindow
                 _lastChatSendUtc = DateTime.MinValue;
 
                 foreach (var el in _shopEls.Values)
-                    Overlay.Children.Remove(el);
+                    RemoveFromMapLayers(el);
                 _shopEls.Clear();
             }
         }

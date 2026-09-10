@@ -46,6 +46,7 @@ public partial class MainWindow
 
             items.Add(new EventDockItem
             {
+                Key = "cargo",
                 Name = Properties.Resources.CargoShip,
                 Icon = "pack://application:,,,/Assets/icons/cargo.png",
                 Active = cargo?.IsActive == true,
@@ -82,6 +83,7 @@ public partial class MainWindow
 
             items.Add(new EventDockItem
             {
+                Key = "deepsea",
                 Name = Properties.Resources.DeepSea,
                 Icon = "pack://application:,,,/Assets/icons/ds_event.png",
                 Active = deepSea?.IsActive == true,
@@ -116,6 +118,7 @@ public partial class MainWindow
                 // Not Resources.OilRig — that reads "Oil Rig Trigger", which described a player
                 // calling the rig via the API. Here it is a recurring "a crate is up" cue, and
                 // the wording matches the alert menu so both call it the same thing.
+                Key = "oilrig",
                 Name = Properties.Resources.OilRigCrateStatus,
                 Icon = "pack://application:,,,/Assets/icons/crate.png",
                 Active = oilRig?.IsActive == true,

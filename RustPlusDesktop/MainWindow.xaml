@@ -7893,7 +7893,13 @@
                         </StackPanel>
 
                         <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
+                        <!--  Overlay = user drawings only. Icons and players get their own canvases so the
+                              mini-map can mirror each layer on its own: a VisualBrush can only show or hide
+                              a whole visual subtree, never a filtered selection of one canvas.  -->
                         <Canvas x:Name="Overlay" IsHitTestVisible="True" />
+                        <Canvas x:Name="IconLayer" IsHitTestVisible="True" />
+                        <Canvas x:Name="PlayerLayer" IsHitTestVisible="True" />
+                        <Canvas x:Name="MapUiLayer" IsHitTestVisible="True" />
 
                         <!-- Monument Navigation Panel -->
                         <Border

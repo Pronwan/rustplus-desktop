@@ -194,6 +194,10 @@
                                             <ComboBoxItem Content="{DynamicResource TimerCreateCmdLabel}" Tag="ChatCommand"/>
                                             <ComboBoxItem Content="{DynamicResource UiRuleTriggered}" Tag="RuleTriggered"/>
                                             <ComboBoxItem Content="{DynamicResource UiRuleCompleted}" Tag="RuleCompleted"/>
+                                            <!--  Fired by a tile on the mini-map's command dock. It carries no
+                                                  trigger detail of its own: the tile names the rule, not the
+                                                  other way round.  -->
+                                            <ComboBoxItem Content="{DynamicResource UiCommandDockTrigger}" Tag="CommandDock"/>
                                          </ComboBox>
 
                                          <!-- Trigger Details -->

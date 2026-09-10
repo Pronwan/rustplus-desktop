@@ -51,6 +51,19 @@
                 <CheckBox x:Name="ChkShowTime" Content="Server Time" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,16,0"/>
                 <CheckBox x:Name="ChkShowPop" Content="Pop" Checked="ChkShowPop_Changed" Unchecked="ChkShowPop_Changed" Style="{StaticResource DotCheckBox}"/>
             </StackPanel>
+
+            <!--  Layers. Each one is a separate mirror of the main map, so they switch
+                  independently; turning the texture off leaves a transparent, frameless
+                  window with only the layers still on.  -->
+            <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
+            <TextBlock Text="{DynamicResource MiniMapLayers}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" FontWeight="SemiBold"/>
+            <StackPanel>
+                <CheckBox x:Name="ChkLayerTexture"  Content="{DynamicResource MiniMapLayerTexture}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <CheckBox x:Name="ChkLayerGrid"     Content="{DynamicResource MiniMapLayerGrid}"     Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <CheckBox x:Name="ChkLayerDrawings" Content="{DynamicResource MiniMapLayerDrawings}" Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <CheckBox x:Name="ChkLayerIcons"    Content="{DynamicResource MiniMapLayerIcons}"    Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <CheckBox x:Name="ChkLayerPlayers"  Content="{DynamicResource MiniMapLayerPlayers}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}"/>
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

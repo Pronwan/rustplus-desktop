@@ -143,15 +143,11 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("minimap.timepop", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected,
                  BeforeShowAsync: async (c, ct) => { 
                      Application.Current.Dispatcher.Invoke(() => {
-                         // Find MiniMapWindow from opened windows
+                         // Find MiniMapWindow from opened windows. The panel lives in a popup
+                         // now, so showing the control itself would not open it — the window
+                         // has to place it, which is what OpenSettings does.
                          var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "MiniMapWindow");
-                         if (mmw != null)
-                         {
-                             if (mmw.GetType().GetProperty("SettingsOverlay")?.GetValue(mmw) is UIElement overlay)
-                                 overlay.Visibility = Visibility.Visible;
-                             if (mmw.GetType().GetProperty("SettingsHoverBorder")?.GetValue(mmw) is UIElement hoverBorder)
-                                 hoverBorder.Visibility = Visibility.Collapsed;
-                         }
+                         mmw?.GetType().GetMethod("OpenSettings")?.Invoke(mmw, null);
                      }); 
                      await Task.Delay(150, ct); 
                  }),

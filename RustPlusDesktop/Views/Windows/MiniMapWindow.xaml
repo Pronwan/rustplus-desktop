@@ -14,90 +14,143 @@
         Topmost="True"
         ShowInTaskbar="False"
         Width="260" Height="260">
-    <Grid>
-        <!-- Container that has the exact size of the Map shape -->
-        <Grid x:Name="MapContainer" Width="260" Height="260" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <!-- Runde / Eckige Mini-Map -->
-            <Border x:Name="MapShapeBorder" CornerRadius="130" BorderBrush="#66000000" BorderThickness="1" SnapsToDevicePixels="True">
-                <Border.Background>
-                    <VisualBrush x:Name="MirrorBrush"
-                                 Stretch="UniformToFill"
-                                 AlignmentX="Center" AlignmentY="Center" />
-                </Border.Background>
-            </Border>
+    <Grid x:Name="RootGrid">
 
-            <!-- Overlays Container -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12">
-                
-                <!-- Time Overlay -->
-                <Border x:Name="TimeOverlayBorder" 
-                        Background="#AA000000" 
-                        CornerRadius="6" 
-                        Padding="6,4" 
-                        Margin="0,0,4,0"
-                        Visibility="Collapsed"
-                        IsHitTestVisible="False">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                    </StackPanel>
+        <!--  The dock: the map is one tile among the command tiles, all placed by pixel
+              position on this canvas. Tiles are built in code because their number, kind
+              and position come from the saved layout.  -->
+        <Canvas x:Name="DockCanvas" Background="Transparent">
+
+            <!-- Container that has the exact size of the Map shape -->
+            <Grid x:Name="MapContainer" Width="260" Height="260">
+                <!-- Runde / Eckige Mini-Map -->
+                <Border x:Name="MapShapeBorder" CornerRadius="130" BorderBrush="#66000000" BorderThickness="1" SnapsToDevicePixels="True">
+                    <!--  One mirror per map layer instead of a single brush over the whole map
+                          host. A VisualBrush shows a visual subtree whole or not at all, so the
+                          only way to switch texture, grid, drawings, icons and players
+                          independently is to give each its own brush. All five share the same
+                          absolute viewbox because the source canvases are siblings in the map
+                          scene and therefore share its coordinate space.  -->
+                    <Grid x:Name="MapClipHost">
+                        <Rectangle x:Name="MapBackdrop" Fill="#0B3A4A"/>
+                        <Rectangle x:Name="LayerTexture">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushTexture" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="LayerGrid">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushGrid" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="LayerDrawings">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushDrawings" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="LayerIcons">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushIcons" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="LayerPlayers">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushPlayers" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Grid>
                 </Border>
 
-                <!-- Pop Overlay -->
-                <Border x:Name="PopOverlayBorder" 
-                        Background="#AA000000" 
-                        CornerRadius="6" 
-                        Padding="6,4" 
-                        Visibility="Collapsed"
-                        IsHitTestVisible="False">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="&#xE716;" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="TxtServerPop" Text="{Binding ServerPlayers}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <!-- Overlays Container -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12">
+
+                    <!-- Time Overlay -->
+                    <Border x:Name="TimeOverlayBorder"
+                            Background="#AA000000"
+                            CornerRadius="6"
+                            Padding="6,4"
+                            Margin="0,0,4,0"
+                            Visibility="Collapsed"
+                            IsHitTestVisible="False">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Pop Overlay -->
+                    <Border x:Name="PopOverlayBorder"
+                            Background="#AA000000"
+                            CornerRadius="6"
+                            Padding="6,4"
+                            Visibility="Collapsed"
+                            IsHitTestVisible="False">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="&#xE716;" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtServerPop" Text="{Binding ServerPlayers}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Settings Hover Area -->
+                <Border x:Name="SettingsHoverBorder" Background="Transparent" Opacity="0">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="10" Panel.ZIndex="10">
+                        <ui:Button x:Name="BtnAddTile"
+                                   Padding="4"
+                                   Margin="0,0,4,0"
+                                   Appearance="Transparent"
+                                   Background="#88000000"
+                                   Foreground="White"
+                                   Click="BtnAddTile_Click"
+                                   ToolTip="{DynamicResource CommandDockAddTile}"
+                                   Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                        <ui:Button x:Name="BtnSettings"
+                                   Padding="4"
+                                   Appearance="Transparent"
+                                   Background="#88000000"
+                                   Foreground="White"
+                                   Click="BtnSettings_Click"
+                                   tutorials:Tutorial.TargetId="MiniMap.Settings"
+                                   Icon="{ui:SymbolIcon Symbol=Settings24}"/>
                     </StackPanel>
                 </Border>
-            </StackPanel>
+            </Grid>
+        </Canvas>
 
-            <!-- Settings Hover Area -->
-            <Border x:Name="SettingsHoverBorder" Background="Transparent" Opacity="0">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                
-                <ui:Button x:Name="BtnSettings" 
-                           HorizontalAlignment="Right" 
-                           VerticalAlignment="Top" 
-                           Margin="10" 
-                           Padding="4"
-                           Appearance="Transparent"
-                           Background="#88000000"
-                           Foreground="White"
-                           Click="BtnSettings_Click"
-                           tutorials:Tutorial.TargetId="MiniMap.Settings"
-                           Icon="{ui:SymbolIcon Symbol=Settings24}"
-                           Panel.ZIndex="10"/>
-            </Border>
-        </Grid>
-
-        <!-- Settings Overlay -->
-        <views:MiniMapSettingsOverlay x:Name="SettingsOverlay" Visibility="Collapsed" Panel.ZIndex="100" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!--  Settings live in a popup, not in this window. The size slider resizes the window
+              it would otherwise sit in, which dragged the panel out from under the cursor on
+              every tick. A popup has its own HWND: it is never clipped by the window and its
+              screen position is ours to hold still while the map behind it grows.  -->
+        <Popup x:Name="SettingsPopup"
+               Placement="RelativePoint"
+               PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+               StaysOpen="True"
+               AllowsTransparency="True"
+               Focusable="False">
+            <views:MiniMapSettingsOverlay x:Name="SettingsOverlay"/>
+        </Popup>
     </Grid>
 </Window>

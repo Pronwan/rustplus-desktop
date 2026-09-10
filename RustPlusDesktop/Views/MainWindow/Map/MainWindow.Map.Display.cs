@@ -53,6 +53,18 @@ public partial class MainWindow
         Overlay.IsHitTestVisible = true;
         Overlay.Background = Brushes.Transparent;
 
+        // Icons, players and the transient inline panels used to share the Overlay canvas and
+        // sort themselves by per-element ZIndex. They are separate canvases now, because the
+        // mini-map mirrors each one through its own VisualBrush and a brush can only take a
+        // whole visual — the stacking order below reproduces the ZIndex bands they had.
+        foreach (var layer in new[] { IconLayer, PlayerLayer, MapUiLayer })
+        {
+            layer.Width = Overlay.Width;
+            layer.Height = Overlay.Height;
+            layer.IsHitTestVisible = true;
+            layer.Background = null;   // null, not Transparent: gaps stay click-through to Overlay
+        }
+
         _scene ??= new Grid();
         _scene.Width = wDip + padPx * 2;
         _scene.Height = hDip + padPx * 2;
@@ -61,6 +73,9 @@ public partial class MainWindow
         (ImgHeatmap.Parent as Panel)?.Children.Remove(ImgHeatmap);
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
+        (IconLayer.Parent as Panel)?.Children.Remove(IconLayer);
+        (PlayerLayer.Parent as Panel)?.Children.Remove(PlayerLayer);
+        (MapUiLayer.Parent as Panel)?.Children.Remove(MapUiLayer);
 
         _scene.Children.Clear();
 
@@ -69,6 +84,9 @@ public partial class MainWindow
         _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
         _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 2);
         _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 3);
+        _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 4);
+        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 5);
+        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 6);
 
         _scene.RenderTransform = MapTransform;
 
@@ -80,6 +98,46 @@ public partial class MainWindow
         }
         _mapView.Child = _scene;
         ApplyMapPerformanceSettings();
+
+        // The layers were just reparented; an open mini-map has to be told, or it keeps
+        // mirroring whatever its brushes were pointed at before the new map arrived.
+        RefreshMiniMapLayers();
+    }
+
+    /// <summary>
+    /// Takes an element off whichever map layer holds it.
+    ///
+    /// Callers that add to a specific layer still remove through here on purpose: the element
+    /// may have been placed before a layout change moved its kind to another canvas, and
+    /// Children.Remove on a canvas that does not hold it is a no-op. One call that always
+    /// works beats a classification that has to stay in sync at 30 removal sites.
+    /// </summary>
+    private void RemoveFromMapLayers(UIElement? el)
+    {
+        if (el == null) return;
+        Overlay?.Children.Remove(el);
+        IconLayer?.Children.Remove(el);
+        PlayerLayer?.Children.Remove(el);
+        MapUiLayer?.Children.Remove(el);
+    }
+
+    /// <summary>
+    /// Swaps an element for its rebuilt version, keeping the position it held in its canvas —
+    /// that index is the draw order among same-ZIndex siblings, so losing it makes markers
+    /// flicker past each other on every avatar or online-state change.
+    /// </summary>
+    private void ReplaceOnMapLayer(UIElement oldEl, UIElement newEl, Canvas fallback)
+    {
+        foreach (var layer in new[] { PlayerLayer, IconLayer, Overlay, MapUiLayer })
+        {
+            if (layer == null) continue;
+            int idx = layer.Children.IndexOf(oldEl);
+            if (idx < 0) continue;
+            layer.Children.RemoveAt(idx);
+            layer.Children.Insert(idx, newEl);
+            return;
+        }
+        fallback.Children.Add(newEl);
     }
 
     private void ResetMapDisplay()
@@ -115,7 +173,7 @@ public partial class MainWindow
         {
             _miniMap.Close();
             _miniMap = null;
-            _miniMapBrush = null;
+
         }
     }
 
@@ -164,6 +222,8 @@ public partial class MainWindow
         if (Overlay != null)
         {
             RenderOptions.SetEdgeMode(Overlay, edgeMode);
+            if (IconLayer != null) RenderOptions.SetEdgeMode(IconLayer, edgeMode);
+            if (PlayerLayer != null) RenderOptions.SetEdgeMode(PlayerLayer, edgeMode);
         }
         RefreshGridLineThickness();
 

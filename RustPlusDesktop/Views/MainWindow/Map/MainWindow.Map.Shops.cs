@@ -166,7 +166,7 @@ public partial class MainWindow
             _shopTimer?.Stop();
             _shopTimer = null;
 
-            foreach (var kv in _shopEls) Overlay.Children.Remove(kv.Value);
+            foreach (var kv in _shopEls) RemoveFromMapLayers(kv.Value);
             _shopEls.Clear();
 
             UpdateShopPollingWarning();
@@ -429,7 +429,7 @@ public partial class MainWindow
             AppendLog("Shops: Polling off.");
         }
 
-        foreach (var el in _shopEls.Values) Overlay.Children.Remove(el);
+        foreach (var el in _shopEls.Values) RemoveFromMapLayers(el);
         _shopEls.Clear();
     }
 
@@ -486,7 +486,7 @@ public partial class MainWindow
                 grid.MouseLeftButtonUp += ShopElement_Click;
 
                 _shopEls[clusterId] = grid;
-                Overlay.Children.Add(grid);
+                IconLayer.Children.Add(grid);
                 Panel.SetZIndex(grid, 910);
                 grid.Visibility = (_isShowingDeepSeaMap == (avgX < 0)) ? Visibility.Visible : Visibility.Collapsed;
                 el = grid;
@@ -543,7 +543,7 @@ public partial class MainWindow
         {
             if (_shopEls.TryGetValue(id, out var el))
             {
-                Overlay.Children.Remove(el);
+                RemoveFromMapLayers(el);
                 _shopEls.Remove(id);
                 if (el is FrameworkElement fe) _shopIconSet.Remove(fe);
             }

@@ -652,7 +652,7 @@ public partial class MainWindow
                         if (_playerOverlayElements.TryGetValue(id, out var listToHide))
                         {
                             foreach (var fe in listToHide)
-                                Overlay.Children.Remove(fe);
+                                RemoveFromMapLayers(fe);
                             _playerOverlayElements.Remove(id);
                         }
                     }

@@ -4361,8 +4361,8 @@ private bool _overlayToolsVisible = false;
 
     private void RemoveInlinePanel(Border panel, Border dismissLayer)
     {
-        Overlay.Children.Remove(panel);
-        Overlay.Children.Remove(dismissLayer);
+        RemoveFromMapLayers(panel);
+        RemoveFromMapLayers(dismissLayer);
     }
 
     private void ShowInlineIconPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
@@ -4433,8 +4433,8 @@ private bool _overlayToolsVisible = false;
         (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
     }
 
     private void ShowInlineColorPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
@@ -4513,8 +4513,8 @@ private bool _overlayToolsVisible = false;
         (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
     }
 
     private void ShowInlineNotePicker(FrameworkElement iconEl, OverlayTag meta)
@@ -4628,8 +4628,8 @@ private bool _overlayToolsVisible = false;
         // Clicking the dismiss layer saves & closes
         dismissLayer.MouseLeftButtonDown += (_, __) => doSave();
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
 
         // Focus and select-all after layout
         panel.Loaded += (_, __) => { tb.Focus(); tb.SelectAll(); };

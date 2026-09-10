@@ -29,6 +29,7 @@ namespace RustPlusDesk.Views
                     ChkShowTime.IsChecked = settings.ShowTime;
                     ChkShowPop.IsChecked = settings.ShowPop;
                     SliSize.Value = settings.Size;
+                    ApplyLayerChecks(settings);
                     ParentWindow?.ApplyLoadedSettings(settings);
                 }
                 else
@@ -38,7 +39,9 @@ namespace RustPlusDesk.Views
                     ChkShowTime.IsChecked = false;
                     ChkShowPop.IsChecked = false;
                     SliSize.Value = 260.0;
-                    ParentWindow?.ApplyLoadedSettings(new MiniMapSettings(0, 260.0, 1.0, false, false));
+                    var defaults = new MiniMapSettings(0, 260.0, 1.0, false, false);
+                    ApplyLayerChecks(defaults);
+                    ParentWindow?.ApplyLoadedSettings(defaults);
                 }
 
                 // Apply current labels
@@ -70,18 +73,35 @@ namespace RustPlusDesk.Views
         }
 
         private void BtnSettingsClose_Click(object sender, RoutedEventArgs e)
+            => ParentWindow?.CloseSettings();
+
+        private void ApplyLayerChecks(MiniMapSettings settings)
         {
-            Visibility = Visibility.Collapsed;
-            if (ParentWindow != null)
-            {
-                ParentWindow.SettingsHoverBorder.Visibility = Visibility.Visible;
-            }
+            ChkLayerTexture.IsChecked = settings.ShowTexture;
+            ChkLayerGrid.IsChecked = settings.ShowGrid;
+            ChkLayerDrawings.IsChecked = settings.ShowDrawings;
+            ChkLayerIcons.IsChecked = settings.ShowIcons;
+            ChkLayerPlayers.IsChecked = settings.ShowPlayers;
+        }
+
+        private void ChkLayer_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+
+            var settings = CurrentSettings();
+            if (settings == null) return;
+
+            ParentWindow?.ApplyLayerVisibility(settings);
+            StorageService.SaveCache("minimap_settings", settings);
         }
 
         private void CmbShape_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_isInitializing || ParentWindow == null) return;
-            ParentWindow.UpdateSize(ParentWindow.Width, updateSlider: true);
+
+            // The slider is the map size; the window's own Width is the whole dock, which since
+            // the command dock arrived is a different number entirely.
+            ParentWindow.UpdateSize(SliSize.Value, updateSlider: false);
             SaveSettings();
         }
 
@@ -151,17 +171,26 @@ namespace RustPlusDesk.Views
 
         public void SaveSettings()
         {
-            if (CmbShape == null || SliOpacity == null || SliSize == null || ChkShowTime == null) return;
+            var settings = CurrentSettings();
+            if (settings != null) StorageService.SaveCache("minimap_settings", settings);
+        }
 
-            var settings = new MiniMapSettings(
+        private MiniMapSettings? CurrentSettings()
+        {
+            if (CmbShape == null || SliOpacity == null || SliSize == null || ChkShowTime == null) return null;
+
+            return new MiniMapSettings(
                 CmbShape.SelectedIndex,
                 SliSize.Value,
                 SliOpacity.Value,
                 ChkShowTime.IsChecked == true,
-                ChkShowPop.IsChecked == true
+                ChkShowPop.IsChecked == true,
+                ChkLayerTexture?.IsChecked != false,
+                ChkLayerGrid?.IsChecked != false,
+                ChkLayerDrawings?.IsChecked != false,
+                ChkLayerIcons?.IsChecked != false,
+                ChkLayerPlayers?.IsChecked != false
             );
-
-            StorageService.SaveCache("minimap_settings", settings);
         }
     }
 }

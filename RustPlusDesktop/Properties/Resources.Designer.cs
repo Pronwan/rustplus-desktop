@@ -816,6 +816,37 @@ namespace RustPlusDesk.Properties {
         public static string ConsoleHelperLoadFailed => GetString("ConsoleHelperLoadFailed");
         public static string ConsoleHelperNotOnTop => GetString("ConsoleHelperNotOnTop");
         public static string ConsoleHelperKeepOnTop => GetString("ConsoleHelperKeepOnTop");
+        public static string MiniMapLayers => GetString("MiniMapLayers");
+        public static string MiniMapLayerTexture => GetString("MiniMapLayerTexture");
+        public static string MiniMapLayerGrid => GetString("MiniMapLayerGrid");
+        public static string MiniMapLayerDrawings => GetString("MiniMapLayerDrawings");
+        public static string MiniMapLayerIcons => GetString("MiniMapLayerIcons");
+        public static string MiniMapLayerPlayers => GetString("MiniMapLayerPlayers");
+        public static string CommandDockAddTile => GetString("CommandDockAddTile");
+        public static string CommandDockPickerHint => GetString("CommandDockPickerHint");
+        public static string CommandDockEditHint => GetString("CommandDockEditHint");
+        public static string CommandDockSectionClock => GetString("CommandDockSectionClock");
+        public static string CommandDockSectionChat => GetString("CommandDockSectionChat");
+        public static string CommandDockSectionEvents => GetString("CommandDockSectionEvents");
+        public static string CommandDockSectionDevices => GetString("CommandDockSectionDevices");
+        public static string CommandDockSectionRules => GetString("CommandDockSectionRules");
+        public static string CommandDockClockDigital => GetString("CommandDockClockDigital");
+        public static string CommandDockClockDigitalHint => GetString("CommandDockClockDigitalHint");
+        public static string CommandDockClockAnalog => GetString("CommandDockClockAnalog");
+        public static string CommandDockClockAnalogHint => GetString("CommandDockClockAnalogHint");
+        public static string CommandDockClockRust => GetString("CommandDockClockRust");
+        public static string CommandDockClockRustHint => GetString("CommandDockClockRustHint");
+        public static string CommandDockChatHint => GetString("CommandDockChatHint");
+        public static string CommandDockDeviceMissing => GetString("CommandDockDeviceMissing");
+        public static string CommandDockAlarmTriggered => GetString("CommandDockAlarmTriggered");
+        public static string CommandDockAlarmIdle => GetString("CommandDockAlarmIdle");
+        public static string CommandDockRuleMissing => GetString("CommandDockRuleMissing");
+        public static string CommandDockRuleInactive => GetString("CommandDockRuleInactive");
+        public static string CommandDockRuleWrongTrigger => GetString("CommandDockRuleWrongTrigger");
+        public static string CommandDockRuleReady => GetString("CommandDockRuleReady");
+        public static string CommandDockNoRules => GetString("CommandDockNoRules");
+        public static string UiCommandDockTrigger => GetString("UiCommandDockTrigger");
+        public static string CommandDockResizeHint => GetString("CommandDockResizeHint");
     }
 }
 

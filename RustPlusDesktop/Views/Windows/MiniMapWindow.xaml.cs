@@ -3,10 +3,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
 
 namespace RustPlusDesk
 {
+    /// <summary>
+    /// The five map layers the mini-map mirrors, each as its own visual.
+    ///
+    /// They are siblings in the main map's scene grid, so they share one coordinate space and
+    /// one viewbox drives all five brushes. Any of them may be null before a map is loaded.
+    /// </summary>
+    public sealed record MiniMapLayers(
+        Visual? Texture,
+        Visual? Grid,
+        Visual? Drawings,
+        Visual? Icons,
+        Visual? Players);
+
     public partial class MiniMapWindow : Window
     {
         public Action? OnClicked { get; set; }
@@ -29,10 +41,15 @@ namespace RustPlusDesk
         private double _panStartX;        // panX beim Down
         private double _panStartY;        // panY beim Down
 
-        public MiniMapWindow(Visual mapVisual)
+        // Current map tile geometry, the single source of truth for the window's size.
+        private double _mapWidth = 260;
+        private double _mapHeight = 260;
+        private int _shapeIndex = 0;      // 0 = circle, 1 = square, 2 = 16:9
+
+        public MiniMapWindow(MiniMapLayers layers)
         {
             InitializeComponent();
-            MirrorBrush.Visual = mapVisual;
+            SetLayers(layers);
 
             // Zoom nur für Mini-Map
             MouseWheel += MiniMapWindow_MouseWheel;
@@ -55,11 +72,26 @@ namespace RustPlusDesk
             };
 
             SettingsOverlay.ParentWindow = this;
+            InitCommandDock();
+        }
+
+        /// <summary>
+        /// Points every layer brush at its source. Called again whenever the main window
+        /// rebuilds its map scene, since a fresh map may hand out fresh visuals.
+        /// </summary>
+        public void SetLayers(MiniMapLayers layers)
+        {
+            BrushTexture.Visual = layers.Texture;
+            BrushGrid.Visual = layers.Grid;
+            BrushDrawings.Visual = layers.Drawings;
+            BrushIcons.Visual = layers.Icons;
+            BrushPlayers.Visual = layers.Players;
+            ApplyViewbox();
         }
 
         private int _viewboxId = 0;
 
-        // wird vom MainWindow aufgerufen
+        // wird vom MainWindow aufgerufen — Koordinaten sind Karten-Pixel (Scene-Space)
         public void SetViewbox(Rect viewbox, bool instant = false)
         {
             if (_baseViewbox.Width <= 0 || _baseViewbox.Height <= 0 || instant)
@@ -77,9 +109,11 @@ namespace RustPlusDesk
             var targetPos = new Point(viewbox.X, viewbox.Y);
             var targetSize = new Size(viewbox.Width, viewbox.Height);
 
-            // Wenn der Sprung zu groß ist (z.B. Erster Start oder Teleport), direkt setzen
+            // Wenn der Sprung zu groß ist (z.B. Erster Start oder Teleport), direkt setzen.
+            // Schwelle relativ zur Ausschnittbreite: der Viewbox lebt jetzt in Karten-Pixeln,
+            // und deren Maßstab hängt von der Kartengröße des Servers ab.
             double dist = Math.Sqrt(Math.Pow(targetPos.X - startPos.X, 2) + Math.Pow(targetPos.Y - startPos.Y, 2));
-            if (dist > 500)
+            if (dist > Math.Max(1.0, targetSize.Width) * 2.0)
             {
                 _baseViewbox = viewbox;
                 ApplyViewbox();
@@ -114,8 +148,7 @@ namespace RustPlusDesk
             {
                 // SHIFT gedrückt → Fenstergröße ändern
                 double factor = e.Delta > 0 ? 1.1 : 1.0 / 1.1;
-                double newW = Width * factor;
-                UpdateSize(newW, updateSlider: true);
+                UpdateSize(_mapWidth * factor, updateSlider: true);
 
                 e.Handled = true;
                 return;
@@ -133,19 +166,16 @@ namespace RustPlusDesk
 
         private void MiniMapWindow_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MouseRightButtonDown += (s, e) =>
+            if (e.ClickCount == 2)
             {
-                if (e.ClickCount == 2)
-                {
-                    _panX = 0;
-                    _panY = 0;
-                    _userZoom = 1.0;
-                    ApplyViewbox();
-                    e.Handled = true;
-                    return;
-                }
-                // sonst normales panning wie oben
-            };
+                _panX = 0;
+                _panY = 0;
+                _userZoom = 1.0;
+                ApplyViewbox();
+                e.Handled = true;
+                return;
+            }
+
             _isPanning = true;
             _panStartMouse = e.GetPosition(this);
             _panStartX = _panX;
@@ -158,8 +188,6 @@ namespace RustPlusDesk
             _isPanning = false;
             ReleaseMouseCapture();
         }
-
-
 
         private void MiniMapWindow_MouseMove(object sender, MouseEventArgs e)
         {
@@ -179,7 +207,6 @@ namespace RustPlusDesk
             double shownH = _baseViewbox.Height / _userZoom;
 
             // Verhältnis: wieviel Karten-Pixel steckt in 1 Fenster-Pixel?
-            // (Window.Width/Height nimmst du aus dem tatsächlichen Fenster)
             double winW = Math.Max(1.0, MapContainer.ActualWidth);
             double winH = Math.Max(1.0, MapContainer.ActualHeight);
 
@@ -209,25 +236,80 @@ namespace RustPlusDesk
             double w = _baseViewbox.Width / _userZoom;
             double h = _baseViewbox.Height / _userZoom;
 
+            // Ein nicht-quadratischer Ausschnitt würde die Karte verzerren, weil alle fünf
+            // Brushes denselben Viewbox teilen: die Höhe folgt dem Seitenverhältnis der Kachel.
+            if (_mapWidth > 0 && _mapHeight > 0)
+                h = w * (_mapHeight / _mapWidth);
+
             // Pan addieren – wir verschieben einfach den Mittelpunkt
             double finalCx = cx - _panX;
             double finalCy = cy - _panY;
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
 
-            MirrorBrush.ViewboxUnits = BrushMappingMode.Absolute;
-            MirrorBrush.Viewbox = vb;
-            MirrorBrush.Stretch = Stretch.Uniform;
+            foreach (var brush in new[] { BrushTexture, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers })
+            {
+                if (brush == null) continue;
+                brush.ViewboxUnits = BrushMappingMode.Absolute;
+                brush.Viewbox = vb;
+                brush.Stretch = Stretch.Fill;
+            }
         }
 
-        private void BtnSettings_Click(object sender, RoutedEventArgs e)
+        // ── Settings popup ──────────────────────────────────────────────────────
+
+        private void BtnSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
+
+        /// <summary>
+        /// Opens the settings popup beside the map and pins it there.
+        ///
+        /// The offsets are relative to this window, so dragging the mini-map carries the panel
+        /// along, which is what you want. Resizing does not: <see cref="UpdateSize"/> corrects
+        /// the offsets by however far it moved the window, so the panel holds its place on
+        /// screen while the map grows out from under it.
+        /// </summary>
+        public void OpenSettings()
         {
-            SettingsOverlay.Visibility = Visibility.Visible;
+            if (SettingsPopup.IsOpen) return;
+
+            double gap = 12;
+            double panelWidth = 220;   // overlay is 180 wide plus its padding and border
+
+            // To the right of the map unless that runs off the screen, then to the left.
+            double offsetX = _mapWidth + gap;
+            if (!double.IsNaN(Left) && Left + offsetX + panelWidth > SystemParameters.VirtualScreenWidth)
+                offsetX = -(panelWidth + gap);
+
+            SettingsPopup.HorizontalOffset = offsetX;
+            SettingsPopup.VerticalOffset = 0;
+            SettingsPopup.IsOpen = true;
             SettingsHoverBorder.Visibility = Visibility.Collapsed;
         }
 
+        public void CloseSettings()
+        {
+            SettingsPopup.IsOpen = false;
+            SettingsHoverBorder.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Keeps the popup where it is on screen after the window's own position changed.
+        /// </summary>
+        private void HoldSettingsPopupInPlace(double dLeft, double dTop)
+        {
+            if (!SettingsPopup.IsOpen) return;
+            if (Math.Abs(dLeft) < 0.01 && Math.Abs(dTop) < 0.01) return;
+
+            SettingsPopup.HorizontalOffset -= dLeft;
+            SettingsPopup.VerticalOffset -= dTop;
+        }
+
+        // ── Settings application ────────────────────────────────────────────────
+
         public void ApplyLoadedSettings(RustPlusDesk.Services.MiniMapSettings settings)
         {
+            _shapeIndex = settings.ShapeIndex;
+
             if (MapShapeBorder != null)
                 MapShapeBorder.Opacity = settings.Opacity;
 
@@ -237,10 +319,39 @@ namespace RustPlusDesk
             if (PopOverlayBorder != null)
                 PopOverlayBorder.Visibility = settings.ShowPop ? Visibility.Visible : Visibility.Collapsed;
 
+            ApplyLayerVisibility(settings);
             UpdateSize(settings.Size, updateSlider: false);
         }
 
+        /// <summary>
+        /// Switches the mirrored layers on and off.
+        ///
+        /// With the texture gone the frame and the backdrop go too: what is left is a fully
+        /// transparent window showing only the layers still enabled — the point of turning the
+        /// texture off is to see teammates over the game, not to stare into a dark disc.
+        /// </summary>
+        public void ApplyLayerVisibility(RustPlusDesk.Services.MiniMapSettings settings)
+        {
+            Vis(LayerTexture, settings.ShowTexture);
+            Vis(LayerGrid, settings.ShowGrid);
+            Vis(LayerDrawings, settings.ShowDrawings);
+            Vis(LayerIcons, settings.ShowIcons);
+            Vis(LayerPlayers, settings.ShowPlayers);
+
+            if (MapBackdrop != null)
+                MapBackdrop.Visibility = settings.ShowTexture ? Visibility.Visible : Visibility.Collapsed;
+
+            if (MapShapeBorder != null)
+                MapShapeBorder.BorderThickness = new Thickness(settings.ShowTexture ? 1 : 0);
+
+            static void Vis(UIElement? el, bool on)
+            {
+                if (el != null) el.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         private bool _isUpdatingSize = false;
+
         public void UpdateSize(double newSize, bool updateSlider = true)
         {
             if (_isUpdatingSize) return;
@@ -248,60 +359,118 @@ namespace RustPlusDesk
             try
             {
                 newSize = Math.Max(160, Math.Min(newSize, 800));
-                
-                double targetWindowSize = Math.Max(260, newSize); // Ensure Window is at least 260x260 so SettingsOverlay never clips!
+                _shapeIndex = SettingsOverlay?.CmbShape?.SelectedIndex ?? _shapeIndex;
 
-                if (!double.IsNaN(Left) && !double.IsNaN(Top) && Width > 0 && Height > 0)
+                // Where the map's middle sits on screen right now. Read before the new size is
+                // applied, because that is the point the resize has to leave alone.
+                Point? anchor = null;
+                if (!double.IsNaN(Left) && !double.IsNaN(Top))
                 {
-                    // Keep the center stationary on the screen during resize
-                    double oldCenterX = Left + Width / 2.0;
-                    double oldMapCenterY = Top + (MapContainer != null && MapContainer.Height > 0 ? MapContainer.Height : Height) / 2.0;
-
-                    Width = targetWindowSize;
-                    Height = targetWindowSize;
-
-                    double newMapHeight = newSize;
-                    var shapeIdx = SettingsOverlay?.CmbShape?.SelectedIndex ?? 0;
-                    if (shapeIdx == 1) newMapHeight = newSize * 0.75;
-
-                    Left = oldCenterX - targetWindowSize / 2.0;
-                    Top = oldMapCenterY - newMapHeight / 2.0;
-                }
-                else
-                {
-                    Width = targetWindowSize;
-                    Height = targetWindowSize;
+                    double mx = Canvas.GetLeft(MapContainer);
+                    double my = Canvas.GetTop(MapContainer);
+                    anchor = new Point(
+                        Left + (double.IsNaN(mx) ? 0 : mx) + _mapWidth / 2.0,
+                        Top + (double.IsNaN(my) ? 0 : my) + _mapHeight / 2.0);
                 }
 
-                int idx = SettingsOverlay?.CmbShape?.SelectedIndex ?? 0;
-                if (MapContainer != null && MapShapeBorder != null)
+                _mapWidth = newSize;
+                _mapHeight = _shapeIndex == 2 ? newSize * 9.0 / 16.0 : newSize;
+
+                double cornerRadius = _shapeIndex == 0 ? newSize / 2.0 : 12;
+
+                if (MapContainer != null)
                 {
-                    if (idx == 0) // Circle
-                    {
-                        MapContainer.Width = newSize;
-                        MapContainer.Height = newSize;
-                        MapShapeBorder.CornerRadius = new CornerRadius(newSize / 2.0);
-                    }
-                    else if (idx == 1) // Square
-                    {
-                        MapContainer.Width = newSize;
-                        MapContainer.Height = newSize;
-                        MapShapeBorder.CornerRadius = new CornerRadius(12);
-                    }
-                    else if (idx == 2) // Rectangle (16:9)
-                    {
-                        MapContainer.Width = newSize;
-                        MapContainer.Height = newSize * 9.0 / 16.0;
-                        MapShapeBorder.CornerRadius = new CornerRadius(12);
-                    }
+                    MapContainer.Width = _mapWidth;
+                    MapContainer.Height = _mapHeight;
                 }
+                if (MapShapeBorder != null)
+                    MapShapeBorder.CornerRadius = new CornerRadius(cornerRadius);
+                if (MapClipHost != null)
+                {
+                    // A Border does not clip its child to its own rounded corners, so the
+                    // mirrors need the geometry applied by hand or the circle shows a square.
+                    MapClipHost.Clip = new RectangleGeometry(
+                        new Rect(0, 0, _mapWidth, _mapHeight), cornerRadius, cornerRadius);
+                }
+
+                RepositionTiles();
+                LayoutDock(anchor);
 
                 if (updateSlider && SettingsOverlay != null)
                     SettingsOverlay.UpdateSliderValue(newSize);
+
+                // The viewbox aspect follows the tile, so a shape change has to reapply it.
+                ApplyViewbox();
             }
             finally
             {
                 _isUpdatingSize = false;
+            }
+        }
+
+        /// <summary>
+        /// Sizes the window to the bounding box of the map tile and every command tile.
+        ///
+        /// <paramref name="mapCentreAnchor"/> is the screen point the map's middle held before
+        /// the change; the window is placed so it still holds it. Anything that moves the window
+        /// runs through here, so the settings popup can be held still at the same time.
+        /// </summary>
+        private void LayoutDock(Point? mapCentreAnchor = null)
+        {
+            var bounds = MeasureDockBounds();
+
+            // Tiles may sit left of or above the map; shift everything so the canvas origin is
+            // the window origin, and the window keeps a positive size.
+            double shiftX = -bounds.X;
+            double shiftY = -bounds.Y;
+            ShiftDockChildren(shiftX, shiftY);
+
+            double oldLeft = Left, oldTop = Top;
+
+            Width = Math.Max(1, bounds.Width);
+            Height = Math.Max(1, bounds.Height);
+
+            if (mapCentreAnchor is { } anchor)
+            {
+                Left = anchor.X - (Canvas.GetLeft(MapContainer) + _mapWidth / 2.0);
+                Top = anchor.Y - (Canvas.GetTop(MapContainer) + _mapHeight / 2.0);
+            }
+
+            if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
+                HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
+        }
+
+        private Rect MeasureDockBounds()
+        {
+            double minX = Canvas.GetLeft(MapContainer);
+            double minY = Canvas.GetTop(MapContainer);
+            if (double.IsNaN(minX)) { minX = 0; Canvas.SetLeft(MapContainer, 0); }
+            if (double.IsNaN(minY)) { minY = 0; Canvas.SetTop(MapContainer, 0); }
+
+            double maxX = minX + _mapWidth;
+            double maxY = minY + _mapHeight;
+
+            foreach (var rect in TileBounds())
+            {
+                minX = Math.Min(minX, rect.X);
+                minY = Math.Min(minY, rect.Y);
+                maxX = Math.Max(maxX, rect.Right);
+                maxY = Math.Max(maxY, rect.Bottom);
+            }
+
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        private void ShiftDockChildren(double dx, double dy)
+        {
+            if (Math.Abs(dx) < 0.01 && Math.Abs(dy) < 0.01) return;
+
+            foreach (UIElement child in DockCanvas.Children)
+            {
+                double x = Canvas.GetLeft(child);
+                double y = Canvas.GetTop(child);
+                Canvas.SetLeft(child, (double.IsNaN(x) ? 0 : x) + dx);
+                Canvas.SetTop(child, (double.IsNaN(y) ? 0 : y) + dy);
             }
         }
     }

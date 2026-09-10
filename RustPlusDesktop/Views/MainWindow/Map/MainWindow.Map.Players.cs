@@ -370,9 +370,7 @@ public partial class MainWindow
             if (el.Tag is not PlayerMarkerTag t || !t.IsDot)
             {
                 var newEl = BuildPlayerDotMarker(sid, name, online, dead);
-                int idx = Overlay.Children.IndexOf(el);
-                if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
-                else Overlay.Children.Add(newEl);
+                ReplaceOnMapLayer(el, newEl, PlayerLayer);
                 _dynEls[key] = newEl; el = newEl;
                 Panel.SetZIndex(newEl, 10000);
             }
@@ -426,9 +424,7 @@ public partial class MainWindow
             if (needsRebuild)
             {
                 var newEl = BuildPlayerMarker(sid, name, online, dead);
-                int idx = Overlay.Children.IndexOf(el);
-                if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
-                else Overlay.Children.Add(newEl);
+                ReplaceOnMapLayer(el, newEl, PlayerLayer);
                 _dynEls[key] = newEl; el = newEl;
             }
             else if (avatar != null && !tag.IsDot && tag.AvatarCircle != null)
@@ -443,9 +439,7 @@ public partial class MainWindow
         else
         {
             var newEl = BuildPlayerMarker(sid, name, online, dead);
-            int idx = Overlay.Children.IndexOf(el);
-            if (idx >= 0) { Overlay.Children.RemoveAt(idx); Overlay.Children.Insert(idx, newEl); }
-            else Overlay.Children.Add(newEl);
+            ReplaceOnMapLayer(el, newEl, PlayerLayer);
             _dynEls[key] = newEl; el = newEl;
         }
     }
@@ -711,7 +705,7 @@ public partial class MainWindow
                 
                 var el = BuildDeathPin(m.Id, m.SteamId, label);
                 _deathPins[m.Id] = el;
-                Overlay.Children.Add(el);
+                IconLayer.Children.Add(el);
                 Panel.SetZIndex(el, 9980);
                 ApplyCurrentOverlayScale(el);
                 var cx = px.X - (PinW / 2.0);
@@ -789,7 +783,7 @@ public partial class MainWindow
 
     private void ClearAllDeathPins()
     {
-        foreach (var kv in _deathPins) Overlay.Children.Remove(kv.Value);
+        foreach (var kv in _deathPins) RemoveFromMapLayers(kv.Value);
         _deathPins.Clear();
     }
 
@@ -1387,7 +1381,7 @@ public partial class MainWindow
                 var el = BuildTeamNoteMarker(note.Type, note.Icon, note.Color, note.Label, ownerSteamId, isLeader: true);
                 var key = $"leader_{i}";
                 _teamNotesEls[key] = el;
-                Overlay.Children.Add(el);
+                IconLayer.Children.Add(el);
                 Panel.SetZIndex(el, 9991);
 
                 var p = WorldToImagePx(note.X, note.Y);
@@ -1407,7 +1401,7 @@ public partial class MainWindow
                 var el = BuildTeamNoteMarker(note.Type, note.Icon, note.Color, note.Label, ownerSteamId, isLeader: false);
                 var key = $"member_{i}";
                 _teamNotesEls[key] = el;
-                Overlay.Children.Add(el);
+                IconLayer.Children.Add(el);
                 Panel.SetZIndex(el, 9990);
 
                 var p = WorldToImagePx(note.X, note.Y);
@@ -1423,7 +1417,7 @@ public partial class MainWindow
         {
             foreach (var el in _teamNotesEls.Values)
             {
-                Overlay.Children.Remove(el);
+                RemoveFromMapLayers(el);
             }
         }
         _teamNotesEls.Clear();
