@@ -332,7 +332,14 @@
                     </Style>
                 </ui:TitleBar.Resources>
                 <ui:TitleBar.Icon>
-                    <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
+                    <ui:ImageIcon
+                        Width="18"
+                        Height="18"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,2,0"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="pack://application:,,,/Assets/logo-light-mode.png" />
                 </ui:TitleBar.Icon>
                 <ui:TitleBar.Header>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -1578,7 +1585,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         RenderOptions.BitmapScalingMode="HighQuality"
-                                        Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico"
+                                        Source="pack://application:,,,/Assets/logo-light-mode.png"
                                         Stretch="UniformToFill" />
                                 </ui:Button>
 
