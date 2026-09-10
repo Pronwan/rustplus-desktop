@@ -3,12 +3,15 @@ using System.Linq;
 using System.Windows;
 using RustPlusDesk.Services.Auth;
 using RustPlusDesk.Services;
+using Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views.Windows;
 
 public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
 {
     private readonly MainWindow _owner;
+    private bool _hasDiscord;
+    private bool _hasEmail;
 
     public CloudAccountWindow(MainWindow owner)
     {
@@ -21,8 +24,8 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
     private void RefreshAccountData()
     {
         var user = SupabaseAuthManager.Client?.Auth?.CurrentUser;
-        bool hasDiscord = SupabaseAuthManager.HasAuthProvider("discord");
-        bool hasEmail = SupabaseAuthManager.HasAuthProvider("email");
+        bool hasDiscord = _hasDiscord = SupabaseAuthManager.HasAuthProvider("discord");
+        bool hasEmail = _hasEmail = SupabaseAuthManager.HasAuthProvider("email");
         string tier = FriendlyTier(SupabaseAuthManager.CurrentTier);
 
         // Identity fields come from whichever backend is active. Under the platform
@@ -35,7 +38,13 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
         string? email = platformUser != null ? platformUser.Email : user?.Email;
         string? userId = platformUser != null ? platformUser.Id : user?.Id;
 
-        TxtPlanBadge.Text = string.Format(Properties.Resources.GetString(SupabaseAuthManager.IsPremium ? "FormatPremiumPlan" : "FormatFreePlan"), tier);
+        PlanBadge.Content = string.Format(Properties.Resources.GetString(SupabaseAuthManager.IsPremium ? "FormatPremiumPlan" : "FormatFreePlan"), tier);
+        // Premium reads as a soft success tint, free as a neutral chip - both are
+        // tints of the surface so the badge never shouts over the account details.
+        PlanBadge.Background = (System.Windows.Media.Brush)FindResource(
+            SupabaseAuthManager.IsPremium ? "SuccessTintBrush" : "CardBorder");
+        PlanBadge.Foreground = (System.Windows.Media.Brush)FindResource(
+            SupabaseAuthManager.IsPremium ? "SuccessTextBrush" : "TextSubtle");
         TxtAccountSummary.Text = TrackingService.CloudSyncEnabled ? RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncEnabled") : RustPlusDesk.Properties.Resources.GetString("CodeUiConnectedCloudSyncPaused");
         TxtDisplayName.Text = displayName ?? email ?? RustPlusDesk.Properties.Resources.GetString("CodeUiCloudUser");
         TxtEmail.Text = string.IsNullOrWhiteSpace(email) ? RustPlusDesk.Properties.Resources.GetString("CodeUiNotLinked") : email;
@@ -81,6 +90,8 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
         label.Text = $"{formatter(current)} / {(unlimited ? RustPlusDesk.Properties.Resources.GetString("CodeUiUnlimited") : formatter(limit))}";
         bar.Value = unlimited || limit <= 0 ? 0 : Math.Clamp(current * 100.0 / limit, 0, 100);
         bar.IsIndeterminate = false;
+        // An empty track under "Unlimited" reads as a maxed-out quota - hide it.
+        bar.Visibility = unlimited || limit <= 0 ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private static string FormatBytes(int bytes)
@@ -93,7 +104,8 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
     {
         SetBusy(true, "Complete the Discord authorization in your browser...");
         var (success, error) = await SupabaseAuthManager.LinkDiscordIdentityAsync();
-        SetBusy(false, success ? "Discord is now linked to this cloud account." : error ?? "Discord linking failed.");
+        SetBusy(false, success ? "Discord is now linked to this cloud account." : error ?? "Discord linking failed.",
+            success ? InfoBarSeverity.Success : InfoBarSeverity.Error);
         if (success) RefreshAccountData();
     }
 
@@ -106,10 +118,11 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
     {
         SetBusy(true, "Adding email login...");
         var (success, error) = await SupabaseAuthManager.AddEmailLoginAsync(TxtLinkEmail.Text.Trim(), PwdLinkEmail.Password);
-        PwdLinkEmail.Clear();
+        PwdLinkEmail.Password = string.Empty;
         SetBusy(false, success
             ? error ?? "Email login added. Check your inbox if Supabase asks you to confirm the address."
-            : error ?? "Could not add email login.");
+            : error ?? "Could not add email login.",
+            success ? InfoBarSeverity.Success : InfoBarSeverity.Error);
         if (success) RefreshAccountData();
     }
 
@@ -122,14 +135,30 @@ public partial class CloudAccountWindow : Wpf.Ui.Controls.FluentWindow
         Close();
     }
 
-    private void SetBusy(bool busy, string message)
+    private void SetBusy(bool busy, string message, InfoBarSeverity severity = InfoBarSeverity.Informational)
     {
-        BtnLinkDiscord.IsEnabled = !busy && BtnLinkDiscord.Content?.ToString() != "Linked";
+        BtnLinkDiscord.IsEnabled = !busy && !_hasDiscord;
+        BtnShowEmailLink.IsEnabled = !busy && !_hasEmail;
         BtnAddEmailLogin.IsEnabled = !busy;
         BtnLogout.IsEnabled = !busy;
-        PanelStatus.Visibility = Visibility.Visible;
-        TxtStatus.Text = message;
-        TxtStatus.Foreground = busy ? System.Windows.Media.Brushes.LightSkyBlue : System.Windows.Media.Brushes.White;
+        BtnWebPortal.IsEnabled = !busy;
+        InfoStatus.Severity = busy ? InfoBarSeverity.Informational : severity;
+        InfoStatus.Message = message;
+        InfoStatus.IsOpen = true;
+    }
+
+    private void BtnWebPortal_Click(object sender, RoutedEventArgs e)
+    {
+        // Same host the client talks to, so the portal always matches this build's backend.
+        string url = $"{Services.Data.DataManager.CLOUD_API_BASEURL.TrimEnd('/')}/dashboard";
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            SetBusy(false, ex.Message, InfoBarSeverity.Error);
+        }
     }
 
     private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();

@@ -3662,6 +3662,9 @@ Please pair this server first.</value>
   <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
     <value>Open or close Team panel (Ctrl+Shift+T)</value>
   </data>
+  <data name="UiOpenWebPortal" xml:space="preserve">
+    <value>Open web portal</value>
+  </data>
   <data name="UiOpenShopFilters" xml:space="preserve">
     <value>Open shop filters</value>
   </data>

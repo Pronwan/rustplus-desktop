@@ -77,6 +77,18 @@
         <SolidColorBrush x:Key="BrandOrangeBrush" Color="{StaticResource BrandOrangeColor}"/>
         <SolidColorBrush x:Key="TextBodyBrush"    Color="{StaticResource TextBodyColor}"/>
 
+        <!-- Soft status/accent tints: translucent fills for pills, icon tiles and
+             progress tracks, so status colour reads as a tint of the surface
+             instead of a solid block competing with the content. -->
+        <Color x:Key="AccentTintColor">#2260CDFF</Color>
+        <Color x:Key="SuccessTintColor">#2639A96B</Color>
+        <Color x:Key="SuccessTextColor">#71E39A</Color>
+        <Color x:Key="TrackColor">#1FFFFFFF</Color>
+        <SolidColorBrush x:Key="AccentTintBrush"  Color="{StaticResource AccentTintColor}"/>
+        <SolidColorBrush x:Key="SuccessTintBrush" Color="{StaticResource SuccessTintColor}"/>
+        <SolidColorBrush x:Key="SuccessTextBrush" Color="{StaticResource SuccessTextColor}"/>
+        <SolidColorBrush x:Key="TrackBrush"       Color="{StaticResource TrackColor}"/>
+
         <!-- Dark utility palette (values kept as-is; tokenized for reuse/theming) -->
         <Color x:Key="SurfaceDeepColor">#0D1117</Color>
         <Color x:Key="SurfacePanelColor">#161B22</Color>
@@ -266,7 +278,8 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
+
+        <!-- ITEM-TEMPLATE (Leaf) bleibt ein einzelnes Root-Element, alles gut) -->
         <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
             <Border x:Name="Bd"
                     Background="{TemplateBinding Background}"

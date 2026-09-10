@@ -3,48 +3,65 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource CloudAccountTitle}"
-        Width="620"
-        Height="700"
-        MinHeight="620"
+        Width="640"
+        Height="780"
+        MinHeight="640"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
-        Foreground="White"
+        Foreground="{DynamicResource TextPrimary}"
         FontFamily="Segoe UI Variable Display, Segoe UI"
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
         WindowCornerPreference="Round">
     <ui:FluentWindow.Resources>
-        <Style x:Key="Card" TargetType="Border">
+        <!-- Fluent card + typography styles, tokens only (no hardcoded colors) -->
+        <Style x:Key="SectionCard" TargetType="ui:Card" BasedOn="{StaticResource {x:Type ui:Card}}">
             <Setter Property="Margin" Value="0,0,0,12" />
             <Setter Property="Padding" Value="16" />
-            <Setter Property="Background" Value="#171B20" />
-            <Setter Property="BorderBrush" Value="#24FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="10" />
         </Style>
-        <Style x:Key="Label" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="Foreground" Value="#91FFFFFF" />
-        </Style>
-        <Style x:Key="Value" TargetType="TextBlock">
-            <Setter Property="Margin" Value="0,2,0,0" />
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+        </Style>
+        <Style x:Key="FieldLabel" TargetType="ui:TextBlock">
+            <Setter Property="FontTypography" Value="Caption" />
+            <Setter Property="Appearance" Value="Secondary" />
+        </Style>
+        <Style x:Key="FieldValue" TargetType="ui:TextBlock">
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="FontTypography" Value="Body" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-        <Style x:Key="AuthField" TargetType="TextBox">
-            <Setter Property="Height" Value="34" />
-            <Setter Property="Padding" Value="9,6" />
-            <Setter Property="Background" Value="#101317" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#36FFFFFF" />
+        <Style x:Key="UsageLabel" TargetType="ui:TextBlock">
+            <Setter Property="FontTypography" Value="Body" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style x:Key="AuthPassword" TargetType="PasswordBox">
-            <Setter Property="Height" Value="34" />
-            <Setter Property="Padding" Value="9,6" />
-            <Setter Property="Background" Value="#101317" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#36FFFFFF" />
+        <Style x:Key="UsageValue" TargetType="ui:TextBlock">
+            <Setter Property="FontTypography" Value="Body" />
+            <Setter Property="Appearance" Value="Secondary" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="UsageBar" TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Height" Value="4" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="Background" Value="{DynamicResource TrackBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+        </Style>
+        <Style x:Key="MethodRowButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="MinWidth" Value="96" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Appearance" Value="Secondary" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </ui:FluentWindow.Resources>
 
@@ -54,163 +71,188 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Title="{DynamicResource CloudAccountTitle}" ShowMaximize="False" ShowMinimize="False"/>
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource CloudAccountTitle}" ShowMaximize="False" ShowMinimize="False" />
 
-    <Grid Grid.Row="1">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Border Padding="22,18" Background="#15191E" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,0,0,1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Border Width="42" Height="42" Background="#1E00CCFF" CornerRadius="10">
-                    <ui:SymbolIcon Symbol="Cloud24" FontSize="22" Foreground="#37C6FF" />
-                </Border>
-                <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
-                    <TextBlock Text="{DynamicResource CloudAccountTitle}" FontSize="18" FontWeight="SemiBold" />
-                    <TextBlock x:Name="TxtAccountSummary" Margin="0,2,0,0" FontSize="11" Foreground="#A8FFFFFF" />
+            <!-- Header band -->
+            <Border Padding="22,18" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="42" Height="42" Background="{DynamicResource AccentTintBrush}" CornerRadius="{DynamicResource Radius}">
+                        <ui:SymbolIcon Symbol="Cloud24" FontSize="22" Foreground="{DynamicResource Accent}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+                        <ui:TextBlock Text="{DynamicResource CloudAccountTitle}" FontTypography="Subtitle" />
+                        <ui:TextBlock x:Name="TxtAccountSummary" Margin="0,2,0,0" FontTypography="Caption" Appearance="Secondary" />
+                    </StackPanel>
+                    <ui:Badge x:Name="PlanBadge" Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold"
+                              Background="{DynamicResource SuccessTintBrush}" Foreground="{DynamicResource SuccessTextBrush}" />
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" Padding="22,18" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Account -->
+                    <ui:Card Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource UiACCOUNT}" Style="{StaticResource SectionHeader}" />
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,12,0">
+                                    <ui:TextBlock Text="{DynamicResource UiDisplayName}" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBlock x:Name="TxtDisplayName" Style="{StaticResource FieldValue}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <ui:TextBlock Text="{DynamicResource UiEmail}" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBlock x:Name="TxtEmail" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Style="{StaticResource FieldValue}" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,12,0">
+                                    <ui:TextBlock Text="{DynamicResource UiCloudUserID}" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBlock x:Name="TxtUserId" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Style="{StaticResource FieldValue}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <ui:TextBlock Text="{DynamicResource UiRustSteamAccount}" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBlock x:Name="TxtSteamAccount" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Style="{StaticResource FieldValue}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <!-- Plan usage -->
+                    <ui:Card Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource UiPLANUSAGE}" Style="{StaticResource SectionHeader}" />
+                            <Grid Margin="0,12,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBlock Text="{DynamicResource UiSyncedDevices}" Style="{StaticResource UsageLabel}" />
+                                <ui:TextBlock x:Name="TxtDevicesUsage" Grid.Column="1" Style="{StaticResource UsageValue}" />
+                                <ProgressBar x:Name="ProgressDevices" Style="{StaticResource UsageBar}" />
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBlock Text="{DynamicResource UiSavedBases}" Style="{StaticResource UsageLabel}" />
+                                <ui:TextBlock x:Name="TxtBasesUsage" Grid.Column="1" Style="{StaticResource UsageValue}" />
+                                <ProgressBar x:Name="ProgressBases" Style="{StaticResource UsageBar}" />
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBlock Text="{DynamicResource UiOverlayStorage}" Style="{StaticResource UsageLabel}" />
+                                <ui:TextBlock x:Name="TxtOverlayUsage" Grid.Column="1" Style="{StaticResource UsageValue}" />
+                                <ProgressBar x:Name="ProgressOverlay" Style="{StaticResource UsageBar}" />
+                            </Grid>
+                            <ui:TextBlock x:Name="TxtScreenshotLimit" Margin="0,14,0,0" FontTypography="Caption" Appearance="Secondary" />
+                        </StackPanel>
+                    </ui:Card>
+
+                    <!-- Sign-in methods -->
+                    <ui:Card Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource UiSIGNINMETHODS}" Style="{StaticResource SectionHeader}" />
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Width="18" Height="18" VerticalAlignment="Center" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/icons/discord.png" />
+                                <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                    <ui:TextBlock Text="Discord" FontTypography="Body" FontWeight="SemiBold" />
+                                    <ui:TextBlock x:Name="TxtDiscordState" FontTypography="Caption" Appearance="Secondary" />
+                                </StackPanel>
+                                <ui:Button x:Name="BtnLinkDiscord" Style="{StaticResource MethodRowButton}" Click="BtnLinkDiscord_Click" />
+                            </Grid>
+
+                            <Separator Margin="0,12" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Symbol="Mail24" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                    <ui:TextBlock Text="{DynamicResource UiEmailAndPassword}" FontTypography="Body" FontWeight="SemiBold" />
+                                    <ui:TextBlock x:Name="TxtEmailState" FontTypography="Caption" Appearance="Secondary" />
+                                </StackPanel>
+                                <ui:Button x:Name="BtnShowEmailLink" Style="{StaticResource MethodRowButton}" Content="{DynamicResource UiAddLogin}" Click="BtnShowEmailLink_Click" />
+                            </Grid>
+
+                            <Grid x:Name="PanelEmailLink" Margin="28,12,0,0" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBox x:Name="TxtLinkEmail" Margin="0,0,8,0" PlaceholderText="{DynamicResource EmailAddressLabel}" ClearButtonEnabled="True">
+                                    <ui:TextBox.Icon>
+                                        <ui:SymbolIcon Symbol="Mail24" />
+                                    </ui:TextBox.Icon>
+                                </ui:TextBox>
+                                <ui:PasswordBox x:Name="PwdLinkEmail" Grid.Column="1" Margin="0,0,8,0" PlaceholderText="{DynamicResource UiNewPassword6Characters}" RevealButtonEnabled="True">
+                                    <ui:PasswordBox.Icon>
+                                        <ui:SymbolIcon Symbol="Key24" />
+                                    </ui:PasswordBox.Icon>
+                                </ui:PasswordBox>
+                                <ui:Button x:Name="BtnAddEmailLogin" Grid.Column="2" MinWidth="96" Content="{DynamicResource Save}" Appearance="Primary" Click="BtnAddEmailLogin_Click" />
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:InfoBar x:Name="InfoStatus" IsClosable="False" IsOpen="False" Severity="Informational" />
                 </StackPanel>
-                <Border Grid.Column="2" Padding="10,5" VerticalAlignment="Center" Background="#2639A96B" CornerRadius="12">
-                    <TextBlock x:Name="TxtPlanBadge" FontSize="11" FontWeight="SemiBold" Foreground="#71E39A" />
-                </Border>
-            </Grid>
-        </Border>
+            </ScrollViewer>
 
-        <ScrollViewer Grid.Row="1" Padding="22,18" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource UiACCOUNT}" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
-                        <Grid Margin="0,12,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Margin="0,0,12,0">
-                                <TextBlock Text="{DynamicResource UiDisplayName}" Style="{StaticResource Label}" />
-                                <TextBlock x:Name="TxtDisplayName" Style="{StaticResource Value}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="{DynamicResource UiEmail}" Style="{StaticResource Label}" />
-                                <TextBlock x:Name="TxtEmail" Style="{StaticResource Value}" />
-                            </StackPanel>
-                        </Grid>
-                        <Grid Margin="0,12,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Margin="0,0,12,0">
-                                <TextBlock Text="{DynamicResource UiCloudUserID}" Style="{StaticResource Label}" />
-                                <TextBlock x:Name="TxtUserId" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" Style="{StaticResource Value}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="{DynamicResource UiRustSteamAccount}" Style="{StaticResource Label}" />
-                                <TextBlock x:Name="TxtSteamAccount" Style="{StaticResource Value}" />
-                            </StackPanel>
-                        </Grid>
+            <!-- Footer -->
+            <Border Grid.Row="2" Padding="22,14" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <ui:Button x:Name="BtnLogout" MinWidth="96" Height="32" Icon="{ui:SymbolIcon SignOut24}" Content="{DynamicResource UiLogOut}" Appearance="Secondary" Click="BtnLogout_Click" />
+                        <ui:Button x:Name="BtnWebPortal" Margin="8,0,0,0" MinWidth="96" Height="32" Icon="{ui:SymbolIcon Globe24}" Content="{DynamicResource UiOpenWebPortal}" Appearance="Secondary" Click="BtnWebPortal_Click" />
                     </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource UiPLANUSAGE}" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
-                        <Grid Margin="0,12,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{DynamicResource UiSyncedDevices}" FontSize="11" />
-                            <TextBlock x:Name="TxtDevicesUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
-                            <ProgressBar x:Name="ProgressDevices" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
-                        </Grid>
-                        <Grid Margin="0,14,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{DynamicResource UiSavedBases}" FontSize="11" />
-                            <TextBlock x:Name="TxtBasesUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
-                            <ProgressBar x:Name="ProgressBases" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
-                        </Grid>
-                        <Grid Margin="0,14,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{DynamicResource UiOverlayStorage}" FontSize="11" />
-                            <TextBlock x:Name="TxtOverlayUsage" Grid.Column="1" FontSize="11" Foreground="#BFFFFFFF" />
-                            <ProgressBar x:Name="ProgressOverlay" Grid.ColumnSpan="2" Height="4" Margin="0,20,0,0" Maximum="100" />
-                        </Grid>
-                        <TextBlock x:Name="TxtScreenshotLimit" Margin="0,12,0,0" FontSize="10" Foreground="#91FFFFFF" />
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource UiSIGNINMETHODS}" FontSize="10" FontWeight="Bold" Foreground="#37C6FF" />
-                        <Grid Margin="0,12,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Image Width="18" Height="18" Source="pack://application:,,,/Assets/icons/discord.png" />
-                            <StackPanel Grid.Column="1" Margin="10,0">
-                                <TextBlock Text="Discord" FontSize="12" FontWeight="SemiBold" />
-                                <TextBlock x:Name="TxtDiscordState" FontSize="10" Foreground="#91FFFFFF" />
-                            </StackPanel>
-                            <ui:Button x:Name="BtnLinkDiscord" Grid.Column="2" MinWidth="92" Height="30" Click="BtnLinkDiscord_Click" />
-                        </Grid>
-
-                        <Border Margin="0,12,0,12" Background="#18FFFFFF" Height="1" />
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Symbol="Mail24" FontSize="18" Foreground="#37C6FF" />
-                            <StackPanel Grid.Column="1" Margin="10,0">
-                                <TextBlock Text="{DynamicResource UiEmailAndPassword}" FontSize="12" FontWeight="SemiBold" />
-                                <TextBlock x:Name="TxtEmailState" FontSize="10" Foreground="#91FFFFFF" />
-                            </StackPanel>
-                            <ui:Button x:Name="BtnShowEmailLink" Grid.Column="2" MinWidth="92" Height="30" Content="{DynamicResource UiAddLogin}" Click="BtnShowEmailLink_Click" />
-                        </Grid>
-
-                        <Grid x:Name="PanelEmailLink" Margin="28,12,0,0" Visibility="Collapsed">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtLinkEmail" Margin="0,0,8,0" Style="{StaticResource AuthField}" ToolTip="{DynamicResource EmailAddressLabel}" />
-                            <PasswordBox x:Name="PwdLinkEmail" Grid.Column="1" Margin="0,0,8,0" Style="{StaticResource AuthPassword}" ToolTip="{DynamicResource UiNewPassword6Characters}" />
-                            <ui:Button x:Name="BtnAddEmailLogin" Grid.Column="2" Height="34" Content="{DynamicResource Save}" Appearance="Primary" Click="BtnAddEmailLogin_Click" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <Border x:Name="PanelStatus" Padding="12,9" Background="#151F25" BorderBrush="#2C37C6FF" BorderThickness="1" CornerRadius="7" Visibility="Collapsed">
-                    <TextBlock x:Name="TxtStatus" FontSize="11" TextWrapping="Wrap" />
-                </Border>
-            </StackPanel>
-        </ScrollViewer>
-
-        <Border Grid.Row="2" Padding="22,14" Background="#15191E" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0">
-            <Grid>
-                <ui:Button x:Name="BtnLogout" HorizontalAlignment="Left" MinWidth="92" Height="32" Content="{DynamicResource UiLogOut}" Appearance="Secondary" Click="BtnLogout_Click" />
-                <ui:Button HorizontalAlignment="Right" MinWidth="92" Height="32" Content="{DynamicResource Close}" Appearance="Primary" Click="BtnClose_Click" />
-            </Grid>
-        </Border>
-    </Grid>
+                    <ui:Button HorizontalAlignment="Right" MinWidth="96" Height="32" Content="{DynamicResource Close}" Appearance="Primary" Click="BtnClose_Click" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ui:FluentWindow>
