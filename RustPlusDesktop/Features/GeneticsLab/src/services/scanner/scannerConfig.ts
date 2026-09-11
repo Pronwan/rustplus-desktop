@@ -15,10 +15,24 @@ export const SCANNER_CONFIG = {
     minGeneConfidence: 50,
     minAverageConfidence: 52,
     temporalSamples: 5,
-    requiredMatches: 3, // 3 consecutive reads of same gene string for 100% rock-solid accuracy
-    activeRegionThreshold: 0.12, // Permissive activity score cutoff for small badges
-    fastPathMinConfidence: 52, // Fast template matching threshold
-    fastPathSingleFrameThreshold: 101 // Disable single-frame bypass: strictly require 3 reads
+    requiredMatches: 3, // Frames that must name the same letter, counted per slot
+    activeRegionThreshold: 0.1, // Cheap pre-filter only; the reader is the real row guard
+    /**
+     * Confidence every slot must clear for a row to be accepted from a single frame.
+     *
+     * Measured on rendered tooltips across the range of Rust UI scales: the worst slot in a
+     * row scores 93 or better at a badge 18px across or larger, 78 at 14px, and 69 at 11px.
+     * The bar sits between the last two, so every scale a player realistically uses reads in
+     * one frame and only a genuinely tiny badge falls back to the confirmation window.
+     *
+     * What is being accepted here is not a bare guess. The badge colour has already reduced
+     * the choice to three letters or two before matching, and at 14px the winner still beats
+     * the runner-up by 60%. The cost of being wrong is a letter the user can see and correct
+     * in the HUD; the cost of being slow is three frames per clone across a whole tray.
+     */
+    instantAcceptSlotConfidence: 75,
+    /** How long before a tooltip that defeated template matching is offered to OCR again. */
+    slotOcrRetryMs: 1200
   },
 
   performance: {

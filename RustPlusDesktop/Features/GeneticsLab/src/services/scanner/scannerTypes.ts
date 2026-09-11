@@ -56,7 +56,11 @@ export interface ScanCandidate {
   geneConfidences: number[];
   activityScore: number;
   valid: boolean;
-  isFastPath?: boolean;
+  /**
+   * Every slot was unambiguous, or two recognisers agreed on the row. The confirmation
+   * window adds nothing to a read this clear, so it is skipped.
+   */
+  acceptImmediately?: boolean;
 }
 
 export interface RegionActivity {
@@ -89,6 +93,18 @@ export interface ScannerDiagnostics {
   planterActivity?: number;
   isStarved?: boolean;
   starvationReason?: StarvationReason;
+  /**
+   * Where the slot geometry came from on the last read. `detected` means all six badges were
+   * found in the image; `calibration` means none were and the saved region was used as-is,
+   * which is the signature of a region pointing at the wrong place.
+   */
+  layoutSource: 'detected' | 'fitted' | 'calibration' | 'none';
+  /** Slots that produced a letter on the last read, out of six. */
+  resolvedSlots: number;
+  /** Last read with a dot for each slot that abstained, e.g. `GHY.XG`. */
+  lastPartialRead: string;
+  /** Rows completed by asking the OCR engine about a slot template matching gave up on. */
+  fallbackReads: number;
 }
 
 export interface GeneRecognizer {
@@ -107,6 +123,16 @@ export interface GeneRecognizer {
   isWarm(): boolean;
   /** Last raw OCR attempt, including reads rejected by the confidence floor. */
   getLastRawRead?(): { text: string; confidence: number } | null;
+  /**
+   * One letter per image with no gating, blanks included.
+   *
+   * The desktop path uses this as a second opinion on individual slots that template
+   * matching refused to name. `recognizeSlots` cannot serve there: it folds six answers into
+   * one nullable row, which is exactly the all-or-nothing shape being moved away from.
+   */
+  readSlotLetters?(canvases: HTMLCanvasElement[]): Promise<string[]>;
+  /** Pre-creates the single-character engine `readSlotLetters` needs. */
+  warmupSlotWorker?(): Promise<void>;
 }
 
 /* ------------------------------------------------------------------ *

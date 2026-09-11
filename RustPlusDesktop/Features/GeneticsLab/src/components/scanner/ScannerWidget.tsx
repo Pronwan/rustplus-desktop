@@ -372,6 +372,16 @@ export const ScannerWidget: React.FC = () => {
             <Box>Planter Act: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.planterActivity ?? 0}</span></Box>
             <Box>Active ROI: <span style={{ color: 'var(--gl-primary)' }}>{diagnostics?.activeRegion ?? 'none'}</span></Box>
             <Box>Accepted: <span style={{ color: 'var(--gl-success)' }}>{diagnostics?.acceptedPlants ?? 0}</span></Box>
+            {/*
+              Where the slot geometry came from, and what the last read actually produced.
+              Without these a failed read looks identical to no tooltip at all: 'calibration'
+              says the badges were never found, and a partial like GHY.XG names the one slot
+              that refused, which is the difference between nudging the region and guessing.
+            */}
+            <Box>Layout: <span style={{ color: diagnostics?.layoutSource === 'calibration' ? 'var(--gl-error)' : 'var(--gl-primary)' }}>{diagnostics?.layoutSource ?? 'none'}</span></Box>
+            <Box>Slots: <span style={{ color: (diagnostics?.resolvedSlots ?? 0) === 6 ? 'var(--gl-success)' : 'var(--gl-text-primary)' }}>{diagnostics?.resolvedSlots ?? 0}/6</span></Box>
+            <Box>Last Read: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.lastPartialRead || '------'}</span></Box>
+            <Box>OCR Assists: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.fallbackReads ?? 0}</span></Box>
           </Box>
         </Box>
       )}

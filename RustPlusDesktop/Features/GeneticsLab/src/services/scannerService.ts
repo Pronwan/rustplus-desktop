@@ -16,14 +16,21 @@ import { TemporalVotingService } from './scanner/TemporalVotingService.ts';
 import { PlantScanDeduplicator } from './scanner/PlantScanDeduplicator.ts';
 import { ScannerStarvationDetector } from './scanner/ScannerStarvationDetector.ts';
 import { AutoCalibrator, AutoCalibrateResult } from './scanner/AutoCalibrator.ts';
-import { DesktopTemplateRecognizer } from './scanner/DesktopTemplateRecognizer.ts';
-import { DesktopSlotExtractor } from './scanner/DesktopSlotExtractor.ts';
+import { DesktopTemplateRecognizer, DesktopTemplateResult } from './scanner/DesktopTemplateRecognizer.ts';
+import { rasterToCanvas, releaseRasterCanvases } from './scanner/vision/frameGrabber.ts';
 
 export * from './scanner/scannerTypes.ts';
 export * from './scanner/scannerConfig.ts';
 export * from './scanner/AutoCalibrator.ts';
 export * from './scanner/DesktopTemplateRecognizer.ts';
-export * from './scanner/DesktopSlotExtractor.ts';
+export * from './scanner/vision/badgeColumns.ts';
+export * from './scanner/vision/desktopRowReader.ts';
+
+/** Canvas pool slots reserved for the desktop path, clear of the camera path's. */
+const SLOT_CANVAS_POOL_BASE = 10;
+
+const GREEN_GENES = new Set(['G', 'Y', 'H']);
+const RED_GENES = new Set(['W', 'X']);
 
 export class ScannerService {
   private listeners: ScannerEventListener[] = [];
@@ -77,6 +84,14 @@ export class ScannerService {
   // for it when nobody is looking at the calibration/preview panel.
   private previewEnabled = true;
 
+  // Most recent per-region read, kept so diagnostics can name the slot that failed rather
+  // than reporting a bare "no result".
+  private lastReads: Record<number, DesktopTemplateResult | null> = {};
+  // One second-opinion attempt per stuck tooltip, not one per frame.
+  private slotOcrAttempts: Record<number, { signature: number; at: number }> = {};
+  private slotOcrInFlight = false;
+  private fallbackReadCount = 0;
+
   // Reusable Canvases
   private previewCanvases: HTMLCanvasElement[] = [];
   private roiCanvases: HTMLCanvasElement[] = [];
@@ -123,12 +138,15 @@ export class ScannerService {
     if (this.isScanning || this.isInitializing) return false;
     this.isInitializing = true;
 
-    // Kick off the OCR warmup right away so its (potentially large, first-run)
-    // asset download runs in parallel with the screen-picker prompt and video
-    // setup below, rather than starting only after the user has picked a window.
-    const warmupPromise: Promise<void> = this.recognizer.isWarm()
-      ? Promise.resolve()
-      : this.recognizer.warmup().catch(() => {});
+    // Start the OCR warmup here so its first-run asset download (~14MB) overlaps the screen
+    // picker and video setup below instead of starting once the user has already chosen a
+    // window. Both engines are warmed: the single-character one is what completes a slot the
+    // template matcher gave up on, and creating it on first use would mean the very read
+    // that needs help most is also the one that waits seconds for a worker to spawn.
+    if (!this.recognizer.isWarm()) {
+      void this.recognizer.warmup().catch(() => {});
+    }
+    void this.recognizer.warmupSlotWorker?.().catch(() => {});
 
     try {
       this.regions = StorageService.getScannerRegions();
@@ -464,6 +482,104 @@ export class ScannerService {
     }
   }
 
+  /**
+   * Asks the OCR engine about the slots template matching could not name.
+   *
+   * The two recognisers fail in unrelated ways. Template matching compares against shapes
+   * drawn from stroke geometry, so it is fast and always produces six answers, but it can be
+   * defeated by a typeface detail it has no reference for. Tesseract has actually seen a
+   * great many typefaces and is slow. Running the slow one on one or two slots, only when
+   * the fast one has already given up, costs nothing in the normal case and is the
+   * difference between a plant being scanned and being silently skipped.
+   *
+   * Whatever comes back still has to survive the badge colour: a red badge holds W or X, and
+   * an OCR letter that disagrees is discarded rather than trusted over the colour.
+   */
+  private async completeWithSlotOcr(
+    item: { rIdx: number; wPx: number; hPx: number; geneWPx: number; gapWPx: number; signature: number; roiData?: Uint8ClampedArray },
+    read: DesktopTemplateResult
+  ): Promise<{ geneString: string; confidence: number; latencyMs: number } | null> {
+    const readSlotLetters = this.recognizer.readSlotLetters;
+    if (!readSlotLetters || !item.roiData) return null;
+
+    // One unreadable slot is a typeface problem worth a second opinion. Three is a
+    // misaligned region, and guessing half a row is how a wrong clone gets saved.
+    if (read.resolvedCount < 4 || read.unresolvedSlots.length === 0) return null;
+    if (this.slotOcrInFlight) return null;
+
+    const previous = this.slotOcrAttempts[item.rIdx];
+    const now = Date.now();
+    const sameTooltip =
+      previous && Math.abs(item.signature - previous.signature) / Math.max(1, Math.abs(previous.signature)) < 0.02;
+    if (sameTooltip && now - previous.at < SCANNER_CONFIG.recognition.slotOcrRetryMs) return null;
+
+    this.slotOcrAttempts[item.rIdx] = { signature: item.signature, at: now };
+    this.slotOcrInFlight = true;
+    this.setPipelineStage('slot-ocr');
+    const started = performance.now();
+
+    try {
+      // Re-read with the rasters attached. The first pass skips them because allocating six
+      // images a frame to throw away is a waste; this path runs rarely enough to afford it.
+      const detailed = DesktopTemplateRecognizer.recognizeFromRoi(
+        item.roiData,
+        item.wPx,
+        item.hPx,
+        item.geneWPx,
+        item.gapWPx,
+        true
+      );
+      if (!detailed) return null;
+
+      const canvases: HTMLCanvasElement[] = [];
+      const indices: number[] = [];
+      for (const index of detailed.unresolvedSlots) {
+        const image = detailed.slots[index]?.image;
+        if (!image) continue;
+        const canvas = rasterToCanvas(image, SLOT_CANVAS_POOL_BASE + index);
+        if (!canvas) continue;
+        canvases.push(canvas);
+        indices.push(index);
+      }
+
+      if (canvases.length !== detailed.unresolvedSlots.length) return null;
+
+      const letters = await readSlotLetters.call(this.recognizer, canvases);
+      const resolved = detailed.slots.map(slot => (slot.reject === null ? slot.gene : null));
+
+      for (let i = 0; i < indices.length; i++) {
+        const index = indices[i];
+        const letter = letters[i];
+        if (!letter) return null;
+
+        const color = detailed.slots[index].color;
+        if (color === 'green' && !GREEN_GENES.has(letter)) return null;
+        if (color === 'red' && !RED_GENES.has(letter)) return null;
+
+        resolved[index] = letter as typeof resolved[number];
+      }
+
+      if (resolved.some(letter => !letter)) return null;
+
+      this.fallbackReadCount++;
+      const geneString = resolved.join('');
+      console.log(`[Scanner SlotOCR] Completed ${detailed.partial} -> ${geneString}`);
+
+      return {
+        geneString,
+        // Deliberately below a clean template read. The row is trustworthy enough to emit and
+        // the user should still be able to tell the two apart in the HUD.
+        confidence: Math.max(SCANNER_CONFIG.recognition.minConfidence, Math.round(read.confidence * 0.9)),
+        latencyMs: performance.now() - started
+      };
+    } catch (error) {
+      console.warn('[Scanner SlotOCR] second opinion failed', error);
+      return null;
+    } finally {
+      this.slotOcrInFlight = false;
+    }
+  }
+
   private async processArbitratedScan(
     regionsToScan: {
       rIdx: number;
@@ -487,47 +603,59 @@ export class ScannerService {
 
     for (const item of regionsToScan) {
       this.lastOcrTimestamps[item.rIdx] = Date.now();
+      if (!item.roiData) continue;
 
-      let result: { geneString: string; confidence: number; slotConfidences?: number[] } | null = null;
-      let isFastPath = false;
+      this.setPipelineStage('template-match');
+      const read = DesktopTemplateRecognizer.recognizeFromRoi(
+        item.roiData,
+        item.wPx,
+        item.hPx,
+        item.geneWPx,
+        item.gapWPx
+      );
 
-      // FAST-PATH: Sub-0.2ms In-Memory Template Matcher & Chromatic Color Guard
-      if (item.roiData) {
-        this.setPipelineStage('template-match');
-        const templateResult = DesktopTemplateRecognizer.recognizeFromRoi(
-          item.roiData,
-          item.wPx,
-          item.hPx,
-          item.geneWPx,
-          item.gapWPx
-        );
-
-        if (
-          templateResult &&
-          templateResult.confidence >= SCANNER_CONFIG.recognition.minConfidence
-        ) {
-          result = {
-            geneString: templateResult.geneString,
-            confidence: templateResult.confidence,
-            slotConfidences: templateResult.slotConfidences
-          };
-          rowOcrLatency += templateResult.latencyMs;
-          isFastPath = true;
-        }
+      if (!read) {
+        this.lastReads[item.rIdx] = null;
+        continue;
       }
 
-      if (result && result.geneString) {
-        candidates.push({
-          regionIndex: item.rIdx,
-          regionType: item.type,
-          genes: result.geneString,
-          confidence: result.confidence,
-          geneConfidences: result.slotConfidences || [],
-          activityScore: item.activityScore,
-          valid: true,
-          isFastPath
-        });
+      this.lastReads[item.rIdx] = read;
+      rowOcrLatency += read.latencyMs;
+
+      let geneString = read.geneString;
+      let confidence = read.confidence;
+      let instantAccept =
+        read.minSlotConfidence >= SCANNER_CONFIG.recognition.instantAcceptSlotConfidence &&
+        read.layoutSource !== 'calibration';
+
+      if (!read.success) {
+        // The row is real -- the badges are there -- but a slot would not name itself. On a
+        // still tooltip the next frame is the same pixels, so re-running the same classifier
+        // will fail the same way forever. Asking a different engine about just that slot is
+        // the only thing that changes the outcome, and it is cheap because it happens once
+        // per stuck tooltip rather than once per frame.
+        const completed = await this.completeWithSlotOcr(item, read);
+        if (!completed) continue;
+        geneString = completed.geneString;
+        confidence = completed.confidence;
+        // Two independent recognisers named the row between them. That is a stronger
+        // agreement than three frames of one recogniser, so it does not wait for the window.
+        instantAccept = true;
+        slotOcrLatency += completed.latencyMs;
       }
+
+      if (!geneString || confidence < SCANNER_CONFIG.recognition.minConfidence) continue;
+
+      candidates.push({
+        regionIndex: item.rIdx,
+        regionType: item.type,
+        genes: geneString,
+        confidence,
+        geneConfidences: read.slotConfidences,
+        activityScore: item.activityScore,
+        valid: true,
+        acceptImmediately: instantAccept
+      });
     }
 
     this.lastOcrLatency = performance.now() - ocrStartTime;
@@ -577,7 +705,7 @@ export class ScannerService {
           geneString: candidate.genes,
           confidence: candidate.confidence
         },
-        candidate.isFastPath
+        candidate.acceptImmediately
       );
 
       if (!votedResult) continue;
@@ -731,6 +859,7 @@ export class ScannerService {
 
   public getDiagnostics(): ScannerDiagnostics {
     const now = performance.now();
+    const lastRead = this.getLastRead();
     return {
       fps: this.currentFps,
       tickGapMs: Math.round(this.lastTickGap * 10) / 10,
@@ -755,8 +884,21 @@ export class ScannerService {
       inventoryActivity: this.activityScores[0] || 0,
       planterActivity: this.activityScores[1] || 0,
       isStarved: this.starvationDetector.getIsStarved(),
-      starvationReason: this.starvationDetector.getStarvationReason()
+      starvationReason: this.starvationDetector.getStarvationReason(),
+      layoutSource: lastRead?.layoutSource ?? 'none',
+      resolvedSlots: lastRead?.resolvedCount ?? 0,
+      lastPartialRead: lastRead?.partial ?? '',
+      fallbackReads: this.fallbackReadCount
     };
+  }
+
+  /** The most recent read from whichever region last produced one. */
+  private getLastRead(): DesktopTemplateResult | null {
+    const active = this.lastReads[1] ?? null;
+    const inventory = this.lastReads[0] ?? null;
+    if (!active) return inventory;
+    if (!inventory) return active;
+    return active.resolvedCount >= inventory.resolvedCount ? active : inventory;
   }
 
   public acknowledgeGeneHandled(geneString: string): void {
@@ -908,6 +1050,14 @@ export class ScannerService {
     this.isScanning = false;
     this.isInitializing = false;
     this.starvationDetector.reset();
+    this.votingService.reset();
+    this.deduplicator.reset();
+    this.changeDetector.reset();
+    this.stabilityDetector.reset();
+    this.lastReads = {};
+    this.slotOcrAttempts = {};
+    this.slotOcrInFlight = false;
+    releaseRasterCanvases();
 
     if (this.tickerWorker) {
       try {
