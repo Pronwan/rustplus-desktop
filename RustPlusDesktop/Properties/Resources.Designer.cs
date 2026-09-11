@@ -954,6 +954,12 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionPolicyTitle => GetString("AiCompanionPolicyTitle");
         public static string AiCompanionPolicyAccept => GetString("AiCompanionPolicyAccept");
         public static string AiCompanionPolicy => GetString("AiCompanionPolicy");
+        public static string AiCompanionTextAnswersHint => GetString("AiCompanionTextAnswersHint");
+        public static string AiCompanionAudioAnswersHint => GetString("AiCompanionAudioAnswersHint");
+        public static string AiCompanionGameAudioHint => GetString("AiCompanionGameAudioHint");
+        public static string AiCompanionScreenshotDefaultHint => GetString("AiCompanionScreenshotDefaultHint");
+        public static string AiCompanionStreamingNeedsVoice => GetString("AiCompanionStreamingNeedsVoice");
+        public static string AiCompanionStreamingOn => GetString("AiCompanionStreamingOn");
     }
 }
 

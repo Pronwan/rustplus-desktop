@@ -7215,4 +7215,22 @@ Your key is stored only on this PC, protected by your Windows account, and is ne
 
 Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes.</value>
   </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>The answer appears under the tile on the dock.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>The answer is spoken, so you can keep both hands on the game.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Records the game&apos;s own sound on a second track — useful for having something said in game translated.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Saves ticking the box each time when you record by hotkey.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Only applies when answers are read out loud.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>The answer is spoken as it is written instead of after it is finished.</value>
+  </data>
 </root>

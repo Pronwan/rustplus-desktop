@@ -70,19 +70,33 @@ namespace RustPlusDesk.Views
 
             BtnRemoveAiKey.Visibility = AiCompanionStore.HasKey ? Visibility.Visible : Visibility.Collapsed;
 
-            // Streaming needs a voice to stream. Where the provider has none, Windows reads the
-            // finished answer instead, and there is nothing to start early.
+            // Streaming needs three things, and each of them fails differently: a provider with
+            // a voice, a supporter account, and spoken answers switched on at all.
             bool canStream = AiProviders.HasVoice(provider);
             bool premium = SupabaseAuthManager.IsPremium;
+            bool speaking = ChkAiAudioAnswers.IsChecked == true;
 
-            ChkAiStreamingVoice.IsEnabled = canStream && premium && ChkAiAudioAnswers.IsChecked == true;
+            ChkAiStreamingVoice.IsEnabled = canStream && premium && speaking;
 
-            TxtAiAnswerNote.Text =
-                !premium ? Loc.Text("AiCompanionStreamingSupporter",
+            var reason =
+                !speaking ? Loc.Text("AiCompanionStreamingNeedsVoice",
+                    "Only applies when answers are read out loud.")
+                : !premium ? Loc.Text("AiCompanionStreamingSupporter",
                     "Spoken answers start once the model has finished. Supporters hear them as they are written.")
                 : !canStream ? Loc.Text("AiCompanionNoVoice",
                     "This provider has no voice of its own, so answers are read by Windows and cannot start early.")
-                : "";
+                : Loc.Text("AiCompanionStreamingOn",
+                    "The answer is spoken as it is written instead of after it is finished.");
+
+            TxtAiAnswerNote.Text = reason;
+
+            // On the switch as well, with ShowOnDisabled set in the markup: a greyed control is
+            // exactly where someone points to ask why, and it has nothing to say by default.
+            ToolTipService.SetToolTip(ChkAiStreamingVoice, reason);
+
+            // The label follows the switch, so the row reads as unavailable rather than as a
+            // live setting that simply refuses to move.
+            LblAiStreamingVoice.Opacity = ChkAiStreamingVoice.IsEnabled ? 1.0 : 0.5;
 
             TxtAiHotkey.Text = string.IsNullOrWhiteSpace(settings.Hotkey)
                 ? Loc.Text("AiCompanionHotkeyNone", "Not set — click the tile to record instead")

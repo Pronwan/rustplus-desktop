@@ -7236,4 +7236,22 @@ Dein Schlüssel wird ausschließlich auf diesem PC gespeichert, geschützt durch
 
 Die Aufnahme läuft nur, solange du den Hotkey hältst oder nachdem du die Kachel angeklickt hast, und endet nach fünf Minuten von selbst.</value>
   </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>Die Antwort erscheint unter der Kachel im Dock.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>Die Antwort wird vorgelesen, damit du beide Hände am Spiel lassen kannst.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Nimmt den Ton des Spiels auf einer zweiten Spur auf — praktisch, um im Spiel Gesagtes übersetzen zu lassen.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Spart das Häkchen bei jeder Aufnahme per Hotkey.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Gilt nur, wenn Antworten vorgelesen werden.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>Die Antwort wird gesprochen, während sie entsteht, statt erst danach.</value>
+  </data>
 </root>

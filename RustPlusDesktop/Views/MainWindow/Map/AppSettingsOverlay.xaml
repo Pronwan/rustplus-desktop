@@ -1201,14 +1201,82 @@
                                 </Grid>
 
                                 <ui:TextBlock Text="{DynamicResource AiCompanionAnswers}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
-                                <CheckBox x:Name="ChkAiTextAnswers" Content="{DynamicResource AiCompanionTextAnswers}" Margin="0,0,0,4" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
-                                <CheckBox x:Name="ChkAiAudioAnswers" Content="{DynamicResource AiCompanionAudioAnswers}" Margin="0,0,0,4" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
-                                <CheckBox x:Name="ChkAiStreamingVoice" Content="{DynamicResource AiCompanionStreamingVoice}" Margin="16,0,0,4" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
-                                <ui:TextBlock x:Name="TxtAiAnswerNote" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,14" Foreground="{DynamicResource TextSubtle}" />
 
-                                <ui:TextBlock Text="{DynamicResource AiCompanionRecording}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
-                                <CheckBox x:Name="ChkAiGameAudio" Content="{DynamicResource AiCompanionGameAudio}" Margin="0,0,0,4" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
-                                <CheckBox x:Name="ChkAiScreenshotDefault" Content="{DynamicResource AiCompanionScreenshotDefault}" Margin="0,0,0,10" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                <Grid MinHeight="36">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionTextAnswers}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionTextAnswersHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiTextAnswers" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <Grid MinHeight="36">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionAudioAnswers}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionAudioAnswersHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiAudioAnswers" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <!--  Indented because it only means anything with the row above
+                                      switched on, and greyed out with its reason on the switch
+                                      itself — ShowOnDisabled, or a disabled control says nothing
+                                      when you go looking for the why.  -->
+                                <Grid MinHeight="36" Margin="16,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock x:Name="LblAiStreamingVoice" Text="{DynamicResource AiCompanionStreamingVoice}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock x:Name="TxtAiAnswerNote" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiStreamingVoice" VerticalAlignment="Center"
+                                                     ToolTipService.ShowOnDisabled="True"
+                                                     Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <ui:TextBlock Text="{DynamicResource AiCompanionRecording}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,10,0,6" />
+
+                                <Grid MinHeight="36">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionGameAudio}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionGameAudioHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiGameAudio" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <Grid MinHeight="36" Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionScreenshotDefault}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionScreenshotDefaultHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiScreenshotDefault" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
 
                                 <Grid Margin="0,0,0,14">
                                     <Grid.ColumnDefinitions>
