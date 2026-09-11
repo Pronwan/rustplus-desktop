@@ -62,7 +62,10 @@
                 <CheckBox x:Name="ChkLayerGrid"     Content="{DynamicResource MiniMapLayerGrid}"     Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerDrawings" Content="{DynamicResource MiniMapLayerDrawings}" Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerIcons"    Content="{DynamicResource MiniMapLayerIcons}"    Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
-                <CheckBox x:Name="ChkLayerPlayers"  Content="{DynamicResource MiniMapLayerPlayers}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}"/>
+                <CheckBox x:Name="ChkLayerPlayers"  Content="{DynamicResource MiniMapLayerPlayers}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <!--  Independent of the main map's own death-marker setting: the point is to see
+                      them here while the big map stays clean, or the other way round.  -->
+                <CheckBox x:Name="ChkLayerDeaths"   Content="{DynamicResource MiniMapLayerDeaths}"   Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="14,0,0,0"/>
             </StackPanel>
 
             <!--  Where a newly added tile lands. Dragging overrules this and reaches every side

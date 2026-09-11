@@ -6993,4 +6993,7 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
     <value>Off shows the device name instead — useful when several switches share an icon.</value>
   </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Death markers</value>
+  </data>
 </root>

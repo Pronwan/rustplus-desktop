@@ -94,6 +94,7 @@ namespace RustPlusDesk.Views
             ChkLayerDrawings.IsChecked = settings.ShowDrawings;
             ChkLayerIcons.IsChecked = settings.ShowIcons;
             ChkLayerPlayers.IsChecked = settings.ShowPlayers;
+            ChkLayerDeaths.IsChecked = settings.ShowDeaths;
         }
 
         private void CmbGrowth_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -117,6 +118,7 @@ namespace RustPlusDesk.Views
                 ChkLayerDrawings.IsChecked = true;
                 ChkLayerIcons.IsChecked = true;
                 ChkLayerPlayers.IsChecked = true;
+                ChkLayerDeaths.IsChecked = true;
             }
             finally
             {
@@ -240,7 +242,8 @@ namespace RustPlusDesk.Views
                 ChkLayerGrid?.IsChecked != false,
                 ChkLayerDrawings?.IsChecked != false,
                 ChkLayerIcons?.IsChecked != false,
-                ChkLayerPlayers?.IsChecked != false
+                ChkLayerPlayers?.IsChecked != false,
+                ChkLayerDeaths?.IsChecked != false
             );
         }
     }

@@ -7014,4 +7014,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
     <value>Aus zeigt stattdessen den Gerätenamen — praktisch, wenn mehrere Schalter dasselbe Icon haben.</value>
   </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Todesmarker</value>
+  </data>
 </root>

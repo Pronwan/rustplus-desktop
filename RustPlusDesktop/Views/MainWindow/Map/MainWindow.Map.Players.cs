@@ -684,7 +684,11 @@ public partial class MainWindow
             WipeDeathMarkersOverlay.Visibility = _showDeathMarkers && hasMarkers ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        if (!_showDeathMarkers) 
+        // Same as the grid: built when either map wants them, and hidden on the main map through
+        // the wrapper rather than by not building them at all.
+        ApplyIndependentLayerVisibility();
+
+        if (!_showDeathMarkers && !MiniMapWantsDeathMarkers)
         {
             SyncLiveMarkersTo3DMap();
             return;
@@ -705,7 +709,7 @@ public partial class MainWindow
                 
                 var el = BuildDeathPin(m.Id, m.SteamId, label);
                 _deathPins[m.Id] = el;
-                IconLayer.Children.Add(el);
+                DeathLayer.Children.Add(el);
                 Panel.SetZIndex(el, 9980);
                 ApplyCurrentOverlayScale(el);
                 var cx = px.X - (PinW / 2.0);

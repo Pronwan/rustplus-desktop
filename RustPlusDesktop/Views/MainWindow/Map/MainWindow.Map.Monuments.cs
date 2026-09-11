@@ -90,7 +90,7 @@ public partial class MainWindow
     {
         if (!IsLoaded || _loadingLayerControls || GridLayer == null) return;
         TrackingService.MapGridOpacity = e.NewValue;
-        GridLayer.Opacity = e.NewValue;
+        ApplyIndependentLayerVisibility();   // the wrapper owns the grid opacity
     }
 
     private void LayerExtraMonumentFilter_Changed(object sender, RoutedEventArgs e)

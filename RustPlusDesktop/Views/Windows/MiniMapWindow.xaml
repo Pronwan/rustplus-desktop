@@ -58,6 +58,13 @@
                                 <VisualBrush x:Name="BrushIcons" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
                             </Rectangle.Fill>
                         </Rectangle>
+                        <!--  Above the icons but below the players: a death marker is a place,
+                              and a teammate standing on it should still be visible.  -->
+                        <Rectangle x:Name="LayerDeaths">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushDeaths" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <Rectangle x:Name="LayerPlayers">
                             <Rectangle.Fill>
                                 <VisualBrush x:Name="BrushPlayers" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>

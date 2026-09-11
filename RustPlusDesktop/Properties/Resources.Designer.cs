@@ -882,6 +882,7 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockClock12Hour => GetString("CommandDockClock12Hour");
         public static string CommandDockDeviceShowIcon => GetString("CommandDockDeviceShowIcon");
         public static string CommandDockDeviceShowIconHint => GetString("CommandDockDeviceShowIconHint");
+        public static string MiniMapLayerDeaths => GetString("MiniMapLayerDeaths");
     }
 }
 

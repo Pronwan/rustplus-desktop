@@ -276,7 +276,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
     /// <summary>The five scene layers the mini-map mirrors, or nulls before a map is loaded.</summary>
     private MiniMapLayers CurrentMiniMapLayers()
-        => new(ImgMap, GridLayer, Overlay, IconLayer, PlayerLayer);
+        => new(ImgMap, GridLayer, Overlay, IconLayer, PlayerLayer, DeathLayer);
 
     /// <summary>Repoints the mini-map's brushes after the scene was rebuilt for a new map.</summary>
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
@@ -343,9 +343,16 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             {
                 _miniMap = null;
                 UpdateMapViewSelector();
+
+                // Nobody is asking for the grid or the death pins on this map's behalf any
+                // more, so it can stop building what it does not show.
+                RefreshIndependentLayers();
             };
 
             _miniMap.Show();
+
+            // It may want the grid or the death markers that this map has switched off.
+            RefreshIndependentLayers();
             CenterMiniMapOnPlayer();
             UpdateMapViewSelector();
 

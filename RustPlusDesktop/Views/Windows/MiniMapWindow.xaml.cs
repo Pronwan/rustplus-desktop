@@ -7,17 +7,18 @@ using System.Windows.Media;
 namespace RustPlusDesk
 {
     /// <summary>
-    /// The five map layers the mini-map mirrors, each as its own visual.
+    /// The map layers the mini-map mirrors, each as its own visual.
     ///
     /// They are siblings in the main map's scene grid, so they share one coordinate space and
-    /// one viewbox drives all five brushes. Any of them may be null before a map is loaded.
+    /// one viewbox drives every brush. Any of them may be null before a map is loaded.
     /// </summary>
     public sealed record MiniMapLayers(
         Visual? Texture,
         Visual? Grid,
         Visual? Drawings,
         Visual? Icons,
-        Visual? Players);
+        Visual? Players,
+        Visual? Deaths);
 
     public partial class MiniMapWindow : Window
     {
@@ -120,6 +121,18 @@ namespace RustPlusDesk
         private bool _clamping;
 
         /// <summary>
+        /// Whether the mini-map is asking the main map to keep building the grid.
+        ///
+        /// The main map skips the work entirely when its own grid is off, and the mini-map
+        /// mirrors that same canvas — so its switch cannot be a filter over something already
+        /// drawn. It has to ask for the layer to exist in the first place.
+        /// </summary>
+        public bool WantsGridLayer { get; private set; } = true;
+
+        /// <summary>The same for death markers, which the main map also builds only on demand.</summary>
+        public bool WantsDeathLayer { get; private set; } = true;
+
+        /// <summary>
         /// Whether a mouse event came from this window's own content rather than from one of its
         /// popups.
         ///
@@ -158,6 +171,7 @@ namespace RustPlusDesk
             BrushDrawings.Visual = layers.Drawings;
             BrushIcons.Visual = layers.Icons;
             BrushPlayers.Visual = layers.Players;
+            BrushDeaths.Visual = layers.Deaths;
             ApplyViewbox();
         }
 
@@ -324,7 +338,7 @@ namespace RustPlusDesk
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
 
-            foreach (var brush in new[] { BrushTexture, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers })
+            foreach (var brush in new[] { BrushTexture, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths })
             {
                 if (brush == null) continue;
                 brush.ViewboxUnits = BrushMappingMode.Absolute;
@@ -459,6 +473,20 @@ namespace RustPlusDesk
             Vis(LayerDrawings, settings.ShowDrawings);
             Vis(LayerIcons, settings.ShowIcons);
             Vis(LayerPlayers, settings.ShowPlayers);
+            Vis(LayerDeaths, settings.ShowDeaths);
+
+            // The main map only builds the grid and the death pins when something wants them,
+            // so the mini-map has to say so — its switch is not a filter over something that is
+            // always there.
+            bool wantsGrid = settings.ShowGrid;
+            bool wantsDeaths = settings.ShowDeaths;
+
+            if (wantsGrid != WantsGridLayer || wantsDeaths != WantsDeathLayer)
+            {
+                WantsGridLayer = wantsGrid;
+                WantsDeathLayer = wantsDeaths;
+                (Application.Current?.MainWindow as Views.MainWindow)?.RefreshIndependentLayers();
+            }
 
             if (MapBackdrop != null)
                 MapBackdrop.Visibility = settings.ShowTexture ? Visibility.Visible : Visibility.Collapsed;
@@ -468,8 +496,8 @@ namespace RustPlusDesk
 
             // With nothing left to draw, the map stops holding cells and the dock closes up over
             // it. Turning a layer back on brings the space back.
-            bool anyLayer = settings.ShowTexture || settings.ShowGrid
-                         || settings.ShowDrawings || settings.ShowIcons || settings.ShowPlayers;
+            bool anyLayer = settings.ShowTexture || settings.ShowGrid || settings.ShowDrawings
+                         || settings.ShowIcons || settings.ShowPlayers || settings.ShowDeaths;
 
             if (anyLayer != _mapLayersOn)
             {

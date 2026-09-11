@@ -18,7 +18,14 @@ public partial class MainWindow
     {
         GridLayer.Children.Clear();
         RedrawBuildingBlockedZones();
-        if (ChkGrid.IsChecked != true || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
+
+        // Drawn whenever either map wants it. The main map hides its copy through the wrapper's
+        // opacity instead of leaving the layer empty, because the mini-map mirrors this very
+        // canvas and an empty one is all it could ever show.
+        ApplyIndependentLayerVisibility();
+
+        bool wanted = ChkGrid.IsChecked == true || MiniMapWantsGrid;
+        if (!wanted || _worldSizeS <= 0 || _worldRectPx.Width <= 0) return;
 
         if (_isShowingDeepSeaMap)
         {

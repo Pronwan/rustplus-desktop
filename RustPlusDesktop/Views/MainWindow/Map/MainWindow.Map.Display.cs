@@ -44,7 +44,7 @@ public partial class MainWindow
 
         GridLayer.Width = wDip;
         GridLayer.Height = hDip;
-        GridLayer.Opacity = TrackingService.MapGridOpacity;
+        GridLayer.Opacity = 1.0;   // the wrapper carries the user opacity, see ApplyIndependentLayerVisibility
         GridLayer.IsHitTestVisible = false;
 
         // WICHTIG: Overlay groesser machen, aber Map nicht anfassen
@@ -57,7 +57,7 @@ public partial class MainWindow
         // sort themselves by per-element ZIndex. They are separate canvases now, because the
         // mini-map mirrors each one through its own VisualBrush and a brush can only take a
         // whole visual — the stacking order below reproduces the ZIndex bands they had.
-        foreach (var layer in new[] { IconLayer, PlayerLayer, MapUiLayer })
+        foreach (var layer in new[] { IconLayer, PlayerLayer, DeathLayer, MapUiLayer })
         {
             layer.Width = Overlay.Width;
             layer.Height = Overlay.Height;
@@ -75,6 +75,7 @@ public partial class MainWindow
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
         (IconLayer.Parent as Panel)?.Children.Remove(IconLayer);
         (PlayerLayer.Parent as Panel)?.Children.Remove(PlayerLayer);
+        (DeathLayer.Parent as Panel)?.Children.Remove(DeathLayer);
         (MapUiLayer.Parent as Panel)?.Children.Remove(MapUiLayer);
 
         _scene.Children.Clear();
@@ -82,11 +83,14 @@ public partial class MainWindow
         // Map bei (padPx, padPx)? -> NEIN, jetzt bei (0,0)!
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
         _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
-        _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 2);
+        _scene.Children.Add(Wrap(ref _gridWrapper, GridLayer)); Panel.SetZIndex(_gridWrapper!, 2);
         _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 3);
         _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 4);
-        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 5);
-        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 6);
+        _scene.Children.Add(Wrap(ref _deathWrapper, DeathLayer)); Panel.SetZIndex(_deathWrapper!, 5);
+        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 6);
+        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 7);
+
+        ApplyIndependentLayerVisibility();
 
         _scene.RenderTransform = MapTransform;
 
@@ -104,6 +108,65 @@ public partial class MainWindow
         RefreshMiniMapLayers();
     }
 
+    // ── Layers the mini-map can switch on its own ───────────────────────────────
+    //
+    // The grid and the death markers are the two the user can want in one place and not the
+    // other. Both used to be hidden by emptying or collapsing the layer itself — which the
+    // mini-map mirrors, so its own switch could only ever turn them further off.
+    //
+    // Each now sits in a wrapper that only the main map owns. Hiding means the wrapper goes to
+    // zero opacity, and a VisualBrush of the layer inside renders its own subtree without an
+    // ancestor's opacity — so the mini-map still sees it. Collapsing the wrapper would not work:
+    // a collapsed parent never lays its children out, and the brush would come back empty.
+
+    private Grid? _gridWrapper;
+    private Grid? _deathWrapper;
+
+    private static Grid Wrap(ref Grid? wrapper, UIElement layer)
+    {
+        wrapper ??= new Grid();
+        wrapper.Children.Clear();
+        wrapper.Children.Add(layer);
+        return wrapper;
+    }
+
+    /// <summary>True while an open mini-map is asking for a layer the main map has switched off.</summary>
+    private bool MiniMapWantsGrid => _miniMap is { IsVisible: true } m && m.WantsGridLayer;
+
+    private bool MiniMapWantsDeathMarkers => _miniMap is { IsVisible: true } m && m.WantsDeathLayer;
+
+    /// <summary>
+    /// Applies the main map's own choice to the wrappers. Opacity rather than visibility, and
+    /// hit testing off with it — a pin nobody can see must not swallow clicks.
+    /// </summary>
+    private void ApplyIndependentLayerVisibility()
+    {
+        if (_gridWrapper != null)
+        {
+            bool on = ChkGrid?.IsChecked == true;
+            _gridWrapper.Opacity = on ? TrackingService.MapGridOpacity : 0;
+            _gridWrapper.IsHitTestVisible = false;   // the grid never takes the mouse anyway
+        }
+
+        if (_deathWrapper != null)
+        {
+            bool on = _showDeathMarkers;
+            _deathWrapper.Opacity = on ? 1 : 0;
+            _deathWrapper.IsHitTestVisible = on;
+        }
+    }
+
+    /// <summary>
+    /// Redraws whatever the mini-map's layer switches just started or stopped asking for.
+    /// Both layers are only built when someone wants them, so a change of mind has to rebuild.
+    /// </summary>
+    internal void RefreshIndependentLayers()
+    {
+        try { RedrawGrid(); } catch { }
+        try { RedrawDeathPins(); } catch { }
+        ApplyIndependentLayerVisibility();
+    }
+
     /// <summary>
     /// Takes an element off whichever map layer holds it.
     ///
@@ -118,6 +181,7 @@ public partial class MainWindow
         Overlay?.Children.Remove(el);
         IconLayer?.Children.Remove(el);
         PlayerLayer?.Children.Remove(el);
+        DeathLayer?.Children.Remove(el);
         MapUiLayer?.Children.Remove(el);
     }
 
@@ -128,7 +192,7 @@ public partial class MainWindow
     /// </summary>
     private void ReplaceOnMapLayer(UIElement oldEl, UIElement newEl, Canvas fallback)
     {
-        foreach (var layer in new[] { PlayerLayer, IconLayer, Overlay, MapUiLayer })
+        foreach (var layer in new[] { PlayerLayer, IconLayer, Overlay, DeathLayer, MapUiLayer })
         {
             if (layer == null) continue;
             int idx = layer.Children.IndexOf(oldEl);
