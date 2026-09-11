@@ -7899,6 +7899,7 @@
                         <Canvas x:Name="Overlay" IsHitTestVisible="True" />
                         <Canvas x:Name="IconLayer" IsHitTestVisible="True" />
                         <Canvas x:Name="PlayerLayer" IsHitTestVisible="True" />
+                        <Canvas x:Name="DeathLayer" IsHitTestVisible="True" />
                         <Canvas x:Name="MapUiLayer" IsHitTestVisible="True" />
 
                         <!-- Monument Navigation Panel -->
