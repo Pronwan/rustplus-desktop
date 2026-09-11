@@ -1651,7 +1651,7 @@ namespace RustPlusDesk
                 // size and five layers, and those already live in their own panel. Its gear goes
                 // straight there rather than to a tile panel of settings that do not apply.
                 if (tile.Kind == CommandDockTileKinds.Map) OpenSettings();
-                else OpenTileSettings(tile, shell);
+                else OpenTileSettings(tile);
             };
 
             // A veil rather than a border tint: the device and alarm refreshers rewrite the

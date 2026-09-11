@@ -23,25 +23,28 @@ namespace RustPlusDesk
     {
         private CommandDockTile? _settingsTile;
 
-        private void OpenTileSettings(CommandDockTile tile, FrameworkElement anchor)
+        private void OpenTileSettings(CommandDockTile tile)
         {
             _settingsTile = tile;
 
             TileSettingsPanel.Content = BuildTileSettings(tile);
             TileSettingsPopup.IsOpen = false;   // reposition cleanly when moving between tiles
 
-            // Beside the tile, then nudged back onto the screen the dock is on. Same rule as the
-            // map's own settings: a panel on the neighbouring monitor is a panel nobody sees.
-            double x = Canvas.GetLeft(anchor);
-            double y = Canvas.GetTop(anchor);
-            if (double.IsNaN(x)) x = 0;
-            if (double.IsNaN(y)) y = 0;
+            // Measured from the tile's cell rather than from the element.
+            //
+            // Changing a setting rebuilds the dock and then reopens this panel, and at that
+            // moment the tile's element is brand new and has not been through a layout pass —
+            // its ActualWidth is zero, so the panel opened on top of the tile instead of beside
+            // it. The cell knows the width before anything is drawn.
+            var rect = CellRect(tile);
+            double x = rect.X + _dragPad;
+            double y = rect.Y + _dragPad;
 
             const double panelWidth = 236;
             const double panelHeight = 330;
             var screen = ScreenBoundsFor(this);
 
-            double offsetX = x + anchor.ActualWidth + 8;
+            double offsetX = x + rect.Width + 8;
             if (Left + offsetX + panelWidth > screen.Right) offsetX = x - panelWidth - 8;
             if (Left + offsetX < screen.Left) offsetX = screen.Left - Left;
 
@@ -186,9 +189,8 @@ namespace RustPlusDesk
                 tile.TextColorKey = null;
                 TileSettingChanged(immediate: true);
 
-                // Rebuilt so the sliders show the inherited values they just fell back to.
-                if (_dock.Tiles.Contains(tile) && _tileElements.TryGetValue(tile.Id, out var el))
-                    OpenTileSettings(tile, el);
+                // Reopened so the sliders show the inherited values they just fell back to.
+                if (_dock.Tiles.Contains(tile)) OpenTileSettings(tile);
             };
             stack.Children.Add(reset);
 
@@ -243,7 +245,7 @@ namespace RustPlusDesk
                     TileSettingChanged(immediate: true);
 
                     // After the rebuild, so the panel re-anchors to the tile that now exists.
-                    if (_tileElements.TryGetValue(tile.Id, out var el)) OpenTileSettings(tile, el);
+                    OpenTileSettings(tile);
                 };
 
                 row.Children.Add(swatch);
