@@ -20,6 +20,17 @@ public partial class MainWindow : ICommandDockHost
     /// </summary>
     private List<EventDockItem> _lastEventDockItems = new();
 
+    public string? DockServerKey
+    {
+        get
+        {
+            var profile = _vm?.Selected;
+            return profile == null || string.IsNullOrWhiteSpace(profile.Host)
+                ? null
+                : $"{profile.Host}-{profile.Port}";
+        }
+    }
+
     public IReadOnlyList<SmartDevice> DockDevices
         => _vm?.Selected?.FlatDevices ?? (IReadOnlyList<SmartDevice>)Array.Empty<SmartDevice>();
 

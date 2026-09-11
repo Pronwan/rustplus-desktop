@@ -282,6 +282,7 @@ namespace RustPlusDesk
         private bool MapOccupiesCells => MapTile != null && _mapLayersOn;
 
         private bool _mapLayersOn = true;
+        private string? _lastServerKey;
 
         /// <summary>How many cells the map's free pixel size needs.</summary>
         private (int Cols, int Rows) MapCellSpan() => MapOccupiesCells
@@ -337,9 +338,42 @@ namespace RustPlusDesk
                 CommandDockLayout.CellsToPixels(tile.RowSpan));
         }
 
-        /// <summary>The tiles that currently take up space — everything but a switched-off map.</summary>
-        private IEnumerable<CommandDockTile> VisibleTiles() => _dock.Tiles
-            .Where(t => t.Kind != CommandDockTileKinds.Map || MapOccupiesCells);
+        /// <summary>
+        /// The tiles that currently take up space: everything but a switched-off map and the
+        /// device tiles belonging to a server other than the one in front of us.
+        /// </summary>
+        private IEnumerable<CommandDockTile> VisibleTiles() => _dock.Tiles.Where(BelongsHere);
+
+        /// <summary>
+        /// Gives a server to device tiles saved before they had one.
+        ///
+        /// Every one of them was created on some server, and the one in front of us is by far the
+        /// best guess. Leaving them unstamped would mean they stay global and keep reading "not
+        /// paired" everywhere else, which is the thing this was meant to stop.
+        /// </summary>
+        private void StampLegacyDeviceTiles()
+        {
+            var key = DockHost?.DockServerKey;
+            if (key == null) return;
+
+            bool changed = false;
+            foreach (var tile in _dock.Tiles)
+            {
+                if (tile.Kind != CommandDockTileKinds.Device || tile.ServerKey != null) continue;
+                tile.ServerKey = key;
+                changed = true;
+            }
+
+            if (changed) SaveDock();
+        }
+
+        private bool BelongsHere(CommandDockTile tile)
+        {
+            if (tile.Kind == CommandDockTileKinds.Map) return MapOccupiesCells;
+            if (tile.ServerKey == null) return true;
+
+            return string.Equals(tile.ServerKey, DockHost?.DockServerKey, StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// The rectangle the dock's tiles fit into, derived from their cells rather than read
@@ -673,7 +707,7 @@ namespace RustPlusDesk
                 // real tile, so every tile collided with itself and the highlight was always
                 // red — most visibly on the map, which is large enough to always overlap.
                 if (except != null && other.Id == except.Id) continue;
-                if (other.Kind == CommandDockTileKinds.Map && !MapOccupiesCells) continue;
+                if (!BelongsHere(other)) continue;
 
                 for (int c = other.Col; c < other.Col + other.ColSpan; c++)
                     for (int r = other.Row; r < other.Row + other.RowSpan; r++)
@@ -703,6 +737,7 @@ namespace RustPlusDesk
             // rebuilds the dock — clearing it here would make the handles vanish under the
             // pointer every time a swatch was clicked.
 
+            StampLegacyDeviceTiles();
             SyncMapCellSpan();
 
             foreach (var tile in _dock.Tiles.ToList())
@@ -710,6 +745,8 @@ namespace RustPlusDesk
                 // The map's element is the one declared in XAML — it carries the mirror brushes
                 // and the whole viewbox machinery, and rebuilding it every time a tile moved
                 // would throw that away. It is placed like any other tile, just not created.
+                if (!BelongsHere(tile) && tile.Kind != CommandDockTileKinds.Map) continue;
+
                 bool isMap = tile.Kind == CommandDockTileKinds.Map;
 
                 if (isMap)
@@ -769,6 +806,16 @@ namespace RustPlusDesk
 
         private void RefreshTiles()
         {
+            // Cheaper than wiring an event through the host: the server changes rarely, and a
+            // second of lag on a dock that has just reconnected is not worth the coupling.
+            var serverKey = DockHost?.DockServerKey;
+            if (!string.Equals(serverKey, _lastServerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                _lastServerKey = serverKey;
+                RebuildTiles();
+                return;
+            }
+
             foreach (var refresh in _tileRefreshers)
             {
                 try { refresh(); }

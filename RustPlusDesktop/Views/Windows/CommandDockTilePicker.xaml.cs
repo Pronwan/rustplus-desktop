@@ -84,11 +84,20 @@ namespace RustPlusDesk
             if (devices.Count > 0)
             {
                 Section(Loc.Text("CommandDockSectionDevices", "Devices"));
+                // Stamped with the server it was added on: an entity id means nothing on another
+                // one, so the tile only appears where it can actually do something.
+                var serverKey = Host?.DockServerKey;
+
                 foreach (var device in devices.Where(d => !d.IsGroup).OrderBy(d => d.DisplayName))
                 {
                     var entityId = device.EntityId;
                     Entry(device.DisplayName, device.Kind ?? "",
-                          () => new CommandDockTile { Kind = CommandDockTileKinds.Device, EntityId = entityId });
+                          () => new CommandDockTile
+                          {
+                              Kind = CommandDockTileKinds.Device,
+                              EntityId = entityId,
+                              ServerKey = serverKey,
+                          });
                 }
             }
 

@@ -25,6 +25,18 @@ namespace RustPlusDesk.Models
         /// <summary>Device tiles: the paired entity this tile controls or reports on.</summary>
         public uint EntityId { get; set; }
 
+        /// <summary>
+        /// The server this tile belongs to, as "{host}-{port}", or null for one that belongs
+        /// everywhere.
+        ///
+        /// Only device tiles get one: an entity id means nothing on another server, so a switch
+        /// from last wipe would sit there as a permanent "not paired". Tiles for a server other
+        /// than the current one are hidden rather than deleted, and since two servers' devices
+        /// are never on screen together they are free to hold the same cells — go back and the
+        /// arrangement is as it was.
+        /// </summary>
+        public string? ServerKey { get; set; }
+
         /// <summary>Rule tiles: the Logic Engine rule this tile launches.</summary>
         public string? RuleId { get; set; }
 

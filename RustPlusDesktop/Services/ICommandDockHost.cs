@@ -14,6 +14,12 @@ namespace RustPlusDesk.Services
     /// </summary>
     public interface ICommandDockHost
     {
+        /// <summary>
+        /// The active server as "{host}-{port}", or null when none is selected. Device tiles are
+        /// stamped with it so they only appear where their entity ids mean something.
+        /// </summary>
+        string? DockServerKey { get; }
+
         /// <summary>Every paired device on the active server, groups flattened.</summary>
         IReadOnlyList<SmartDevice> DockDevices { get; }
 
