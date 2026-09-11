@@ -1098,8 +1098,9 @@ namespace RustPlusDesk
 
                 // Icon mode is the default: the picture plus one state word. Turning it off puts
                 // the name back, which is what a dock full of identical-looking switches needs.
-                bool showPicture = tile.ShowDeviceIcon && device.CustomIcon != null;
-                picture.Source = showPicture ? device.CustomIcon : null;
+                var art = DeviceArt(device);
+                bool showPicture = tile.ShowDeviceIcon && art != null;
+                picture.Source = showPicture ? art : null;
                 picture.Visibility = showPicture ? Visibility.Visible : Visibility.Collapsed;
                 icon.Visibility = showPicture ? Visibility.Collapsed : Visibility.Visible;
 
@@ -1187,6 +1188,33 @@ namespace RustPlusDesk
             });
 
             return shell;
+        }
+
+        /// <summary>
+        /// The picture the device list shows for a device: the icon the user picked for it, or
+        /// the default for its kind.
+        ///
+        /// The list falls back by kind through a stack of XAML triggers, so a device nobody gave
+        /// an icon to still has one everywhere else in the app — which is why using CustomIcon
+        /// alone left every untouched alarm, switch and monitor on the dock with a generic glyph.
+        /// </summary>
+        private static ImageSource? DeviceArt(SmartDevice device)
+        {
+            if (device.CustomIcon != null) return device.CustomIcon;
+
+            string key =
+                device.IsGroup ? "IconGroup" :
+                IsAlarm(device) ? "IconSmartAlarm" :
+                IsSwitch(device) ? "IconSmartSwitch" :
+                "IconStorageMonitor";
+
+            // SharedResources.xaml is merged into the main window, not into the application, so
+            // the application-wide lookup that every other brush here uses finds nothing. Ask
+            // the window that actually holds the dictionary first.
+            if (Application.Current?.MainWindow?.TryFindResource(key) is ImageSource fromWindow)
+                return fromWindow;
+
+            return Application.Current?.TryFindResource(key) as ImageSource;
         }
 
         private SmartDevice? FindDevice(uint entityId)
