@@ -69,6 +69,15 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool GrowRight { get; set; }
 
+        /// <summary>
+        /// Where the dock last sat on screen. Global rather than per server: it is a place on the
+        /// user's desk, not a property of the server they happen to be on. Null until the dock
+        /// has been moved once, which is what keeps the first-run position up to the caller.
+        /// </summary>
+        public double? WindowLeft { get; set; }
+
+        public double? WindowTop { get; set; }
+
         /// <summary>Cell size and gap in device-independent pixels.</summary>
         public const double CellSize = 74;
         public const double CellGap = 8;

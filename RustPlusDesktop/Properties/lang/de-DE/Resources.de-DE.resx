@@ -6921,4 +6921,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockRemoveTile" xml:space="preserve">
     <value>Kachel entfernen</value>
   </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
 </root>

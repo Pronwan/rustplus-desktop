@@ -47,11 +47,122 @@ namespace RustPlusDesk
             };
             _dockTimer.Tick += (_, __) => RefreshTiles();
 
+            InitArming();
+
             Loaded += (_, __) => { RebuildTiles(); _dockTimer.Start(); };
-            Closed += (_, __) => _dockTimer?.Stop();
+            Closed += (_, __) =>
+            {
+                _dockTimer?.Stop();
+                _armTimer?.Stop();
+                _disarmTimer?.Stop();
+                SaveDockPosition();
+            };
         }
 
         private void SaveDock() => StorageService.SaveCache(DockCacheKey, _dock);
+
+        // ── Dock position ───────────────────────────────────────────────────────
+
+        private void SaveDockPosition()
+        {
+            if (double.IsNaN(Left) || double.IsNaN(Top)) return;
+
+            _dock.WindowLeft = Left;
+            _dock.WindowTop = Top;
+            SaveDock();
+        }
+
+        /// <summary>
+        /// Puts the dock back where it was left. Silently skipped the first time, so a fresh
+        /// install still gets the top-right corner the main window picks for it.
+        /// </summary>
+        private void RestoreDockPosition()
+        {
+            if (_dock.WindowLeft is not { } left || _dock.WindowTop is not { } top) return;
+
+            double dLeft = left - Left, dTop = top - Top;
+            Left = left;
+            Top = top;
+            ClampToScreen();
+            HoldSettingsPopupInPlace(dLeft, dTop);
+        }
+
+        // ── Arming ──────────────────────────────────────────────────────────────
+
+        // Long enough that crossing a tile on the way somewhere else does not arm it, short
+        // enough that deliberately resting on one does.
+        private static readonly TimeSpan ArmDelay = TimeSpan.FromMilliseconds(600);
+
+        // Kept armed after the pointer leaves, so several tiles can be changed in a row without
+        // waiting out the delay between each.
+        private static readonly TimeSpan DisarmGrace = TimeSpan.FromSeconds(2.5);
+
+        private DispatcherTimer? _armTimer;
+        private DispatcherTimer? _disarmTimer;
+        private bool _armed;
+        private string? _hoveredTileId;
+
+        private void InitArming()
+        {
+            _armTimer = new DispatcherTimer { Interval = ArmDelay };
+            _armTimer.Tick += (_, __) => { _armTimer!.Stop(); SetArmed(true); };
+
+            _disarmTimer = new DispatcherTimer { Interval = DisarmGrace };
+            _disarmTimer.Tick += (_, __) => { _disarmTimer!.Stop(); SetArmed(false); };
+
+            MouseEnter += (_, __) =>
+            {
+                _disarmTimer?.Stop();
+                if (!_armed) _armTimer?.Start();
+            };
+
+            MouseLeave += (_, __) =>
+            {
+                _armTimer?.Stop();
+                _hoveredTileId = null;
+                UpdateTileHandles();
+                if (_armed) _disarmTimer?.Start();
+            };
+        }
+
+        private void SetArmed(bool armed)
+        {
+            if (_armed == armed) return;
+            _armed = armed;
+
+            FadeTitleBar(armed);
+            UpdateTileHandles();
+        }
+
+        private void FadeTitleBar(bool show)
+        {
+            if (DockTitleBar == null) return;
+
+            // Opacity 0 does not stop a WPF element from taking the mouse. Left hit-testable,
+            // the invisible bar would swallow every click on the top 30 pixels of whatever tile
+            // sits under it — so the two are switched together.
+            DockTitleBar.IsHitTestVisible = show;
+
+            var fade = new DoubleAnimation(show ? 1.0 : 0.0, TimeSpan.FromMilliseconds(show ? 120 : 450))
+            {
+                FillBehavior = FillBehavior.HoldEnd,
+            };
+            DockTitleBar.BeginAnimation(UIElement.OpacityProperty, fade);
+        }
+
+        /// <summary>
+        /// Handles belong to the hovered tile, and only while the dock is armed. Both conditions
+        /// change independently, so one place decides and everything else just calls it.
+        /// </summary>
+        private void UpdateTileHandles()
+        {
+            foreach (var (tileId, handles) in _tileHandles)
+            {
+                var show = _armed && tileId == _hoveredTileId;
+                foreach (var handle in handles)
+                    handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
         // ── Geometry ────────────────────────────────────────────────────────────
 
@@ -159,6 +270,8 @@ namespace RustPlusDesk
 
             _tileElements.Clear();
             _tileRefreshers.Clear();
+            _tileHandles.Clear();
+            _hoveredTileId = null;
 
             foreach (var tile in _dock.Tiles.ToList())
             {
@@ -793,13 +906,15 @@ namespace RustPlusDesk
             return shell;
         }
 
-        // ── Edit mode ───────────────────────────────────────────────────────────
+        // ── Adding and arranging ────────────────────────────────────────────────
 
         private void BtnAddTile_Click(object sender, RoutedEventArgs e) => ShowPicker();
 
         /// <summary>
-        /// The corner handle that changes a tile's cell span. Shown while the tile is hovered,
-        /// so resizing needs no mode — the same as moving and removing.
+        /// The corner handle that changes a tile's cell span, and the button that removes the
+        /// tile. Both appear on the hovered tile once the dock has armed — see the arming timers
+        /// above: the delay is what stops a cursor passing over a switch from putting a delete
+        /// button under it.
         ///
         /// It is wrapped into the tile after the tile built its own content, so every kind gets
         /// one without each builder having to make room for it. Chat keeps a floor of two cells
@@ -853,16 +968,38 @@ namespace RustPlusDesk
             remove.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
             remove.MouseLeftButtonUp += (_, e) => { e.Handled = true; RemoveTile(tile.Id); };
 
+            // A veil rather than a border tint: the device and alarm refreshers rewrite the
+            // shell's BorderBrush every second and would wipe a hover colour straight off again.
+            // It is also what shows a press landed, which a tile that only toggles a switch
+            // somewhere else on screen otherwise never acknowledges.
+            var veil = new Border
+            {
+                CornerRadius = shell.CornerRadius,
+                Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF)),
+                Opacity = 0,
+                IsHitTestVisible = false,
+            };
+
+            void Veil(double to, int ms) => veil.BeginAnimation(
+                UIElement.OpacityProperty,
+                new DoubleAnimation(to, TimeSpan.FromMilliseconds(ms)) { FillBehavior = FillBehavior.HoldEnd });
+
             shell.MouseEnter += (_, __) =>
             {
-                grip.Visibility = Visibility.Visible;
-                remove.Visibility = Visibility.Visible;
+                _hoveredTileId = tile.Id;
+                UpdateTileHandles();
+                Veil(0.07, 120);
             };
+
             shell.MouseLeave += (_, __) =>
             {
-                grip.Visibility = Visibility.Collapsed;
-                remove.Visibility = Visibility.Collapsed;
+                if (_hoveredTileId == tile.Id) _hoveredTileId = null;
+                UpdateTileHandles();
+                Veil(0, 160);
             };
+
+            shell.PreviewMouseLeftButtonDown += (_, __) => Veil(0.18, 40);
+            shell.PreviewMouseLeftButtonUp += (_, __) => Veil(shell.IsMouseOver ? 0.07 : 0, 220);
             // The edit hints live on the grip, not the tile: the tile's own tooltip is live data
             // that its refresher rewrites every second, and would swallow anything set here.
             ToolTipService.SetToolTip(grip,
@@ -911,6 +1048,9 @@ namespace RustPlusDesk
                 RebuildTiles();
             };
 
+            // Veil under the handles, so the grip and the × stay at full strength on a pressed
+            // tile; both above the content, so they are never hidden behind a chat line.
+            host.Children.Add(veil);
             host.Children.Add(grip);
             host.Children.Add(remove);
             shell.Child = host;

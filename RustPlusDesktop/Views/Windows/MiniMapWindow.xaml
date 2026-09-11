@@ -95,60 +95,68 @@
             </Grid>
         </Canvas>
 
-        <!--  The two buttons live above the dock, not inside the map tile: a tile placed over
-              the map's top-right corner used to cover them. Their position is set in code from
-              the map tile's corner, since that is what the user reads as "the mini-map".  -->
-        <Canvas x:Name="ChromeLayer">
-            <Border x:Name="SettingsHoverBorder" Opacity="0">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <!--  Driven by the whole window, not by the button strip: with the
-                                  map texture off there is nothing to aim at, and the buttons
-                                  have to appear from anywhere inside the dock.  -->
-                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <!--  Held for over a second, then faded slowly: the
-                                                  path from the map to the button leaves the
-                                                  window on a transparent map, and a 0.2s fade
-                                                  was gone before the cursor arrived.  -->
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" BeginTime="0:0:1.4" Duration="0:0:1.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
+        <!--  The dock's title bar: the handle for the whole grid, and the home of the add and
+              settings buttons. It spans the dock and overlays whatever is under it, map tile
+              included — so it exists and can be grabbed even with the map switched off, which
+              a handle sitting inside the map tile could not.
 
-                <StackPanel Orientation="Horizontal">
-                    <ui:Button x:Name="BtnAddTile"
-                               Padding="4"
-                               Margin="0,0,4,0"
-                               Appearance="Transparent"
-                               Background="#AA000000"
-                               Foreground="White"
-                               Click="BtnAddTile_Click"
-                               ToolTip="{DynamicResource CommandDockAddTile}"
-                               Icon="{ui:SymbolIcon Symbol=Add24}"/>
-                    <ui:Button x:Name="BtnSettings"
-                               Padding="4"
-                               Appearance="Transparent"
-                               Background="#AA000000"
-                               Foreground="White"
-                               Click="BtnSettings_Click"
-                               tutorials:Tutorial.TargetId="MiniMap.Settings"
-                               Icon="{ui:SymbolIcon Symbol=Settings24}"/>
-                </StackPanel>
+              Its opacity is driven from code rather than an IsMouseOver trigger, because it
+              appears on the same delay that arms the tile handles: a bar that showed up the
+              instant the cursor crossed it would bring the delete buttons with it.  -->
+        <Canvas x:Name="ChromeLayer">
+            <Border x:Name="DockTitleBar"
+                    Height="30"
+                    Opacity="0"
+                    IsHitTestVisible="False"
+                    CornerRadius="8,8,0,0"
+                    Background="#B0101518"
+                    BorderBrush="#33FFFFFF"
+                    BorderThickness="1,1,1,0"
+                    Cursor="SizeAll">
+                <Grid>
+                    <!--  Grip dots, the usual sign for "this is draggable".  -->
+                    <TextBlock x:Name="DockGrip"
+                               Text="&#xE700;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="13"
+                               Foreground="#99FFFFFF"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"
+                               IsHitTestVisible="False"/>
+
+                    <TextBlock x:Name="DockTitleText"
+                               Text="{DynamicResource CommandDockTitle}"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#99FFFFFF"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Margin="30,0,0,0"
+                               TextTrimming="CharacterEllipsis"
+                               IsHitTestVisible="False"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,4,0">
+                        <ui:Button x:Name="BtnAddTile"
+                                   Padding="3"
+                                   Margin="0,0,2,0"
+                                   Appearance="Transparent"
+                                   Foreground="White"
+                                   Click="BtnAddTile_Click"
+                                   ToolTip="{DynamicResource CommandDockAddTile}"
+                                   Icon="{ui:SymbolIcon Symbol=Add24}"/>
+                        <ui:Button x:Name="BtnSettings"
+                                   Padding="3"
+                                   Appearance="Transparent"
+                                   Foreground="White"
+                                   Click="BtnSettings_Click"
+                                   tutorials:Tutorial.TargetId="MiniMap.Settings"
+                                   Icon="{ui:SymbolIcon Symbol=Settings24}"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Canvas>
 

@@ -61,7 +61,12 @@ namespace RustPlusDesk
 
             // Click detection for centering
             Point startDragPos = new Point();
-            MouseLeftButtonDown += (s, e) => { startDragPos = e.GetPosition(this); DragMove(); };
+            MouseLeftButtonDown += (s, e) =>
+            {
+                startDragPos = e.GetPosition(this);
+                DragMove();
+                ClampToScreen();
+            };
             MouseLeftButtonUp += (s, e) =>
             {
                 var endPos = e.GetPosition(this);
@@ -69,11 +74,42 @@ namespace RustPlusDesk
                 {
                     OnClicked?.Invoke();
                 }
+                else
+                {
+                    // Dragged by the map rather than the title bar — the dock still ends up
+                    // somewhere new, and the position has to survive the next restart either way.
+                    SaveDockPosition();
+                }
             };
+
+            // The title bar drags the whole dock, and is the only handle left once the map is
+            // switched off. DragMove blocks until the button is released, so the clamp runs
+            // afterwards rather than during — LocationChanged catches the in-between frames.
+            DockTitleBar.MouseLeftButtonDown += (_, e) =>
+            {
+                e.Handled = true;
+                DragMove();
+                ClampToScreen();
+                SaveDockPosition();
+            };
+
+            LocationChanged += (_, __) =>
+            {
+                if (_clamping) return;
+                _clamping = true;
+                try { ClampToScreen(); }
+                finally { _clamping = false; }
+            };
+
+            // Runs after every Loaded handler, so the saved position is applied on top of
+            // whatever the initial layout and the loaded settings worked out.
+            ContentRendered += (_, __) => RestoreDockPosition();
 
             SettingsOverlay.ParentWindow = this;
             InitCommandDock();
         }
+
+        private bool _clamping;
 
         /// <summary>
         /// Points every layer brush at its source. Called again whenever the main window
@@ -481,25 +517,50 @@ namespace RustPlusDesk
                 Top = anchor.Y - (Canvas.GetTop(MapContainer) + _mapHeight / 2.0);
             }
 
+            ClampToScreen();
+
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
 
             PositionChrome();
         }
 
-        /// <summary>Parks the add and settings buttons on the map tile's top-right corner.</summary>
+        /// <summary>Stretches the title bar across the dock and parks it on the top edge.</summary>
         private void PositionChrome()
         {
-            if (SettingsHoverBorder == null) return;
+            if (DockTitleBar == null) return;
 
-            double mapLeft = Canvas.GetLeft(MapContainer);
-            double mapTop = Canvas.GetTop(MapContainer);
-            if (double.IsNaN(mapLeft)) mapLeft = 0;
-            if (double.IsNaN(mapTop)) mapTop = 0;
+            DockTitleBar.Width = Math.Max(120, Width);
+            Canvas.SetLeft(DockTitleBar, 0);
+            Canvas.SetTop(DockTitleBar, 0);
+        }
 
-            const double stripWidth = 72;   // two icon buttons plus the gap between them
-            Canvas.SetLeft(SettingsHoverBorder, mapLeft + _mapWidth - stripWidth - 10);
-            Canvas.SetTop(SettingsHoverBorder, mapTop + 10);
+        /// <summary>
+        /// Keeps the dock reachable.
+        ///
+        /// The title bar is the only way to move the dock once the map is off, and it sits on the
+        /// window's top edge — so that edge may never leave the screen. Horizontally a strip is
+        /// enough: the dock can hang off either side as long as some of the bar can be grabbed.
+        /// </summary>
+        private void ClampToScreen()
+        {
+            if (double.IsNaN(Left) || double.IsNaN(Top)) return;
+
+            const double grabbable = 120;
+            var screen = ScreenBoundsFor(this);
+
+            double top = Math.Max(screen.Top, Top);
+
+            // Nothing below the bottom edge either, unless the dock is taller than the screen —
+            // then the top wins, because that is where the handle is.
+            if (top + Height > screen.Bottom)
+                top = Math.Max(screen.Top, screen.Bottom - Height);
+
+            double left = Math.Min(Left, screen.Right - grabbable);
+            left = Math.Max(left, screen.Left - Math.Max(0, Width - grabbable));
+
+            if (Math.Abs(left - Left) > 0.01) Left = left;
+            if (Math.Abs(top - Top) > 0.01) Top = top;
         }
 
         private Rect MeasureDockBounds()

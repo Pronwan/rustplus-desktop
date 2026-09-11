@@ -6900,4 +6900,7 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockRemoveTile" xml:space="preserve">
     <value>Remove tile</value>
   </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
 </root>
