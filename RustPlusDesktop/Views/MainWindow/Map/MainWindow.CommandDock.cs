@@ -266,22 +266,25 @@ public partial class MainWindow : ICommandDockHost
     /// Oil rig crate countdowns, one line per rig currently being hacked. Empty when no rule
     /// can start such a timer — a countdown nothing can ever start is worse than no tile.
     /// </summary>
-    public IReadOnlyList<(string Rig, TimeSpan Left)> DockOilRigTimers
+    public IReadOnlyList<(string Rig, string Short, TimeSpan Left)> DockOilRigTimers
     {
         get
         {
-            if (!HasOilRigTimerRule()) return Array.Empty<(string, TimeSpan)>();
+            if (!HasOilRigTimerRule()) return Array.Empty<(string, string, TimeSpan)>();
 
-            var result = new List<(string, TimeSpan)>();
-            foreach (var (key, label) in new[]
+            var result = new List<(string, string, TimeSpan)>();
+            foreach (var (key, label, shortLabel) in new[]
                      {
-                         ("Small Oil Rig", Properties.Resources.SmallOilRig),
-                         ("Large Oil Rig", Properties.Resources.LargeOilRig),
+                         ("Small Oil Rig", Properties.Resources.SmallOilRig, "S"),
+                         ("Large Oil Rig", Properties.Resources.LargeOilRig, "L"),
                      })
             {
                 var left = _monumentWatcher?.GetActiveEventTimeLeft(key);
-                if (left is { } span && span > TimeSpan.Zero) result.Add((label, span));
+                if (left is { } span && span > TimeSpan.Zero) result.Add((label, shortLabel, span));
             }
+
+            // Soonest first: with one line to spare that is the one worth showing.
+            result.Sort((a, b) => a.Item3.CompareTo(b.Item3));
             return result;
         }
     }

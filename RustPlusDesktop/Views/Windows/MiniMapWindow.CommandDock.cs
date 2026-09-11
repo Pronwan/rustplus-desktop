@@ -1289,6 +1289,10 @@ namespace RustPlusDesk
             return $"{span.Minutes}m";
         }
 
+        /// <summary>A remaining time as m:ss, the way every other countdown on the dock reads.</summary>
+        private static string Countdown(TimeSpan left)
+            => $"{(int)left.TotalMinutes}:{left.Seconds:D2}";
+
         private static string Abbreviate(string? text, int max)
         {
             if (string.IsNullOrEmpty(text)) return "";
@@ -1321,10 +1325,24 @@ namespace RustPlusDesk
                 Foreground = style.TextMain,
                 Effect = style.TextShadow,
             };
+            // A second countdown, for when both rigs are being hacked at once. Only ever shown
+            // on a tile at least two cells tall — at one cell the first timer already fills the
+            // space under the icon, and a line that does not fit is a line nobody can read.
+            var timer2 = new TextBlock
+            {
+                FontSize = style.Size(12),
+                FontWeight = FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = style.TextMain,
+                Effect = style.TextShadow,
+                Visibility = Visibility.Collapsed,
+            };
+
             var label = SubtleText(style);
 
             stack.Children.Add(image);
             stack.Children.Add(timer);
+            stack.Children.Add(timer2);
             stack.Children.Add(label);
 
             string? loadedIcon = null;
@@ -1333,19 +1351,42 @@ namespace RustPlusDesk
             {
                 // The Oil Rig crate countdown is not an event dock entry: it comes from the
                 // Logic Engine's hack timers, and only exists when a rule can start one.
+                timer2.Visibility = Visibility.Collapsed;
+
+                // A rig wired to an RF receiver gives a real countdown from the moment the hack
+                // starts. The crowd-sourced cue below only says "a crate went up somewhere" and
+                // cannot tell the two rigs apart, so a real trigger always wins the display.
                 if (tile.EventKey == "oilrig")
                 {
                     var host = Application.Current?.MainWindow as Views.MainWindow;
-                    var running = host?.DockOilRigTimers ?? Array.Empty<(string Rig, TimeSpan Left)>();
+                    var running = host?.DockOilRigTimers ?? Array.Empty<(string Rig, string Short, TimeSpan Left)>();
                     SetIcon("pack://application:,,,/Assets/icons/crate.png");
                     label.Text = Loc.Text("OilRigCrateStatus", "Oil Rig crate");
 
                     if (running.Count > 0)
                     {
-                        var (rig, left) = running[0];
-                        timer.Text = $"{(int)left.TotalMinutes}:{left.Seconds:D2}";
                         shell.Opacity = 1.0;
-                        ToolTipService.SetToolTip(shell, $"{rig}: {timer.Text}");
+
+                        // Both rigs at once needs two lines, and two lines need the height. On a
+                        // single cell the soonest one is shown with a count of what is hidden,
+                        // so the tile never pretends the other rig is not running.
+                        bool roomForTwo = tile.RowSpan >= 2 && running.Count > 1;
+
+                        timer.Text = $"{running[0].Short} {Countdown(running[0].Left)}";
+
+                        if (roomForTwo)
+                        {
+                            timer2.Text = $"{running[1].Short} {Countdown(running[1].Left)}";
+                            timer2.Visibility = Visibility.Visible;
+                        }
+                        else if (running.Count > 1)
+                        {
+                            timer.Text += $"  +{running.Count - 1}";
+                        }
+
+                        ToolTipService.SetToolTip(shell,
+                            Loc.Text("CommandDockOilRigTrigger", "From your Oil Rig trigger") + "\n" +
+                            string.Join("\n", running.Select(r => $"{r.Rig}: {Countdown(r.Left)}")));
                         return;
                     }
                 }
@@ -1364,7 +1405,13 @@ namespace RustPlusDesk
                 timer.Text = string.IsNullOrWhiteSpace(ev.TimerText) ? "—" : ev.TimerText;
                 timer.Foreground = ev.Active ? style.TextMain : style.TextSub;
                 shell.Opacity = ev.Active ? 1.0 : 0.55;
-                ToolTipService.SetToolTip(shell, ev.ToolTip ?? ev.Name);
+                // Named as heard rather than measured, so an Oil Rig reading from the crowd cue
+                // is not mistaken for the real countdown a trigger gives.
+                var source = tile.EventKey == "oilrig"
+                    ? Loc.Text("CommandDockOilRigHeard", "Heard by other players") + "\n"
+                    : "";
+
+                ToolTipService.SetToolTip(shell, source + (ev.ToolTip ?? ev.Name));
 
                 void SetIcon(string uri)
                 {

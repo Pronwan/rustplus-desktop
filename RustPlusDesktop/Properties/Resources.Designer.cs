@@ -924,6 +924,8 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockTemplateDelete => GetString("CommandDockTemplateDelete");
         public static string CommandDockTemplateDeleteConfirm => GetString("CommandDockTemplateDeleteConfirm");
         public static string CommandDockTemplateSummary => GetString("CommandDockTemplateSummary");
+        public static string CommandDockOilRigTrigger => GetString("CommandDockOilRigTrigger");
+        public static string CommandDockOilRigHeard => GetString("CommandDockOilRigHeard");
     }
 }
 

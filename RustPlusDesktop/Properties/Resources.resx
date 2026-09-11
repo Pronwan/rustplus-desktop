@@ -7119,4 +7119,10 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockTemplateSummary" xml:space="preserve">
     <value>{0} tiles · saved {1}</value>
   </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>From your Oil Rig trigger</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Heard by other players</value>
+  </data>
 </root>

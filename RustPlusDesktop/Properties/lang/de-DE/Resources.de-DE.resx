@@ -7140,4 +7140,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockTemplateSummary" xml:space="preserve">
     <value>{0} Kacheln · gespeichert {1}</value>
   </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>Von deinem Oil-Rig-Trigger</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Von anderen Spielern gehört</value>
+  </data>
 </root>
