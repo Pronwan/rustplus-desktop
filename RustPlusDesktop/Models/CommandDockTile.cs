@@ -139,6 +139,16 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool MapRemoved { get; set; }
 
+        /// <summary>
+        /// While locked, hovering a tile offers nothing to drag, resize or delete — the dock is
+        /// only used, not rearranged.
+        ///
+        /// Locked is the resting state and the saved default, because arranging happens once and
+        /// using happens every session. A hover-armed delete button is fine for the minute you
+        /// are building the dock and a hazard for every hour after it.
+        /// </summary>
+        public bool Locked { get; set; } = true;
+
         // ── Appearance defaults ─────────────────────────────────────────────
         // What a tile uses until it is given its own value.
 

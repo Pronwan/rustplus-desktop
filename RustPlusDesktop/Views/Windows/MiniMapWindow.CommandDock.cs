@@ -63,7 +63,7 @@ namespace RustPlusDesk
 
             InitArming();
 
-            Loaded += (_, __) => { RebuildTiles(); _dockTimer.Start(); };
+            Loaded += (_, __) => { ApplyLockState(); RebuildTiles(); _dockTimer.Start(); };
             Closed += (_, __) =>
             {
                 _dockTimer?.Stop();
@@ -92,6 +92,7 @@ namespace RustPlusDesk
                 _dock.Tiles.Insert(0, new CommandDockTile { Id = CommandDockTileKinds.MapTileId, Kind = CommandDockTileKinds.Map });
 
             CloseTileSettings();
+            ApplyLockState();
             RebuildTiles();
         }
 
@@ -221,17 +222,48 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Handles belong to the hovered tile, and only while the dock is armed. Both conditions
-        /// change independently, so one place decides and everything else just calls it.
+        /// Handles belong to the hovered tile, while the dock is armed, and only when it is
+        /// unlocked. Three conditions that change independently, so one place decides and
+        /// everything else just calls it.
         /// </summary>
         private void UpdateTileHandles()
         {
             foreach (var (tileId, handles) in _tileHandles)
             {
-                var show = _armed && tileId == _hoveredTileId;
+                var show = _armed && !_dock.Locked && tileId == _hoveredTileId;
                 foreach (var handle in handles)
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+
+        // ── Lock ────────────────────────────────────────────────────────────────
+
+        private void BtnLockDock_Click(object sender, RoutedEventArgs e)
+        {
+            _dock.Locked = !_dock.Locked;
+            SaveDock();
+
+            if (_dock.Locked) CloseTileSettings();
+
+            ApplyLockState();
+            UpdateTileHandles();
+        }
+
+        /// <summary>Puts the lock button into the state it is actually in.</summary>
+        private void ApplyLockState()
+        {
+            if (LockGlyph == null || BtnLockDock == null) return;
+
+            bool locked = _dock.Locked;
+
+            LockGlyph.Text = locked ? "\uE72E" : "\uE785";   // closed / open padlock
+            LockGlyph.Foreground = locked
+                ? System.Windows.Media.Brushes.White
+                : Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF));
+
+            ToolTipService.SetToolTip(BtnLockDock, locked
+                ? Loc.Text("CommandDockUnlockHint", "Unlock to move, resize and remove tiles")
+                : Loc.Text("CommandDockLockHint", "Lock the layout"));
         }
 
         // ── Geometry ────────────────────────────────────────────────────────────
@@ -1629,6 +1661,10 @@ namespace RustPlusDesk
             border.PreviewMouseMove += (_, e) =>
             {
                 if (!pressed) return;
+
+                // A locked dock is used, not rearranged. The press is still swallowed above, so
+                // a switch tile toggles as usual — it simply cannot be dragged off its cell.
+                if (_dock.Locked) return;
 
                 if (!dragging)
                 {

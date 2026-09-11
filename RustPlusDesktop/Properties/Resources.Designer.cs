@@ -873,6 +873,8 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockDefaultFontSize => GetString("CommandDockDefaultFontSize");
         public static string CommandDockReset => GetString("CommandDockReset");
         public static string CommandDockResetConfirm => GetString("CommandDockResetConfirm");
+        public static string CommandDockLockHint => GetString("CommandDockLockHint");
+        public static string CommandDockUnlockHint => GetString("CommandDockUnlockHint");
     }
 }
 

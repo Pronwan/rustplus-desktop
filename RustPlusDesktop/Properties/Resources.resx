@@ -6966,4 +6966,10 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockResetConfirm" xml:space="preserve">
     <value>Every tile, its position and its settings are removed. The mini-map itself is not affected.</value>
   </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>Lock the layout</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>Unlock to move, resize and remove tiles</value>
+  </data>
 </root>

@@ -145,6 +145,19 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 Margin="0,0,4,0">
+                        <!--  The lock is what decides whether hovering a tile offers to move,
+                              resize or delete it. Locked is the resting state.  -->
+                        <ui:Button x:Name="BtnLockDock"
+                                   Padding="3"
+                                   Margin="0,0,2,0"
+                                   Appearance="Transparent"
+                                   Foreground="White"
+                                   Click="BtnLockDock_Click">
+                            <TextBlock x:Name="LockGlyph"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="14"
+                                       Text="&#xE72E;"/>
+                        </ui:Button>
                         <ui:Button x:Name="BtnAddTile"
                                    Padding="3"
                                    Margin="0,0,2,0"
