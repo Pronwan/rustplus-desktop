@@ -43,6 +43,19 @@ namespace RustPlusDesk.Services
 
         /// <summary>Server time as "HH:mm" plus whether it is currently day.</summary>
         (string Time, bool IsDay, TimeSpan? UntilSwitch) DockServerTime { get; }
+
+        /// <summary>
+        /// The notification channels the user has configured for their Discord bot — "chat",
+        /// "events", "shop" — as the destinations the Discord tile can send to. Empty when the
+        /// bot is not set up, which is what greys the tile out.
+        /// </summary>
+        Task<IReadOnlyList<string>> GetDockDiscordChannelsAsync();
+
+        /// <summary>Posts a line into one of those channels.</summary>
+        Task<bool> SendDockDiscordMessageAsync(string channelType, string message);
+
+        /// <summary>Posts the current map view into one of those channels.</summary>
+        Task<bool> SendDockMapToDiscordAsync(string channelType);
     }
 
     /// <summary>An event dock entry, flattened so the dock does not depend on the main window's

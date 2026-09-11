@@ -7038,4 +7038,40 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
     <value>Supporter feature</value>
   </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Send a line or the current map view</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Send the current map view</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Mention</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>Sends to your {0} channel</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>No Discord channel is configured. Set one up under Connected Services first.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>Text-to-speech follows this channel&apos;s own setting under Connected Services.</value>
+  </data>
 </root>

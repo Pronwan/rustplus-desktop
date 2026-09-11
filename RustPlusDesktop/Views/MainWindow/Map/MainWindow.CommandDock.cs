@@ -147,6 +147,103 @@ public partial class MainWindow : ICommandDockHost
         }
     }
 
+    // ── Discord ─────────────────────────────────────────────────────────────────
+
+    private IReadOnlyList<string>? _dockDiscordChannels;
+    private DateTime _dockDiscordChannelsFetchedUtc = DateTime.MinValue;
+
+    /// <summary>
+    /// The notification types that have a channel behind them.
+    ///
+    /// Cached for a few minutes: it is two round trips to answer, the tile asks every time it is
+    /// rebuilt, and nobody reconfigures their Discord bot mid-session.
+    /// </summary>
+    public async Task<IReadOnlyList<string>> GetDockDiscordChannelsAsync()
+    {
+        if (_dockDiscordChannels != null && DateTime.UtcNow - _dockDiscordChannelsFetchedUtc < TimeSpan.FromMinutes(5))
+            return _dockDiscordChannels;
+
+        var found = new List<string>();
+        try
+        {
+            var guildId = await ResolveDiscordGuildIdAsync();
+            if (!string.IsNullOrEmpty(guildId))
+            {
+                var query = new Dictionary<string, string> { ["guild_id"] = guildId };
+                var body = await Services.Auth.SupabaseAuthManager
+                    .CallEdgeFunctionAsync("discord-bot/channels", System.Net.Http.HttpMethod.Get, null, query);
+
+                var channels = System.Text.Json.JsonSerializer.Deserialize<List<Models.DiscordChannelsConfigModel>>(
+                    body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                found = (channels ?? new List<Models.DiscordChannelsConfigModel>())
+                    .Where(c => !string.IsNullOrEmpty(c.ChannelId) && !string.IsNullOrEmpty(c.NotificationType))
+                    .Select(c => c.NotificationType)
+                    .Distinct()
+                    .OrderBy(t => t)
+                    .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[CommandDock] Could not read the Discord channels: {ex.Message}");
+        }
+
+        _dockDiscordChannels = found;
+        _dockDiscordChannelsFetchedUtc = DateTime.UtcNow;
+        return found;
+    }
+
+    /// <summary>
+    /// Sends through the same path as every other notification of that type, so the channel's own
+    /// mention text and text-to-speech setting apply exactly as they do to an alert.
+    /// </summary>
+    public async Task<bool> SendDockDiscordMessageAsync(string channelType, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return false;
+
+        try
+        {
+            await DiscordBotListenerService.Instance.SendNotificationAsync(channelType, message);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[CommandDock] Discord message failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> SendDockMapToDiscordAsync(string channelType)
+    {
+        try
+        {
+            var guildId = await ResolveDiscordGuildIdAsync();
+            if (string.IsNullOrEmpty(guildId)) return false;
+
+            var query = new Dictionary<string, string> { ["guild_id"] = guildId };
+            var body = await Services.Auth.SupabaseAuthManager
+                .CallEdgeFunctionAsync("discord-bot/channels", System.Net.Http.HttpMethod.Get, null, query);
+
+            var channels = System.Text.Json.JsonSerializer.Deserialize<List<Models.DiscordChannelsConfigModel>>(
+                body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var channelId = channels?
+                .FirstOrDefault(c => c.NotificationType == channelType && !string.IsNullOrEmpty(c.ChannelId))?
+                .ChannelId;
+
+            if (string.IsNullOrEmpty(channelId)) return false;
+
+            var base64 = await GetCurrentMapScreenshotBase64Async();
+            return await UploadMapScreenshotToDiscordAsync(base64, null, null, channelId, guildId);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[CommandDock] Map screenshot to Discord failed: {ex.Message}");
+            return false;
+        }
+    }
+
     /// <summary>The formatted "until sunrise / sunset" text the HUD shows, or empty.</summary>
     public string DockTimeUntilNextPhase => _vm?.TimeUntilNextPhase ?? "";
 

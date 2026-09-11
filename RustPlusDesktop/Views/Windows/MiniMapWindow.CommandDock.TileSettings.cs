@@ -278,6 +278,54 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.Discord:
+                {
+                    var box = new StackPanel();
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockDiscordChannel", "Channel")));
+
+                    var channels = new ComboBox { Margin = new Thickness(0, 0, 0, 10) };
+                    foreach (var type in _discordChannels)
+                        channels.Items.Add(new ComboBoxItem { Content = type, Tag = type });
+
+                    channels.SelectedIndex = Math.Max(0, _discordChannels.IndexOf(EffectiveChannel(tile) ?? ""));
+                    channels.IsEnabled = _discordChannels.Count > 0;
+                    channels.SelectionChanged += (_, __) =>
+                    {
+                        tile.DiscordChannel = (channels.SelectedItem as ComboBoxItem)?.Tag as string;
+                        TileSettingChanged(immediate: true);
+                    };
+                    box.Children.Add(channels);
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockDiscordMention", "Mention")));
+
+                    var mention = new ComboBox { Margin = new Thickness(0, 0, 0, 8) };
+                    mention.Items.Add(new ComboBoxItem { Content = Loc.Text("CommandDockDiscordMentionNone", "None") });
+                    mention.Items.Add(new ComboBoxItem { Content = "@here" });
+                    mention.Items.Add(new ComboBoxItem { Content = "@everyone" });
+                    mention.SelectedIndex = Math.Clamp(tile.DiscordMention, 0, 2);
+                    mention.SelectionChanged += (_, __) =>
+                    {
+                        tile.DiscordMention = mention.SelectedIndex;
+                        TileSettingChanged(immediate: true);
+                    };
+                    box.Children.Add(mention);
+
+                    // No text-to-speech switch here on purpose: the sender reads it from the
+                    // channel's own configuration, and a switch on the tile that never reached
+                    // it would be a lie in a settings panel.
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = Loc.Text("CommandDockDiscordTtsHint",
+                            "Text-to-speech follows this channel's own setting under Connected Services."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.Session:
                 {
                     var box = new StackPanel();
@@ -352,6 +400,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Rule => DockHost?.DockRules.FirstOrDefault(r => r.Id == tile.RuleId)?.Name
                                          ?? Loc.Text("CommandDockSectionRules", "Logic Engine"),
             CommandDockTileKinds.Session => Loc.Text("CommandDockSessionTitle", "Session"),
+            CommandDockTileKinds.Discord => "Discord",
             CommandDockTileKinds.TeamChat => Loc.Text("TeamChat", "Team chat"),
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             _ => tile.Kind,

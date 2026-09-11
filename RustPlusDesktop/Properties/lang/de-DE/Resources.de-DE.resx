@@ -7059,4 +7059,40 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
     <value>Supporter-Feature</value>
   </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Nachricht oder aktuelle Kartenansicht senden</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Aktuelle Kartenansicht senden</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Kanal</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Erwähnung</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>Keine</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>Sendet in deinen {0}-Kanal</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>Es ist kein Discord-Kanal eingerichtet. Lege zuerst unter Connected Services einen an.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>Die Sprachausgabe richtet sich nach der Einstellung dieses Kanals unter Connected Services.</value>
+  </data>
 </root>

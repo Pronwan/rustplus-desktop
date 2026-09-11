@@ -64,6 +64,12 @@ namespace RustPlusDesk
                       : Loc.Text("CommandDockSupporterOnlyShort", "Supporter feature"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Session, ColSpan = 3, RowSpan = 1 });
 
+            Entry("Discord",
+                  RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium
+                      ? Loc.Text("CommandDockDiscordHint", "Send a line or the current map view")
+                      : Loc.Text("CommandDockSupporterOnlyShort", "Supporter feature"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.Discord, ColSpan = 2, RowSpan = 1 });
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"));
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

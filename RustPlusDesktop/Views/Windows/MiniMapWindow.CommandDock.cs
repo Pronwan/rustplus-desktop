@@ -802,6 +802,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Map => false,
             CommandDockTileKinds.Device => false,
             CommandDockTileKinds.Session => false,
+            CommandDockTileKinds.Discord => false,
             _ => true,
         };
 
@@ -855,6 +856,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Event => BuildEventTile(tile),
             CommandDockTileKinds.Rule => BuildRuleTile(tile),
             CommandDockTileKinds.Session => BuildSessionTile(tile),
+            CommandDockTileKinds.Discord => BuildDiscordTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,

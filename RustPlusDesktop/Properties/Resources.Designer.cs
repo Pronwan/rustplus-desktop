@@ -897,6 +897,18 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockSessionWipeHint => GetString("CommandDockSessionWipeHint");
         public static string CommandDockSupporterOnly => GetString("CommandDockSupporterOnly");
         public static string CommandDockSupporterOnlyShort => GetString("CommandDockSupporterOnlyShort");
+        public static string CommandDockDiscordHint => GetString("CommandDockDiscordHint");
+        public static string CommandDockDiscordSend => GetString("CommandDockDiscordSend");
+        public static string CommandDockDiscordSendMap => GetString("CommandDockDiscordSendMap");
+        public static string CommandDockDiscordChannel => GetString("CommandDockDiscordChannel");
+        public static string CommandDockDiscordMention => GetString("CommandDockDiscordMention");
+        public static string CommandDockDiscordMentionNone => GetString("CommandDockDiscordMentionNone");
+        public static string CommandDockDiscordChat => GetString("CommandDockDiscordChat");
+        public static string CommandDockDiscordEvents => GetString("CommandDockDiscordEvents");
+        public static string CommandDockDiscordShop => GetString("CommandDockDiscordShop");
+        public static string CommandDockDiscordSendsTo => GetString("CommandDockDiscordSendsTo");
+        public static string CommandDockDiscordNoChannels => GetString("CommandDockDiscordNoChannels");
+        public static string CommandDockDiscordTtsHint => GetString("CommandDockDiscordTtsHint");
     }
 }
 

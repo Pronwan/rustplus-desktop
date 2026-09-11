@@ -63,6 +63,16 @@ namespace RustPlusDesk.Models
         /// <summary>Chat tiles: shorten long names so the message still fits on one line.</summary>
         public bool ChatAbbreviateNames { get; set; } = true;
 
+        /// <summary>
+        /// Discord tiles: which configured notification channel to post into — "chat", "events"
+        /// or "shop". Null follows whichever is configured first, so a tile keeps working when
+        /// the channel it was pointed at is removed.
+        /// </summary>
+        public string? DiscordChannel { get; set; }
+
+        /// <summary>Discord tiles: 0 none, 1 @here, 2 @everyone.</summary>
+        public int DiscordMention { get; set; }
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the
@@ -125,6 +135,7 @@ namespace RustPlusDesk.Models
         public const string Event = "Event";
         public const string Rule = "Rule";
         public const string Session = "Session";
+        public const string Discord = "Discord";
     }
 
     /// <summary>
