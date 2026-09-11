@@ -16,8 +16,16 @@ namespace RustPlusDesk.Views
             Loaded += MiniMapSettingsOverlay_Loaded;
         }
 
+        private bool _loadedOnce;
+
         private void MiniMapSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
         {
+            // A popup's child is disconnected when it closes, so this fires again on every open.
+            // Re-reading the file each time would overwrite whatever the user has changed since
+            // with what was on disk when the panel first appeared.
+            if (_loadedOnce) return;
+            _loadedOnce = true;
+
             _isInitializing = true;
             try
             {
@@ -163,6 +171,11 @@ namespace RustPlusDesk.Views
 
             if (_isInitializing || ParentWindow == null) return;
             ParentWindow.UpdateSize(e.NewValue, updateSlider: false);
+
+            // UpdateSize only saves on the path that writes the slider back — which is every
+            // path except this one, where the slider is already where the user put it. So
+            // dragging it changed the map and saved nothing, and the next load undid it.
+            SaveSettings();
         }
 
         private void ChkShowTime_Changed(object sender, RoutedEventArgs e)

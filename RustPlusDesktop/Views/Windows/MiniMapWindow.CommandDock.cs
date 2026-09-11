@@ -69,6 +69,7 @@ namespace RustPlusDesk
                 _dockTimer?.Stop();
                 _armTimer?.Stop();
                 _disarmTimer?.Stop();
+                _hoverHideTimer?.Stop();
                 _settingsApplyTimer?.Stop();
                 SaveDockPosition();
             };
@@ -130,10 +131,47 @@ namespace RustPlusDesk
         // waiting out the delay between each.
         private static readonly TimeSpan DisarmGrace = TimeSpan.FromSeconds(2.5);
 
+        // The handles sit on the tile's bounding box, which for a round map is a square whose
+        // corners are not part of the map and take no mouse. Reaching the gear therefore means
+        // crossing dead space, and hiding the moment the pointer left would take the button away
+        // before it could be pressed.
+        private static readonly TimeSpan HoverHideDelay = TimeSpan.FromMilliseconds(700);
+
         private DispatcherTimer? _armTimer;
         private DispatcherTimer? _disarmTimer;
+        private DispatcherTimer? _hoverHideTimer;
         private bool _armed;
         private string? _hoveredTileId;
+
+        /// <summary>Marks a tile hovered and cancels any pending hide.</summary>
+        private void HoverTile(string tileId)
+        {
+            _hoverHideTimer?.Stop();
+            _hoveredTileId = tileId;
+            UpdateTileHandles();
+        }
+
+        /// <summary>Starts the grace period before the hovered tile gives up its handles.</summary>
+        private void UnhoverTile(string? tileId = null)
+        {
+            if (tileId != null && _hoveredTileId != tileId) return;
+
+            _hoverHideTimer ??= CreateHoverHideTimer();
+            _hoverHideTimer.Stop();
+            _hoverHideTimer.Start();
+        }
+
+        private DispatcherTimer CreateHoverHideTimer()
+        {
+            var timer = new DispatcherTimer { Interval = HoverHideDelay };
+            timer.Tick += (_, __) =>
+            {
+                timer.Stop();
+                _hoveredTileId = null;
+                UpdateTileHandles();
+            };
+            return timer;
+        }
 
         private void InitArming()
         {
@@ -152,8 +190,7 @@ namespace RustPlusDesk
             MouseLeave += (_, __) =>
             {
                 _armTimer?.Stop();
-                _hoveredTileId = null;
-                UpdateTileHandles();
+                UnhoverTile();
                 if (_armed) _disarmTimer?.Start();
             };
         }
@@ -625,7 +662,10 @@ namespace RustPlusDesk
             _tileElements.Clear();
             _tileRefreshers.Clear();
             _tileHandles.Clear();
-            _hoveredTileId = null;
+
+            // _hoveredTileId survives on purpose. Tile ids are stable, and a settings change
+            // rebuilds the dock — clearing it here would make the handles vanish under the
+            // pointer every time a swatch was clicked.
 
             SyncMapCellSpan();
 
@@ -669,6 +709,10 @@ namespace RustPlusDesk
             }
 
             if (MapTile == null) MapContainer.Visibility = Visibility.Collapsed;
+
+            // The handles are rebuilt collapsed; this gives them back to the tile still under
+            // the pointer.
+            UpdateTileHandles();
 
             RefreshTiles();
             LayoutDock();
@@ -1408,15 +1452,13 @@ namespace RustPlusDesk
             {
                 shell.MouseEnter += (_, __) =>
                 {
-                    _hoveredTileId = tileId;
-                    UpdateTileHandles();
+                    HoverTile(tileId);
                     Veil(0.07, 120);
                 };
 
                 shell.MouseLeave += (_, __) =>
                 {
-                    if (_hoveredTileId == tileId) _hoveredTileId = null;
-                    UpdateTileHandles();
+                    UnhoverTile(tileId);
                     Veil(0, 160);
                 };
 
