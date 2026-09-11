@@ -883,6 +883,20 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockDeviceShowIcon => GetString("CommandDockDeviceShowIcon");
         public static string CommandDockDeviceShowIconHint => GetString("CommandDockDeviceShowIconHint");
         public static string MiniMapLayerDeaths => GetString("MiniMapLayerDeaths");
+        public static string CommandDockSectionSession => GetString("CommandDockSectionSession");
+        public static string CommandDockSessionTitle => GetString("CommandDockSessionTitle");
+        public static string CommandDockSessionHint => GetString("CommandDockSessionHint");
+        public static string CommandDockSessionOnline => GetString("CommandDockSessionOnline");
+        public static string CommandDockSessionDistance => GetString("CommandDockSessionDistance");
+        public static string CommandDockSessionAfk => GetString("CommandDockSessionAfk");
+        public static string CommandDockSessionDeaths => GetString("CommandDockSessionDeaths");
+        public static string CommandDockSessionTeamDeaths => GetString("CommandDockSessionTeamDeaths");
+        public static string CommandDockSessionSince => GetString("CommandDockSessionSince");
+        public static string CommandDockSessionWaiting => GetString("CommandDockSessionWaiting");
+        public static string CommandDockSessionWipe => GetString("CommandDockSessionWipe");
+        public static string CommandDockSessionWipeHint => GetString("CommandDockSessionWipeHint");
+        public static string CommandDockSupporterOnly => GetString("CommandDockSupporterOnly");
+        public static string CommandDockSupporterOnlyShort => GetString("CommandDockSupporterOnlyShort");
     }
 }
 

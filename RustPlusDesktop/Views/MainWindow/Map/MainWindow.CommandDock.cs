@@ -20,6 +20,40 @@ public partial class MainWindow : ICommandDockHost
     /// </summary>
     private List<EventDockItem> _lastEventDockItems = new();
 
+    /// <summary>
+    /// Hands the session tracker one reading a second. Called once during start-up; the tracker
+    /// owns the timer, because most of what it counts is elapsed time and it needs one anyway.
+    /// </summary>
+    internal void StartSessionTracking()
+    {
+        SessionTracker.Instance.Source = () =>
+        {
+            var key = DockServerKey;
+            if (key == null || _vm?.Selected?.IsFullConnected != true) return null;
+
+            var me = TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId);
+
+            return new SessionSnapshot(
+                Connected: true,
+                ServerKey: key,
+                MySteamId: _mySteamId,
+                MyX: me?.X,
+                MyY: me?.Y,
+                MyAfk: me?.IsAfk == true,
+                Population: ParsePopulation(_vm?.ServerPlayers),
+                Team: TeamMembers.Select(t => (t.SteamId, t.IsDead)).ToList());
+        };
+    }
+
+    /// <summary>"128/200" as 128. The HUD keeps it as text, which is all the HUD needs.</summary>
+    private static int ParsePopulation(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return 0;
+
+        var head = text.Split('/')[0].Trim();
+        return int.TryParse(head, out var players) ? players : 0;
+    }
+
     public string? DockServerKey
     {
         get

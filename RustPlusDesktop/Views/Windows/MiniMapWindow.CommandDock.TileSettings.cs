@@ -278,6 +278,33 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.Session:
+                {
+                    var box = new StackPanel();
+                    var wipe = new Button
+                    {
+                        Content = Loc.Text("CommandDockSessionWipe", "Start a new session"),
+                        Padding = new Thickness(8, 5, 8, 5),
+                        Cursor = Cursors.Hand,
+                    };
+                    wipe.Click += (_, __) =>
+                    {
+                        Services.SessionTracker.Instance.Wipe(DockHost?.DockServerKey);
+                        TileSettingChanged(immediate: true);
+                    };
+                    box.Children.Add(wipe);
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = Loc.Text("CommandDockSessionWipeHint",
+                            "Resets the figures for this server. Counting continues from zero."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 6, 0, 0),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+                    return box;
+                }
+
                 case CommandDockTileKinds.Device:
                 {
                     var box = new StackPanel();
@@ -324,6 +351,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Event => Loc.Text("CommandDockSectionEvents", "Events"),
             CommandDockTileKinds.Rule => DockHost?.DockRules.FirstOrDefault(r => r.Id == tile.RuleId)?.Name
                                          ?? Loc.Text("CommandDockSectionRules", "Logic Engine"),
+            CommandDockTileKinds.Session => Loc.Text("CommandDockSessionTitle", "Session"),
             CommandDockTileKinds.TeamChat => Loc.Text("TeamChat", "Team chat"),
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             _ => tile.Kind,

@@ -6996,4 +6996,46 @@ You can find more information on the server&apos;s official website:
   <data name="MiniMapLayerDeaths" xml:space="preserve">
     <value>Death markers</value>
   </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Session stats</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Online time, distance, idle time and deaths</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Walked</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>Session since {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>Counting starts once you are connected to a server.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Start a new session</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Resets the figures for this server. Counting continues from zero.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>A supporter feature. Sign in with a supporter account to use this tile.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter feature</value>
+  </data>
 </root>

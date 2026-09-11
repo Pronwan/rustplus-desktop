@@ -7017,4 +7017,46 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="MiniMapLayerDeaths" xml:space="preserve">
     <value>Todesmarker</value>
   </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Session-Statistik</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Online-Zeit, Strecke, AFK-Zeit und Tode</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Strecke</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>AFK</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Tode</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>Session seit {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>Die Zählung beginnt, sobald du mit einem Server verbunden bist.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Neue Session starten</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Setzt die Werte für diesen Server zurück. Die Zählung läuft bei null weiter.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Ein Supporter-Feature. Melde dich mit einem Supporter-Konto an, um diese Kachel zu nutzen.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter-Feature</value>
+  </data>
 </root>

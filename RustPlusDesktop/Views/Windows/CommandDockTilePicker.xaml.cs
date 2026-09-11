@@ -57,6 +57,13 @@ namespace RustPlusDesk
                   Loc.Text("CommandDockClockRustHint", "Server time in the game's own lettering"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Clock, ClockStyle = 2 });
 
+            Section(Loc.Text("CommandDockSectionSession", "Session"));
+            Entry(Loc.Text("CommandDockSessionTitle", "Session stats"),
+                  RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium
+                      ? Loc.Text("CommandDockSessionHint", "Online time, distance, idle time and deaths")
+                      : Loc.Text("CommandDockSupporterOnlyShort", "Supporter feature"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.Session, ColSpan = 3, RowSpan = 1 });
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"));
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

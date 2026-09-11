@@ -508,6 +508,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (FindName("TxtAppVersion") is TextBlock txt)
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
+        StartSessionTracking();
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
         ApplySettings();

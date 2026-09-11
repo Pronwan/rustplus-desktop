@@ -124,6 +124,7 @@ namespace RustPlusDesk.Models
         public const string ClanChat = "ClanChat";
         public const string Event = "Event";
         public const string Rule = "Rule";
+        public const string Session = "Session";
     }
 
     /// <summary>
