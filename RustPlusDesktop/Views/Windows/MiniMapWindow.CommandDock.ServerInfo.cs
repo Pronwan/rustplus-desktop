@@ -38,6 +38,11 @@ namespace RustPlusDesk
             Grid.SetColumn(figures, 0);
             row.Children.Add(figures);
 
+            // The count and the cap belong on one line: at a single cell, "/ 50 · 0 waiting"
+            // underneath was wider than the tile and left the queue nowhere to go. The cap stays
+            // small, so the reading is still what the eye lands on.
+            var headline = new StackPanel { Orientation = Orientation.Horizontal };
+
             var players = new TextBlock
             {
                 FontSize = style.Size(18),
@@ -45,6 +50,17 @@ namespace RustPlusDesk
                 Foreground = style.TextMain,
                 Effect = style.TextShadow,
             };
+            var capacity = new TextBlock
+            {
+                FontSize = style.Size(9),
+                Margin = new Thickness(2, 0, 0, 2),
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Foreground = style.TextSub,
+                Effect = style.TextShadow,
+            };
+            headline.Children.Add(players);
+            headline.Children.Add(capacity);
+
             var caption = new TextBlock
             {
                 FontSize = style.Size(9),
@@ -52,7 +68,8 @@ namespace RustPlusDesk
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 Effect = style.TextShadow,
             };
-            figures.Children.Add(players);
+
+            figures.Children.Add(headline);
             figures.Children.Add(caption);
 
             // Drawn by hand rather than through a charting library: it is one polyline, an area
@@ -90,11 +107,13 @@ namespace RustPlusDesk
                 var (current, max, queue) = DockHost?.DockPopulation ?? (0, 0, "");
 
                 players.Text = current > 0 || max > 0 ? current.ToString() : "—";
-                caption.Text = max > 0
-                    ? string.IsNullOrEmpty(queue)
-                        ? $"/ {max}"
-                        : string.Format(Loc.Text("CommandDockServerQueue", "/ {0} · {1} waiting"), max, queue)
-                    : Loc.Text("CommandDockServerPlayers", "players");
+                capacity.Text = max > 0 ? $"/ {max}" : "";
+
+                // The second line is the queue alone, and only when there is a queue to report.
+                // A server with nobody waiting says "players" instead of an empty row.
+                caption.Text = string.IsNullOrEmpty(queue)
+                    ? Loc.Text("CommandDockServerPlayers", "players")
+                    : string.Format(Loc.Text("CommandDockServerQueue", "{0} waiting"), queue);
 
                 plot.Visibility = tile.ShowGraph ? Visibility.Visible : Visibility.Collapsed;
                 if (!tile.ShowGraph) return;

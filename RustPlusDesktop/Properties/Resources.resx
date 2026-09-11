@@ -7087,7 +7087,7 @@ You can find more information on the server&apos;s official website:
     <value>players</value>
   </data>
   <data name="CommandDockServerQueue" xml:space="preserve">
-    <value>/ {0} · {1} waiting</value>
+    <value>{0} waiting</value>
   </data>
   <data name="CommandDockServerShowGraph" xml:space="preserve">
     <value>Show the population graph</value>

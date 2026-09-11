@@ -7108,7 +7108,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Spieler</value>
   </data>
   <data name="CommandDockServerQueue" xml:space="preserve">
-    <value>/ {0} · {1} in Warteschlange</value>
+    <value>{0} in Warteschlange</value>
   </data>
   <data name="CommandDockServerShowGraph" xml:space="preserve">
     <value>Verlaufsgraph anzeigen</value>
