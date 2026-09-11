@@ -636,7 +636,11 @@ namespace RustPlusDesk
 
             foreach (var other in _dock.Tiles)
             {
-                if (other == except) continue;
+                // By id, not by reference: the drop preview asks with a throwaway copy of the
+                // tile at a candidate cell. Compared by reference that copy never matched the
+                // real tile, so every tile collided with itself and the highlight was always
+                // red — most visibly on the map, which is large enough to always overlap.
+                if (except != null && other.Id == except.Id) continue;
                 if (other.Kind == CommandDockTileKinds.Map && !MapOccupiesCells) continue;
 
                 for (int c = other.Col; c < other.Col + other.ColSpan; c++)
@@ -1419,7 +1423,16 @@ namespace RustPlusDesk
             };
             ToolTipService.SetToolTip(gear, Loc.Text("CommandDockTileSettings", "Tile settings"));
             gear.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
-            gear.MouseLeftButtonUp += (_, e) => { e.Handled = true; OpenTileSettings(tile, shell); };
+            gear.MouseLeftButtonUp += (_, e) =>
+            {
+                e.Handled = true;
+
+                // The map has no text to colour and no background to fade — it has a shape, a
+                // size and five layers, and those already live in their own panel. Its gear goes
+                // straight there rather than to a tile panel of settings that do not apply.
+                if (tile.Kind == CommandDockTileKinds.Map) OpenSettings();
+                else OpenTileSettings(tile, shell);
+            };
 
             // A veil rather than a border tint: the device and alarm refreshers rewrite the
             // shell's BorderBrush every second and would wipe a hover colour straight off again.

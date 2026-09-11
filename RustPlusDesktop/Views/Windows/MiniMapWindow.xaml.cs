@@ -63,12 +63,16 @@ namespace RustPlusDesk
             Point startDragPos = new Point();
             MouseLeftButtonDown += (s, e) =>
             {
+                if (!IsFromWindowContent(e.OriginalSource)) return;
+
                 startDragPos = e.GetPosition(this);
                 DragMove();
                 ClampToScreen();
             };
             MouseLeftButtonUp += (s, e) =>
             {
+                if (!IsFromWindowContent(e.OriginalSource)) return;
+
                 var endPos = e.GetPosition(this);
                 if (Math.Abs(endPos.X - startDragPos.X) < 5 && Math.Abs(endPos.Y - startDragPos.Y) < 5)
                 {
@@ -105,11 +109,43 @@ namespace RustPlusDesk
             // whatever the initial layout and the loaded settings worked out.
             ContentRendered += (_, __) => RestoreDockPosition();
 
+            // The clip depends on the layers' measured size, which arrives after the layout pass
+            // that UpdateSize triggers — so it is reapplied whenever that size settles.
+            MapClipHost.SizeChanged += (_, __) => ApplyMapClip();
+
             SettingsOverlay.ParentWindow = this;
             InitCommandDock();
         }
 
         private bool _clamping;
+
+        /// <summary>
+        /// Whether a mouse event came from this window's own content rather than from one of its
+        /// popups.
+        ///
+        /// A popup renders in its own HWND with its own visual root, but its events still bubble
+        /// into the window through the logical tree. Without this check, pressing anything in a
+        /// popup that does not handle the press itself — a colour swatch, say, as opposed to a
+        /// slider or a button — reached the window's DragMove, which blocks until the button
+        /// comes back up and swallows the release. The swatch never saw its own click.
+        /// </summary>
+        private bool IsFromWindowContent(object? originalSource)
+        {
+            if (originalSource is not DependencyObject node) return true;
+
+            DependencyObject root = node;
+            while (true)
+            {
+                var parent = root is Visual or System.Windows.Media.Media3D.Visual3D
+                    ? VisualTreeHelper.GetParent(root)
+                    : (root as FrameworkContentElement)?.Parent;
+
+                if (parent == null) break;
+                root = parent;
+            }
+
+            return ReferenceEquals(root, this);
+        }
 
         /// <summary>
         /// Points every layer brush at its source. Called again whenever the main window
@@ -180,6 +216,9 @@ namespace RustPlusDesk
 
         private void MiniMapWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            // A wheel over a popup scrolls that popup, it does not zoom the map behind it.
+            if (!IsFromWindowContent(e.OriginalSource)) return;
+
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
                 // SHIFT gedrückt → Fenstergröße ändern
@@ -202,6 +241,8 @@ namespace RustPlusDesk
 
         private void MiniMapWindow_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (!IsFromWindowContent(e.OriginalSource)) return;
+
             if (e.ClickCount == 2)
             {
                 _panX = 0;
@@ -442,6 +483,28 @@ namespace RustPlusDesk
             }
         }
 
+        private double _mapCornerRadius = 130;
+
+        /// <summary>
+        /// Rounds off the mirrored layers. A Border does not clip its child to its own rounded
+        /// corners, so the geometry has to be applied by hand or the circle shows a square.
+        ///
+        /// Measured from what is actually being clipped rather than from the tile's size: the
+        /// border sits inside the tile, so the layers are a pixel or two smaller. Using the tile
+        /// size made the clip circle wider than its content, and the content's own straight edge
+        /// showed through as a flat cut on the right and the bottom.
+        /// </summary>
+        private void ApplyMapClip()
+        {
+            if (MapClipHost == null) return;
+
+            double w = MapClipHost.ActualWidth, h = MapClipHost.ActualHeight;
+            if (w <= 0 || h <= 0) return;
+
+            double radius = Math.Min(_mapCornerRadius, Math.Min(w, h) / 2.0);
+            MapClipHost.Clip = new RectangleGeometry(new Rect(0, 0, w, h), radius, radius);
+        }
+
         private bool _isUpdatingSize = false;
 
         public void UpdateSize(double newSize, bool updateSlider = true)
@@ -477,13 +540,9 @@ namespace RustPlusDesk
                 }
                 if (MapShapeBorder != null)
                     MapShapeBorder.CornerRadius = new CornerRadius(cornerRadius);
-                if (MapClipHost != null)
-                {
-                    // A Border does not clip its child to its own rounded corners, so the
-                    // mirrors need the geometry applied by hand or the circle shows a square.
-                    MapClipHost.Clip = new RectangleGeometry(
-                        new Rect(0, 0, _mapWidth, _mapHeight), cornerRadius, cornerRadius);
-                }
+
+                _mapCornerRadius = cornerRadius;
+                ApplyMapClip();
 
                 // LayoutDock re-derives every tile's position from its cell, which is all a
                 // resize needs: the map's cell span changed, so the seam moved with it.

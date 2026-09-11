@@ -278,21 +278,8 @@ namespace RustPlusDesk
                     return box;
                 }
 
-                case CommandDockTileKinds.Map:
-                {
-                    var box = new StackPanel();
-                    var open = new Button
-                    {
-                        Content = Loc.Text("MiniMapSettings", "Mini-map settings"),
-                        Padding = new Thickness(8, 5, 8, 5),
-                        Cursor = Cursors.Hand,
-                    };
-                    // Shape, size and the layer switches stay in their own panel. Copying them
-                    // here would be a second place to change the same five things.
-                    open.Click += (_, __) => { CloseTileSettings(); OpenSettings(); };
-                    box.Children.Add(open);
-                    return box;
-                }
+                // The map never reaches this panel — its gear opens the mini-map settings, where
+                // its shape, size and layers already live.
 
                 default:
                     return null;
