@@ -74,6 +74,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\sounds\screenshot.mp3" />
+	  <Content Include="Assets\sounds\screenshot.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Assets\1-76fc6c7e.ico" />
 	  <None Remove="Assets\1min.mp3" />
 	  <None Remove="Assets\bell.mp3" />
@@ -360,6 +367,7 @@
     <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.8" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
@@ -377,14 +385,10 @@
   <!-- Source inputs for the MapParser publish, so it only re-publishes when MapParser actually
        changes (a self-contained single-file compressed publish is expensive to run every build). -->
   <ItemGroup>
-    <MapParserSource Include="$(MSBuildProjectDirectory)\..\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\MapParser\**\*.json"
-                     Exclude="$(MSBuildProjectDirectory)\..\MapParser\bin\**;$(MSBuildProjectDirectory)\..\MapParser\obj\**;$(MSBuildProjectDirectory)\..\MapParser\node_modules\**" />
+    <MapParserSource Include="$(MSBuildProjectDirectory)\..\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\MapParser\**\*.json" Exclude="$(MSBuildProjectDirectory)\..\MapParser\bin\**;$(MSBuildProjectDirectory)\..\MapParser\obj\**;$(MSBuildProjectDirectory)\..\MapParser\node_modules\**" />
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime"
-          Inputs="@(MapParserSource)"
-          Outputs="$(MapParserPublishedExe)"
-          Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="BuildMapParserRuntime" Inputs="@(MapParserSource)" Outputs="$(MapParserPublishedExe)" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
@@ -562,6 +566,7 @@
     <EmbeddedResource Include="Assets\Data\recycler-items.json" />
     <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
     <EmbeddedResource Include="Assets\Data\raid-data.json" />
+    <Resource Include="Assets\icons\app-icons\logo-dark-mode.png" />
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icons\r+desktop-icon.png" />
     <Resource Include="Assets\icq-message.wav" />

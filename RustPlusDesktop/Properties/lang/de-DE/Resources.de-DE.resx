@@ -7254,4 +7254,85 @@ Die Aufnahme läuft nur, solange du den Hotkey hältst oder nachdem du die Kache
   <data name="AiCompanionStreamingOn" xml:space="preserve">
     <value>Die Antwort wird gesprochen, während sie entsteht, statt erst danach.</value>
   </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>KI-Begleiter</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>KI fragen</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>Frage aufnehmen, Bildschirm anhängen, Antwort bekommen</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>Braucht deinen eigenen KI-Schlüssel unter Verbundene Dienste</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>Frage aufnehmen</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>Aufnahme beenden</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>Screenshot anhängen</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>Auch den Spielton aufnehmen</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>Drücken zum Aufnehmen der Frage, erneut drücken zum Beenden.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>Noch kein KI-Schlüssel hinterlegt. Lege zuerst einen unter Verbundene Dienste an.</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>Nimmt auf {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>{0} aufgenommen</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>Kein Mikrofon gefunden</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>Nach fünf Minuten beendet</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>Screenshot angehängt</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>Frage senden</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>Wird gesendet…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>Antwortet…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>Fehlgeschlagen — siehe Fenster</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>KI-Antwort</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>Denkt nach…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>Gesendet. Warte auf die ersten Worte…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>Antwortet…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>Antwort</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
 </root>

@@ -655,6 +655,7 @@ namespace RustPlusDesk
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
+                FollowAiAnswer();
 
             PositionChrome();
             DrawGridGhost();

@@ -8699,6 +8699,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         _lastGestureAt[gesture] = now;
 
+        if (HandledByAiCompanion(gesture)) return;
+
         var map = MapForCurrentServer();
         if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;
 
@@ -9013,6 +9015,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _hotkeyMgr?.UnregisterAll();
         _hotkeysActive = false;
+
+        // Push to talk is not a device binding and does not belong to this switch.
+        ApplyAiHotkey();
+
         UpdateHotkeyButtonUi();
     }
 
@@ -9030,6 +9036,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             any |= _hotkeyMgr.Register(gesture);
 
         _hotkeysActive = any;
+
+        ApplyAiHotkey();
+
         UpdateHotkeyButtonUi();
     }
 

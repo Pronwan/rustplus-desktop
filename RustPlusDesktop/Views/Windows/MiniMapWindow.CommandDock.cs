@@ -71,6 +71,7 @@ namespace RustPlusDesk
                 _disarmTimer?.Stop();
                 _hoverHideTimer?.Stop();
                 _settingsApplyTimer?.Stop();
+                CloseAiAnswer();
                 SaveDockPosition();
             };
         }
@@ -120,6 +121,7 @@ namespace RustPlusDesk
             Top = top;
             ClampToScreen();
             HoldSettingsPopupInPlace(dLeft, dTop);
+            FollowAiAnswer();
         }
 
         // ── Arming ──────────────────────────────────────────────────────────────
@@ -859,6 +861,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Session => BuildSessionTile(tile),
             CommandDockTileKinds.Discord => BuildDiscordTile(tile),
             CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
+            CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,

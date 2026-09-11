@@ -111,6 +111,7 @@ namespace RustPlusDesk.Views
             settings.Provider = SelectedAiProvider;
             AiCompanionStore.Save(settings);
 
+
             ApplyAiCompanionState();
         }
 
@@ -225,6 +226,10 @@ namespace RustPlusDesk.Views
             var settings = AiCompanionStore.Current;
             settings.Hotkey = capture.Gesture?.Trim() ?? "";
             AiCompanionStore.Save(settings);
+
+            // Registered right away rather than at the next restart: the user has just chosen
+            // a key combination and the obvious next thing they do is try it.
+            (Application.Current?.MainWindow as Views.MainWindow)?.ApplyAiHotkey();
 
             ApplyAiCompanionState();
         }

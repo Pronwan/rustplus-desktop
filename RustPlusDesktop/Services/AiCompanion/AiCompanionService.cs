@@ -1,0 +1,260 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace RustPlusDesk.Services.AiCompanion
+{
+    public enum AiAnswerState
+    {
+        /// <summary>Nothing asked, or the last answer dismissed.</summary>
+        None,
+
+        /// <summary>Sent, nothing back yet. On the slow path this includes transcribing.</summary>
+        Sending,
+
+        /// <summary>Words are arriving.</summary>
+        Streaming,
+
+        Answered,
+        Failed,
+    }
+
+    /// <summary>
+    /// One question at a time, from the recording to the answer.
+    ///
+    /// It holds the answer rather than handing it to a caller because more than one thing wants
+    /// it — the panel under the tile shows it, the voice reads it, and the tile itself only
+    /// needs to know whether anything is happening. All three can then ask, and none of them has
+    /// to own it.
+    /// </summary>
+    public sealed class AiCompanionService
+    {
+        public static AiCompanionService Instance { get; } = new();
+
+        private AiCompanionService() { }
+
+        public AiAnswerState State { get; private set; } = AiAnswerState.None;
+
+        /// <summary>The answer so far. Grows while streaming, complete once answered.</summary>
+        public string Answer { get; private set; } = "";
+
+        /// <summary>Why it failed, in a sentence meant to be read on the overlay.</summary>
+        public string? Error { get; private set; }
+
+        /// <summary>
+        /// The screenshot waiting to go with the next question.
+        ///
+        /// Owned here rather than by the tile so that it survives a rebuild of the dock, and so
+        /// that sending, discarding and replacing it are all one decision in one place.
+        /// </summary>
+        public string? Screenshot { get; private set; }
+
+        public bool IsBusy => State is AiAnswerState.Sending or AiAnswerState.Streaming;
+
+        /// <summary>Fires on whatever thread the change happened on. Marshal before touching UI.</summary>
+        public event Action? Changed;
+
+        private CancellationTokenSource? _cancel;
+
+        public void AttachScreenshot(string? path)
+        {
+            if (!string.IsNullOrEmpty(Screenshot) && Screenshot != path) DeleteScreenshot();
+
+            Screenshot = path;
+            Raise();
+        }
+
+        private void DeleteScreenshot()
+        {
+            GameScreenshot.Delete(Screenshot);
+            Screenshot = null;
+        }
+
+        /// <summary>
+        /// Sends the recording and whatever is attached to it.
+        ///
+        /// The recording is thrown away as soon as it is on its way. Keeping it would mean a
+        /// folder of everything the player has ever said building up in the temp directory, and
+        /// nothing in the app would ever ask for it again.
+        /// </summary>
+        public async Task AskAsync(string? context)
+        {
+            if (IsBusy) return;
+
+            var recorder = AiRecorder.Instance;
+            var mic = recorder.MicPath;
+            var game = recorder.GamePath;
+            var shot = Screenshot;
+
+            // Nothing to ask about. Not an error — it is what an accidental press looks like.
+            if (mic == null && game == null && shot == null) return;
+
+            var key = AiCompanionStore.ReadKey();
+            if (string.IsNullOrEmpty(key))
+            {
+                Fail("No key is stored for this provider. Add one under Connected Services.");
+                return;
+            }
+
+            var settings = AiCompanionStore.Current;
+
+            var question = new AiQuestion
+            {
+                MicPath = mic,
+                GamePath = game,
+                ScreenshotPath = shot,
+                Language = AiPrompt.CurrentLanguage(),
+                Context = context,
+            };
+
+            bool speak = settings.AudioAnswers && AiVoice.IsAvailable;
+
+            // Speaking as the answer is written is the supporter half of the setting. The
+            // rest of it — speaking at all — is not gated.
+            bool speakLive = speak && settings.StreamingVoice && Auth.SupabaseAuthManager.IsPremium;
+
+            // Streamed only when something is watching the words land, whether that is the
+            // panel reading them or the voice speaking them. Asking for a stream nobody
+            // follows costs a longer connection for the same answer.
+            bool stream = settings.TextAnswers || speakLive;
+
+            // What has been handed to the voice already, so the rest can be flushed at the end.
+            int spokenUpTo = 0;
+
+            Answer = "";
+            Error = null;
+            State = AiAnswerState.Sending;
+            _cancel = new CancellationTokenSource();
+
+            // A question asked while the last answer is still being read out loud replaces
+            // it; two answers over each other are neither of them audible.
+            AiVoice.Stop();
+
+            Raise();
+
+            try
+            {
+                var provider = AiProviderFactory.For(settings.Provider);
+
+                Action<string>? onDelta = stream
+                    ? piece =>
+                      {
+                          Answer += piece;
+                          State = AiAnswerState.Streaming;
+
+                          // A sentence at a time, never a fragment: the synthesiser reads
+                          // half a clause as a statement and the intonation comes out wrong.
+                          if (speakLive) spokenUpTo += SpeakSentences(Answer.Substring(spokenUpTo));
+
+                          Raise();
+                      }
+                    : null;
+
+                var answer = await provider.AskAsync(question, key, onDelta, _cancel.Token);
+
+                Answer = string.IsNullOrWhiteSpace(answer)
+                    ? "The provider returned an empty answer."
+                    : answer.Trim();
+
+                State = AiAnswerState.Answered;
+
+                // Whatever the sentence flush did not reach — the last sentence usually has
+                // no terminator until the very end, and often no terminator at all.
+                if (speakLive && spokenUpTo < Answer.Length) AiVoice.Speak(Answer.Substring(spokenUpTo));
+                else if (speak && !speakLive) AiVoice.Speak(Answer);
+
+                Raise();
+            }
+            catch (OperationCanceledException)
+            {
+                State = AiAnswerState.None;
+                Answer = "";
+                Raise();
+            }
+            catch (AiRequestException ex)
+            {
+                Fail(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Fail(Readable(ex));
+            }
+            finally
+            {
+                _cancel?.Dispose();
+                _cancel = null;
+
+                // Whether it worked or not: the recording has been sent or has failed to send,
+                // and either way asking again means recording again.
+                recorder.Discard();
+                DeleteScreenshot();
+                Raise();
+            }
+        }
+
+        /// <summary>A network failure in the terms the player can do something about.</summary>
+        private static string Readable(Exception ex) => ex switch
+        {
+            TaskCanceledException => "The provider took too long to answer.",
+            System.Net.Http.HttpRequestException =>
+                "Could not reach the provider. Check the connection and try again.",
+            _ => ex.Message,
+        };
+
+        public void Cancel()
+        {
+            try { _cancel?.Cancel(); } catch { }
+            AiVoice.Stop();
+        }
+
+        /// <summary>
+        /// Hands every complete sentence in <paramref name="pending"/> to the voice, and
+        /// returns how many characters of it were taken.
+        /// </summary>
+        private static int SpeakSentences(string pending)
+        {
+            int cut = -1;
+
+            for (int i = 0; i < pending.Length; i++)
+            {
+                if (pending[i] is not ('.' or '!' or '?' or '\n')) continue;
+
+                // A terminator with nothing after it yet may still be the middle of a number
+                // or an abbreviation, so it waits for the next chunk to settle it.
+                if (i + 1 < pending.Length && !char.IsWhiteSpace(pending[i + 1])) continue;
+
+                cut = i + 1;
+            }
+
+            if (cut <= 0) return 0;
+
+            AiVoice.Speak(pending.Substring(0, cut));
+            return cut;
+        }
+
+        /// <summary>Dismisses the answer and closes the panel under the tile.</summary>
+        public void ClearAnswer()
+        {
+            if (IsBusy) Cancel();
+            AiVoice.Stop();
+
+            Answer = "";
+            Error = null;
+            State = AiAnswerState.None;
+            Raise();
+        }
+
+        private void Fail(string message)
+        {
+            Error = message;
+            State = AiAnswerState.Failed;
+            Raise();
+        }
+
+        private void Raise()
+        {
+            try { Changed?.Invoke(); } catch { }
+        }
+
+    }
+}

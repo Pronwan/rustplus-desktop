@@ -1,0 +1,84 @@
+<Window x:Class="RustPlusDesk.Views.Windows.AiAnswerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource AiAnswerTitle}"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        SizeToContent="Height"
+        Width="320">
+
+    <!--  Sized to its text up to a ceiling, because the answer to "how much sulfur" is one line
+          and the answer to "how do I build this" is twenty. A fixed height would either waste
+          the screen or hide the end of half the answers.  -->
+    <Border x:Name="Shell"
+            CornerRadius="10"
+            BorderThickness="1"
+            Background="{DynamicResource Surface}"
+            BorderBrush="{DynamicResource CardBorder}"
+            Padding="10,8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Margin="0,0,0,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtState"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource Accent}"
+                               VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtProvider"
+                               FontSize="10"
+                               Margin="6,0,0,0"
+                               Foreground="{DynamicResource TextSubtle}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!--  Both are Borders rather than Buttons so they look the same as the icon
+                      buttons on the tiles they sit under.  -->
+                <Border x:Name="BtnCopy" Grid.Column="1"
+                        Width="22" Height="22" CornerRadius="4"
+                        Background="#30FFFFFF" Cursor="Hand"
+                        MouseLeftButtonUp="BtnCopy_Click">
+                    <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                               Foreground="{DynamicResource TextPrimary}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+
+                <Border x:Name="BtnClose" Grid.Column="2"
+                        Width="22" Height="22" CornerRadius="4" Margin="4,0,0,0"
+                        Background="#30FFFFFF" Cursor="Hand"
+                        MouseLeftButtonUp="BtnClose_Click">
+                    <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                               Foreground="{DynamicResource TextPrimary}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+
+            <ScrollViewer x:Name="Scroller" Grid.Row="1"
+                          MaxHeight="260"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <TextBlock x:Name="TxtAnswer"
+                           TextWrapping="Wrap"
+                           LineHeight="17"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextPrimary}" />
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

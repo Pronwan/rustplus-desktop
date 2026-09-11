@@ -960,6 +960,33 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionScreenshotDefaultHint => GetString("AiCompanionScreenshotDefaultHint");
         public static string AiCompanionStreamingNeedsVoice => GetString("AiCompanionStreamingNeedsVoice");
         public static string AiCompanionStreamingOn => GetString("AiCompanionStreamingOn");
+        public static string CommandDockSectionAi => GetString("CommandDockSectionAi");
+        public static string CommandDockAiTitle => GetString("CommandDockAiTitle");
+        public static string CommandDockAiPickerHint => GetString("CommandDockAiPickerHint");
+        public static string CommandDockAiPickerNoKey => GetString("CommandDockAiPickerNoKey");
+        public static string CommandDockAiRecord => GetString("CommandDockAiRecord");
+        public static string CommandDockAiStop => GetString("CommandDockAiStop");
+        public static string CommandDockAiScreenshot => GetString("CommandDockAiScreenshot");
+        public static string CommandDockAiGameAudio => GetString("CommandDockAiGameAudio");
+        public static string CommandDockAiDiscard => GetString("CommandDockAiDiscard");
+        public static string CommandDockAiHint => GetString("CommandDockAiHint");
+        public static string CommandDockAiNoKey => GetString("CommandDockAiNoKey");
+        public static string CommandDockAiRecording => GetString("CommandDockAiRecording");
+        public static string CommandDockAiReady => GetString("CommandDockAiReady");
+        public static string CommandDockAiIdle => GetString("CommandDockAiIdle");
+        public static string CommandDockAiNoMic => GetString("CommandDockAiNoMic");
+        public static string CommandDockAiCutoff => GetString("CommandDockAiCutoff");
+        public static string CommandDockAiShotAttached => GetString("CommandDockAiShotAttached");
+        public static string CommandDockAiSend => GetString("CommandDockAiSend");
+        public static string CommandDockAiSending => GetString("CommandDockAiSending");
+        public static string CommandDockAiAnswering => GetString("CommandDockAiAnswering");
+        public static string CommandDockAiFailed => GetString("CommandDockAiFailed");
+        public static string AiAnswerTitle => GetString("AiAnswerTitle");
+        public static string AiAnswerThinking => GetString("AiAnswerThinking");
+        public static string AiAnswerWaiting => GetString("AiAnswerWaiting");
+        public static string AiAnswerWriting => GetString("AiAnswerWriting");
+        public static string AiAnswerDone => GetString("AiAnswerDone");
+        public static string AiAnswerFailed => GetString("AiAnswerFailed");
     }
 }
 

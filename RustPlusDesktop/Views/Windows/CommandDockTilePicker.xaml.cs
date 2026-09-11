@@ -70,6 +70,13 @@ namespace RustPlusDesk
                       : Loc.Text("CommandDockSupporterOnlyShort", "Supporter feature"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Discord, ColSpan = 2, RowSpan = 1 });
 
+            Section(Loc.Text("CommandDockSectionAi", "AI companion"));
+            Entry(Loc.Text("CommandDockAiTitle", "Ask AI"),
+                  RustPlusDesk.Services.AiCompanion.AiCompanionStore.HasKey
+                      ? Loc.Text("CommandDockAiPickerHint", "Record a question, attach the screen, get an answer")
+                      : Loc.Text("CommandDockAiPickerNoKey", "Needs your own AI key under Connected Services"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.AiCompanion, ColSpan = 2, RowSpan = 1 });
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"));
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

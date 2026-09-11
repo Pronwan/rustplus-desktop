@@ -140,6 +140,12 @@ namespace RustPlusDesk.Models
         public const string Session = "Session";
         public const string Discord = "Discord";
         public const string ServerInfo = "ServerInfo";
+
+        /// <summary>
+        /// The AI companion. One per dock in practice — a second one would share the same
+        /// recorder and the same key, so the two would only fight over one microphone.
+        /// </summary>
+        public const string AiCompanion = "AiCompanion";
     }
 
     /// <summary>
