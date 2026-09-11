@@ -43,7 +43,13 @@ namespace RustPlusDesk.Views
 
         private void OnCommandDockDefaultChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (_loadingDockDefaults) return;
+            // RangeBase raises this while the XAML is still being parsed, because a Value set in
+            // markup is a change from the default. At that moment the second slider has not been
+            // created yet, and reading it throws inside the constructor — which surfaces as a
+            // TargetInvocationException from the BAML loader rather than anywhere near here.
+            // _isSettingsInitialized is the same guard every other handler in this file uses.
+            if (!_isSettingsInitialized || _loadingDockDefaults) return;
+            if (SliderDockOpacity == null || SliderDockFontScale == null) return;
 
             UpdateDock(dock =>
             {
