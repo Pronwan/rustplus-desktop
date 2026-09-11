@@ -909,6 +909,11 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockDiscordSendsTo => GetString("CommandDockDiscordSendsTo");
         public static string CommandDockDiscordNoChannels => GetString("CommandDockDiscordNoChannels");
         public static string CommandDockDiscordTtsHint => GetString("CommandDockDiscordTtsHint");
+        public static string CommandDockSectionServer => GetString("CommandDockSectionServer");
+        public static string CommandDockServerInfoTitle => GetString("CommandDockServerInfoTitle");
+        public static string CommandDockServerInfoHint => GetString("CommandDockServerInfoHint");
+        public static string CommandDockServerPlayers => GetString("CommandDockServerPlayers");
+        public static string CommandDockServerQueue => GetString("CommandDockServerQueue");
     }
 }
 

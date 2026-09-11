@@ -72,7 +72,17 @@ namespace RustPlusDesk.Services
         /// <summary>Above this, the player teleported, respawned or the map changed.</summary>
         private const double MaxStepMetres = 500;
 
-        private static readonly TimeSpan PopulationInterval = TimeSpan.FromHours(1);
+        /// <summary>
+        /// How often the population is written down.
+        ///
+        /// Five minutes rather than an hour: the reading is already in hand from the status the
+        /// app polls anyway, so a longer gap buys nothing and costs the graph — a three-hour
+        /// evening would be three dots. At this rate the same evening is a line.
+        /// </summary>
+        private static readonly TimeSpan PopulationInterval = TimeSpan.FromMinutes(5);
+
+        /// <summary>Half a day of readings, which is longer than any tile draws.</summary>
+        private const int MaxPopulationSamples = 144;
 
         /// <summary>Set once by the main window. Null until then, and the tracker idles.</summary>
         public Func<SessionSnapshot?>? Source { get; set; }
@@ -223,8 +233,7 @@ namespace RustPlusDesk.Services
 
             session.Population.Add(new PopulationSample { Utc = now, Players = snapshot.Population });
 
-            // A day of hourly readings is more than the tile ever draws.
-            if (session.Population.Count > 24) session.Population.RemoveAt(0);
+            if (session.Population.Count > MaxPopulationSamples) session.Population.RemoveAt(0);
         }
 
         /// <summary>

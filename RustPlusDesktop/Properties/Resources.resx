@@ -7074,4 +7074,19 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockDiscordTtsHint" xml:space="preserve">
     <value>Text-to-speech follows this channel&apos;s own setting under Connected Services.</value>
   </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>Server info</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>Players on now, and how that has moved this session</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>players</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>/ {0} · {1} waiting</value>
+  </data>
 </root>

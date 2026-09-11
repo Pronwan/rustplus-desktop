@@ -136,6 +136,7 @@ namespace RustPlusDesk.Models
         public const string Rule = "Rule";
         public const string Session = "Session";
         public const string Discord = "Discord";
+        public const string ServerInfo = "ServerInfo";
     }
 
     /// <summary>

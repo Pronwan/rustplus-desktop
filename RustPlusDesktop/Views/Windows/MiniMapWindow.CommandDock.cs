@@ -858,6 +858,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Rule => BuildRuleTile(tile),
             CommandDockTileKinds.Session => BuildSessionTile(tile),
             CommandDockTileKinds.Discord => BuildDiscordTile(tile),
+            CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,

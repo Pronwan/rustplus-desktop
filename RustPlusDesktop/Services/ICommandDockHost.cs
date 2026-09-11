@@ -44,6 +44,9 @@ namespace RustPlusDesk.Services
         /// <summary>Server time as "HH:mm" plus whether it is currently day.</summary>
         (string Time, bool IsDay, TimeSpan? UntilSwitch) DockServerTime { get; }
 
+        /// <summary>Players on, the server's cap, and how many are waiting to get in.</summary>
+        (int Current, int Max, string Queue) DockPopulation { get; }
+
         /// <summary>
         /// The notification channels the user has configured for their Discord bot — "chat",
         /// "events", "shop" — as the destinations the Discord tile can send to. Empty when the

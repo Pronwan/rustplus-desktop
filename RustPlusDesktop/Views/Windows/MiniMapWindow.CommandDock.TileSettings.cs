@@ -403,6 +403,7 @@ namespace RustPlusDesk
                                          ?? Loc.Text("CommandDockSectionRules", "Logic Engine"),
             CommandDockTileKinds.Session => Loc.Text("CommandDockSessionTitle", "Session"),
             CommandDockTileKinds.Discord => "Discord",
+            CommandDockTileKinds.ServerInfo => Loc.Text("CommandDockServerInfoTitle", "Server"),
             CommandDockTileKinds.TeamChat => Loc.Text("TeamChat", "Team chat"),
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             _ => tile.Kind,

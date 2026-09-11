@@ -244,6 +244,21 @@ public partial class MainWindow : ICommandDockHost
         }
     }
 
+    public (int Current, int Max, string Queue) DockPopulation
+    {
+        get
+        {
+            var text = _vm?.ServerPlayers ?? "";
+            var parts = text.Split('/');
+
+            int current = parts.Length > 0 && int.TryParse(parts[0].Trim(), out var c) ? c : 0;
+            int max = parts.Length > 1 && int.TryParse(parts[1].Trim(), out var m) ? m : 0;
+            var queue = _vm?.ServerQueue ?? "";
+
+            return (current, max, string.Equals(queue, "-", StringComparison.Ordinal) ? "" : queue);
+        }
+    }
+
     /// <summary>The formatted "until sunrise / sunset" text the HUD shows, or empty.</summary>
     public string DockTimeUntilNextPhase => _vm?.TimeUntilNextPhase ?? "";
 
