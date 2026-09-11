@@ -378,6 +378,7 @@ export const ScannerWidget: React.FC = () => {
               says the badges were never found, and a partial like GHY.XG names the one slot
               that refused, which is the difference between nudging the region and guessing.
             */}
+            <Box>Frames: <span style={{ color: diagnostics?.frameSource === 'track' ? 'var(--gl-success)' : 'var(--gl-text-primary)' }}>{diagnostics?.frameSource ?? 'none'}</span></Box>
             <Box>Layout: <span style={{ color: diagnostics?.layoutSource === 'calibration' ? 'var(--gl-error)' : 'var(--gl-primary)' }}>{diagnostics?.layoutSource ?? 'none'}</span></Box>
             <Box>Slots: <span style={{ color: (diagnostics?.resolvedSlots ?? 0) === 6 ? 'var(--gl-success)' : 'var(--gl-text-primary)' }}>{diagnostics?.resolvedSlots ?? 0}/6</span></Box>
             <Box>Last Read: <span style={{ color: 'var(--gl-text-primary)' }}>{diagnostics?.lastPartialRead || '------'}</span></Box>

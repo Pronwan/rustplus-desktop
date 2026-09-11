@@ -94,6 +94,12 @@ export interface ScannerDiagnostics {
   isStarved?: boolean;
   starvationReason?: StarvationReason;
   /**
+   * How frames are reaching the scanner. `track` reads them straight off the capture track
+   * and is immune to the renderer being unable to present; `video` goes through an element
+   * and is not.
+   */
+  frameSource: 'track' | 'video' | 'none';
+  /**
    * Where the slot geometry came from on the last read. `detected` means all six badges were
    * found in the image; `calibration` means none were and the saved region was used as-is,
    * which is the signature of a region pointing at the wrong place.

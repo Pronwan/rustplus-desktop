@@ -18,6 +18,11 @@ import { ScannerStarvationDetector } from './scanner/ScannerStarvationDetector.t
 import { AutoCalibrator, AutoCalibrateResult } from './scanner/AutoCalibrator.ts';
 import { DesktopTemplateRecognizer, DesktopTemplateResult } from './scanner/DesktopTemplateRecognizer.ts';
 import { rasterToCanvas, releaseRasterCanvases } from './scanner/vision/frameGrabber.ts';
+import {
+  CaptureFrameSource,
+  createTrackFrameSource,
+  createVideoFrameSource
+} from './scanner/vision/captureFrameSource.ts';
 
 export * from './scanner/scannerTypes.ts';
 export * from './scanner/scannerConfig.ts';
@@ -36,6 +41,7 @@ export class ScannerService {
   private listeners: ScannerEventListener[] = [];
   private mediaStream: MediaStream | null = null;
   private videoElement: HTMLVideoElement | null = null;
+  private frameSource: CaptureFrameSource | null = null;
   private isScanning = false;
   private isInitializing = false;
 
@@ -68,7 +74,6 @@ export class ScannerService {
   private lastSlotOcrLatency = 0;
   private lastTickTime = 0;
   private lastTickGap = 0;
-  private lastVideoTime = -1;
   private lastVideoFrameTime = 0;
   private lastVideoFrameGap = 0;
   private pipelineStage = 'idle';
@@ -91,6 +96,7 @@ export class ScannerService {
   private slotOcrAttempts: Record<number, { signature: number; at: number }> = {};
   private slotOcrInFlight = false;
   private fallbackReadCount = 0;
+  private lastScannedFrameCount = -1;
 
   // Reusable Canvases
   private previewCanvases: HTMLCanvasElement[] = [];
@@ -171,47 +177,57 @@ export class ScannerService {
         this.stop();
       });
 
-      // Mount video element to DOM to ensure Chromium never throttles frame decoding
-      this.videoElement = document.createElement('video');
-      this.videoElement.autoplay = true;
-      this.videoElement.playsInline = true;
-      this.videoElement.muted = true;
-      this.videoElement.style.position = 'fixed';
-      this.videoElement.style.top = '-9999px';
-      this.videoElement.style.left = '-9999px';
-      this.videoElement.style.width = '100px';
-      this.videoElement.style.height = '100px';
-      this.videoElement.style.opacity = '0.001';
-      this.videoElement.style.pointerEvents = 'none';
-      this.videoElement.style.zIndex = '-9999';
-      document.body.appendChild(this.videoElement);
+      // Take frames off the capture track directly where the platform allows it, so
+      // recognition never depends on the renderer presenting them. See
+      // `captureFrameSource.ts` for why that is the difference behind a fullscreen game.
+      this.frameSource = createTrackFrameSource(videoTrack);
 
-      const video = this.videoElement;
+      if (!this.frameSource) {
+        // Mount the video element in the DOM so Chromium does not throttle frame decoding.
+        // Only built on this path: when the track processor works, an element attached to
+        // the same track would be a second sink doing precisely the decode-and-present work
+        // the track path exists to skip.
+        this.videoElement = document.createElement('video');
+        this.videoElement.autoplay = true;
+        this.videoElement.playsInline = true;
+        this.videoElement.muted = true;
+        this.videoElement.style.position = 'fixed';
+        this.videoElement.style.top = '-9999px';
+        this.videoElement.style.left = '-9999px';
+        this.videoElement.style.width = '100px';
+        this.videoElement.style.height = '100px';
+        this.videoElement.style.opacity = '0.001';
+        this.videoElement.style.pointerEvents = 'none';
+        this.videoElement.style.zIndex = '-9999';
+        document.body.appendChild(this.videoElement);
 
-      // Robust video initialization that never hangs on readyState
-      await new Promise<void>((resolve) => {
-        let isDone = false;
-        const done = () => {
-          if (isDone) return;
-          isDone = true;
-          video.play().then(() => resolve()).catch(() => resolve());
-        };
+        const video = this.videoElement;
 
-        video.onloadedmetadata = done;
-        video.onloadeddata = done;
-        video.oncanplay = done;
+        // Robust video initialization that never hangs on readyState
+        await new Promise<void>((resolve) => {
+          let isDone = false;
+          const done = () => {
+            if (isDone) return;
+            isDone = true;
+            video.play().then(() => resolve()).catch(() => resolve());
+          };
 
-        video.srcObject = this.mediaStream;
+          video.onloadedmetadata = done;
+          video.onloadeddata = done;
+          video.oncanplay = done;
 
-        if (video.readyState >= 1 && video.videoWidth > 0) {
-          done();
-        }
+          video.srcObject = this.mediaStream;
 
-        // Safety fallback timeout
-        setTimeout(done, 1200);
-      });
+          if (video.readyState >= 1 && video.videoWidth > 0) {
+            done();
+          }
 
-      // Fast-path template recognizer starts instantly without Tesseract warmup delay!
+          // Safety fallback timeout
+          setTimeout(done, 1200);
+        });
+
+        this.frameSource = createVideoFrameSource(video);
+      }
 
       this.isScanning = true;
       this.isInitializing = false;
@@ -237,21 +253,16 @@ export class ScannerService {
   private startScanLoop(): void {
     if (!this.isScanning) return;
 
-    // Use requestVideoFrameCallback if available to synchronize directly with GPU compositor frames
-    if (this.videoElement && 'requestVideoFrameCallback' in this.videoElement) {
-      const onFrame = () => {
-        if (!this.isScanning) return;
-        const now = performance.now();
-        if (now - this.lastScanExecuteTime >= 15) {
-          this.lastScanExecuteTime = now;
-          this.scanFrame();
-        }
-        if (this.isScanning && this.videoElement && 'requestVideoFrameCallback' in this.videoElement) {
-          (this.videoElement as any).requestVideoFrameCallback(onFrame);
-        }
-      };
-      (this.videoElement as any).requestVideoFrameCallback(onFrame);
-    }
+    // Scan when the capture produces a frame. Reading the same pixels twice cannot yield a
+    // different answer, so anything faster than the capture rate is wasted work, and
+    // anything driven by a timer instead risks reading a frame that never changed.
+    this.frameSource?.onFrame(() => {
+      if (!this.isScanning) return;
+      const now = performance.now();
+      if (now - this.lastScanExecuteTime < 15) return;
+      this.lastScanExecuteTime = now;
+      this.scanFrame();
+    });
 
     try {
       const tickerBlob = new Blob([`
@@ -293,7 +304,9 @@ export class ScannerService {
   }
 
   private async scanFrame(): Promise<void> {
-    if (!this.videoElement || this.videoElement.videoWidth === 0) return;
+    const source = this.frameSource;
+    const frame = source?.current();
+    if (!source || !frame || source.width === 0) return;
 
     const startTime = performance.now();
     if (this.lastTickTime > 0) {
@@ -301,20 +314,36 @@ export class ScannerService {
     }
     this.lastTickTime = startTime;
 
-    if (this.videoElement.readyState >= 2) {
-      if (this.lastVideoFrameTime > 0) {
-        this.lastVideoFrameGap = startTime - this.lastVideoFrameTime;
-      }
-      this.lastVideoTime = this.videoElement.currentTime;
-      this.lastVideoFrameTime = startTime;
+    // Frame health now comes from the capture itself rather than from the tick clock.
+    //
+    // These metrics used to be stamped on every tick where the video was merely decodable,
+    // which made "capture stalled" and "tick delayed" two names for one measurement: the
+    // frame numbers could not go bad unless the ticker had already gone bad, and a capture
+    // that had genuinely frozen while ticks kept arriving looked perfectly healthy. The
+    // distinction is the whole point of the advice the HUD gives -- capping in-game FPS
+    // helps a starved capture and does nothing for a throttled timer.
+    this.lastVideoFrameTime = source.lastFrameAt;
+    this.lastVideoFrameGap = source.lastFrameGapMs;
+
+    // The ticker keeps calling this even when the capture has stopped delivering, which is
+    // what lets starvation be noticed and reported at all. Re-reading pixels that have not
+    // changed cannot produce a different answer, though, so everything below the metrics is
+    // skipped until a new frame actually arrives.
+    const isNewFrame = source.frameCount !== this.lastScannedFrameCount;
+    this.lastScannedFrameCount = source.frameCount;
+
+    if (!isNewFrame) {
+      this.lastScanLatency = performance.now() - startTime;
+      this.evaluateStarvation(startTime);
+      return;
     }
 
     if (!this.isOcrInProgress) {
       this.setPipelineStage('capture');
     }
 
-    const videoW = this.videoElement.videoWidth;
-    const videoH = this.videoElement.videoHeight;
+    const videoW = source.width;
+    const videoH = source.height;
     const now = Date.now();
 
     // FPS Calculation
@@ -360,7 +389,7 @@ export class ScannerService {
 
       // Rust Breeder-style Preview Rendering (throttled)
       if (shouldEmitPreview) {
-        this.renderPreview(rIdx, xPx, yPx, wPx, hPx, reg);
+        this.renderPreview(rIdx, xPx, yPx, wPx, hPx, reg, frame);
       }
 
       if (!this.roiCanvases[rIdx]) {
@@ -372,7 +401,7 @@ export class ScannerService {
       const roiCtx = roiCanvas.getContext('2d', { willReadFrequently: true });
       if (!roiCtx) continue;
 
-      roiCtx.drawImage(this.videoElement, xPx, yPx, wPx, hPx, 0, 0, wPx, hPx);
+      roiCtx.drawImage(frame, xPx, yPx, wPx, hPx, 0, 0, wPx, hPx);
       const roiData = roiCtx.getImageData(0, 0, wPx, hPx).data;
 
       // Activity Score Calculation
@@ -452,8 +481,11 @@ export class ScannerService {
     }
 
     this.lastScanLatency = performance.now() - startTime;
+    this.evaluateStarvation(startTime);
+  }
 
-    // Evaluate GPU/CPU starvation in real-time
+  /** Watches capture and pipeline health, and announces changes to it. */
+  private evaluateStarvation(startTime: number): void {
     const starvationEval = this.starvationDetector.evaluate({
       videoFrameAgeMs: this.lastVideoFrameTime > 0 ? startTime - this.lastVideoFrameTime : 0,
       videoFrameGapMs: this.lastVideoFrameGap,
@@ -464,21 +496,21 @@ export class ScannerService {
       pipelineStageAgeMs: startTime - this.pipelineStageStartedAt
     });
 
-    if (starvationEval.stateChanged) {
-      if (starvationEval.isStarved) {
-        this.emit({
-          type: 'STARVATION_DETECTED',
-          isStarved: true,
-          starvationReason: starvationEval.starvationReason,
-          diagnostics: this.getDiagnostics()
-        });
-      } else {
-        this.emit({
-          type: 'STARVATION_RESOLVED',
-          isStarved: false,
-          diagnostics: this.getDiagnostics()
-        });
-      }
+    if (!starvationEval.stateChanged) return;
+
+    if (starvationEval.isStarved) {
+      this.emit({
+        type: 'STARVATION_DETECTED',
+        isStarved: true,
+        starvationReason: starvationEval.starvationReason,
+        diagnostics: this.getDiagnostics()
+      });
+    } else {
+      this.emit({
+        type: 'STARVATION_RESOLVED',
+        isStarved: false,
+        diagnostics: this.getDiagnostics()
+      });
     }
   }
 
@@ -595,7 +627,7 @@ export class ScannerService {
       roiData?: Uint8ClampedArray;
     }[]
   ): Promise<void> {
-    if (!this.videoElement) return;
+    if (!this.frameSource) return;
     const ocrStartTime = performance.now();
     const candidates: ScanCandidate[] = [];
     let rowOcrLatency = 0;
@@ -765,12 +797,16 @@ export class ScannerService {
     yPx: number,
     wPx: number,
     hPx: number,
-    reg: ScannerRegion
+    reg: ScannerRegion,
+    /** The frame being scanned. Omitted by the nudge/scale callers, which take the latest. */
+    sourceFrame?: CanvasImageSource
   ): void {
-    if (!this.videoElement || this.videoElement.videoWidth === 0) return;
+    const source = this.frameSource;
+    const frame = sourceFrame ?? source?.current();
+    if (!source || !frame || source.width === 0) return;
 
-    const videoW = this.videoElement.videoWidth;
-    const videoH = this.videoElement.videoHeight;
+    const videoW = source.width;
+    const videoH = source.height;
 
     // Surrounding context padding
     const padX = Math.round(wPx * 0.15);
@@ -799,7 +835,7 @@ export class ScannerService {
 
     // 1. Draw zoomed surrounding video area
     pCtx.imageSmoothingEnabled = false;
-    pCtx.drawImage(this.videoElement, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
+    pCtx.drawImage(frame, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
 
     // 2. Compute local coordinates of the exact capture bounding box inside the preview
     const localBoxX = (xPx - srcX) * scale;
@@ -873,9 +909,7 @@ export class ScannerService {
       pipelineStageAgeMs: Math.round((now - this.pipelineStageStartedAt) * 10) / 10,
       uiUpdateLatencyMs: Math.round((this.pendingUiStartedAt > 0 ? now - this.pendingUiStartedAt : this.lastUiUpdateLatency) * 10) / 10,
       pageVisibility: document.visibilityState,
-      captureResolution: this.videoElement
-        ? `${this.videoElement.videoWidth}x${this.videoElement.videoHeight}`
-        : '0x0',
+      captureResolution: this.frameSource ? `${this.frameSource.width}x${this.frameSource.height}` : '0x0',
       confidence: Math.round(this.latestConfidence),
       totalScans: this.scanCount,
       acceptedPlants: this.acceptedCount,
@@ -885,6 +919,7 @@ export class ScannerService {
       planterActivity: this.activityScores[1] || 0,
       isStarved: this.starvationDetector.getIsStarved(),
       starvationReason: this.starvationDetector.getStarvationReason(),
+      frameSource: this.frameSource?.kind ?? 'none',
       layoutSource: lastRead?.layoutSource ?? 'none',
       resolvedSlots: lastRead?.resolvedCount ?? 0,
       lastPartialRead: lastRead?.partial ?? '',
@@ -920,8 +955,8 @@ export class ScannerService {
     if (!reg) return;
 
     // Support both normalized delta (< 0.5) and pixel delta (>= 1)
-    const actualVideoW = this.videoElement?.videoWidth || videoW;
-    const actualVideoH = this.videoElement?.videoHeight || videoH;
+    const actualVideoW = this.frameSource?.width || videoW;
+    const actualVideoH = this.frameSource?.height || videoH;
     const dxNorm = Math.abs(dx) < 0.5 ? dx : dx / actualVideoW;
     const dyNorm = Math.abs(dy) < 0.5 ? dy : dy / actualVideoH;
 
@@ -932,7 +967,7 @@ export class ScannerService {
     this.saveRegions();
 
     // Trigger instant preview frame re-render
-    if (this.videoElement && this.videoElement.videoWidth > 0) {
+    if (this.frameSource && this.frameSource.width > 0) {
       const xPx = Math.round(actualVideoW * reg.TOP_LEFT_X);
       const yPx = Math.round(actualVideoH * reg.TOP_LEFT_Y);
       const wPx = Math.round(actualVideoW * reg.WIDTH);
@@ -945,8 +980,8 @@ export class ScannerService {
     const reg = this.regions[regionIndex];
     if (!reg) return;
 
-    const actualVideoW = this.videoElement?.videoWidth || videoW;
-    const actualVideoH = this.videoElement?.videoHeight || 1080;
+    const actualVideoW = this.frameSource?.width || videoW;
+    const actualVideoH = this.frameSource?.height || 1080;
     const dwNorm = Math.abs(dw) < 0.5 ? dw : dw / actualVideoW;
     const newWidth = Math.max(0.02, Math.min(0.5, reg.WIDTH + dwNorm));
     const normH = newWidth * reg.HEIGHT_TO_WIDTH_RATIO;
@@ -958,7 +993,7 @@ export class ScannerService {
     this.saveRegions();
 
     // Trigger instant preview frame re-render
-    if (this.videoElement && this.videoElement.videoWidth > 0) {
+    if (this.frameSource && this.frameSource.width > 0) {
       const xPx = Math.round(actualVideoW * reg.TOP_LEFT_X);
       const yPx = Math.round(actualVideoH * reg.TOP_LEFT_Y);
       const wPx = Math.round(actualVideoW * reg.WIDTH);
@@ -984,9 +1019,9 @@ export class ScannerService {
     this.saveRegions();
 
     // Trigger instant preview frame re-render for both regions
-    if (this.videoElement && this.videoElement.videoWidth > 0) {
-      const videoW = this.videoElement.videoWidth;
-      const videoH = this.videoElement.videoHeight;
+    if (this.frameSource && this.frameSource.width > 0) {
+      const videoW = this.frameSource.width;
+      const videoH = this.frameSource.height;
       for (let rIdx = 0; rIdx < this.regions.length; rIdx++) {
         const reg = this.regions[rIdx];
         const xPx = Math.round(videoW * reg.TOP_LEFT_X);
@@ -1005,7 +1040,7 @@ export class ScannerService {
 
   public resetRegions(): ScannerRegion[] {
     this.regions = StorageService.resetScannerRegions();
-    if (this.videoElement && this.videoElement.videoWidth > 0) {
+    if (this.frameSource && this.frameSource.width > 0) {
       this.setRegions(this.regions);
     }
     return this.regions;
@@ -1015,15 +1050,16 @@ export class ScannerService {
     return this.regions;
   }
 
-  public getVideoElement(): HTMLVideoElement | null {
-    return this.videoElement;
+  /** True once the capture has delivered a frame the scanner can read. */
+  public isCaptureReady(): boolean {
+    return !!this.frameSource && this.frameSource.width > 0 && this.frameSource.current() !== null;
   }
 
   /**
    * Runs 1-Click Auto Calibration using the live video stream from screen capture.
    */
   public async autoCalibrate(preferredRegionIndex?: number): Promise<AutoCalibrateResult> {
-    if (!this.videoElement || this.videoElement.videoWidth === 0) {
+    if (!this.isCaptureReady()) {
       return {
         success: false,
         regionIndex: preferredRegionIndex ?? 0,
@@ -1031,8 +1067,10 @@ export class ScannerService {
       };
     }
 
-    const res = await AutoCalibrator.calibrateFromVideo(
-      this.videoElement,
+    const res = await AutoCalibrator.calibrateFromFrame(
+      this.frameSource!.current(),
+      this.frameSource!.width,
+      this.frameSource!.height,
       preferredRegionIndex,
       this.recognizer
     );
@@ -1056,8 +1094,14 @@ export class ScannerService {
     this.stabilityDetector.reset();
     this.lastReads = {};
     this.slotOcrAttempts = {};
+    this.lastScannedFrameCount = -1;
     this.slotOcrInFlight = false;
     releaseRasterCanvases();
+
+    if (this.frameSource) {
+      this.frameSource.stop();
+      this.frameSource = null;
+    }
 
     if (this.tickerWorker) {
       try {

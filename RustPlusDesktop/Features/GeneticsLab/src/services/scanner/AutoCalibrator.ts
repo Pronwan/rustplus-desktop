@@ -18,19 +18,27 @@ export class AutoCalibrator {
   private static grabber = new CanvasFrameGrabber();
 
   /**
-   * Automatically detects plant gene rows from the live desktop screen capture
-   * and computes calibrated ScannerRegion coordinates.
+   * Detects plant gene rows in a captured frame and computes ScannerRegion coordinates.
    *
-   * @param video The active HTMLVideoElement streaming game capture
+   * Takes a drawable and its size rather than a video element, because the scanner may be
+   * pulling frames straight off the capture track. Calibrating from the video element in
+   * that case would measure whatever the renderer last managed to present, which behind a
+   * fullscreen game is not what is on screen now.
+   *
+   * @param source The frame to calibrate from
+   * @param sourceWidth Captured surface width in pixels
+   * @param sourceHeight Captured surface height in pixels
    * @param preferredRegionIndex Optional target region (0 for Inventory, 1 for Planter)
    * @param recognizer Optional GeneRecognizer to read and verify genes
    */
-  public static async calibrateFromVideo(
-    video: HTMLVideoElement,
+  public static async calibrateFromFrame(
+    source: CanvasImageSource | null,
+    sourceWidth: number,
+    sourceHeight: number,
     preferredRegionIndex?: number,
     recognizer?: GeneRecognizer
   ): Promise<AutoCalibrateResult> {
-    if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+    if (!source || sourceWidth === 0 || sourceHeight === 0) {
       return {
         success: false,
         regionIndex: preferredRegionIndex ?? 0,
@@ -38,12 +46,13 @@ export class AutoCalibrator {
       };
     }
 
-    const videoW = video.videoWidth;
-    const videoH = video.videoHeight;
+    const video = source;
+    const videoW = sourceWidth;
+    const videoH = sourceHeight;
 
     // Use full-fidelity discovery resolution (up to 1920px wide) for precise sub-pixel boundary fitting
     const discoveryWidth = Math.min(videoW, 1920);
-    const frame = this.grabber.grabAnalysis(video, discoveryWidth);
+    const frame = this.grabber.grabAnalysis(video, discoveryWidth, { width: videoW, height: videoH });
     if (!frame) {
       return {
         success: false,
