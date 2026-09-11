@@ -485,7 +485,8 @@ namespace RustPlusDesk
                         new Rect(0, 0, _mapWidth, _mapHeight), cornerRadius, cornerRadius);
                 }
 
-                RepositionTiles();
+                // LayoutDock re-derives every tile's position from its cell, which is all a
+                // resize needs: the map's cell span changed, so the seam moved with it.
                 LayoutDock(anchor);
 
                 if (updateSlider && SettingsOverlay != null)
@@ -509,18 +510,33 @@ namespace RustPlusDesk
         /// </summary>
         private void LayoutDock(Point? mapCentreAnchor = null)
         {
-            var bounds = MeasureDockBounds();
-
-            // Tiles may sit left of or above the map; shift everything so the canvas origin is
-            // the window origin, and the window keeps a positive size.
-            double shiftX = -bounds.X;
-            double shiftY = -bounds.Y;
-            ShiftDockChildren(shiftX, shiftY);
-
             double oldLeft = Left, oldTop = Top;
 
-            Width = Math.Max(1, bounds.Width);
-            Height = Math.Max(1, bounds.Height);
+            // Cells are the only state; pixels are derived from them, always, everywhere.
+            //
+            // This used to shift the canvas children in pixels when a tile sat left of or above
+            // the origin, and leave their cell coordinates alone. From then on the two disagreed,
+            // and a drop — which reads a pixel position and converts it back through the cell
+            // formula — landed a cell or more away from where it was let go, further every time.
+            // Re-basing the cells instead keeps one grid, and the window takes the opposite move
+            // so the content does not appear to jump.
+            var before = CellBounds();
+            NormaliseCells();
+            var bounds = CellBounds();
+
+            double padDelta = _dragPad - _appliedDragPad;
+            _appliedDragPad = _dragPad;
+
+            ApplyTilePositions();
+
+            Width = Math.Max(1, bounds.Width + 2 * _dragPad);
+            Height = Math.Max(1, bounds.Height + 2 * _dragPad);
+
+            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            {
+                Left += before.X - bounds.X - padDelta;
+                Top += before.Y - bounds.Y - padDelta;
+            }
 
             // Only meaningful while the map is on the dock; with it gone there is no centre to
             // hold and the dock simply keeps its own top-left corner.
@@ -541,6 +557,7 @@ namespace RustPlusDesk
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
 
             PositionChrome();
+            DrawGridGhost();
         }
 
         /// <summary>Stretches the title bar across the dock and parks it on the top edge.</summary>
@@ -581,46 +598,10 @@ namespace RustPlusDesk
             if (Math.Abs(top - Top) > 0.01) Top = top;
         }
 
-        /// <summary>
-        /// The rectangle every placed tile fits into. The map is one of those tiles now, so it
-        /// needs no separate term — and a dock with no tiles at all still gets a usable size, or
-        /// the window would collapse to nothing and take the title bar with it.
-        /// </summary>
-        private Rect MeasureDockBounds()
-        {
-            double minX = double.MaxValue, minY = double.MaxValue;
-            double maxX = double.MinValue, maxY = double.MinValue;
-
-            foreach (var rect in TileBounds())
-            {
-                minX = Math.Min(minX, rect.X);
-                minY = Math.Min(minY, rect.Y);
-                maxX = Math.Max(maxX, rect.Right);
-                maxY = Math.Max(maxY, rect.Bottom);
-            }
-
-            if (minX > maxX || minY > maxY)
-                return new Rect(0, 0, EmptyDockWidth, EmptyDockHeight);
-
-            return new Rect(minX, minY, maxX - minX, maxY - minY);
-        }
-
         // Just the title bar, wide enough to hold its buttons: what is left when the map is off
         // and no tile has been added yet.
         private const double EmptyDockWidth = 200;
         private const double EmptyDockHeight = 30;
 
-        private void ShiftDockChildren(double dx, double dy)
-        {
-            if (Math.Abs(dx) < 0.01 && Math.Abs(dy) < 0.01) return;
-
-            foreach (UIElement child in DockCanvas.Children)
-            {
-                double x = Canvas.GetLeft(child);
-                double y = Canvas.GetTop(child);
-                Canvas.SetLeft(child, (double.IsNaN(x) ? 0 : x) + dx);
-                Canvas.SetTop(child, (double.IsNaN(y) ? 0 : y) + dy);
-            }
-        }
     }
 }

@@ -16,6 +16,11 @@
         Width="260" Height="260">
     <Grid x:Name="RootGrid">
 
+        <!--  Drawn only while a tile is being dragged, and behind everything: the cells it can
+              land in, plus the one it would land in right now. Without it a tile let go in an
+              empty area snapped somewhere with no visible reason.  -->
+        <Canvas x:Name="GridGhostLayer" IsHitTestVisible="False"/>
+
         <!--  The dock: the map is one tile among the command tiles, all placed by pixel
               position on this canvas. Tiles are built in code because their number, kind
               and position come from the saved layout.  -->

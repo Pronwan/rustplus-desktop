@@ -248,18 +248,211 @@ namespace RustPlusDesk
                 CommandDockLayout.CellsToPixels(tile.RowSpan));
         }
 
-        /// <summary>Every placed tile's rect, for <see cref="MeasureDockBounds"/>.</summary>
-        private IEnumerable<Rect> TileBounds()
+        /// <summary>The tiles that currently take up space — everything but a switched-off map.</summary>
+        private IEnumerable<CommandDockTile> VisibleTiles() => _dock.Tiles
+            .Where(t => t.Kind != CommandDockTileKinds.Map || MapOccupiesCells);
+
+        /// <summary>
+        /// The rectangle the dock's tiles fit into, derived from their cells rather than read
+        /// back off the canvas. Reading the canvas was how the layout and the cell grid drifted
+        /// apart; now nothing writes a pixel position that is not computed here first.
+        /// </summary>
+        private Rect CellBounds()
         {
+            double minX = double.MaxValue, minY = double.MaxValue;
+            double maxX = double.MinValue, maxY = double.MinValue;
+
+            foreach (var tile in VisibleTiles())
+            {
+                var r = CellRect(tile);
+                minX = Math.Min(minX, r.X);
+                minY = Math.Min(minY, r.Y);
+                maxX = Math.Max(maxX, r.Right);
+                maxY = Math.Max(maxY, r.Bottom);
+            }
+
+            if (minX > maxX || minY > maxY)
+                return new Rect(0, 0, EmptyDockWidth, EmptyDockHeight);
+
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        /// <summary>
+        /// Slides every tile so the top-left occupied cell is (0,0).
+        ///
+        /// Without this the grid can grow into negative cells, and then a pixel position and a
+        /// cell coordinate stop being convertible into one another — which is exactly the drift
+        /// that made dropped tiles land somewhere other than where they were let go. Hidden tiles
+        /// move along so they stay consistent, but do not get a vote on where the corner is.
+        /// </summary>
+        private void NormaliseCells()
+        {
+            var visible = VisibleTiles().ToList();
+            if (visible.Count == 0) return;
+
+            int minCol = visible.Min(t => t.Col);
+            int minRow = visible.Min(t => t.Row);
+            if (minCol == 0 && minRow == 0) return;
+
             foreach (var tile in _dock.Tiles)
             {
-                if (tile.Kind == CommandDockTileKinds.Map && !MapOccupiesCells) continue;
+                tile.Col -= minCol;
+                tile.Row -= minRow;
+            }
+        }
+
+        /// <summary>Writes every tile's derived pixel position onto the canvas.</summary>
+        private void ApplyTilePositions()
+        {
+            SyncMapCellSpan();
+
+            foreach (var tile in _dock.Tiles)
+            {
                 if (!_tileElements.TryGetValue(tile.Id, out var el)) continue;
 
-                double x = Canvas.GetLeft(el), y = Canvas.GetTop(el);
-                if (double.IsNaN(x) || double.IsNaN(y)) continue;
-                yield return new Rect(x, y, el.Width, el.Height);
+                var rect = CellRect(tile);
+
+                // The map's size comes from the slider, not from its cell span — UpdateSize has
+                // already applied it, and writing the cell width here would undo that.
+                if (tile.Kind != CommandDockTileKinds.Map)
+                {
+                    el.Width = rect.Width;
+                    el.Height = rect.Height;
+                }
+
+                Canvas.SetLeft(el, rect.X + _dragPad);
+                Canvas.SetTop(el, rect.Y + _dragPad);
             }
+        }
+
+        // ── Drag preview ────────────────────────────────────────────────────────
+
+        // While a tile is in flight the dock grows by one cell on every side, so the grid hint
+        // can show the row and column it could be extended into — and so a tile dragged to the
+        // edge is not clipped by the window it is still inside of.
+        private double _dragPad;
+        private double _appliedDragPad;
+
+        private CommandDockTile? _draggingTile;
+        private (int Col, int Row)? _dropTarget;
+
+        private static double CellPitch => CommandDockLayout.CellSize + CommandDockLayout.CellGap;
+
+        private void BeginDragPreview(CommandDockTile tile)
+        {
+            _draggingTile = tile;
+            _dropTarget = (tile.Col, tile.Row);
+            _dragPad = CellPitch;
+            LayoutDock();
+        }
+
+        private void EndDragPreview()
+        {
+            _draggingTile = null;
+            _dropTarget = null;
+            _dropHighlight = null;
+            _dragPad = 0;
+            GridGhostLayer.Children.Clear();
+        }
+
+        /// <summary>
+        /// Paints the cell grid under a tile in flight, and fills the cell it would drop into.
+        ///
+        /// The whole point is that the snap stops being a surprise: the filled rectangle is the
+        /// tile's own footprint at the target cell, so what is highlighted is exactly what will
+        /// be occupied — including when the target is taken and the drop will bounce elsewhere,
+        /// which the colour says.
+        /// </summary>
+        private void DrawGridGhost()
+        {
+            if (GridGhostLayer == null) return;
+
+            GridGhostLayer.Children.Clear();
+            if (_draggingTile == null) return;
+
+            var line = new SolidColorBrush(Color.FromArgb(0x38, 0xFF, 0xFF, 0xFF));
+            line.Freeze();
+
+            for (int col = -1; col < 40; col++)
+            {
+                double x = CellX(col) + _dragPad;
+                if (x >= Width) break;
+
+                for (int row = -1; row < 40; row++)
+                {
+                    double y = CellY(row) + _dragPad;
+                    if (y >= Height) break;
+                    if (x + CommandDockLayout.CellSize <= 0 || y + CommandDockLayout.CellSize <= 0) continue;
+
+                    var cell = new System.Windows.Shapes.Rectangle
+                    {
+                        Width = CommandDockLayout.CellSize,
+                        Height = CommandDockLayout.CellSize,
+                        RadiusX = 8,
+                        RadiusY = 8,
+                        Stroke = line,
+                        StrokeThickness = 1,
+                        StrokeDashArray = new DoubleCollection { 3, 3 },
+                        Fill = System.Windows.Media.Brushes.Transparent,
+                    };
+                    Canvas.SetLeft(cell, x);
+                    Canvas.SetTop(cell, y);
+                    GridGhostLayer.Children.Add(cell);
+                }
+            }
+
+            // The cells never move during a drag — only the highlight does, so it is built once
+            // here and repositioned on the move rather than the whole grid being rebuilt at
+            // pointer rate.
+            _dropHighlight = new System.Windows.Shapes.Rectangle
+            {
+                RadiusX = 10,
+                RadiusY = 10,
+                StrokeThickness = 2,
+            };
+            GridGhostLayer.Children.Add(_dropHighlight);
+            UpdateDropHighlight();
+        }
+
+        private System.Windows.Shapes.Rectangle? _dropHighlight;
+
+        private void UpdateDropHighlight()
+        {
+            if (_dropHighlight == null || _draggingTile == null) return;
+
+            if (_dropTarget is not { } target)
+            {
+                _dropHighlight.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            var probe = new CommandDockTile
+            {
+                Id = _draggingTile.Id,
+                Kind = _draggingTile.Kind,
+                Col = target.Col,
+                Row = target.Row,
+                ColSpan = _draggingTile.ColSpan,
+                RowSpan = _draggingTile.RowSpan,
+            };
+
+            // Red says the drop will bounce to the next free spot instead of landing here, so
+            // that outcome is visible before the button comes up rather than after.
+            bool blocked = Overlaps(probe);
+            var rect = CellRect(probe);
+
+            _dropHighlight.Visibility = Visibility.Visible;
+            _dropHighlight.Width = Math.Max(1, rect.Width);
+            _dropHighlight.Height = Math.Max(1, rect.Height);
+            _dropHighlight.Fill = new SolidColorBrush(blocked
+                ? Color.FromArgb(0x33, 0xE5, 0x39, 0x35)
+                : Color.FromArgb(0x33, 0x3F, 0xD7, 0xFF));
+            _dropHighlight.Stroke = new SolidColorBrush(blocked
+                ? Color.FromArgb(0xAA, 0xE5, 0x39, 0x35)
+                : Color.FromArgb(0xAA, 0x3F, 0xD7, 0xFF));
+
+            Canvas.SetLeft(_dropHighlight, rect.X + _dragPad);
+            Canvas.SetTop(_dropHighlight, rect.Y + _dragPad);
         }
 
         /// <summary>Keeps the map tile's cell span in step with the size the slider gave it.</summary>
@@ -383,15 +576,8 @@ namespace RustPlusDesk
                 var el = isMap ? MapContainer : BuildTile(tile);
                 if (el == null) continue;   // unknown kind from a newer build
 
-                var rect = CellRect(tile);
-                if (!isMap)
-                {
-                    el.Width = rect.Width;
-                    el.Height = rect.Height;
-                }
-                Canvas.SetLeft(el, rect.X);
-                Canvas.SetTop(el, rect.Y);
-
+                // Size and position come from ApplyTilePositions at the end, so there is exactly
+                // one place that turns a cell into pixels.
                 if (!isMap) DockCanvas.Children.Add(el);
                 _tileElements[tile.Id] = el;
 
@@ -407,34 +593,6 @@ namespace RustPlusDesk
 
             RefreshTiles();
             LayoutDock();
-        }
-
-        /// <summary>
-        /// Moves existing tiles to the cells they now sit in, without rebuilding them.
-        /// Resizing the map changes how many cells it covers, and everything to its right and
-        /// below has to follow — rebuilding would restart the chat scroll and the alarm pulse.
-        /// </summary>
-        private void RepositionTiles()
-        {
-            SyncMapCellSpan();
-
-            foreach (var tile in _dock.Tiles)
-            {
-                if (!_tileElements.TryGetValue(tile.Id, out var el)) continue;
-
-                var rect = CellRect(tile);
-
-                // The map's size comes from the slider, not from its cell span — UpdateSize has
-                // already applied it, and writing the cell width here would undo that.
-                if (tile.Kind != CommandDockTileKinds.Map)
-                {
-                    el.Width = rect.Width;
-                    el.Height = rect.Height;
-                }
-
-                Canvas.SetLeft(el, rect.X);
-                Canvas.SetTop(el, rect.Y);
-            }
         }
 
         private void RefreshTiles()
@@ -1276,18 +1434,30 @@ namespace RustPlusDesk
             {
                 if (!pressed) return;
 
-                var p = e.GetPosition(DockCanvas);
-
                 if (!dragging)
                 {
                     var moved = e.GetPosition(border) - grabOffset;
                     if (Math.Abs(moved.X) < DragThreshold && Math.Abs(moved.Y) < DragThreshold) return;
+
                     dragging = true;
                     Panel.SetZIndex(border, 1000);   // over its neighbours while it travels
+
+                    var dragged = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
+                    if (dragged != null) BeginDragPreview(dragged);
                 }
 
+                var p = e.GetPosition(DockCanvas);
                 Canvas.SetLeft(border, p.X - grabOffset.X);
                 Canvas.SetTop(border, p.Y - grabOffset.Y);
+
+                // Recomputed on every move so the highlight is always the cell a release would
+                // actually use — the drop reads this, it does not work it out again.
+                var next = CellUnder(border);
+                if (next != _dropTarget)
+                {
+                    _dropTarget = next;
+                    UpdateDropHighlight();
+                }
             };
 
             border.PreviewMouseLeftButtonUp += (_, e) =>
@@ -1308,7 +1478,7 @@ namespace RustPlusDesk
                 dragging = false;
                 Panel.SetZIndex(border, 0);
                 e.Handled = true;        // a drag must not also toggle the switch it landed on
-                SnapTileToGrid(tileId, border);
+                DropTile(tileId);
             };
 
             // Registered with handledEventsToo: the tile's own click handler has already marked
@@ -1319,17 +1489,37 @@ namespace RustPlusDesk
 
         }
 
-        /// <summary>Turns a dropped pixel position back into the nearest free cell.</summary>
-        private void SnapTileToGrid(string tileId, FrameworkElement el)
+        /// <summary>The cell a dragged element's top-left corner currently sits over.</summary>
+        private (int Col, int Row) CellUnder(FrameworkElement el) =>
+        (
+            // The padding is a rendering offset, not part of the grid — take it back off before
+            // asking which cell this is, or every drop lands one cell too far.
+            NearestCell(Canvas.GetLeft(el) - _dragPad, CellX),
+            NearestCell(Canvas.GetTop(el) - _dragPad, CellY)
+        );
+
+        /// <summary>
+        /// Commits a drag to the cell the highlight was showing. It is not recomputed here: the
+        /// tile lands where the preview said it would, or the preview was lying.
+        /// </summary>
+        private void DropTile(string tileId)
         {
             var tile = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
-            if (tile == null) return;
+            var target = _dropTarget;
 
-            tile.Col = NearestCell(Canvas.GetLeft(el), CellX);
-            tile.Row = NearestCell(Canvas.GetTop(el), CellY);
+            EndDragPreview();
+
+            if (tile == null) { LayoutDock(); return; }
+
+            if (target is { } cell)
+            {
+                tile.Col = cell.Col;
+                tile.Row = cell.Row;
+            }
 
             // A drop onto occupied cells falls back to the first free spot, which is what makes
-            // the dock behave like desktop icons rather than a free canvas.
+            // the dock behave like desktop icons rather than a free canvas. The highlight turned
+            // red on the way in, so this is not a surprise.
             if (Overlaps(tile)) AssignFreeCell(tile);
 
             SaveDock();
