@@ -1345,6 +1345,47 @@ namespace RustPlusDesk
             stack.Children.Add(timer2);
             stack.Children.Add(label);
 
+            // A green glow behind the crate while a real countdown is running, so the two Oil Rig
+            // states are told apart at a glance and not only by reading the tooltip.
+            //
+            // A shadow with no depth rather than a shape behind the icon: it follows the crate's
+            // own alpha, so it reads as the icon glowing rather than as a blob it sits on.
+            var glow = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                Color = Color.FromRgb(0x4C, 0xC9, 0x6A),
+                ShadowDepth = 0,
+                BlurRadius = 14,
+                Opacity = 0,
+                RenderingBias = System.Windows.Media.Effects.RenderingBias.Performance,
+            };
+
+            var breathe = new DoubleAnimation(0.25, 0.85, TimeSpan.FromMilliseconds(1400))
+            {
+                AutoReverse = true,
+                RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+            };
+
+            bool glowing = false;
+
+            void SetGlow(bool on)
+            {
+                if (on == glowing) return;
+                glowing = on;
+
+                if (on)
+                {
+                    image.Effect = glow;
+                    glow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, breathe);
+                }
+                else
+                {
+                    glow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, null);
+                    glow.Opacity = 0;
+                    image.Effect = null;   // the sound-detected view looks exactly as it did
+                }
+            }
+
             string? loadedIcon = null;
 
             _tileRefreshers.Add(() =>
@@ -1366,6 +1407,7 @@ namespace RustPlusDesk
                     if (running.Count > 0)
                     {
                         shell.Opacity = 1.0;
+                        SetGlow(true);
 
                         // Both rigs at once needs two lines, and two lines need the height. On a
                         // single cell the soonest one is shown with a count of what is hidden,
@@ -1389,6 +1431,9 @@ namespace RustPlusDesk
                             string.Join("\n", running.Select(r => $"{r.Rig}: {Countdown(r.Left)}")));
                         return;
                     }
+
+                    // No live trigger: the crowd-sourced reading below, and no glow with it.
+                    SetGlow(false);
                 }
 
                 var ev = DockHost?.DockEvents.FirstOrDefault(e => e.Key == tile.EventKey);
