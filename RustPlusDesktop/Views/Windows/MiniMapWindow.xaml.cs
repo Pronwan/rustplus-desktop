@@ -521,7 +521,14 @@ namespace RustPlusDesk
             // Re-basing the cells instead keeps one grid, and the window takes the opposite move
             // so the content does not appear to jump.
             var before = CellBounds();
+
+            // Before normalising: the map's cell span follows its free size, so a resize — or
+            // simply loading the saved size after the tiles were placed — can leave neighbours
+            // underneath it.
+            SyncMapCellSpan();
+            ResolveOverlaps();
             NormaliseCells();
+
             var bounds = CellBounds();
 
             double padDelta = _dragPad - _appliedDragPad;

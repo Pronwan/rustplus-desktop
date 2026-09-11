@@ -73,9 +73,17 @@ namespace RustPlusDesk
         /// look like the dock was flickering. Coalescing to roughly eight redraws a second is
         /// still continuous to the eye and leaves that state alone in between.
         /// </summary>
-        private void TileSettingChanged()
+        private void TileSettingChanged(bool immediate = false)
         {
             SaveDock();
+
+            // A click has one value, not twenty — coalescing it only delays the feedback.
+            if (immediate)
+            {
+                _settingsApplyTimer?.Stop();
+                RebuildTiles();
+                return;
+            }
 
             _settingsApplyTimer ??= CreateApplyTimer();
             _settingsApplyTimer.Stop();
@@ -176,7 +184,7 @@ namespace RustPlusDesk
                 tile.Opacity = null;
                 tile.FontScale = null;
                 tile.TextColorKey = null;
-                TileSettingChanged();
+                TileSettingChanged(immediate: true);
 
                 // Rebuilt so the sliders show the inherited values they just fell back to.
                 if (_dock.Tiles.Contains(tile) && _tileElements.TryGetValue(tile.Id, out var el))
@@ -227,10 +235,14 @@ namespace RustPlusDesk
                 swatch.MouseLeftButtonUp += (_, e) =>
                 {
                     e.Handled = true;
-                    tile.TextColorKey = chosen == CommandDockTextColors.Auto && tile.TextColorKey == null
-                        ? null
-                        : chosen;
-                    TileSettingChanged();
+
+                    // "Theme colour" is the absence of a choice, so it stores null and the tile
+                    // goes back to inheriting — picking it should not count as an override.
+                    tile.TextColorKey = chosen == CommandDockTextColors.Auto ? null : chosen;
+
+                    TileSettingChanged(immediate: true);
+
+                    // After the rebuild, so the panel re-anchors to the tile that now exists.
                     if (_tileElements.TryGetValue(tile.Id, out var el)) OpenTileSettings(tile, el);
                 };
 
@@ -251,7 +263,7 @@ namespace RustPlusDesk
                     box.Children.Add(SettingsCheck(
                         Loc.Text("CommandDockClockDayNight", "Show time until day or night"),
                         tile.ClockShowDayNight,
-                        on => { tile.ClockShowDayNight = on; TileSettingChanged(); }));
+                        on => { tile.ClockShowDayNight = on; TileSettingChanged(immediate: true); }));
                     return box;
                 }
 
@@ -262,7 +274,7 @@ namespace RustPlusDesk
                     box.Children.Add(SettingsCheck(
                         Loc.Text("CommandDockChatAbbreviate", "Shorten long names"),
                         tile.ChatAbbreviateNames,
-                        on => { tile.ChatAbbreviateNames = on; TileSettingChanged(); }));
+                        on => { tile.ChatAbbreviateNames = on; TileSettingChanged(immediate: true); }));
                     return box;
                 }
 

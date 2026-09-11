@@ -86,6 +86,15 @@ namespace RustPlusDesk.Models
         /// </summary>
         public const string Map = "Map";
 
+        /// <summary>
+        /// The map tile's id is fixed rather than a fresh Guid.
+        ///
+        /// Its element is the one declared in XAML and survives every rebuild, so its mouse
+        /// handlers are attached once and capture this id. A new id per map would leave those
+        /// handlers pointing at a tile that no longer exists.
+        /// </summary>
+        public const string MapTileId = "map";
+
         public const string Clock = "Clock";
         public const string Device = "Device";
         public const string TeamChat = "TeamChat";

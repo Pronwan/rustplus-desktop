@@ -48,6 +48,7 @@ namespace RustPlusDesk
             {
                 _dock.Tiles.Insert(0, new CommandDockTile
                 {
+                    Id = CommandDockTileKinds.MapTileId,
                     Kind = CommandDockTileKinds.Map,
                     Col = 0,
                     Row = 0,
@@ -87,7 +88,7 @@ namespace RustPlusDesk
             _dock = reloaded;
 
             if (MapTile == null && !_dock.MapRemoved)
-                _dock.Tiles.Insert(0, new CommandDockTile { Kind = CommandDockTileKinds.Map });
+                _dock.Tiles.Insert(0, new CommandDockTile { Id = CommandDockTileKinds.MapTileId, Kind = CommandDockTileKinds.Map });
 
             CloseTileSettings();
             RebuildTiles();
@@ -491,10 +492,11 @@ namespace RustPlusDesk
         /// side is full. Only auto-placement follows the setting — a drag reaches any cell,
         /// including the ones left of and above the map.
         /// </summary>
-        private void AssignFreeCell(CommandDockTile tile)
-        {
-            var taken = OccupiedCells(except: tile);
+        private void AssignFreeCell(CommandDockTile tile) =>
+            PlaceInFirstFreeCell(tile, OccupiedCells(except: tile));
 
+        private void PlaceInFirstFreeCell(CommandDockTile tile, HashSet<(int, int)> taken)
+        {
             bool Fits(int col, int row)
             {
                 for (int c = col; c < col + tile.ColSpan; c++)
@@ -535,8 +537,56 @@ namespace RustPlusDesk
 
             if (right ? (TryBeside() || TryBelow()) : (TryBelow() || TryBeside())) return;
 
-            tile.Col = right ? afterCol : originCol;
-            tile.Row = right ? originRow : afterRow;
+            // Both windows full. Walk down until something fits rather than dropping the tile on
+            // top of another: past the lowest occupied row every cell is free, so this ends.
+            int floor = taken.Count == 0 ? afterRow : taken.Max(cell => cell.Item2) + 1;
+            for (int row = floor; row < floor + tile.RowSpan + 2; row++)
+            {
+                if (!Fits(originCol, row)) continue;
+                tile.Col = originCol;
+                tile.Row = row;
+                return;
+            }
+
+            tile.Col = originCol;
+            tile.Row = floor;
+        }
+
+        /// <summary>
+        /// Pushes apart any tiles sitting on top of one another.
+        ///
+        /// Needed because the map's footprint is not fixed: making it bigger claims cells that
+        /// were free when the tiles beside it were put there, and loading a layout applies the
+        /// saved size after the tiles are already placed. Without this the map simply drew over
+        /// them.
+        ///
+        /// The map is placed first — it is what the rest of the dock is arranged around — and
+        /// everything else keeps its reading order, so a collision feels like the neighbours
+        /// shuffling down rather than the layout being redealt.
+        /// </summary>
+        private void ResolveOverlaps()
+        {
+            var placed = new HashSet<(int, int)>();
+
+            var ordered = VisibleTiles()
+                .OrderBy(t => t.Kind == CommandDockTileKinds.Map ? 0 : 1)
+                .ThenBy(t => t.Row)
+                .ThenBy(t => t.Col)
+                .ToList();
+
+            foreach (var tile in ordered)
+            {
+                bool clear = true;
+                for (int c = tile.Col; c < tile.Col + tile.ColSpan && clear; c++)
+                    for (int r = tile.Row; r < tile.Row + tile.RowSpan && clear; r++)
+                        if (placed.Contains((c, r))) clear = false;
+
+                if (!clear) PlaceInFirstFreeCell(tile, placed);
+
+                for (int c = tile.Col; c < tile.Col + tile.ColSpan; c++)
+                    for (int r = tile.Row; r < tile.Row + tile.RowSpan; r++)
+                        placed.Add((c, r));
+            }
         }
 
         /// <summary>
@@ -603,9 +653,19 @@ namespace RustPlusDesk
                 // Handles after the tile's own click handlers, so a device toggle still gets its
                 // MouseUp: the interaction handler only swallows what is left, which is what
                 // keeps the window's DragMove from eating the click.
-                AddTileHandles(el, tile, resizable: !isMap);
-                AttachTileInteraction(el, tile.Id,
-                    onClick: isMap ? () => OnClicked?.Invoke() : null);
+                //
+                // Every tile but the map is a fresh element each rebuild, so its handlers go
+                // with it. The map's element is not — attaching again would stack another drag
+                // and another hover handler on it every single time the dock redraws.
+                bool wireMouse = !isMap || !_mapMouseWired;
+                AddTileHandles(el, tile, resizable: !isMap, wireMouse: wireMouse);
+
+                if (wireMouse)
+                {
+                    AttachTileInteraction(el, tile.Id,
+                        onClick: isMap ? () => OnClicked?.Invoke() : null);
+                    if (isMap) _mapMouseWired = true;
+                }
             }
 
             if (MapTile == null) MapContainer.Visibility = Visibility.Collapsed;
@@ -869,9 +929,12 @@ namespace RustPlusDesk
                 {
                     bool on = device.IsOn == true;
                     icon.Text = "\uE7E8";                  // power button
+                    // Green means on and is left alone. Off follows the chosen text colour —
+                    // it used to be the theme's grey, which is the one state that stops being
+                    // readable the moment the tile goes transparent.
                     icon.Foreground = on
                         ? new SolidColorBrush(Color.FromRgb(0x4C, 0xC9, 0x6A))
-                        : Brush("TextSubtle", Colors.Gray);
+                        : style.TextSub;
                     state.Text = on ? Loc.Text("On", "On") : Loc.Text("Off", "Off");
                     state.Foreground = icon.Foreground;
                     shell.BorderBrush = on
@@ -883,9 +946,11 @@ namespace RustPlusDesk
                 {
                     bool fired = device.IsOn == true;
                     icon.Text = "\uE7ED";                  // ringer
+                    // Red means it went off; armed is an ordinary resting state and follows the
+                    // tile's text colour like everything else.
                     icon.Foreground = fired
                         ? new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35))
-                        : Brush("TextSubtle", Colors.Gray);
+                        : style.TextSub;
                     state.Text = fired
                         ? Loc.Text("CommandDockAlarmTriggered", "Triggered")
                         : Loc.Text("CommandDockAlarmIdle", "Armed");
@@ -1235,7 +1300,9 @@ namespace RustPlusDesk
         /// one without each builder having to make room for it. Chat keeps a floor of two cells
         /// wide — below that a message is nothing but an ellipsis.
         /// </summary>
-        private void AddTileHandles(FrameworkElement shell, CommandDockTile tile, bool resizable)
+        private bool _mapMouseWired;
+
+        private void AddTileHandles(FrameworkElement shell, CommandDockTile tile, bool resizable, bool wireMouse)
         {
             var host = EnsureHandleHost(shell);
 
@@ -1333,22 +1400,29 @@ namespace RustPlusDesk
                 UIElement.OpacityProperty,
                 new DoubleAnimation(to, TimeSpan.FromMilliseconds(ms)) { FillBehavior = FillBehavior.HoldEnd });
 
-            shell.MouseEnter += (_, __) =>
-            {
-                _hoveredTileId = tile.Id;
-                UpdateTileHandles();
-                Veil(0.07, 120);
-            };
+            // The tile id rather than the tile object: the map's handlers outlive the layout they
+            // were attached under, and its id is fixed precisely so they stay valid.
+            var tileId = tile.Id;
 
-            shell.MouseLeave += (_, __) =>
+            if (wireMouse)
             {
-                if (_hoveredTileId == tile.Id) _hoveredTileId = null;
-                UpdateTileHandles();
-                Veil(0, 160);
-            };
+                shell.MouseEnter += (_, __) =>
+                {
+                    _hoveredTileId = tileId;
+                    UpdateTileHandles();
+                    Veil(0.07, 120);
+                };
 
-            shell.PreviewMouseLeftButtonDown += (_, __) => Veil(0.18, 40);
-            shell.PreviewMouseLeftButtonUp += (_, __) => Veil(shell.IsMouseOver ? 0.07 : 0, 220);
+                shell.MouseLeave += (_, __) =>
+                {
+                    if (_hoveredTileId == tileId) _hoveredTileId = null;
+                    UpdateTileHandles();
+                    Veil(0, 160);
+                };
+
+                shell.PreviewMouseLeftButtonDown += (_, __) => Veil(0.18, 40);
+                shell.PreviewMouseLeftButtonUp += (_, __) => Veil(shell.IsMouseOver ? 0.07 : 0, 220);
+            }
             // The edit hints live on the grip, not the tile: the tile's own tooltip is live data
             // that its refresher rewrites every second, and would swallow anything set here.
             ToolTipService.SetToolTip(grip,
@@ -1658,7 +1732,7 @@ namespace RustPlusDesk
             {
                 _dock.MapRemoved = false;
 
-                var tile = new CommandDockTile { Kind = CommandDockTileKinds.Map };
+                var tile = new CommandDockTile { Id = CommandDockTileKinds.MapTileId, Kind = CommandDockTileKinds.Map };
                 AssignFreeCell(tile);
                 _dock.Tiles.Insert(0, tile);
                 SaveDock();
