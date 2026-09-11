@@ -854,6 +854,25 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockTitle => GetString("CommandDockTitle");
         public static string CommandDockSectionMap => GetString("CommandDockSectionMap");
         public static string CommandDockAddMapHint => GetString("CommandDockAddMapHint");
+        public static string CommandDockTileSettings => GetString("CommandDockTileSettings");
+        public static string CommandDockTileOpacity => GetString("CommandDockTileOpacity");
+        public static string CommandDockTileFontSize => GetString("CommandDockTileFontSize");
+        public static string CommandDockTileTextColor => GetString("CommandDockTileTextColor");
+        public static string CommandDockTileResetToGlobal => GetString("CommandDockTileResetToGlobal");
+        public static string CommandDockClockDayNight => GetString("CommandDockClockDayNight");
+        public static string CommandDockChatAbbreviate => GetString("CommandDockChatAbbreviate");
+        public static string CommandDockColorAuto => GetString("CommandDockColorAuto");
+        public static string CommandDockColorWhite => GetString("CommandDockColorWhite");
+        public static string CommandDockColorBlack => GetString("CommandDockColorBlack");
+        public static string CommandDockColorCyan => GetString("CommandDockColorCyan");
+        public static string CommandDockColorAmber => GetString("CommandDockColorAmber");
+        public static string CommandDockColorRed => GetString("CommandDockColorRed");
+        public static string CommandDockColorGreen => GetString("CommandDockColorGreen");
+        public static string CommandDockDefaultsHint => GetString("CommandDockDefaultsHint");
+        public static string CommandDockDefaultOpacity => GetString("CommandDockDefaultOpacity");
+        public static string CommandDockDefaultFontSize => GetString("CommandDockDefaultFontSize");
+        public static string CommandDockReset => GetString("CommandDockReset");
+        public static string CommandDockResetConfirm => GetString("CommandDockResetConfirm");
     }
 }
 

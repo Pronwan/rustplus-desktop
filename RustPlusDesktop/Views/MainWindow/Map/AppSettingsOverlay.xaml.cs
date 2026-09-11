@@ -711,6 +711,8 @@ namespace RustPlusDesk.Views
             ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
             SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
 
+            LoadCommandDockDefaults();
+
             // Server events (audio fallback)
             ChkListenForServerEvents.IsChecked = TrackingService.ListenForServerEvents;
             ChkTrustOwnDetections.IsChecked = TrackingService.TrustOwnDetections;

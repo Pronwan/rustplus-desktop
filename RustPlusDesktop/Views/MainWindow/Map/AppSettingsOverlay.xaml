@@ -830,6 +830,60 @@
                                 <ui:TextBlock Text="{Binding Value, ElementName=SliderPlayerIconScaleOverlay, StringFormat={}{0:P0}}" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="11" FontWeight="Medium" />
                             </Border>
                         </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!--  Command Dock defaults. These are what a tile uses until its own
+                              gear is touched — not a second switch for the same thing, which
+                              would leave two places disagreeing about one value.  -->
+                        <ui:CardExpander Header="{DynamicResource CommandDockTitle}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                            <StackPanel Margin="0,8,0,0">
+                                <ui:TextBlock Text="{DynamicResource CommandDockDefaultsHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+                                <Grid MinHeight="36" Margin="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="65" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="{DynamicResource CommandDockDefaultOpacity}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                    <Slider Grid.Column="1" x:Name="SliderDockOpacity" Minimum="0" Maximum="1" Value="1" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="OnCommandDockDefaultChanged" VerticalAlignment="Center" />
+                                    <Border Grid.Column="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="6,3" Margin="8,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <ui:TextBlock Text="{Binding Value, ElementName=SliderDockOpacity, StringFormat={}{0:P0}}" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="11" FontWeight="Medium" />
+                                    </Border>
+                                </Grid>
+
+                                <Grid MinHeight="36" Margin="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="65" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="{DynamicResource CommandDockDefaultFontSize}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                    <Slider Grid.Column="1" x:Name="SliderDockFontScale" Minimum="0.7" Maximum="2.0" Value="1" TickFrequency="0.05" IsSnapToTickEnabled="True" ValueChanged="OnCommandDockDefaultChanged" VerticalAlignment="Center" />
+                                    <Border Grid.Column="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="6,3" Margin="8,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <ui:TextBlock Text="{Binding Value, ElementName=SliderDockFontScale, StringFormat={}{0:P0}}" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="11" FontWeight="Medium" />
+                                    </Border>
+                                </Grid>
+
+                                <Grid MinHeight="36" Margin="0,2,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBlock Text="{DynamicResource CommandDockTileTextColor}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                    <WrapPanel Grid.Column="1" x:Name="DockColorSwatches" VerticalAlignment="Center" />
+                                </Grid>
+
+                                <ui:Button x:Name="BtnResetCommandDock"
+                                           Content="{DynamicResource CommandDockReset}"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowReset24}"
+                                           Appearance="Secondary"
+                                           HorizontalAlignment="Stretch"
+                                           Height="34"
+                                           Click="BtnResetCommandDock_Click" />
+                            </StackPanel>
+                        </ui:CardExpander>
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>

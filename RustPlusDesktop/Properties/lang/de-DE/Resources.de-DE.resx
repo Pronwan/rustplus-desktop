@@ -6930,4 +6930,61 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockAddMapHint" xml:space="preserve">
     <value>Holt die Karte mit allen Ebenen zurück</value>
   </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Kachel-Einstellungen</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Transparenz {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Schriftgröße {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Schriftfarbe</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Zurück auf die Dock-Vorgaben</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Zeit bis Tag oder Nacht anzeigen</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Lange Namen kürzen</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Designfarbe</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>Weiß</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Schwarz</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Bernstein</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Rot</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Grün</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>So sehen Kacheln aus, bis du ihr eigenes Zahnrad benutzt. Bereits angepasste Kacheln behalten ihre eigenen Werte.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Standard-Transparenz</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Standard-Schriftgröße</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Dock zurücksetzen</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Alle Kacheln, ihre Position und ihre Einstellungen werden entfernt. Die Minimap selbst bleibt unberührt.</value>
+  </data>
 </root>

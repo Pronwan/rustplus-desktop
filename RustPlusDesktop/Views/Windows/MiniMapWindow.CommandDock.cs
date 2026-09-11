@@ -68,11 +68,30 @@ namespace RustPlusDesk
                 _dockTimer?.Stop();
                 _armTimer?.Stop();
                 _disarmTimer?.Stop();
+                _settingsApplyTimer?.Stop();
                 SaveDockPosition();
             };
         }
 
         private void SaveDock() => StorageService.SaveCache(DockCacheKey, _dock);
+
+        /// <summary>
+        /// Re-reads the layout from disk and redraws. Called when the main settings change the
+        /// dock's defaults, so the two views of one file cannot disagree.
+        /// </summary>
+        public void ReloadDockLayout()
+        {
+            var reloaded = StorageService.LoadCache<CommandDockLayout>(DockCacheKey);
+            if (reloaded == null) return;
+
+            _dock = reloaded;
+
+            if (MapTile == null && !_dock.MapRemoved)
+                _dock.Tiles.Insert(0, new CommandDockTile { Kind = CommandDockTileKinds.Map });
+
+            CloseTileSettings();
+            RebuildTiles();
+        }
 
         // ── Dock position ───────────────────────────────────────────────────────
 
@@ -604,14 +623,19 @@ namespace RustPlusDesk
             }
         }
 
-        private static Border TileShell()
+        /// <summary>
+        /// The tile's frame, already faded to its chosen opacity. Only the background and the
+        /// border go through the style — text is added by the builders and stays fully opaque,
+        /// which is the point of a tile that can be turned invisible.
+        /// </summary>
+        private static Border TileShell(TileStyle style)
         {
             return new Border
             {
                 CornerRadius = new CornerRadius(10),
                 BorderThickness = new Thickness(1),
-                Background = Brush("Surface", Color.FromArgb(0xD8, 0x16, 0x1B, 0x22)),
-                BorderBrush = Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)),
+                Background = style.Chrome(Brush("Surface", Color.FromArgb(0xD8, 0x16, 0x1B, 0x22))),
+                BorderBrush = style.Chrome(Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF))),
                 Padding = new Thickness(6),
                 SnapsToDevicePixels = true,
             };
@@ -638,7 +662,8 @@ namespace RustPlusDesk
 
         private FrameworkElement BuildClockTile(CommandDockTile tile)
         {
-            var shell = TileShell();
+            var style = StyleFor(tile);
+            var shell = TileShell(style);
             shell.Tag = tile;
 
             var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
@@ -660,7 +685,8 @@ namespace RustPlusDesk
                     StrokeThickness = 2.5,
                     StrokeStartLineCap = PenLineCap.Round,
                     StrokeEndLineCap = PenLineCap.Round,
-                    Stroke = System.Windows.Media.Brushes.White,
+                    Stroke = style.TextMain,
+                    Effect = style.TextShadow,
                 };
                 var minuteHand = new System.Windows.Shapes.Line
                 {
@@ -680,7 +706,7 @@ namespace RustPlusDesk
                 face.Children.Add(minuteHand);
                 stack.Children.Add(face);
 
-                var phase = SubtleText();
+                var phase = SubtleText(style);
                 stack.Children.Add(phase);
 
                 _tileRefreshers.Add(() =>
@@ -706,21 +732,25 @@ namespace RustPlusDesk
             var glyph = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = 14,
+                FontSize = style.Size(14),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 2),
+                Effect = style.TextShadow,
             };
             var clock = new TextBlock
             {
-                FontSize = rustStyle ? 20 : 19,
+                FontSize = style.Size(rustStyle ? 20 : 19),
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = rustStyle
+                Effect = style.TextShadow,
+                // The Rust clock keeps the game's own red unless a colour was picked; anything
+                // else would make "Rust style" just mean a different typeface.
+                Foreground = rustStyle && (tile.TextColorKey ?? _dock.DefaultTextColorKey) == CommandDockTextColors.Auto
                     ? new SolidColorBrush(Color.FromRgb(0xCD, 0x41, 0x2B))
-                    : Brush("TextPrimary", Colors.White),
+                    : style.TextMain,
                 FontFamily = rustStyle ? new FontFamily("Impact, Segoe UI") : new FontFamily("Consolas, Segoe UI"),
             };
-            var phaseText = SubtleText();
+            var phaseText = SubtleText(style);
 
             stack.Children.Add(glyph);
             stack.Children.Add(clock);
@@ -755,19 +785,21 @@ namespace RustPlusDesk
                 && int.TryParse(parts[1].Trim(), out minutes);
         }
 
-        private static TextBlock SubtleText() => new()
+        private static TextBlock SubtleText(TileStyle style) => new()
         {
-            FontSize = 10,
+            FontSize = style.Size(10),
             HorizontalAlignment = HorizontalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Foreground = Brush("TextSubtle", Colors.Gray),
+            Foreground = style.TextSub,
+            Effect = style.TextShadow,
         };
 
         // ── Device ──────────────────────────────────────────────────────────────
 
         private FrameworkElement BuildDeviceTile(CommandDockTile tile)
         {
-            var shell = TileShell();
+            var style = StyleFor(tile);
+            var shell = TileShell(style);
             shell.Tag = tile;
             shell.Cursor = Cursors.Hand;
 
@@ -777,17 +809,19 @@ namespace RustPlusDesk
             var icon = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = 17,
+                FontSize = style.Size(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
+                Effect = style.TextShadow,
             };
-            var name = SubtleText();
+            var name = SubtleText(style);
             var state = new TextBlock
             {
-                FontSize = 11,
+                FontSize = style.Size(11),
                 FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
+                Effect = style.TextShadow,
             };
 
             stack.Children.Add(icon);
@@ -822,7 +856,7 @@ namespace RustPlusDesk
                     icon.Text = "\uE783";                  // error: the device is gone
                     name.Text = $"#{tile.EntityId}";
                     state.Text = Loc.Text("CommandDockDeviceMissing", "not paired");
-                    state.Foreground = Brush("TextSubtle", Colors.Gray);
+                    state.Foreground = style.TextSub;
                     shell.Opacity = 0.5;
                     return;
                 }
@@ -841,8 +875,8 @@ namespace RustPlusDesk
                     state.Text = on ? Loc.Text("On", "On") : Loc.Text("Off", "Off");
                     state.Foreground = icon.Foreground;
                     shell.BorderBrush = on
-                        ? new SolidColorBrush(Color.FromArgb(0x99, 0x4C, 0xC9, 0x6A))
-                        : Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF));
+                        ? style.Chrome(Color.FromArgb(0x99, 0x4C, 0xC9, 0x6A))
+                        : style.Chrome(Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)));
                     StopPulse();
                 }
                 else if (IsAlarm(device))
@@ -857,8 +891,8 @@ namespace RustPlusDesk
                         : Loc.Text("CommandDockAlarmIdle", "Armed");
                     state.Foreground = icon.Foreground;
                     shell.BorderBrush = fired
-                        ? new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35))
-                        : Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF));
+                        ? style.Chrome(Color.FromRgb(0xE5, 0x39, 0x35))
+                        : style.Chrome(Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)));
 
                     if (fired) StartPulse(); else StopPulse();
                 }
@@ -867,19 +901,19 @@ namespace RustPlusDesk
                     // Storage monitor, including a tool cupboard: upkeep is the number that
                     // matters, and only a TC ever reports one.
                     icon.Text = "\uE7B8";                  // package
-                    icon.Foreground = Brush("TextSubtle", Colors.Gray);
+                    icon.Foreground = style.TextSub;
                     var secs = device.UpkeepSeconds ?? 0;
                     if (secs > 0)
                     {
                         state.Text = FormatUpkeep(secs);
                         state.Foreground = secs < 3600
                             ? new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35))
-                            : Brush("TextPrimary", Colors.White);
+                            : style.TextMain;
                     }
                     else
                     {
                         state.Text = "—";
-                        state.Foreground = Brush("TextSubtle", Colors.Gray);
+                        state.Foreground = style.TextSub;
                     }
                     StopPulse();
                 }
@@ -932,7 +966,8 @@ namespace RustPlusDesk
 
         private FrameworkElement BuildEventTile(CommandDockTile tile)
         {
-            var shell = TileShell();
+            var style = StyleFor(tile);
+            var shell = TileShell(style);
             shell.Tag = tile;
 
             var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
@@ -947,12 +982,13 @@ namespace RustPlusDesk
             };
             var timer = new TextBlock
             {
-                FontSize = 12,
+                FontSize = style.Size(12),
                 FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = Brush("TextPrimary", Colors.White),
+                Foreground = style.TextMain,
+                Effect = style.TextShadow,
             };
-            var label = SubtleText();
+            var label = SubtleText(style);
 
             stack.Children.Add(image);
             stack.Children.Add(timer);
@@ -993,9 +1029,7 @@ namespace RustPlusDesk
                 SetIcon(ev.Icon);
                 label.Text = Abbreviate(ev.Name, 12);
                 timer.Text = string.IsNullOrWhiteSpace(ev.TimerText) ? "—" : ev.TimerText;
-                timer.Foreground = ev.Active
-                    ? Brush("TextPrimary", Colors.White)
-                    : Brush("TextSubtle", Colors.Gray);
+                timer.Foreground = ev.Active ? style.TextMain : style.TextSub;
                 shell.Opacity = ev.Active ? 1.0 : 0.55;
                 ToolTipService.SetToolTip(shell, ev.ToolTip ?? ev.Name);
 
@@ -1014,7 +1048,8 @@ namespace RustPlusDesk
 
         private FrameworkElement BuildRuleTile(CommandDockTile tile)
         {
-            var shell = TileShell();
+            var style = StyleFor(tile);
+            var shell = TileShell(style);
             shell.Tag = tile;
             shell.Cursor = Cursors.Hand;
 
@@ -1033,12 +1068,13 @@ namespace RustPlusDesk
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
                 Text = "\uE945",              // lightning bolt: the rule launcher
-                FontSize = 17,
+                FontSize = style.Size(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
+                Effect = style.TextShadow,
                 Foreground = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
             };
-            var name = SubtleText();
+            var name = SubtleText(style);
 
             stack.Children.Add(image);
             stack.Children.Add(glyph);
@@ -1113,7 +1149,8 @@ namespace RustPlusDesk
             if (tile.ColSpan < 2) tile.ColSpan = 2;
             if (tile.RowSpan < 2) tile.RowSpan = 2;
 
-            var shell = TileShell();
+            var style = StyleFor(tile);
+            var shell = TileShell(style);
             shell.Tag = tile;
 
             var grid = new Grid();
@@ -1123,7 +1160,8 @@ namespace RustPlusDesk
 
             var header = new TextBlock
             {
-                FontSize = 10,
+                FontSize = style.Size(10),
+                Effect = style.TextShadow,
                 FontWeight = FontWeights.SemiBold,
                 Margin = new Thickness(0, 0, 0, 4),
                 Foreground = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
@@ -1158,9 +1196,10 @@ namespace RustPlusDesk
                 {
                     var para = new TextBlock
                     {
-                        FontSize = 11,
+                        FontSize = style.Size(11),
                         TextWrapping = TextWrapping.Wrap,
                         Margin = new Thickness(0, 0, 0, 2),
+                        Effect = style.TextShadow,
                     };
                     para.Inlines.Add(new System.Windows.Documents.Run(
                         tile.ChatAbbreviateNames ? Abbreviate(line.Author, 10) : line.Author)
@@ -1170,7 +1209,7 @@ namespace RustPlusDesk
                     });
                     para.Inlines.Add(new System.Windows.Documents.Run("  " + line.Message)
                     {
-                        Foreground = Brush("TextPrimary", Colors.White),
+                        Foreground = style.TextMain,
                     });
                     ToolTipService.SetToolTip(para, $"{line.Author} · {line.Time}");
                     lines.Children.Add(para);
@@ -1243,6 +1282,33 @@ namespace RustPlusDesk
             ToolTipService.SetToolTip(remove, Loc.Text("CommandDockRemoveTile", "Remove tile"));
             remove.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
             remove.MouseLeftButtonUp += (_, e) => { e.Handled = true; RemoveTile(tile.Id); };
+
+            // Next to the ×, along the bottom edge, for the same reason: the title bar owns the
+            // top of the dock.
+            var gear = new Border
+            {
+                Width = 16,
+                Height = 16,
+                CornerRadius = new CornerRadius(8),
+                Margin = new Thickness(14, 0, 0, -6),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
+                Cursor = Cursors.Hand,
+                Visibility = Visibility.Collapsed,
+                Child = new TextBlock
+                {
+                    Text = "\uE713",  // settings
+                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                    FontSize = 9,
+                    Foreground = System.Windows.Media.Brushes.Black,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            };
+            ToolTipService.SetToolTip(gear, Loc.Text("CommandDockTileSettings", "Tile settings"));
+            gear.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
+            gear.MouseLeftButtonUp += (_, e) => { e.Handled = true; OpenTileSettings(tile, shell); };
 
             // A veil rather than a border tint: the device and alarm refreshers rewrite the
             // shell's BorderBrush every second and would wipe a hover colour straight off again.
@@ -1336,12 +1402,13 @@ namespace RustPlusDesk
             if (veil != null) host.Children.Add(veil);
             if (resizable) host.Children.Add(grip);
             host.Children.Add(remove);
+            host.Children.Add(gear);
 
             // The tile's drag handler consults these so a press that started on one of them is
             // not turned into a tile drag.
             _tileHandles[tile.Id] = resizable
-                ? new[] { (FrameworkElement)grip, remove }
-                : new FrameworkElement[] { remove };
+                ? new FrameworkElement[] { grip, remove, gear }
+                : new FrameworkElement[] { remove, gear };
         }
 
         /// <summary>

@@ -39,6 +39,43 @@ namespace RustPlusDesk.Models
 
         /// <summary>Chat tiles: shorten long names so the message still fits on one line.</summary>
         public bool ChatAbbreviateNames { get; set; } = true;
+
+        // ── Appearance ──────────────────────────────────────────────────────
+        //
+        // All three are null until the tile's own settings are touched, and fall back to the
+        // dock's defaults. Two places that set the same thing drift apart — one says 70% while
+        // the tile shows 40% and nobody can tell which wins — so the global values are
+        // defaults rather than a second switch, and "back to global" is putting null back.
+
+        /// <summary>Background and border opacity, 0 to 1. Text is never faded.</summary>
+        public double? Opacity { get; set; }
+
+        /// <summary>Multiplier on every font size in the tile.</summary>
+        public double? FontScale { get; set; }
+
+        /// <summary>A key from <see cref="CommandDockTextColors"/>, or null for the theme's own.</summary>
+        public string? TextColorKey { get; set; }
+    }
+
+    /// <summary>
+    /// The text colours a tile can be set to.
+    ///
+    /// Deliberately few, and each one picked to hold up on both a bright desert and a night-time
+    /// screen — a tile turned fully transparent sits directly on the game, and the theme's grey
+    /// stops being readable the moment its background goes.
+    /// </summary>
+    public static class CommandDockTextColors
+    {
+        public const string Auto = "auto";
+        public const string White = "white";
+        public const string Black = "black";
+        public const string Cyan = "cyan";
+        public const string Amber = "amber";
+        public const string Red = "red";
+        public const string Green = "green";
+
+        public static readonly string[] All =
+            { Auto, White, Black, Cyan, Amber, Red, Green };
     }
 
     public static class CommandDockTileKinds
@@ -92,6 +129,15 @@ namespace RustPlusDesk.Models
         /// the map would look identical to an old layout and it would reappear on the next start.
         /// </summary>
         public bool MapRemoved { get; set; }
+
+        // ── Appearance defaults ─────────────────────────────────────────────
+        // What a tile uses until it is given its own value.
+
+        public double DefaultOpacity { get; set; } = 1.0;
+
+        public double DefaultFontScale { get; set; } = 1.0;
+
+        public string DefaultTextColorKey { get; set; } = CommandDockTextColors.Auto;
 
         /// <summary>Cell size and gap in device-independent pixels.</summary>
         public const double CellSize = 74;

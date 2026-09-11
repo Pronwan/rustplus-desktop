@@ -6909,4 +6909,61 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockAddMapHint" xml:space="preserve">
     <value>Brings the map back with all layers on</value>
   </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Tile settings</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Opacity {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Text size {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Text colour</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Back to the dock&apos;s defaults</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Show time until day or night</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Shorten long names</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Theme colour</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>What a tile looks like until its own gear is used. Tiles you have already adjusted keep their own values.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Default opacity</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Default text size</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Reset the dock</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Every tile, its position and its settings are removed. The mini-map itself is not affected.</value>
+  </data>
 </root>

@@ -177,5 +177,31 @@
                Focusable="False">
             <views:MiniMapSettingsOverlay x:Name="SettingsOverlay"/>
         </Popup>
+
+        <!--  One panel, retargeted at whichever tile's gear was pressed. Its contents are built
+              in code because the kind-specific half differs per tile.  -->
+        <Popup x:Name="TileSettingsPopup"
+               Placement="RelativePoint"
+               PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+               StaysOpen="True"
+               AllowsTransparency="True"
+               Focusable="False">
+            <Border Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="14">
+                <Grid>
+                    <ContentControl x:Name="TileSettingsPanel"/>
+                    <ui:Button HorizontalAlignment="Right"
+                               VerticalAlignment="Top"
+                               Margin="0,-4,-4,0"
+                               Padding="4"
+                               Appearance="Transparent"
+                               Click="TileSettingsClose_Click"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+                </Grid>
+            </Border>
+        </Popup>
     </Grid>
 </Window>
