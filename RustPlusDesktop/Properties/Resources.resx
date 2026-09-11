@@ -6903,4 +6903,10 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockTitle" xml:space="preserve">
     <value>Command Dock</value>
   </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Brings the map back with all layers on</value>
+  </data>
 </root>

@@ -94,6 +94,34 @@ namespace RustPlusDesk.Views
             ParentWindow.DockGrowsRight = CmbGrowth.SelectedIndex == 1;
         }
 
+        /// <summary>
+        /// Switches every map layer back on. Called when the map is added back to the dock: it
+        /// may well have been removed because it was invisible, and handing it back in that state
+        /// would look like nothing happened.
+        /// </summary>
+        public void TurnAllLayersOn()
+        {
+            _isInitializing = true;
+            try
+            {
+                ChkLayerTexture.IsChecked = true;
+                ChkLayerGrid.IsChecked = true;
+                ChkLayerDrawings.IsChecked = true;
+                ChkLayerIcons.IsChecked = true;
+                ChkLayerPlayers.IsChecked = true;
+            }
+            finally
+            {
+                _isInitializing = false;
+            }
+
+            var settings = CurrentSettings();
+            if (settings == null) return;
+
+            ParentWindow?.ApplyLayerVisibility(settings);
+            StorageService.SaveCache("minimap_settings", settings);
+        }
+
         private void ChkLayer_Changed(object sender, RoutedEventArgs e)
         {
             if (_isInitializing) return;

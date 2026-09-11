@@ -36,6 +36,16 @@ namespace RustPlusDesk
         {
             Catalogue.Children.Clear();
 
+            // Offered only while no map is on the dock — either removed, or with every layer
+            // switched off, which looks the same from the outside.
+            if ((Owner as MiniMapWindow)?.CanAddMap == true)
+            {
+                Section(Loc.Text("CommandDockSectionMap", "Map"));
+                Entry(Loc.Text("MiniMap", "Mini-map"),
+                      Loc.Text("CommandDockAddMapHint", "Brings the map back with all layers on"),
+                      () => new CommandDockTile { Kind = CommandDockTileKinds.Map });
+            }
+
             Section(Loc.Text("CommandDockSectionClock", "Clock"));
             Entry(Loc.Text("CommandDockClockDigital", "Digital clock"),
                   Loc.Text("CommandDockClockDigitalHint", "Server time with the day and night phase"),

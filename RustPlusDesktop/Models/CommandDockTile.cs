@@ -43,6 +43,12 @@ namespace RustPlusDesk.Models
 
     public static class CommandDockTileKinds
     {
+        /// <summary>
+        /// The mini-map. One per dock, and the only tile whose size is free rather than derived
+        /// from its cell span — but otherwise an ordinary occupant of the grid.
+        /// </summary>
+        public const string Map = "Map";
+
         public const string Clock = "Clock";
         public const string Device = "Device";
         public const string TeamChat = "TeamChat";
@@ -77,6 +83,15 @@ namespace RustPlusDesk.Models
         public double? WindowLeft { get; set; }
 
         public double? WindowTop { get; set; }
+
+        /// <summary>
+        /// True once the map has been taken off the dock on purpose.
+        ///
+        /// Needed because "no map tile in the list" also describes every layout written before
+        /// the map was a tile at all, and those have to get one back. Without this flag, removing
+        /// the map would look identical to an old layout and it would reappear on the next start.
+        /// </summary>
+        public bool MapRemoved { get; set; }
 
         /// <summary>Cell size and gap in device-independent pixels.</summary>
         public const double CellSize = 74;

@@ -852,6 +852,8 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockGrowRight => GetString("CommandDockGrowRight");
         public static string CommandDockRemoveTile => GetString("CommandDockRemoveTile");
         public static string CommandDockTitle => GetString("CommandDockTitle");
+        public static string CommandDockSectionMap => GetString("CommandDockSectionMap");
+        public static string CommandDockAddMapHint => GetString("CommandDockAddMapHint");
     }
 }
 

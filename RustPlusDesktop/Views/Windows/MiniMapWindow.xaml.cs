@@ -425,6 +425,17 @@ namespace RustPlusDesk
             if (MapShapeBorder != null)
                 MapShapeBorder.BorderThickness = new Thickness(settings.ShowTexture ? 1 : 0);
 
+            // With nothing left to draw, the map stops holding cells and the dock closes up over
+            // it. Turning a layer back on brings the space back.
+            bool anyLayer = settings.ShowTexture || settings.ShowGrid
+                         || settings.ShowDrawings || settings.ShowIcons || settings.ShowPlayers;
+
+            if (anyLayer != _mapLayersOn)
+            {
+                _mapLayersOn = anyLayer;
+                RebuildTiles();
+            }
+
             static void Vis(UIElement? el, bool on)
             {
                 if (el != null) el.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
@@ -511,10 +522,17 @@ namespace RustPlusDesk
             Width = Math.Max(1, bounds.Width);
             Height = Math.Max(1, bounds.Height);
 
-            if (mapCentreAnchor is { } anchor)
+            // Only meaningful while the map is on the dock; with it gone there is no centre to
+            // hold and the dock simply keeps its own top-left corner.
+            if (mapCentreAnchor is { } anchor && MapContainer.Visibility == Visibility.Visible)
             {
-                Left = anchor.X - (Canvas.GetLeft(MapContainer) + _mapWidth / 2.0);
-                Top = anchor.Y - (Canvas.GetTop(MapContainer) + _mapHeight / 2.0);
+                double mx = Canvas.GetLeft(MapContainer);
+                double my = Canvas.GetTop(MapContainer);
+                if (!double.IsNaN(mx) && !double.IsNaN(my))
+                {
+                    Left = anchor.X - (mx + _mapWidth / 2.0);
+                    Top = anchor.Y - (my + _mapHeight / 2.0);
+                }
             }
 
             ClampToScreen();
@@ -563,15 +581,15 @@ namespace RustPlusDesk
             if (Math.Abs(top - Top) > 0.01) Top = top;
         }
 
+        /// <summary>
+        /// The rectangle every placed tile fits into. The map is one of those tiles now, so it
+        /// needs no separate term — and a dock with no tiles at all still gets a usable size, or
+        /// the window would collapse to nothing and take the title bar with it.
+        /// </summary>
         private Rect MeasureDockBounds()
         {
-            double minX = Canvas.GetLeft(MapContainer);
-            double minY = Canvas.GetTop(MapContainer);
-            if (double.IsNaN(minX)) { minX = 0; Canvas.SetLeft(MapContainer, 0); }
-            if (double.IsNaN(minY)) { minY = 0; Canvas.SetTop(MapContainer, 0); }
-
-            double maxX = minX + _mapWidth;
-            double maxY = minY + _mapHeight;
+            double minX = double.MaxValue, minY = double.MaxValue;
+            double maxX = double.MinValue, maxY = double.MinValue;
 
             foreach (var rect in TileBounds())
             {
@@ -581,8 +599,16 @@ namespace RustPlusDesk
                 maxY = Math.Max(maxY, rect.Bottom);
             }
 
+            if (minX > maxX || minY > maxY)
+                return new Rect(0, 0, EmptyDockWidth, EmptyDockHeight);
+
             return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
+
+        // Just the title bar, wide enough to hold its buttons: what is left when the map is off
+        // and no tile has been added yet.
+        private const double EmptyDockWidth = 200;
+        private const double EmptyDockHeight = 30;
 
         private void ShiftDockChildren(double dx, double dy)
         {

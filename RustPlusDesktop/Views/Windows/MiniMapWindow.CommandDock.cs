@@ -41,6 +41,19 @@ namespace RustPlusDesk
         {
             _dock = StorageService.LoadCache<CommandDockLayout>(DockCacheKey) ?? new CommandDockLayout();
 
+            // Layouts written before the map became a tile have none, and their tiles were
+            // positioned relative to a map pinned at the origin — so putting it at (0,0) leaves
+            // every one of them exactly where it was.
+            if (MapTile == null && !_dock.MapRemoved)
+            {
+                _dock.Tiles.Insert(0, new CommandDockTile
+                {
+                    Kind = CommandDockTileKinds.Map,
+                    Col = 0,
+                    Row = 0,
+                });
+            }
+
             _dockTimer = new DispatcherTimer(DispatcherPriority.Background)
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -166,42 +179,98 @@ namespace RustPlusDesk
 
         // ── Geometry ────────────────────────────────────────────────────────────
 
-        /// <summary>How many cells the map tile covers, so tiles never land underneath it.</summary>
-        private (int Cols, int Rows) MapCellSpan() =>
-            (CommandDockLayout.PixelsToCells(_mapWidth), CommandDockLayout.PixelsToCells(_mapHeight));
+        /// <summary>The map's entry in the layout, or null when it has been removed.</summary>
+        private CommandDockTile? MapTile =>
+            _dock.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.Map);
 
         /// <summary>
-        /// A tile's pixel rect. Cell (0,0) is the map tile's top-left; cells past the map's own
-        /// span continue after it, and negative cells run left of and above it. So the grid
-        /// stays whole while the map changes size, and a bar can be built on any side.
+        /// Whether the map takes up space in the grid.
+        ///
+        /// A map with every layer switched off draws nothing at all, so leaving a hole in the
+        /// dock the size of a map nobody can see would be absurd — it counts as removed until a
+        /// layer comes back on.
         /// </summary>
+        private bool MapOccupiesCells => MapTile != null && _mapLayersOn;
+
+        private bool _mapLayersOn = true;
+
+        /// <summary>How many cells the map's free pixel size needs.</summary>
+        private (int Cols, int Rows) MapCellSpan() => MapOccupiesCells
+            ? (CommandDockLayout.PixelsToCells(_mapWidth), CommandDockLayout.PixelsToCells(_mapHeight))
+            : (0, 0);
+
+        /// <summary>
+        /// The left edge of a column.
+        ///
+        /// The grid is uniform except for one seam. The map keeps a free pixel size but reserves
+        /// whole cells, and its cell allotment is always a little wider than it is — so every
+        /// column past the map shifts by that difference and closes the gap. The shift applies
+        /// at every row, not only beside the map, or a tile underneath would fall out of line
+        /// with the tile above it.
+        /// </summary>
+        private double CellX(int col)
+        {
+            double x = CommandDockLayout.CellOffset(col);
+            var map = MapOccupiesCells ? MapTile : null;
+            if (map == null) return x;
+
+            var (mapCols, _) = MapCellSpan();
+            if (col >= map.Col + mapCols)
+                x += _mapWidth - CommandDockLayout.CellsToPixels(mapCols);
+
+            return x;
+        }
+
+        private double CellY(int row)
+        {
+            double y = CommandDockLayout.CellOffset(row);
+            var map = MapOccupiesCells ? MapTile : null;
+            if (map == null) return y;
+
+            var (_, mapRows) = MapCellSpan();
+            if (row >= map.Row + mapRows)
+                y += _mapHeight - CommandDockLayout.CellsToPixels(mapRows);
+
+            return y;
+        }
+
+        /// <summary>A tile's pixel rect. The map is the one tile whose size is not cell-derived.</summary>
         private Rect CellRect(CommandDockTile tile)
         {
-            var (mapCols, mapRows) = MapCellSpan();
+            double x = CellX(tile.Col);
+            double y = CellY(tile.Row);
 
-            double x = tile.Col >= mapCols
-                ? _mapWidth + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Col - mapCols)
-                : CommandDockLayout.CellOffset(tile.Col);
-
-            double y = tile.Row >= mapRows
-                ? _mapHeight + CommandDockLayout.CellGap + CommandDockLayout.CellOffset(tile.Row - mapRows)
-                : CommandDockLayout.CellOffset(tile.Row);
+            if (tile.Kind == CommandDockTileKinds.Map)
+                return new Rect(x, y, _mapWidth, _mapHeight);
 
             return new Rect(x, y,
                 CommandDockLayout.CellsToPixels(tile.ColSpan),
                 CommandDockLayout.CellsToPixels(tile.RowSpan));
         }
 
-        /// <summary>Feeds <see cref="MeasureDockBounds"/>; the map tile is measured separately.</summary>
+        /// <summary>Every placed tile's rect, for <see cref="MeasureDockBounds"/>.</summary>
         private IEnumerable<Rect> TileBounds()
         {
             foreach (var tile in _dock.Tiles)
             {
+                if (tile.Kind == CommandDockTileKinds.Map && !MapOccupiesCells) continue;
                 if (!_tileElements.TryGetValue(tile.Id, out var el)) continue;
+
                 double x = Canvas.GetLeft(el), y = Canvas.GetTop(el);
                 if (double.IsNaN(x) || double.IsNaN(y)) continue;
                 yield return new Rect(x, y, el.Width, el.Height);
             }
+        }
+
+        /// <summary>Keeps the map tile's cell span in step with the size the slider gave it.</summary>
+        private void SyncMapCellSpan()
+        {
+            var map = MapTile;
+            if (map == null) return;
+
+            var (cols, rows) = MapCellSpan();
+            map.ColSpan = Math.Max(1, cols);
+            map.RowSpan = Math.Max(1, rows);
         }
 
         /// <summary>
@@ -212,20 +281,7 @@ namespace RustPlusDesk
         /// </summary>
         private void AssignFreeCell(CommandDockTile tile)
         {
-            var (mapCols, mapRows) = MapCellSpan();
-            var taken = new HashSet<(int, int)>();
-
-            for (int c = 0; c < mapCols; c++)
-                for (int r = 0; r < mapRows; r++)
-                    taken.Add((c, r));
-
-            foreach (var other in _dock.Tiles)
-            {
-                if (other == tile) continue;
-                for (int c = other.Col; c < other.Col + other.ColSpan; c++)
-                    for (int r = other.Row; r < other.Row + other.RowSpan; r++)
-                        taken.Add((c, r));
-            }
+            var taken = OccupiedCells(except: tile);
 
             bool Fits(int col, int row)
             {
@@ -235,30 +291,61 @@ namespace RustPlusDesk
                 return true;
             }
 
+            // The map is no longer pinned to the origin, so the search starts from wherever it
+            // happens to be — that is the corner everything else is arranged around.
+            var map = MapOccupiesCells ? MapTile : null;
+            var (mapCols, mapRows) = MapCellSpan();
+
+            int originCol = map?.Col ?? 0;
+            int originRow = map?.Row ?? 0;
+            int afterCol = originCol + mapCols;
+            int afterRow = originRow + mapRows;
+
             // Below the map by default: it keeps the dock as narrow as the map, which is what
             // sits well beside a game. Growing to the right is the opt-in, for a quickbar.
             bool right = _dock.GrowRight;
 
-            if (right)
+            bool TryBeside()
             {
-                for (int col = mapCols; col < mapCols + 8; col++)
-                    for (int row = 0; row < mapRows + 8; row++)
-                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
+                for (int col = afterCol; col < afterCol + 8; col++)
+                    for (int row = originRow; row < afterRow + 8; row++)
+                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return true; }
+                return false;
             }
 
-            for (int row = mapRows; row < mapRows + 16; row++)
-                for (int col = 0; col < Math.Max(mapCols, 1) + 8; col++)
-                    if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
-
-            if (!right)
+            bool TryBelow()
             {
-                for (int col = mapCols; col < mapCols + 8; col++)
-                    for (int row = 0; row < mapRows + 8; row++)
-                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return; }
+                for (int row = afterRow; row < afterRow + 16; row++)
+                    for (int col = originCol; col < afterCol + 8; col++)
+                        if (Fits(col, row)) { tile.Col = col; tile.Row = row; return true; }
+                return false;
             }
 
-            tile.Col = right ? mapCols : 0;
-            tile.Row = right ? 0 : mapRows;
+            if (right ? (TryBeside() || TryBelow()) : (TryBelow() || TryBeside())) return;
+
+            tile.Col = right ? afterCol : originCol;
+            tile.Row = right ? originRow : afterRow;
+        }
+
+        /// <summary>
+        /// Every cell some tile already holds. The map is in the list like everything else now,
+        /// so it needs no special case here — only the check that it is actually on screen.
+        /// </summary>
+        private HashSet<(int, int)> OccupiedCells(CommandDockTile? except)
+        {
+            var taken = new HashSet<(int, int)>();
+
+            foreach (var other in _dock.Tiles)
+            {
+                if (other == except) continue;
+                if (other.Kind == CommandDockTileKinds.Map && !MapOccupiesCells) continue;
+
+                for (int c = other.Col; c < other.Col + other.ColSpan; c++)
+                    for (int r = other.Row; r < other.Row + other.RowSpan; r++)
+                        taken.Add((c, r));
+            }
+
+            return taken;
         }
 
         // ── Building ────────────────────────────────────────────────────────────
@@ -266,36 +353,57 @@ namespace RustPlusDesk
         private void RebuildTiles()
         {
             foreach (var el in _tileElements.Values)
+            {
+                // Never the map: its element is declared in XAML and stays a child of the canvas
+                // for the life of the window.
+                if (ReferenceEquals(el, MapContainer)) continue;
                 DockCanvas.Children.Remove(el);
+            }
 
             _tileElements.Clear();
             _tileRefreshers.Clear();
             _tileHandles.Clear();
             _hoveredTileId = null;
 
+            SyncMapCellSpan();
+
             foreach (var tile in _dock.Tiles.ToList())
             {
-                var el = BuildTile(tile);
+                // The map's element is the one declared in XAML — it carries the mirror brushes
+                // and the whole viewbox machinery, and rebuilding it every time a tile moved
+                // would throw that away. It is placed like any other tile, just not created.
+                bool isMap = tile.Kind == CommandDockTileKinds.Map;
+
+                if (isMap)
+                {
+                    MapContainer.Visibility = MapOccupiesCells ? Visibility.Visible : Visibility.Collapsed;
+                    if (!MapOccupiesCells) continue;
+                }
+
+                var el = isMap ? MapContainer : BuildTile(tile);
                 if (el == null) continue;   // unknown kind from a newer build
 
                 var rect = CellRect(tile);
-                el.Width = rect.Width;
-                el.Height = rect.Height;
+                if (!isMap)
+                {
+                    el.Width = rect.Width;
+                    el.Height = rect.Height;
+                }
                 Canvas.SetLeft(el, rect.X);
                 Canvas.SetTop(el, rect.Y);
 
-                DockCanvas.Children.Add(el);
+                if (!isMap) DockCanvas.Children.Add(el);
                 _tileElements[tile.Id] = el;
 
-                // After the tile's own click handlers, so a device toggle still gets its
-                // MouseUp: this one only swallows what is left, which is what keeps the
-                // window's DragMove from eating the click.
-                if (el is Border border)
-                {
-                    AddResizeGrip(border, tile);
-                    AttachTileInteraction(border, tile.Id);
-                }
+                // Handles after the tile's own click handlers, so a device toggle still gets its
+                // MouseUp: the interaction handler only swallows what is left, which is what
+                // keeps the window's DragMove from eating the click.
+                AddTileHandles(el, tile, resizable: !isMap);
+                AttachTileInteraction(el, tile.Id,
+                    onClick: isMap ? () => OnClicked?.Invoke() : null);
             }
+
+            if (MapTile == null) MapContainer.Visibility = Visibility.Collapsed;
 
             RefreshTiles();
             LayoutDock();
@@ -308,12 +416,22 @@ namespace RustPlusDesk
         /// </summary>
         private void RepositionTiles()
         {
+            SyncMapCellSpan();
+
             foreach (var tile in _dock.Tiles)
             {
                 if (!_tileElements.TryGetValue(tile.Id, out var el)) continue;
+
                 var rect = CellRect(tile);
-                el.Width = rect.Width;
-                el.Height = rect.Height;
+
+                // The map's size comes from the slider, not from its cell span — UpdateSize has
+                // already applied it, and writing the cell width here would undo that.
+                if (tile.Kind != CommandDockTileKinds.Map)
+                {
+                    el.Width = rect.Width;
+                    el.Height = rect.Height;
+                }
+
                 Canvas.SetLeft(el, rect.X);
                 Canvas.SetTop(el, rect.Y);
             }
@@ -920,12 +1038,9 @@ namespace RustPlusDesk
         /// one without each builder having to make room for it. Chat keeps a floor of two cells
         /// wide — below that a message is nothing but an ellipsis.
         /// </summary>
-        private void AddResizeGrip(Border shell, CommandDockTile tile)
+        private void AddTileHandles(FrameworkElement shell, CommandDockTile tile, bool resizable)
         {
-            var content = shell.Child;
-            var host = new Grid();
-            shell.Child = null;
-            if (content != null) host.Children.Add(content);
+            var host = EnsureHandleHost(shell);
 
             var grip = new Border
             {
@@ -943,14 +1058,17 @@ namespace RustPlusDesk
             // Removing is a button, not a right-click. Right-click still pans the map, and a
             // tile that vanished because the cursor happened to be over it would be worse than
             // any amount of saved pixels.
+            //
+            // Bottom-left, opposite the grip: the title bar overlays the dock's top edge, and a
+            // × in the top-right corner of a first-row tile would sit underneath it.
             var remove = new Border
             {
                 Width = 16,
                 Height = 16,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(0, -6, -6, 0),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(-6, 0, 0, -6),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
                 Background = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)),
                 Cursor = Cursors.Hand,
                 Visibility = Visibility.Collapsed,
@@ -972,15 +1090,22 @@ namespace RustPlusDesk
             // shell's BorderBrush every second and would wipe a hover colour straight off again.
             // It is also what shows a press landed, which a tile that only toggles a switch
             // somewhere else on screen otherwise never acknowledges.
-            var veil = new Border
+            //
+            // The map gets none: it is round, a rectangular veil over it would look like a bug,
+            // and it answers a click by recentring, which is feedback enough.
+            Border? veil = null;
+            if (shell is Border tileBorder)
             {
-                CornerRadius = shell.CornerRadius,
-                Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF)),
-                Opacity = 0,
-                IsHitTestVisible = false,
-            };
+                veil = new Border
+                {
+                    CornerRadius = tileBorder.CornerRadius,
+                    Background = new SolidColorBrush(Colors.White),
+                    Opacity = 0,
+                    IsHitTestVisible = false,
+                };
+            }
 
-            void Veil(double to, int ms) => veil.BeginAnimation(
+            void Veil(double to, int ms) => veil?.BeginAnimation(
                 UIElement.OpacityProperty,
                 new DoubleAnimation(to, TimeSpan.FromMilliseconds(ms)) { FillBehavior = FillBehavior.HoldEnd });
 
@@ -1050,14 +1175,51 @@ namespace RustPlusDesk
 
             // Veil under the handles, so the grip and the × stay at full strength on a pressed
             // tile; both above the content, so they are never hidden behind a chat line.
-            host.Children.Add(veil);
-            host.Children.Add(grip);
+            if (veil != null) host.Children.Add(veil);
+            if (resizable) host.Children.Add(grip);
             host.Children.Add(remove);
-            shell.Child = host;
 
             // The tile's drag handler consults these so a press that started on one of them is
             // not turned into a tile drag.
-            _tileHandles[tile.Id] = new[] { (FrameworkElement)grip, remove };
+            _tileHandles[tile.Id] = resizable
+                ? new[] { (FrameworkElement)grip, remove }
+                : new FrameworkElement[] { remove };
+        }
+
+        /// <summary>
+        /// The layer a tile's handles are drawn into.
+        ///
+        /// A built tile is a Border with one child, so its content is wrapped in a grid that the
+        /// handles can share. The map is a panel that already holds the mirror layers and its
+        /// overlays, so it gets an overlay grid instead — wrapping its children would take them
+        /// out of the tree the viewbox machinery expects them in.
+        /// </summary>
+        private static Grid EnsureHandleHost(FrameworkElement shell)
+        {
+            const string marker = "dock-handles";
+
+            if (shell is Border border)
+            {
+                // Built fresh on every rebuild, so there is never an old host to reuse.
+                var content = border.Child;
+                var host = new Grid { Tag = marker };
+                border.Child = null;
+                if (content != null) host.Children.Add(content);
+                border.Child = host;
+                return host;
+            }
+
+            var panel = (Panel)shell;
+            var overlay = panel.Children.OfType<Grid>().FirstOrDefault(g => (g.Tag as string) == marker);
+            if (overlay == null)
+            {
+                overlay = new Grid { Tag = marker };
+                Panel.SetZIndex(overlay, 50);
+                panel.Children.Add(overlay);
+            }
+
+            overlay.Children.Clear();
+            return overlay;
         }
 
         private readonly Dictionary<string, FrameworkElement[]> _tileHandles = new();
@@ -1090,7 +1252,7 @@ namespace RustPlusDesk
         /// MouseLeftButtonDown and DragMove blocks until the button comes back up, eating the
         /// MouseUp with it — a tile that let the press through would never see its own click.
         /// </summary>
-        private void AttachTileInteraction(Border border, string tileId)
+        private void AttachTileInteraction(FrameworkElement border, string tileId, Action? onClick = null)
         {
             Point grabOffset = default;
             bool pressed = false;
@@ -1134,7 +1296,14 @@ namespace RustPlusDesk
                 pressed = false;
                 border.ReleaseMouseCapture();
 
-                if (!dragging) return;   // a click: let the tile's own handler have it
+                if (!dragging)
+                {
+                    // A click. Tiles that do something on click carry their own handler and get
+                    // the event; the map cannot, because its click action lives on the window,
+                    // and the swallower below would eat the release before it arrived.
+                    onClick?.Invoke();
+                    return;
+                }
 
                 dragging = false;
                 Panel.SetZIndex(border, 0);
@@ -1156,59 +1325,90 @@ namespace RustPlusDesk
             var tile = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
             if (tile == null) return;
 
-            var (mapCols, mapRows) = MapCellSpan();
-            double x = Canvas.GetLeft(el), y = Canvas.GetTop(el);
+            tile.Col = NearestCell(Canvas.GetLeft(el), CellX);
+            tile.Row = NearestCell(Canvas.GetTop(el), CellY);
 
-            tile.Col = PixelToCell(x, _mapWidth, mapCols);
-            tile.Row = PixelToCell(y, _mapHeight, mapRows);
-
-            // A drop onto occupied cells or onto the map falls back to the first free spot,
-            // which is what makes the dock behave like desktop icons rather than a free canvas.
+            // A drop onto occupied cells falls back to the first free spot, which is what makes
+            // the dock behave like desktop icons rather than a free canvas.
             if (Overlaps(tile)) AssignFreeCell(tile);
 
             SaveDock();
             RebuildTiles();
+        }
 
-            static int PixelToCell(double pixels, double mapExtent, int mapCells)
+        /// <summary>
+        /// The cell index whose edge sits closest to a dropped pixel position.
+        ///
+        /// Searched rather than solved: the grid has a seam at the map, so the mapping is
+        /// piecewise and not worth inverting by hand for a range this small. Negative indices are
+        /// included on purpose — they are how a bar gets built along the top or the left edge.
+        /// </summary>
+        private static int NearestCell(double pixels, Func<int, double> edgeAt)
+        {
+            if (double.IsNaN(pixels)) return 0;
+
+            int best = 0;
+            double bestDistance = double.MaxValue;
+
+            for (int index = -16; index <= 32; index++)
             {
-                double step = CommandDockLayout.CellSize + CommandDockLayout.CellGap;
-
-                // Negative cells are allowed: they are how a bar gets built along the left edge
-                // or across the top, which the map's own footprint would otherwise block.
-                if (pixels < mapExtent)
-                    return (int)Math.Round(pixels / step);
-
-                double past = pixels - mapExtent - CommandDockLayout.CellGap;
-                return mapCells + Math.Max(0, (int)Math.Round(past / step));
+                double distance = Math.Abs(edgeAt(index) - pixels);
+                if (distance >= bestDistance) continue;
+                bestDistance = distance;
+                best = index;
             }
+
+            return best;
         }
 
         private bool Overlaps(CommandDockTile tile)
         {
-            var (mapCols, mapRows) = MapCellSpan();
+            var taken = OccupiedCells(except: tile);
 
             for (int c = tile.Col; c < tile.Col + tile.ColSpan; c++)
                 for (int r = tile.Row; r < tile.Row + tile.RowSpan; r++)
-                {
-                    // The map's own footprint. Both bounds matter: a negative cell is left of
-                    // or above the map, not on it, and dropping there has to be allowed.
-                    if (c >= 0 && c < mapCols && r >= 0 && r < mapRows) return true;
-
-                    foreach (var other in _dock.Tiles)
-                    {
-                        if (other == tile) continue;
-                        if (c >= other.Col && c < other.Col + other.ColSpan &&
-                            r >= other.Row && r < other.Row + other.RowSpan) return true;
-                    }
-                }
+                    if (taken.Contains((c, r))) return true;
 
             return false;
         }
 
         private void RemoveTile(string tileId)
         {
+            if (_dock.Tiles.FirstOrDefault(t => t.Id == tileId) is { Kind: CommandDockTileKinds.Map })
+                _dock.MapRemoved = true;
+
             _dock.Tiles.RemoveAll(t => t.Id == tileId);
             SaveDock();
+            RebuildTiles();
+        }
+
+        /// <summary>
+        /// True while no map is visible on the dock — whether it was removed outright or every
+        /// one of its layers was switched off. Both look the same to the user, so the picker
+        /// offers to bring it back in both cases.
+        /// </summary>
+        public bool CanAddMap => !MapOccupiesCells;
+
+        /// <summary>
+        /// Puts the map back on the dock, with every layer on.
+        ///
+        /// Coming back through the picker means the user asked for a mini-map, and handing them
+        /// the invisible one they had switched off would look like the button did nothing.
+        /// </summary>
+        public void AddMapTile()
+        {
+            if (MapTile == null)
+            {
+                _dock.MapRemoved = false;
+
+                var tile = new CommandDockTile { Kind = CommandDockTileKinds.Map };
+                AssignFreeCell(tile);
+                _dock.Tiles.Insert(0, tile);
+                SaveDock();
+            }
+
+            // Also the path back from "every layer off", which rebuilds the dock by itself.
+            SettingsOverlay?.TurnAllLayersOn();
             RebuildTiles();
         }
 
@@ -1226,6 +1426,10 @@ namespace RustPlusDesk
 
         public void AddTile(CommandDockTile tile)
         {
+            // The map is never a second copy of itself — the picker's map entry means "bring the
+            // one back", and it has its own path because it may only need its layers switched on.
+            if (tile.Kind == CommandDockTileKinds.Map) { AddMapTile(); return; }
+
             AssignFreeCell(tile);
             _dock.Tiles.Add(tile);
             SaveDock();

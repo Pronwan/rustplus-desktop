@@ -6924,4 +6924,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockTitle" xml:space="preserve">
     <value>Command Dock</value>
   </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Karte</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Holt die Karte mit allen Ebenen zurück</value>
+  </data>
 </root>
