@@ -264,6 +264,35 @@ namespace RustPlusDesk
                         Loc.Text("CommandDockClockDayNight", "Show time until day or night"),
                         tile.ClockShowDayNight,
                         on => { tile.ClockShowDayNight = on; TileSettingChanged(immediate: true); }));
+
+                    // The analogue face is a dial either way, so the option is only offered
+                    // where it changes something.
+                    if (tile.ClockStyle != 1)
+                    {
+                        box.Children.Add(SettingsCheck(
+                            Loc.Text("CommandDockClock12Hour", "12-hour clock (AM/PM)"),
+                            tile.Clock12Hour,
+                            on => { tile.Clock12Hour = on; TileSettingChanged(immediate: true); }));
+                    }
+
+                    return box;
+                }
+
+                case CommandDockTileKinds.Device:
+                {
+                    var box = new StackPanel();
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockDeviceShowIcon", "Show the device's icon"),
+                        tile.ShowDeviceIcon,
+                        on => { tile.ShowDeviceIcon = on; TileSettingChanged(immediate: true); }));
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = Loc.Text("CommandDockDeviceShowIconHint",
+                            "Off shows the device name instead — useful when several switches share an icon."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
                     return box;
                 }
 

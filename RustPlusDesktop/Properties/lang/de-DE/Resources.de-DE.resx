@@ -6826,7 +6826,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Raster</value>
   </data>
   <data name="MiniMapLayerDrawings" xml:space="preserve">
-    <value>Zeichnungen</value>
+    <value>Overlay</value>
   </data>
   <data name="MiniMapLayerIcons" xml:space="preserve">
     <value>Symbole</value>
@@ -6992,5 +6992,26 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   </data>
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Entsperren, um Kacheln zu verschieben, zu skalieren und zu entfernen</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>AN</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>AUS</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>AKTIV</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>INAKTIV</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12-Stunden-Anzeige (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Geräte-Icon anzeigen</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Aus zeigt stattdessen den Gerätenamen — praktisch, wenn mehrere Schalter dasselbe Icon haben.</value>
   </data>
 </root>

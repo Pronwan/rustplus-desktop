@@ -734,7 +734,7 @@ namespace RustPlusDesk
                 // with it. The map's element is not — attaching again would stack another drag
                 // and another hover handler on it every single time the dock redraws.
                 bool wireMouse = !isMap || !_mapMouseWired;
-                AddTileHandles(el, tile, resizable: !isMap, wireMouse: wireMouse);
+                AddTileHandles(el, tile, resizable: IsResizable(tile), wireMouse: wireMouse);
 
                 if (wireMouse)
                 {
@@ -753,6 +753,19 @@ namespace RustPlusDesk
             RefreshTiles();
             LayoutDock();
         }
+
+        /// <summary>
+        /// Whether a tile offers a resize grip.
+        ///
+        /// A device is an icon and one word — stretching it produces a mostly empty rectangle,
+        /// so it stays one cell. The map is free-size through its own slider, not through cells.
+        /// </summary>
+        private static bool IsResizable(CommandDockTile tile) => tile.Kind switch
+        {
+            CommandDockTileKinds.Map => false,
+            CommandDockTileKinds.Device => false,
+            _ => true,
+        };
 
         private void RefreshTiles()
         {
@@ -809,16 +822,57 @@ namespace RustPlusDesk
             var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
             shell.Child = stack;
 
+            // A bigger clock tile gets a bigger clock. Driven by the smaller of the two spans,
+            // because a clock three cells wide and one tall has no room to grow — which is what
+            // "as far as the height allows" means.
+            //
+            // Not a Viewbox around the content: the day-night line is much wider than the time,
+            // so scaling to fit would have shrunk the reading to make room for its own caption.
+            double grow = Math.Min(3.0, 1 + (Math.Min(tile.ColSpan, tile.RowSpan) - 1) * 0.8);
+            double Sized(double baseSize) => style.Size(baseSize * grow);
+
             if (tile.ClockStyle == 1)
             {
-                // Analog: a face plus two hands, redrawn from the server clock each tick.
-                var face = new Grid { Width = 46, Height = 46, HorizontalAlignment = HorizontalAlignment.Center };
+                // Analog: a face, hour marks and two hands, redrawn from the server clock.
+                //
+                // The face keeps its own 46-unit space — every coordinate below, including the
+                // hands' rotation centre, is written in it — and a LayoutTransform scales the
+                // whole thing. Layout, not render: the panel above has to reserve the larger
+                // size, or a grown clock would overlap the line under it.
+                var face = new Grid
+                {
+                    Width = 46,
+                    Height = 46,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    LayoutTransform = new ScaleTransform(grow, grow),
+                };
                 var dial = new System.Windows.Shapes.Ellipse
                 {
                     Stroke = Brush("TextSubtle", Colors.Gray),
                     StrokeThickness = 1.5,
                     Fill = System.Windows.Media.Brushes.Transparent,
                 };
+
+                face.Children.Add(dial);
+
+                // Twelve marks, the quarters longer. Without them a bare ring gives the hands
+                // nothing to be read against.
+                for (int hour = 0; hour < 12; hour++)
+                {
+                    bool quarter = hour % 3 == 0;
+                    var mark = new System.Windows.Shapes.Line
+                    {
+                        X1 = 23, Y1 = quarter ? 3.5 : 4.5,
+                        X2 = 23, Y2 = quarter ? 8.5 : 7.0,
+                        StrokeThickness = quarter ? 1.6 : 1.0,
+                        Stroke = style.TextSub,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        StrokeEndLineCap = PenLineCap.Round,
+                        RenderTransform = new RotateTransform(hour * 30, 23, 23),
+                    };
+                    face.Children.Add(mark);
+                }
+
                 var hourHand = new System.Windows.Shapes.Line
                 {
                     X1 = 23, Y1 = 23, X2 = 23, Y2 = 11,
@@ -841,12 +895,12 @@ namespace RustPlusDesk
                 hourHand.RenderTransform = hourRotate;
                 minuteHand.RenderTransform = minuteRotate;
 
-                face.Children.Add(dial);
                 face.Children.Add(hourHand);
                 face.Children.Add(minuteHand);
                 stack.Children.Add(face);
 
                 var phase = SubtleText(style);
+                phase.FontSize = Sized(10);
                 stack.Children.Add(phase);
 
                 _tileRefreshers.Add(() =>
@@ -872,14 +926,14 @@ namespace RustPlusDesk
             var glyph = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = style.Size(14),
+                FontSize = Sized(14),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 2),
                 Effect = style.TextShadow,
             };
             var clock = new TextBlock
             {
-                FontSize = style.Size(rustStyle ? 20 : 19),
+                FontSize = Sized(rustStyle ? 20 : 19),
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Effect = style.TextShadow,
@@ -891,6 +945,7 @@ namespace RustPlusDesk
                 FontFamily = rustStyle ? new FontFamily("Impact, Segoe UI") : new FontFamily("Consolas, Segoe UI"),
             };
             var phaseText = SubtleText(style);
+            phaseText.FontSize = Sized(10);
 
             stack.Children.Add(glyph);
             stack.Children.Add(clock);
@@ -899,7 +954,7 @@ namespace RustPlusDesk
             _tileRefreshers.Add(() =>
             {
                 var (time, isDay, _) = DockHost?.DockServerTime ?? ("-", true, (TimeSpan?)null);
-                clock.Text = time;
+                clock.Text = tile.Clock12Hour ? To12Hour(time) : time;
                 glyph.Text = isDay ? "\uE706" : "\uE708";   // sun / moon
                 glyph.Foreground = isDay
                     ? new SolidColorBrush(Color.FromRgb(0xFF, 0xD1, 0x66))
@@ -913,6 +968,21 @@ namespace RustPlusDesk
 
         private string DayNightLine()
             => (Application.Current?.MainWindow as Views.MainWindow)?.DockTimeUntilNextPhase ?? "";
+
+        /// <summary>
+        /// "15:20" as "3:20 PM". Returns the input untouched when it is not a clock reading —
+        /// the server time is a dash until the first status arrives.
+        /// </summary>
+        private static string To12Hour(string time)
+        {
+            if (!TryParseServerTime(time, out int h, out int m)) return time;
+
+            string suffix = h >= 12 ? "PM" : "AM";
+            int hour12 = h % 12;
+            if (hour12 == 0) hour12 = 12;
+
+            return $"{hour12}:{m:D2} {suffix}";
+        }
 
         private static bool TryParseServerTime(string text, out int hours, out int minutes)
         {
@@ -946,6 +1016,20 @@ namespace RustPlusDesk
             var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
             shell.Child = stack;
 
+            // The picture from the device list, when the user gave the device one. It is what
+            // the device is recognised by everywhere else in the app, and a glyph that says
+            // "some switch" carries none of that.
+            var picture = new Image
+            {
+                Width = style.Size(24),
+                Height = style.Size(24),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 3),
+                Visibility = Visibility.Collapsed,
+                Effect = style.TextShadow,
+            };
+            RenderOptions.SetBitmapScalingMode(picture, BitmapScalingMode.HighQuality);
+
             var icon = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
@@ -964,6 +1048,7 @@ namespace RustPlusDesk
                 Effect = style.TextShadow,
             };
 
+            stack.Children.Add(picture);
             stack.Children.Add(icon);
             stack.Children.Add(name);
             stack.Children.Add(state);
@@ -976,6 +1061,13 @@ namespace RustPlusDesk
                 RepeatBehavior = RepeatBehavior.Forever,
             };
             bool pulsing = false;
+
+            // An alarm stays on until someone resets it in game, so pulsing while it is on would
+            // pulse for hours. Ten seconds from the moment it went off is long enough to catch
+            // the eye and short enough to stop being noise.
+            var pulseFor = TimeSpan.FromSeconds(10);
+            bool wasFired = false;
+            DateTime firedAt = DateTime.MinValue;
 
             shell.MouseLeftButtonUp += async (_, e) =>
             {
@@ -1002,8 +1094,17 @@ namespace RustPlusDesk
                 }
 
                 shell.Opacity = 1.0;
-                name.Text = Abbreviate(device.DisplayName, 12);
                 ToolTipService.SetToolTip(shell, device.DisplayName);
+
+                // Icon mode is the default: the picture plus one state word. Turning it off puts
+                // the name back, which is what a dock full of identical-looking switches needs.
+                bool showPicture = tile.ShowDeviceIcon && device.CustomIcon != null;
+                picture.Source = showPicture ? device.CustomIcon : null;
+                picture.Visibility = showPicture ? Visibility.Visible : Visibility.Collapsed;
+                icon.Visibility = showPicture ? Visibility.Collapsed : Visibility.Visible;
+
+                name.Text = Abbreviate(device.DisplayName, 12);
+                name.Visibility = tile.ShowDeviceIcon ? Visibility.Collapsed : Visibility.Visible;
 
                 if (IsSwitch(device))
                 {
@@ -1015,7 +1116,9 @@ namespace RustPlusDesk
                     icon.Foreground = on
                         ? new SolidColorBrush(Color.FromRgb(0x4C, 0xC9, 0x6A))
                         : style.TextSub;
-                    state.Text = on ? Loc.Text("On", "On") : Loc.Text("Off", "Off");
+                    state.Text = on
+                        ? Loc.Text("CommandDockSwitchOn", "ON")
+                        : Loc.Text("CommandDockSwitchOff", "OFF");
                     state.Foreground = icon.Foreground;
                     shell.BorderBrush = on
                         ? style.Chrome(Color.FromArgb(0x99, 0x4C, 0xC9, 0x6A))
@@ -1032,14 +1135,18 @@ namespace RustPlusDesk
                         ? new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35))
                         : style.TextSub;
                     state.Text = fired
-                        ? Loc.Text("CommandDockAlarmTriggered", "Triggered")
-                        : Loc.Text("CommandDockAlarmIdle", "Armed");
+                        ? Loc.Text("CommandDockAlarmActive", "ACTIVE")
+                        : Loc.Text("CommandDockAlarmInactive", "INACTIVE");
                     state.Foreground = icon.Foreground;
                     shell.BorderBrush = fired
                         ? style.Chrome(Color.FromRgb(0xE5, 0x39, 0x35))
                         : style.Chrome(Brush("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)));
 
-                    if (fired) StartPulse(); else StopPulse();
+                    if (fired && !wasFired) firedAt = DateTime.UtcNow;
+                    wasFired = fired;
+
+                    if (fired && DateTime.UtcNow - firedAt < pulseFor) StartPulse();
+                    else StopPulse();
                 }
                 else
                 {
@@ -1291,8 +1398,9 @@ namespace RustPlusDesk
         private FrameworkElement BuildChatTile(CommandDockTile tile, bool clan)
         {
             // Chat needs room for a line of text; one cell would only ever show an ellipsis.
+            // Height is free — a single row still shows the last message, which is often all
+            // anyone wants from it.
             if (tile.ColSpan < 2) tile.ColSpan = 2;
-            if (tile.RowSpan < 2) tile.RowSpan = 2;
 
             var style = StyleFor(tile);
             var shell = TileShell(style);

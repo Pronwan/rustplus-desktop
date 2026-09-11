@@ -37,6 +37,17 @@ namespace RustPlusDesk.Models
         /// <summary>Clock tiles: append the time left until sunrise or sunset.</summary>
         public bool ClockShowDayNight { get; set; } = true;
 
+        /// <summary>Clock tiles: 3:20 PM rather than 15:20.</summary>
+        public bool Clock12Hour { get; set; }
+
+        /// <summary>
+        /// Device tiles: show the icon chosen in the device list instead of the device's name.
+        ///
+        /// The icon is what the device is recognised by — it is the same picture as in the list,
+        /// and at one cell there is room for it and a state word, but not for a name as well.
+        /// </summary>
+        public bool ShowDeviceIcon { get; set; } = true;
+
         /// <summary>Chat tiles: shorten long names so the message still fits on one line.</summary>
         public bool ChatAbbreviateNames { get; set; } = true;
 

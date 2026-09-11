@@ -875,6 +875,13 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockResetConfirm => GetString("CommandDockResetConfirm");
         public static string CommandDockLockHint => GetString("CommandDockLockHint");
         public static string CommandDockUnlockHint => GetString("CommandDockUnlockHint");
+        public static string CommandDockSwitchOn => GetString("CommandDockSwitchOn");
+        public static string CommandDockSwitchOff => GetString("CommandDockSwitchOff");
+        public static string CommandDockAlarmActive => GetString("CommandDockAlarmActive");
+        public static string CommandDockAlarmInactive => GetString("CommandDockAlarmInactive");
+        public static string CommandDockClock12Hour => GetString("CommandDockClock12Hour");
+        public static string CommandDockDeviceShowIcon => GetString("CommandDockDeviceShowIcon");
+        public static string CommandDockDeviceShowIconHint => GetString("CommandDockDeviceShowIconHint");
     }
 }
 

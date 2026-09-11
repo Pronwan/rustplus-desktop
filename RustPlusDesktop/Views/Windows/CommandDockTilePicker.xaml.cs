@@ -65,15 +65,15 @@ namespace RustPlusDesk
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.ClanChat, ColSpan = 2, RowSpan = 2 });
 
+            // Heli, Chinook and the travelling vendor are gone on purpose: the event dock hides
+            // them whenever the server does not report them, and a tile that is empty on most
+            // servers is worse than no tile at all.
             Section(Loc.Text("CommandDockSectionEvents", "Events"));
             foreach (var (key, label) in new[]
                      {
                          ("cargo", Loc.Text("CargoShip", "Cargo ship")),
                          ("deepsea", Loc.Text("DeepSea", "Deep Sea")),
                          ("oilrig", Loc.Text("OilRigCrateStatus", "Oil Rig crate")),
-                         ("heli", Loc.Text("HeliEventName", "Patrol helicopter")),
-                         ("chinook", Loc.Text("Chinook", "Chinook")),
-                         ("vendor", Loc.Text("Vendor", "Travelling vendor")),
                      })
             {
                 var eventKey = key;

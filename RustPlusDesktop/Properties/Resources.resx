@@ -6805,7 +6805,7 @@ You can find more information on the server&apos;s official website:
     <value>Grid</value>
   </data>
   <data name="MiniMapLayerDrawings" xml:space="preserve">
-    <value>Drawings</value>
+    <value>Overlay</value>
   </data>
   <data name="MiniMapLayerIcons" xml:space="preserve">
     <value>Icons</value>
@@ -6971,5 +6971,26 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Unlock to move, resize and remove tiles</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>INACTIVE</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12-hour clock (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Show the device&apos;s icon</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Off shows the device name instead — useful when several switches share an icon.</value>
   </data>
 </root>
