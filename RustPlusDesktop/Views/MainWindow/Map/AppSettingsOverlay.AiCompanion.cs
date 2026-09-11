@@ -1,0 +1,231 @@
+using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using RustPlusDesk.Helpers;
+using RustPlusDesk.Services.AiCompanion;
+using RustPlusDesk.Services.Auth;
+using WpfUi = Wpf.Ui.Controls;
+
+namespace RustPlusDesk.Views
+{
+    /// <summary>
+    /// The AI companion's settings.
+    ///
+    /// It differs from the other connected services in one way worth being loud about: the
+    /// connection is between this machine and the user's own account with a model provider.
+    /// Nothing here goes through our cloud, and the key is never uploaded. The panel says so,
+    /// the policy dialog says so before a key can be stored, and the store that keeps it has no
+    /// network call in it.
+    /// </summary>
+    public partial class AppSettingsOverlay : UserControl
+    {
+        private void LoadAiCompanionSettings()
+        {
+            var settings = AiCompanionStore.Current;
+
+            if (CmbAiProvider.Items.Count == 0)
+            {
+                foreach (var provider in AiProviders.All)
+                    CmbAiProvider.Items.Add(new ComboBoxItem
+                    {
+                        Content = AiProviders.DisplayName(provider),
+                        Tag = provider,
+                    });
+            }
+
+            CmbAiProvider.SelectedIndex = Math.Max(0, Array.IndexOf(AiProviders.All, settings.Provider));
+
+            ChkAiTextAnswers.IsChecked = settings.TextAnswers;
+            ChkAiAudioAnswers.IsChecked = settings.AudioAnswers;
+            ChkAiStreamingVoice.IsChecked = settings.StreamingVoice;
+            ChkAiGameAudio.IsChecked = settings.CaptureGameAudio;
+            ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
+
+            ApplyAiCompanionState();
+        }
+
+        private string SelectedAiProvider =>
+            (CmbAiProvider.SelectedItem as ComboBoxItem)?.Tag as string ?? AiProviders.OpenAi;
+
+        /// <summary>
+        /// Brings the panel in line with what the chosen provider can do and what has been set
+        /// up so far. Everything that would otherwise be a setting quietly doing nothing gets
+        /// disabled here with the reason beside it.
+        /// </summary>
+        private void ApplyAiCompanionState()
+        {
+            var provider = SelectedAiProvider;
+            var settings = AiCompanionStore.Current;
+
+            TxtAiProviderNote.Text = AiProviders.AcceptsAudio(provider)
+                ? Loc.Text("AiCompanionProviderNative",
+                    "Takes your recording directly, so what it hears is what you said.")
+                : Loc.Text("AiCompanionProviderTranscribed",
+                    "Does not accept audio. Your recording is turned into text on this PC first, which is slower and less accurate with names and game terms than GPT or Gemini.");
+
+            TxtAiKeyState.Text = AiCompanionStore.HasKey
+                ? Loc.Text("AiCompanionKeyStored", "A key is stored on this PC.")
+                : Loc.Text("AiCompanionKeyMissing", "No key yet — the companion cannot send anything without one.");
+
+            BtnRemoveAiKey.Visibility = AiCompanionStore.HasKey ? Visibility.Visible : Visibility.Collapsed;
+
+            // Streaming needs a voice to stream. Where the provider has none, Windows reads the
+            // finished answer instead, and there is nothing to start early.
+            bool canStream = AiProviders.HasVoice(provider);
+            bool premium = SupabaseAuthManager.IsPremium;
+
+            ChkAiStreamingVoice.IsEnabled = canStream && premium && ChkAiAudioAnswers.IsChecked == true;
+
+            TxtAiAnswerNote.Text =
+                !premium ? Loc.Text("AiCompanionStreamingSupporter",
+                    "Spoken answers start once the model has finished. Supporters hear them as they are written.")
+                : !canStream ? Loc.Text("AiCompanionNoVoice",
+                    "This provider has no voice of its own, so answers are read by Windows and cannot start early.")
+                : "";
+
+            TxtAiHotkey.Text = string.IsNullOrWhiteSpace(settings.Hotkey)
+                ? Loc.Text("AiCompanionHotkeyNone", "Not set — click the tile to record instead")
+                : settings.Hotkey;
+        }
+
+        private void CmbAiProvider_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.Provider = SelectedAiProvider;
+            AiCompanionStore.Save(settings);
+
+            ApplyAiCompanionState();
+        }
+
+        private void OnAiSettingChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            if (ChkAiTextAnswers == null || ChkAiAudioAnswers == null) return;
+
+            // One of the two has to stay on, or an answer arrives with nowhere to go. The box
+            // the user just cleared is the one that gives way.
+            if (ChkAiTextAnswers.IsChecked != true && ChkAiAudioAnswers.IsChecked != true)
+            {
+                if (ReferenceEquals(sender, ChkAiTextAnswers)) ChkAiAudioAnswers.IsChecked = true;
+                else ChkAiTextAnswers.IsChecked = true;
+            }
+
+            var settings = AiCompanionStore.Current;
+            settings.TextAnswers = ChkAiTextAnswers.IsChecked == true;
+            settings.AudioAnswers = ChkAiAudioAnswers.IsChecked == true;
+            settings.StreamingVoice = ChkAiStreamingVoice.IsChecked == true;
+            settings.CaptureGameAudio = ChkAiGameAudio.IsChecked == true;
+            settings.AttachScreenshotByDefault = ChkAiScreenshotDefault.IsChecked == true;
+            AiCompanionStore.Save(settings);
+
+            ApplyAiCompanionState();
+        }
+
+        private async void BtnSaveAiKey_Click(object sender, RoutedEventArgs e)
+        {
+            var key = TxtAiKey.Password;
+            var provider = SelectedAiProvider;
+
+            if (!AiProviders.LooksLikeKey(provider, key))
+            {
+                await ShowAiMessage(
+                    Loc.Text("AiCompanionKeyRejectedTitle", "That does not look like a key"),
+                    string.Format(
+                        Loc.Text("AiCompanionKeyRejected",
+                            "A {0} key does not look like that. Check you pasted the whole thing, without the surrounding quotes."),
+                        AiProviders.DisplayName(provider)));
+                return;
+            }
+
+            // The policy is shown before the first key is ever written, not after, and the field
+            // stays empty if it is declined.
+            if (AiCompanionStore.Current.PolicyAcceptedUtc == null && !await AcceptAiPolicyAsync())
+                return;
+
+            AiCompanionStore.WriteKey(key);
+            TxtAiKey.Password = "";
+            ApplyAiCompanionState();
+        }
+
+        private async void BtnRemoveAiKey_Click(object sender, RoutedEventArgs e)
+        {
+            var box = new WpfUi.MessageBox
+            {
+                Title = Loc.Text("AiCompanionRemoveKey", "Remove key"),
+                Content = Loc.Text("AiCompanionRemoveKeyConfirm",
+                    "Remove the stored key from this PC? The companion stops working until a new one is entered. Nothing is changed at your provider — revoke it there too if it may have leaked."),
+                PrimaryButtonText = Loc.Text("AiCompanionRemoveKey", "Remove key"),
+                CloseButtonText = Loc.Text("Cancel", "Cancel"),
+                Owner = Window.GetWindow(this),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            if (await box.ShowDialogAsync() != WpfUi.MessageBoxResult.Primary) return;
+
+            AiCompanionStore.WriteKey(null);
+            ApplyAiCompanionState();
+        }
+
+        private async void BtnAiPolicy_Click(object sender, RoutedEventArgs e) => await AcceptAiPolicyAsync();
+
+        /// <summary>
+        /// What happens to a recording, in the plainest words available, with acceptance recorded.
+        /// Shown before the first key is stored and readable again from the button at any time.
+        /// </summary>
+        private async System.Threading.Tasks.Task<bool> AcceptAiPolicyAsync()
+        {
+            var box = new WpfUi.MessageBox
+            {
+                Title = Loc.Text("AiCompanionPolicyTitle", "What happens to your recordings"),
+                Content = Loc.Text("AiCompanionPolicy",
+                    "The recording is made on this PC and sent straight to the AI provider whose key you entered. "
+                    + "It does not pass through our servers and we never receive it.\n\n"
+                    + "What happens to it after that is governed by that provider's terms — the ones you agreed to when you created the key, not ours.\n\n"
+                    + "Your key is stored only on this PC, protected by your Windows account, and is never uploaded. "
+                    + "Because it is tied to this Windows account, it will not survive a reinstall or move to another PC: you will need to enter it again.\n\n"
+                    + "Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes."),
+                PrimaryButtonText = Loc.Text("AiCompanionPolicyAccept", "Understood"),
+                CloseButtonText = Loc.Text("Cancel", "Cancel"),
+                Owner = Window.GetWindow(this),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            if (await box.ShowDialogAsync() != WpfUi.MessageBoxResult.Primary) return false;
+
+            var settings = AiCompanionStore.Current;
+            settings.PolicyAcceptedUtc = DateTime.UtcNow;
+            AiCompanionStore.Save(settings);
+            return true;
+        }
+
+        private void BtnAiHotkey_Click(object sender, RoutedEventArgs e)
+        {
+            var capture = new Windows.HotkeyCaptureWindow { Owner = Window.GetWindow(this) };
+            if (capture.ShowDialog() != true) return;
+
+            // An empty gesture clears it, and having no hotkey is a valid choice: the tile can
+            // be clicked instead, which is what the label says when there is none.
+            var settings = AiCompanionStore.Current;
+            settings.Hotkey = capture.Gesture?.Trim() ?? "";
+            AiCompanionStore.Save(settings);
+
+            ApplyAiCompanionState();
+        }
+
+        private async System.Threading.Tasks.Task ShowAiMessage(string title, string message)
+        {
+            var box = new WpfUi.MessageBox
+            {
+                Title = title,
+                Content = message,
+                PrimaryButtonText = Properties.Resources.OK,
+                Owner = Window.GetWindow(this),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            await box.ShowDialogAsync();
+        }
+    }
+}

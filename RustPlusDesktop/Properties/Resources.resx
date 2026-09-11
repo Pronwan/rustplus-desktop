@@ -7125,4 +7125,94 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockOilRigHeard" xml:space="preserve">
     <value>Heard by other players</value>
   </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Ask a question by voice and get an answer without leaving the game. It runs on your own account with an AI provider: the recording goes straight from this PC to them, never through our servers, and your key is stored here and never uploaded.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Takes your recording directly, so what it hears is what you said.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>Does not accept audio. Your recording is turned into text on this PC first, which is slower and less accurate with names and game terms than GPT or Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API key</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Remove key</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>Remove the stored key from this PC? The companion stops working until a new one is entered. Nothing is changed at your provider — revoke it there too if it may have leaked.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>A key is stored on this PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>No key yet — the companion cannot send anything without one.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>That does not look like a key</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>A {0} key does not look like that. Check you pasted the whole thing, without the surrounding quotes.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Answers</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Show as text</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Read out loud</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Start speaking before the answer is finished</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Spoken answers start once the model has finished. Supporters hear them as they are written.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>This provider has no voice of its own, so answers are read by Windows and cannot start early.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Recording</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Record the game&apos;s sound as well</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Attach a screenshot by default</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Push to talk</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Set hotkey</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Not set — click the tile to record instead</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>What happens to your recordings</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>What happens to your recordings</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Understood</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>The recording is made on this PC and sent straight to the AI provider whose key you entered. It does not pass through our servers and we never receive it.
+
+What happens to it after that is governed by that provider&apos;s terms — the ones you agreed to when you created the key, not ours.
+
+Your key is stored only on this PC, protected by your Windows account, and is never uploaded. Because it is tied to this Windows account, it will not survive a reinstall or move to another PC: you will need to enter it again.
+
+Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes.</value>
+  </data>
 </root>

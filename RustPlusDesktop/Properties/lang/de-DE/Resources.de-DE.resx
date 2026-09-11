@@ -7146,4 +7146,94 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockOilRigHeard" xml:space="preserve">
     <value>Von anderen Spielern gehört</value>
   </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Stelle per Sprache eine Frage und bekomme eine Antwort, ohne das Spiel zu verlassen. Es läuft über dein eigenes Konto bei einem KI-Anbieter: Die Aufnahme geht direkt von diesem PC dorthin, nie über unsere Server, und dein Schlüssel bleibt hier und wird nie hochgeladen.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Anbieter</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Nimmt deine Aufnahme direkt entgegen — es hört also genau das, was du gesagt hast.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>Nimmt kein Audio entgegen. Deine Aufnahme wird zuerst auf diesem PC in Text umgewandelt — das ist langsamer und bei Namen und Spielbegriffen ungenauer als bei GPT oder Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API-Schlüssel</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Schlüssel entfernen</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>Den gespeicherten Schlüssel von diesem PC entfernen? Der Companion funktioniert dann erst wieder mit einem neuen. Bei deinem Anbieter ändert sich nichts — widerrufe ihn dort zusätzlich, falls er abhandengekommen sein könnte.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>Auf diesem PC ist ein Schlüssel gespeichert.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>Noch kein Schlüssel — ohne ihn kann der Companion nichts senden.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>Das sieht nicht nach einem Schlüssel aus</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>Ein Schlüssel von {0} sieht anders aus. Prüfe, ob du ihn vollständig eingefügt hast — ohne Anführungszeichen drumherum.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Antworten</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Als Text anzeigen</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Vorlesen</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Sprechen beginnen, bevor die Antwort fertig ist</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Gesprochene Antworten beginnen, sobald das Modell fertig ist. Supporter hören sie, während sie entstehen.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>Dieser Anbieter hat keine eigene Stimme — Antworten liest Windows vor und können nicht vorzeitig beginnen.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Aufnahme</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Spiel-Audio mit aufnehmen</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Screenshot standardmäßig anhängen</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Push-to-Talk</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Hotkey festlegen</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Nicht gesetzt — stattdessen die Kachel anklicken</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>Was mit deinen Aufnahmen passiert</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>Was mit deinen Aufnahmen passiert</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>Die Aufnahme entsteht auf diesem PC und geht direkt an den KI-Anbieter, dessen Schlüssel du eingetragen hast. Sie läuft nicht über unsere Server, und wir bekommen sie nie zu sehen.
+
+Was danach mit ihr geschieht, regeln die Bedingungen dieses Anbieters — die, denen du beim Anlegen des Schlüssels zugestimmt hast, nicht unsere.
+
+Dein Schlüssel wird ausschließlich auf diesem PC gespeichert, geschützt durch dein Windows-Konto, und nie hochgeladen. Weil er an dieses Windows-Konto gebunden ist, übersteht er weder eine Neuinstallation noch den Umzug auf einen anderen PC: Du musst ihn dann erneut eintragen.
+
+Die Aufnahme läuft nur, solange du den Hotkey hältst oder nachdem du die Kachel angeklickt hast, und endet nach fünf Minuten von selbst.</value>
+  </data>
 </root>

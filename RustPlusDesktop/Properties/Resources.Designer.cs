@@ -926,6 +926,34 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockTemplateSummary => GetString("CommandDockTemplateSummary");
         public static string CommandDockOilRigTrigger => GetString("CommandDockOilRigTrigger");
         public static string CommandDockOilRigHeard => GetString("CommandDockOilRigHeard");
+        public static string AiCompanionIntro => GetString("AiCompanionIntro");
+        public static string AiCompanionProvider => GetString("AiCompanionProvider");
+        public static string AiCompanionProviderNative => GetString("AiCompanionProviderNative");
+        public static string AiCompanionProviderTranscribed => GetString("AiCompanionProviderTranscribed");
+        public static string AiCompanionApiKey => GetString("AiCompanionApiKey");
+        public static string AiCompanionSaveKey => GetString("AiCompanionSaveKey");
+        public static string AiCompanionRemoveKey => GetString("AiCompanionRemoveKey");
+        public static string AiCompanionRemoveKeyConfirm => GetString("AiCompanionRemoveKeyConfirm");
+        public static string AiCompanionKeyStored => GetString("AiCompanionKeyStored");
+        public static string AiCompanionKeyMissing => GetString("AiCompanionKeyMissing");
+        public static string AiCompanionKeyRejectedTitle => GetString("AiCompanionKeyRejectedTitle");
+        public static string AiCompanionKeyRejected => GetString("AiCompanionKeyRejected");
+        public static string AiCompanionAnswers => GetString("AiCompanionAnswers");
+        public static string AiCompanionTextAnswers => GetString("AiCompanionTextAnswers");
+        public static string AiCompanionAudioAnswers => GetString("AiCompanionAudioAnswers");
+        public static string AiCompanionStreamingVoice => GetString("AiCompanionStreamingVoice");
+        public static string AiCompanionStreamingSupporter => GetString("AiCompanionStreamingSupporter");
+        public static string AiCompanionNoVoice => GetString("AiCompanionNoVoice");
+        public static string AiCompanionRecording => GetString("AiCompanionRecording");
+        public static string AiCompanionGameAudio => GetString("AiCompanionGameAudio");
+        public static string AiCompanionScreenshotDefault => GetString("AiCompanionScreenshotDefault");
+        public static string AiCompanionHotkey => GetString("AiCompanionHotkey");
+        public static string AiCompanionSetHotkey => GetString("AiCompanionSetHotkey");
+        public static string AiCompanionHotkeyNone => GetString("AiCompanionHotkeyNone");
+        public static string AiCompanionPolicyButton => GetString("AiCompanionPolicyButton");
+        public static string AiCompanionPolicyTitle => GetString("AiCompanionPolicyTitle");
+        public static string AiCompanionPolicyAccept => GetString("AiCompanionPolicyAccept");
+        public static string AiCompanionPolicy => GetString("AiCompanionPolicy");
     }
 }
 
