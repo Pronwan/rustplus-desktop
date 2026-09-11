@@ -914,6 +914,16 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockServerInfoHint => GetString("CommandDockServerInfoHint");
         public static string CommandDockServerPlayers => GetString("CommandDockServerPlayers");
         public static string CommandDockServerQueue => GetString("CommandDockServerQueue");
+        public static string CommandDockServerShowGraph => GetString("CommandDockServerShowGraph");
+        public static string CommandDockTemplates => GetString("CommandDockTemplates");
+        public static string CommandDockTemplatesHint => GetString("CommandDockTemplatesHint");
+        public static string CommandDockTemplatesEmpty => GetString("CommandDockTemplatesEmpty");
+        public static string CommandDockTemplateNamePlaceholder => GetString("CommandDockTemplateNamePlaceholder");
+        public static string CommandDockTemplateSave => GetString("CommandDockTemplateSave");
+        public static string CommandDockTemplateRename => GetString("CommandDockTemplateRename");
+        public static string CommandDockTemplateDelete => GetString("CommandDockTemplateDelete");
+        public static string CommandDockTemplateDeleteConfirm => GetString("CommandDockTemplateDeleteConfirm");
+        public static string CommandDockTemplateSummary => GetString("CommandDockTemplateSummary");
     }
 }
 

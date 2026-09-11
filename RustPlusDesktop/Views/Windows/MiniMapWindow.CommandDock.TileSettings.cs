@@ -280,6 +280,16 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.ServerInfo:
+                {
+                    var box = new StackPanel();
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockServerShowGraph", "Show the population graph"),
+                        tile.ShowGraph,
+                        on => { tile.ShowGraph = on; TileSettingChanged(immediate: true); }));
+                    return box;
+                }
+
                 case CommandDockTileKinds.Discord:
                 {
                     var box = new StackPanel();

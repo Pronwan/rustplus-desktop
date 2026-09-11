@@ -7110,4 +7110,34 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockServerQueue" xml:space="preserve">
     <value>/ {0} · {1} in Warteschlange</value>
   </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Verlaufsgraph anzeigen</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Anordnungen</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Speichere das Dock, wie es gerade ist, oder lade eine frühere Anordnung. Fahre über einen Namen, um sie auf dem Dock umrissen zu sehen.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Noch nichts gespeichert. Ordne das Dock an, gib ihm einen Namen und speichere es.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Name für diese Anordnung</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>Anordnung „{0}“ löschen?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} Kacheln · gespeichert {1}</value>
+  </data>
 </root>

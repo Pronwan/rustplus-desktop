@@ -627,8 +627,10 @@ namespace RustPlusDesk
 
             ApplyTilePositions();
 
-            Width = Math.Max(1, bounds.Width + 2 * _dragPad);
-            Height = Math.Max(1, bounds.Height + 2 * _dragPad);
+            // The preview extra grows the window without moving anything, so an arrangement
+            // larger than the dock can be outlined in full.
+            Width = Math.Max(1, bounds.Width + 2 * _dragPad + _previewExtra.Width);
+            Height = Math.Max(1, bounds.Height + 2 * _dragPad + _previewExtra.Height);
 
             if (!double.IsNaN(Left) && !double.IsNaN(Top))
             {

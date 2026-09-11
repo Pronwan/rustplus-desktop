@@ -96,6 +96,9 @@ namespace RustPlusDesk
                         : string.Format(Loc.Text("CommandDockServerQueue", "/ {0} · {1} waiting"), max, queue)
                     : Loc.Text("CommandDockServerPlayers", "players");
 
+                plot.Visibility = tile.ShowGraph ? Visibility.Visible : Visibility.Collapsed;
+                if (!tile.ShowGraph) return;
+
                 var samples = SessionTracker.Instance.For(DockHost?.DockServerKey)?.Population
                               ?? new List<PopulationSample>();
 

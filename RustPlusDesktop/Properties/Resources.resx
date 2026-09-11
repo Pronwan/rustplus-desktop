@@ -7089,4 +7089,34 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockServerQueue" xml:space="preserve">
     <value>/ {0} · {1} waiting</value>
   </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Show the population graph</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Arrangements</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Save the dock as it is now, or load one you saved earlier. Hover a name to see it outlined on the dock.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Nothing saved yet. Arrange the dock, give it a name and save it.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Name this arrangement</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>Delete the arrangement “{0}”?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} tiles · saved {1}</value>
+  </data>
 </root>

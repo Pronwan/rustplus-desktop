@@ -21,6 +21,10 @@
               empty area snapped somewhere with no visible reason.  -->
         <Canvas x:Name="GridGhostLayer" IsHitTestVisible="False"/>
 
+        <!--  An outline of a saved arrangement, faded in while its name is hovered in the
+              templates window.  -->
+        <Canvas x:Name="PresetPreviewLayer" IsHitTestVisible="False"/>
+
         <!--  The dock: the map is one tile among the command tiles, all placed by pixel
               position on this canvas. Tiles are built in code because their number, kind
               and position come from the saved layout.  -->
@@ -165,6 +169,14 @@
                                        FontSize="14"
                                        Text="&#xE72E;"/>
                         </ui:Button>
+                        <ui:Button x:Name="BtnTemplates"
+                                   Padding="3"
+                                   Margin="0,0,2,0"
+                                   Appearance="Transparent"
+                                   Foreground="White"
+                                   Click="BtnTemplates_Click"
+                                   ToolTip="{DynamicResource CommandDockTemplates}"
+                                   Icon="{ui:SymbolIcon Symbol=Save24}"/>
                         <ui:Button x:Name="BtnAddTile"
                                    Padding="3"
                                    Margin="0,0,2,0"

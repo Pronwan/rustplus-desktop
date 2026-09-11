@@ -73,6 +73,9 @@ namespace RustPlusDesk.Models
         /// <summary>Discord tiles: 0 none, 1 @here, 2 @everyone.</summary>
         public int DiscordMention { get; set; }
 
+        /// <summary>Server info tiles: draw the population line, not just the figure.</summary>
+        public bool ShowGraph { get; set; } = true;
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the

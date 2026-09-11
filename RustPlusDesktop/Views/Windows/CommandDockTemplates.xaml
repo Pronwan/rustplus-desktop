@@ -1,0 +1,70 @@
+<Window x:Class="RustPlusDesk.CommandDockTemplates"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource CommandDockTemplates}"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        SizeToContent="Height"
+        Width="320"
+        MaxHeight="520"
+        WindowStartupLocation="CenterOwner">
+    <Border Background="{DynamicResource Surface}"
+            BorderBrush="{DynamicResource CardBorder}"
+            BorderThickness="1"
+            CornerRadius="12"
+            Padding="14">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Save24" Margin="0,0,6,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Text="{DynamicResource CommandDockTemplates}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                </StackPanel>
+                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4"
+                           Appearance="Transparent" Click="BtnClose_Click"
+                           Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+            </Grid>
+
+            <TextBlock Grid.Row="1"
+                       Text="{DynamicResource CommandDockTemplatesHint}"
+                       FontSize="11"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,10"
+                       Foreground="{DynamicResource TextSubtle}"/>
+
+            <!--  Saving the arrangement you have now, which is the common reason for opening
+                  this at all, so it sits above the list rather than below it.  -->
+            <Grid Grid.Row="2" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ui:TextBox x:Name="TxtName"
+                            PlaceholderText="{DynamicResource CommandDockTemplateNamePlaceholder}"
+                            Height="30"
+                            Padding="8,4"
+                            KeyDown="TxtName_KeyDown"/>
+                <ui:Button Grid.Column="1"
+                           Margin="6,0,0,0"
+                           Height="30"
+                           Appearance="Primary"
+                           Content="{DynamicResource CommandDockTemplateSave}"
+                           Click="BtnSave_Click"/>
+            </Grid>
+
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="PresetList"/>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>
