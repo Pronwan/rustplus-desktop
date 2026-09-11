@@ -732,6 +732,7 @@ namespace RustPlusDesk
             _tileElements.Clear();
             _tileRefreshers.Clear();
             _tileHandles.Clear();
+            _tilePassThrough.Clear();
 
             // _hoveredTileId survives on purpose. Tile ids are stable, and a settings change
             // rebuilds the dock — clearing it here would make the handles vanish under the
@@ -1801,15 +1802,52 @@ namespace RustPlusDesk
         {
             if (!_tileHandles.TryGetValue(tileId, out var handles)) return false;
 
-            for (var node = originalSource as DependencyObject; node != null;)
-            {
+            for (var node = originalSource as DependencyObject; node != null; node = ParentOf(node))
                 if (node is FrameworkElement fe && Array.IndexOf(handles, fe) >= 0) return true;
-                node = node is Visual or System.Windows.Media.Media3D.Visual3D
-                    ? VisualTreeHelper.GetParent(node)
-                    : (node as FrameworkContentElement)?.Parent;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Whether a press landed on something inside a tile that wants it — a text box, a
+        /// button, a dropdown, or an element a builder registered.
+        ///
+        /// Tunnelling runs outside in, so the tile's own press handler sees the event before any
+        /// control inside it does. Left to swallow everything, it made the Discord tile's text
+        /// box impossible to focus and its two buttons impossible to press. The window's drag
+        /// handler consults this for the same reason: it is the next thing the press would reach.
+        /// </summary>
+        private bool PressedOnTileControl(object? originalSource)
+        {
+            for (var node = originalSource as DependencyObject; node != null; node = ParentOf(node))
+            {
+                if (node is System.Windows.Controls.Primitives.TextBoxBase
+                         or System.Windows.Controls.Primitives.ButtonBase
+                         or ComboBox
+                         or Slider
+                         or System.Windows.Controls.Primitives.ScrollBar)
+                    return true;
+
+                if (node is FrameworkElement fe && _tilePassThrough.Contains(fe)) return true;
             }
 
             return false;
+        }
+
+        private static DependencyObject? ParentOf(DependencyObject node)
+            => node is Visual or System.Windows.Media.Media3D.Visual3D
+                ? VisualTreeHelper.GetParent(node)
+                : (node as FrameworkContentElement)?.Parent;
+
+        /// <summary>
+        /// Elements a tile builder wants to keep its own presses. Needed for the ones that are
+        /// not standard controls — the Discord tile's two icon buttons are Borders.
+        /// </summary>
+        private readonly HashSet<FrameworkElement> _tilePassThrough = new();
+
+        internal void KeepPresses(params FrameworkElement[] elements)
+        {
+            foreach (var element in elements) _tilePassThrough.Add(element);
         }
 
         /// <summary>Below this many pixels a press is a click, above it a drag.</summary>
@@ -1837,6 +1875,10 @@ namespace RustPlusDesk
                 // tunnelling handler sees their presses first. Handling one here would suppress
                 // their own bubbling handlers entirely and neither would ever work.
                 if (PressedOnHandle(tileId, e.OriginalSource)) return;
+
+                // Same for a control inside the tile. Swallowed here, the Discord tiles text
+                // box could never take focus and its buttons could never be pressed.
+                if (PressedOnTileControl(e.OriginalSource)) return;
 
                 pressed = true;
                 dragging = false;

@@ -66,6 +66,10 @@ namespace RustPlusDesk
             {
                 if (!IsFromWindowContent(e.OriginalSource)) return;
 
+                // A press a tile let through on purpose, so a control inside it could have it.
+                // DragMove blocks until the button comes back up and would eat that press too.
+                if (PressedOnTileControl(e.OriginalSource)) return;
+
                 startDragPos = e.GetPosition(this);
                 DragMove();
                 ClampToScreen();

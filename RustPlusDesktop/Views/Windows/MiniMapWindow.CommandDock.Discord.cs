@@ -64,9 +64,11 @@ namespace RustPlusDesk
             Grid.SetColumn(map, 3);
             row.Children.Add(map);
 
-            // Typing must not reach the dock: space and the arrow keys belong to the box, and a
-            // press on it must not start dragging the tile.
-            input.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
+            // The tile swallows presses so the window does not drag itself; these three have to
+            // be exempt or the box cannot take focus and the buttons cannot be pressed. The box
+            // is a TextBox and recognised by type; the buttons are Borders and are registered.
+            KeepPresses(send, map);
+
             input.PreviewKeyDown += (_, e) =>
             {
                 if (e.Key != Key.Enter) return;
@@ -206,7 +208,6 @@ namespace RustPlusDesk
             };
 
             ToolTipService.SetToolTip(button, tooltip);
-            button.PreviewMouseLeftButtonDown += (_, e) => e.Handled = true;
             return button;
         }
     }
