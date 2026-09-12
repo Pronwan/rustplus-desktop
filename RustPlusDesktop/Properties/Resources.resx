@@ -7478,4 +7478,52 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionGameDataOff" xml:space="preserve">
     <value>Cheaper, but recipes and raid costs come from the model&apos;s memory — which holds every retired version of them and cannot tell which is current.</value>
   </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>Ask AI</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Ask the AI companion from in-game chat and get the answer in chat. Answers are kept to a line or two, without screenshots.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>Ask AI</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Allow for teammates</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>Off by default, so only you can use it. Switched on, every teammate question is answered by your provider on your API key and billed to you — with your settings: same provider, same model, same language.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Questions per teammate</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} per hour</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Unlimited</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Counted per person over a rolling hour. Your own questions are never counted.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Ask a question after the command.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>No AI is set up on this client.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Asking the AI from chat is a supporter feature.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>The AI could not answer that.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} has used their AI questions for this hour.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>Allow Ask AI</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Clan members can ask the AI on your API key, and the bill is yours. Separate from the team setting above.</value>
+  </data>
 </root>

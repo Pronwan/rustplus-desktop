@@ -357,6 +357,52 @@ public class ServerProfile : INotifyPropertyChanged
     }
 
 
+    private string _cmdAi = "ai";
+    public string CmdAi
+    {
+        get => _cmdAi;
+        set { _cmdAi = ValidateCommand(value, "ai"); OnProp(); }
+    }
+
+    /// <summary>
+    /// Whether teammates may use the AI command, or only this client's owner.
+    ///
+    /// Off by default, and deliberately so: every use of it spends the credit on the key
+    /// stored on this PC. Switching it on is a decision to let four other people spend your
+    /// money, which is a decision and not a default.
+    /// </summary>
+    private bool _chatAiAllowTeammates;
+    public bool ChatAiAllowTeammates
+    {
+        get => _chatAiAllowTeammates;
+        set { _chatAiAllowTeammates = value; OnProp(); }
+    }
+
+    /// <summary>
+    /// How many questions each teammate may ask per hour, or zero for no limit.
+    ///
+    /// Per person rather than per team, so one teammate playing with it cannot use up the
+    /// allowance of the one who actually needs an answer. Never applies to this client's
+    /// owner — it is their key.
+    /// </summary>
+    private int _chatAiPerHour = 5;
+    public int ChatAiPerHour
+    {
+        get => _chatAiPerHour;
+        set { _chatAiPerHour = value < 0 ? 0 : value; OnProp(); }
+    }
+
+    /// <summary>
+    /// Whether the clan may use the AI command. Off by default for the same reason as the
+    /// team switch, doubled: a clan is up to a hundred accounts and the bill is still yours.
+    /// </summary>
+    private bool _clanCommandsAllowAi;
+    public bool ClanCommandsAllowAi
+    {
+        get => _clanCommandsAllowAi;
+        set { _clanCommandsAllowAi = value; OnProp(); }
+    }
+
     private string _cmdPop = "pop";
     public string CmdPop
     {

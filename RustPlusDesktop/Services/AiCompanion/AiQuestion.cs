@@ -11,6 +11,22 @@ namespace RustPlusDesk.Services.AiCompanion
     /// </summary>
     public sealed class AiQuestion
     {
+        /// <summary>
+        /// A question in words, where it was typed rather than spoken.
+        ///
+        /// Set by the chat command. When it is present there is nothing to transcribe and no
+        /// recording to send, so the providers skip straight to asking.
+        /// </summary>
+        public string? Text { get; init; }
+
+        /// <summary>
+        /// A hard ceiling on the answer, in words, or zero for the usual limit.
+        ///
+        /// Rust's chat truncates a long line and shows it to everyone in the team, so an
+        /// answer that goes there has to be shorter than one nobody else reads.
+        /// </summary>
+        public int MaxWords { get; init; }
+
         /// <summary>The microphone track: the player asking.</summary>
         public string? MicPath { get; init; }
 

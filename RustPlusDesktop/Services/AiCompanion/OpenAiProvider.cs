@@ -31,6 +31,14 @@ namespace RustPlusDesk.Services.AiCompanion
         public async Task<AiAnswerResult> AskAsync(
             AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct)
         {
+            // Typed: there is nothing to transcribe, and the transcription endpoint is the
+            // slow half of this provider.
+            if (!string.IsNullOrWhiteSpace(question.Text))
+            {
+                var typed = await Chat(question, question.Text, apiKey, onDelta, ct);
+                return new AiAnswerResult(typed, null);
+            }
+
             var spoken = await Transcribe(question.MicPath, apiKey, ct);
             var overheard = await Transcribe(question.GamePath, apiKey, ct);
 

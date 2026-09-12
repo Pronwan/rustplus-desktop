@@ -332,6 +332,50 @@
                         </StackPanel>
 
                         <!--
+                            Ask AI. Its own block rather than a row among the command words,
+                            because it is the only command that costs money to answer and the
+                            money is this client owner's.
+                        -->
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="{DynamicResource ChatAiCategory}" Foreground="{DynamicResource Accent}" Margin="0,0,0,2" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ChatAiDesc}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="120" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource ChatAiCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                                <ui:TextBox Grid.Column="2" Text="{Binding CmdAi}" Margin="0,4" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <!-- The info icon carries the part that costs money, next to the switch that starts it. -->
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox x:Name="ChatAiTeammatesCheckBox"
+                                          Content="{DynamicResource ChatAiAllowTeammates}"
+                                          IsChecked="{Binding ChatAiAllowTeammates, Mode=TwoWay}"
+                                          Style="{StaticResource DotCheckBox}"
+                                          VerticalAlignment="Center" />
+                                <ui:SymbolIcon Symbol="Info24"
+                                               FontSize="15"
+                                               Margin="6,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource Accent}"
+                                               ToolTipService.ShowDuration="30000"
+                                               ToolTip="{DynamicResource ChatAiCreditTooltip}" />
+                            </StackPanel>
+
+                            <!-- Only once it is on: a limit for nobody is a setting with nothing to limit. -->
+                            <StackPanel Margin="18,6,0,0" Visibility="{Binding ChatAiAllowTeammates, Converter={StaticResource Vis}}">
+                                <TextBlock Text="{DynamicResource ChatAiPerHour}" Foreground="{DynamicResource TextPrimary}" FontSize="12" Margin="0,0,0,4" />
+                                <ComboBox x:Name="ChatAiPerHourBox" Width="160" HorizontalAlignment="Left" SelectionChanged="ChatAiPerHour_SelectionChanged" />
+                                <TextBlock Text="{DynamicResource ChatAiPerHourHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--
                             Clan Commands Section. Only shown once a clan has actually been pulled
                             for this server: on a server where the player is in no clan the whole
                             block would be settings for something that cannot happen.
@@ -384,7 +428,13 @@
                                           IsChecked="{Binding ClanCommandsAllowBaseCodes, Mode=TwoWay}"
                                           Style="{StaticResource DotCheckBox}"
                                           Margin="0,0,0,2" />
-                                <TextBlock Text="{DynamicResource ClanCommandsAllowBaseCodesHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="18,0,0,0" />
+                                <TextBlock Text="{DynamicResource ClanCommandsAllowBaseCodesHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="18,0,0,8" />
+
+                                <CheckBox Content="{DynamicResource ClanCommandsAllowAi}"
+                                          IsChecked="{Binding ClanCommandsAllowAi, Mode=TwoWay}"
+                                          Style="{StaticResource DotCheckBox}"
+                                          Margin="0,0,0,2" />
+                                <TextBlock Text="{DynamicResource ClanCommandsAllowAiHint}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" TextWrapping="Wrap" Margin="18,0,0,0" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

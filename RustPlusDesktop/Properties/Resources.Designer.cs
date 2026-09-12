@@ -1041,6 +1041,22 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionGameDataOn => GetString("AiCompanionGameDataOn");
         public static string AiCompanionGameDataOnFree => GetString("AiCompanionGameDataOnFree");
         public static string AiCompanionGameDataOff => GetString("AiCompanionGameDataOff");
+        public static string ChatAiCategory => GetString("ChatAiCategory");
+        public static string ChatAiDesc => GetString("ChatAiDesc");
+        public static string ChatAiCommand => GetString("ChatAiCommand");
+        public static string ChatAiAllowTeammates => GetString("ChatAiAllowTeammates");
+        public static string ChatAiCreditTooltip => GetString("ChatAiCreditTooltip");
+        public static string ChatAiPerHour => GetString("ChatAiPerHour");
+        public static string ChatAiPerHourCount => GetString("ChatAiPerHourCount");
+        public static string ChatAiPerHourUnlimited => GetString("ChatAiPerHourUnlimited");
+        public static string ChatAiPerHourHint => GetString("ChatAiPerHourHint");
+        public static string ChatAiUsage => GetString("ChatAiUsage");
+        public static string ChatAiNoKey => GetString("ChatAiNoKey");
+        public static string ChatAiSupporter => GetString("ChatAiSupporter");
+        public static string ChatAiFailed => GetString("ChatAiFailed");
+        public static string ChatAiRateLimited => GetString("ChatAiRateLimited");
+        public static string ClanCommandsAllowAi => GetString("ClanCommandsAllowAi");
+        public static string ClanCommandsAllowAiHint => GetString("ClanCommandsAllowAiHint");
     }
 }
 

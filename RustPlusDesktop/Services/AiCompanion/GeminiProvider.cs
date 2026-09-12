@@ -33,18 +33,25 @@ namespace RustPlusDesk.Services.AiCompanion
             {
                 // Said in words, because the request carries two audio tracks and nothing else
                 // in it distinguishes them.
-                var intro = new StringBuilder();
-                intro.Append(question.MicPath != null
-                    ? "The first audio track is the player asking you something. "
-                    : "");
-                if (question.GamePath != null)
-                    intro.Append("The other audio track is the game's own sound at that moment. ");
-                if (intro.Length == 0) intro.Append(AiPrompt.NoSpeechFallback);
+                if (!string.IsNullOrWhiteSpace(question.Text))
+                {
+                    parts.Add(new { text = question.Text });
+                }
+                else
+                {
+                    var intro = new StringBuilder();
+                    intro.Append(question.MicPath != null
+                        ? "The first audio track is the player asking you something. "
+                        : "");
+                    if (question.GamePath != null)
+                        intro.Append("The other audio track is the game's own sound at that moment. ");
+                    if (intro.Length == 0) intro.Append(AiPrompt.NoSpeechFallback);
 
-                parts.Add(new { text = intro.ToString() });
+                    parts.Add(new { text = intro.ToString() });
 
-                AddAudio(parts, temporary, question.MicPath);
-                AddAudio(parts, temporary, question.GamePath);
+                    AddAudio(parts, temporary, question.MicPath);
+                    AddAudio(parts, temporary, question.GamePath);
+                }
 
                 if (question.ScreenshotPath != null && File.Exists(question.ScreenshotPath))
                 {

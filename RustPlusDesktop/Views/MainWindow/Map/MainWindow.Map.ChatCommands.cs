@@ -123,6 +123,10 @@ public partial class MainWindow
 
         _lastChatCommandTime = DateTime.UtcNow;
 
+        // Before the client check below, because this one answers from the companion rather
+        // than from the game and works whether or not the socket is up.
+        if (await TryHandleAiCommand(profile, m, cmd, prefix, channel, Reply)) return;
+
         if (_rust is not RustPlusClientReal real) return;
 
         // Command: List Commands
@@ -146,6 +150,11 @@ public partial class MainWindow
             // send people to a command that answers with nothing.
             if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && profile.HasBaseCodes && allowBaseCodes)
                 standardCmds.Add(prefix + profile.CmdBaseCodes);
+
+            // Listed only to people who could actually use it. Advertising it to a team it is
+            // switched off for invites four people to find out by being ignored.
+            if (!string.IsNullOrWhiteSpace(profile.CmdAi) && IsAiCommandListable(profile, m, channel))
+                standardCmds.Add(prefix + profile.CmdAi);
 
             string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
             if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";

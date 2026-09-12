@@ -7499,4 +7499,52 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionGameDataOff" xml:space="preserve">
     <value>Günstiger, aber Rezepte und Raid-Kosten kommen aus dem Gedächtnis des Modells — das jede alte Fassung kennt und nicht weiß, welche aktuell ist.</value>
   </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>KI fragen</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Den KI-Begleiter aus dem Spiel-Chat fragen und die Antwort im Chat bekommen. Antworten bleiben ein bis zwei Zeilen lang, ohne Screenshots.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>KI fragen</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Für Teammates erlauben</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>Standardmäßig aus, sodass nur du es nutzen kannst. Eingeschaltet beantwortet dein Anbieter jede Teammate-Frage über deinen API-Schlüssel auf deine Rechnung — mit deinen Einstellungen: gleicher Anbieter, gleiches Modell, gleiche Sprache.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Fragen pro Teammate</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} pro Stunde</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Unbegrenzt</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Pro Person über eine gleitende Stunde gezählt. Deine eigenen Fragen zählen nie mit.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Stell eine Frage nach dem Befehl.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>Auf diesem Client ist keine KI eingerichtet.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Die KI aus dem Chat zu fragen ist ein Supporter-Feature.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>Die KI konnte das nicht beantworten.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} hat die KI-Fragen für diese Stunde aufgebraucht.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>KI-Fragen erlauben</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Clan-Mitglieder können die KI über deinen API-Schlüssel fragen, die Rechnung ist deine. Unabhängig von der Team-Einstellung oben.</value>
+  </data>
 </root>

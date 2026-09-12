@@ -26,10 +26,16 @@ namespace RustPlusDesk.Services.AiCompanion
         public async Task<AiAnswerResult> AskAsync(
             AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct)
         {
+            bool typed = !string.IsNullOrWhiteSpace(question.Text);
+
             // On a worker: the recogniser chews through the file synchronously and would hold
-            // the UI thread for as long as the recording runs.
-            var spoken = await Task.Run(() => LocalTranscriber.Transcribe(question.MicPath), ct);
-            var overheard = question.GamePath == null
+            // the calling thread for as long as the recording runs. Skipped entirely for a
+            // typed question, which is the one case where this provider has no handicap.
+            var spoken = typed
+                ? question.Text!
+                : await Task.Run(() => LocalTranscriber.Transcribe(question.MicPath), ct);
+
+            var overheard = typed || question.GamePath == null
                 ? ""
                 : await Task.Run(() => LocalTranscriber.Transcribe(question.GamePath), ct);
 
@@ -39,7 +45,7 @@ namespace RustPlusDesk.Services.AiCompanion
             if (!string.IsNullOrWhiteSpace(overheard))
                 prompt.Append("\n\nHeard in the game at the same time: \"").Append(overheard).Append("\"");
 
-            if (!string.IsNullOrWhiteSpace(spoken))
+            if (!typed && !string.IsNullOrWhiteSpace(spoken))
             {
                 prompt.Append(
                     "\n\n(That question was transcribed by Windows' own speech recognition and may " +

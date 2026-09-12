@@ -250,6 +250,73 @@ namespace RustPlusDesk.Services.AiCompanion
             _ => AiPrompt.LanguageNamed(setting),
         };
 
+        /// <summary>
+        /// Asks a typed question and hands back the answer, touching none of the state above.
+        ///
+        /// The chat command uses this. It must not blank the panel under the tile, must not be
+        /// refused because a spoken question is in flight, and must not leave its answer behind
+        /// as the thing the panel is showing — a teammate asking about sulfur should be
+        /// invisible to whoever is wearing the overlay.
+        ///
+        /// It goes through the same settings as everything else: same provider, same model,
+        /// same game data, same key. That is the whole point of the permission that gates it.
+        /// </summary>
+        /// <returns>The answer, or null with <paramref name="error"/> set.</returns>
+        public static async Task<string?> AskTextAsync(
+            string question, string? context, int maxWords, CancellationToken ct = default)
+        {
+            var key = AiCompanionStore.ReadKey();
+            if (string.IsNullOrEmpty(key)) return null;
+
+            var settings = AiCompanionStore.Current;
+
+            var record = new AiExchange
+            {
+                Provider = settings.Provider,
+                Model = AiProviders.Model(settings.Provider),
+                Transcript = question,
+            };
+
+            try
+            {
+                var provider = AiProviderFactory.For(settings.Provider);
+
+                var asked = new AiQuestion
+                {
+                    Text = question,
+                    MaxWords = maxWords,
+                    Language = AnswerLanguageName(settings.AnswerLanguage),
+                    MatchQuestionLanguage = settings.AnswerLanguage == AnswerLanguages.MatchQuestion,
+                    Context = context,
+                };
+
+                // Never streamed: nothing is watching it arrive, and the answer cannot be sent
+                // to chat until it is whole anyway.
+                var result = await Task.Run(() => provider.AskAsync(asked, key, null, ct), ct);
+
+                record.Answer = result.Answer.Trim();
+                AiHistory.Add(record);
+
+                return string.IsNullOrWhiteSpace(result.Answer) ? null : result.Answer.Trim();
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
+            catch (AiRequestException ex)
+            {
+                record.Error = ex.Message;
+                AiHistory.Add(record);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                record.Error = Readable(ex);
+                AiHistory.Add(record);
+                return null;
+            }
+        }
+
         /// <summary>A network failure in the terms the player can do something about.</summary>
         private static string Readable(Exception ex) => ex switch
         {
