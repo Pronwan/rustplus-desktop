@@ -417,7 +417,8 @@ namespace RustPlusDesk
 
                 // Only one screenshot rides along with a question; a second press replaces the
                 // first rather than leaving it behind in the temp folder.
-                var path = await GameScreenshot.CaptureAsync(OurWindowHandles());
+                var path = await GameScreenshot.CaptureAsync(
+                    OurWindowHandles(), AiCompanionStore.Current.ScreenshotZoom);
                 AiCompanionService.Instance.AttachScreenshot(path);
 
                 if (path != null)

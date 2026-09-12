@@ -43,6 +43,15 @@ namespace RustPlusDesk.Views
             ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
             ChkAiAutoSend.IsChecked = settings.AutoSendAfterRecording;
 
+            if (CmbAiShotZoom.Items.Count == 0)
+            {
+                foreach (var (zoom, label) in ShotZooms)
+                    CmbAiShotZoom.Items.Add(new ComboBoxItem { Content = label(), Tag = zoom });
+            }
+
+            CmbAiShotZoom.SelectedIndex = Math.Max(0,
+                Array.FindIndex(ShotZooms, entry => Math.Abs(entry.Zoom - settings.ScreenshotZoom) < 0.01));
+
             if (CmbAiAnswerColor.Items.Count == 0)
             {
                 foreach (var key in Models.CommandDockTextColors.All)
@@ -100,6 +109,15 @@ namespace RustPlusDesk.Views
                     "Spoken answers use this provider's own voice.")
                 : Loc.Text("AiCompanionVoiceWindows",
                     "Spoken answers are read by Windows, which sounds noticeably more synthetic."));
+
+            // What it costs to use, because none of the three is covered by the chat
+            // subscription people already pay for and all three fail the same anonymous way
+            // when the credit runs out.
+            TxtAiProviderNote.Text += " " + (provider == AiProviders.Gemini
+                ? Loc.Text("AiCompanionBillingFree",
+                    "Google gives the API a free allowance, so a key from AI Studio works without paying. Busy sessions can still hit the per-minute limit.")
+                : Loc.Text("AiCompanionBillingPrepaid",
+                    "This API is billed separately from any chat subscription and needs its own prepaid credit."));
 
             // Per provider, and it says which of the others are set up too — the whole reason
             // there is a slot each is that people keep more than one and switch between them.
@@ -171,6 +189,12 @@ namespace RustPlusDesk.Views
                     "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
                 AiProviders.DefaultModel(provider));
 
+            TxtAiShotZoomNote.Text = settings.ScreenshotZoom >= 0.99
+                ? Loc.Text("AiCompanionShotFullNote",
+                    "Everything you can see, including the HUD and the map. Small things far from the crosshair may be too small for the model to identify.")
+                : Loc.Text("AiCompanionShotCropNote",
+                    "Only what you are aiming at, at full resolution. Much better at naming a switch on a wall or an item on the ground, and it cannot see the rest of the screen.");
+
             UpdateAiAnswerLabels();
         }
 
@@ -237,6 +261,30 @@ namespace RustPlusDesk.Views
                 (CmbAiAnswerColor.SelectedItem as ComboBoxItem)?.Tag as string
                 ?? Models.CommandDockTextColors.Auto;
             AiCompanionStore.Save(settings);
+        }
+
+        /// <summary>
+        /// How much of the screen a screenshot keeps.
+        ///
+        /// Three steps rather than a slider: the choice is between wanting the situation and
+        /// wanting the detail, and there is no useful answer at 43 per cent.
+        /// </summary>
+        private static readonly (double Zoom, Func<string> Label)[] ShotZooms =
+        {
+            (1.0, () => Loc.Text("AiCompanionShotFull", "Whole screen")),
+            (0.5, () => Loc.Text("AiCompanionShotHalf", "Middle half — closer look")),
+            (0.25, () => Loc.Text("AiCompanionShotQuarter", "Middle quarter — closest look")),
+        };
+
+        private void CmbAiShotZoom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.ScreenshotZoom = (CmbAiShotZoom.SelectedItem as ComboBoxItem)?.Tag as double? ?? 1.0;
+            AiCompanionStore.Save(settings);
+
+            ApplyAiCompanionState();
         }
 
         private void BtnAiAnswerPreview_Click(object sender, RoutedEventArgs e)

@@ -7439,4 +7439,28 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionVoiceWindows" xml:space="preserve">
     <value>Gesprochene Antworten liest Windows vor, was deutlich synthetischer klingt.</value>
   </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google gibt der API ein Gratis-Kontingent, ein Schlüssel aus AI Studio funktioniert also ohne Bezahlung. Bei vielen Anfragen kann trotzdem das Minutenlimit greifen.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>Diese API wird getrennt von jedem Chat-Abo abgerechnet und braucht eigenes Prepaid-Guthaben.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Screenshot-Ausschnitt</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Ganzer Bildschirm</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Mittlere Hälfte — näher dran</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Mittleres Viertel — am nächsten</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>Alles, was du siehst, samt HUD und Karte. Kleine Dinge abseits des Fadenkreuzes sind für das Modell womöglich zu klein.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Nur das, worauf du zielst, in voller Auflösung. Deutlich besser darin, einen Schalter an der Wand oder ein Item am Boden zu benennen — den Rest des Bildschirms sieht es dann nicht.</value>
+  </data>
 </root>

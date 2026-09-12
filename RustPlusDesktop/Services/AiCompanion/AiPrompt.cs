@@ -42,11 +42,34 @@ namespace RustPlusDesk.Services.AiCompanion
                     "A screenshot of the player's screen is attached. It may show the game, the " +
                     "map, an inventory or a menu. Use it to work out what is being asked about, " +
                     "and say so if it does not show what the question needs. ");
+
+                // The failure this is aimed at: a smart switch read as an RF receiver. Rust is
+                // full of small props that differ by a dial, an aerial or a colour, at a size
+                // where a scaled screenshot barely resolves them — and a confident wrong name
+                // is worse than an honest description, because it is acted on.
+                text.Append(
+                    "Be careful naming things you can only partly make out. Many Rust items " +
+                    "look alike at screenshot resolution: the electrical deployables are a " +
+                    "set of similar grey boxes, doors and walls differ mainly by tier, and " +
+                    "weapons and animals read as silhouettes at distance. Describe what you " +
+                    "can actually see — where it is, what shape and colour, what it is " +
+                    "attached to — and name the item only when you are sure. When you are " +
+                    "not, give the likely candidates and say what would tell them apart, so " +
+                    "the player can settle it by looking. ");
             }
 
             text.Append(
                 "If you are not sure, say what you are not sure about rather than guessing at " +
                 "numbers. Rust is patched often and exact values go stale.");
+
+            if (question.Zoom < 1.0)
+            {
+                text.Append(
+                    "The screenshot is a crop of the middle of the screen, around where the " +
+                    "player was aiming, so that small things are legible. The rest of the " +
+                    "screen and the HUD are outside it — do not read their absence as " +
+                    "meaningful. ");
+            }
 
             if (!string.IsNullOrWhiteSpace(question.Context))
                 text.Append("\n\nWhat the app knows right now: ").Append(question.Context);

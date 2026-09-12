@@ -60,6 +60,18 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>Attach a screenshot by default, without having to tick it each time.</summary>
         public bool AttachScreenshotByDefault { get; set; }
 
+        /// <summary>
+        /// How much of the screen a screenshot covers: 1 for all of it, 0.5 for the middle
+        /// half, 0.25 for the middle quarter.
+        ///
+        /// This is the one lever that really changes what a model can make out. Providers
+        /// scale an image down before they read it, so on a 4K screen a switch on a wall
+        /// arrives a couple of dozen pixels across whatever the file was saved at. Cropping
+        /// to the middle — which in a first-person game is whatever is being looked at —
+        /// hands over the same object several times larger, at the cost of the surroundings.
+        /// </summary>
+        public double ScreenshotZoom { get; set; } = 1.0;
+
         /// <summary>Send as soon as the recording stops, without a second press.</summary>
         public bool AutoSendAfterRecording { get; set; }
 

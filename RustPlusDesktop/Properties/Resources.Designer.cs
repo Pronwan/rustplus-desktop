@@ -1021,6 +1021,14 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionKeyAlsoStored => GetString("AiCompanionKeyAlsoStored");
         public static string AiCompanionVoiceNative => GetString("AiCompanionVoiceNative");
         public static string AiCompanionVoiceWindows => GetString("AiCompanionVoiceWindows");
+        public static string AiCompanionBillingFree => GetString("AiCompanionBillingFree");
+        public static string AiCompanionBillingPrepaid => GetString("AiCompanionBillingPrepaid");
+        public static string AiCompanionShotArea => GetString("AiCompanionShotArea");
+        public static string AiCompanionShotFull => GetString("AiCompanionShotFull");
+        public static string AiCompanionShotHalf => GetString("AiCompanionShotHalf");
+        public static string AiCompanionShotQuarter => GetString("AiCompanionShotQuarter");
+        public static string AiCompanionShotFullNote => GetString("AiCompanionShotFullNote");
+        public static string AiCompanionShotCropNote => GetString("AiCompanionShotCropNote");
     }
 }
 

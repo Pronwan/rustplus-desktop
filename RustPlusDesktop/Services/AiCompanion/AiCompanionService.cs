@@ -106,6 +106,7 @@ namespace RustPlusDesk.Services.AiCompanion
                 MicPath = mic,
                 GamePath = game,
                 ScreenshotPath = shot,
+                Zoom = shot == null ? 1.0 : settings.ScreenshotZoom,
                 Language = AiPrompt.CurrentLanguage(),
                 Context = context,
             };

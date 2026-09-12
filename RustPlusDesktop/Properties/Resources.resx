@@ -7418,4 +7418,28 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionVoiceWindows" xml:space="preserve">
     <value>Spoken answers are read by Windows, which sounds noticeably more synthetic.</value>
   </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google gives the API a free allowance, so a key from AI Studio works without paying. Busy sessions can still hit the per-minute limit.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>This API is billed separately from any chat subscription and needs its own prepaid credit.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Screenshot area</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Whole screen</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Middle half — closer look</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Middle quarter — closest look</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>Everything you can see, including the HUD and the map. Small things far from the crosshair may be too small for the model to identify.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Only what you are aiming at, at full resolution. Much better at naming a switch on a wall or an item on the ground, and it cannot see the rest of the screen.</value>
+  </data>
 </root>

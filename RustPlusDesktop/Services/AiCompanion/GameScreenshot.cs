@@ -55,7 +55,12 @@ namespace RustPlusDesk.Services.AiCompanion
         /// the display controller is already showing, the same thing a screen recorder takes,
         /// so there is nothing for an anti-cheat to object to.
         /// </param>
-        public static Task<string?> CaptureAsync(IReadOnlyList<IntPtr>? exclude = null)
+        /// <param name="zoom">
+        /// How much of the screen to keep, measured from the middle: 1 for all of it, 0.5 for
+        /// the middle half. Anything under 1 is there to make small things legible — see
+        /// <see cref="AiCompanionSettings.ScreenshotZoom"/>.
+        /// </param>
+        public static Task<string?> CaptureAsync(IReadOnlyList<IntPtr>? exclude = null, double zoom = 1.0)
         {
             return Task.Run<string?>(() =>
             {
@@ -63,7 +68,7 @@ namespace RustPlusDesk.Services.AiCompanion
 
                 try
                 {
-                    var bounds = GameScreenBounds();
+                    var bounds = Crop(GameScreenBounds(), zoom);
 
                     using var bitmap = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format24bppRgb);
                     using (var graphics = Graphics.FromImage(bitmap))
@@ -74,9 +79,15 @@ namespace RustPlusDesk.Services.AiCompanion
 
                     var path = Path.Combine(folder, $"shot-{DateTime.UtcNow:yyyyMMdd-HHmmss}.jpg");
 
-                    // JPEG at 80: a screenshot goes up with the question, and a lossless 4K frame
-                    // is eight megabytes of upload for detail no model needs to read a map.
-                    bitmap.Save(path, JpegEncoder(), JpegQuality(80));
+                    // JPEG at 92 rather than 80.
+                    //
+                    // The things being asked about are small: a smart switch on a wall is a few
+                    // dozen pixels before the provider scales the frame down again, and JPEG
+                    // spends its error budget exactly there, on small high-contrast detail. The
+                    // extra megabyte buys back the difference between naming the deployable and
+                    // guessing at it, and the file never leaves this machine except with the
+                    // question it belongs to.
+                    bitmap.Save(path, JpegEncoder(), JpegQuality(92));
                     return path;
                 }
                 catch
@@ -122,6 +133,27 @@ namespace RustPlusDesk.Services.AiCompanion
             if (done.Count > 0) System.Threading.Thread.Sleep(60);
 
             return done;
+        }
+
+        /// <summary>
+        /// Keeps the middle of a screen, in the proportion asked for.
+        ///
+        /// The middle rather than anywhere else because this is a first-person game: what the
+        /// player is asking about is what the crosshair is on.
+        /// </summary>
+        private static Rectangle Crop(Rectangle bounds, double zoom)
+        {
+            zoom = Math.Clamp(zoom, 0.2, 1.0);
+            if (zoom >= 1.0) return bounds;
+
+            int width = Math.Max(64, (int)Math.Round(bounds.Width * zoom));
+            int height = Math.Max(64, (int)Math.Round(bounds.Height * zoom));
+
+            return new Rectangle(
+                bounds.Left + (bounds.Width - width) / 2,
+                bounds.Top + (bounds.Height - height) / 2,
+                width,
+                height);
         }
 
         private static Rectangle GameScreenBounds()

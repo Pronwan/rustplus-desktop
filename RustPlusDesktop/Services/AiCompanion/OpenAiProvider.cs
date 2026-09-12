@@ -92,7 +92,15 @@ namespace RustPlusDesk.Services.AiCompanion
                 content.Add(new
                 {
                     type = "image_url",
-                    image_url = new { url = "data:image/jpeg;base64," + AiHttp.Base64(question.ScreenshotPath) },
+                    image_url = new
+                    {
+                        url = "data:image/jpeg;base64," + AiHttp.Base64(question.ScreenshotPath),
+
+                        // High detail costs more tokens and reads the frame in 512-pixel tiles
+                        // instead of one shrunken thumbnail. On a 4K screenshot that is the
+                        // difference between seeing a deployable and seeing a smudge.
+                        detail = "high",
+                    },
                 });
             }
 

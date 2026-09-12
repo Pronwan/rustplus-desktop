@@ -1291,6 +1291,13 @@
                                     <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiScreenshotDefault" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
                                 </Grid>
 
+                                <!--  The one setting that really changes what a model can make out in a frame:
+                                      providers scale an image down before reading it, so cropping to what the
+                                      player is aiming at hands over the same object several times larger.  -->
+                                <ui:TextBlock Text="{DynamicResource AiCompanionShotArea}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,6,0,0" />
+                                <ComboBox x:Name="CmbAiShotZoom" MinHeight="32" Padding="8,4" Margin="0,2,0,4" SelectionChanged="CmbAiShotZoom_SelectionChanged" />
+                                <ui:TextBlock x:Name="TxtAiShotZoomNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}" />
+
                                 <Border Style="{StaticResource SettingsRowDivider}" />
 
                                 <Grid MinHeight="36" Margin="0,0,0,10">

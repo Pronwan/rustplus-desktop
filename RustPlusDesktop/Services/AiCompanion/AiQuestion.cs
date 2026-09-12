@@ -20,6 +20,14 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>A JPEG of the game's screen, when one was attached.</summary>
         public string? ScreenshotPath { get; init; }
 
+        /// <summary>
+        /// How much of the screen that JPEG covers: 1 for all of it, 0.5 for the middle half.
+        ///
+        /// The model has to be told, or it reads a missing HUD and missing surroundings as
+        /// facts about the situation rather than as the edges of a crop.
+        /// </summary>
+        public double Zoom { get; init; } = 1.0;
+
         /// <summary>The language the answer should be in, as an English name such as "German".</summary>
         public string Language { get; init; } = "English";
 
