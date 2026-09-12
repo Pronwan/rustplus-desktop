@@ -7677,4 +7677,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="AiCompanionPolicyRouting" xml:space="preserve">
     <value>OpenRouter ist ein Vermittler, nicht das Modell selbst: Deine Aufnahme wird an die Firma weitergereicht, die das gewählte Modell betreibt, und deren Bedingungen gelten dann ebenfalls. Solange „Strict Privacy“ aus ist, können das Anbieter sein, die Anfragen aufbewahren und darauf trainieren dürfen — meist ist genau das der Grund, warum ein Modell kostenlos ist.</value>
   </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Nur Karte (Standard)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Entfernt alle Widgets und setzt die Karte zurück in ihre Ecke</value>
+  </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Anfrage an</value>
+  </data>
 </root>

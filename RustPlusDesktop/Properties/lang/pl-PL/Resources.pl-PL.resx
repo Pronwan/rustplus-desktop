@@ -5771,4 +5771,13 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon nie akceptuje już połączenia z Rust+ Desktop, więc alarmy o rajdzie przestały docierać do Alexy. Sterowanie głosowe działa dalej. Otwórz aplikację Alexa, wyłącz umiejętność Rust+ Desktop i połącz ją ponownie.</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Wyślij do</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Tylko mapa (domyślnie)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Usuwa wszystkie widżety i przywraca mapę do jej rogu</value>
+  </data>
 </root>

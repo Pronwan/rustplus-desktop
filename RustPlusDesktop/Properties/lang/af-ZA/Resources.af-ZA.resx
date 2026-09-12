@@ -5765,4 +5765,13 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Verwyder {0} uit die span?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Stuur aan</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Slegs kaart (verstek)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Verwyder elke widget en sit die kaart terug in sy hoek</value>
+  </data>
 </root>

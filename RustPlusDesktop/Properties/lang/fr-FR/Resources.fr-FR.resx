@@ -7583,4 +7583,13 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Dernière tentative : {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Envoyer à</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Carte seule (par défaut)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Retire tous les widgets et remet la carte dans son coin</value>
+  </data>
 </root>

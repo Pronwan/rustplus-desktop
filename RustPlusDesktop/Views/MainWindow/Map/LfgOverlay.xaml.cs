@@ -1567,10 +1567,22 @@ public partial class LfgOverlay : UserControl
 
     // ── Friends ─────────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Who the pending request is for, when the sheet was opened from somebody's chat line.
+    ///
+    /// The card above the form shows their name and face; this is the id it stands for. Held
+    /// here rather than in the text box because the text box is what the user can see, and an
+    /// id belongs to the person it identifies, not to whoever happens to be adding them.
+    /// </summary>
+    private string? _friendTargetSteamId;
+
     private async void BtnFriends_Click(object sender, RoutedEventArgs e)
     {
         FriendsSheet.Visibility = Visibility.Visible;
         FriendsNotice.Visibility = Visibility.Collapsed;
+
+        // Opened by hand, so there is nobody in mind yet: back to the plain id field.
+        ClearFriendTarget();
 
         await LoadFriendsAsync().ConfigureAwait(true);
     }
@@ -1612,7 +1624,7 @@ public partial class LfgOverlay : UserControl
 
     private async void BtnFriendAdd_Click(object sender, RoutedEventArgs e)
     {
-        var steamId = TxtFriendSteamId.Text?.Trim() ?? "";
+        var steamId = _friendTargetSteamId ?? TxtFriendSteamId.Text?.Trim() ?? "";
         var message = TxtFriendMessage.Text?.Trim() ?? "";
 
         if (steamId.Length == 0 || message.Length == 0) return;
@@ -1626,7 +1638,7 @@ public partial class LfgOverlay : UserControl
 
             if (result == SocialApi.FriendRequestResult.Ok)
             {
-                TxtFriendSteamId.Text = "";
+                ClearFriendTarget();
                 TxtFriendMessage.Text = "";
 
                 // Green rather than red: this one is not a refusal.
@@ -1746,7 +1758,7 @@ public partial class LfgOverlay : UserControl
     private void ChatAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
-        _ = StartFriendRequestAsync(line.SteamId);
+        _ = StartFriendRequestAsync(line.SteamId, line.SenderName, line.AvatarUrl);
     }
 
     /// <summary>
@@ -1755,10 +1767,10 @@ public partial class LfgOverlay : UserControl
     /// The global chat lane in the team-chat window offers the same action, and a second friends
     /// sheet built over there would be a second one to keep true. It opens this panel instead.
     /// </summary>
-    public void StartFriendRequestFor(string? steamId)
+    public void StartFriendRequestFor(string? steamId, string? name = null, string? avatarUrl = null)
     {
         ShowPublicRoom();
-        _ = StartFriendRequestAsync(steamId);
+        _ = StartFriendRequestAsync(steamId, name, avatarUrl);
     }
 
     /// <summary>
@@ -1779,24 +1791,92 @@ public partial class LfgOverlay : UserControl
     private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
-        _ = StartFriendRequestAsync(thread.CounterpartSteamId);
+        _ = StartFriendRequestAsync(thread.CounterpartSteamId, thread.CounterpartName, thread.AvatarUrl);
     }
 
     /// <summary>
-    /// Opens the friends sheet with the id already filled in, so the one message they get is all
+    /// Opens the friends sheet already aimed at somebody, so the one message they get is all
     /// that is left to write. Somebody who has no Steam id on their account cannot be added, and
     /// the empty field says so more plainly than a refusal afterwards would.
     /// </summary>
-    private async Task StartFriendRequestAsync(string? steamId)
+    private async Task StartFriendRequestAsync(string? steamId, string? name = null, string? avatarUrl = null)
     {
         FriendsSheet.Visibility = Visibility.Visible;
         FriendsNotice.Visibility = Visibility.Collapsed;
 
-        TxtFriendSteamId.Text = steamId ?? "";
+        ShowFriendTarget(steamId, name, avatarUrl);
         TxtFriendMessage.Text = "";
         TxtFriendMessage.Focus();
 
         await LoadFriendsAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>
+    /// Puts the person on the card and takes the id off the screen.
+    ///
+    /// Without a name there is nothing to put on the card, and falling back to the id field is
+    /// the only way such a request can still be sent — every caller here has a name, so that is
+    /// a path for somebody we genuinely know nothing about rather than the ordinary case.
+    /// </summary>
+    private void ShowFriendTarget(string? steamId, string? name, string? avatarUrl)
+    {
+        if (string.IsNullOrWhiteSpace(steamId) || string.IsNullOrWhiteSpace(name))
+        {
+            ClearFriendTarget();
+            TxtFriendSteamId.Text = steamId ?? "";
+            return;
+        }
+
+        _friendTargetSteamId = steamId.Trim();
+
+        FriendTargetName.Text = name;
+        FriendTargetAvatar.ImageSource = LoadAvatar(avatarUrl);
+
+        FriendTargetCard.Visibility = Visibility.Visible;
+
+        // Collapsed rather than disabled: a greyed-out box still shows what is in it.
+        TxtFriendSteamId.Text = "";
+        TxtFriendSteamId.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>Back to the plain id field, with nothing of the last person left behind.</summary>
+    private void ClearFriendTarget()
+    {
+        _friendTargetSteamId = null;
+
+        FriendTargetCard.Visibility = Visibility.Collapsed;
+        FriendTargetName.Text = "";
+        FriendTargetAvatar.ImageSource = null;
+
+        TxtFriendSteamId.Text = "";
+        TxtFriendSteamId.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>
+    /// The avatar, or nothing. Frozen so it can be handed straight to the brush, and http only:
+    /// a url from the server is still a url somebody else wrote.
+    /// </summary>
+    private static ImageSource? LoadAvatar(string? url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return null;
+        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) return null;
+
+        try
+        {
+            var image = new System.Windows.Media.Imaging.BitmapImage();
+            image.BeginInit();
+            image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+            image.UriSource = uri;
+            image.EndInit();
+            if (image.CanFreeze) image.Freeze();
+
+            return image;
+        }
+        catch
+        {
+            // A face that will not load is not a reason to lose the request.
+            return null;
+        }
     }
 
     // ── The block list ──────────────────────────────────────────────────────

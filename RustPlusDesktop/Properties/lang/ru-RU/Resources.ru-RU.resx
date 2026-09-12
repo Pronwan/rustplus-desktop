@@ -7583,4 +7583,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Последняя попытка: {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Только карта (по умолчанию)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Убирает все виджеты и возвращает карту в её угол</value>
+  </data>
 </root>

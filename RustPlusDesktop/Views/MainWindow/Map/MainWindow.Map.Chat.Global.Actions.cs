@@ -125,7 +125,7 @@ public partial class MainWindow
 
         EnsureLfgWired();
         LfgPanel.Visibility = Visibility.Visible;
-        LfgPanel.StartFriendRequestFor(line.SteamId);
+        LfgPanel.StartFriendRequestFor(line.SteamId, line.SenderName, line.AvatarUrl);
     }
 
     /// <summary>

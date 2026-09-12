@@ -5765,4 +5765,13 @@ Podeu trobar més informació al lloc web oficial del servidor:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Vols treure {0} de l’equip?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>S'enviarà a</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Només el mapa (predeterminat)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Elimina tots els ginys i torna el mapa al seu racó</value>
+  </data>
 </root>

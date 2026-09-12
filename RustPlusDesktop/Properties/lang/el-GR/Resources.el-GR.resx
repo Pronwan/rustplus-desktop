@@ -5765,4 +5765,13 @@ Open Releases page?</value>
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Να αφαιρεθεί ο/η {0} από την ομάδα;</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Αποστολή σε</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Μόνο χάρτης (προεπιλογή)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Αφαιρεί όλα τα widget και επαναφέρει τον χάρτη στη γωνία του</value>
+  </data>
 </root>

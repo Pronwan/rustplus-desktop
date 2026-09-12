@@ -5765,4 +5765,13 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Eltávolítod {0} játékost a csapatból?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Címzett</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Csak térkép (alapértelmezett)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Eltávolít minden widgetet, és visszateszi a térképet a sarkába</value>
+  </data>
 </root>

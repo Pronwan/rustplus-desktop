@@ -1098,6 +1098,8 @@ namespace RustPlusDesk.Properties {
         public static string AiHistoryVoiceFailedBody => GetString("AiHistoryVoiceFailedBody");
         public static string CommandDockAiNoKeyForProvider => GetString("CommandDockAiNoKeyForProvider");
         public static string AiCompanionPolicyRouting => GetString("AiCompanionPolicyRouting");
+        public static string CommandDockTemplateDefault => GetString("CommandDockTemplateDefault");
+        public static string CommandDockTemplateDefaultHint => GetString("CommandDockTemplateDefaultHint");
     }
 }
 

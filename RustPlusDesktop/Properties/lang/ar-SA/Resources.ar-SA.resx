@@ -7474,4 +7474,13 @@
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>آخر محاولة: {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>إرسال إلى</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>الخريطة فقط (افتراضي)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>يزيل كل الأدوات ويعيد الخريطة إلى زاويتها</value>
+  </data>
 </root>

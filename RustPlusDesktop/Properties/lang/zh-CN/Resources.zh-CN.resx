@@ -7331,4 +7331,13 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>最近一次尝试：{0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>发送给</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>仅地图（默认）</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>移除所有小部件，并把地图放回它的角落</value>
+  </data>
 </root>

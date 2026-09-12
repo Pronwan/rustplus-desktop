@@ -7583,4 +7583,13 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Último intento: {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Enviar a</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Solo el mapa (predeterminado)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Quita todos los widgets y devuelve el mapa a su esquina</value>
+  </data>
 </root>

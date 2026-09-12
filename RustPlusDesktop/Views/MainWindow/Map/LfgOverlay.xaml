@@ -1574,6 +1574,44 @@
                         <!--  Adding somebody: an id and one message, which is all you get.  -->
                         <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,12,0,12" />
 
+                        <!--
+                            Who the request is going to, when it was started from a chat line or a
+                            thread rather than typed in here.
+
+                            A face and the name they chat under, which is what the sender actually
+                            recognises — and deliberately not the Steam id. We resolve the request
+                            by id underneath, but nobody should have to put their id on another
+                            player's screen as the price of being invited.
+                        -->
+                        <Border x:Name="FriendTargetCard" Visibility="Collapsed" Padding="10" CornerRadius="6"
+                                Background="#14FFFFFF" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" MinWidth="0" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0"
+                                      VerticalAlignment="Center">
+                                    <!--  Underneath, so a missing or slow avatar is a quiet disc.  -->
+                                    <Ellipse Fill="{StaticResource LfgLine}" />
+                                    <Ellipse>
+                                        <Ellipse.Fill>
+                                            <ImageBrush x:Name="FriendTargetAvatar" Stretch="UniformToFill" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource FriendsAddTarget}"
+                                               Foreground="{StaticResource LfgMuted}" FontSize="10" />
+                                    <TextBlock x:Name="FriendTargetName" Margin="0,1,0,0"
+                                               Foreground="{StaticResource LfgText}" FontSize="12.5"
+                                               FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
                         <ui:TextBox x:Name="TxtFriendSteamId" MaxLength="17"
                                     PlaceholderText="{DynamicResource FriendsAddSteamId}" />
                         <ui:TextBox x:Name="TxtFriendMessage" MaxLength="300" Margin="0,8,0,0"

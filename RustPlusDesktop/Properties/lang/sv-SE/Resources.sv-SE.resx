@@ -5765,4 +5765,13 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Ta bort {0} från laget?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Skickas till</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Endast karta (standard)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Tar bort alla widgetar och lägger tillbaka kartan i hörnet</value>
+  </data>
 </root>

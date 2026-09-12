@@ -5765,4 +5765,13 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Xoá {0} khỏi đội?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Gửi đến</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Chỉ bản đồ (mặc định)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Gỡ mọi tiện ích và đưa bản đồ về góc của nó</value>
+  </data>
 </root>

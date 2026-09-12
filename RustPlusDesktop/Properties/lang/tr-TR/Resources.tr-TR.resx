@@ -6616,4 +6616,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Son deneme: {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Gönderilecek kişi</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Yalnızca harita (varsayılan)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Tüm bileşenleri kaldırır ve haritayı köşesine geri koyar</value>
+  </data>
 </root>

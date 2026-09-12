@@ -5771,4 +5771,13 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>A Amazon não aceita mais a conexão com o Rust+ Desktop, então os alarmes de raid deixaram de chegar à Alexa. O controle por voz continua funcionando. Abra o aplicativo Alexa, desative a skill do Rust+ Desktop e vincule novamente.</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Enviando para</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Somente o mapa (padrão)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Remove todos os widgets e devolve o mapa ao seu canto</value>
+  </data>
 </root>

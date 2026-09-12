@@ -7504,4 +7504,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>마지막 시도: {0}</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>받는 사람</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>지도만 (기본값)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>모든 위젯을 제거하고 지도를 원래 모서리로 되돌립니다</value>
+  </data>
 </root>

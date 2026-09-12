@@ -1476,4 +1476,13 @@
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon 不再接受与 Rust+ Desktop 的连接，突袭警报无法送达 Alexa。语音控制仍可正常使用。请打开 Alexa 应用，停用 Rust+ Desktop 技能后重新关联。</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>发送给</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>仅地图（默认）</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>移除所有小部件，并把地图放回它的角落</value>
+  </data>
 </root>
