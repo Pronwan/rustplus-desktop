@@ -1185,14 +1185,14 @@
                                             <Border.ContextMenu>
                                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                     <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ThreadAddFriend_Click" Tag="{Binding}">
-                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="PersonAdd24" FontSize="14" /></MenuItem.Icon>
+                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="PersonAdd24" FontSize="16" /></MenuItem.Icon>
                                                     </MenuItem>
                                                     <Separator />
                                                     <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuBlock_Click" Tag="{Binding}">
-                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="PersonProhibited24" FontSize="14" /></MenuItem.Icon>
+                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="PersonProhibited24" FontSize="16" /></MenuItem.Icon>
                                                     </MenuItem>
                                                     <MenuItem Header="{DynamicResource LfgReportUser}" Click="MenuReport_Click" Tag="{Binding}">
-                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="Flag24" FontSize="14" /></MenuItem.Icon>
+                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="Flag24" FontSize="16" /></MenuItem.Icon>
                                                     </MenuItem>
                                                 </ContextMenu>
                                             </Border.ContextMenu>
@@ -1410,23 +1410,23 @@
                                                     <ContextMenu Style="{StaticResource DarkContextMenu}">
                                                         <MenuItem Header="{DynamicResource FriendsMessage}" Click="MenuFriendMessage_Click" Tag="{Binding}">
                                                             <MenuItem.Icon>
-                                                                <ui:SymbolIcon Symbol="Chat24" FontSize="14" />
+                                                                <ui:SymbolIcon Symbol="Chat24" FontSize="16" />
                                                             </MenuItem.Icon>
                                                         </MenuItem>
                                                         <MenuItem Header="{DynamicResource ProfileOpenSteam}" Click="MenuFriendProfile_Click" Tag="{Binding}">
                                                             <MenuItem.Icon>
-                                                                <ui:SymbolIcon Symbol="Globe24" FontSize="14" />
+                                                                <ui:SymbolIcon Symbol="Globe24" FontSize="16" />
                                                             </MenuItem.Icon>
                                                         </MenuItem>
                                                         <Separator />
                                                         <MenuItem Header="{DynamicResource FriendsRemove}" Click="MenuFriendRemove_Click" Tag="{Binding}">
                                                             <MenuItem.Icon>
-                                                                <ui:SymbolIcon Symbol="PersonDelete24" FontSize="14" />
+                                                                <ui:SymbolIcon Symbol="PersonDelete24" FontSize="16" />
                                                             </MenuItem.Icon>
                                                         </MenuItem>
                                                         <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuFriendBlock_Click" Tag="{Binding}">
                                                             <MenuItem.Icon>
-                                                                <ui:SymbolIcon Symbol="PersonProhibited24" FontSize="14" />
+                                                                <ui:SymbolIcon Symbol="PersonProhibited24" FontSize="16" />
                                                             </MenuItem.Icon>
                                                         </MenuItem>
                                                     </ContextMenu>
