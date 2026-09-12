@@ -7547,4 +7547,109 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>Clan-Mitglieder können die KI über deinen API-Schlüssel fragen, die Rechnung ist deine. Unabhängig von der Team-Einstellung oben.</value>
   </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>Die Mini-Map wird zur Kommandozentrale — und der KI-Begleiter kommt dazu.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Uhren, Smart Switches, Team- und Clan-Chat, Event-Timer, Session-Statistiken und Serverauslastung als Widgets rund um die Karte. Mit + im Dock fügst du eines hinzu; es landet im ersten freien Feld und lässt sich von dort beliebig ziehen. Auch die Karte ist ein Widget und kann verschoben oder ganz entfernt werden.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>Nach deinem Geschmack</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Textfarbe, Schriftgröße und Transparenz auf einmal für das ganze Dock — und jedes Widget kann alle drei über sein eigenes Zahnrad überschreiben. Sperre das Layout gegen versehentliches Ziehen und speichere Anordnungen unter einem Namen, um zwischen ihnen zu wechseln.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>KI-Begleiter</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Taste halten, laut fragen und eine Antwort bekommen, ohne das Spiel zu verlassen — als Text unter dem Widget oder vorgelesen. Wähle GPT, Gemini oder Claude und nutze deinen eigenen API-Schlüssel: Er liegt nur auf diesem PC und wird nie hochgeladen, und Aufnahmen gehen direkt an den gewählten Anbieter.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>!ai im Team- und Clan-Chat</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>Frag direkt aus dem Spiel heraus, die Antwort kommt im Chat zurück, auf ein bis zwei Zeilen begrenzt. Standardmäßig nur für dich freigegeben — jede Antwort geht auf deinen Schlüssel — und beim Freischalten mit Stundenlimit pro Teammate.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Mach aus der Mini-Map ein Dock aus Widgets, das du selbst anordnest.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Mini-Map öffnen</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>Der Mini-Button öffnet die Mini-Map in einem eigenen Fenster, das über dem Spiel schwebt. Alles in diesem Tutorial passiert in diesem Fenster.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>Widgets mit + hinzufügen</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>Die Karte ist nur eines von vielen Widgets. Mit + in der Titelleiste des Docks fügst du eine Uhr hinzu, einen gekoppelten Smart Switch oder Alarm, Team- oder Clan-Chat, einen Event-Timer, eine Logic-Engine-Regel, Session-Statistiken, die Serverauslastung, eine Discord-Zeile — oder den KI-Begleiter. Jedes landet im ersten freien Feld neben der Karte.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Ziehen, skalieren, sperren</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Fahre über ein Widget, um es zu verschieben, zieh an der Ecke, um die Größe zu ändern, oder entferne es mit ×. Das Schloss in der Titelleiste schützt das ganze Layout vor versehentlichem Ziehen, und über Anordnungen speicherst du das Dock unter einem Namen — fahr über einen gespeicherten Namen, um ihn vor dem Laden als Umriss zu sehen.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Das ganze Dock gestalten</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Textfarbe, Schriftgröße und Transparenz für alle Widgets auf einmal. Ein fast unsichtbares Dock bleibt lesbar, weil der Text seinen Schatten behält und nur der Hintergrund verblasst.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Oder einzeln je Widget</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>Jedes Widget hat sein eigenes Zahnrad mit denselben drei Einstellungen. Änderst du dort etwas, folgt dieses Widget nicht mehr den Dock-Standards; alle anderen erben sie weiterhin, und eine Schaltfläche setzt es zurück.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>KI-Begleiter</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Stell eine Frage laut und bekomm eine Antwort, ohne das Spiel zu verlassen.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>Was es macht</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Taste halten oder auf das Widget drücken, Frage stellen — die Antwort erscheint in einem Fenster unter dem Widget oder wird vorgelesen. Es läuft über dein eigenes Konto bei einem KI-Anbieter: Die Aufnahme geht von diesem PC direkt dorthin und niemals über unsere Server.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>Zu finden unter Verbundene Dienste</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Einstellungen → Verbundene Dienste → AI Companion. Alles für den Begleiter steckt in dieser Karte: Anbieter, Schlüssel, wie Antworten ankommen und was aufgenommen wird.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Drei Modelle zur Auswahl</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT und Gemini nehmen deine Aufnahme direkt entgegen — sie hören also genau das, was du gesagt hast — und lesen die Antwort mit eigener Stimme vor. Claude akzeptiert kein Audio: Die Aufnahme wird zuerst auf diesem PC in Text umgewandelt, was langsamer ist und bei Namen und Spielbegriffen schwächer. Gemini hat ein kostenloses API-Kontingent; GPT und Claude brauchen eigenes Prepaid-Guthaben, unabhängig von jedem Chat-Abo.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Eigenen Schlüssel einfügen</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Erstelle beim gewählten Anbieter einen API-Schlüssel und füge ihn in das Schlüsselfeld ein. Er liegt nur auf diesem PC, geschützt durch dein Windows-Konto, und wird nie hochgeladen — das heißt auch, dass er eine Neuinstallation oder den Wechsel auf einen anderen PC nicht übersteht. Es gibt einen Platz pro Anbieter, du kannst also alle drei hinterlegen.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Aus dem Dock fragen</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>Füge das Widget „KI fragen“ mit + zum Command Dock hinzu. Drücken startet die Aufnahme, erneut drücken beendet sie, dann senden. Du kannst einen Screenshot anhängen: Es zählt erst von drei herunter, damit du vor dem Auslöser wieder im Spiel bist — und die App lässt sich selbst aus dem Bild.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Dem Team !ai erlauben</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>Unter Chat-Befehle kannst du Teammates erlauben, !ai aus dem Spiel-Chat zu nutzen. Es läuft über diesen Client mit deinem Schlüssel und deinen Einstellungen — gleicher Anbieter, gleiches Modell, gleiche Sprache — deshalb ist es aus, bis du es einschaltest, und beim Einschalten kommt ein Stundenlimit pro Teammate dazu. Der Clan hat einen eigenen, getrennten Schalter.</value>
+  </data>
 </root>

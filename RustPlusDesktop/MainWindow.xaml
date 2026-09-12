@@ -10216,12 +10216,25 @@
 
             <tutorialViews:TutorialsPage
                 x:Name="TutorialsPagePanel"
+                Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.ColumnSpan="3"
                 Panel.ZIndex="18000"
                 Visibility="Collapsed" />
 
+            <!--
+                RowSpan is load-bearing. This grid is a title-bar row over a content row, and
+                a child without it sits in row 0 — so the overlay measured as tall as the
+                title bar, and the dimming stopped an inch below the top of the window. It
+                looked worst maximised, where that inch is a smaller share of the screen.
+
+                The overlay takes its size from its own layout slot, so covering both rows is
+                what makes it follow the window when it is resized, maximised or restored.
+            -->
             <tutorialControls:TutorialOverlay
                 x:Name="TutorialOverlay"
+                Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.ColumnSpan="3"
                 Panel.ZIndex="20000" />
 

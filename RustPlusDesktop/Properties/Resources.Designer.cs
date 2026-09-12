@@ -1057,6 +1057,15 @@ namespace RustPlusDesk.Properties {
         public static string ChatAiRateLimited => GetString("ChatAiRateLimited");
         public static string ClanCommandsAllowAi => GetString("ClanCommandsAllowAi");
         public static string ClanCommandsAllowAiHint => GetString("ClanCommandsAllowAiHint");
+        public static string UpdateWhatsNew93Summary => GetString("UpdateWhatsNew93Summary");
+        public static string UpdateWhatsNew93Title1 => GetString("UpdateWhatsNew93Title1");
+        public static string UpdateWhatsNew93Desc1 => GetString("UpdateWhatsNew93Desc1");
+        public static string UpdateWhatsNew93Title2 => GetString("UpdateWhatsNew93Title2");
+        public static string UpdateWhatsNew93Desc2 => GetString("UpdateWhatsNew93Desc2");
+        public static string UpdateWhatsNew93Title3 => GetString("UpdateWhatsNew93Title3");
+        public static string UpdateWhatsNew93Desc3 => GetString("UpdateWhatsNew93Desc3");
+        public static string UpdateWhatsNew93Title4 => GetString("UpdateWhatsNew93Title4");
+        public static string UpdateWhatsNew93Desc4 => GetString("UpdateWhatsNew93Desc4");
     }
 }
 

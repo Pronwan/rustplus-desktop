@@ -43,6 +43,64 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
+                    <!-- NEW v9.3 PATCH NOTES -->
+                    <!-- ============================================== -->
+                    <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="v9.3 | The Command Dock &amp; the AI Companion" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
+                                The mini-map has grown into a command centre you can build yourself: the map is now one widget among many, and clocks, smart switches, chat, session stats, server population and Discord can sit around it in any arrangement you like. Alongside it comes the AI Companion — hold a key, ask a question out loud, and get an answer without leaving the game.
+                            </TextBlock>
+
+                            <TextBlock Text="🎛️ Command Dock" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Widgets Around the Map:</Run>
+                                Open the mini-map and press + to add a widget. Digital, analogue and Rust-styled clocks, any paired smart switch or alarm, team and clan chat, the event timers, Logic Engine rules, session stats, server population and a Discord line — each one lands in the first free cell next to the map and can be dragged anywhere from there.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; The Map Is a Widget Too:</Run>
+                                It can be moved, or removed entirely for a bar of switches along the edge of your screen. Its five layers — texture, grid, drawings, icons, players — switch on and off separately, and death markers have their own.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Styled Globally or One at a Time:</Run>
+                                Text colour, text size and transparency are set once for the whole dock, and any widget can override all three from its own gear. A dock turned nearly invisible still reads over snow and water, because the text keeps a shadow while the background fades.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Lock It, and Save Arrangements:</Run>
+                                A lock in the title bar puts the layout beyond accidental dragging. Arrangements save the whole dock under a name — hover one to see it outlined in place before you load it.
+                            </TextBlock>
+
+                            <TextBlock Text="🤖 AI Companion" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Ask Out Loud, Keep Playing:</Run>
+                                Press the widget or hold your push-to-talk key, ask, and the answer appears in a panel under the tile or is read to you. You can attach a screenshot — it counts three down first, so you are back in the game before the shutter, and the app takes itself out of the picture.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Your Key, Your Account, Three Models:</Run>
+                                Choose GPT, Gemini or Claude and paste your own API key. GPT and Gemini take the recording itself; Claude does not accept audio, so it is transcribed on your PC first, which is slower and weaker on names. Gemini has a free allowance; GPT and Claude need their own prepaid credit, separately from any chat subscription.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Stored Locally, Sent Nowhere Else:</Run>
+                                The key is kept on your PC, protected by your Windows account, and is never uploaded. Recordings go straight from your machine to the provider you chose and never pass through our servers. One key per provider, so switching between them no longer overwrites the other.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; It Knows the Current Patch:</Run>
+                                Crafting recipes and raid costs are sent from the app's own data with every question, so it answers with what a metal wall costs today rather than what it cost two updates ago.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; !ai in Team and Clan Chat:</Run>
+                                Ask from inside the game and the answer comes back in chat, kept to a line or two. Off for everyone but you until you allow it, with a per-teammate hourly limit when you do — every answer is billed to your key.
+                            </TextBlock>
+
+                            <views:ImageGallery>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/9.3/CommandDock.jpg" Description="The Command Dock: the mini-map as one widget among clocks, smart switches, chat, session stats and server population, each styled globally or on its own"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/9.3/ai-chat-command.jpg" Description="The AI Companion answering !ai from in-game chat — your own key, your own model, and a per-teammate hourly limit when you let the team use it"/>
+                            </views:ImageGallery>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============================================== -->
                     <!-- NEW v9.2.2 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">

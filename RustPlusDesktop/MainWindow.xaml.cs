@@ -653,6 +653,18 @@ public partial class MainWindow : WpfUi.FluentWindow
         // One-time migration notice for v5.2.0
         var appVersion = VersionHelper.GetClientVersion();
 
+        // Strictly less than, for a notice aimed at everyone arriving from before a release
+        // rather than everyone up to and including one. "9.2.2" is below "9.3"; "9.3.0" is
+        // not, because System.Version orders an absent build component below a zero one.
+        bool IsVersionLessThan(string versionStr, string targetStr)
+        {
+            string cleanVer = versionStr.Split('-')[0];
+            string cleanTarget = targetStr.Split('-')[0];
+            return System.Version.TryParse(cleanVer, out var v1)
+                && System.Version.TryParse(cleanTarget, out var v2)
+                && v1 < v2;
+        }
+
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
             string cleanVer = versionStr.Split('-')[0];
@@ -724,7 +736,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // Everyone arriving from 9.0.4 or earlier gets the what's-new notice once. A fresh install
+        // Everyone arriving from before 9.3 gets the what's-new notice once. A fresh install
         // starts on the current version and has nothing to catch up on, so it is left alone.
         //
         // The flag is latched here rather than re-derived on every start: LastSeenVersion has
@@ -736,7 +748,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // ticked — and the notice could never be dismissed.
         if (!string.IsNullOrEmpty(versionBeforeThisStart)
             && versionBeforeThisStart != appVersion
-            && IsVersionLessThanOrEqual(versionBeforeThisStart, "9.0.4"))
+            && IsVersionLessThan(versionBeforeThisStart, "9.3"))
         {
             TrackingService.PendingWhatsNewNotice = true;
         }

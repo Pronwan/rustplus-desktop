@@ -7526,4 +7526,109 @@ Close this preview when the panel looks right.</value>
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>Clan members can ask the AI on your API key, and the bill is yours. Separate from the team setting above.</value>
   </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>The mini-map becomes a command centre — and the AI Companion arrives.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Clocks, smart switches, team and clan chat, event timers, session stats and server population as widgets around the map. Press + in the dock to add one; it lands in the first free cell and can be dragged anywhere from there. The map is a widget too, and can be moved or removed entirely.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>Styled Your Way</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Text colour, text size and transparency for the whole dock at once, and any widget can override all three from its own gear. Lock the layout against accidental dragging, and save arrangements under a name to switch between them.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Hold a key, ask out loud, and get an answer without leaving the game — as text under the widget or read aloud. Choose GPT, Gemini or Claude and use your own API key: it is stored on this PC only and never uploaded, and recordings go straight to the provider you chose.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>!ai in Team and Clan Chat</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>Ask from inside the game and the answer comes back in chat, kept to a line or two. Off for everyone but you until you allow it — every answer is billed to your key — with an hourly limit per teammate when you do.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Turn the mini-map into a dock of widgets you arrange yourself.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Open the Mini Map</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>The Mini button opens the mini-map in its own window, floating above the game. Everything in this tutorial happens in that window.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>Add Widgets with +</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>The map is one widget among many. Press + in the dock&apos;s title bar to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Drag, Resize, Lock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Hover a widget to move it, drag its corner to resize, or use × to remove it. The lock in the title bar puts the whole layout beyond accidental dragging, and the Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Style the Whole Dock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Text colour, text size and transparency for every widget at once. A dock turned nearly invisible stays readable, because the text keeps its shadow while only the background fades.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Or One Widget at a Time</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>Every widget has its own gear with the same three settings. Change one there and that widget stops following the dock&apos;s defaults; everything else keeps inheriting them, and a button puts it back.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Ask a question out loud and get an answer without leaving the game.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>What It Does</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Hold a key or press the widget, ask your question, and the answer appears in a panel under the widget or is read aloud. It runs on your own account with an AI provider: the recording goes from this PC straight to them and never passes through our servers.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>Find It Under Connected Services</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Settings → Connected Services → AI Companion. Everything for the companion lives in this card: the provider, your key, how answers arrive and what gets recorded.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Three Models to Choose From</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT and Gemini take your recording directly, so what they hear is what you said, and both read the answer back in their own voice. Claude does not accept audio: the recording is turned into text on this PC first, which is slower and weaker on names and game terms. Gemini has a free API allowance; GPT and Claude need their own prepaid credit, separately from any chat subscription.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Paste Your Own Key</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Create an API key with the provider you chose and paste it into the key field. It is stored on this PC only, protected by your Windows account, and is never uploaded — which also means it does not survive a reinstall or a move to another PC. There is one slot per provider, so you can keep all three.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Ask from the Dock</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>Add the Ask AI widget to the Command Dock with +. Press it to record, press again to stop, then send. You can attach a screenshot: it counts three down first, so you are back in the game before the shutter, and the app leaves itself out of the picture.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Let the Team Ask with !ai</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>Under Chat Commands you can allow teammates to use !ai from in-game chat. It runs through this client on your key and your settings — same provider, same model, same language — so it is off until you switch it on, and turning it on adds an hourly limit per teammate. The clan has its own separate switch.</value>
+  </data>
 </root>

@@ -31,7 +31,7 @@
             <Border Grid.Row="0" Background="{DynamicResource SurfacePanelBrush}" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v9.2" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v9.3" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
                     <TextBlock Text="{DynamicResource UpdateWhatsNewTitle}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -40,7 +40,7 @@
             <!-- Content -->
             <StackPanel Grid.Row="1" Margin="22,18,22,10">
 
-                <TextBlock Text="{DynamicResource UpdateWhatsNewSummary}" FontSize="13" FontWeight="SemiBold"
+                <TextBlock Text="{DynamicResource UpdateWhatsNew93Summary}" FontSize="13" FontWeight="SemiBold"
                            Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,0,0,10"/>
 
                 <!-- Feature list -->
@@ -52,10 +52,10 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="People24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Grid24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle1}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNewDesc1}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title1}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew93Desc1}"/>
                             </TextBlock>
                         </Grid>
 
@@ -65,10 +65,10 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Map24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Color24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle2}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNewDesc2}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title2}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew93Desc2}"/>
                             </TextBlock>
                         </Grid>
 
@@ -78,10 +78,10 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Comment24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Mic24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle3}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNewDesc3}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title3}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew93Desc3}"/>
                             </TextBlock>
                         </Grid>
 
@@ -91,10 +91,10 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Home24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Chat24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNewTitle4}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNewDesc4}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title4}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew93Desc4}"/>
                             </TextBlock>
                         </Grid>
                     </StackPanel>

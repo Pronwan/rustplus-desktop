@@ -836,7 +836,7 @@
                         <!--  Command Dock defaults. These are what a tile uses until its own
                               gear is touched — not a second switch for the same thing, which
                               would leave two places disagreeing about one value.  -->
-                        <ui:CardExpander Header="{DynamicResource CommandDockTitle}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                        <ui:CardExpander Header="{DynamicResource CommandDockTitle}" tutorials:Tutorial.TargetId="Settings.CommandDock" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
                                 <ui:TextBlock Text="{DynamicResource CommandDockDefaultsHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,12" />
 
@@ -1178,7 +1178,7 @@
                               the connection is the user's own account with the model provider and
                               nothing about it passes through us. That difference is the first
                               thing the panel says.  -->
-                        <ui:CardExpander Header="AI Companion" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                        <ui:CardExpander Header="AI Companion" tutorials:Tutorial.TargetId="Settings.AiCompanion" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
                             <StackPanel Margin="0,8,0,0">
                                 <ui:TextBlock Text="{DynamicResource AiCompanionIntro}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14" />
 
