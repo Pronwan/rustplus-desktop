@@ -7664,4 +7664,11 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Letzter Versuch: {0}</value>
   </data>
+  <data name="AiHistoryVoiceFailedTitle" xml:space="preserve">
+    <value>Gesprochene Antworten kommen von Windows, nicht vom Anbieter</value>
+  </data>
+  <data name="AiHistoryVoiceFailedBody" xml:space="preserve">
+    <value>Der Anbieter hat die letzte Sprachanfrage abgelehnt: {0}
+Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ändere ihn unter Verbundene Dienste.</value>
+  </data>
 </root>

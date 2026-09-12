@@ -7703,4 +7703,11 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionVoiceLastError" xml:space="preserve">
     <value>Last attempt: {0}</value>
   </data>
+  <data name="AiHistoryVoiceFailedTitle" xml:space="preserve">
+    <value>Spoken answers are coming from Windows, not the provider</value>
+  </data>
+  <data name="AiHistoryVoiceFailedBody" xml:space="preserve">
+    <value>The provider refused the last request for speech: {0}
+The answer itself was unaffected. If the model name is the problem, change it under Connected Services.</value>
+  </data>
 </root>

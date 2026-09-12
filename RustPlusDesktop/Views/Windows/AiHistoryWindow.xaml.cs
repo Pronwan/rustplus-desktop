@@ -39,6 +39,11 @@ namespace RustPlusDesk.Views.Windows
 
             Entries.Children.Clear();
 
+            // Above the exchanges, because this is the question someone actually arrives with:
+            // the answer came back but was read by Windows, and nothing said why. A refused
+            // speech request is not a failed answer, so it has no entry of its own to live in.
+            if (!string.IsNullOrEmpty(AiSpeech.LastError)) Entries.Children.Add(VoiceBanner());
+
             var history = AiHistory.Entries;
 
             TxtFooter.Text = string.Format(
@@ -59,6 +64,53 @@ namespace RustPlusDesk.Views.Windows
             }
 
             foreach (var entry in history) Entries.Children.Add(Card(entry));
+        }
+
+        /// <summary>
+        /// Says that the provider's voice refused, and why.
+        ///
+        /// The fallback to Windows works, which is exactly the problem: the answer arrives and
+        /// is read aloud, so nothing looks broken and the setting appears to do nothing. This
+        /// is the first place anyone looks after that happens.
+        /// </summary>
+        private UIElement VoiceBanner()
+        {
+            var stack = new StackPanel();
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = Loc.Text("AiHistoryVoiceFailedTitle",
+                    "Spoken answers are coming from Windows, not the provider"),
+                FontWeight = FontWeights.SemiBold,
+                FontSize = 12,
+                TextWrapping = TextWrapping.Wrap,
+                Foreground = Resource("WarnOrangeBrush", Color.FromRgb(0xE0, 0xB3, 0x41)),
+                Margin = new Thickness(0, 0, 0, 4),
+            });
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = string.Format(
+                    Loc.Text("AiHistoryVoiceFailedBody",
+                        "The provider refused the last request for speech: {0}" + Environment.NewLine +
+                        "The answer itself was unaffected. If the model name is the problem, " +
+                        "change it under Connected Services."),
+                    AiSpeech.LastError),
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 11,
+                Foreground = Resource("TextSubtle", Colors.Gray),
+            });
+
+            return new Border
+            {
+                CornerRadius = new CornerRadius(8),
+                BorderThickness = new Thickness(1),
+                Background = Resource("Card", Color.FromArgb(0x22, 0xFF, 0xFF, 0xFF)),
+                BorderBrush = Resource("WarnOrangeBrush", Color.FromRgb(0xE0, 0xB3, 0x41)),
+                Padding = new Thickness(12, 10, 12, 10),
+                Margin = new Thickness(0, 0, 0, 10),
+                Child = stack,
+            };
         }
 
         private UIElement Card(AiExchange entry)
