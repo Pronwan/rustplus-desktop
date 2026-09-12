@@ -153,6 +153,11 @@ namespace RustPlusDesk.Services.AiCompanion
                     ? Convert.FromBase64String(data.GetString() ?? "")
                     : Array.Empty<byte>();
 
+                // This answer is spoken as it is generated, so its wav header was written
+                // before the length was known — the same placeholder that made the speech
+                // endpoint unplayable, arriving here by a different door.
+                if (bytes.Length > 0) bytes = WavTools.EnsurePlayable(bytes);
+
                 return new AiAnswerResult(said, null, bytes.Length > 0 ? bytes : null);
             }
             catch

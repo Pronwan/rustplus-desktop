@@ -119,7 +119,7 @@ namespace RustPlusDesk.Services.AiCompanion
             }
 
             var pcm = await response.Content.ReadAsByteArrayAsync(ct);
-            return pcm.Length == 0 ? null : WrapAsWav(pcm, OpenAiRate);
+            return pcm.Length == 0 ? null : WavTools.Wrap(pcm, OpenAiRate);
         }
 
         // ── Gemini ──────────────────────────────────────────────────────────────
@@ -183,7 +183,7 @@ namespace RustPlusDesk.Services.AiCompanion
                     !inline.TryGetProperty("data", out var data)) continue;
 
                 var pcm = Convert.FromBase64String(data.GetString() ?? "");
-                return pcm.Length == 0 ? null : WrapAsWav(pcm, GeminiRate);
+                return pcm.Length == 0 ? null : WavTools.Wrap(pcm, GeminiRate);
             }
 
             return null;
@@ -196,39 +196,5 @@ namespace RustPlusDesk.Services.AiCompanion
             return failure.Message;
         }
 
-        /// <summary>
-        /// Puts a WAV header on raw PCM so the same player can handle both providers.
-        ///
-        /// Forty-four bytes of header, which is a great deal less machinery than teaching the
-        /// playback side about a second audio format.
-        /// </summary>
-        private static byte[] WrapAsWav(byte[] pcm, int sampleRate, short channels = 1, short bits = 16)
-        {
-            using var buffer = new MemoryStream();
-            using var writer = new BinaryWriter(buffer);
-
-            int byteRate = sampleRate * channels * bits / 8;
-            short blockAlign = (short)(channels * bits / 8);
-
-            writer.Write(Encoding.ASCII.GetBytes("RIFF"));
-            writer.Write(36 + pcm.Length);
-            writer.Write(Encoding.ASCII.GetBytes("WAVE"));
-
-            writer.Write(Encoding.ASCII.GetBytes("fmt "));
-            writer.Write(16);                 // chunk size for PCM
-            writer.Write((short)1);           // format: PCM
-            writer.Write(channels);
-            writer.Write(sampleRate);
-            writer.Write(byteRate);
-            writer.Write(blockAlign);
-            writer.Write(bits);
-
-            writer.Write(Encoding.ASCII.GetBytes("data"));
-            writer.Write(pcm.Length);
-            writer.Write(pcm);
-
-            writer.Flush();
-            return buffer.ToArray();
-        }
     }
 }

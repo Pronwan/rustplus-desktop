@@ -60,6 +60,104 @@ namespace RustPlusDesk.Services.AiCompanion
         public static bool IsTemporaryCopy(string path) =>
             Path.GetFileNameWithoutExtension(path).EndsWith(SpeechSuffix, StringComparison.Ordinal);
 
+        /// <summary>
+        /// Puts a wav header on raw samples, with the real length in it.
+        /// </summary>
+        public static byte[] Wrap(byte[] pcm, int sampleRate, short channels = 1, short bits = 16)
+        {
+            using var buffer = new MemoryStream();
+            using var writer = new BinaryWriter(buffer);
+
+            int byteRate = sampleRate * channels * bits / 8;
+            short blockAlign = (short)(channels * bits / 8);
+
+            writer.Write(System.Text.Encoding.ASCII.GetBytes("RIFF"));
+            writer.Write(36 + pcm.Length);
+            writer.Write(System.Text.Encoding.ASCII.GetBytes("WAVE"));
+
+            writer.Write(System.Text.Encoding.ASCII.GetBytes("fmt "));
+            writer.Write(16);                 // chunk size for PCM
+            writer.Write((short)1);           // format: PCM
+            writer.Write(channels);
+            writer.Write(sampleRate);
+            writer.Write(byteRate);
+            writer.Write(blockAlign);
+            writer.Write(bits);
+
+            writer.Write(System.Text.Encoding.ASCII.GetBytes("data"));
+            writer.Write(pcm.Length);
+            writer.Write(pcm);
+
+            writer.Flush();
+            return buffer.ToArray();
+        }
+
+        /// <summary>
+        /// Rewrites a wav header that was written before its length was known.
+        ///
+        /// Speech is generated as it is spoken, so a provider streaming a wav has to commit to
+        /// a header first and fills the length in with a placeholder — usually all ones, which
+        /// is -1 once a reader takes it as a signed count. The reader then refuses the file
+        /// outright, and the only visible symptom is an answer read by the wrong voice.
+        ///
+        /// The samples themselves are fine: this keeps the format the header declares and
+        /// replaces the length with the number of bytes actually present. Anything that does
+        /// not parse is handed back untouched, since a reader that can cope with it should
+        /// still get the chance.
+        /// </summary>
+        public static byte[] EnsurePlayable(byte[] wav)
+        {
+            try
+            {
+                if (wav.Length < 44) return wav;
+
+                var ascii = System.Text.Encoding.ASCII;
+                if (ascii.GetString(wav, 0, 4) != "RIFF" || ascii.GetString(wav, 8, 4) != "WAVE")
+                    return wav;
+
+                int rate = 0, offset = 12;
+                short channels = 1, bits = 16;
+
+                while (offset + 8 <= wav.Length)
+                {
+                    var id = ascii.GetString(wav, offset, 4);
+                    int size = BitConverter.ToInt32(wav, offset + 4);
+                    int start = offset + 8;
+
+                    if (id == "fmt " && start + 16 <= wav.Length)
+                    {
+                        channels = BitConverter.ToInt16(wav, start + 2);
+                        rate = BitConverter.ToInt32(wav, start + 4);
+                        bits = BitConverter.ToInt16(wav, start + 14);
+                    }
+                    else if (id == "data")
+                    {
+                        int actual = wav.Length - start;
+                        if (rate <= 0 || actual <= 0) return wav;
+
+                        // Already honest about its own length: leave it alone.
+                        if (size > 0 && size <= actual) return wav;
+
+                        var samples = new byte[actual];
+                        Buffer.BlockCopy(wav, start, samples, 0, actual);
+                        return Wrap(samples, rate, channels, bits);
+                    }
+
+                    // A chunk claiming an impossible size is the same corruption, one chunk
+                    // earlier — there is nothing safe to skip to.
+                    if (size <= 0 || start + size > wav.Length) return wav;
+
+                    offset = start + size + (size % 2);   // chunks are word-aligned
+                }
+
+                return wav;
+            }
+            catch
+            {
+                return wav;
+            }
+        }
+
         /// <summary>How long a wav file runs, for the size checks and the tile's label.</summary>
         public static TimeSpan Duration(string path)
         {
