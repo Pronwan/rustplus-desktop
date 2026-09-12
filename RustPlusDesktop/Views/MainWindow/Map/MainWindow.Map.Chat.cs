@@ -21,7 +21,14 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    public enum ChatChannel { Team, Clan }
+    /// <summary>
+    /// The lanes in the chat window.
+    ///
+    /// <see cref="Global"/> is not a Rust channel — it is the platform's public room, put here
+    /// because this is the chat surface people already watch while they play. A room nobody visits
+    /// does not need a better front door so much as it needs to be where the traffic is.
+    /// </summary>
+    public enum ChatChannel { Team, Clan, Global }
 
     // ====== STATE (Team) ======
     private readonly List<TeamChatMessage> _chatHistoryLog = new();
@@ -37,13 +44,25 @@ public partial class MainWindow
     private DateTime _lastClanChatDate = DateTime.MinValue;
     private int _clanDisplayedMessagesCount = 20;
 
+    // ====== STATE (Global) ======
+    // No history log of its own: GlobalChatFeed holds the room for the whole app, and a second
+    // copy here would be a second thing to keep in step with it.
+    private DateTime _lastGlobalChatDate = DateTime.MinValue;
+    private int _globalDisplayedMessagesCount = 20;
+    private bool _globalLaneWired;
+
     // ====== UNREAD NOTIFICATION STATE ======
     private int _unreadTeamCount = 0;
     private int _unreadClanCount = 0;
 
     public int UnreadTeamCount => _unreadTeamCount;
     public int UnreadClanCount => _unreadClanCount;
-    public int TotalUnreadChatCount => _unreadTeamCount + _unreadClanCount;
+
+    /// <summary>Counted by the feed, which keeps counting while this window is shut.</summary>
+    private int UnreadGlobalCount => Services.Social.GlobalChatFeed.Unseen(
+        Services.Social.GlobalChatFeed.DefaultRoom);
+
+    public int TotalUnreadChatCount => _unreadTeamCount + _unreadClanCount + UnreadGlobalCount;
 
     // ====== SHARED UI STATE ======
     private ChatChannel _activeChatChannel = ChatChannel.Team;
@@ -147,6 +166,109 @@ public partial class MainWindow
         }
 
         public bool HasAvatar => Avatar != null;
+
+        /// <summary>
+        /// The room message this row was built from, or null for an in-game line.
+        ///
+        /// The two kinds of message do not carry the same facts — a Rust line has a Steam id and
+        /// no roles, a room line the reverse — and rather than flattening every room-only fact
+        /// into its own property, the line itself is kept so the row can offer what only a room
+        /// message can: a reply, a report, a name colour its sender chose.
+        /// </summary>
+        private Models.ChatLine? _sourceLine;
+        public Models.ChatLine? SourceLine
+        {
+            get => _sourceLine;
+            set
+            {
+                if (_sourceLine != value)
+                {
+                    _sourceLine = value;
+                    OnChanged(nameof(SourceLine));
+                    OnChanged(nameof(IsRoomLine));
+                    OnChanged(nameof(AuthorBrush));
+                    OnChanged(nameof(RoleBadge));
+                    OnChanged(nameof(HasRoleBadge));
+                    OnChanged(nameof(HasReply));
+                    OnChanged(nameof(ReplyAuthor));
+                    OnChanged(nameof(ReplyExcerpt));
+                    OnChanged(nameof(CanActOnSender));
+                }
+            }
+        }
+
+        /// <summary>Whether this row came from the public room rather than from a Rust server.</summary>
+        public bool IsRoomLine => _sourceLine != null;
+
+        /// <summary>
+        /// Whether this line addresses the signed-in account.
+        ///
+        /// Taken from the server's resolution rather than by looking for your own name in the
+        /// text: names are neither unique nor stable, so searching for one finds other people's
+        /// conversations and misses your own.
+        /// </summary>
+        public bool MentionsMe => _sourceLine?.MentionsMe == true;
+
+        /// <summary>
+        /// The sender's chosen name colour, falling back to the supporter gold or the room's
+        /// default. Null for in-game lines, which keep the template's own accent.
+        /// </summary>
+        public Brush? AuthorBrush => _sourceLine?.SenderNameBrush;
+
+        public RoleBadgeInfo? RoleBadge => _sourceLine?.RoleBadge;
+
+        public bool HasRoleBadge => _sourceLine?.HasRoleBadge == true;
+
+        /// <summary>Whether the row answers another message.</summary>
+        public bool HasReply => _sourceLine?.HasReply == true;
+
+        public string ReplyAuthor => _sourceLine?.ReplyTo?.SenderName ?? "";
+
+        /// <summary>
+        /// The quoted line, or a note that it is gone. A reference without a quote means the
+        /// original was deleted, which is worth saying rather than hiding.
+        /// </summary>
+        public string ReplyExcerpt => _sourceLine?.ReplyTo is { } reply
+            ? (string.IsNullOrWhiteSpace(reply.Excerpt)
+                ? Properties.Resources.GetString("ChatReplyDeleted")
+                : reply.Excerpt!)
+            : "";
+
+        /// <summary>
+        /// Whether reporting or blocking this sender is on offer. Doing either to yourself is an
+        /// offer that makes no sense, and making it anyway makes the menu look untended.
+        /// </summary>
+        public bool CanActOnSender => _sourceLine is { IsMine: false, SenderId: not null };
+
+        /// <summary>
+        /// Whether a friend request can be addressed to this sender.
+        ///
+        /// Friends are keyed by Steam account, and not every room account has one attached. The
+        /// entry is hidden rather than shown and refused.
+        /// </summary>
+        public bool CanAddSenderAsFriend =>
+            CanActOnSender && !string.IsNullOrWhiteSpace(_sourceLine?.SteamId);
+
+        /// <summary>
+        /// Whether this row draws its own name, badge, time and avatar, or continues the one above.
+        ///
+        /// Somebody saying four things in a row is one person talking, and repeating their name and
+        /// picture over every line turns a short exchange into a wall of headers. Always true for
+        /// the in-game lanes, which are not grouped.
+        /// </summary>
+        private bool _showHeader = true;
+        public bool ShowHeader
+        {
+            get => _showHeader;
+            set
+            {
+                if (_showHeader != value)
+                {
+                    _showHeader = value;
+                    OnChanged(nameof(ShowHeader));
+                }
+            }
+        }
 
         private bool _showSeparator;
         public bool ShowSeparator
@@ -337,12 +459,11 @@ public partial class MainWindow
 
     // ====== LOGIC ======
 
-    private void AddIncomingChatMessage(string author, string text, DateTime? ts = null, ulong steamId = 0, bool autoScroll = true)
+    private void AddIncomingChatMessage(string author, string text, DateTime? ts = null, ulong steamId = 0, bool autoScroll = true, bool? forceSupporter = null, bool? forceIsMe = null, ImageSource? avatarOverride = null, Models.ChatLine? sourceLine = null)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
         var time = ts ?? DateTime.Now;
-        bool isClanActive = _activeChatChannel == ChatChannel.Clan;
-        var lastDate = isClanActive ? _lastClanChatDate : _lastChatDate;
+        var lastDate = LastChatDateFor(_activeChatChannel);
 
         bool showSep = false;
         string? sepText = null;
@@ -351,13 +472,13 @@ public partial class MainWindow
         {
             showSep = true;
             sepText = time.ToString("D", CultureInfo.CurrentUICulture);
-            if (isClanActive) _lastClanChatDate = time.Date;
-            else _lastChatDate = time.Date;
+            SetLastChatDate(_activeChatChannel, time.Date);
         }
 
-        // Avatar: check cache first, or fetch asynchronously
-        ImageSource? avatar = null;
-        if (steamId != 0)
+        // Avatar: an override wins, because a room line's picture comes from the platform account
+        // rather than from Steam — and asking Steam would mean holding a stranger's Steam id.
+        ImageSource? avatar = avatarOverride;
+        if (avatar == null && steamId != 0)
         {
             avatar = AvatarLoader.GetCachedAvatar(steamId) ?? (_avatarCache.TryGetValue(steamId, out var img) ? img : null);
             if (avatar == null)
@@ -366,8 +487,13 @@ public partial class MainWindow
             }
         }
 
-        bool isMe = steamId != 0 && steamId == _mySteamId;
-        bool isSupporter = (isMe && Services.Auth.SupabaseAuthManager.IsPremium);
+        // Without a Steam id there is nothing to compare, so the room says which line is its
+        // reader's rather than letting it be worked out from an identity it does not carry.
+        bool isMe = forceIsMe ?? (steamId != 0 && steamId == _mySteamId);
+
+        // In-game chat carries no supporter flag, so the only one we can know is our own. The
+        // public room does carry it per line, and passes it in rather than being guessed at.
+        bool isSupporter = forceSupporter ?? (isMe && Services.Auth.SupabaseAuthManager.IsPremium);
         bool isBot = text.StartsWith("[Chat Command]", StringComparison.OrdinalIgnoreCase) ||
                      text.StartsWith("!", StringComparison.OrdinalIgnoreCase);
         bool isAlert = text.Contains("[Raid Alert]", StringComparison.OrdinalIgnoreCase) ||
@@ -386,7 +512,8 @@ public partial class MainWindow
             IsMe = isMe,
             IsSupporter = isSupporter,
             IsBotOrCommand = isBot,
-            IsSystemAlert = isAlert
+            IsSystemAlert = isAlert,
+            SourceLine = sourceLine
         };
 
         // Filter check if search is active
@@ -404,12 +531,36 @@ public partial class MainWindow
         if (autoScroll)
         {
             if (_activeChatChannel == ChatChannel.Clan) _clanDisplayedMessagesCount++;
+            else if (_activeChatChannel == ChatChannel.Global) _globalDisplayedMessagesCount++;
             else _displayedMessagesCount++;
 
             if (ChatOverlayPanel?.Visibility == Visibility.Visible && ChatContentBorder?.Visibility == Visibility.Visible)
             {
                 ScrollChatToBottom();
             }
+        }
+    }
+
+    /// <summary>
+    /// The date of the last line drawn in a lane, so a day boundary gets one separator.
+    ///
+    /// Per lane rather than shared: the lanes are drawn independently and a separator owed to one
+    /// of them must not be considered already spent by another.
+    /// </summary>
+    private DateTime LastChatDateFor(ChatChannel channel) => channel switch
+    {
+        ChatChannel.Clan => _lastClanChatDate,
+        ChatChannel.Global => _lastGlobalChatDate,
+        _ => _lastChatDate,
+    };
+
+    private void SetLastChatDate(ChatChannel channel, DateTime date)
+    {
+        switch (channel)
+        {
+            case ChatChannel.Clan: _lastClanChatDate = date; break;
+            case ChatChannel.Global: _lastGlobalChatDate = date; break;
+            default: _lastChatDate = date; break;
         }
     }
 
@@ -454,6 +605,14 @@ public partial class MainWindow
             {
                 BadgeUnreadClan.Visibility = _unreadClanCount > 0 ? Visibility.Visible : Visibility.Collapsed;
                 TxtUnreadClan.Text = _unreadClanCount > 99 ? "99+" : _unreadClanCount.ToString();
+            }
+
+            // Global Tab Badge
+            if (BadgeUnreadGlobal != null && TxtUnreadGlobal != null)
+            {
+                var unseen = UnreadGlobalCount;
+                BadgeUnreadGlobal.Visibility = unseen > 0 ? Visibility.Visible : Visibility.Collapsed;
+                TxtUnreadGlobal.Text = unseen > 99 ? "99+" : unseen.ToString();
             }
 
             // Bottom Dock Button Badge
@@ -542,6 +701,15 @@ public partial class MainWindow
 
     private async Task<bool> SendChatReliableAsync(string text, ChatChannel channel)
     {
+        // This path talks to a Rust server, and everything below treats anything that is not Clan
+        // as Team. A room message arriving here would be sent to the player's team instead — so it
+        // is refused rather than quietly misrouted.
+        if (channel == ChatChannel.Global)
+        {
+            AppendLog("[Chat] Global chat does not go through the in-game send path.");
+            return false;
+        }
+
         if (_rust is not RustPlusClientReal real) return false;
 
         if (text == null)
@@ -757,6 +925,12 @@ public partial class MainWindow
     {
         ChatMessages.Clear();
 
+        if (_activeChatChannel == ChatChannel.Global)
+        {
+            RebuildGlobalChatMessages();
+            return;
+        }
+
         bool isClan = _activeChatChannel == ChatChannel.Clan;
         var log = isClan ? _clanChatHistoryLog : _chatHistoryLog;
         int displayCount = isClan ? _clanDisplayedMessagesCount : _displayedMessagesCount;
@@ -798,8 +972,22 @@ public partial class MainWindow
     private async void ChatTab_Checked(object sender, RoutedEventArgs e)
     {
         if (sender is not RadioButton rb || rb.Tag is not string tag) return;
-        var channel = tag == "Clan" ? ChatChannel.Clan : ChatChannel.Team;
+        var channel = tag switch
+        {
+            "Clan" => ChatChannel.Clan,
+            "Global" => ChatChannel.Global,
+            _ => ChatChannel.Team,
+        };
         if (channel == _activeChatChannel) return;
+
+        // Global chat needs an account rather than a server. Refuse before switching, so the lane
+        // never shows as selected over somebody else's messages.
+        if (channel == ChatChannel.Global && !GlobalLaneAvailable)
+        {
+            WarnGlobalLaneUnavailable();
+            SelectChatLanePill(_activeChatChannel);
+            return;
+        }
 
         _activeChatChannel = channel;
         TxtChatInput?.Clear();
@@ -809,6 +997,16 @@ public partial class MainWindow
         if (channel == ChatChannel.Team) _unreadTeamCount = 0;
         else if (channel == ChatChannel.Clan) _unreadClanCount = 0;
         UpdateUnreadBadges();
+
+        UpdateChatComposerForLane();
+
+        if (channel == ChatChannel.Global)
+        {
+            // The room has no server to prime and no history to fetch from one, so the lane is
+            // fully entered here and none of the in-game work below applies.
+            await EnterGlobalLaneAsync();
+            return;
+        }
 
         // The two channels do not offer the same chips, so they are rebuilt on the switch rather
         // than only when the drawer opens — the empty-state row shows them without any drawer.
@@ -877,17 +1075,27 @@ public partial class MainWindow
         // empty-state row shows chips before anyone touches the drawer.
         RebuildQuickCommandChips();
 
-        if (_rust is not RustPlusClientReal real)
+        // Global chat needs no server, so a disconnected client is no longer a reason to refuse the
+        // whole window — only the two in-game lanes. Without this the room would be unreachable
+        // from here exactly when somebody is most likely to be looking for people to play with.
+        var connected = _rust is RustPlusClientReal && (_vm.Selected?.IsConnected ?? false);
+
+        if (!connected)
         {
-            ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.NotConnectedError, WpfUi.ControlAppearance.Caution);
+            if (!GlobalLaneAvailable)
+            {
+                ShowInfoSnackbar(
+                    Properties.Resources.SnackbarTitleChat,
+                    _rust is RustPlusClientReal ? Properties.Resources.PleaseConnectFirst : Properties.Resources.NotConnectedError,
+                    WpfUi.ControlAppearance.Info);
+                return;
+            }
+
+            await OpenChatOverlayOnGlobalAsync();
             return;
         }
 
-        if (!(_vm.Selected?.IsConnected ?? false))
-        {
-            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
-            return;
-        }
+        var real = (RustPlusClientReal)_rust!;
 
         try
         {
@@ -920,30 +1128,30 @@ public partial class MainWindow
         else if (_activeChatChannel == ChatChannel.Clan) _unreadClanCount = 0;
         UpdateUnreadBadges();
 
-        RebuildChatMessages();
+        UpdateChatComposerForLane();
 
-        // Update server header label
-        if (TxtChatServerContext != null)
+        // The room can be the lane that was left selected last time, and it is not primed or
+        // labelled by any of the work above. Enter it properly rather than drawing an empty list
+        // under a server name.
+        if (_activeChatChannel == ChatChannel.Global)
         {
-            string serverName = _vm.Selected?.Name ?? "Rust Server";
-            int teamCount = TeamMembers.Count;
-            TxtChatServerContext.Text = teamCount > 0 ? $"{serverName} · {teamCount} Teammates" : serverName;
+            ShowChatOverlayCard();
+            await EnterGlobalLaneAsync();
         }
+        else
+        {
+            RebuildChatMessages();
 
-        // Overlay animation
-        ChatContentBorder.Visibility = Visibility.Visible;
-        ChatContentBorder.Opacity = 0;
+            // Update server header label
+            if (TxtChatServerContext != null)
+            {
+                string serverName = _vm.Selected?.Name ?? "Rust Server";
+                int teamCount = TeamMembers.Count;
+                TxtChatServerContext.Text = teamCount > 0 ? $"{serverName} · {teamCount} Teammates" : serverName;
+            }
 
-        var fade = new System.Windows.Media.Animation.DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
-        var sb = new System.Windows.Media.Animation.Storyboard();
-        sb.Children.Add(fade);
-        System.Windows.Media.Animation.Storyboard.SetTarget(fade, ChatContentBorder);
-        System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
-        sb.Begin();
-
-        EnsureTeamChatEmojiHelper();
-        TxtChatInput.Focus();
-        ScrollChatToBottom();
+            ShowChatOverlayCard();
+        }
 
         try
         {
@@ -968,6 +1176,42 @@ public partial class MainWindow
         {
             AppendLog("GetHistory Error: " + ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Reveals the chat card and puts the cursor in the box.
+    ///
+    /// Shared by both ways in: with a server connected, after the lanes have been primed, and
+    /// without one, straight onto the room.
+    /// </summary>
+    private void ShowChatOverlayCard()
+    {
+        ChatContentBorder.Visibility = Visibility.Visible;
+        ChatContentBorder.Opacity = 0;
+
+        var fade = new System.Windows.Media.Animation.DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
+        var sb = new System.Windows.Media.Animation.Storyboard();
+        sb.Children.Add(fade);
+        System.Windows.Media.Animation.Storyboard.SetTarget(fade, ChatContentBorder);
+        System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
+        sb.Begin();
+
+        EnsureTeamChatEmojiHelper();
+        TxtChatInput.Focus();
+        ScrollChatToBottom();
+    }
+
+    /// <summary>
+    /// Opens the window straight onto the room, for when there is no server connected.
+    /// </summary>
+    private async Task OpenChatOverlayOnGlobalAsync()
+    {
+        _activeChatChannel = ChatChannel.Global;
+        SelectChatLanePill(ChatChannel.Global);
+        UpdateChatComposerForLane();
+
+        ShowChatOverlayCard();
+        await EnterGlobalLaneAsync();
     }
 
     private void EnsureTeamChatEmojiHelper()
@@ -1026,14 +1270,20 @@ public partial class MainWindow
             var oldContent = BtnSendChat.Content;
             BtnSendChat.Content = "...";
 
-            bool confirmed = await SendChatReliableAsync(text, _activeChatChannel);
+            // The room is not a Rust channel: it has no server to confirm against and its refusals
+            // are its own, so it does not go through the reliable-send path.
+            bool confirmed = _activeChatChannel == ChatChannel.Global
+                ? await SendGlobalChatAsync(text)
+                : await SendChatReliableAsync(text, _activeChatChannel);
 
             if (confirmed)
             {
                 TxtChatInput.Clear();
             }
-            else
+            else if (_activeChatChannel != ChatChannel.Global)
             {
+                // The global path has already said which refusal this was; a generic line after it
+                // would overwrite the specific one.
                 if (ChatErrorBox != null && ChatErrorText != null)
                 {
                     ChatErrorBox.Visibility = Visibility.Visible;
@@ -1143,15 +1393,27 @@ public partial class MainWindow
     private void LoadMoreChatMessages()
     {
         bool isClan = _activeChatChannel == ChatChannel.Clan;
-        var log = isClan ? _clanChatHistoryLog : _chatHistoryLog;
+        bool isGlobal = _activeChatChannel == ChatChannel.Global;
 
+        // The room's history lives in the feed, not in a log here, so its total comes from there.
         int totalAvailable;
-        lock (log)
+        if (isGlobal)
         {
-            totalAvailable = log.Count;
+            totalAvailable = Services.Social.GlobalChatFeed.Lines(
+                Services.Social.GlobalChatFeed.DefaultRoom).Count;
+        }
+        else
+        {
+            var log = isClan ? _clanChatHistoryLog : _chatHistoryLog;
+            lock (log)
+            {
+                totalAvailable = log.Count;
+            }
         }
 
-        int displayCount = isClan ? _clanDisplayedMessagesCount : _displayedMessagesCount;
+        int displayCount = isGlobal ? _globalDisplayedMessagesCount
+            : isClan ? _clanDisplayedMessagesCount
+            : _displayedMessagesCount;
         if (displayCount >= totalAvailable)
         {
             return;
@@ -1166,7 +1428,8 @@ public partial class MainWindow
                 double oldOffset = scrollViewer.VerticalOffset;
                 double oldHeight = scrollViewer.ExtentHeight;
 
-                if (isClan) _clanDisplayedMessagesCount += 20;
+                if (isGlobal) _globalDisplayedMessagesCount += 20;
+                else if (isClan) _clanDisplayedMessagesCount += 20;
                 else _displayedMessagesCount += 20;
 
                 RebuildChatMessages();
@@ -1324,12 +1587,25 @@ public partial class MainWindow
     private void ChatContext_Mention_Click(object sender, RoutedEventArgs e)
     {
         var vm = GetContextMessage(sender);
-        if (vm != null && !string.IsNullOrEmpty(vm.Author))
+        if (vm == null) return;
+
+        // In the room, address the handle rather than the display name. Only the handle is unique
+        // and only the handle is what the server resolves against — "@Dave Smith" reaches nobody,
+        // and would not survive him renaming himself even if it did.
+        var token = vm.SourceLine?.Handle;
+
+        if (string.IsNullOrWhiteSpace(token))
         {
-            TxtChatInput.Text = $"@{vm.Author} " + TxtChatInput.Text;
-            TxtChatInput.CaretIndex = TxtChatInput.Text.Length;
-            TxtChatInput.Focus();
+            // An in-game line, or a room account from before handles existed. The display name is
+            // all there is, and in team chat it is what people read anyway.
+            token = vm.Author;
         }
+
+        if (string.IsNullOrWhiteSpace(token)) return;
+
+        TxtChatInput.Text = $"@{token} " + TxtChatInput.Text;
+        TxtChatInput.CaretIndex = TxtChatInput.Text.Length;
+        TxtChatInput.Focus();
     }
 
     private void ChatContext_CenterMap_Click(object sender, RoutedEventArgs e)

@@ -311,6 +311,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <!--  Global chat ticker. A row rather than an overlay, so it never covers a tab.  -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!--  Custom TitleBar for Guaranteed Visibility in Mica/Dark Mode  -->
@@ -8445,6 +8447,29 @@
                                                             </Border>
                                                         </StackPanel>
                                                     </RadioButton>
+
+                                                    <!--
+                                                        Global Chat Tab.
+
+                                                        Not a Rust channel — the platform's public room, in the window people
+                                                        already watch while they play. It inherits that habit rather than
+                                                        asking for a new one, and the composer below was always shared.
+                                                    -->
+                                                    <RadioButton
+                                                        x:Name="TabGlobalChat"
+                                                        GroupName="ChatTabsGroup"
+                                                        Tag="Global"
+                                                        Margin="4,0,0,0"
+                                                        Style="{StaticResource ChatTabPillStyle}"
+                                                        Checked="ChatTab_Checked">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon Symbol="Earth24" Margin="0,0,5,0" FontSize="13" Foreground="#FF4CC38A" />
+                                                            <TextBlock Text="{DynamicResource GlobalChatTitle}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                            <Border x:Name="BadgeUnreadGlobal" Visibility="Collapsed" Background="#FF4CC38A" CornerRadius="7" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
+                                                                <TextBlock x:Name="TxtUnreadGlobal" FontSize="8.5" FontWeight="Bold" Foreground="#FF0A0D14" Text="0" />
+                                                            </Border>
+                                                        </StackPanel>
+                                                    </RadioButton>
                                                 </StackPanel>
 
                                                 <!-- Server Context Indicator -->
@@ -8648,6 +8673,29 @@
                                                                         <MenuItem Header="Open Steam Profile" Click="ChatContext_OpenSteam_Click" Tag="{Binding}" Visibility="{Binding HasSteamId, Converter={StaticResource BoolToVisibility}}">
                                                                             <MenuItem.Icon><ui:SymbolIcon Symbol="Globe24" FontSize="14" /></MenuItem.Icon>
                                                                         </MenuItem>
+
+                                                                        <!--
+                                                                            Room-only actions. They need a message id and a sender account, neither of
+                                                                            which an in-game line has, so they appear only on a line from the public room.
+                                                                        -->
+                                                                        <Separator Visibility="{Binding IsRoomLine, Converter={StaticResource BoolToVisibility}}" />
+                                                                        <MenuItem Header="{DynamicResource ChatReply}" Click="GlobalChatContext_Reply_Click" Tag="{Binding}" Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="ArrowReply24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="{DynamicResource ChatTranslateWithGoogle}" Click="GlobalChatContext_Translate_Click" Tag="{Binding}" Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Translate24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <Separator Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}" />
+                                                                        <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="GlobalChatContext_AddFriend_Click" Tag="{Binding}" Visibility="{Binding CanAddSenderAsFriend, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="PersonAdd24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <Separator Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}" />
+                                                                        <MenuItem Header="{DynamicResource LfgBlockUser}" Click="GlobalChatContext_Block_Click" Tag="{Binding}" Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="PersonProhibited24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
+                                                                        <MenuItem Header="{DynamicResource LfgReportUser}" Click="GlobalChatContext_Report_Click" Tag="{Binding}" Visibility="{Binding CanActOnSender, Converter={StaticResource BoolToVisibility}}">
+                                                                            <MenuItem.Icon><ui:SymbolIcon Symbol="Flag24" FontSize="14" /></MenuItem.Icon>
+                                                                        </MenuItem>
                                                                     </ContextMenu>
                                                                 </Grid.ContextMenu>
 
@@ -8699,6 +8747,16 @@
                                                                     <!-- Metadata Header: Sender Name & Time -->
                                                                     <StackPanel x:Name="MetaStack" Orientation="Horizontal" Margin="4,0,4,3">
                                                                         <TextBlock x:Name="SenderText" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource Accent}" Text="{Binding Author}" />
+
+                                                                        <!--  Role badge. Room lines only: a Rust server tells us nothing about roles.  -->
+                                                                        <Border x:Name="RoleBadge"
+                                                                                Visibility="{Binding HasRoleBadge, Converter={StaticResource BoolToVisibility}}"
+                                                                                Background="{Binding RoleBadge.BackgroundBrush}"
+                                                                                BorderBrush="{Binding RoleBadge.BorderBrush}"
+                                                                                BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
+                                                                            <TextBlock Text="{Binding RoleBadge.DisplayText}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding RoleBadge.ForegroundBrush}" />
+                                                                        </Border>
+
                                                                         <!-- Bot / Command badge -->
                                                                         <Border x:Name="BotBadge" Visibility="{Binding IsBotOrCommand, Converter={StaticResource BoolToVisibility}}" Background="#254660" BorderBrush="#3B6B91" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
                                                                             <TextBlock Text="BOT" FontSize="8.5" FontWeight="Bold" Foreground="#FF3FD7FF" />
@@ -8708,7 +8766,23 @@
 
                                                                     <!-- Message Bubble -->
                                                                     <Border x:Name="MsgBubble" Padding="10,6" CornerRadius="2,12,12,12" BorderThickness="1" Background="#1C2028" BorderBrush="#2A303C" HorizontalAlignment="Left" MaxWidth="340">
-                                                                        <chat:RichChatTextBlock Foreground="{DynamicResource TextPrimary}" RawText="{Binding DisplayText}" TextWrapping="Wrap" FontSize="11.5" LineHeight="16" />
+                                                                        <StackPanel>
+                                                                            <!--  The quoted line this message answers.  -->
+                                                                            <Border x:Name="ReplyQuote"
+                                                                                    Visibility="{Binding HasReply, Converter={StaticResource BoolToVisibility}}"
+                                                                                    Margin="0,0,0,5" Padding="7,3"
+                                                                                    Background="#14FFFFFF"
+                                                                                    BorderBrush="{DynamicResource Accent}"
+                                                                                    BorderThickness="2,0,0,0"
+                                                                                    CornerRadius="0,4,4,0">
+                                                                                <StackPanel>
+                                                                                    <TextBlock Text="{Binding ReplyAuthor}" FontSize="9.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                                                    <TextBlock Text="{Binding ReplyExcerpt}" FontSize="10" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" MaxWidth="300" HorizontalAlignment="Left" />
+                                                                                </StackPanel>
+                                                                            </Border>
+
+                                                                            <chat:RichChatTextBlock Foreground="{DynamicResource TextPrimary}" RawText="{Binding DisplayText}" TextWrapping="Wrap" FontSize="11.5" LineHeight="16" />
+                                                                        </StackPanel>
                                                                     </Border>
                                                                 </StackPanel>
 
@@ -8753,6 +8827,16 @@
 
                                                         <!-- Layout Triggers: Outgoing (Me) on Right vs Incoming (Teammates) on Left -->
                                                         <DataTemplate.Triggers>
+                                                            <!--
+                                                                A room sender's own name colour. Applied by trigger rather than bound
+                                                                directly, so an in-game line — which has no such colour — keeps the
+                                                                template's accent instead of falling back to nothing.
+                                                            -->
+                                                            <DataTrigger Binding="{Binding IsRoomLine}" Value="True">
+                                                                <Setter TargetName="SenderText" Property="Foreground" Value="{Binding AuthorBrush}" />
+                                                            </DataTrigger>
+
+
                                                             <!-- ME: Right Sided -->
                                                             <DataTrigger Binding="{Binding IsMe}" Value="True">
                                                                 <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Collapsed" />
@@ -8778,6 +8862,69 @@
                                                                 <Setter TargetName="MsgBubble" Property="Background" Value="#2B1D12" />
                                                                 <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#6B411F" />
                                                                 <Setter TargetName="SenderText" Property="Foreground" Value="#FFF59E0B" />
+                                                            </DataTrigger>
+
+                                                            <!--
+                                                                Your own name in the room keeps the colour you chose.
+
+                                                                Restated after the IsMe trigger above, which paints every outgoing
+                                                                name with the accent — right for a Rust server that has no such
+                                                                notion, wrong for a room where you paid for the colour.
+                                                            -->
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsRoomLine}" Value="True" />
+                                                                    <Condition Binding="{Binding IsMe}" Value="True" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter TargetName="SenderText" Property="Foreground" Value="{Binding AuthorBrush}" />
+                                                            </MultiDataTrigger>
+
+                                                            <!--
+                                                                A continuation of the line above: no name, no badge, no time.
+
+                                                                Somebody saying four things in a row is one person talking, and
+                                                                repeating their name and picture over each line turns a short
+                                                                exchange into a wall of headers. Last in the list so it wins over
+                                                                the avatar and corner-radius setters above.
+                                                            -->
+                                                            <DataTrigger Binding="{Binding ShowHeader}" Value="False">
+                                                                <Setter TargetName="MetaStack" Property="Visibility" Value="Collapsed" />
+                                                                <Setter TargetName="MsgGrid" Property="Margin" Value="4,1,4,1" />
+                                                                <Setter TargetName="MsgBubble" Property="CornerRadius" Value="12" />
+                                                            </DataTrigger>
+
+                                                            <!--
+                                                                The avatar goes with the header, but its column must keep its
+                                                                width — Hidden, not Collapsed — or the bubbles in a run sit
+                                                                further out than the one that has a picture.
+                                                            -->
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ShowHeader}" Value="False" />
+                                                                    <Condition Binding="{Binding IsMe}" Value="False" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter TargetName="LeftAvatarBorder" Property="Visibility" Value="Hidden" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding ShowHeader}" Value="False" />
+                                                                    <Condition Binding="{Binding IsMe}" Value="True" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter TargetName="RightAvatarBorder" Property="Visibility" Value="Hidden" />
+                                                            </MultiDataTrigger>
+
+                                                            <!--
+                                                                Somebody is talking to you.
+
+                                                                Last, so it wins over the ordinary bubble colours: in a room where
+                                                                most lines are not for you, the one that is has to be findable by
+                                                                scrolling past rather than by reading.
+                                                            -->
+                                                            <DataTrigger Binding="{Binding MentionsMe}" Value="True">
+                                                                <Setter TargetName="MsgBubble" Property="Background" Value="#2A2410" />
+                                                                <Setter TargetName="MsgBubble" Property="BorderBrush" Value="#8A6D1F" />
+                                                                <Setter TargetName="MsgBubble" Property="BorderThickness" Value="1,1,1,1" />
                                                             </DataTrigger>
                                                         </DataTemplate.Triggers>
                                                     </DataTemplate>
@@ -8842,6 +8989,69 @@
                                                         TextWrapping="Wrap" />
                                                 </Border>
 
+                                                <!--
+                                                    Silenced bar. Replaces nothing — it sits above a box that will refuse
+                                                    anyway, and says until when and why. A box that silently refuses is worse
+                                                    than no box: the user retypes, tries again, and concludes the app is broken.
+                                                -->
+                                                <Border
+                                                    x:Name="GlobalChatSilencedBar"
+                                                    Margin="0,0,0,8"
+                                                    Padding="8,5"
+                                                    Background="#33D97706"
+                                                    BorderBrush="#80D97706"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Visibility="Collapsed">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ui:SymbolIcon Symbol="PersonProhibited24" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="#FFE0A045" />
+                                                        <TextBlock x:Name="GlobalChatSilencedText" FontSize="10.5" Foreground="#FFE0A045" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!--  Slow mode: not an error but a wait, so it says how long.  -->
+                                                <Border
+                                                    x:Name="GlobalChatSlowModeBar"
+                                                    Margin="0,0,0,8"
+                                                    Padding="8,5"
+                                                    Background="#1A3FD7FF"
+                                                    BorderBrush="#333FD7FF"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Visibility="Collapsed">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ui:SymbolIcon Symbol="Timer24" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="#FF3FD7FF" />
+                                                        <TextBlock x:Name="GlobalChatSlowModeText" FontSize="10.5" Foreground="#FF8FE3FF" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!--  The line being answered, with a way out of answering it.  -->
+                                                <Border
+                                                    x:Name="GlobalChatReplyBar"
+                                                    Margin="0,0,0,8"
+                                                    Padding="8,5"
+                                                    Background="#14FFFFFF"
+                                                    BorderBrush="{DynamicResource Accent}"
+                                                    BorderThickness="2,0,0,0"
+                                                    CornerRadius="0,6,6,0"
+                                                    Visibility="Collapsed">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0">
+                                                            <TextBlock x:Name="GlobalChatReplyAuthor" FontSize="9.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                            <TextBlock x:Name="GlobalChatReplyExcerpt" FontSize="10" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
+                                                        </StackPanel>
+                                                        <ui:Button Grid.Column="1"
+                                                                   Width="22" Height="22" Padding="0"
+                                                                   Appearance="Transparent" BorderThickness="0"
+                                                                   Click="GlobalChatCancelReply_Click"
+                                                                   Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
+                                                    </Grid>
+                                                </Border>
+
                                                 <!-- Textbox & Send Button Row -->
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
@@ -8864,6 +9074,93 @@
                                                             ClearButtonEnabled="False"
                                                             ClipToBounds="True"
                                                             FontSize="12" />
+
+                                                        <!--
+                                                            Name colour, for supporters, in the room only.
+
+                                                            It changes how your messages look in this room, and this is where
+                                                            you are while you care about that. Hidden for everyone else — the
+                                                            platform refuses the write anyway, and a control that only ever
+                                                            says no is worse than no control.
+                                                        -->
+                                                        <Button x:Name="BtnGlobalNameColor"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,34,0"
+                                                                Width="28"
+                                                                Height="28"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Cursor="Hand"
+                                                                Visibility="Collapsed"
+                                                                Click="BtnGlobalNameColor_Click"
+                                                                ToolTip="{DynamicResource ChatNameColorTooltip}">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                                        <Ellipse Width="13" Height="13"
+                                                                                 Stroke="#66FFFFFF" StrokeThickness="1"
+                                                                                 Fill="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
+
+                                                        <Popup x:Name="GlobalNameColorPopup"
+                                                               PlacementTarget="{Binding ElementName=BtnGlobalNameColor}"
+                                                               Placement="Top"
+                                                               StaysOpen="False"
+                                                               AllowsTransparency="True"
+                                                               PopupAnimation="Fade">
+                                                            <Border Background="#1B2027" BorderBrush="#2E3742" BorderThickness="1"
+                                                                    CornerRadius="8" Padding="8" Margin="0,0,0,6">
+                                                                <StackPanel>
+                                                                    <TextBlock Text="{DynamicResource ChatNameColorHeading}"
+                                                                               Foreground="{DynamicResource TextSubtle}" FontSize="11"
+                                                                               Margin="2,0,2,6" />
+                                                                    <ItemsControl x:Name="GlobalNameColorList">
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <WrapPanel MaxWidth="180" />
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <Button Width="30" Height="30" Margin="2" Cursor="Hand"
+                                                                                        Background="Transparent" BorderThickness="0"
+                                                                                        Tag="{Binding Key}"
+                                                                                        ToolTip="{Binding Label}"
+                                                                                        Click="GlobalNameColorChoice_Click">
+                                                                                    <Button.Template>
+                                                                                        <ControlTemplate TargetType="Button">
+                                                                                            <Border x:Name="Sw" Background="Transparent" CornerRadius="6" Padding="3">
+                                                                                                <Ellipse Width="20" Height="20"
+                                                                                                         Fill="{Binding Brush}"
+                                                                                                         Stroke="#66FFFFFF" StrokeThickness="1" />
+                                                                                            </Border>
+                                                                                            <ControlTemplate.Triggers>
+                                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                                    <Setter TargetName="Sw" Property="Background" Value="#22FFFFFF" />
+                                                                                                </Trigger>
+                                                                                            </ControlTemplate.Triggers>
+                                                                                        </ControlTemplate>
+                                                                                    </Button.Template>
+                                                                                </Button>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Popup>
 
                                                         <!-- Seamless Embedded Emoji Button -->
                                                         <Button
@@ -10256,6 +10553,17 @@
             </ItemsControl>
 
         </Grid>
+
+        <!--
+            One line of the room, under every tab.
+
+            Collapsed until the account is known to have the social layer: a strip advertising a
+            room this account cannot enter is worse than no strip.
+        -->
+        <chat:GlobalChatTicker
+            x:Name="GlobalChatTickerStrip"
+            Grid.Row="2"
+            Visibility="Collapsed" />
     </Grid>
 </ui:FluentWindow>
 
