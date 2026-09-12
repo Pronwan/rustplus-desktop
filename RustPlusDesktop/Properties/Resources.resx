@@ -801,6 +801,66 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="TeamChatTitle" xml:space="preserve">
     <value>TEAM CHAT</value>
   </data>
+  <data name="GlobalChatTitle" xml:space="preserve">
+    <value>GLOBAL</value>
+  </data>
+  <data name="GlobalChatTickerOnline" xml:space="preserve">
+    <value>{0} online</value>
+  </data>
+  <data name="GlobalChatTickerQuiet" xml:space="preserve">
+    <value>Global chat is quiet — say something.</value>
+  </data>
+  <data name="GlobalChatTickerIdle" xml:space="preserve">
+    <value>Global chat — find a team, a trade, or a raid.</value>
+  </data>
+  <data name="GlobalChatTickerHide" xml:space="preserve">
+    <value>Hide this strip</value>
+  </data>
+  <data name="GlobalChatTickerSetting" xml:space="preserve">
+    <value>Show the global chat strip at the bottom of the window</value>
+  </data>
+  <data name="GlobalChatTickerSettingHint" xml:space="preserve">
+    <value>One line of the room on every tab, with how many people are in it. Turning it off does not leave the room — chat stays on the Community rail.</value>
+  </data>
+  <data name="GlobalChatPlaceholder" xml:space="preserve">
+    <value>Message global chat…</value>
+  </data>
+  <data name="GlobalChatSignInNotice" xml:space="preserve">
+    <value>Sign in to a cloud account to use global chat.</value>
+  </data>
+  <data name="ChatTranslate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="ChatReport" xml:space="preserve">
+    <value>Report message</value>
+  </data>
+  <data name="ChatBlock" xml:space="preserve">
+    <value>Block this player</value>
+  </data>
+  <data name="ChatReportSent" xml:space="preserve">
+    <value>Reported. Moderators will take a look.</value>
+  </data>
+  <data name="ChatReportFailed" xml:space="preserve">
+    <value>Could not send that report. Try again in a moment.</value>
+  </data>
+  <data name="ChatBlockDone" xml:space="preserve">
+    <value>Blocked. You will not see each other in chat.</value>
+  </data>
+  <data name="ChatBlockFailed" xml:space="preserve">
+    <value>Could not block that player. Try again in a moment.</value>
+  </data>
+  <data name="GlobalChatMentionToastTitle" xml:space="preserve">
+    <value>{0} mentioned you in global chat</value>
+  </data>
+  <data name="ChatSlowModeActive" xml:space="preserve">
+    <value>Slow mode: one message every {0} seconds.</value>
+  </data>
+  <data name="GlobalChatConsentNotice" xml:space="preserve">
+    <value>Read and accept the room rules in Community before posting.</value>
+  </data>
+  <data name="ChatRefusedSanctioned" xml:space="preserve">
+    <value>You cannot post in global chat right now. Open Community to see until when, and why.</value>
+  </data>
   <data name="ClanChatTitle" xml:space="preserve">
     <value>CLAN CHAT</value>
   </data>

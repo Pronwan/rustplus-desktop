@@ -343,6 +343,18 @@ public static class SocialRealtime
                 || data["is_premium"]?.Value<bool>() == true
                 || roles.Any(r => string.Equals(r, "supporter", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "premium", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "vip", StringComparison.OrdinalIgnoreCase));
 
+            // Resolved server-side when the line was posted, so the socket and the REST read agree
+            // without either of them parsing names out of the body.
+            var mentions = new List<string>();
+            if (data["mentions"] is JArray mentionArray)
+            {
+                foreach (var m in mentionArray)
+                {
+                    var value = m.ToString();
+                    if (!string.IsNullOrWhiteSpace(value)) mentions.Add(value);
+                }
+            }
+
             return new Models.ChatLine
             {
                 Id = id,
@@ -350,8 +362,11 @@ public static class SocialRealtime
                 Room = room!,
                 SenderId = senderId ?? sender?["id"]?.ToString(),
                 SenderName = senderName,
+                Handle = sender?["handle"]?.ToString() ?? data["handle"]?.ToString(),
                 AvatarUrl = avatarUrl,
                 SteamId = steamId,
+                Mentions = mentions,
+                MentionsMe = SocialApi.MentionsOwnAccount(mentions),
                 IsSupporter = isSupporter,
                 NameColor = sender?["name_color"]?.ToString(),
                 IsMine = SocialApi.IsOwnSender(senderId ?? sender?["id"]?.ToString()),

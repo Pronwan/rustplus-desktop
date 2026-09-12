@@ -102,6 +102,86 @@ public static class SocialApi
     /// A reference with no quote is kept rather than discarded: it means the original was
     /// deleted, and the view says so instead of quietly showing an ordinary message.
     /// </summary>
+    /// <summary>Somebody who can be addressed in the room right now.</summary>
+    public sealed record MentionCandidate(string Id, string Handle, string DisplayName, string? AvatarUrl);
+
+    /// <summary>
+    /// Who may be mentioned in the room.
+    ///
+    /// Asked of the server rather than assembled from the lines in hand, because the server
+    /// decides which mentions it will actually resolve. An autocomplete built from the local
+    /// buffer would offer people the post then silently drops.
+    /// </summary>
+    public static async Task<System.Collections.Generic.List<MentionCandidate>> GetMentionableAsync(string room = ChatRooms.Public)
+    {
+        var result = new System.Collections.Generic.List<MentionCandidate>();
+
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync(
+                "social/chat/mentionable",
+                HttpMethod.Get,
+                queryParams: new System.Collections.Generic.Dictionary<string, string> { ["room"] = room })
+                .ConfigureAwait(false);
+
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
+                return result;
+
+            foreach (var row in rows.EnumerateArray())
+            {
+                var handle = Str(row, "handle");
+                var id = Str(row, "id");
+                if (string.IsNullOrWhiteSpace(handle) || string.IsNullOrWhiteSpace(id)) continue;
+
+                result.Add(new MentionCandidate(
+                    id!,
+                    handle!,
+                    Str(row, "display_name") ?? handle!,
+                    Str(row, "avatar_url")));
+            }
+        }
+        catch
+        {
+            // An autocomplete that cannot reach the server simply offers nothing.
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// The accounts a line addresses, as the server resolved them when it was posted.
+    ///
+    /// Read rather than worked out from the text: the server knows who was in the room and which
+    /// handle belongs to whom, and a client parsing "@dave" against the names it happens to be
+    /// showing does not.
+    /// </summary>
+    internal static System.Collections.Generic.IReadOnlyList<string> ParseMentions(JsonElement row)
+    {
+        if (!row.TryGetProperty("mentions", out var mentions) || mentions.ValueKind != JsonValueKind.Array)
+            return Array.Empty<string>();
+
+        var ids = new System.Collections.Generic.List<string>();
+        foreach (var id in mentions.EnumerateArray())
+        {
+            var value = id.ValueKind == JsonValueKind.String ? id.GetString() : id.ToString();
+            if (!string.IsNullOrWhiteSpace(value)) ids.Add(value!);
+        }
+
+        return ids;
+    }
+
+    /// <summary>Whether the signed-in account is among a line's mentions.</summary>
+    internal static bool MentionsOwnAccount(System.Collections.Generic.IReadOnlyList<string> mentions)
+    {
+        if (mentions.Count == 0) return false;
+
+        var me = Cloud.CloudAuthManager.CurrentUser?.Id;
+        if (string.IsNullOrWhiteSpace(me)) return false;
+
+        return mentions.Any(id => string.Equals(id, me, StringComparison.OrdinalIgnoreCase));
+    }
+
     internal static Models.ChatReplyReference? ParseReply(JsonElement row)
     {
         if (!row.TryGetProperty("reply_to", out var reply) || reply.ValueKind != JsonValueKind.Object)
@@ -690,6 +770,8 @@ public static class SocialApi
                         || (row.TryGetProperty("is_premium", out var prem2) && (prem2.ValueKind == JsonValueKind.True || (prem2.ValueKind == JsonValueKind.Number && prem2.GetInt32() == 1)))
                         || roles.Any(r => string.Equals(r, "supporter", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "premium", StringComparison.OrdinalIgnoreCase) || string.Equals(r, "vip", StringComparison.OrdinalIgnoreCase));
 
+                    var mentions = ParseMentions(row);
+
                     lines.Add(new Models.ChatLine
                     {
                         Id = Str(row, "id") ?? "",
@@ -699,8 +781,11 @@ public static class SocialApi
                         // without this block/report bail out on a null SenderId.
                         SenderId = Str(row, "sender_id") ?? Str(sender, "id"),
                         SenderName = Str(sender, "display_name") ?? Str(sender, "name") ?? "—",
+                        Handle = Str(sender, "handle"),
                         AvatarUrl = Str(sender, "avatar_url"),
                         SteamId = Str(sender, "steam_id"),
+                        Mentions = mentions,
+                        MentionsMe = MentionsOwnAccount(mentions),
                         IsSupporter = isSupporter,
                         NameColor = Str(sender, "name_color"),
                         IsMine = IsOwnSender(Str(row, "sender_id") ?? Str(sender, "id")),

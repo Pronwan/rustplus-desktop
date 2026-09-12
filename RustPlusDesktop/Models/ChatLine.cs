@@ -164,9 +164,30 @@ public sealed class ChatLine
 
     public string SenderName { get; init; } = "—";
 
+    /// <summary>
+    /// The sender's unique handle — what you type after an "@" to address them.
+    ///
+    /// Separate from the display name on purpose: names are neither unique nor stable, so a
+    /// mention written against one would address nobody in particular and would come loose the
+    /// moment they renamed themselves.
+    /// </summary>
+    public string? Handle { get; init; }
+
     public string? AvatarUrl { get; init; }
 
     public string? SteamId { get; init; }
+
+    /// <summary>
+    /// The accounts this line addresses, resolved by the server when it was posted.
+    ///
+    /// Ids rather than names, and decided once rather than by each reader parsing text: that is
+    /// what makes "was I mentioned" an exact question instead of a guess about whose display name
+    /// happens to look like the word after the "@".
+    /// </summary>
+    public IReadOnlyList<string> Mentions { get; init; } = Array.Empty<string>();
+
+    /// <summary>Whether this line addresses the signed-in account.</summary>
+    public bool MentionsMe { get; init; }
 
     public bool IsSupporter { get; init; }
 
@@ -261,8 +282,11 @@ public sealed class ChatLine
         Body = body,
         SenderId = SenderId,
         SenderName = SenderName,
+        Handle = Handle,
         AvatarUrl = AvatarUrl,
         SteamId = SteamId,
+        Mentions = Mentions,
+        MentionsMe = MentionsMe,
         IsSupporter = IsSupporter,
         NameColor = NameColor,
         IsMine = IsMine,
