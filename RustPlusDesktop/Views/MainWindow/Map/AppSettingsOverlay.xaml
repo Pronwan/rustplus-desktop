@@ -1211,7 +1211,19 @@
                                     <ui:TextBox x:Name="TxtAiModel" MinHeight="32" Padding="8,4" VerticalContentAlignment="Center" TextChanged="TxtAiModel_TextChanged" />
                                     <ui:Button Grid.Column="1" x:Name="BtnAiModelReset" Content="{DynamicResource AiCompanionModelReset}" Height="32" Margin="6,0,0,0" Click="BtnAiModelReset_Click" />
                                 </Grid>
-                                <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14" Foreground="{DynamicResource TextSubtle}" />
+                                <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
+
+                                <Grid MinHeight="36" Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionGameData}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock x:Name="TxtAiGameDataNote" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiGameData" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
 
                                 <ui:TextBlock Text="{DynamicResource AiCompanionAnswers}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
 

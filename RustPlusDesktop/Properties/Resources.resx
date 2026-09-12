@@ -7466,4 +7466,16 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
     <value>Windows reads every answer in one language, so an answer in another one will sound wrong.</value>
   </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Send Rust data with each question</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Current recipes and raid costs go with every question, so the model is not answering from an old patch. Adds about 10,000 tokens a question, most of it cached after the first.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Current recipes and raid costs go with every question, so the model is not answering from an old patch. Free on Gemini.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Cheaper, but recipes and raid costs come from the model&apos;s memory — which holds every retired version of them and cannot tell which is current.</value>
+  </data>
 </root>

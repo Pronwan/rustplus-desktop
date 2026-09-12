@@ -12,13 +12,57 @@ namespace RustPlusDesk.Services.AiCompanion
     /// </summary>
     public static class AiPrompt
     {
+        /// <summary>
+        /// Everything the model is told before the question.
+        ///
+        /// Ordered for the providers' prompt caches: the reference tables and the standing
+        /// instructions never change between questions and come first, so they can be cached
+        /// as a prefix; everything that varies with the question — the language, what was
+        /// attached, the server's clock — comes last. Reversed, a ten-thousand-token prefix
+        /// would be re-read and re-billed on every single question.
+        /// </summary>
         public static string SystemMessage(AiQuestion question)
         {
             var text = new StringBuilder();
 
+            // ── Standing instructions: identical on every request ────────────────
+
             text.Append(
                 "You are an in-game companion for the survival game Rust, answering a player who " +
-                "is in the middle of a session and reading your answer on a small overlay. ");
+                "is in the middle of a session and reading your answer on a small overlay. " +
+                "Be direct and specific. Lead with the answer, then at most a sentence of reason. " +
+                "Stay under 60 words unless the question genuinely needs more, such as a recipe or " +
+                "a list of steps. No greetings, no offers of further help, no restating the " +
+                "question. Plain sentences, no markdown headings or bold. " +
+                "If you are not sure, say what you are not sure about rather than guessing at " +
+                "numbers — Rust is patched often and remembered values go stale. " +
+                "Be careful naming things you can only partly make out in a screenshot. Many Rust " +
+                "items look alike at that resolution: the electrical deployables are a set of " +
+                "similar grey boxes, doors and walls differ mainly by tier, and weapons and " +
+                "animals read as silhouettes at distance. Describe what you can actually see — " +
+                "where it is, what shape and colour, what it is attached to — and name the item " +
+                "only when you are sure. When you are not, give the likely candidates and say " +
+                "what would tell them apart, so the player can settle it by looking.");
+
+            // ── Reference data: large, and identical on every request ────────────
+            //
+            // The two things this app can settle outright. Everything else the model is asked
+            // is judgement; raid costs and recipes are lookups, and answering those from
+            // memory is how someone ends up at a wall with half the rockets they need, or at
+            // a workbench with the recipe from two updates ago.
+
+            if (AiCompanionStore.Current.IncludeGameData)
+            {
+                var raid = AiGameFacts.RaidCosts();
+                if (raid.Length > 0) text.Append("\n\n").Append(raid);
+
+                var recipes = AiCraftingFacts.Recipes();
+                if (recipes.Length > 0) text.Append("\n\n").Append(recipes);
+            }
+
+            // ── This question in particular ──────────────────────────────────────
+
+            text.Append("\n\n");
 
             // Following the question is the default because Rust's own vocabulary is English
             // and people ask about it in English whatever language they run the app in. The
@@ -36,12 +80,6 @@ namespace RustPlusDesk.Services.AiCompanion
                     .Append(", whatever language the question was asked in. ");
             }
 
-            text.Append(
-                "Be direct and specific. Lead with the answer, then at most a sentence of reason. " +
-                "Stay under 60 words unless the question genuinely needs more, such as a recipe or " +
-                "a list of steps. No greetings, no offers of further help, no restating the " +
-                "question. Plain sentences, no markdown headings or bold. ");
-
             if (question.GamePath != null)
             {
                 text.Append(
@@ -57,25 +95,7 @@ namespace RustPlusDesk.Services.AiCompanion
                     "A screenshot of the player's screen is attached. It may show the game, the " +
                     "map, an inventory or a menu. Use it to work out what is being asked about, " +
                     "and say so if it does not show what the question needs. ");
-
-                // The failure this is aimed at: a smart switch read as an RF receiver. Rust is
-                // full of small props that differ by a dial, an aerial or a colour, at a size
-                // where a scaled screenshot barely resolves them — and a confident wrong name
-                // is worse than an honest description, because it is acted on.
-                text.Append(
-                    "Be careful naming things you can only partly make out. Many Rust items " +
-                    "look alike at screenshot resolution: the electrical deployables are a " +
-                    "set of similar grey boxes, doors and walls differ mainly by tier, and " +
-                    "weapons and animals read as silhouettes at distance. Describe what you " +
-                    "can actually see — where it is, what shape and colour, what it is " +
-                    "attached to — and name the item only when you are sure. When you are " +
-                    "not, give the likely candidates and say what would tell them apart, so " +
-                    "the player can settle it by looking. ");
             }
-
-            text.Append(
-                "If you are not sure, say what you are not sure about rather than guessing at " +
-                "numbers. Rust is patched often and exact values go stale.");
 
             if (question.Zoom < 1.0)
             {
@@ -88,12 +108,6 @@ namespace RustPlusDesk.Services.AiCompanion
 
             if (!string.IsNullOrWhiteSpace(question.Context))
                 text.Append("\n\nWhat the app knows right now: ").Append(question.Context);
-
-            // The one set of numbers this app can settle outright. Everything else the model
-            // is asked is judgement; raid costs are a lookup, and getting them from memory is
-            // how someone ends up at a wall with half the rockets they need.
-            var raid = AiGameFacts.RaidCosts();
-            if (raid.Length > 0) text.Append("\n\n").Append(raid);
 
             return text.ToString();
         }

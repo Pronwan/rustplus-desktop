@@ -7487,4 +7487,16 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
     <value>Windows liest jede Antwort in einer Sprache vor — eine Antwort in einer anderen klingt entsprechend falsch.</value>
   </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Rust-Daten mitsenden</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Aktuelle Rezepte und Raid-Kosten gehen bei jeder Frage mit, damit das Modell nicht aus einem alten Patch antwortet. Kostet rund 10.000 Tokens pro Frage, davon das meiste ab der zweiten Frage aus dem Cache.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Aktuelle Rezepte und Raid-Kosten gehen bei jeder Frage mit, damit das Modell nicht aus einem alten Patch antwortet. Bei Gemini kostenlos.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Günstiger, aber Rezepte und Raid-Kosten kommen aus dem Gedächtnis des Modells — das jede alte Fassung kennt und nicht weiß, welche aktuell ist.</value>
+  </data>
 </root>

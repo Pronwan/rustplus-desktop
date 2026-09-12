@@ -42,6 +42,7 @@ namespace RustPlusDesk.Views
             ChkAiGameAudio.IsChecked = settings.CaptureGameAudio;
             ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
             ChkAiAutoSend.IsChecked = settings.AutoSendAfterRecording;
+            ChkAiGameData.IsChecked = settings.IncludeGameData;
 
             if (CmbAiAnswerLanguage.Items.Count == 0)
             {
@@ -197,6 +198,17 @@ namespace RustPlusDesk.Views
                 Loc.Text("AiCompanionModelNote",
                     "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
                 AiProviders.DefaultModel(provider));
+
+            // Said in terms of what it fixes and what it costs, because it is the one setting
+            // here that meaningfully changes the bill.
+            TxtAiGameDataNote.Text = settings.IncludeGameData
+                ? (provider == AiProviders.Gemini
+                    ? Loc.Text("AiCompanionGameDataOnFree",
+                        "Current recipes and raid costs go with every question, so the model is not answering from an old patch. Free on Gemini.")
+                    : Loc.Text("AiCompanionGameDataOn",
+                        "Current recipes and raid costs go with every question, so the model is not answering from an old patch. Adds about 10,000 tokens a question, most of it cached after the first."))
+                : Loc.Text("AiCompanionGameDataOff",
+                    "Cheaper, but recipes and raid costs come from the model's memory — which holds every retired version of them and cannot tell which is current.");
 
             TxtAiAnswerLanguageNote.Text = settings.AnswerLanguage switch
             {
@@ -390,6 +402,7 @@ namespace RustPlusDesk.Views
             settings.CaptureGameAudio = ChkAiGameAudio.IsChecked == true;
             settings.AttachScreenshotByDefault = ChkAiScreenshotDefault.IsChecked == true;
             settings.AutoSendAfterRecording = ChkAiAutoSend.IsChecked == true;
+            settings.IncludeGameData = ChkAiGameData.IsChecked == true;
             AiCompanionStore.Save(settings);
 
             ApplyAiCompanionState();

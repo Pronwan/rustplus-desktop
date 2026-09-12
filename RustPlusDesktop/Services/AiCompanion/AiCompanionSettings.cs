@@ -83,6 +83,16 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public double ScreenshotZoom { get; set; } = 1.0;
 
+        /// <summary>
+        /// Send the shipped raid and crafting tables with every question.
+        ///
+        /// On by default, because without them a model answers recipes and raid costs from
+        /// training data that has every retired version of them in it and no way to tell which
+        /// is current. It costs roughly ten thousand tokens a question — free on Gemini, and
+        /// mostly cached after the first question everywhere, but it is the user's bill.
+        /// </summary>
+        public bool IncludeGameData { get; set; } = true;
+
         /// <summary>Send as soon as the recording stops, without a second press.</summary>
         public bool AutoSendAfterRecording { get; set; }
 

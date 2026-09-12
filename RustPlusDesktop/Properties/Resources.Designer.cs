@@ -1037,6 +1037,10 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionLanguageAppNote => GetString("AiCompanionLanguageAppNote");
         public static string AiCompanionLanguageEnglishNote => GetString("AiCompanionLanguageEnglishNote");
         public static string AiCompanionLanguageVoiceWarn => GetString("AiCompanionLanguageVoiceWarn");
+        public static string AiCompanionGameData => GetString("AiCompanionGameData");
+        public static string AiCompanionGameDataOn => GetString("AiCompanionGameDataOn");
+        public static string AiCompanionGameDataOnFree => GetString("AiCompanionGameDataOnFree");
+        public static string AiCompanionGameDataOff => GetString("AiCompanionGameDataOff");
     }
 }
 

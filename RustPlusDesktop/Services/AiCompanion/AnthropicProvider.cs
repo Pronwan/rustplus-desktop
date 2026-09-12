@@ -72,7 +72,18 @@ namespace RustPlusDesk.Services.AiCompanion
                 model = Model,
                 max_tokens = 700,
                 stream = onDelta != null,
-                system = AiPrompt.SystemMessage(question),
+                // Marked for caching, because the reference tables at the front of it are the
+                // same ten thousand tokens on every question. OpenAI and Google do this on
+                // their own; Anthropic needs the breakpoint spelled out.
+                system = new object[]
+                {
+                    new
+                    {
+                        type = "text",
+                        text = AiPrompt.SystemMessage(question),
+                        cache_control = new { type = "ephemeral" },
+                    },
+                },
                 messages = new object[] { new { role = "user", content } },
             };
 
