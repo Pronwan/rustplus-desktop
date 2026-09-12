@@ -1296,6 +1296,93 @@
 
                             <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
 
+                            <!-- OpenRouter Parameters & Reasoning Settings -->
+                            <StackPanel x:Name="PanelOpenRouterOptions" Margin="0,0,0,14" Visibility="Collapsed">
+                                <ui:TextBlock Text="OpenRouter Request Options" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
+                                
+                                <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="8" Padding="12,10" Margin="0,0,0,4">
+                                    <StackPanel>
+                                        <!-- Reasoning Effort Row -->
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock Text="Reasoning &amp; Thinking Effort" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Controls how deeply reasoning models (DeepSeek-R1, o1/o3, Claude 3.7) think before answering." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <ComboBox Grid.Column="1" x:Name="CmbOpenRouterReasoning" MinWidth="150" MinHeight="30" Padding="8,2" VerticalContentAlignment="Center" SelectionChanged="OnOpenRouterOptionChanged" />
+                                        </Grid>
+
+                                        <!-- Thinking Tokens Row -->
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock Text="Max Thinking Tokens" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Upper limit for reasoning steps (0 = model default)." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <ComboBox Grid.Column="1" x:Name="CmbOpenRouterThinkingTokens" MinWidth="150" MinHeight="30" Padding="8,2" VerticalContentAlignment="Center" SelectionChanged="OnOpenRouterOptionChanged" />
+                                        </Grid>
+
+                                        <!-- Temperature Slider Row -->
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="140" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock x:Name="LblOpenRouterTemperature" Text="Temperature — 0.70" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Lower is more factual and precise; higher is more creative." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Slider Grid.Column="1" x:Name="SliOpenRouterTemperature" Minimum="0.0" Maximum="1.5" SmallChange="0.05" LargeChange="0.1" ValueChanged="OnOpenRouterSliderChanged" VerticalAlignment="Center" />
+                                        </Grid>
+
+                                        <!-- Max Output Tokens Row -->
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="140" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock x:Name="LblOpenRouterMaxTokens" Text="Max Output Length — 700 tokens" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Maximum response length generated per question." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Slider Grid.Column="1" x:Name="SliOpenRouterMaxTokens" Minimum="256" Maximum="4096" SmallChange="64" LargeChange="256" ValueChanged="OnOpenRouterSliderChanged" VerticalAlignment="Center" />
+                                        </Grid>
+
+                                        <!-- Provider Fallbacks Switch -->
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock Text="Allow Provider Fallbacks" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Automatically try backup hosts on OpenRouter if the primary host is down." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOpenRouterFallbacks" VerticalAlignment="Center" Checked="OnOpenRouterSwitchChanged" Unchecked="OnOpenRouterSwitchChanged" />
+                                        </Grid>
+
+                                        <!-- Data Privacy (Zero Retention) Switch -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <ui:TextBlock Text="Strict Privacy (Zero Data Retention)" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                                <ui:TextBlock Text="Route exclusively to OpenRouter providers that enforce zero prompt logging." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOpenRouterPrivacy" VerticalAlignment="Center" Checked="OnOpenRouterSwitchChanged" Unchecked="OnOpenRouterSwitchChanged" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
                             <!--  The speech model goes stale on its own schedule, and its failure is quieter:
                                   the request fails and Windows reads the answer, so it sounds like nothing
                                   happened rather than like something broke.  -->

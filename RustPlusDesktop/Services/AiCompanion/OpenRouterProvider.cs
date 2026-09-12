@@ -79,17 +79,53 @@ namespace RustPlusDesk.Services.AiCompanion
                 });
             }
 
-            var payload = new
+            var settings = AiCompanionStore.Current;
+            var opts = settings.OpenRouter;
+
+            var payload = new Dictionary<string, object?>
             {
-                model = ChatModel,
-                stream = onDelta != null,
-                max_tokens = 700,
-                messages = new object[]
+                ["model"] = ChatModel,
+                ["stream"] = onDelta != null,
+                ["max_tokens"] = opts.MaxTokens > 0 ? opts.MaxTokens : 700,
+                ["temperature"] = opts.Temperature,
+                ["top_p"] = opts.TopP,
+                ["messages"] = new object[]
                 {
                     new { role = "system", content = AiPrompt.SystemMessage(question) },
                     new { role = "user", content },
                 },
             };
+
+            // Reasoning / Thinking settings
+            var reasoning = new Dictionary<string, object>();
+            if (!string.IsNullOrWhiteSpace(opts.ReasoningEffort) &&
+                !string.Equals(opts.ReasoningEffort, "auto", StringComparison.OrdinalIgnoreCase))
+            {
+                reasoning["effort"] = opts.ReasoningEffort.ToLowerInvariant();
+            }
+            if (opts.ReasoningMaxTokens > 0)
+            {
+                reasoning["max_tokens"] = opts.ReasoningMaxTokens;
+            }
+            if (opts.ExcludeReasoning)
+            {
+                reasoning["exclude"] = true;
+            }
+            if (reasoning.Count > 0)
+            {
+                payload["reasoning"] = reasoning;
+            }
+
+            // Provider routing settings
+            var providerRouting = new Dictionary<string, object>
+            {
+                ["allow_fallbacks"] = opts.AllowFallbacks,
+            };
+            if (string.Equals(opts.DataCollection, "deny", StringComparison.OrdinalIgnoreCase))
+            {
+                providerRouting["data_collection"] = "deny";
+            }
+            payload["provider"] = providerRouting;
 
             using var request = new HttpRequestMessage(HttpMethod.Post, ChatUrl)
             {

@@ -81,6 +81,61 @@ namespace RustPlusDesk.Views
             SliAiAnswerWidth.Value = Math.Clamp(settings.AnswerWidth, 220, 900);
             SliAiAnswerHeight.Value = Math.Clamp(settings.AnswerHeight, 80, 800);
 
+            if (CmbOpenRouterReasoning.Items.Count == 0)
+            {
+                CmbOpenRouterReasoning.Items.Add(new ComboBoxItem { Content = "Auto (Model Default)", Tag = "auto" });
+                CmbOpenRouterReasoning.Items.Add(new ComboBoxItem { Content = "Low Effort", Tag = "low" });
+                CmbOpenRouterReasoning.Items.Add(new ComboBoxItem { Content = "Medium Effort", Tag = "medium" });
+                CmbOpenRouterReasoning.Items.Add(new ComboBoxItem { Content = "High Effort", Tag = "high" });
+                CmbOpenRouterReasoning.Items.Add(new ComboBoxItem { Content = "None / Disabled", Tag = "none" });
+            }
+
+            var currentEffort = settings.OpenRouter.ReasoningEffort ?? "auto";
+            int effortIdx = 0;
+            for (int i = 0; i < CmbOpenRouterReasoning.Items.Count; i++)
+            {
+                if (CmbOpenRouterReasoning.Items[i] is ComboBoxItem item &&
+                    string.Equals(item.Tag as string, currentEffort, StringComparison.OrdinalIgnoreCase))
+                {
+                    effortIdx = i;
+                    break;
+                }
+            }
+            CmbOpenRouterReasoning.SelectedIndex = effortIdx;
+
+            if (CmbOpenRouterThinkingTokens.Items.Count == 0)
+            {
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "Auto (Default)", Tag = 0 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "1,024 tokens", Tag = 1024 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "2,048 tokens", Tag = 2048 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "4,096 tokens", Tag = 4096 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "8,192 tokens", Tag = 8192 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "16,384 tokens", Tag = 16384 });
+                CmbOpenRouterThinkingTokens.Items.Add(new ComboBoxItem { Content = "32,768 tokens", Tag = 32768 });
+            }
+
+            int currentTokens = settings.OpenRouter.ReasoningMaxTokens;
+            int tokenIdx = 0;
+            for (int i = 0; i < CmbOpenRouterThinkingTokens.Items.Count; i++)
+            {
+                if (CmbOpenRouterThinkingTokens.Items[i] is ComboBoxItem item &&
+                    item.Tag is int val && val == currentTokens)
+                {
+                    tokenIdx = i;
+                    break;
+                }
+            }
+            CmbOpenRouterThinkingTokens.SelectedIndex = tokenIdx;
+
+            SliOpenRouterTemperature.Value = Math.Clamp(settings.OpenRouter.Temperature, 0.0, 1.5);
+            LblOpenRouterTemperature.Text = $"Temperature — {settings.OpenRouter.Temperature:F2}";
+
+            SliOpenRouterMaxTokens.Value = Math.Clamp(settings.OpenRouter.MaxTokens > 0 ? settings.OpenRouter.MaxTokens : 700, 256, 4096);
+            LblOpenRouterMaxTokens.Text = $"Max Output Length — {(int)SliOpenRouterMaxTokens.Value} tokens";
+
+            ChkOpenRouterFallbacks.IsChecked = settings.OpenRouter.AllowFallbacks;
+            ChkOpenRouterPrivacy.IsChecked = string.Equals(settings.OpenRouter.DataCollection, "deny", StringComparison.OrdinalIgnoreCase);
+
             ApplyAiCompanionState();
         }
 
@@ -203,6 +258,13 @@ namespace RustPlusDesk.Views
             if (PanelOpenRouterTools != null)
             {
                 PanelOpenRouterTools.Visibility = provider == AiProviders.OpenRouter
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
+            if (PanelOpenRouterOptions != null)
+            {
+                PanelOpenRouterOptions.Visibility = provider == AiProviders.OpenRouter
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
@@ -746,6 +808,64 @@ namespace RustPlusDesk.Views
             AiCompanionStore.Save(settings);
 
             ApplyAiCompanionState();
+        }
+
+        private void OnOpenRouterOptionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            var settings = AiCompanionStore.Current;
+
+            if (CmbOpenRouterReasoning?.SelectedItem is ComboBoxItem reasoningItem && reasoningItem.Tag is string effort)
+            {
+                settings.OpenRouter.ReasoningEffort = effort;
+            }
+
+            if (CmbOpenRouterThinkingTokens?.SelectedItem is ComboBoxItem tokenItem && tokenItem.Tag is int tokens)
+            {
+                settings.OpenRouter.ReasoningMaxTokens = tokens;
+            }
+
+            AiCompanionStore.Save(settings);
+        }
+
+        private void OnOpenRouterSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_isSettingsInitialized) return;
+            var settings = AiCompanionStore.Current;
+
+            if (SliOpenRouterTemperature != null && LblOpenRouterTemperature != null)
+            {
+                double temp = Math.Round(SliOpenRouterTemperature.Value, 2);
+                settings.OpenRouter.Temperature = temp;
+                LblOpenRouterTemperature.Text = $"Temperature — {temp:F2}";
+            }
+
+            if (SliOpenRouterMaxTokens != null && LblOpenRouterMaxTokens != null)
+            {
+                int maxTokens = (int)Math.Round(SliOpenRouterMaxTokens.Value);
+                settings.OpenRouter.MaxTokens = maxTokens;
+                LblOpenRouterMaxTokens.Text = $"Max Output Length — {maxTokens} tokens";
+            }
+
+            AiCompanionStore.Save(settings);
+        }
+
+        private void OnOpenRouterSwitchChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            var settings = AiCompanionStore.Current;
+
+            if (ChkOpenRouterFallbacks != null)
+            {
+                settings.OpenRouter.AllowFallbacks = ChkOpenRouterFallbacks.IsChecked == true;
+            }
+
+            if (ChkOpenRouterPrivacy != null)
+            {
+                settings.OpenRouter.DataCollection = ChkOpenRouterPrivacy.IsChecked == true ? "deny" : "allow";
+            }
+
+            AiCompanionStore.Save(settings);
         }
 
         private async void BtnSaveAiKey_Click(object sender, RoutedEventArgs e)

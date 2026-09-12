@@ -117,8 +117,57 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>Its text colour, by the same keys the dock's tiles use.</summary>
         public string AnswerTextColorKey { get; set; } = RustPlusDesk.Models.CommandDockTextColors.Auto;
 
+        /// <summary>Specific request options for OpenRouter (reasoning, effort, temperature, etc.).</summary>
+        public OpenRouterSettings OpenRouter { get; set; } = new();
+
         /// <summary>When the user accepted what happens to their recordings. Null until they have.</summary>
         public DateTime? PolicyAcceptedUtc { get; set; }
+    }
+
+    /// <summary>
+    /// Configuration options for OpenRouter chat requests.
+    /// </summary>
+    public sealed class OpenRouterSettings
+    {
+        /// <summary>
+        /// Reasoning effort: "auto" (default), "none", "low", "medium", "high".
+        /// </summary>
+        public string ReasoningEffort { get; set; } = "auto";
+
+        /// <summary>
+        /// Max reasoning / thinking tokens (0 for auto/model default).
+        /// </summary>
+        public int ReasoningMaxTokens { get; set; } = 0;
+
+        /// <summary>
+        /// Whether to exclude reasoning / chain-of-thought tokens from the final response.
+        /// </summary>
+        public bool ExcludeReasoning { get; set; } = false;
+
+        /// <summary>
+        /// Temperature (0.0 to 2.0, default 0.7).
+        /// </summary>
+        public double Temperature { get; set; } = 0.7;
+
+        /// <summary>
+        /// Top P (0.0 to 1.0, default 1.0).
+        /// </summary>
+        public double TopP { get; set; } = 1.0;
+
+        /// <summary>
+        /// Max output tokens (default 700).
+        /// </summary>
+        public int MaxTokens { get; set; } = 700;
+
+        /// <summary>
+        /// Allow OpenRouter to fallback to alternative providers if the primary host is down.
+        /// </summary>
+        public bool AllowFallbacks { get; set; } = true;
+
+        /// <summary>
+        /// Privacy data collection policy: "allow" or "deny" (deny routes only to providers that do not log prompts).
+        /// </summary>
+        public string DataCollection { get; set; } = "allow";
     }
 
     public static class AnswerLanguages
