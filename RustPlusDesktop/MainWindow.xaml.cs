@@ -654,7 +654,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         var appVersion = VersionHelper.GetClientVersion();
 
         // Strictly less than, for a notice aimed at everyone arriving from before a release
-        // rather than everyone up to and including one. "9.2.2" is below "9.3"; "9.3.0" is
+        // rather than everyone up to and including one. "9.3.0" is below "10.0"; "10.0.0" is
         // not, because System.Version orders an absent build component below a zero one.
         bool IsVersionLessThan(string versionStr, string targetStr)
         {
@@ -736,7 +736,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // Everyone arriving from before 9.3 gets the what's-new notice once. A fresh install
+        // Everyone arriving from before 10.0 gets the what's-new notice once. A fresh install
         // starts on the current version and has nothing to catch up on, so it is left alone.
         //
         // The flag is latched here rather than re-derived on every start: LastSeenVersion has
@@ -748,7 +748,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // ticked — and the notice could never be dismissed.
         if (!string.IsNullOrEmpty(versionBeforeThisStart)
             && versionBeforeThisStart != appVersion
-            && IsVersionLessThan(versionBeforeThisStart, "9.3"))
+            && IsVersionLessThan(versionBeforeThisStart, "10.0"))
         {
             TrackingService.PendingWhatsNewNotice = true;
         }
