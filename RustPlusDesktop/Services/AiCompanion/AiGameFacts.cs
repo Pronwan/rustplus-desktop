@@ -33,8 +33,10 @@ namespace RustPlusDesk.Services.AiCompanion
 
             try
             {
-                var data = new RaidDataService().LoadAsync().GetAwaiter().GetResult();
-                _cached = Render(data);
+                // Synchronously, never by blocking on the async one: this is reached from
+                // inside a provider request, and blocking there on a method whose awaits
+                // capture the dispatcher is what froze the app on send.
+                _cached = Render(new RaidDataService().Load());
             }
             catch
             {

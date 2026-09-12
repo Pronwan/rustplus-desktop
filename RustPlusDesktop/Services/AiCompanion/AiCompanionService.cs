@@ -162,7 +162,16 @@ namespace RustPlusDesk.Services.AiCompanion
                       }
                     : null;
 
-                var result = await provider.AskAsync(question, key, onDelta, _cancel.Token);
+                // On a worker, all of it.
+                //
+                // A provider does real work before its first await — building the prompt,
+                // base64-ing a four-megapixel screenshot — and all of that ran on the UI
+                // thread, where it is at best a stutter and at worst a freeze. Off-thread it
+                // cannot be either. The deltas then arrive off-thread too, which is why every
+                // listener marshals before touching a control.
+                var token = _cancel.Token;
+                var result = await Task.Run(
+                    () => provider.AskAsync(question, key, onDelta, token), token);
 
                 Answer = string.IsNullOrWhiteSpace(result.Answer)
                     ? "The provider returned an empty answer."
