@@ -43,14 +43,39 @@ namespace RustPlusDesk.Services.AiCompanion
             {
                 401 or 403 => "The provider rejected the key.",
                 402 => "The provider says this account cannot be billed.",
-                404 => "The provider does not know that model.",
+                404 => "The provider does not know that model. Check the model name in the settings.",
                 413 => "The recording was too large to send.",
-                429 => "Rate limit or quota reached at the provider.",
+
+                // Two very different problems arrive as 429 and need opposite responses:
+                // waiting fixes one and never fixes the other.
+                429 when IsOutOfCredit(body) =>
+                    "There is no credit on this API account. A free rate-limit tier is not free " +
+                    "usage — the API has to be topped up before it will answer.",
+                429 => "Too many requests in a short time. Wait a moment and ask again.",
+
                 >= 500 => "The provider had a problem at its end.",
                 _ => $"The provider refused the request ({code}).",
             };
 
             return new AiRequestException(string.IsNullOrEmpty(detail) ? head : head + " " + detail);
+        }
+
+        /// <summary>
+        /// Whether a 429 means "no money" rather than "too fast".
+        ///
+        /// OpenAI marks the first insufficient_quota, Google RESOURCE_EXHAUSTED with billing in
+        /// the text, Anthropic credit_balance_too_low — and all three send it as 429, the same
+        /// status as an ordinary rate limit. Told to wait, someone with an empty account waits
+        /// forever; told to top up, someone who merely asked twice in a second pays for nothing.
+        /// </summary>
+        private static bool IsOutOfCredit(string body)
+        {
+            if (string.IsNullOrWhiteSpace(body)) return false;
+
+            return body.Contains("insufficient_quota", StringComparison.OrdinalIgnoreCase)
+                || body.Contains("credit_balance", StringComparison.OrdinalIgnoreCase)
+                || body.Contains("billing", StringComparison.OrdinalIgnoreCase)
+                || body.Contains("exceeded your current quota", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string ExtractMessage(string body)
