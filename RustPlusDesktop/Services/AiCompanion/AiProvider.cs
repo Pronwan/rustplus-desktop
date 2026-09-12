@@ -3,25 +3,27 @@ using System;
 namespace RustPlusDesk.Services.AiCompanion
 {
     /// <summary>
-    /// The three models the companion can talk to, and what each of them can actually do.
+    /// The models the companion can talk to, and what each of them can actually do.
     ///
     /// They differ in ways the UI has to be honest about rather than paper over: only two take
     /// audio at all, and only two have a voice of their own. Pretending otherwise would mean a
-    /// setting that silently does nothing on one of the three.
+    /// setting that silently does nothing on one of them.
     /// </summary>
     public static class AiProviders
     {
         public const string OpenAi = "openai";
         public const string Gemini = "gemini";
         public const string Anthropic = "anthropic";
+        public const string OpenRouter = "openrouter";
 
-        public static readonly string[] All = { OpenAi, Gemini, Anthropic };
+        public static readonly string[] All = { OpenAi, Gemini, Anthropic, OpenRouter };
 
         public static string DisplayName(string provider) => provider switch
         {
             OpenAi => "OpenAI · GPT",
             Gemini => "Google · Gemini",
             Anthropic => "Anthropic · Claude",
+            OpenRouter => "OpenRouter · Many models",
             _ => provider,
         };
 
@@ -54,7 +56,34 @@ namespace RustPlusDesk.Services.AiCompanion
             OpenAi => "gpt-4o",
             Gemini => "gemini-3.6-flash",
             Anthropic => "claude-sonnet-5",
+            OpenRouter => "openai/gpt-4o-mini",
             _ => "",
+        };
+
+        /// <summary>
+        /// A short list of well-known model ids offered as one-click choices.
+        ///
+        /// The text field stays the source of truth — anything typed there wins, including a
+        /// model id released after this app shipped. These are just the common starting
+        /// points so nobody has to guess the exact spelling of a model id.
+        /// </summary>
+        public static string[] SuggestedModels(string provider) => provider switch
+        {
+            OpenAi => new[] { "gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini" },
+            Gemini => new[] { "gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-pro" },
+            Anthropic => new[] { "claude-sonnet-5", "claude-sonnet-4-5", "claude-haiku-4-5" },
+            OpenRouter => new[]
+            {
+                "openai/gpt-4o-mini",
+                "openai/gpt-4o",
+                "anthropic/claude-sonnet-4",
+                "anthropic/claude-3.5-sonnet",
+                "google/gemini-2.5-flash",
+                "google/gemini-2.5-pro",
+                "meta-llama/llama-3.3-70b-instruct",
+                "deepseek/deepseek-chat",
+            },
+            _ => Array.Empty<string>(),
         };
 
         /// <summary>The model actually used: the user's own where they set one.</summary>
@@ -97,6 +126,7 @@ namespace RustPlusDesk.Services.AiCompanion
             OpenAi => "https://platform.openai.com/api-keys",
             Gemini => "https://aistudio.google.com/app/apikey",
             Anthropic => "https://console.anthropic.com/settings/keys",
+            OpenRouter => "https://openrouter.ai/keys",
             _ => "",
         };
 
@@ -115,6 +145,8 @@ namespace RustPlusDesk.Services.AiCompanion
                 Anthropic => key.StartsWith("sk-ant-", StringComparison.Ordinal) && key.Length > 20,
                 // Google's keys carry no prefix worth checking; length is all there is to go on.
                 Gemini => key.Length > 20,
+                // OpenRouter keys look like sk-or-v1-…, but older ones are plain sk-or-….
+                OpenRouter => (key.StartsWith("sk-or-", StringComparison.Ordinal) || key.Length > 20) && key.Length > 20,
                 _ => key.Length > 20,
             };
         }

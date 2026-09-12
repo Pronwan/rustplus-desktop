@@ -251,6 +251,8 @@ namespace RustPlusDesk.Services.AiCompanion
             };
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
+            AiLog.Info($"[OpenAI] Sending POST to {ChatUrl} (model={ChatModel}, stream={onDelta != null})");
+
             using var response = await AiHttp.Client.SendAsync(
                 request,
                 onDelta != null ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead,

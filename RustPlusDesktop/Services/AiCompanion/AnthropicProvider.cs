@@ -100,6 +100,8 @@ namespace RustPlusDesk.Services.AiCompanion
             request.Headers.Add("x-api-key", apiKey);
             request.Headers.Add("anthropic-version", Version);
 
+            AiLog.Info($"[Anthropic] Sending POST to {Url} (model={Model}, stream={onDelta != null})");
+
             using var response = await AiHttp.Client.SendAsync(
                 request,
                 onDelta != null ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead,

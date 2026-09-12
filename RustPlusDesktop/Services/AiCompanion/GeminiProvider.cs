@@ -87,6 +87,8 @@ namespace RustPlusDesk.Services.AiCompanion
                 // reports, and this one would carry the key with it.
                 request.Headers.Add("x-goog-api-key", apiKey);
 
+                AiLog.Info($"[Gemini] Sending POST to {url} (model={Model}, stream={onDelta != null})");
+
                 using var response = await AiHttp.Client.SendAsync(
                     request,
                     onDelta != null ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead,

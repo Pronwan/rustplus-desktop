@@ -123,11 +123,15 @@ namespace RustPlusDesk.Views
             // What it costs to use, because none of the three is covered by the chat
             // subscription people already pay for and all three fail the same anonymous way
             // when the credit runs out.
-            TxtAiProviderNote.Text += " " + (provider == AiProviders.Gemini
-                ? Loc.Text("AiCompanionBillingFree",
-                    "Google gives the API a free allowance, so a key from AI Studio works without paying. Busy sessions can still hit the per-minute limit.")
-                : Loc.Text("AiCompanionBillingPrepaid",
-                    "This API is billed separately from any chat subscription and needs its own prepaid credit."));
+            TxtAiProviderNote.Text += " " + (provider switch
+            {
+                AiProviders.Gemini => Loc.Text("AiCompanionBillingFree",
+                    "Google gives the API a free allowance, so a key from AI Studio works without paying. Busy sessions can still hit the per-minute limit."),
+                AiProviders.OpenRouter => Loc.Text("AiCompanionBillingOpenRouter",
+                    "One key for many models with pay-as-you-go credit. Prices vary per model — cheap ones cost a fraction of GPT per question."),
+                _ => Loc.Text("AiCompanionBillingPrepaid",
+                    "This API is billed separately from any chat subscription and needs its own prepaid credit."),
+            });
 
             // Per provider, and it says which of the others are set up too — the whole reason
             // there is a slot each is that people keep more than one and switch between them.
@@ -193,6 +197,10 @@ namespace RustPlusDesk.Views
 
             TxtAiModel.PlaceholderText = AiProviders.DefaultModel(provider);
             BtnAiModelReset.IsEnabled = !string.IsNullOrWhiteSpace(TxtAiModel.Text);
+
+            // One-click choices for this provider. Hidden when there is nothing to offer;
+            // picking one just fills the text field, which stays the saved value.
+            RefreshAiModelChoices(provider, settings.Models.TryGetValue(provider, out var current) ? current : "");
 
             TxtAiModelNote.Text = string.Format(
                 Loc.Text("AiCompanionModelNote",
@@ -300,11 +308,36 @@ namespace RustPlusDesk.Views
 
             AiCompanionStore.Save(settings);
             BtnAiModelReset.IsEnabled = typed.Length > 0;
+
+            // Keep the one-click list in step with hand typing, without saving twice.
+            if (CmbAiModel != null && CmbAiModel.Visibility == Visibility.Visible)
+            {
+                _loadingAiModel = true;
+                try
+                {
+                    int match = 0;
+                    for (int i = 1; i < CmbAiModel.Items.Count; i++)
+                    {
+                        if (string.Equals((CmbAiModel.Items[i] as ComboBoxItem)?.Tag as string,
+                                typed, StringComparison.OrdinalIgnoreCase))
+                        {
+                            match = i;
+                            break;
+                        }
+                    }
+                    if (CmbAiModel.SelectedIndex != match) CmbAiModel.SelectedIndex = match;
+                }
+                finally
+                {
+                    _loadingAiModel = false;
+                }
+            }
         }
 
         private void BtnAiModelReset_Click(object sender, RoutedEventArgs e)
         {
             TxtAiModel.Text = "";
+            if (CmbAiModel != null) CmbAiModel.SelectedIndex = 0;
             ApplyAiCompanionState();
         }
 
@@ -327,6 +360,72 @@ namespace RustPlusDesk.Views
         {
             TxtAiVoiceModel.Text = "";
             ApplyAiCompanionState();
+        }
+
+        /// <summary>
+        /// Rebuilds the one-click model list for this provider.
+        ///
+        /// First row is always the default (empty text field), so resetting does not need a
+        /// separate control to find — followed by the known ids. The combo is hidden entirely
+        /// when a provider offers no suggestions.
+        /// </summary>
+        private void RefreshAiModelChoices(string provider, string current)
+        {
+            if (CmbAiModel == null) return;
+
+            var suggestions = AiProviders.SuggestedModels(provider);
+            if (suggestions.Length == 0)
+            {
+                CmbAiModel.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            CmbAiModel.Visibility = Visibility.Visible;
+
+            _loadingAiModel = true;
+            try
+            {
+                CmbAiModel.Items.Clear();
+                CmbAiModel.Items.Add(new ComboBoxItem
+                {
+                    Content = string.Format(
+                        Loc.Text("AiCompanionModelDefaultChoice", "Default ({0})"),
+                        AiProviders.DefaultModel(provider)),
+                    Tag = "",
+                });
+                foreach (var name in suggestions)
+                    CmbAiModel.Items.Add(new ComboBoxItem { Content = name, Tag = name });
+
+                var trimmed = (current ?? "").Trim();
+                int match = 0;
+                for (int i = 1; i < CmbAiModel.Items.Count; i++)
+                {
+                    if (string.Equals((CmbAiModel.Items[i] as ComboBoxItem)?.Tag as string,
+                            trimmed, StringComparison.OrdinalIgnoreCase))
+                    {
+                        match = i;
+                        break;
+                    }
+                }
+
+                // A hand-typed id with no suggestion keeps the default row selected rather
+                // than inventing a row for it — the text field shows what will be used.
+                CmbAiModel.SelectedIndex = match;
+            }
+            finally
+            {
+                _loadingAiModel = false;
+            }
+        }
+
+        private void CmbAiModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized || _loadingAiModel) return;
+            if (CmbAiModel?.SelectedItem is not ComboBoxItem picked) return;
+
+            // Default row clears the override; anything else fills the text field, whose
+            // own change handler does the saving.
+            TxtAiModel.Text = (picked.Tag as string) ?? "";
         }
 
         private void OnAiAnswerAppearanceChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

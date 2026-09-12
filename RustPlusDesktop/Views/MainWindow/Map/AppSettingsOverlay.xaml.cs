@@ -171,6 +171,7 @@ namespace RustPlusDesk.Views
                 Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync wipe tracker player backup", SectionCloud),
                 Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
                 Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
+                Section("ai-companion", "ai-companion", T("AiCompanionTitle", "AI Companion"), "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
                 Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
                 Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
                 Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
@@ -465,6 +466,7 @@ namespace RustPlusDesk.Views
             "connected" => ("Connected Services", "Cloud, integrations, chat, and account connections"),
             "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
             "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
+            "ai-companion" => (T("AiCompanionTitle", "AI Companion"), T("AiCompanionCategoryDesc", "Voice and text companion, provider, hotkey, and appearance")),
             "system" => ("System", "Maintenance, backup, reset, and application information"),
             _ => ("General", "Language, startup, and application behavior")
         };
@@ -489,7 +491,6 @@ namespace RustPlusDesk.Views
                 switch (targetId)
                 {
                     case "Settings.AiCompanion":
-                        if (CardAiCompanion != null) CardAiCompanion.IsExpanded = true;
                         break;
                     case "Settings.CommandDock":
                         if (CardCommandDock != null) CardCommandDock.IsExpanded = true;

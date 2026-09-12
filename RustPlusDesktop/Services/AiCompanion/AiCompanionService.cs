@@ -52,6 +52,16 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public string? Screenshot { get; private set; }
 
+        public string StatusTitle { get; private set; } = "";
+        public string StatusText { get; private set; } = "";
+
+        public void SetStatus(string title, string text)
+        {
+            StatusTitle = title;
+            StatusText = text;
+            Raise();
+        }
+
         public bool IsBusy => State is AiAnswerState.Sending or AiAnswerState.Streaming;
 
         /// <summary>Fires on whatever thread the change happened on. Marshal before touching UI.</summary>
@@ -151,7 +161,10 @@ namespace RustPlusDesk.Services.AiCompanion
             Error = null;
             Transcript = null;
             State = AiAnswerState.Sending;
+            SetStatus("Thinking…", $"Connecting to {AiProviders.DisplayName(settings.Provider)}…");
             _cancel = new CancellationTokenSource();
+
+            AiLog.Info($"Sending question to {settings.Provider} ({AiProviders.Model(settings.Provider)}) | Mic: {(mic != null ? "Yes" : "No")}, Screen: {(shot != null ? "Yes" : "No")}, GameAudio: {(game != null ? "Yes" : "No")}, Language: {question.Language}");
 
             // A question asked while the last answer is still being read out loud replaces
             // it; two answers over each other are neither of them audible.
@@ -168,6 +181,7 @@ namespace RustPlusDesk.Services.AiCompanion
                       {
                           Answer += piece;
                           State = AiAnswerState.Streaming;
+                          SetStatus("Answering…", "");
 
                           // A sentence at a time, never a fragment: the synthesiser reads
                           // half a clause as a statement and the intonation comes out wrong.
@@ -210,6 +224,8 @@ namespace RustPlusDesk.Services.AiCompanion
                 AiHistory.Add(record);
 
                 State = AiAnswerState.Answered;
+                SetStatus("Answer", "");
+                AiLog.Info($"Response received from {settings.Provider}: {Answer}");
 
                 if (result.Audio != null)
                 {
@@ -229,18 +245,24 @@ namespace RustPlusDesk.Services.AiCompanion
             {
                 State = AiAnswerState.None;
                 Answer = "";
+                SetStatus("", "");
+                AiLog.Info($"Request to {settings.Provider} cancelled by user.");
                 Raise();
             }
             catch (AiRequestException ex)
             {
                 record.Error = ex.Message;
                 AiHistory.Add(record);
+                SetStatus("Failed", ex.Message);
+                AiLog.Info($"Request to {settings.Provider} failed: {ex.Message}");
                 Fail(ex.Message);
             }
             catch (Exception ex)
             {
                 record.Error = Readable(ex);
                 AiHistory.Add(record);
+                SetStatus("Failed", record.Error);
+                AiLog.Info($"Request to {settings.Provider} error: {record.Error}");
                 Fail(record.Error);
             }
             finally
@@ -290,6 +312,8 @@ namespace RustPlusDesk.Services.AiCompanion
 
             var settings = AiCompanionStore.Current;
 
+            AiLog.Info($"Sending text question to {settings.Provider} ({AiProviders.Model(settings.Provider)}): \"{question}\"");
+
             var record = new AiExchange
             {
                 Provider = settings.Provider,
@@ -316,23 +340,27 @@ namespace RustPlusDesk.Services.AiCompanion
 
                 record.Answer = result.Answer.Trim();
                 AiHistory.Add(record);
+                AiLog.Info($"Response received from {settings.Provider}: {record.Answer}");
 
                 return string.IsNullOrWhiteSpace(result.Answer) ? null : result.Answer.Trim();
             }
             catch (OperationCanceledException)
             {
+                AiLog.Info($"Text request to {settings.Provider} cancelled.");
                 return null;
             }
             catch (AiRequestException ex)
             {
                 record.Error = ex.Message;
                 AiHistory.Add(record);
+                AiLog.Info($"Text request to {settings.Provider} failed: {ex.Message}");
                 return null;
             }
             catch (Exception ex)
             {
                 record.Error = Readable(ex);
                 AiHistory.Add(record);
+                AiLog.Info($"Text request to {settings.Provider} error: {record.Error}");
                 return null;
             }
         }

@@ -279,9 +279,13 @@ namespace RustPlusDesk.Views.Windows
             switch (_service.State)
             {
                 case AiAnswerState.Sending:
-                    TxtState.Text = Loc.Text("AiAnswerThinking", "Thinking…");
+                    TxtState.Text = !string.IsNullOrEmpty(_service.StatusTitle)
+                        ? _service.StatusTitle
+                        : Loc.Text("AiAnswerThinking", "Thinking…");
                     TxtState.Foreground = Resource("Accent", Colors.SkyBlue);
-                    TxtAnswer.Text = Loc.Text("AiAnswerWaiting", "Sent. Waiting for the first words…");
+                    TxtAnswer.Text = !string.IsNullOrEmpty(_service.StatusText)
+                        ? _service.StatusText
+                        : Loc.Text("AiAnswerWaiting", "Sent. Waiting for the first words…");
                     break;
 
                 case AiAnswerState.Streaming:

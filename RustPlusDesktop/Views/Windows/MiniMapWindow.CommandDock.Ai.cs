@@ -197,9 +197,11 @@ namespace RustPlusDesk
 
                 if (service.IsBusy)
                 {
-                    status.Text = service.State == AiAnswerState.Sending
-                        ? Loc.Text("CommandDockAiSending", "Sending…")
-                        : Loc.Text("CommandDockAiAnswering", "Answering…");
+                    status.Text = !string.IsNullOrEmpty(service.StatusTitle)
+                        ? service.StatusTitle
+                        : (service.State == AiAnswerState.Sending
+                            ? Loc.Text("CommandDockAiSending", "Sending…")
+                            : Loc.Text("CommandDockAiAnswering", "Answering…"));
                     status.Foreground = style.TextMain;
                     SetPulse(false);
                 }

@@ -7662,10 +7662,16 @@ Close this preview when the panel looks right.</value>
     <value>Hold a key or press the widget, ask your question, and the answer appears in a panel under the widget or is read aloud. It runs on your own account with an AI provider: the recording goes from this PC straight to them and never passes through our servers.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
-    <value>Find It Under Connected Services</value>
+    <value>Find It in AI Companion Settings</value>
   </data>
   <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
-    <value>Settings → Connected Services → AI Companion. Everything for the companion lives in this card: the provider, your key, how answers arrive and what gets recorded.</value>
+    <value>Settings → AI Companion. Everything for the companion lives in this section: the provider, your key, how answers arrive and what gets recorded.</value>
+  </data>
+  <data name="AiCompanionTitle" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="AiCompanionCategoryDesc" xml:space="preserve">
+    <value>Voice and text companion, provider, hotkey, and appearance</value>
   </data>
   <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
     <value>Three Models to Choose From</value>

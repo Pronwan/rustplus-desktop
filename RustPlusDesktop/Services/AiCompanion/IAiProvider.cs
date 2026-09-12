@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace RustPlusDesk.Services.AiCompanion
 {
     /// <summary>
-    /// One model provider. Three of these exist and they differ in what they will accept, not in
+    /// One model provider. These exist and they differ in what they will accept, not in
     /// what they are asked — the differences are absorbed here so the rest of the app only ever
     /// has a question and an answer.
     /// </summary>
@@ -27,6 +27,7 @@ namespace RustPlusDesk.Services.AiCompanion
         {
             AiProviders.Gemini => new GeminiProvider(),
             AiProviders.Anthropic => new AnthropicProvider(),
+            AiProviders.OpenRouter => new OpenRouterProvider(),
             _ => new OpenAiProvider(),
         };
     }

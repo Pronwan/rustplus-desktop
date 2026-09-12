@@ -198,7 +198,8 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
                     // the section holding it was never shown, so the element was never visible.
                     AppSettingsPanel.OpenCategory(step.TargetId switch
                     {
-                        "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" or "Settings.AiCompanion" => "connected",
+                        "Settings.AiCompanion" => "ai-companion",
+                        "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" => "connected",
                         "Settings.ChatCommands" or "ChatCommands.AskAi" => "chat-commands",
                         "Settings.Map" or "Settings.CommandDock" => "map",
                         "Settings.Maintenance" => "system",
