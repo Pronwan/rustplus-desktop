@@ -7574,4 +7574,10 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>Sous Commandes de chat, tu peux autoriser tes coéquipiers à utiliser !ai depuis le chat du jeu. Cela passe par ce client, avec ta clé et tes réglages — même fournisseur, même modèle, même langue — c&apos;est donc désactivé jusqu&apos;à ce que tu l&apos;actives, et l&apos;activation ajoute une limite horaire par coéquipier. Le clan a son propre interrupteur, distinct.</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Modèle vocal</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Laisse vide pour utiliser {0}. Si les réponses parlées sortent avec la voix de Windows au lieu de celle du fournisseur, ce nom en est la cause habituelle.</value>
+  </data>
 </root>

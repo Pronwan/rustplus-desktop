@@ -7465,4 +7465,10 @@
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>تحت أوامر الدردشة يمكنك السماح لزملاء الفريق باستخدام !ai من دردشة اللعبة. يمر عبر هذا العميل بمفتاحك وإعداداتك — المزوّد نفسه والنموذج نفسه واللغة نفسها — لذا فهو معطّل حتى تفعّله، والتفعيل يضيف حدًا لكل زميل في الساعة. وللـ clan مفتاح منفصل خاص به.</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>نموذج الصوت</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>اتركه فارغًا لاستخدام {0}. إذا صدرت الإجابات المنطوقة بصوت Windows بدل صوت المزوّد، فهذا الاسم هو السبب المعتاد.</value>
+  </data>
 </root>

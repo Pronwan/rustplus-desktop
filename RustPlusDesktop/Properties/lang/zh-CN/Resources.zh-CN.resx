@@ -7322,4 +7322,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>在聊天命令中，你可以允许队友从游戏聊天里使用 !ai。它通过这个客户端运行，用的是你的密钥和你的设置 —— 同一个服务商、同一个模型、同一种语言 —— 所以在你开启之前是关闭的，开启后还会按队友加上每小时上限。战队有单独的开关。</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>语音模型</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>留空则使用 {0}。如果语音回答用的是 Windows 的声音而不是服务商的，通常就是这个名称的问题。</value>
+  </data>
 </root>

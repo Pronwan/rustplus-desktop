@@ -1087,6 +1087,8 @@ namespace RustPlusDesk.Properties {
         public static string UpdateWhatsNew93Title4 => GetString("UpdateWhatsNew93Title4");
         public static string UpdateWhatsNew93Desc4 => GetString("UpdateWhatsNew93Desc4");
         public static string UpdateWhatsNewHeading => GetString("UpdateWhatsNewHeading");
+        public static string AiCompanionVoiceModel => GetString("AiCompanionVoiceModel");
+        public static string AiCompanionVoiceModelNote => GetString("AiCompanionVoiceModelNote");
     }
 }
 

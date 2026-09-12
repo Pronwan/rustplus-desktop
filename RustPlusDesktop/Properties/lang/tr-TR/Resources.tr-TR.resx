@@ -6607,4 +6607,10 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>Sohbet Komutları altında takım arkadaşlarının oyun içi sohbetten !ai kullanmasına izin verebilirsin. Bu istemci üzerinden, senin anahtarın ve senin ayarlarınla çalışır — aynı sağlayıcı, aynı model, aynı dil — bu yüzden sen açana kadar kapalıdır ve açtığında takım arkadaşı başına saatlik bir sınır eklenir. Klanın kendi ayrı anahtarı vardır.</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Ses modeli</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>{0} kullanmak için boş bırak. Sesli cevaplar sağlayıcının sesi yerine Windows sesiyle geliyorsa, sebebi genelde bu addır.</value>
+  </data>
 </root>

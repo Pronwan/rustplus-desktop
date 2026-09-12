@@ -1227,6 +1227,22 @@
                                 </Grid>
                                 <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
 
+                                <!--  The speech model goes stale on its own schedule, and its failure is quieter:
+                                      the request fails and Windows reads the answer, so it sounds like nothing
+                                      happened rather than like something broke.  -->
+                                <StackPanel x:Name="PanelAiVoiceModel">
+                                    <ui:TextBlock Text="{DynamicResource AiCompanionVoiceModel}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <ui:TextBox x:Name="TxtAiVoiceModel" MinHeight="32" Padding="8,4" VerticalContentAlignment="Center" TextChanged="TxtAiVoiceModel_TextChanged" />
+                                        <ui:Button Grid.Column="1" x:Name="BtnAiVoiceModelReset" Content="{DynamicResource AiCompanionModelReset}" Height="32" Margin="6,0,0,0" Click="BtnAiVoiceModelReset_Click" />
+                                    </Grid>
+                                    <ui:TextBlock x:Name="TxtAiVoiceModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
+                                </StackPanel>
+
                                 <Grid MinHeight="36" Margin="0,0,0,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />

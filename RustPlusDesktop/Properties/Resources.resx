@@ -7694,4 +7694,10 @@ Close this preview when the panel looks right.</value>
   <data name="UpdateWhatsNewHeading" xml:space="preserve">
     <value>What&apos;s new</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Voice model</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Leave empty to use {0}. If spoken answers come out in the Windows voice instead of this provider&apos;s, this name is the usual reason.</value>
+  </data>
 </root>

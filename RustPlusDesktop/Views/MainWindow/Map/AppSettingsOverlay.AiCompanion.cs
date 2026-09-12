@@ -199,6 +199,26 @@ namespace RustPlusDesk.Views
                     "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
                 AiProviders.DefaultModel(provider));
 
+            // Only where there is a provider voice to name. With Claude the answer is read by
+            // Windows whatever is typed here, so the field would be a setting that does nothing.
+            PanelAiVoiceModel.Visibility = AiProviders.HasVoice(provider)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            _loadingAiModel = true;
+            TxtAiVoiceModel.Text = settings.Models.TryGetValue(AiProviders.VoiceModelKey(provider), out var voice)
+                ? voice
+                : "";
+            _loadingAiModel = false;
+
+            TxtAiVoiceModel.PlaceholderText = AiProviders.DefaultVoiceModel(provider);
+            BtnAiVoiceModelReset.IsEnabled = !string.IsNullOrWhiteSpace(TxtAiVoiceModel.Text);
+
+            TxtAiVoiceModelNote.Text = string.Format(
+                Loc.Text("AiCompanionVoiceModelNote",
+                    "Leave empty to use {0}. If spoken answers come out in the Windows voice instead of this provider's, this name is the usual reason."),
+                AiProviders.DefaultVoiceModel(provider));
+
             // Said in terms of what it fixes and what it costs, because it is the one setting
             // here that meaningfully changes the bill.
             TxtAiGameDataNote.Text = settings.IncludeGameData
@@ -278,6 +298,27 @@ namespace RustPlusDesk.Views
         private void BtnAiModelReset_Click(object sender, RoutedEventArgs e)
         {
             TxtAiModel.Text = "";
+            ApplyAiCompanionState();
+        }
+
+        private void TxtAiVoiceModel_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized || _loadingAiModel) return;
+
+            var settings = AiCompanionStore.Current;
+            var key = AiProviders.VoiceModelKey(SelectedAiProvider);
+            var typed = TxtAiVoiceModel.Text?.Trim() ?? "";
+
+            if (typed.Length == 0) settings.Models.Remove(key);
+            else settings.Models[key] = typed;
+
+            AiCompanionStore.Save(settings);
+            BtnAiVoiceModelReset.IsEnabled = typed.Length > 0;
+        }
+
+        private void BtnAiVoiceModelReset_Click(object sender, RoutedEventArgs e)
+        {
+            TxtAiVoiceModel.Text = "";
             ApplyAiCompanionState();
         }
 

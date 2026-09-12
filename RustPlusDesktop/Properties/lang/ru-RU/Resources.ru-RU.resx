@@ -7574,4 +7574,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>В разделе «Чат-команды» можно разрешить сокомандникам использовать !ai из игрового чата. Это идёт через этот клиент, с твоим ключом и твоими настройками — тот же провайдер, та же модель, тот же язык — поэтому по умолчанию выключено, а при включении добавляется почасовой лимит на каждого сокомандника. У клана свой отдельный переключатель.</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Модель голоса</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Оставь пустым, чтобы использовать {0}. Если ответы озвучиваются голосом Windows, а не провайдера, дело обычно в этом названии.</value>
+  </data>
 </root>

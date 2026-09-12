@@ -7574,4 +7574,10 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>En Comandos de chat puedes permitir que tus compañeros usen !ai desde el chat del juego. Pasa por este cliente con tu clave y tus ajustes — mismo proveedor, mismo modelo, mismo idioma — por eso está desactivado hasta que lo actives, y activarlo añade un límite por hora para cada compañero. El clan tiene su propio interruptor aparte.</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Modelo de voz</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Déjalo vacío para usar {0}. Si las respuestas habladas salen con la voz de Windows en lugar de la del proveedor, este nombre suele ser el motivo.</value>
+  </data>
 </root>

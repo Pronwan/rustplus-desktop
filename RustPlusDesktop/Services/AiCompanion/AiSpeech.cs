@@ -55,7 +55,6 @@ namespace RustPlusDesk.Services.AiCompanion
 
         // ── OpenAI ──────────────────────────────────────────────────────────────
 
-        private const string OpenAiModel = "gpt-4o-mini-tts";
         private const string OpenAiVoice = "alloy";
         private const string OpenAiUrl = "https://api.openai.com/v1/audio/speech";
 
@@ -63,7 +62,7 @@ namespace RustPlusDesk.Services.AiCompanion
         {
             var payload = new
             {
-                model = OpenAiModel,
+                model = AiProviders.VoiceModel(AiProviders.OpenAi),
                 voice = OpenAiVoice,
 
                 // WAV rather than MP3: it plays from a stream with no decoder involved, and the
@@ -86,7 +85,6 @@ namespace RustPlusDesk.Services.AiCompanion
 
         // ── Gemini ──────────────────────────────────────────────────────────────
 
-        private const string GeminiModel = "gemini-2.5-flash-preview-tts";
         private const string GeminiVoice = "Kore";
 
         private const string GeminiUrl =
@@ -116,7 +114,7 @@ namespace RustPlusDesk.Services.AiCompanion
             };
 
             using var request = new HttpRequestMessage(
-                HttpMethod.Post, string.Format(GeminiUrl, GeminiModel))
+                HttpMethod.Post, string.Format(GeminiUrl, AiProviders.VoiceModel(AiProviders.Gemini)))
             {
                 Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"),
             };

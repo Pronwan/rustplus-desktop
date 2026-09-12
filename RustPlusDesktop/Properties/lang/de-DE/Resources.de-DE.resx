@@ -7655,4 +7655,10 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="UpdateWhatsNewHeading" xml:space="preserve">
     <value>Was ist neu</value>
   </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Sprachmodell</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Leer lassen für {0}. Wenn gesprochene Antworten in der Windows-Stimme statt der des Anbieters kommen, liegt es meist an diesem Namen.</value>
+  </data>
 </root>

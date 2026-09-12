@@ -64,6 +64,33 @@ namespace RustPlusDesk.Services.AiCompanion
             return string.IsNullOrWhiteSpace(chosen) ? DefaultModel(provider) : chosen.Trim();
         }
 
+        /// <summary>
+        /// The model that reads answers aloud.
+        ///
+        /// Separate from the chat model and separately stale-able — the two are retired on
+        /// their own schedules, and a speech model that has gone away is worse than a chat
+        /// one that has: the request fails quietly and Windows takes over, so it sounds like
+        /// the setting simply did nothing.
+        /// </summary>
+        public static string DefaultVoiceModel(string provider) => provider switch
+        {
+            OpenAi => "tts-1",
+            Gemini => "gemini-2.5-flash-preview-tts",
+            _ => "",
+        };
+
+        /// <summary>The key the voice model is stored under, beside the chat model.</summary>
+        public static string VoiceModelKey(string provider) => provider + ":tts";
+
+        public static string VoiceModel(string provider)
+        {
+            var chosen = AiCompanionStore.Current.Models.TryGetValue(VoiceModelKey(provider), out var name)
+                ? name
+                : null;
+
+            return string.IsNullOrWhiteSpace(chosen) ? DefaultVoiceModel(provider) : chosen.Trim();
+        }
+
         /// <summary>Where to get a key, for the link next to the field.</summary>
         public static string KeyUrl(string provider) => provider switch
         {
