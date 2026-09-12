@@ -18,8 +18,23 @@ namespace RustPlusDesk.Services.AiCompanion
 
             text.Append(
                 "You are an in-game companion for the survival game Rust, answering a player who " +
-                "is in the middle of a session and reading your answer on a small overlay. " +
-                "Answer in ").Append(question.Language).Append(". ");
+                "is in the middle of a session and reading your answer on a small overlay. ");
+
+            // Following the question is the default because Rust's own vocabulary is English
+            // and people ask about it in English whatever language they run the app in. The
+            // app's language is only the fallback, for a recording with no words in it.
+            if (question.MatchQuestionLanguage)
+            {
+                text.Append(
+                    "Answer in the same language the player asked in. If the question has no " +
+                    "words in it, or you cannot tell which language it is, answer in ")
+                    .Append(question.Language).Append(". ");
+            }
+            else
+            {
+                text.Append("Answer in ").Append(question.Language)
+                    .Append(", whatever language the question was asked in. ");
+            }
 
             text.Append(
                 "Be direct and specific. Lead with the answer, then at most a sentence of reason. " +
@@ -93,12 +108,25 @@ namespace RustPlusDesk.Services.AiCompanion
             "The player recorded this without saying anything audible. Describe what the attached " +
             "material shows and what is worth knowing about it, briefly.";
 
-        /// <summary>The answer language as an English name, from the app's own UI culture.</summary>
-        public static string CurrentLanguage()
+        /// <summary>
+        /// The app's own language as an English name.
+        ///
+        /// Its UI culture, which the app sets from the language chosen in its settings — not
+        /// from Windows, except where no choice has been made and it falls back to it.
+        /// </summary>
+        public static string CurrentLanguage() => NameOf(System.Globalization.CultureInfo.CurrentUICulture);
+
+        /// <summary>A culture name such as "en" as an English language name.</summary>
+        public static string LanguageNamed(string cultureName)
+        {
+            try { return NameOf(new System.Globalization.CultureInfo(cultureName)); }
+            catch { return "English"; }
+        }
+
+        private static string NameOf(System.Globalization.CultureInfo culture)
         {
             try
             {
-                var culture = System.Globalization.CultureInfo.CurrentUICulture;
                 var name = culture.EnglishName;
 
                 // "German (Germany)" — the country is noise here, and asking for a regional

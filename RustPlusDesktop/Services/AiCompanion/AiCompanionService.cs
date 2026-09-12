@@ -107,7 +107,8 @@ namespace RustPlusDesk.Services.AiCompanion
                 GamePath = game,
                 ScreenshotPath = shot,
                 Zoom = shot == null ? 1.0 : settings.ScreenshotZoom,
-                Language = AiPrompt.CurrentLanguage(),
+                Language = AnswerLanguageName(settings.AnswerLanguage),
+                MatchQuestionLanguage = settings.AnswerLanguage == AnswerLanguages.MatchQuestion,
                 Context = context,
             };
 
@@ -223,6 +224,20 @@ namespace RustPlusDesk.Services.AiCompanion
                 Raise();
             }
         }
+
+        /// <summary>
+        /// The language to ask for, as an English name.
+        ///
+        /// For "match the question" this is the fallback rather than the instruction — the
+        /// app's own language, which is the best guess for someone whose recording had nothing
+        /// recognisable in it.
+        /// </summary>
+        private static string AnswerLanguageName(string setting) => setting switch
+        {
+            AnswerLanguages.English => "English",
+            AnswerLanguages.AppLanguage or AnswerLanguages.MatchQuestion => AiPrompt.CurrentLanguage(),
+            _ => AiPrompt.LanguageNamed(setting),
+        };
 
         /// <summary>A network failure in the terms the player can do something about.</summary>
         private static string Readable(Exception ex) => ex switch

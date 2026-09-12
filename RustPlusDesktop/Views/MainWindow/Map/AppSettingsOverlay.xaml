@@ -1215,6 +1215,10 @@
 
                                 <ui:TextBlock Text="{DynamicResource AiCompanionAnswers}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
 
+                                <ui:TextBlock Text="{DynamicResource AiCompanionAnswerLanguage}" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                <ComboBox x:Name="CmbAiAnswerLanguage" MinHeight="32" Padding="8,4" Margin="0,2,0,4" SelectionChanged="CmbAiAnswerLanguage_SelectionChanged" />
+                                <ui:TextBlock x:Name="TxtAiAnswerLanguageNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
+
                                 <Grid MinHeight="36">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />

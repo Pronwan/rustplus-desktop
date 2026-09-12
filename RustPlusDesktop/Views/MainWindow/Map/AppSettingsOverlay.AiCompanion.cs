@@ -43,6 +43,15 @@ namespace RustPlusDesk.Views
             ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
             ChkAiAutoSend.IsChecked = settings.AutoSendAfterRecording;
 
+            if (CmbAiAnswerLanguage.Items.Count == 0)
+            {
+                foreach (var (key, label) in AnswerLanguageChoices)
+                    CmbAiAnswerLanguage.Items.Add(new ComboBoxItem { Content = label(), Tag = key });
+            }
+
+            CmbAiAnswerLanguage.SelectedIndex = Math.Max(0,
+                Array.FindIndex(AnswerLanguageChoices, entry => entry.Key == settings.AnswerLanguage));
+
             if (CmbAiShotZoom.Items.Count == 0)
             {
                 foreach (var (zoom, label) in ShotZooms)
@@ -189,6 +198,28 @@ namespace RustPlusDesk.Views
                     "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
                 AiProviders.DefaultModel(provider));
 
+            TxtAiAnswerLanguageNote.Text = settings.AnswerLanguage switch
+            {
+                AnswerLanguages.AppLanguage => Loc.Text("AiCompanionLanguageAppNote",
+                    "Answers always come back in the app's language, even when you ask in another one."),
+                AnswerLanguages.English => Loc.Text("AiCompanionLanguageEnglishNote",
+                    "Always English. Useful because Rust's own item and monument names are English."),
+                _ => string.Format(Loc.Text("AiCompanionLanguageMatchNote",
+                    "Ask in English and the answer is English; ask in {0} and it is {0}. Falls back to {0} when the recording has no words in it."),
+                    AiPrompt.CurrentLanguage()),
+            };
+
+            // Windows' voice picks a language when it is built, so a spoken answer that came
+            // back in a different one is read with the wrong accent. The providers' own voices
+            // follow the text, which is one more reason to prefer them.
+            if (settings.AnswerLanguage == AnswerLanguages.MatchQuestion &&
+                settings.AudioAnswers &&
+                !AiProviders.HasVoice(provider))
+            {
+                TxtAiAnswerLanguageNote.Text += " " + Loc.Text("AiCompanionLanguageVoiceWarn",
+                    "Windows reads every answer in one language, so an answer in another one will sound wrong.");
+            }
+
             TxtAiShotZoomNote.Text = settings.ScreenshotZoom >= 0.99
                 ? Loc.Text("AiCompanionShotFullNote",
                     "Everything you can see, including the HUD and the map. Small things far from the crosshair may be too small for the model to identify.")
@@ -275,6 +306,37 @@ namespace RustPlusDesk.Views
             (0.5, () => Loc.Text("AiCompanionShotHalf", "Middle half — closer look")),
             (0.25, () => Loc.Text("AiCompanionShotQuarter", "Middle quarter — closest look")),
         };
+
+        /// <summary>
+        /// What language answers come back in.
+        ///
+        /// Following the question is first and is the default: Rust's own vocabulary is
+        /// English, so asking in English while running the app in another language is the
+        /// normal case rather than the exception.
+        /// </summary>
+        private static readonly (string Key, Func<string> Label)[] AnswerLanguageChoices =
+        {
+            (AnswerLanguages.MatchQuestion,
+                () => Loc.Text("AiCompanionLanguageMatch", "Same language as the question")),
+            (AnswerLanguages.AppLanguage,
+                () => string.Format(Loc.Text("AiCompanionLanguageApp", "App language ({0})"),
+                    AiPrompt.CurrentLanguage())),
+            (AnswerLanguages.English,
+                () => Loc.Text("AiCompanionLanguageEnglish", "Always English")),
+        };
+
+        private void CmbAiAnswerLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.AnswerLanguage =
+                (CmbAiAnswerLanguage.SelectedItem as ComboBoxItem)?.Tag as string
+                ?? AnswerLanguages.MatchQuestion;
+            AiCompanionStore.Save(settings);
+
+            ApplyAiCompanionState();
+        }
 
         private void CmbAiShotZoom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

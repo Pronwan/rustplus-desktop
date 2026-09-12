@@ -42,6 +42,17 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>The voice language for spoken answers, as a culture name such as "de-DE".</summary>
         public string TtsLanguage { get; set; } = "";
 
+        /// <summary>
+        /// What language answers come back in.
+        ///
+        /// <c>match</c> follows the question, which is the only one of the three that is right
+        /// for someone who asks in two languages — and asking a Rust question in English while
+        /// running the app in German is entirely normal, because the game's own terms are
+        /// English. <c>app</c> pins it to the app's language, and anything else is a culture
+        /// name to pin it to.
+        /// </summary>
+        public string AnswerLanguage { get; set; } = AnswerLanguages.MatchQuestion;
+
         /// <summary>Record the game's own sound alongside the microphone.</summary>
         public bool CaptureGameAudio { get; set; }
 
@@ -98,6 +109,18 @@ namespace RustPlusDesk.Services.AiCompanion
 
         /// <summary>When the user accepted what happens to their recordings. Null until they have.</summary>
         public DateTime? PolicyAcceptedUtc { get; set; }
+    }
+
+    public static class AnswerLanguages
+    {
+        /// <summary>Answer in whatever language the question was asked in.</summary>
+        public const string MatchQuestion = "match";
+
+        /// <summary>Answer in the language the app itself is set to.</summary>
+        public const string AppLanguage = "app";
+
+        /// <summary>Answer in English, whatever the question was.</summary>
+        public const string English = "en";
     }
 
     /// <summary>Loads and saves <see cref="AiCompanionSettings"/>, and guards the key.</summary>

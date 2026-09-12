@@ -28,8 +28,16 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public double Zoom { get; init; } = 1.0;
 
-        /// <summary>The language the answer should be in, as an English name such as "German".</summary>
+        /// <summary>
+        /// The language to answer in, as an English name such as "German".
+        ///
+        /// When <see cref="MatchQuestionLanguage"/> is set this is only the fallback, for a
+        /// recording with nothing recognisable in it.
+        /// </summary>
         public string Language { get; init; } = "English";
+
+        /// <summary>Answer in whatever language the question was asked in.</summary>
+        public bool MatchQuestionLanguage { get; init; } = true;
 
         /// <summary>What the app knows about the situation — the server, the time, the team.</summary>
         public string? Context { get; init; }

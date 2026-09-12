@@ -7442,4 +7442,28 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionShotCropNote" xml:space="preserve">
     <value>Only what you are aiming at, at full resolution. Much better at naming a switch on a wall or an item on the ground, and it cannot see the rest of the screen.</value>
   </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Answer language</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>Same language as the question</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>App language ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Always English</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>Ask in English and the answer is English; ask in {0} and it is {0}. Falls back to {0} when the recording has no words in it.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Answers always come back in the app&apos;s language, even when you ask in another one.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Always English. Useful because Rust&apos;s own item and monument names are English.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows reads every answer in one language, so an answer in another one will sound wrong.</value>
+  </data>
 </root>

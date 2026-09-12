@@ -7463,4 +7463,28 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionShotCropNote" xml:space="preserve">
     <value>Nur das, worauf du zielst, in voller Auflösung. Deutlich besser darin, einen Schalter an der Wand oder ein Item am Boden zu benennen — den Rest des Bildschirms sieht es dann nicht.</value>
   </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Antwortsprache</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>Gleiche Sprache wie die Frage</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>App-Sprache ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Immer Englisch</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>Frag auf Englisch und die Antwort ist Englisch; frag auf {0} und sie ist {0}. Fällt auf {0} zurück, wenn die Aufnahme keine Worte enthält.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Antworten kommen immer in der App-Sprache, auch wenn du in einer anderen fragst.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Immer Englisch. Praktisch, weil Rusts Item- und Monument-Namen englisch sind.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows liest jede Antwort in einer Sprache vor — eine Antwort in einer anderen klingt entsprechend falsch.</value>
+  </data>
 </root>
