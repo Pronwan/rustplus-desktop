@@ -107,6 +107,7 @@ namespace RustPlusDesk.Services.AiCompanion
                 GamePath = game,
                 ScreenshotPath = shot,
                 Zoom = shot == null ? 1.0 : settings.ScreenshotZoom,
+                WantsSpokenAnswer = settings.AudioAnswers && AiVoice.IsAvailable,
                 Language = AnswerLanguageName(settings.AnswerLanguage),
                 MatchQuestionLanguage = settings.AnswerLanguage == AnswerLanguages.MatchQuestion,
                 Context = context,
@@ -129,7 +130,19 @@ namespace RustPlusDesk.Services.AiCompanion
             // Streamed only when something is watching the words land, whether that is the
             // panel reading them or the voice speaking them. Asking for a stream nobody
             // follows costs a longer connection for the same answer.
-            bool stream = settings.TextAnswers || speakLive;
+            //
+            // Never for a question the provider can answer in speech in one call: that answer
+            // arrives whole, and asking for it in pieces would give up the round trip the
+            // shortcut exists to save. The conditions are OpenAiProvider's, mirrored — getting
+            // this wrong costs a stream, not an answer, and the alternative is asking the
+            // provider what it is about to do.
+            bool oneCall = settings.Provider == AiProviders.OpenAi
+                && speak
+                && shot == null
+                && game == null
+                && mic != null;
+
+            bool stream = (settings.TextAnswers || speakLive) && !oneCall;
 
             // What has been handed to the voice already, so the rest can be flushed at the end.
             int spokenUpTo = 0;
@@ -198,9 +211,16 @@ namespace RustPlusDesk.Services.AiCompanion
 
                 State = AiAnswerState.Answered;
 
+                if (result.Audio != null)
+                {
+                    // Answered in the provider's own voice in the same call. Nothing to
+                    // synthesise, and nothing was streamed, so the whole clip goes at once.
+                    if (speak) AiVoice.SpeakClip(result.Audio, Answer);
+                }
+
                 // Whatever the sentence flush did not reach — the last sentence usually has
                 // no terminator until the very end, and often no terminator at all.
-                if (speakLive && spokenUpTo < Answer.Length) AiVoice.Speak(Answer.Substring(spokenUpTo));
+                else if (speakLive && spokenUpTo < Answer.Length) AiVoice.Speak(Answer.Substring(spokenUpTo));
                 else if (speak && !speakLive) AiVoice.Speak(Answer);
 
                 Raise();

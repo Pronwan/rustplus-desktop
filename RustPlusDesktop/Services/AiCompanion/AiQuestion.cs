@@ -55,6 +55,14 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>Answer in whatever language the question was asked in.</summary>
         public bool MatchQuestionLanguage { get; init; } = true;
 
+        /// <summary>
+        /// Whether the answer is going to be read aloud.
+        ///
+        /// A provider that can answer in speech directly only helps if speech is wanted; with
+        /// text-only answers the ordinary path is both cheaper and streams as it writes.
+        /// </summary>
+        public bool WantsSpokenAnswer { get; init; }
+
         /// <summary>What the app knows about the situation — the server, the time, the team.</summary>
         public string? Context { get; init; }
     }
@@ -66,7 +74,11 @@ namespace RustPlusDesk.Services.AiCompanion
     /// a wrong answer to a mis-heard question looks exactly like a wrong answer until you can
     /// see what it heard. Null where the provider listened to the recording itself.
     /// </summary>
-    public sealed record AiAnswerResult(string Answer, string? Transcript);
+    /// <param name="Audio">
+    /// The answer already spoken, where the provider could do it in the same call. Null
+    /// everywhere else, and the text is then read by whatever voice is configured.
+    /// </param>
+    public sealed record AiAnswerResult(string Answer, string? Transcript, byte[]? Audio = null);
 
     /// <summary>What went wrong, in the terms the answer panel shows it in.</summary>
     public sealed class AiRequestException : Exception

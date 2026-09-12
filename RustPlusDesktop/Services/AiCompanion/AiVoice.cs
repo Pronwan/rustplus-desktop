@@ -89,6 +89,30 @@ namespace RustPlusDesk.Services.AiCompanion
             Task.Run(() => PlayLoop(toPlay, token), CancellationToken.None);
         }
 
+        /// <summary>
+        /// Queues audio the provider produced with the answer itself.
+        ///
+        /// Straight into the player, past the stage that would otherwise fetch speech for it:
+        /// the whole point of a provider answering in its own voice is that nothing has to be
+        /// asked for twice. The text comes along as the fallback for a clip that will not play.
+        /// </summary>
+        public static void SpeakClip(byte[] audio, string fallbackText)
+        {
+            if (audio.Length == 0)
+            {
+                Speak(fallbackText);
+                return;
+            }
+
+            lock (Gate)
+            {
+                if (_toPlay == null || _cancel == null || _cancel.IsCancellationRequested) StartWorkers();
+
+                try { _toPlay!.Add(new Clip(fallbackText, audio)); }
+                catch { /* torn down between the check and here */ }
+            }
+        }
+
         /// <summary>Cuts the voice off — a new question, or the panel being dismissed.</summary>
         public static void Stop()
         {
