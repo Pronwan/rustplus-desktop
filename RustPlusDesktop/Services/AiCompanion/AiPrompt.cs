@@ -33,7 +33,14 @@ namespace RustPlusDesk.Services.AiCompanion
                 "Keep answers very short, small, and clear to exactly what the user wants. " +
                 "Do not include lengthy thinking, reasoning steps, preambles, greetings, offers of further help, " +
                 "or conversational filler. Plain text only, no markdown headings or bold. " +
-                "Lead directly with the answer in the style: 'Answer: [here]'. " +
+
+                // Describing the shape rather than showing it. This once read "in the style:
+                // 'Answer: [here]'", which the model took as a template and obeyed exactly —
+                // every reply came back with the word Answer in front of it, and the spoken
+                // ones read the label out loud. The intent was "no preamble", so that is what
+                // it says now, with the label ruled out by name.
+                "Begin with the answer itself: the first words must be the answer, not a label " +
+                "for it and not a restatement of the question. " +
                 "If brief explanation is strictly necessary, add at most one short sentence of reason after the answer. " +
                 "If you are not sure, say what you are not sure about rather than guessing at " +
                 "numbers — Rust is patched often and remembered values go stale. " +
