@@ -18,10 +18,11 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
     public TutorialOverlay()
     {
         InitializeComponent();
-        SizeChanged += (_, _) => 
+        SizeChanged += (_, _) =>
         {
             RenderPresentation();
             UpdatePopupPosition();
+            ResizePopupToOverlay();
         };
         Loaded += (_, _) =>
         {
@@ -33,12 +34,19 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
 
                 // Maximising and restoring change where the client area starts without
                 // always raising LocationChanged.
-                window.StateChanged += (s, e) => Dispatcher.BeginInvoke(
-                    new Action(UpdatePopupPosition), DispatcherPriority.Loaded);
+                window.StateChanged += (s, e) => Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    UpdatePopupPosition();
+                    ResizePopupToOverlay();
+                }), DispatcherPriority.Loaded);
             }
         };
 
-        OverlayPopup.Opened += (_, _) => UpdatePopupPosition();
+        OverlayPopup.Opened += (_, _) =>
+        {
+            UpdatePopupPosition();
+            _popupSize = new Size(ActualWidth, ActualHeight);
+        };
         PreviewKeyDown += OnPreviewKeyDown;
         SystemParameters.StaticPropertyChanged += (_, e) =>
         {
@@ -46,22 +54,51 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         };
     }
 
+    /// <summary>The size the popup's own window was built for, so a stale one is noticed.</summary>
+    private Size _popupSize = Size.Empty;
+
+    /// <summary>
+    /// Rebuilds the popup when the overlay has changed size under it.
+    ///
+    /// A Popup sizes its own window once, when it opens, and does not grow with its child.
+    /// So maximising the app left the dimming at the size the window had when the tutorial
+    /// started — covering the top of the screen and stopping part-way down, taking the
+    /// popover's buttons with it at that same edge. Closing and reopening is the only thing
+    /// that makes a popup take a new size; there is no property for it.
+    ///
+    /// Guarded by the size it was last built at, because this runs on every SizeChanged and a
+    /// popup that closed and reopened for a one-pixel change would visibly blink.
+    /// </summary>
+    private void ResizePopupToOverlay()
+    {
+        if (!OverlayPopup.IsOpen) return;
+        if (ActualWidth <= 0 || ActualHeight <= 0) return;
+
+        if (Math.Abs(_popupSize.Width - ActualWidth) < 1 &&
+            Math.Abs(_popupSize.Height - ActualHeight) < 1) return;
+
+        _popupSize = new Size(ActualWidth, ActualHeight);
+
+        OverlayPopup.IsOpen = false;
+        UpdatePopupPosition();
+        OverlayPopup.IsOpen = true;
+    }
+
     /// <summary>
     /// Pins the popup over this control, wherever on the desktop that is.
     ///
-    /// It used to be placed relative to this control and nudged by a pixel to force a
-    /// refresh. WPF reserves the right to move a relatively-placed popup that it thinks will
-    /// not fit, and a popup the size of a maximised window never fits — so it was moved, and
-    /// on a multi-monitor desktop it landed on the neighbouring screen.
+    /// It used to be placed relative to this control and nudged by a pixel to force a refresh.
+    /// WPF reserves the right to move a relatively-placed popup it thinks will not fit, and a
+    /// popup the size of a maximised window never fits — so it was moved, and on a
+    /// multi-monitor desktop it landed on the neighbouring screen.
     ///
     /// AbsolutePoint is the one mode WPF positions and then leaves alone, so the offsets here
     /// are the whole answer: this control's top-left corner, in the device-independent units
-    /// the popup measures its offsets in.
+    /// the popup measures its offsets in. Deliberately usable while the popup is closed, since
+    /// the resize above sets the position between closing and reopening.
     /// </summary>
     private void UpdatePopupPosition()
     {
-        if (!OverlayPopup.IsOpen) return;
-
         try
         {
             var source = PresentationSource.FromVisual(this);
@@ -70,8 +107,6 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             Point device = PointToScreen(new Point(0, 0));
             Point dip = source.CompositionTarget.TransformFromDevice.Transform(device);
 
-            // Assigned unconditionally rather than only on change: the same value re-applied
-            // is what makes the popup re-evaluate itself after the window has moved.
             OverlayPopup.HorizontalOffset = dip.X;
             OverlayPopup.VerticalOffset = dip.Y;
         }
@@ -81,7 +116,6 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             // is about to disappear with it either way.
         }
     }
-
     public event EventHandler? NextRequested;
     public event EventHandler? BackRequested;
     public event EventHandler? SkipRequested;
