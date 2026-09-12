@@ -85,10 +85,22 @@ namespace RustPlusDesk.Services.AiCompanion
             // app's language is only the fallback, for a recording with no words in it.
             if (question.MatchQuestionLanguage)
             {
+                // The fallback is deliberately narrow. It used to also cover "or you cannot
+                // tell which language it is", which is an easy door out of a decision the
+                // model is usually capable of making — and every time it took that door, an
+                // English question came back in the app's language.
                 text.Append(
-                    "Answer in the same language the player asked in. If the question has no " +
-                    "words in it, or you cannot tell which language it is, answer in ")
+                    "Answer in the same language the player asked in, even when that is not the " +
+                    "language of these instructions. Only if the recording contains no words at " +
+                    "all, answer in ")
                     .Append(question.Language).Append(". ");
+
+                if (question.Text is null)
+                {
+                    text.Append(
+                        "If what you are given is a transcript rather than the recording, judge " +
+                        "the language from the words in it and answer in that one. ");
+                }
             }
             else
             {
