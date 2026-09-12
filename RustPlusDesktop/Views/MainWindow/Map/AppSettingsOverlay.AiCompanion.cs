@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using RustPlusDesk.Helpers;
@@ -198,14 +199,42 @@ namespace RustPlusDesk.Views
             TxtAiModel.PlaceholderText = AiProviders.DefaultModel(provider);
             BtnAiModelReset.IsEnabled = !string.IsNullOrWhiteSpace(TxtAiModel.Text);
 
+            // OpenRouter tools (browse all models / refresh catalog)
+            if (PanelOpenRouterTools != null)
+            {
+                PanelOpenRouterTools.Visibility = provider == AiProviders.OpenRouter
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
             // One-click choices for this provider. Hidden when there is nothing to offer;
             // picking one just fills the text field, which stays the saved value.
             RefreshAiModelChoices(provider, settings.Models.TryGetValue(provider, out var current) ? current : "");
 
-            TxtAiModelNote.Text = string.Format(
-                Loc.Text("AiCompanionModelNote",
-                    "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
-                AiProviders.DefaultModel(provider));
+            if (provider == AiProviders.OpenRouter && !string.IsNullOrWhiteSpace(TxtAiModel.Text))
+            {
+                var found = OpenRouterModelService.FindModel(TxtAiModel.Text);
+                if (found != null)
+                {
+                    TxtAiModelNote.Text = $"{found.Name}\n" +
+                        $"{(found.IsFree ? "🎁 100% Free model" : found.PricingSummary)}  ·  {found.FormattedContextLength}  ·  {(found.SupportsVision ? "👁️ Vision supported" : "💬 Text only")}" +
+                        (string.IsNullOrWhiteSpace(found.Description) ? "" : $"\n{found.Description}");
+                }
+                else
+                {
+                    TxtAiModelNote.Text = string.Format(
+                        Loc.Text("AiCompanionModelNote",
+                            "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
+                        AiProviders.DefaultModel(provider));
+                }
+            }
+            else
+            {
+                TxtAiModelNote.Text = string.Format(
+                    Loc.Text("AiCompanionModelNote",
+                        "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
+                    AiProviders.DefaultModel(provider));
+            }
 
             // Only where there is a provider voice to name. With Claude the answer is read by
             // Windows whatever is typed here, so the field would be a setting that does nothing.
@@ -362,16 +391,22 @@ namespace RustPlusDesk.Views
             ApplyAiCompanionState();
         }
 
+        private bool _isFetchingOpenRouterModels;
+
         /// <summary>
         /// Rebuilds the one-click model list for this provider.
         ///
-        /// First row is always the default (empty text field), so resetting does not need a
-        /// separate control to find — followed by the known ids. The combo is hidden entirely
-        /// when a provider offers no suggestions.
+        /// For OpenRouter, dynamically populates all auto-fetched free models alongside popular presets.
         /// </summary>
         private void RefreshAiModelChoices(string provider, string current)
         {
             if (CmbAiModel == null) return;
+
+            if (provider == AiProviders.OpenRouter)
+            {
+                PopulateOpenRouterModelChoices(current);
+                return;
+            }
 
             var suggestions = AiProviders.SuggestedModels(provider);
             if (suggestions.Length == 0)
@@ -418,10 +453,168 @@ namespace RustPlusDesk.Views
             }
         }
 
+        private void PopulateOpenRouterModelChoices(string current)
+        {
+            CmbAiModel.Visibility = Visibility.Visible;
+
+            // Trigger background fetch if not already done
+            if (!_isFetchingOpenRouterModels)
+            {
+                _isFetchingOpenRouterModels = true;
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await OpenRouterModelService.GetModelsAsync();
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            if (SelectedAiProvider == AiProviders.OpenRouter)
+                            {
+                                PopulateOpenRouterModelChoices(TxtAiModel?.Text ?? "");
+                                ApplyAiCompanionState();
+                            }
+                        });
+                    }
+                    finally
+                    {
+                        _isFetchingOpenRouterModels = false;
+                    }
+                });
+            }
+
+            _loadingAiModel = true;
+            try
+            {
+                CmbAiModel.Items.Clear();
+
+                // 1. Default Option
+                CmbAiModel.Items.Add(new ComboBoxItem
+                {
+                    Content = string.Format(
+                        Loc.Text("AiCompanionModelDefaultChoice", "Default ({0})"),
+                        AiProviders.DefaultModel(AiProviders.OpenRouter)),
+                    Tag = "",
+                });
+
+                var trimmed = (current ?? "").Trim();
+                bool currentMatched = string.IsNullOrEmpty(trimmed);
+
+                // 2. Free Models Section (from non-blocking cache)
+                var freeModels = OpenRouterModelService.GetCachedFreeModels();
+                if (freeModels.Count > 0)
+                {
+                    CmbAiModel.Items.Add(new ComboBoxItem
+                    {
+                        Content = $"─── 🎁 Free Models ({freeModels.Count}) ───",
+                        IsEnabled = false,
+                        FontWeight = FontWeights.Bold,
+                        Foreground = System.Windows.Media.Brushes.MediumSeaGreen,
+                    });
+
+                    foreach (var model in freeModels)
+                    {
+                        var item = new ComboBoxItem
+                        {
+                            Content = $"[Free] {model.Name} ({model.Id})",
+                            Tag = model.Id,
+                        };
+                        CmbAiModel.Items.Add(item);
+                        if (!currentMatched && string.Equals(model.Id, trimmed, StringComparison.OrdinalIgnoreCase))
+                            currentMatched = true;
+                    }
+                }
+
+                // 3. Popular Models Section
+                var popular = AiProviders.SuggestedModels(AiProviders.OpenRouter);
+                if (popular.Length > 0)
+                {
+                    CmbAiModel.Items.Add(new ComboBoxItem
+                    {
+                        Content = "─── ⚡ Popular Models ───",
+                        IsEnabled = false,
+                        FontWeight = FontWeights.Bold,
+                    });
+
+                    foreach (var id in popular)
+                    {
+                        if (freeModels.Any(m => string.Equals(m.Id, id, StringComparison.OrdinalIgnoreCase)))
+                            continue;
+
+                        var item = new ComboBoxItem
+                        {
+                            Content = id,
+                            Tag = id,
+                        };
+                        CmbAiModel.Items.Add(item);
+                        if (!currentMatched && string.Equals(id, trimmed, StringComparison.OrdinalIgnoreCase))
+                            currentMatched = true;
+                    }
+                }
+
+                // If current model is a custom/searched one not in list, add it so selection works
+                if (!currentMatched && !string.IsNullOrEmpty(trimmed))
+                {
+                    var customItem = new ComboBoxItem
+                    {
+                        Content = $"Selected: {trimmed}",
+                        Tag = trimmed,
+                    };
+                    CmbAiModel.Items.Add(customItem);
+                }
+
+                // Select matching item
+                int match = 0;
+                for (int i = 0; i < CmbAiModel.Items.Count; i++)
+                {
+                    if (CmbAiModel.Items[i] is ComboBoxItem cbi && cbi.IsEnabled &&
+                        string.Equals(cbi.Tag as string, trimmed, StringComparison.OrdinalIgnoreCase))
+                    {
+                        match = i;
+                        break;
+                    }
+                }
+
+                CmbAiModel.SelectedIndex = match;
+            }
+            finally
+            {
+                _loadingAiModel = false;
+            }
+        }
+
+        private void BtnBrowseOpenRouterModels_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.OpenRouterModelPickerWindow(TxtAiModel.Text)
+            {
+                Owner = Window.GetWindow(this),
+            };
+
+            if (picker.ShowDialog() == true && !string.IsNullOrWhiteSpace(picker.SelectedModelId))
+            {
+                TxtAiModel.Text = picker.SelectedModelId;
+                ApplyAiCompanionState();
+            }
+        }
+
+        private async void BtnRefreshOpenRouterModels_Click(object sender, RoutedEventArgs e)
+        {
+            if (BtnRefreshOpenRouterModels != null) BtnRefreshOpenRouterModels.IsEnabled = false;
+            try
+            {
+                await OpenRouterModelService.GetModelsAsync(forceRefresh: true);
+                PopulateOpenRouterModelChoices(TxtAiModel.Text);
+                ApplyAiCompanionState();
+            }
+            finally
+            {
+                if (BtnRefreshOpenRouterModels != null) BtnRefreshOpenRouterModels.IsEnabled = true;
+            }
+        }
+
         private void CmbAiModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!_isSettingsInitialized || _loadingAiModel) return;
-            if (CmbAiModel?.SelectedItem is not ComboBoxItem picked) return;
+            if (CmbAiModel?.SelectedItem is not ComboBoxItem picked || !picked.IsEnabled) return;
 
             // Default row clears the override; anything else fills the text field, whose
             // own change handler does the saving.

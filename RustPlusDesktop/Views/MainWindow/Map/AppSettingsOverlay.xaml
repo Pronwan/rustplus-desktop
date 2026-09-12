@@ -1269,6 +1269,31 @@
                                   truth — picking here just fills it in, so a model released after
                                   this app shipped can still be typed by hand.  -->
                             <ComboBox x:Name="CmbAiModel" MinHeight="32" Padding="8,4" Margin="0,0,0,4" SelectionChanged="CmbAiModel_SelectionChanged" />
+
+                            <!-- OpenRouter Model Tools: Browse & Search, Live Refresh -->
+                            <Grid x:Name="PanelOpenRouterTools" Margin="0,0,0,4" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:Button x:Name="BtnBrowseOpenRouterModels"
+                                           Icon="{ui:SymbolIcon Symbol=Search24}"
+                                           Content="{DynamicResource AiCompanionOpenRouterBrowse}"
+                                           Appearance="Secondary"
+                                           HorizontalAlignment="Stretch"
+                                           Height="32"
+                                           Click="BtnBrowseOpenRouterModels_Click" />
+                                <ui:Button Grid.Column="1"
+                                           x:Name="BtnRefreshOpenRouterModels"
+                                           Icon="{ui:SymbolIcon Symbol=ArrowSync24}"
+                                           ToolTip="{DynamicResource AiCompanionOpenRouterRefreshTip}"
+                                           Appearance="Secondary"
+                                           Height="32"
+                                           Margin="6,0,0,0"
+                                           Padding="8,0"
+                                           Click="BtnRefreshOpenRouterModels_Click" />
+                            </Grid>
+
                             <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextSubtle}" />
 
                             <!--  The speech model goes stale on its own schedule, and its failure is quieter:

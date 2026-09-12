@@ -1010,6 +1010,10 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionModel => GetString("AiCompanionModel");
         public static string AiCompanionModelReset => GetString("AiCompanionModelReset");
         public static string AiCompanionModelNote => GetString("AiCompanionModelNote");
+        public static string AiCompanionOpenRouterBrowse => GetString("AiCompanionOpenRouterBrowse");
+        public static string AiCompanionOpenRouterRefreshTip => GetString("AiCompanionOpenRouterRefreshTip");
+        public static string AiCompanionOpenRouterFreeSection => GetString("AiCompanionOpenRouterFreeSection");
+        public static string AiCompanionOpenRouterPopularSection => GetString("AiCompanionOpenRouterPopularSection");
         public static string AiCompanionAutoSend => GetString("AiCompanionAutoSend");
         public static string AiCompanionAutoSendHint => GetString("AiCompanionAutoSendHint");
         public static string AiCompanionAnswerWindow => GetString("AiCompanionAnswerWindow");

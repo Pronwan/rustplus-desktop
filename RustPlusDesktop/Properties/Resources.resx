@@ -7383,6 +7383,18 @@ Recording only ever runs while you hold the hotkey or after you click the tile, 
   <data name="AiCompanionModelNote" xml:space="preserve">
     <value>Leave empty to use {0}. Change it if the provider replies that the model no longer exists.</value>
   </data>
+  <data name="AiCompanionOpenRouterBrowse" xml:space="preserve">
+    <value>Browse &amp; Search Models...</value>
+  </data>
+  <data name="AiCompanionOpenRouterRefreshTip" xml:space="preserve">
+    <value>Refresh model catalog from OpenRouter</value>
+  </data>
+  <data name="AiCompanionOpenRouterFreeSection" xml:space="preserve">
+    <value>─── 🎁 Free Models ───</value>
+  </data>
+  <data name="AiCompanionOpenRouterPopularSection" xml:space="preserve">
+    <value>─── ⚡ Popular Models ───</value>
+  </data>
   <data name="AiCompanionAutoSend" xml:space="preserve">
     <value>Send as soon as recording stops</value>
   </data>
