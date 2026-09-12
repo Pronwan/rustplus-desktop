@@ -60,18 +60,18 @@
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton x:Name="RadFilterAll" Content="All Models" GroupName="ModelFilter"
-                             IsChecked="False" Margin="0,0,10,0" Checked="OnFilterChanged" />
+                             IsChecked="False" Margin="0,0,10,0" VerticalContentAlignment="Center" Checked="OnFilterChanged" />
                 <RadioButton x:Name="RadFilterFree" Content="🎁 Free Only" GroupName="ModelFilter"
-                             IsChecked="True" Margin="0,0,10,0" Checked="OnFilterChanged" />
+                             IsChecked="True" Margin="0,0,10,0" VerticalContentAlignment="Center" Checked="OnFilterChanged" />
                 <RadioButton x:Name="RadFilterPaid" Content="Paid Only" GroupName="ModelFilter"
-                             IsChecked="False" Margin="0,0,14,0" Checked="OnFilterChanged" />
+                             IsChecked="False" Margin="0,0,14,0" VerticalContentAlignment="Center" Checked="OnFilterChanged" />
                 <CheckBox x:Name="ChkFilterVision" Content="👁️ Vision / Image Support"
-                          Margin="0,0,10,0" Checked="OnFilterChanged" Unchecked="OnFilterChanged" />
+                          Margin="0,0,10,0" VerticalContentAlignment="Center" Checked="OnFilterChanged" Unchecked="OnFilterChanged" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Provider:" VerticalAlignment="Center" FontSize="11" Margin="0,0,6,0" Foreground="{DynamicResource TextSubtle}" />
-                <ComboBox x:Name="CmbProviderFilter" MinWidth="120" Height="28" SelectionChanged="CmbProviderFilter_SelectionChanged" />
+                <ComboBox x:Name="CmbProviderFilter" MinWidth="130" MinHeight="32" Padding="8,4" VerticalContentAlignment="Center" SelectionChanged="CmbProviderFilter_SelectionChanged" />
             </StackPanel>
         </Grid>
 
