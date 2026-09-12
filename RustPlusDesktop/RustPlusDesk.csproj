@@ -375,7 +375,17 @@
   </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" Private="false" />
+      <!--
+        No ProjectReference to MapParser on purpose.
+
+        It never carried a reference — ReferenceOutputAssembly was false and Private was false,
+        so its only job was build ordering, and BuildMapParserRuntime below already does that by
+        invoking MapParser itself. What it did carry was MapParser's whole framework list into
+        restore: it multi-targets net8.0 and net10.0 for a migration that has not reached this
+        project, so every machine without the .NET 10 SDK failed before a line was compiled,
+        over an output it was never going to use. SetTargetFramework does not help — that is a
+        build-time decision and this happens during restore.
+      -->
     </ItemGroup>
 
   <PropertyGroup>
