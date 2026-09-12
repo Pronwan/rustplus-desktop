@@ -100,7 +100,18 @@ namespace RustPlusDesk
                 Effect = style.TextShadow,
                 TextAlignment = TextAlignment.Center,
             };
-            stack.Children.Add(value);
+
+            // The format above keeps the usual figures inside the column; this catches what
+            // it cannot — a three-digit hour count, a wide font, a tile scaled down — by
+            // shrinking the text instead of letting the column cut it in half. DownOnly, so
+            // a short figure is never blown up to fill the width.
+            stack.Children.Add(new Viewbox
+            {
+                Child = value,
+                Stretch = Stretch.Uniform,
+                StretchDirection = StretchDirection.DownOnly,
+                HorizontalAlignment = HorizontalAlignment.Center,
+            });
 
             stack.Children.Add(new TextBlock
             {
@@ -117,9 +128,18 @@ namespace RustPlusDesk
             return value;
         }
 
+        /// <summary>
+        /// A duration in the narrowest form that is still unambiguous.
+        ///
+        /// The cell is a fifth of the tile, so "10h 15m" was being cut off by the column
+        /// beside it. Past an hour it becomes a clock reading — 10:15h — which drops a unit
+        /// label and a space without losing anything, since the glyph above it is already a
+        /// clock. Below an hour there is room for the label, and a bare "15" under a clock
+        /// would read as a time of day.
+        /// </summary>
         private static string FormatSpan(TimeSpan span)
         {
-            if (span.TotalHours >= 1) return $"{(int)span.TotalHours}h {span.Minutes:D2}m";
+            if (span.TotalHours >= 1) return $"{(int)span.TotalHours}:{span.Minutes:D2}h";
             if (span.TotalMinutes >= 1) return $"{span.Minutes}m";
             return $"{span.Seconds}s";
         }
