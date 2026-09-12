@@ -26,6 +26,35 @@ namespace RustPlusDesk
             (StorageService.LoadCache<CommandDockPresetStore>(PresetCacheKey) ?? new CommandDockPresetStore())
                 .Presets;
 
+        /// <summary>
+        /// The arrangement that is always there and cannot be removed.
+        ///
+        /// Not stored: it is built on demand, so it cannot be renamed away, deleted by
+        /// accident, or quietly diverge from what a fresh install starts with. It is the way
+        /// back — one click from any arrangement to the bare mini-map in the corner, which is
+        /// where the Mini button used to put it and what people mean by "undo all this".
+        /// </summary>
+        public const string DefaultPresetId = "builtin-default";
+
+        /// <summary>The mini-map's original size and corner, as the main window first places it.</summary>
+        private const double DefaultMapSize = 260;
+
+        private static CommandDockPreset BuiltInDefault() => new()
+        {
+            Id = DefaultPresetId,
+            Name = Helpers.Loc.Text("CommandDockTemplateDefault", "Map only (default)"),
+            Tiles = new List<CommandDockTile>
+            {
+                new() { Id = CommandDockTileKinds.MapTileId, Kind = CommandDockTileKinds.Map, Col = 0, Row = 0 },
+            },
+            GrowRight = false,
+            MapSize = DefaultMapSize,
+        };
+
+        /// <summary>A saved arrangement, or the built-in one. Null for an id that is neither.</summary>
+        private CommandDockPreset? FindPreset(string id) =>
+            id == DefaultPresetId ? BuiltInDefault() : Presets.FirstOrDefault(p => p.Id == id);
+
         private void SavePresets(List<CommandDockPreset> presets) =>
             StorageService.SaveCache(PresetCacheKey, new CommandDockPresetStore { Presets = presets });
 
@@ -74,6 +103,10 @@ namespace RustPlusDesk
 
         public void RenamePreset(string id, string name)
         {
+            // Guarded here rather than only in the window: the built-in is not in the store,
+            // so renaming it would silently write a second arrangement under its name.
+            if (id == DefaultPresetId) return;
+
             name = name.Trim();
             if (name.Length == 0) return;
 
@@ -87,6 +120,8 @@ namespace RustPlusDesk
 
         public void DeletePreset(string id)
         {
+            if (id == DefaultPresetId) return;
+
             var presets = Presets.ToList();
             presets.RemoveAll(p => p.Id == id);
             SavePresets(presets);
@@ -98,7 +133,7 @@ namespace RustPlusDesk
         /// </summary>
         public void ApplyPreset(string id)
         {
-            var preset = Presets.FirstOrDefault(p => p.Id == id);
+            var preset = FindPreset(id);
             if (preset == null) return;
 
             HidePresetPreview();
@@ -116,6 +151,25 @@ namespace RustPlusDesk
             RebuildTiles();
 
             if (preset.MapSize is { } size) UpdateSize(size, updateSlider: true);
+
+            // The one arrangement that moves the window as well.
+            //
+            // Every other preset deliberately leaves the dock where it is — position belongs
+            // to the desk, not the layout. This one is the way back to the beginning, and a
+            // dock that has been dragged to the middle of the screen while it held eight
+            // widgets is not back at the beginning while it sits there holding one.
+            if (id == DefaultPresetId) MoveToDefaultCorner();
+        }
+
+        /// <summary>Top-right of the working area, where the Mini button first puts it.</summary>
+        private void MoveToDefaultCorner()
+        {
+            Left = SystemParameters.WorkArea.Right - DefaultMapSize - 20;
+            Top = SystemParameters.WorkArea.Top + 20;
+
+            ClampToScreen();
+            SaveDockPosition();
+            FollowAiAnswer();
         }
 
         private static List<CommandDockTile> CopyTiles(IEnumerable<CommandDockTile> tiles)
@@ -140,7 +194,7 @@ namespace RustPlusDesk
         /// </summary>
         public void ShowPresetPreview(string id)
         {
-            var preset = Presets.FirstOrDefault(p => p.Id == id);
+            var preset = FindPreset(id);
             if (preset == null) return;
 
             EnsurePreviewCanvas();

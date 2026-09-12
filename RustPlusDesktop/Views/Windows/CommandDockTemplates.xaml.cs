@@ -68,6 +68,14 @@ namespace RustPlusDesk
         {
             PresetList.Children.Clear();
 
+            // First and unsorted: it is the way back, not one arrangement among the others,
+            // and it should sit in the same place every time the list is opened.
+            PresetList.Children.Add(BuildRow(new CommandDockPreset
+            {
+                Id = MiniMapWindow.DefaultPresetId,
+                Name = Loc.Text("CommandDockTemplateDefault", "Map only (default)"),
+            }, builtIn: true));
+
             var presets = Dock?.Presets ?? Array.Empty<CommandDockPreset>();
             if (presets.Count == 0)
             {
@@ -87,7 +95,7 @@ namespace RustPlusDesk
                 PresetList.Children.Add(BuildRow(preset));
         }
 
-        private UIElement BuildRow(CommandDockPreset preset)
+        private UIElement BuildRow(CommandDockPreset preset, bool builtIn = false)
         {
             var row = new Border
             {
@@ -118,23 +126,35 @@ namespace RustPlusDesk
             });
             text.Children.Add(new TextBlock
             {
-                Text = string.Format(
-                    Loc.Text("CommandDockTemplateSummary", "{0} tiles · saved {1}"),
-                    preset.Tiles.Count,
-                    preset.SavedUtc.ToLocalTime().ToString("d MMM, HH:mm")),
+                Text = builtIn
+                    ? Loc.Text("CommandDockTemplateDefaultHint",
+                        "Removes every widget and puts the map back in its corner")
+                    : string.Format(
+                        Loc.Text("CommandDockTemplateSummary", "{0} tiles · saved {1}"),
+                        preset.Tiles.Count,
+                        preset.SavedUtc.ToLocalTime().ToString("d MMM, HH:mm")),
                 FontSize = 10,
+                TextWrapping = TextWrapping.Wrap,
                 Foreground = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray,
                 Margin = new Thickness(0, 2, 0, 0)
             });
             grid.Children.Add(text);
 
-            var rename = SmallButton(SymbolRegular.Edit24, Loc.Text("CommandDockTemplateRename", "Rename"));
-            Grid.SetColumn(rename, 1);
-            grid.Children.Add(rename);
+            // The built-in gets neither: there is nothing stored to rename, and nothing to
+            // delete. Showing them greyed out would only invite the question.
+            if (!builtIn)
+            {
+                var rename = SmallButton(SymbolRegular.Edit24, Loc.Text("CommandDockTemplateRename", "Rename"));
+                Grid.SetColumn(rename, 1);
+                grid.Children.Add(rename);
 
-            var delete = SmallButton(SymbolRegular.Delete24, Loc.Text("CommandDockTemplateDelete", "Delete"), isDanger: true);
-            Grid.SetColumn(delete, 2);
-            grid.Children.Add(delete);
+                var delete = SmallButton(SymbolRegular.Delete24, Loc.Text("CommandDockTemplateDelete", "Delete"), isDanger: true);
+                Grid.SetColumn(delete, 2);
+                grid.Children.Add(delete);
+
+                rename.MouseLeftButtonUp += (_, e) => { e.Handled = true; BeginRename(preset); };
+                delete.MouseLeftButtonUp += (_, e) => { e.Handled = true; ConfirmDelete(preset); };
+            }
 
             // The whole row loads; the two buttons stop the press before it gets that far.
             row.MouseLeftButtonUp += (_, __) => { Dock?.ApplyPreset(preset.Id); Close(); };
@@ -151,9 +171,6 @@ namespace RustPlusDesk
                 row.BorderBrush = new SolidColorBrush(Color.FromRgb(0x24, 0x2E, 0x3D));
                 Dock?.HidePresetPreview();
             };
-
-            rename.MouseLeftButtonUp += (_, e) => { e.Handled = true; BeginRename(preset); };
-            delete.MouseLeftButtonUp += (_, e) => { e.Handled = true; ConfirmDelete(preset); };
 
             return row;
         }
