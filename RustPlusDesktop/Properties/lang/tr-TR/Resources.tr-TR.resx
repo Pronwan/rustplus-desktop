@@ -5771,4 +5771,732 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon artık Rust+ Desktop bağlantısını kabul etmiyor, bu yüzden baskın alarmları Alexa'ya ulaşmıyor. Sesli kontrol çalışmaya devam ediyor. Alexa uygulamasını açın, Rust+ Desktop becerisini devre dışı bırakın ve yeniden bağlayın.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>Katmanlar</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>Harita dokusu</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>Izgara</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>Çizim katmanı</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>Simgeler</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>Oyuncular</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>Kart ekle</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>Dock&apos;a yerleştirmek için bir kart seç. Haritanın yanındaki ilk boş yere yerleşir.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>Taşımak için sürükle · kaldırmak için ×</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>Saat</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>Sohbet</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>Cihazlar</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>Dijital saat</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>Gündüz ve gece evresiyle sunucu saati</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>Analog saat</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>Sunucu saatini izleyen bir kadran</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Rust saati</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>Oyunun kendi yazı tipiyle sunucu saati</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>İki hücre genişliğinde, düzenleme modunda yeniden boyutlandırılabilir</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>eşleşmemiş</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>Tetiklendi</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>Kurulu</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>Bu kural artık yok.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Logic Engine&apos;i ya da kuralı etkinleştir</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>Bu kural artık Command Dock tetikleyicisini kullanmıyor.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>Tıklayınca çalışır</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>Henüz hiçbir kural Command Dock tetikleyicisini kullanmıyor. Buradan çalıştırmak için bir kuralın tetikleyicisini Command Dock yap.</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>Boyutlandırmak için sürükle</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>Yeni kartlar şuraya gider</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Haritanın altına</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Haritanın yanına</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Kartı kaldır</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Harita</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Haritayı tüm katmanları açık şekilde geri getirir</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Kart ayarları</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Saydamsızlık %{0}</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Yazı boyutu %{0}</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Yazı rengi</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Dock&apos;un varsayılanlarına dön</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Gündüze veya geceye kalan süreyi göster</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Uzun isimleri kısalt</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Tema rengi</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>Beyaz</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Siyah</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Camgöbeği</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Kehribar</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Kırmızı</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Yeşil</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>Kendi dişlisi kullanılmadığı sürece bir kartın görünümü. Zaten ayarladığın kartlar kendi değerlerini korur.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Varsayılan saydamsızlık</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Varsayılan yazı boyutu</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Dock&apos;u sıfırla</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Bütün kartlar, konumları ve ayarları silinir. Mini haritanın kendisi etkilenmez.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>Yerleşimi kilitle</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>Kartları taşımak, boyutlandırmak ve kaldırmak için kilidi aç</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>AÇIK</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>KAPALI</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>ETKİN</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>ETKİSİZ</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12 saatlik gösterim (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Cihazın simgesini göster</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Kapalıyken cihaz adı görünür — birden fazla anahtar aynı simgeyi paylaştığında işe yarar.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Ölüm işaretleri</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Oturum</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Oturum istatistikleri</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Çevrimiçi süre, mesafe, boşta geçen süre ve ölümler</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>Çevrimiçi</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Yürünen</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>Boşta</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Ölümler</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Takım</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>{0} tarihinden beri oturum</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>Sayım, bir sunucuya bağlandığında başlar.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Yeni bir oturum başlat</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Bu sunucunun rakamlarını sıfırlar. Sayım sıfırdan devam eder.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Supporter özelliği. Bu kartı kullanmak için bir Supporter hesabıyla giriş yap.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter özelliği</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Bir satır ya da güncel harita görünümünü gönder</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Güncel harita görünümünü gönder</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Kanal</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Bahsetme</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>Yok</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>{0} kanalına gönderir</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>Hiçbir Discord kanalı ayarlanmamış. Önce Bağlı Servisler altından birini ayarla.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>Sesli okuma, bu kanalın Bağlı Servisler altındaki kendi ayarını izler.</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>Sunucu</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>Sunucu bilgisi</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>Şu anki oyuncu sayısı ve bu oturumda nasıl değiştiği</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>oyuncu</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} sırada</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Oyuncu grafiğini göster</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Yerleşimler</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Dock&apos;u şu anki haliyle kaydet ya da daha önce kaydettiğin bir yerleşimi yükle. Dock üzerinde taslağını görmek için bir adın üzerine gel.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Henüz kayıtlı bir şey yok. Dock&apos;u düzenle, bir ad ver ve kaydet.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Bu yerleşime bir ad ver</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>“{0}” yerleşimi silinsin mi?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} kart · {1} tarihinde kaydedildi</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>Kendi Oil Rig tetikleyicinden</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Diğer oyuncular tarafından duyuldu</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Sesle soru sor ve oyundan çıkmadan cevap al. Bir yapay zekâ sağlayıcısındaki kendi hesabınla çalışır: kayıt doğrudan bu bilgisayardan ona gider, asla bizim sunucularımızdan geçmez ve anahtarın burada saklanır, hiçbir zaman yüklenmez.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Sağlayıcı</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Kaydını doğrudan alır, yani duyduğu şey söylediğin şeydir.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>Ses kabul etmez. Kaydın önce bu bilgisayarda metne çevrilir; bu daha yavaştır ve isimlerle oyun terimlerinde GPT ya da Gemini kadar isabetli değildir.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API anahtarı</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Anahtarı kaldır</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>Bu bilgisayarda saklanan anahtar kaldırılsın mı? Yenisi girilene kadar yardımcı çalışmaz. Sağlayıcında hiçbir şey değişmez — sızmış olabileceğini düşünüyorsan orada da iptal et.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>Bu bilgisayarda bir anahtar saklanıyor.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>Henüz anahtar yok — onsuz yardımcı hiçbir şey gönderemez.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>Bu bir anahtara benzemiyor</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>{0} anahtarı böyle görünmez. Tamamını, etrafındaki tırnaklar olmadan yapıştırdığından emin ol.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Cevaplar</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Metin olarak göster</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Sesli oku</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Cevap bitmeden konuşmaya başla</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Sesli cevaplar model bitirdikten sonra başlar. Supporter olanlar yazılırken duyar.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>Bu sağlayıcının kendi sesi yok, bu yüzden cevapları Windows okur ve erken başlayamaz.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Kayıt</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Oyunun sesini de kaydet</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Varsayılan olarak ekran görüntüsü ekle</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Bas-konuş</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Kısayol belirle</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Belirlenmedi — kaydetmek için karta tıkla</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>Kayıtlarına ne oluyor</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>Kayıtlarına ne oluyor</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Anladım</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>Kayıt bu bilgisayarda alınır ve doğrudan anahtarını girdiğin yapay zekâ sağlayıcısına gönderilir. Bizim sunucularımızdan geçmez ve biz onu asla almayız.
+
+Sonrasında ne olduğu o sağlayıcının koşullarına tabidir — anahtarı oluştururken kabul ettiklerine, bizimkilere değil.
+
+Anahtarın yalnızca bu bilgisayarda, Windows hesabınla korunarak saklanır ve asla yüklenmez. Bu Windows hesabına bağlı olduğu için yeniden kurulumdan ya da başka bir bilgisayara geçişten sağ çıkmaz: yeniden girmen gerekir.
+
+Kayıt yalnızca kısayolu basılı tuttuğun sürece ya da karta tıkladıktan sonra çalışır ve beş dakika sonra kendiliğinden durur.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>Cevap, dock&apos;ta kartın altında görünür.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>Cevap sesli okunur, böylece iki elin de oyunda kalır.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Oyunun sesini ikinci bir kanala kaydeder — oyunda söylenen bir şeyi çevirtmek için kullanışlı.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Kısayolla kayıt yaparken her seferinde kutuyu işaretlemekten kurtarır.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Yalnızca cevaplar sesli okunduğunda geçerlidir.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>Cevap, bitmesini beklemeden yazılırken seslendirilir.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>Yapay zekâ yardımcısı</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>Yapay zekâya sor</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>Soru kaydet, ekranı ekle, cevabı al</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>Bağlı Servisler altında kendi yapay zekâ anahtarını gerektirir</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>Soru kaydet</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>Kaydı durdur</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>Ekran görüntüsü ekle</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>Oyunun sesini de kaydet</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>At</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>Sorunu kaydetmek için bas, durdurmak için tekrar bas.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>Henüz yapay zekâ anahtarı yok. Önce Bağlı Servisler altından bir tane ekle.</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>Kaydediliyor {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>{0} kaydedildi</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>Mikrofon bulunamadı</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>Beş dakika sonra durduruldu</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>Ekran görüntüsü eklendi</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>Soruyu gönder</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>Gönderiliyor…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>Cevaplıyor…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>Başarısız — panele bak</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>Yapay zekâ cevabı</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>Düşünüyor…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>Gönderildi. İlk kelimeler bekleniyor…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>Cevaplıyor…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>Cevap</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>Başarısız</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>{0} kullanmak için boş bırak. Sağlayıcı modelin artık olmadığını bildirirse değiştir.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Kayıt biter bitmez gönder</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>İkinci bir basış yok. Her seferinde ekran görüntüsü eklenecek şekilde ayarlıysa önce o alınır.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Cevap penceresi</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>Metin cevapları açıkken kartın altına yerleşen panel.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Saydamlık — %{0} opak</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Genişlik — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Kaydırmadan önceki yükseklik — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Yazı rengi</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Cevap penceresini önizle</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Son soruları göster</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Önce sülfür — bir roket 1400 istiyor ve her şeyden önce o bitecek. Ekran görüntüsündeki sandık normal bir military crate, yani içinden roket çıkmaz.
+
+Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Son sorular</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>Son birkaç alışveriş, bu bilgisayarda tutulur ve asla yüklenmez. Özellikle cevap penceresi kapalıyken oluşan bir hatayı okumak için işe yarar.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Temizle</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>Son {1} sorudan {0} tanesi bu bilgisayarda tutuluyor</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Henüz bir şey sorulmadı.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>ekran görüntüsü</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>oyun sesi</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Kopyalamak için tıkla</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Kayıt biter bitmez gönder</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Her seferinde ekran görüntüsü ekle</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Oyunun sesini de kaydet</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Cevabı kartın altında göster</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC kısayolu kaldırır · Enter kaydeder · iptal için bu pencereyi kapat</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Başarısız — son sorulara bak</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>Bu bilgisayarda bir {0} anahtarı saklanıyor.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>Henüz {0} anahtarı yok — bu sağlayıcı onsuz hiçbir şey gönderemez.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>Ayrıca saklananlar: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Sesli cevaplar bu sağlayıcının kendi sesini kullanır.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Sesli cevapları Windows okur, bu da belirgin biçimde daha yapay duyar.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google API&apos;ye ücretsiz bir kota veriyor, bu yüzden AI Studio&apos;dan alınan bir anahtar ödeme yapmadan çalışır. Yoğun oturumlarda yine de dakikalık limite takılabilirsin.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>Bu API, herhangi bir sohbet aboneliğinden ayrı faturalanır ve kendi ön ödemeli bakiyesini gerektirir.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Ekran görüntüsü alanı</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Tüm ekran</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Ortadaki yarı — daha yakın</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Ortadaki çeyrek — en yakın</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>HUD ve harita dahil gördüğün her şey. Nişangâhtan uzaktaki küçük şeyler, modelin tanıyamayacağı kadar küçük kalabilir.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Yalnızca nişan aldığın şey, tam çözünürlükte. Duvardaki bir anahtarı ya da yerdeki bir eşyayı adlandırmakta çok daha iyi, ama ekranın geri kalanını göremez.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Cevap dili</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>Soruyla aynı dil</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>Uygulama dili ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Her zaman İngilizce</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>İngilizce sorarsan cevap İngilizce olur; {0} sorarsan {0} olur. Kayıtta hiç kelime yoksa {0} kullanılır.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Cevaplar başka bir dilde sorsan bile hep uygulamanın dilinde gelir.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Her zaman İngilizce. Rust&apos;ın eşya ve monument adları İngilizce olduğu için kullanışlı.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows her cevabı tek bir dilde okur, bu yüzden başka bir dildeki cevap yanlış duyulur.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Her soruyla Rust verilerini gönder</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Güncel tarifler ve raid maliyetleri her soruyla gider, böylece model eski bir yamaya göre cevap vermez. Soru başına yaklaşık 10.000 token ekler, büyük kısmı ilkinden sonra önbelleğe alınır.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Güncel tarifler ve raid maliyetleri her soruyla gider, böylece model eski bir yamaya göre cevap vermez. Gemini&apos;de ücretsiz.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Daha ucuz, ama tarifler ve raid maliyetleri modelin belleğinden gelir — orada hepsinin eski sürümleri durur ve hangisinin güncel olduğunu bilemez.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>Yapay zekâya sor</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Yapay zekâ yardımcısına oyun içi sohbetten sor ve cevabı sohbette al. Cevaplar bir iki satırla sınırlıdır, ekran görüntüsü olmaz.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>Yapay zekâya sor</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Takım arkadaşlarına izin ver</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>Varsayılan olarak kapalı, yani yalnızca sen kullanabilirsin. Açıkken her takım arkadaşı sorusunu senin sağlayıcın senin API anahtarınla cevaplar ve fatura sana çıkar — senin ayarlarınla: aynı sağlayıcı, aynı model, aynı dil.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Takım arkadaşı başına soru</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>saatte {0}</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Sınırsız</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Kişi başına, kayan bir saat üzerinden sayılır. Kendi soruların hiçbir zaman sayılmaz.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Komuttan sonra bir soru yaz.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>Bu istemcide yapay zekâ kurulu değil.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Sohbetten yapay zekâya sormak bir Supporter özelliğidir.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>Yapay zekâ buna cevap veremedi.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} bu saatlik yapay zekâ sorularını tüketti.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>Yapay zekâya sormaya izin ver</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Klan üyeleri senin API anahtarınla yapay zekâya sorabilir ve fatura senin olur. Yukarıdaki takım ayarından bağımsızdır.</value>
+  </data>
 </root>

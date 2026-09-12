@@ -6738,4 +6738,732 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon больше не принимает подключение к Rust+ Desktop, поэтому оповещения о рейде перестали доходить до Alexa. Голосовое управление продолжает работать. Откройте приложение Alexa, отключите навык Rust+ Desktop и свяжите его заново.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>Слои</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>Текстура карты</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>Сетка</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>Слой рисования</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>Иконки</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>Игроки</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>Добавить виджет</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>Выбери виджет, чтобы разместить его на доке. Он встанет в первое свободное место рядом с картой.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>Перетащи, чтобы переместить · × чтобы убрать</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>Часы</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>Чат</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>Устройства</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>Цифровые часы</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>Время сервера с фазой дня и ночи</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>Аналоговые часы</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>Циферблат, следующий за временем сервера</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Часы в стиле Rust</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>Время сервера шрифтом самой игры</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>Две ячейки в ширину, размер меняется в режиме редактирования</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>не сопряжено</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>Сработала</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>На взводе</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>Этого правила больше нет.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Включи Logic Engine или само правило</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>Это правило больше не использует триггер Command Dock.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>Запускается по клику</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>Пока ни одно правило не использует триггер Command Dock. Поставь у правила триггер Command Dock, чтобы запускать его отсюда.</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>Потяни, чтобы изменить размер</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>Новые виджеты идут</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Под картой</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Рядом с картой</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Убрать виджет</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Карта</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Возвращает карту со всеми включёнными слоями</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Настройки виджета</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Непрозрачность {0} %</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Размер текста {0} %</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Цвет текста</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Вернуть настройки дока по умолчанию</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Показывать время до дня или ночи</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Сокращать длинные имена</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Цвет темы</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>Белый</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Чёрный</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Голубой</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Янтарный</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Красный</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Зелёный</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>Как выглядит виджет, пока не тронута его собственная шестерёнка. Уже настроенные виджеты сохраняют свои значения.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Непрозрачность по умолчанию</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Размер текста по умолчанию</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Сбросить док</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Все виджеты, их позиции и настройки будут удалены. Саму мини-карту это не затронет.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>Заблокировать расположение</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>Разблокируй, чтобы двигать, менять размер и убирать виджеты</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>ВКЛ</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>ВЫКЛ</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>АКТИВНА</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>НЕАКТИВНА</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12-часовой формат (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Показывать иконку устройства</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Если выключено, показывается имя устройства — удобно, когда у нескольких переключателей одна иконка.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Метки смертей</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Сессия</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Статистика сессии</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Время в игре, дистанция, простой и смерти</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>В сети</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Пройдено</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>Простой</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Смерти</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Команда</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>Сессия с {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>Отсчёт начнётся, когда ты подключишься к серверу.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Начать новую сессию</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Сбрасывает цифры для этого сервера. Отсчёт продолжится с нуля.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Функция Supporter. Войди с аккаунтом Supporter, чтобы пользоваться этим виджетом.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Функция Supporter</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Отправить строку или текущий вид карты</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Отправить текущий вид карты</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Канал</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Упоминание</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>Отправляет в твой канал {0}</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>Ни один канал Discord не настроен. Сначала настрой его в разделе «Подключённые сервисы».</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>Озвучка следует собственной настройке этого канала в разделе «Подключённые сервисы».</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>Сервер</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>О сервере</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>Сколько игроков сейчас и как это менялось за сессию</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>игроков</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} в очереди</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Показывать график онлайна</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Раскладки</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Сохрани док как есть или загрузи сохранённую раньше раскладку. Наведи на название, чтобы увидеть её контур на доке.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Пока ничего не сохранено. Расставь виджеты, дай раскладке имя и сохрани её.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Назови эту раскладку</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Переименовать</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>Удалить раскладку «{0}»?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} виджетов · сохранена {1}</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>От твоего триггера Oil Rig</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Услышано другими игроками</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Задай вопрос голосом и получи ответ, не выходя из игры. Всё работает через твой собственный аккаунт у провайдера ИИ: запись идёт прямо с этого ПК к нему, минуя наши серверы, а ключ хранится здесь и никогда не загружается.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Провайдер</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Принимает запись напрямую, поэтому слышит именно то, что ты сказал.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>Не принимает аудио. Запись сначала превращается в текст на этом ПК, что медленнее и хуже справляется с именами и игровыми терминами, чем GPT или Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API-ключ</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Удалить ключ</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>Удалить сохранённый на этом ПК ключ? Компаньон перестанет работать, пока не введёшь новый. У провайдера ничего не меняется — отзови ключ и там, если он мог утечь.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>Ключ сохранён на этом ПК.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>Ключа пока нет — без него компаньон ничего не отправит.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>Это не похоже на ключ</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>Ключ {0} выглядит иначе. Проверь, что вставил его целиком, без кавычек вокруг.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Ответы</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Показывать текстом</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Зачитывать вслух</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Начинать говорить до того, как ответ закончен</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Озвучка начинается после того, как модель закончила. Supporter слышат ответ по мере написания.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>У этого провайдера нет собственного голоса, поэтому ответы читает Windows и начать раньше нельзя.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Запись</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Записывать также звук игры</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Прикреплять скриншот по умолчанию</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Push-to-talk</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Задать горячую клавишу</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Не задана — нажми на виджет, чтобы записать</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>Что происходит с твоими записями</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>Что происходит с твоими записями</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Понятно</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>Запись делается на этом ПК и отправляется напрямую тому провайдеру ИИ, чей ключ ты ввёл. Она не проходит через наши серверы, и мы её никогда не получаем.
+
+Что с ней происходит дальше, определяют условия этого провайдера — те, которые ты принял при создании ключа, а не наши.
+
+Ключ хранится только на этом ПК, защищён твоей учётной записью Windows и никогда не загружается. Поскольку он привязан к этой учётной записи, он не переживёт переустановку или переезд на другой ПК: его придётся ввести заново.
+
+Запись идёт только пока ты держишь горячую клавишу или после нажатия на виджет и сама останавливается через пять минут.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>Ответ появляется под виджетом на доке.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>Ответ зачитывается вслух, чтобы обе руки остались в игре.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Записывает звук игры на вторую дорожку — удобно, чтобы перевести сказанное в игре.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Избавляет от галочки при каждой записи по горячей клавише.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Работает, только когда ответы зачитываются вслух.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>Ответ проговаривается по мере написания, а не после его завершения.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>ИИ-компаньон</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>Запиши вопрос, приложи экран, получи ответ</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>Нужен свой ключ ИИ в разделе «Подключённые сервисы»</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>Записать вопрос</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>Остановить запись</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>Приложить скриншот</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>Записывать также звук игры</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>Отбросить</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>Нажми, чтобы записать вопрос, нажми ещё раз, чтобы остановить.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>Ключ ИИ ещё не сохранён. Сначала добавь его в разделе «Подключённые сервисы».</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>Запись {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>Записано {0}</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>Готов</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>Микрофон не найден</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>Остановлено через пять минут</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>Скриншот приложен</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>Отправить вопрос</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>Отправка…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>Отвечает…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>Ошибка — смотри панель</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>Ответ ИИ</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>Думает…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>Отправлено. Ждём первых слов…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>Отвечает…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>Ответ</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Модель</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>Оставь пустым, чтобы использовать {0}. Измени, если провайдер отвечает, что модели больше нет.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Отправлять сразу после остановки записи</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>Без второго нажатия. Если скриншот прикрепляется всегда, он делается первым.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Окно ответа</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>Панель, которая пристыковывается под виджетом, когда включены текстовые ответы.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Прозрачность — {0} % непрозрачности</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Ширина — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Высота до прокрутки — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Цвет текста</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Посмотреть окно ответа</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Показать последние вопросы</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Сначала сера — на ракету нужно 1400, и её тебе не хватит раньше всего остального. Ящик на скриншоте — обычный military crate, так что ракеты в нём не будет.
+
+Закрой предпросмотр, когда панель будет выглядеть как надо.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Последние вопросы</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>Несколько последних обменов, хранятся на этом ПК и никуда не загружаются. Полезно прежде всего, чтобы прочитать ошибку, случившуюся при выключенном окне ответа.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} из последних {1} хранится на этом ПК</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Пока ничего не спрошено.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>скриншот</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>звук игры</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Нажми, чтобы скопировать</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Отправлять сразу после остановки записи</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Всегда прикреплять скриншот</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Записывать также звук игры</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Показывать ответ под виджетом</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC убирает горячую клавишу · Enter сохраняет · закрой окно, чтобы отменить</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Ошибка — смотри последние вопросы</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>Ключ {0} сохранён на этом ПК.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>Ключа {0} пока нет — без него этот провайдер ничего не отправит.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>Также сохранены: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Ответы озвучиваются собственным голосом этого провайдера.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Ответы читает Windows, и звучит это заметно более синтетически.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google даёт API бесплатный лимит, поэтому ключ из AI Studio работает без оплаты. При активной игре можно упереться в лимит в минуту.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>Этот API оплачивается отдельно от любой подписки на чат и требует собственного предоплаченного баланса.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Область скриншота</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Весь экран</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Центральная половина — ближе</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Центральная четверть — ещё ближе</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>Всё, что ты видишь, включая HUD и карту. Мелкие предметы вдали от прицела могут оказаться слишком мелкими, чтобы модель их опознала.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Только то, во что ты целишься, в полном разрешении. Намного лучше распознаёт переключатель на стене или предмет на земле, но остального экрана не видит.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Язык ответов</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>Тот же язык, что и вопрос</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>Язык приложения ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Всегда английский</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>Спросишь по-английски — ответ по-английски; спросишь на {0} — ответ на {0}. Если в записи нет слов, используется {0}.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Ответы всегда приходят на языке приложения, даже если спрашиваешь на другом.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Всегда английский. Полезно, потому что названия предметов и монументов в Rust английские.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows читает все ответы на одном языке, поэтому ответ на другом прозвучит неправильно.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Отправлять данные Rust с каждым вопросом</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Актуальные рецепты и стоимость рейда идут с каждым вопросом, чтобы модель не отвечала по старому патчу. Добавляет около 10 000 токенов на вопрос, большая часть кэшируется после первого.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Актуальные рецепты и стоимость рейда идут с каждым вопросом, чтобы модель не отвечала по старому патчу. На Gemini бесплатно.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Дешевле, но рецепты и стоимость рейда берутся из памяти модели — а там лежат все их старые версии, и какая актуальна, она не знает.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Задай вопрос ИИ-компаньону прямо из игрового чата и получи ответ там же. Ответы укладываются в одну-две строки, без скриншотов.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Разрешить сокомандникам</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>По умолчанию выключено, так что пользоваться можешь только ты. Если включить, каждый вопрос сокомандника обрабатывает твой провайдер по твоему API-ключу и за твой счёт — с твоими настройками: тот же провайдер, та же модель, тот же язык.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Вопросов на сокомандника</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} в час</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Без ограничений</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Считается для каждого отдельно за скользящий час. Твои собственные вопросы не учитываются.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Напиши вопрос после команды.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>На этом клиенте ИИ не настроен.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Спрашивать ИИ из чата — функция Supporter.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>ИИ не смог на это ответить.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} исчерпал свои вопросы к ИИ на этот час.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>Разрешить «Спросить ИИ»</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Участники клана смогут спрашивать ИИ по твоему API-ключу, и счёт будет твой. Не зависит от настройки для команды выше.</value>
+  </data>
 </root>

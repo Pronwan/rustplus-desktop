@@ -6486,4 +6486,732 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon 不再接受与 Rust+ Desktop 的连接，突袭警报无法送达 Alexa。语音控制仍可正常使用。请打开 Alexa 应用，停用 Rust+ Desktop 技能后重新关联。</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>地图底图</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>网格</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>绘制图层</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>图标</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>玩家</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>添加磁贴</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>选一个磁贴放到 dock 上。它会落在地图旁边第一个空位。</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>拖动移动 · × 移除</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>时钟</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>聊天</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>数字时钟</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>带昼夜阶段的服务器时间</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>指针时钟</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>跟随服务器时间的表盘</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Rust 时钟</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>用游戏自身字体显示的服务器时间</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>宽两格，编辑模式下可调整大小</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>未配对</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>已触发</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>已布防</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>该规则已不存在。</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>请启用 Logic Engine 或该规则</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>该规则已不再使用 Command Dock 触发器。</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>点击即运行</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>还没有规则使用 Command Dock 触发器。把某条规则的触发器设为 Command Dock，就能从这里启动它。</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>拖动调整大小</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>新磁贴放在</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>地图下方</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>地图旁边</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>移除磁贴</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>把地图连同所有图层一起恢复</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>磁贴设置</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>不透明度 {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>文字大小 {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>文字颜色</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>恢复 dock 的默认值</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>显示距离白天或黑夜的时间</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>缩短过长的名字</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>主题色</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>白色</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>黑色</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>琥珀色</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>红色</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>绿色</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>在动用磁贴自己的齿轮之前，它的样子。已经单独调整过的磁贴会保留各自的数值。</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>默认不透明度</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>默认文字大小</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>重置 dock</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>所有磁贴、它们的位置和设置都会被移除。小地图本身不受影响。</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>锁定布局</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>解锁后可移动、调整大小和移除磁贴</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12 小时制（AM/PM）</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>显示设备图标</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>关闭后显示设备名称 — 多个开关共用同一个图标时很有用。</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>死亡标记</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>本次会话</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>会话统计</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>在线时间、移动距离、挂机时间和死亡次数</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>移动</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>挂机</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>死亡</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>队伍</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>自 {0} 起的会话</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>连接到服务器后才开始统计。</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>开始新的会话</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>重置该服务器的数据。统计从零重新开始。</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Supporter 功能。请用 Supporter 账号登录以使用此磁贴。</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter 功能</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>发送一行文字或当前地图画面</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>发送当前地图画面</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>频道</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>提及</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>发送到你的 {0} 频道</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>还没有配置 Discord 频道。请先在“已连接服务”中设置一个。</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>语音朗读遵循该频道在“已连接服务”中的自身设置。</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>服务器</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>服务器信息</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>当前在线人数，以及本次会话中的变化</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>人</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} 人排队</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>显示人数曲线</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>布局</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>把当前的 dock 保存下来，或载入之前保存的布局。把鼠标移到名称上可在 dock 上看到它的轮廓。</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>还没有保存任何布局。先摆好 dock，取个名字再保存。</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>为这个布局取个名字</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>删除布局“{0}”？</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} 个磁贴 · 保存于 {1}</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>来自你的 Oil Rig 触发器</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>其他玩家听到的</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>用语音提问，不用离开游戏就能得到答案。它使用你自己在某个 AI 服务商的账号：录音从这台电脑直接发给对方，不经过我们的服务器，密钥保存在本机且从不上传。</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>服务商</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>直接接收你的录音，所以它听到的就是你说的。</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>不接受音频。你的录音会先在本机转成文字，这比 GPT 或 Gemini 更慢，对人名和游戏术语也更容易出错。</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API 密钥</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>删除密钥</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>删除本机保存的密钥？在输入新密钥之前助手将停止工作。服务商那边不会有任何改动 — 如果密钥可能泄露，也请在那边吊销。</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>本机已保存一个密钥。</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>还没有密钥 — 没有它助手无法发送任何内容。</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>这看起来不像密钥</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>{0} 的密钥不是这个样子。请确认你粘贴了完整内容，且不带两端的引号。</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>回答</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>以文字显示</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>朗读出来</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>回答写完之前就开始朗读</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>语音回答会在模型写完后才开始。Supporter 可以边写边听。</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>该服务商没有自己的语音，因此由 Windows 朗读，无法提前开始。</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>录音</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>同时录制游戏声音</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>默认附带截图</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>按住说话</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>设置快捷键</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>未设置 — 点击磁贴即可录音</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>你的录音会怎样处理</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>你的录音会怎样处理</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>明白了</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>录音在这台电脑上完成，并直接发送给你填入密钥的那家 AI 服务商。它不经过我们的服务器，我们也从不接收。
+
+之后如何处理由该服务商的条款决定 — 是你创建密钥时同意的那份，而不是我们的。
+
+你的密钥只保存在这台电脑上，由你的 Windows 账户保护，从不上传。由于它与该 Windows 账户绑定，重装系统或换到另一台电脑后不会保留：你需要重新输入。
+
+录音只在你按住快捷键期间或点击磁贴之后进行，并在五分钟后自动停止。</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>回答会显示在 dock 上磁贴的下方。</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>回答会被朗读出来，这样双手可以留在游戏上。</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>把游戏声音录到第二条音轨 — 想让人翻译游戏里说的话时很有用。</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>用快捷键录音时不必每次都勾选。</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>仅在回答被朗读时才适用。</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>回答边写边读，而不是写完之后才读。</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>AI 助手</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>问 AI</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>录一个问题，附上画面，得到答案</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>需要在“已连接服务”中填入你自己的 AI 密钥</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>录制问题</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>停止录音</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>附带截图</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>同时录制游戏声音</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>丢弃</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>按一下开始录问题，再按一下停止。</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>还没有保存 AI 密钥。请先在“已连接服务”中添加。</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>录音中 {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>已录 {0}</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>未找到麦克风</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>五分钟后已停止</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>已附带截图</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>发送问题</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>发送中…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>回答中…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>失败 — 请看面板</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>AI 回答</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>思考中…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>已发送。等待最初的文字…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>回答中…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>回答</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>留空则使用 {0}。如果服务商回复说该模型已不存在，请在这里改。</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>录音一结束就发送</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>不需要按第二次。如果设置了每次都附带截图，会先拍好截图。</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>回答窗口</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>开启文字回答时停靠在磁贴下方的面板。</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>透明度 — 不透明 {0}%</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>宽度 — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>开始滚动前的高度 — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>文字颜色</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>预览回答窗口</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>查看最近的提问</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>先攒硫磺 — 一枚火箭需要 1400，而它会比别的东西更早不够用。截图里的箱子是普通的 military crate，里面不会有火箭。
+
+面板看着合适了就关掉这个预览。</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>最近的提问</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>最近几次问答，只保存在这台电脑上，从不上传。主要用来查看回答窗口关闭时发生的错误。</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>清空</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>最近 {1} 条中的 {0} 条保存在本机</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>还没有提问过。</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>游戏声音</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>点击复制</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>录音一结束就发送</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>每次都附带截图</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>同时录制游戏声音</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>在磁贴下方显示回答</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC 清除快捷键 · Enter 保存 · 关闭此窗口取消</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>失败 — 请看最近的提问</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>本机已保存一个 {0} 密钥。</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>还没有 {0} 密钥 — 没有它这家服务商无法发送任何内容。</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>同时保存了：{0}。</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>语音回答使用该服务商自己的声音。</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>语音回答由 Windows 朗读，机器味明显更重。</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google 给 API 提供免费额度，所以来自 AI Studio 的密钥无需付费即可使用。提问密集时仍可能触及每分钟限制。</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>该 API 与任何聊天订阅分开计费，需要自己的预付余额。</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>截图范围</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>整个屏幕</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>中间一半 — 更近</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>中间四分之一 — 最近</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>你能看到的一切，包括 HUD 和地图。离准星较远的小物件可能小到模型认不出来。</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>只有你瞄准的部分，保持原始分辨率。识别墙上的开关或地上的物品要好得多，但看不到屏幕的其余部分。</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>回答语言</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>与提问相同的语言</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>应用语言（{0}）</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>始终用英语</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>用英语问就用英语答；用{0}问就用{0}答。录音里没有话语时回退到{0}。</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>即使你用别的语言提问，回答也始终使用应用的语言。</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>始终用英语。因为 Rust 的物品名和 monument 名本来就是英文，这样很方便。</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows 只用一种语言朗读所有回答，所以另一种语言的回答听起来会不对。</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>每次提问都带上 Rust 数据</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>当前的配方和 raid 成本会随每个问题一起发送，这样模型就不会照着旧版本回答。每个问题增加约 10,000 个 token，第一次之后大部分会被缓存。</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>当前的配方和 raid 成本会随每个问题一起发送，这样模型就不会照着旧版本回答。在 Gemini 上免费。</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>更省钱，但配方和 raid 成本来自模型的记忆 — 那里存着它们所有的旧版本，而它分不清哪个是当前的。</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>问 AI</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>在游戏聊天里向 AI 助手提问，答案也回到聊天里。回答控制在一两行，不带截图。</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>问 AI</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>允许队友使用</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>默认关闭，因此只有你能使用。开启后，队友的每个问题都由你的服务商用你的 API 密钥回答，费用算在你头上 — 并且使用你的设置：同一个服务商、同一个模型、同一种语言。</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>每位队友的提问次数</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>每小时 {0} 次</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>不限</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>按人分别统计，以滚动的一小时为准。你自己的提问从不计入。</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>请在命令后面写上问题。</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>这个客户端没有配置 AI。</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>从聊天里问 AI 是 Supporter 功能。</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>AI 无法回答这个问题。</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} 已用完本小时的 AI 提问次数。</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>允许使用“问 AI”</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>战队成员可以用你的 API 密钥向 AI 提问，费用算你的。与上面的队伍设置相互独立。</value>
+  </data>
 </root>

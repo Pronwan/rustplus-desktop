@@ -6659,4 +6659,732 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon이 Rust+ Desktop 연결을 더 이상 허용하지 않아 습격 알림이 Alexa에 전달되지 않습니다. 음성 제어는 계속 작동합니다. Alexa 앱을 열고 Rust+ Desktop 스킬을 비활성화한 뒤 다시 연결해 주세요.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>레이어</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>지도 텍스처</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>격자</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>그리기 레이어</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>아이콘</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>플레이어</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>타일 추가</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>독에 올릴 타일을 고르세요. 지도 옆 첫 번째 빈 자리에 놓입니다.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>드래그해서 이동 · ×로 제거</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>시계</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>채팅</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>장치</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>디지털 시계</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>낮·밤 단계가 함께 표시되는 서버 시간</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>아날로그 시계</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>서버 시간을 따라가는 시계판</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Rust 시계</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>게임 자체 글꼴로 표시하는 서버 시간</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>가로 두 칸, 편집 모드에서 크기 조절 가능</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>페어링 안 됨</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>작동됨</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>대기 중</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>이 규칙은 더 이상 없습니다.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Logic Engine 또는 규칙을 활성화하세요</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>이 규칙은 더 이상 Command Dock 트리거를 쓰지 않습니다.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>클릭하면 실행</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>아직 Command Dock 트리거를 쓰는 규칙이 없습니다. 여기서 실행하려면 규칙의 트리거를 Command Dock으로 설정하세요.</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>드래그해서 크기 조절</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>새 타일이 놓이는 위치</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>지도 아래</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>지도 옆</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>타일 제거</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>지도</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>모든 레이어를 켠 채로 지도를 되돌립니다</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>타일 설정</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>불투명도 {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>글자 크기 {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>글자 색</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>독 기본값으로 되돌리기</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>낮 또는 밤까지 남은 시간 표시</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>긴 이름 줄이기</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>테마 색</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>흰색</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>검은색</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>청록색</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>황색</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>빨간색</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>초록색</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>타일 자체의 톱니바퀴를 쓰기 전까지의 모습입니다. 이미 조정한 타일은 각자의 값을 유지합니다.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>기본 불투명도</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>기본 글자 크기</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>독 초기화</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>모든 타일과 그 위치, 설정이 삭제됩니다. 미니맵 자체는 영향을 받지 않습니다.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>배치 잠그기</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>타일을 옮기고 크기를 바꾸고 제거하려면 잠금 해제</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>켜짐</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>꺼짐</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>활성</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>비활성</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12시간제 (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>장치 아이콘 표시</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>끄면 장치 이름이 대신 표시됩니다 — 여러 스위치가 같은 아이콘을 쓸 때 유용합니다.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>사망 표시</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>세션</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>세션 통계</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>접속 시간, 이동 거리, 유휴 시간, 사망 횟수</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>접속</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>이동</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>유휴</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>사망</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>팀</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>{0}부터의 세션</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>서버에 접속하면 집계가 시작됩니다.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>새 세션 시작</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>이 서버의 수치를 초기화합니다. 집계는 0부터 다시 이어집니다.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Supporter 기능입니다. 이 타일을 쓰려면 Supporter 계정으로 로그인하세요.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter 기능</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>한 줄 또는 현재 지도 화면을 보냅니다</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>보내기</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>현재 지도 화면 보내기</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>채널</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>멘션</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>없음</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>{0} 채널로 보냅니다</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>설정된 Discord 채널이 없습니다. 먼저 연결된 서비스에서 하나 설정하세요.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>음성 읽기는 연결된 서비스에 있는 이 채널의 자체 설정을 따릅니다.</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>서버</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>서버 정보</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>현재 접속 인원과 이번 세션 동안의 변화</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>명</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>대기 {0}명</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>접속자 그래프 표시</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>배치</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>지금 상태의 독을 저장하거나 이전에 저장한 배치를 불러옵니다. 이름 위에 마우스를 올리면 독에 윤곽이 표시됩니다.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>아직 저장된 것이 없습니다. 독을 배치하고 이름을 붙여 저장하세요.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>이 배치의 이름</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>이름 변경</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>배치 “{0}”을(를) 삭제할까요?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>타일 {0}개 · {1}에 저장됨</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>내 Oil Rig 트리거에서</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>다른 플레이어가 들음</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>게임을 벗어나지 않고 음성으로 질문하고 답을 받습니다. AI 제공사의 본인 계정으로 동작합니다: 녹음은 이 PC에서 제공사로 바로 전송되며 우리 서버를 거치지 않고, 키는 이곳에 저장되어 절대 업로드되지 않습니다.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>제공사</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>녹음을 그대로 받으므로 말한 내용을 그대로 듣습니다.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>오디오를 받지 않습니다. 녹음이 먼저 이 PC에서 텍스트로 변환되며, GPT나 Gemini보다 느리고 이름이나 게임 용어에서 정확도가 떨어집니다.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API 키</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>키 삭제</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>이 PC에 저장된 키를 삭제할까요? 새 키를 넣을 때까지 companion이 동작하지 않습니다. 제공사 쪽은 바뀌지 않습니다 — 유출이 의심되면 그쪽에서도 폐기하세요.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>이 PC에 키가 저장되어 있습니다.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>아직 키가 없습니다 — 키 없이는 아무것도 보낼 수 없습니다.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>키처럼 보이지 않습니다</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>{0} 키는 그런 모양이 아닙니다. 앞뒤 따옴표 없이 전체를 붙여 넣었는지 확인하세요.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>답변</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>텍스트로 표시</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>소리 내어 읽기</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>답변이 끝나기 전에 말하기 시작</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>음성 답변은 모델이 끝낸 뒤에 시작됩니다. Supporter는 작성되는 대로 듣습니다.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>이 제공사는 자체 음성이 없어 Windows가 답을 읽으며, 더 일찍 시작할 수 없습니다.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>녹음</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>게임 소리도 함께 녹음</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>기본적으로 스크린샷 첨부</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>누르고 말하기</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>단축키 설정</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>설정 안 됨 — 타일을 눌러 녹음하세요</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>녹음은 어떻게 처리되나요</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>녹음은 어떻게 처리되나요</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>이해했습니다</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>녹음은 이 PC에서 이루어지며, 키를 입력한 AI 제공사로 바로 전송됩니다. 우리 서버를 거치지 않으며 우리는 절대 받지 않습니다.
+
+그 이후의 처리는 해당 제공사의 약관을 따릅니다 — 키를 만들 때 동의한 그 약관이며, 우리 것이 아닙니다.
+
+키는 이 PC에만 저장되고 Windows 계정으로 보호되며 업로드되지 않습니다. 이 Windows 계정에 묶여 있으므로 재설치하거나 다른 PC로 옮기면 남지 않습니다: 다시 입력해야 합니다.
+
+녹음은 단축키를 누르고 있는 동안이나 타일을 누른 뒤에만 동작하며, 5분이 지나면 스스로 멈춥니다.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>답변이 독의 타일 아래에 표시됩니다.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>답변을 소리로 읽어 주어 두 손을 게임에 둘 수 있습니다.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>게임 소리를 두 번째 트랙에 녹음합니다 — 게임에서 들은 말을 번역시킬 때 유용합니다.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>단축키로 녹음할 때마다 체크할 필요가 없어집니다.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>답변을 소리 내어 읽을 때만 적용됩니다.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>답변이 끝난 뒤가 아니라 작성되는 동안 읽어 줍니다.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>AI 컴패니언</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>질문을 녹음하고 화면을 첨부해 답을 받으세요</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>연결된 서비스에 본인 AI 키가 필요합니다</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>질문 녹음</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>녹음 중지</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>스크린샷 첨부</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>게임 소리도 함께 녹음</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>버리기</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>누르면 질문이 녹음되고, 다시 누르면 멈춥니다.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>아직 AI 키가 없습니다. 먼저 연결된 서비스에서 추가하세요.</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>녹음 중 {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>{0} 녹음됨</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>준비됨</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>마이크를 찾을 수 없습니다</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>5분 후 중지됨</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>스크린샷 첨부됨</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>질문 보내기</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>보내는 중…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>답하는 중…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>실패 — 패널을 확인하세요</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>AI 답변</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>생각 중…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>전송됨. 첫 단어를 기다리는 중…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>답하는 중…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>답변</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>실패</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>모델</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>기본값</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>{0}을(를) 쓰려면 비워 두세요. 제공사가 모델이 더 이상 없다고 답하면 변경하세요.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>녹음이 끝나면 바로 보내기</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>두 번 누를 필요가 없습니다. 스크린샷을 항상 첨부하도록 설정했다면 먼저 촬영됩니다.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>답변 창</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>텍스트 답변이 켜져 있을 때 타일 아래에 붙는 패널입니다.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>투명도 — 불투명도 {0}%</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>너비 — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>스크롤 전 높이 — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>글자 색</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>답변 창 미리보기</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>최근 질문 보기</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>미리보기</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>먼저 유황입니다 — 로켓 하나에 1400이 필요하고, 다른 무엇보다 먼저 모자라게 됩니다. 스크린샷의 상자는 평범한 military crate라서 로켓은 들어 있지 않습니다.
+
+패널이 마음에 들면 이 미리보기를 닫으세요.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>최근 질문</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>최근 주고받은 내용으로, 이 PC에만 보관되며 업로드되지 않습니다. 답변 창이 꺼져 있을 때 발생한 오류를 확인하는 데 특히 유용합니다.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>비우기</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>최근 {1}개 중 {0}개가 이 PC에 보관됨</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>아직 질문한 것이 없습니다.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>스크린샷</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>게임 소리</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>클릭해서 복사</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>녹음이 끝나면 바로 보내기</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>항상 스크린샷 첨부</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>게임 소리도 함께 녹음</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>타일 아래에 답변 표시</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC는 단축키 삭제 · Enter는 저장 · 취소하려면 창을 닫으세요</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>실패 — 최근 질문을 확인하세요</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>이 PC에 {0} 키가 저장되어 있습니다.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>아직 {0} 키가 없습니다 — 키 없이는 이 제공사로 아무것도 보낼 수 없습니다.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>함께 저장됨: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>음성 답변에 이 제공사의 자체 음성을 사용합니다.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>음성 답변은 Windows가 읽으며, 눈에 띄게 더 기계적으로 들립니다.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google은 API에 무료 사용량을 제공하므로 AI Studio의 키는 결제 없이 동작합니다. 질문이 잦으면 분당 제한에 걸릴 수 있습니다.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>이 API는 채팅 구독과 별도로 청구되며 자체 선불 크레딧이 필요합니다.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>스크린샷 범위</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>화면 전체</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>가운데 절반 — 더 가깝게</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>가운데 4분의 1 — 가장 가깝게</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>HUD와 지도를 포함해 보이는 모든 것. 조준점에서 먼 작은 물체는 모델이 식별하기에 너무 작을 수 있습니다.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>조준하고 있는 것만 전체 해상도로 담습니다. 벽의 스위치나 바닥의 아이템 이름을 훨씬 잘 맞히지만 화면의 나머지는 보지 못합니다.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>답변 언어</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>질문과 같은 언어</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>앱 언어 ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>항상 영어</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>영어로 물으면 영어로, {0}(으)로 물으면 {0}(으)로 답합니다. 녹음에 말이 없으면 {0}(으)로 답합니다.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>다른 언어로 물어도 답변은 항상 앱 언어로 돌아옵니다.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>항상 영어. Rust의 아이템과 monument 이름이 영어라 유용합니다.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows는 모든 답변을 한 언어로 읽으므로 다른 언어의 답변은 어색하게 들립니다.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>질문마다 Rust 데이터 함께 전송</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>최신 제작법과 레이드 비용이 모든 질문과 함께 전송되어 모델이 옛 패치 기준으로 답하지 않습니다. 질문당 약 10,000 토큰이 추가되며 첫 질문 이후 대부분 캐시됩니다.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>최신 제작법과 레이드 비용이 모든 질문과 함께 전송되어 모델이 옛 패치 기준으로 답하지 않습니다. Gemini에서는 무료입니다.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>더 저렴하지만 제작법과 레이드 비용이 모델의 기억에서 나옵니다 — 그 안에는 모든 옛 버전이 있고 무엇이 현재인지 알 수 없습니다.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>게임 내 채팅에서 AI 컴패니언에게 묻고 답을 채팅으로 받습니다. 답변은 한두 줄로 제한되며 스크린샷은 없습니다.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>팀원에게 허용</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>기본적으로 꺼져 있어 본인만 쓸 수 있습니다. 켜면 팀원의 모든 질문을 당신의 제공사가 당신의 API 키로 답하고 비용도 당신에게 청구됩니다 — 당신의 설정 그대로: 같은 제공사, 같은 모델, 같은 언어.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>팀원당 질문 수</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>시간당 {0}회</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>무제한</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>사람마다 지난 한 시간 기준으로 셉니다. 본인의 질문은 세지 않습니다.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>명령어 뒤에 질문을 적으세요.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>이 클라이언트에는 AI가 설정되어 있지 않습니다.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>채팅에서 AI에게 묻는 것은 Supporter 기능입니다.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>AI가 답할 수 없었습니다.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0}님은 이번 시간의 AI 질문을 모두 사용했습니다.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>AI에게 묻기 허용</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>클랜원이 당신의 API 키로 AI에게 물을 수 있고 비용은 당신 몫입니다. 위의 팀 설정과는 별개입니다.</value>
+  </data>
 </root>

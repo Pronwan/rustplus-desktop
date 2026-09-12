@@ -6738,4 +6738,732 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon ya no acepta la conexión con Rust+ Desktop, por lo que las alarmas de asalto han dejado de llegar a Alexa. El control por voz sigue funcionando. Abre la aplicación Alexa, desactiva la skill de Rust+ Desktop y vuelve a vincularla.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>Capas</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>Textura del mapa</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>Cuadrícula</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>Capa de dibujo</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>Iconos</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>Jugadores</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>Añadir widget</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>Elige un widget para colocarlo en el dock. Se sitúa en el primer hueco libre junto al mapa.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>Arrastra para mover · × para quitar</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>Reloj</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>Dispositivos</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>Reloj digital</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>Hora del servidor con la fase de día y noche</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>Reloj analógico</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>Una esfera que sigue la hora del servidor</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Reloj de Rust</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>Hora del servidor con la tipografía del juego</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>Dos celdas de ancho, redimensionable en modo edición</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>sin emparejar</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>Activada</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>Armada</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>Esta regla ya no existe.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Activa el Logic Engine o la regla</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>Esta regla ya no usa el disparador Command Dock.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>Se ejecuta al hacer clic</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>Ninguna regla usa todavía el disparador Command Dock. Pon el disparador de una regla en Command Dock para lanzarla desde aquí.</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>Arrastra para redimensionar</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>Los widgets nuevos van</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Debajo del mapa</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Junto al mapa</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Quitar widget</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Devuelve el mapa con todas las capas activadas</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Ajustes del widget</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Opacidad {0} %</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Tamaño del texto {0} %</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Color del texto</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Volver a los valores por defecto del dock</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Mostrar el tiempo hasta el día o la noche</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Acortar nombres largos</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Color del tema</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>Blanco</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Negro</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Cian</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Ámbar</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Rojo</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>El aspecto de un widget mientras no se use su propio engranaje. Los que ya has ajustado conservan sus valores.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Opacidad por defecto</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Tamaño del texto por defecto</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Restablecer el dock</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Se eliminan todos los widgets, sus posiciones y sus ajustes. El minimapa en sí no se ve afectado.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>Bloquear la disposición</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>Desbloquea para mover, redimensionar y quitar widgets</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>ACTIVA</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>INACTIVA</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>Reloj de 12 horas (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Mostrar el icono del dispositivo</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Desactivado muestra el nombre del dispositivo — útil cuando varios interruptores comparten icono.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Marcadores de muerte</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Sesión</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Estadísticas de sesión</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Tiempo conectado, distancia, tiempo inactivo y muertes</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>Conectado</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Recorrido</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>Inactivo</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Muertes</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>Sesión desde {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>El recuento empieza cuando estés conectado a un servidor.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Empezar una sesión nueva</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Reinicia las cifras de este servidor. El recuento continúa desde cero.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>Función Supporter. Inicia sesión con una cuenta Supporter para usar este widget.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Función Supporter</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Envía una línea o la vista actual del mapa</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Enviar la vista actual del mapa</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Canal</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Mención</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>Ninguna</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>Envía a tu canal {0}</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>No hay ningún canal de Discord configurado. Configura uno en Servicios conectados.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>La lectura por voz sigue el ajuste propio de este canal en Servicios conectados.</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>Servidor</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>Info del servidor</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>Jugadores conectados ahora, y cómo ha variado durante la sesión</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>jugadores</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} en cola</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Mostrar el gráfico de jugadores</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Disposiciones</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Guarda el dock tal como está, o carga una disposición guardada antes. Pasa el ratón por un nombre para verla esbozada en el dock.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Aún no hay nada guardado. Organiza el dock, dale un nombre y guárdalo.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Nombra esta disposición</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Renombrar</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>¿Eliminar la disposición «{0}»?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} widgets · guardada {1}</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>Desde tu disparador de Oil Rig</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Oído por otros jugadores</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Haz una pregunta por voz y recibe una respuesta sin salir del juego. Funciona con tu propia cuenta de un proveedor de IA: la grabación va directa desde este PC hasta él, nunca por nuestros servidores, y tu clave se guarda aquí y nunca se sube.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Recibe tu grabación directamente, así que lo que oye es lo que dijiste.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>No acepta audio. Tu grabación se convierte primero en texto en este PC, lo que es más lento y menos preciso con nombres y términos del juego que GPT o Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>Clave API</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Eliminar clave</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>¿Eliminar la clave guardada en este PC? El compañero deja de funcionar hasta que introduzcas una nueva. No se cambia nada en tu proveedor — revócala también allí si ha podido filtrarse.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>Hay una clave guardada en este PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>Aún no hay clave — el compañero no puede enviar nada sin ella.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>Eso no parece una clave</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>Una clave de {0} no es así. Comprueba que has pegado todo, sin las comillas alrededor.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Respuestas</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Mostrar como texto</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Leer en voz alta</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Empezar a hablar antes de que la respuesta termine</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Las respuestas habladas empiezan cuando el modelo termina. Los Supporters las oyen mientras se escriben.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>Este proveedor no tiene voz propia, así que Windows lee las respuestas y no pueden empezar antes.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Grabación</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Grabar también el sonido del juego</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Adjuntar una captura por defecto</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Pulsar para hablar</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Definir atajo</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Sin definir — haz clic en el widget para grabar</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>Qué ocurre con tus grabaciones</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>Qué ocurre con tus grabaciones</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Entendido</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>La grabación se hace en este PC y se envía directamente al proveedor de IA cuya clave introdujiste. No pasa por nuestros servidores y nosotros nunca la recibimos.
+
+Lo que ocurra con ella después se rige por las condiciones de ese proveedor — las que aceptaste al crear la clave, no las nuestras.
+
+Tu clave se guarda solo en este PC, protegida por tu cuenta de Windows, y nunca se sube. Como está ligada a esa cuenta de Windows, no sobrevivirá a una reinstalación ni al cambio a otro PC: tendrás que introducirla de nuevo.
+
+La grabación solo corre mientras mantienes el atajo o después de hacer clic en el widget, y se detiene sola a los cinco minutos.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>La respuesta aparece bajo el widget, en el dock.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>La respuesta se lee en voz alta, para que puedas dejar las dos manos en el juego.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Graba el sonido del juego en una segunda pista — útil para que te traduzcan algo dicho en la partida.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Evita marcar la casilla cada vez que grabas con el atajo.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Solo se aplica cuando las respuestas se leen en voz alta.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>La respuesta se pronuncia mientras se escribe, en vez de esperar al final.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>Compañero IA</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>Preguntar a la IA</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>Graba una pregunta, adjunta la pantalla, recibe una respuesta</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>Necesita tu propia clave de IA en Servicios conectados</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>Grabar una pregunta</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>Detener la grabación</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>Adjuntar una captura</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>Grabar también el sonido del juego</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>Descartar</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>Pulsa para grabar tu pregunta, pulsa otra vez para parar.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>Todavía no hay clave de IA. Añade una en Servicios conectados.</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>Grabando {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>{0} grabado</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>No se encontró micrófono</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>Detenido tras cinco minutos</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>Captura adjunta</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>Enviar la pregunta</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>Enviando…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>Respondiendo…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>Error — mira el panel</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>Respuesta de la IA</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>Pensando…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>Enviado. Esperando las primeras palabras…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>Respondiendo…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>Respuesta</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>Por defecto</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>Déjalo vacío para usar {0}. Cámbialo si el proveedor responde que el modelo ya no existe.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Enviar en cuanto termine la grabación</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>Sin segunda pulsación. Si siempre se adjunta una captura, se toma antes.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Ventana de respuesta</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>El panel que se ancla bajo el widget cuando las respuestas en texto están activadas.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Transparencia — {0} % opaco</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Ancho — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Alto antes de desplazarse — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Color del texto</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Previsualizar la ventana de respuesta</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Ver preguntas recientes</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Primero azufre — un cohete necesita 1400, y eso te faltará antes que ninguna otra cosa. La caja de la captura es una military crate normal, así que no llevará ninguno.
+
+Cierra esta vista previa cuando el panel te guste.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Preguntas recientes</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>Los últimos intercambios, guardados en este PC y nunca subidos. Útil sobre todo para leer un error ocurrido con la ventana de respuesta desactivada.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Vaciar</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} de las últimas {1} guardadas en este PC</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Todavía no has preguntado nada.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>captura</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>sonido del juego</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Haz clic para copiar</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Enviar en cuanto termine la grabación</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Adjuntar una captura siempre</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Grabar también el sonido del juego</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Mostrar la respuesta bajo el widget</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC quita el atajo · Intro guarda · cierra esta ventana para cancelar</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Error — mira las preguntas recientes</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>Hay una clave de {0} guardada en este PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>Aún no hay clave de {0} — este proveedor no puede enviar nada sin ella.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>También guardadas: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Las respuestas habladas usan la voz propia de este proveedor.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Las respuestas habladas las lee Windows, que suena bastante más sintético.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google da a la API una cuota gratuita, así que una clave de AI Studio funciona sin pagar. En sesiones intensas aún puedes alcanzar el límite por minuto.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>Esta API se factura aparte de cualquier suscripción de chat y necesita su propio saldo de prepago.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Zona de la captura</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Pantalla completa</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Mitad central — más cerca</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Cuarto central — lo más cerca</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>Todo lo que ves, incluidos el HUD y el mapa. Las cosas pequeñas lejos de la mira pueden quedar demasiado pequeñas para que el modelo las identifique.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Solo aquello a lo que apuntas, a resolución completa. Mucho mejor para nombrar un interruptor en una pared o un objeto en el suelo, pero no ve el resto de la pantalla.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Idioma de las respuestas</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>El mismo idioma que la pregunta</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>Idioma de la app ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Siempre en inglés</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>Pregunta en inglés y la respuesta es en inglés; pregunta en {0} y es en {0}. Recurre a {0} cuando la grabación no contiene palabras.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Las respuestas vuelven siempre en el idioma de la app, aunque preguntes en otro.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Siempre en inglés. Útil porque los nombres de objetos y monumentos de Rust están en inglés.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows lee cada respuesta en un solo idioma, así que una respuesta en otro sonará mal.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Enviar datos de Rust con cada pregunta</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Las recetas y costes de raid actuales van con cada pregunta, para que el modelo no responda desde un parche antiguo. Añade unos 10 000 tokens por pregunta, casi todo en caché después de la primera.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Las recetas y costes de raid actuales van con cada pregunta, para que el modelo no responda desde un parche antiguo. Gratis en Gemini.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Más barato, pero las recetas y los costes de raid salen de la memoria del modelo — que guarda todas sus versiones antiguas y no sabe cuál es la actual.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>Preguntar a la IA</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Pregunta al compañero IA desde el chat del juego y recibe la respuesta en el chat. Las respuestas se limitan a una o dos líneas, sin capturas.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>Preguntar a la IA</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Permitir a los compañeros</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>Desactivado por defecto, así solo tú puedes usarlo. Activado, cada pregunta de un compañero la responde tu proveedor con tu clave API y se te factura a ti — con tus ajustes: mismo proveedor, mismo modelo, mismo idioma.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Preguntas por compañero</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} por hora</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Sin límite</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Contadas por persona en una hora móvil. Tus propias preguntas nunca cuentan.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Escribe una pregunta después del comando.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>No hay ninguna IA configurada en este cliente.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Preguntar a la IA desde el chat es una función Supporter.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>La IA no ha podido responder a eso.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} ha agotado sus preguntas a la IA de esta hora.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>Permitir Preguntar a la IA</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Los miembros del clan pueden preguntar a la IA con tu clave API, y la factura es tuya. Independiente del ajuste de equipo de arriba.</value>
+  </data>
 </root>

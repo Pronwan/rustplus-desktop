@@ -6629,4 +6629,732 @@
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>لم تعد أمازون تقبل الاتصال بـ Rust+ Desktop، لذلك لم تعد تنبيهات الغارات تصل إلى Alexa. لا يزال التحكم الصوتي يعمل. افتح تطبيق Alexa، وعطّل مهارة Rust+ Desktop ثم اربطها من جديد.</value>
   </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>الطبقات</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>خامة الخريطة</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>الشبكة</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>طبقة الرسم</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>الأيقونات</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>اللاعبون</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>إضافة بطاقة</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>اختر بطاقة لوضعها على الـ dock. ستحل في أول موضع فارغ بجوار الخريطة.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>اسحب للتحريك · × للإزالة</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>الساعة</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>الدردشة</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>الأجهزة</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>ساعة رقمية</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>وقت الخادم مع مرحلة النهار والليل</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>ساعة عقارب</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>قرص يتبع وقت الخادم</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>ساعة Rust</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>وقت الخادم بخط اللعبة نفسه</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>بعرض خانتين، ويمكن تغيير حجمها في وضع التحرير</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>غير مقترن</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>انطلق</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>مُفعّل</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>لم تعد هذه القاعدة موجودة.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>فعّل Logic Engine أو القاعدة نفسها</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>لم تعد هذه القاعدة تستخدم مشغّل Command Dock.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>تعمل عند النقر</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>لا توجد بعد قاعدة تستخدم مشغّل Command Dock. اضبط مشغّل إحدى القواعد على Command Dock لتشغيلها من هنا.</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>اسحب لتغيير الحجم</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>البطاقات الجديدة توضع</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>أسفل الخريطة</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>بجوار الخريطة</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>إزالة البطاقة</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>الخريطة</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>يعيد الخريطة مع تفعيل كل الطبقات</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>إعدادات البطاقة</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>العتامة {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>حجم النص {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>لون النص</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>العودة إلى إعدادات الـ dock الافتراضية</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>إظهار الوقت المتبقي حتى النهار أو الليل</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>اختصار الأسماء الطويلة</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>لون السمة</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>أبيض</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>أسود</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>سماوي</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>كهرماني</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>أحمر</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>أخضر</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>شكل البطاقة قبل استخدام ترس الإعدادات الخاص بها. البطاقات التي عدّلتها تحتفظ بقيمها.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>العتامة الافتراضية</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>حجم النص الافتراضي</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>إعادة ضبط الـ dock</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>ستُزال كل البطاقات ومواضعها وإعداداتها. الخريطة المصغّرة نفسها لن تتأثر.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>قفل التخطيط</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>ألغِ القفل لتحريك البطاقات وتغيير حجمها وإزالتها</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>تشغيل</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>إيقاف</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>نظام 12 ساعة (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>إظهار أيقونة الجهاز</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>عند الإيقاف يظهر اسم الجهاز بدلًا منها — مفيد عندما تشترك عدة مفاتيح في الأيقونة نفسها.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>علامات الموت</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>الجلسة</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>إحصاءات الجلسة</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>وقت الاتصال والمسافة ووقت الخمول وعدد مرات الموت</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>المسافة</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>خمول</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>الموت</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>الفريق</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>الجلسة منذ {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>يبدأ العد بمجرد اتصالك بخادم.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>بدء جلسة جديدة</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>يعيد ضبط أرقام هذا الخادم. يستمر العد من الصفر.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>ميزة Supporter. سجّل الدخول بحساب Supporter لاستخدام هذه البطاقة.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>ميزة Supporter</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>أرسل سطرًا أو منظر الخريطة الحالي</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>إرسال منظر الخريطة الحالي</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>القناة</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>الإشارة</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>بلا</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>يُرسل إلى قناة {0} الخاصة بك</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>لم تُضبط أي قناة Discord. اضبط واحدة أولًا من «الخدمات المتصلة».</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>القراءة الصوتية تتبع إعداد هذه القناة نفسها في «الخدمات المتصلة».</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>الخادم</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>معلومات الخادم</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>عدد اللاعبين الآن، وكيف تغيّر خلال هذه الجلسة</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>لاعب</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} في الانتظار</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>إظهار رسم عدد اللاعبين</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>التخطيطات</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>احفظ الـ dock بوضعه الحالي، أو حمّل تخطيطًا حفظته سابقًا. مرّر المؤشر فوق اسم لترى مخططه على الـ dock.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>لا شيء محفوظ بعد. رتّب الـ dock وسمّه واحفظه.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>سمِّ هذا التخطيط</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>إعادة تسمية</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>حذف التخطيط ‏“{0}”؟</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} بطاقة · حُفظ في {1}</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>من مشغّل Oil Rig الخاص بك</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>سمعه لاعبون آخرون</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>اطرح سؤالًا بصوتك واحصل على إجابة دون مغادرة اللعبة. يعمل عبر حسابك أنت لدى مزوّد ذكاء اصطناعي: التسجيل يذهب من هذا الجهاز إليه مباشرة، ولا يمر عبر خوادمنا أبدًا، ومفتاحك محفوظ هنا ولا يُرفع أبدًا.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>المزوّد</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>يستقبل تسجيلك مباشرة، فما يسمعه هو ما قلته.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>لا يقبل الصوت. يُحوَّل تسجيلك إلى نص على هذا الجهاز أولًا، وهو أبطأ وأقل دقة مع الأسماء ومصطلحات اللعبة من GPT أو Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>مفتاح API</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>إزالة المفتاح</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>إزالة المفتاح المحفوظ على هذا الجهاز؟ سيتوقف المساعد عن العمل حتى تُدخل مفتاحًا جديدًا. لن يتغير شيء لدى المزوّد — ألغِه هناك أيضًا إن كان قد تسرّب.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>هناك مفتاح محفوظ على هذا الجهاز.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>لا يوجد مفتاح بعد — لا يستطيع المساعد إرسال أي شيء بدونه.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>هذا لا يبدو مفتاحًا</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>مفتاح {0} لا يبدو هكذا. تأكد من لصقه كاملًا، بدون علامات الاقتباس المحيطة.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>الإجابات</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>عرضها كنص</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>قراءتها بصوت عالٍ</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>ابدأ القراءة قبل اكتمال الإجابة</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>تبدأ الإجابات المنطوقة بعد أن ينتهي النموذج. أما Supporter فيسمعونها أثناء كتابتها.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>هذا المزوّد ليس له صوت خاص، لذا يقرأ Windows الإجابات ولا يمكن أن تبدأ مبكرًا.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>التسجيل</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>سجّل صوت اللعبة أيضًا</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>إرفاق لقطة شاشة افتراضيًا</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>اضغط للتحدث</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>تعيين اختصار</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>غير معيّن — انقر البطاقة للتسجيل بدلًا من ذلك</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>ماذا يحدث لتسجيلاتك</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>ماذا يحدث لتسجيلاتك</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>فهمت</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>يُسجَّل الصوت على هذا الجهاز ويُرسل مباشرة إلى مزوّد الذكاء الاصطناعي الذي أدخلت مفتاحه. لا يمر عبر خوادمنا ولا نستلمه أبدًا.
+
+ما يحدث له بعد ذلك تحكمه شروط ذلك المزوّد — الشروط التي وافقت عليها عند إنشاء المفتاح، لا شروطنا.
+
+مفتاحك محفوظ على هذا الجهاز فقط، محميًا بحساب Windows الخاص بك، ولا يُرفع أبدًا. ولأنه مرتبط بحساب Windows هذا، فلن يبقى بعد إعادة التثبيت أو الانتقال إلى جهاز آخر: ستحتاج إلى إدخاله من جديد.
+
+لا يعمل التسجيل إلا أثناء ضغطك على الاختصار أو بعد نقرك على البطاقة، ويتوقف من تلقاء نفسه بعد خمس دقائق.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>تظهر الإجابة أسفل البطاقة على الـ dock.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>تُقرأ الإجابة بصوت عالٍ، لتبقى يداك على اللعبة.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>يسجّل صوت اللعبة على مسار ثانٍ — مفيد لترجمة شيء قيل داخل اللعبة.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>يوفّر عليك تحديد الخانة في كل مرة تسجّل فيها بالاختصار.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>لا ينطبق إلا عندما تُقرأ الإجابات بصوت عالٍ.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>تُقرأ الإجابة أثناء كتابتها بدلًا من انتظار اكتمالها.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>مساعد الذكاء الاصطناعي</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>اسأل الذكاء الاصطناعي</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>سجّل سؤالًا، أرفق الشاشة، واحصل على إجابة</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>يتطلب مفتاح ذكاء اصطناعي خاصًا بك في «الخدمات المتصلة»</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>تسجيل سؤال</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>إيقاف التسجيل</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>إرفاق لقطة شاشة</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>سجّل صوت اللعبة أيضًا</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>تجاهل</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>اضغط لتسجيل سؤالك، واضغط مرة أخرى للإيقاف.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>لا يوجد مفتاح ذكاء اصطناعي بعد. أضف واحدًا أولًا من «الخدمات المتصلة».</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>جارٍ التسجيل {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>سُجِّل {0}</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>جاهز</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>لم يُعثر على ميكروفون</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>توقّف بعد خمس دقائق</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>أُرفقت لقطة الشاشة</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>إرسال السؤال</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>جارٍ الإرسال…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>جارٍ الإجابة…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>فشل — راجع اللوحة</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>إجابة الذكاء الاصطناعي</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>يفكّر…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>أُرسل. في انتظار أول الكلمات…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>جارٍ الإجابة…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>الإجابة</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>فشل</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>النموذج</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>الافتراضي</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>اتركه فارغًا لاستخدام {0}. غيّره إذا ردّ المزوّد بأن النموذج لم يعد موجودًا.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>الإرسال فور انتهاء التسجيل</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>بلا ضغطة ثانية. وإذا كانت لقطة الشاشة تُرفق في كل مرة، تُلتقط أولًا.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>نافذة الإجابة</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>اللوحة التي ترسو أسفل البطاقة عندما تكون الإجابات النصية مفعّلة.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>الشفافية — {0}% عتامة</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>العرض — {0} بكسل</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>الارتفاع قبل التمرير — {0} بكسل</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>لون النص</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>معاينة نافذة الإجابة</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>عرض الأسئلة الأخيرة</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>الكبريت أولًا — الصاروخ الواحد يحتاج 1400، وهو ما سينقصك قبل أي شيء آخر. الصندوق في لقطة الشاشة هو military crate عادي، فلن يحتوي على صاروخ.
+
+أغلق هذه المعاينة عندما تصبح اللوحة كما تريد.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>الأسئلة الأخيرة</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>آخر التبادلات، محفوظة على هذا الجهاز ولا تُرفع أبدًا. مفيدة خصوصًا لقراءة خطأ حدث بينما كانت نافذة الإجابة مغلقة.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} من آخر {1} محفوظة على هذا الجهاز</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>لم تسأل شيئًا بعد.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>لقطة شاشة</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>صوت اللعبة</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>انقر للنسخ</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>الإرسال فور انتهاء التسجيل</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>إرفاق لقطة شاشة في كل مرة</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>سجّل صوت اللعبة أيضًا</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>إظهار الإجابة أسفل البطاقة</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>‏ESC يزيل الاختصار · Enter يحفظ · أغلق هذه النافذة للإلغاء</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>فشل — راجع الأسئلة الأخيرة</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>هناك مفتاح {0} محفوظ على هذا الجهاز.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>لا يوجد مفتاح {0} بعد — لا يستطيع هذا المزوّد إرسال أي شيء بدونه.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>محفوظ أيضًا: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>الإجابات المنطوقة تستخدم صوت هذا المزوّد نفسه.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>الإجابات المنطوقة يقرأها Windows، وهو ما يبدو أكثر اصطناعية بوضوح.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>تمنح Google الـ API حصة مجانية، فمفتاح من AI Studio يعمل دون دفع. ومع ذلك قد تصطدم الجلسات المزدحمة بالحد في الدقيقة.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>تُحاسب هذه الـ API بشكل منفصل عن أي اشتراك دردشة وتحتاج رصيدًا مدفوعًا مسبقًا خاصًا بها.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>منطقة لقطة الشاشة</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>الشاشة كاملة</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>النصف الأوسط — أقرب</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>الربع الأوسط — الأقرب</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>كل ما تراه، بما في ذلك الـ HUD والخريطة. الأشياء الصغيرة البعيدة عن نقطة التصويب قد تكون أصغر من أن يتعرّف عليها النموذج.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>ما تصوّب نحوه فقط، بدقة كاملة. أفضل بكثير في تسمية مفتاح على جدار أو غرض على الأرض، لكنه لا يرى بقية الشاشة.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>لغة الإجابة</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>نفس لغة السؤال</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>لغة التطبيق ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>الإنجليزية دائمًا</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>اسأل بالإنجليزية تأتِ الإجابة بالإنجليزية؛ واسأل بـ {0} تأتِ بـ {0}. ويُرجَع إلى {0} عندما لا يحتوي التسجيل على كلمات.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>تأتي الإجابات دائمًا بلغة التطبيق، حتى لو سألت بلغة أخرى.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>الإنجليزية دائمًا. مفيد لأن أسماء الأغراض والـ monuments في Rust إنجليزية.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>يقرأ Windows كل إجابة بلغة واحدة، لذا ستبدو الإجابة بلغة أخرى غير سليمة.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>أرسل بيانات Rust مع كل سؤال</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>تُرسل الوصفات وتكاليف الـ raid الحالية مع كل سؤال، حتى لا يجيب النموذج اعتمادًا على تحديث قديم. يضيف نحو 10٬000 توكن لكل سؤال، معظمها مخزّن مؤقتًا بعد السؤال الأول.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>تُرسل الوصفات وتكاليف الـ raid الحالية مع كل سؤال، حتى لا يجيب النموذج اعتمادًا على تحديث قديم. مجاني على Gemini.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>أرخص، لكن الوصفات وتكاليف الـ raid تأتي من ذاكرة النموذج — وفيها كل نسخها القديمة دون أن يعرف أيها الحالية.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>اسأل الذكاء الاصطناعي</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>اسأل مساعد الذكاء الاصطناعي من دردشة اللعبة واحصل على الإجابة في الدردشة. الإجابات محصورة في سطر أو سطرين، بدون لقطات شاشة.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>اسأل الذكاء الاصطناعي</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>السماح لزملاء الفريق</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>معطّل افتراضيًا، فلا يستطيع استخدامه سواك. وعند تفعيله، يجيب مزوّدك عن كل سؤال لزميل في الفريق باستخدام مفتاح API الخاص بك وعلى حسابك — وبإعداداتك أنت: المزوّد نفسه والنموذج نفسه واللغة نفسها.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>الأسئلة لكل زميل</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} في الساعة</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>بلا حد</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>تُحسب لكل شخص على حدة خلال ساعة متحركة. أسئلتك أنت لا تُحسب أبدًا.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>اكتب سؤالًا بعد الأمر.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>لا يوجد ذكاء اصطناعي مُعدّ على هذا العميل.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>سؤال الذكاء الاصطناعي من الدردشة ميزة Supporter.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>لم يستطع الذكاء الاصطناعي الإجابة عن ذلك.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>استنفد {0} أسئلته للذكاء الاصطناعي في هذه الساعة.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>السماح بسؤال الذكاء الاصطناعي</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>يستطيع أعضاء الـ clan سؤال الذكاء الاصطناعي بمفتاح API الخاص بك، والفاتورة عليك. مستقل عن إعداد الفريق أعلاه.</value>
+  </data>
 </root>
