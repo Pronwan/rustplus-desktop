@@ -7671,4 +7671,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Der Anbieter hat die letzte Sprachanfrage abgelehnt: {0}
 Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ändere ihn unter Verbundene Dienste.</value>
   </data>
+  <data name="CommandDockAiNoKeyForProvider" xml:space="preserve">
+    <value>Kein {0}-Schlüssel hinterlegt. Lege einen unter Verbundene Dienste an oder wähle einen Anbieter, für den du einen hast.</value>
+  </data>
 </root>

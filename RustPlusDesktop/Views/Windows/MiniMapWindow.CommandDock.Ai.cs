@@ -300,7 +300,22 @@ namespace RustPlusDesk
             }
 
             // Without a key there is nowhere to send it, so recording would only fill the disk.
-            if (!AiCompanionStore.HasKey) return;
+            //
+            // Said out loud rather than simply not happening: this is reached from the
+            // push-to-talk key, so the player is looking at the game and gets no feedback at
+            // all from a silent return. Naming the provider matters too — the usual way to
+            // end up here is a provider that was switched without a key being entered for it.
+            if (!AiCompanionStore.HasKey)
+            {
+                AiCompanionService.Instance.ShowProblem(string.Format(
+                    Loc.Text("CommandDockAiNoKeyForProvider",
+                        "No {0} key is stored. Add one under Connected Services, or pick a provider you have a key for."),
+                    AiProviders.DisplayName(AiCompanionStore.Current.Provider)));
+
+                ShowAiAnswer();
+                RefreshTiles();
+                return;
+            }
 
             // A new question clears the last answer. Leaving it up would make it ambiguous which
             // question the panel under the tile is answering.

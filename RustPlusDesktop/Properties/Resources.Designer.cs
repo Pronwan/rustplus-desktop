@@ -1092,6 +1092,7 @@ namespace RustPlusDesk.Properties {
         public static string AiCompanionVoiceLastError => GetString("AiCompanionVoiceLastError");
         public static string AiHistoryVoiceFailedTitle => GetString("AiHistoryVoiceFailedTitle");
         public static string AiHistoryVoiceFailedBody => GetString("AiHistoryVoiceFailedBody");
+        public static string CommandDockAiNoKeyForProvider => GetString("CommandDockAiNoKeyForProvider");
     }
 }
 

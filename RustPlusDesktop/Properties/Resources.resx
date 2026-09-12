@@ -7716,4 +7716,7 @@ Close this preview when the panel looks right.</value>
     <value>The provider refused the last request for speech: {0}
 The answer itself was unaffected. If the model name is the problem, change it under Connected Services.</value>
   </data>
+  <data name="CommandDockAiNoKeyForProvider" xml:space="preserve">
+    <value>No {0} key is stored. Add one under Connected Services, or pick a provider you have a key for.</value>
+  </data>
 </root>

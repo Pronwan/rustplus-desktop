@@ -424,6 +424,16 @@ namespace RustPlusDesk.Services.AiCompanion
             Raise();
         }
 
+        /// <summary>
+        /// Puts a problem in front of the user that happened before anything was sent.
+        ///
+        /// Pressing push-to-talk with no usable key did nothing at all and said nothing about
+        /// why — and a hotkey is pressed while looking at the game, where a greyed tile in a
+        /// corner is not an answer. This reuses the failure state so it lands in the panel
+        /// over the game and clears itself after ten seconds, like any other failure.
+        /// </summary>
+        public void ShowProblem(string message) => Fail(message);
+
         private void Fail(string message)
         {
             Error = message;
