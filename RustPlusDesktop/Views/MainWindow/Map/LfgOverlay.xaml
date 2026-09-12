@@ -455,43 +455,8 @@
 
                                                     <!-- Content Column -->
                                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                                        <!--
-                                                            The quoted line this message answers. Clicking it jumps to
-                                                            the original, so the reply is a way back rather than just a
-                                                            label. When the original is gone the excerpt says so —
-                                                            hiding the whole strip would erase the fact that this was
-                                                            an answer to something.
-                                                        -->
-                                                        <Button Visibility="{Binding HasReply, Converter={StaticResource BoolToVis}}"
-                                                                Click="ChatJumpToOriginal_Click" Tag="{Binding ReplyTo.Id}"
-                                                                Background="Transparent" BorderThickness="0" Padding="0"
-                                                                Cursor="Hand" HorizontalAlignment="Left" Margin="0,0,0,3">
-                                                            <Button.Template>
-                                                                <ControlTemplate TargetType="Button">
-                                                                    <Border x:Name="Rb" CornerRadius="4" Padding="5,2" Background="{DynamicResource WhiteA14}">
-                                                                        <StackPanel Orientation="Horizontal">
-                                                                            <TextBlock Text="↰" Foreground="{StaticResource LfgMuted}"
-                                                                                       FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                                                            <TextBlock Text="{Binding ReplyTo.DisplayName}" FontSize="10.5"
-                                                                                       Foreground="{StaticResource LfgMuted}" FontWeight="SemiBold"
-                                                                                       VerticalAlignment="Center" Margin="0,0,5,0" />
-                                                                            <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="10.5"
-                                                                                       Foreground="{StaticResource LfgMuted}" FontStyle="Italic"
-                                                                                       VerticalAlignment="Center" MaxWidth="230"
-                                                                                       TextTrimming="CharacterEllipsis" />
-                                                                        </StackPanel>
-                                                                    </Border>
-                                                                    <ControlTemplate.Triggers>
-                                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter TargetName="Rb" Property="Background" Value="#26FFFFFF" />
-                                                                        </Trigger>
-                                                                    </ControlTemplate.Triggers>
-                                                                </ControlTemplate>
-                                                            </Button.Template>
-                                                        </Button>
-
                                                         <!-- Metadata Header (Shown only on first message of a group) -->
-                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,2"
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3"
                                                                     Visibility="{Binding ShowHeader, Converter={StaticResource BoolToVis}}">
                                                             <TextBlock Text="{Binding SenderName}" Foreground="{Binding SenderNameBrush}"
                                                                        FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" />
@@ -510,6 +475,51 @@
                                                             <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
                                                                        FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
+
+                                                        <!--
+                                                            The quoted line this message answers. Clicking it jumps to
+                                                            the original, so the reply is a way back rather than just a
+                                                            label.
+                                                        -->
+                                                        <Button Visibility="{Binding HasReply, Converter={StaticResource BoolToVis}}"
+                                                                Click="ChatJumpToOriginal_Click" Tag="{Binding ReplyTo.Id}"
+                                                                Background="Transparent" BorderThickness="0" Padding="0"
+                                                                Cursor="Hand" HorizontalAlignment="Stretch" Margin="0,2,0,5">
+                                                            <Button.Template>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border x:Name="QuoteCard" Background="#161B23" BorderBrush="#20FFFFFF" BorderThickness="1"
+                                                                            CornerRadius="6" Padding="8,6" SnapsToDevicePixels="True">
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="Auto" />
+                                                                                <ColumnDefinition Width="*" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <!-- Left Vertical Accent Bar -->
+                                                                            <Border Grid.Column="0" Width="3" CornerRadius="1.5" Background="#38BDF8"
+                                                                                    HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0,1,8,1" />
+                                                                            <!-- Author + Excerpt Text -->
+                                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                                <TextBlock Text="{Binding ReplyTo.DisplayName}" FontSize="11"
+                                                                                           Foreground="#38BDF8" FontWeight="SemiBold" Margin="0,0,0,2"
+                                                                                           TextTrimming="CharacterEllipsis" />
+                                                                                <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="10.5"
+                                                                                           Foreground="{StaticResource LfgMuted}"
+                                                                                           TextTrimming="CharacterEllipsis" />
+                                                                            </StackPanel>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="QuoteCard" Property="Background" Value="#222B38" />
+                                                                            <Setter TargetName="QuoteCard" Property="BorderBrush" Value="#4038BDF8" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter TargetName="QuoteCard" Property="Background" Value="#12161E" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Button.Template>
+                                                        </Button>
 
                                                         <!-- Message Text & Emojis -->
                                                         <chat:RichChatTextBlock RawText="{Binding Body}" TextWrapping="Wrap" Margin="0,0,0,0"
@@ -586,13 +596,14 @@
                         <Button x:Name="BtnScrollToBottom"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"
-                                Margin="0,0,0,8"
+                                Margin="0,0,0,10"
                                 Padding="10,4"
                                 Background="#E6151F2C"
                                 BorderBrush="#333FD7FF"
                                 BorderThickness="1"
                                 Click="BtnScrollToBottom_Click"
                                 Visibility="Collapsed"
+                                Opacity="0"
                                 Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
@@ -602,17 +613,20 @@
                                             BorderThickness="{TemplateBinding BorderThickness}"
                                             CornerRadius="12">
                                         <Border.Effect>
-                                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.5" />
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.6" />
                                         </Border.Effect>
-                                        <StackPanel Orientation="Horizontal" Margin="6,2">
-                                            <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{StaticResource LfgAccent}" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Horizontal" Margin="8,3">
+                                            <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{StaticResource LfgAccent}" Margin="0,0,6,0" VerticalAlignment="Center" />
                                             <TextBlock Text="{DynamicResource ChatScrollToBottom}" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource LfgText}" VerticalAlignment="Center" />
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter TargetName="Bd" Property="Background" Value="#FF1C2B3E" />
-                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#663FD7FF" />
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#883FD7FF" />
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FF131D2A" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -732,52 +746,113 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <ui:TextBox x:Name="TxtChat" MaxLength="128"
-                                                Height="36"
-                                                Padding="10,0,38,0"
+                                                MinHeight="36"
+                                                MaxHeight="100"
+                                                Padding="10,7,92,7"
+                                                AcceptsReturn="True"
+                                                TextWrapping="Wrap"
+                                                VerticalScrollBarVisibility="Auto"
                                                 ClearButtonEnabled="False"
                                                 ClipToBounds="True"
                                                 PlaceholderText="{DynamicResource ChatPlaceholder}"
                                                 VerticalContentAlignment="Center"
                                                 TextChanged="TxtChat_TextChanged"
                                                 KeyDown="TxtChat_KeyDown" />
-                                    <!--
-                                        Sits beside the emoji button rather than in a settings page:
-                                        it changes how your messages look in this room, and this is
-                                        where you are while you care about that. Hidden entirely for
-                                        non-supporters — the platform refuses the write anyway, and a
-                                        control that only ever says no is worse than no control.
-                                    -->
-                                    <Button x:Name="BtnChatNameColor"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Margin="0,0,34,0"
-                                            Width="28"
-                                            Height="28"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Cursor="Hand"
-                                            Visibility="Collapsed"
-                                            Click="BtnChatNameColor_Click"
-                                            ToolTip="{DynamicResource ChatNameColorTooltip}">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
-                                                    <Ellipse x:Name="Dot" Width="13" Height="13"
-                                                             Stroke="#66FFFFFF" StrokeThickness="1"
-                                                             Fill="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
-                                                             HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0">
+                                        <!-- Clear Text Button -->
+                                        <Button x:Name="BtnChatClear"
+                                                Width="24" Height="24"
+                                                Margin="0,0,2,0"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                Visibility="Collapsed"
+                                                Click="BtnChatClear_Click"
+                                                ToolTip="Clear message">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="12" Padding="2">
+                                                        <ui:SymbolIcon x:Name="Ico" Symbol="Dismiss24" FontSize="12"
+                                                                       Foreground="{StaticResource LfgMuted}"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                            <Setter TargetName="Ico" Property="Foreground" Value="{StaticResource LfgText}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+
+                                        <!--
+                                            Sits beside the emoji button rather than in a settings page:
+                                            it changes how your messages look in this room, and this is
+                                            where you are while you care about that. Hidden entirely for
+                                            non-supporters — the platform refuses the write anyway, and a
+                                            control that only ever says no is worse than no control.
+                                        -->
+                                        <Button x:Name="BtnChatNameColor"
+                                                Width="26" Height="26"
+                                                Margin="0,0,2,0"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                Visibility="Collapsed"
+                                                Click="BtnChatNameColor_Click"
+                                                ToolTip="{DynamicResource ChatNameColorTooltip}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                        <Ellipse x:Name="Dot" Width="13" Height="13"
+                                                                 Stroke="#66FFFFFF" StrokeThickness="1"
+                                                                 Fill="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+
+                                        <Button x:Name="BtnChatEmoji"
+                                                Width="26" Height="26"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                ToolTip="Insert Emoji or Rust Item">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
+                                                        <TextBlock x:Name="Ico" Text="😊" FontSize="14"
+                                                                   Opacity="0.65"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
+                                                            <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
+                                                            <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </StackPanel>
 
                                     <Popup x:Name="ChatNameColorPopup"
                                            PlacementTarget="{Binding ElementName=BtnChatNameColor}"
@@ -830,37 +905,6 @@
                                             </StackPanel>
                                         </Border>
                                     </Popup>
-
-                                    <Button x:Name="BtnChatEmoji"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Margin="0,0,6,0"
-                                            Width="28"
-                                            Height="28"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Cursor="Hand"
-                                            ToolTip="Insert Emoji or Rust Item">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="2">
-                                                    <TextBlock x:Name="Ico" Text="😊" FontSize="15"
-                                                               Opacity="0.65"
-                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#22FFFFFF" />
-                                                        <Setter TargetName="Ico" Property="Opacity" Value="1.0" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF" />
-                                                        <Setter TargetName="Ico" Property="Opacity" Value="0.8" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
                                 </Grid>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
                                     <!-- Character Counter -->
@@ -871,10 +915,32 @@
                                                VerticalAlignment="Center"
                                                Margin="0,0,8,0" />
 
-                                    <ui:Button x:Name="BtnChatSend" Click="BtnChatSend_Click"
-                                               Appearance="Primary"
-                                               Height="36" Padding="14,0"
-                                               Content="{DynamicResource LfgSend}" />
+                                    <Button x:Name="BtnChatSend" Click="BtnChatSend_Click"
+                                            Width="36" Height="36"
+                                            Background="#00A884"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            ToolTip="{DynamicResource LfgSend}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd"
+                                                        Background="{TemplateBinding Background}"
+                                                        CornerRadius="18">
+                                                    <ui:SymbolIcon Symbol="Send24" FontSize="18" Foreground="#FFFFFF"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                   Margin="2,0,0,0" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#00C49A" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#008F6F" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
                                 </StackPanel>
 
                                 <!-- Autocomplete Popup -->

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace RustPlusDesk.Views;
 
@@ -1091,6 +1092,51 @@ public partial class LfgOverlay : UserControl
     private System.Windows.Threading.DispatcherTimer? _cooldownTimer;
     private int _remainingCooldownSeconds;
     private bool _userScrolledUp;
+    private bool _isScrollingToBottomAnimationActive;
+
+    private void SetScrollToBottomVisibility(bool show)
+    {
+        if (BtnScrollToBottom == null) return;
+
+        if (show)
+        {
+            if (BtnScrollToBottom.Visibility != Visibility.Visible || BtnScrollToBottom.Opacity < 0.95)
+            {
+                BtnScrollToBottom.Visibility = Visibility.Visible;
+                var fadeIn = new DoubleAnimation
+                {
+                    To = 1.0,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+                BtnScrollToBottom.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            }
+        }
+        else
+        {
+            if (BtnScrollToBottom.Visibility == Visibility.Visible && BtnScrollToBottom.Opacity > 0.05)
+            {
+                var fadeOut = new DoubleAnimation
+                {
+                    To = 0.0,
+                    Duration = TimeSpan.FromMilliseconds(160),
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                };
+                fadeOut.Completed += (s, e) =>
+                {
+                    if (!_userScrolledUp)
+                    {
+                        BtnScrollToBottom.Visibility = Visibility.Collapsed;
+                    }
+                };
+                BtnScrollToBottom.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+            }
+            else if (BtnScrollToBottom.Opacity <= 0.05)
+            {
+                BtnScrollToBottom.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
 
     private void ChatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
@@ -1099,26 +1145,34 @@ public partial class LfgOverlay : UserControl
         if (e.ExtentHeightChange > 0 && !_userScrolledUp)
         {
             ChatScrollViewer.ScrollToEnd();
-            if (BtnScrollToBottom != null)
-                BtnScrollToBottom.Visibility = Visibility.Collapsed;
+            SetScrollToBottomVisibility(false);
+            return;
+        }
+
+        if (_isScrollingToBottomAnimationActive)
+        {
             return;
         }
 
         bool isScrolledUp = ChatScrollViewer.VerticalOffset < (ChatScrollViewer.ScrollableHeight - 30);
         _userScrolledUp = isScrolledUp;
 
-        if (BtnScrollToBottom != null)
-        {
-            BtnScrollToBottom.Visibility = (isScrolledUp && _chatLines.Count > 5) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        SetScrollToBottomVisibility(isScrolledUp && _chatLines.Count > 5);
     }
 
     private void BtnScrollToBottom_Click(object sender, RoutedEventArgs e)
     {
         _userScrolledUp = false;
-        ChatScrollViewer?.ScrollToEnd();
-        if (BtnScrollToBottom != null)
-            BtnScrollToBottom.Visibility = Visibility.Collapsed;
+        SetScrollToBottomVisibility(false);
+
+        if (ChatScrollViewer == null) return;
+
+        _isScrollingToBottomAnimationActive = true;
+        ChatScrollViewer.SmoothScrollTo(ChatScrollViewer.ScrollableHeight, 300, () =>
+        {
+            _isScrollingToBottomAnimationActive = false;
+            ChatScrollViewer.ScrollToEnd();
+        });
     }
 
     private void UpdateSlowModeUI()
@@ -1253,6 +1307,19 @@ public partial class LfgOverlay : UserControl
     private void TxtChat_TextChanged(object sender, TextChangedEventArgs e)
     {
         UpdateChatCharCount();
+        if (BtnChatClear != null)
+        {
+            BtnChatClear.Visibility = string.IsNullOrEmpty(TxtChat?.Text) ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
+    private void BtnChatClear_Click(object sender, RoutedEventArgs e)
+    {
+        if (TxtChat != null)
+        {
+            TxtChat.Text = "";
+            TxtChat.Focus();
+        }
     }
 
     private void UpdateChatCharCount()
@@ -2076,6 +2143,7 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private void ChatJumpToOriginal_Click(object sender, RoutedEventArgs e)
     {
+        e.Handled = true;
         if ((sender as FrameworkElement)?.Tag is not string originalId || string.IsNullOrEmpty(originalId)) return;
 
         var target = _chatLines.FirstOrDefault(line => line.Id == originalId);
@@ -2087,7 +2155,76 @@ public partial class LfgOverlay : UserControl
         }
 
         var container = ChatList.ItemContainerGenerator.ContainerFromItem(target) as FrameworkElement;
-        container?.BringIntoView();
+        if (container == null)
+        {
+            ChatList.UpdateLayout();
+            container = ChatList.ItemContainerGenerator.ContainerFromItem(target) as FrameworkElement;
+        }
+
+        if (container != null && ChatScrollViewer != null)
+        {
+            try
+            {
+                var transform = container.TransformToAncestor(ChatScrollViewer);
+                var point = transform.Transform(new Point(0, 0));
+                double targetOffset = ChatScrollViewer.VerticalOffset + point.Y - (ChatScrollViewer.ActualHeight / 3);
+                targetOffset = Math.Max(0, Math.Min(targetOffset, ChatScrollViewer.ScrollableHeight));
+
+                _userScrolledUp = true;
+                ChatScrollViewer.SmoothScrollTo(targetOffset, 280, () =>
+                {
+                    FlashMessageContainer(container);
+                });
+                return;
+            }
+            catch
+            {
+                // Fallback to instant bring into view if transform fails
+            }
+
+            container.BringIntoView();
+            FlashMessageContainer(container);
+        }
+        else
+        {
+            container?.BringIntoView();
+            if (container != null)
+            {
+                FlashMessageContainer(container);
+            }
+        }
+    }
+
+    private static void FlashMessageContainer(FrameworkElement container)
+    {
+        var border = container as Border ?? FindChild<Border>(container);
+        if (border != null)
+        {
+            var anim = new System.Windows.Media.Animation.ColorAnimation
+            {
+                From = Color.FromArgb(0x55, 0x38, 0xBD, 0xF8),
+                To = Colors.Transparent,
+                Duration = TimeSpan.FromMilliseconds(1600),
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+            var brush = new SolidColorBrush(Color.FromArgb(0x55, 0x38, 0xBD, 0xF8));
+            border.Background = brush;
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, anim);
+        }
+    }
+
+    private static T? FindChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent == null) return null;
+        int count = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < count; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typed) return typed;
+            var sub = FindChild<T>(child);
+            if (sub != null) return sub;
+        }
+        return null;
     }
 
     /// <summary>Copies the message body — the one action that makes sense on your own lines too.</summary>
@@ -2205,4 +2342,59 @@ public partial class LfgOverlay : UserControl
 
     private void BtnClose_Click(object sender, RoutedEventArgs e)
         => CloseRequested?.Invoke(this, e);
+}
+
+public static class ScrollViewerExtensions
+{
+    public static readonly DependencyProperty AnimatedVerticalOffsetProperty =
+        DependencyProperty.RegisterAttached(
+            "AnimatedVerticalOffset",
+            typeof(double),
+            typeof(ScrollViewerExtensions),
+            new PropertyMetadata(0.0, OnAnimatedVerticalOffsetChanged));
+
+    public static double GetAnimatedVerticalOffset(DependencyObject obj) =>
+        (double)obj.GetValue(AnimatedVerticalOffsetProperty);
+
+    public static void SetAnimatedVerticalOffset(DependencyObject obj, double value) =>
+        obj.SetValue(AnimatedVerticalOffsetProperty, value);
+
+    private static void OnAnimatedVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ScrollViewer sv)
+        {
+            sv.ScrollToVerticalOffset((double)e.NewValue);
+        }
+    }
+
+    public static void SmoothScrollTo(this ScrollViewer scrollViewer, double targetOffset, double durationMs = 280, Action? onCompleted = null)
+    {
+        if (scrollViewer == null) return;
+
+        targetOffset = Math.Max(0, Math.Min(targetOffset, scrollViewer.ScrollableHeight));
+        double startOffset = scrollViewer.VerticalOffset;
+        if (Math.Abs(startOffset - targetOffset) < 1.0)
+        {
+            scrollViewer.ScrollToVerticalOffset(targetOffset);
+            onCompleted?.Invoke();
+            return;
+        }
+
+        scrollViewer.SetValue(AnimatedVerticalOffsetProperty, startOffset);
+
+        var anim = new DoubleAnimation
+        {
+            From = startOffset,
+            To = targetOffset,
+            Duration = TimeSpan.FromMilliseconds(durationMs),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+
+        if (onCompleted != null)
+        {
+            anim.Completed += (s, e) => onCompleted();
+        }
+
+        scrollViewer.BeginAnimation(AnimatedVerticalOffsetProperty, anim);
+    }
 }

@@ -2004,24 +2004,27 @@
                                                                 <Binding RelativeSource="{RelativeSource AncestorType=TreeViewItem}" />
                                                             </MultiBinding>
                                                         </Border.Width>
+                                                        <Border.Effect>
+                                                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.45" />
+                                                        </Border.Effect>
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Setter Property="Background" Value="{DynamicResource Surface}" />
-                                                                <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
+                                                                <Setter Property="BorderBrush" Value="#1A1F26" />
                                                                 <Setter Property="BorderThickness" Value="1" />
                                                                 <Style.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
                                                                         <Setter Property="Background" Value="{DynamicResource SurfaceHover}" />
-                                                                        <Setter Property="BorderBrush" Value="#40FFFFFF" />
+                                                                        <Setter Property="BorderBrush" Value="#2D3542" />
                                                                     </Trigger>
                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                         <Setter Property="Opacity" Value="0.65" />
                                                                         <Setter Property="Background" Value="#121418" />
-                                                                        <Setter Property="BorderBrush" Value="#1EFFFFFF" />
+                                                                        <Setter Property="BorderBrush" Value="#161A20" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                         <Setter Property="Background" Value="#14223C" />
-                                                                        <Setter Property="BorderBrush" Value="#253A5A" />
+                                                                        <Setter Property="BorderBrush" Value="#1C2D47" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropInto">
                                                                         <Setter Property="Background" Value="#263B5B" />
