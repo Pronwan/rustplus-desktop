@@ -7466,4 +7466,112 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>Участники клана смогут спрашивать ИИ по твоему API-ключу, и счёт будет твой. Не зависит от настройки для команды выше.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>Что нового</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>Мини-карта становится командным центром — и появляется ИИ-компаньон.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Часы, смарт-переключатели, командный и клановый чат, таймеры events, статистика сессии и онлайн сервера — виджетами вокруг карты. Кнопка + в доке добавляет виджет; он встаёт в первое свободное место, а дальше его можно перетащить куда угодно. Карта тоже виджет: её можно передвинуть или убрать совсем.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>На твой вкус</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Цвет текста, размер шрифта и прозрачность сразу для всего дока — и любой виджет может переопределить все три через собственную шестерёнку. Заблокируй расположение от случайных перетаскиваний и сохраняй раскладки под именем, чтобы переключаться между ними.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>ИИ-компаньон</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Удерживай клавишу, задай вопрос голосом и получи ответ, не выходя из игры — текстом под виджетом или вслух. Выбери GPT, Gemini или Claude со своим собственным API-ключом: он хранится только на этом ПК и никогда не загружается, а записи идут напрямую выбранному провайдеру.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>!ai в командном и клановом чате</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>Спрашивай прямо из игры — ответ придёт в чат, в одну-две строки. По умолчанию доступно только тебе — каждый ответ оплачивается твоим ключом — а при включении добавляется почасовой лимит на каждого сокомандника.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Преврати мини-карту в док из виджетов, который ты собираешь сам.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Открыть мини-карту</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>Кнопка Mini открывает мини-карту в отдельном окне поверх игры. Всё в этом руководстве происходит в этом окне.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>Добавление виджетов через +</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>Карта — лишь один из виджетов. Кнопка + в заголовке дока добавляет часы, сопряжённый переключатель или сигнализацию, командный или клановый чат, таймер event, правило Logic Engine, статистику сессии, онлайн сервера, строку Discord — или ИИ-компаньона. Каждый встаёт в первое свободное место рядом с картой.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Перетащить, изменить размер, заблокировать</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Наведи на виджет, чтобы переместить его, потяни за угол, чтобы изменить размер, или убери его крестиком. Замок в заголовке защищает всё расположение от случайных перетаскиваний, а кнопка «Раскладки» сохраняет док под именем — наведи на сохранённое имя, чтобы увидеть контур на месте до загрузки.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Оформить весь док</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Цвет текста, размер шрифта и прозрачность сразу для всех виджетов. Почти невидимый док остаётся читаемым, потому что текст сохраняет тень, а исчезает только фон.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Или каждый виджет отдельно</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>У каждого виджета своя шестерёнка с теми же тремя настройками. Изменишь что-то там — и этот виджет перестанет следовать настройкам дока по умолчанию; остальные продолжат их наследовать, а кнопка вернёт всё назад.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>ИИ-компаньон</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Задай вопрос голосом и получи ответ, не выходя из игры.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>Что это даёт</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Удерживай клавишу или нажми на виджет, задай вопрос — ответ появится в панели под виджетом или будет зачитан вслух. Всё работает через твой собственный аккаунт у провайдера ИИ: запись идёт с этого ПК напрямую к нему и никогда не проходит через наши серверы.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>Искать в разделе «Подключённые сервисы»</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Настройки → Подключённые сервисы → AI Companion. Всё, что касается компаньона, собрано в этой карточке: провайдер, ключ, как приходят ответы и что записывается.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Три модели на выбор</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT и Gemini принимают запись напрямую, поэтому слышат именно то, что ты сказал, и оба зачитывают ответ собственным голосом. Claude не принимает аудио: запись сначала превращается в текст на этом ПК, что медленнее и хуже справляется с именами и игровыми терминами. У Gemini есть бесплатный лимит API; GPT и Claude требуют собственного предоплаченного баланса, отдельно от любой подписки на чат.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Вставь свой ключ</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Создай API-ключ у выбранного провайдера и вставь его в поле ключа. Он хранится только на этом ПК, защищён твоей учётной записью Windows и никогда не загружается — а значит, не переживёт переустановку или переезд на другой ПК. На каждого провайдера есть свой слот, так что можно держать все три.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Спросить из дока</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>Добавь виджет «Спросить ИИ» в Command Dock через +. Нажми, чтобы начать запись, нажми ещё раз, чтобы остановить, затем отправь. Можно приложить скриншот: сначала идёт отсчёт от трёх, чтобы ты успел вернуться в игру до срабатывания, и приложение убирает себя из кадра.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Разрешить команде спрашивать через !ai</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>В разделе «Чат-команды» можно разрешить сокомандникам использовать !ai из игрового чата. Это идёт через этот клиент, с твоим ключом и твоими настройками — тот же провайдер, та же модель, тот же язык — поэтому по умолчанию выключено, а при включении добавляется почасовой лимит на каждого сокомандника. У клана свой отдельный переключатель.</value>
+  </data>
 </root>

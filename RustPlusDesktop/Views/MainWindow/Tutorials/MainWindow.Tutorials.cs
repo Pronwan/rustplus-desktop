@@ -193,14 +193,19 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
                     SetSidebarExpanded(true);
                     AppSettingsPanel.LoadSettings();
                     AppSettingsPanel.Visibility = Visibility.Visible;
+                    // A target with no entry here lands on "general", which is why a step
+                    // pointing at something further down reported the feature as unavailable:
+                    // the section holding it was never shown, so the element was never visible.
                     AppSettingsPanel.OpenCategory(step.TargetId switch
                     {
-                        "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" => "connected",
-                        "Settings.ChatCommands" => "chat-commands",
-                        "Settings.Map" => "map",
+                        "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" or "Settings.AiCompanion" => "connected",
+                        "Settings.ChatCommands" or "ChatCommands.AskAi" => "chat-commands",
+                        "Settings.Map" or "Settings.CommandDock" => "map",
                         "Settings.Maintenance" => "system",
                         _ => "general"
                     });
+
+                    AppSettingsPanel.ExpandTutorialCard(step.TargetId);
                     break;
             }
 

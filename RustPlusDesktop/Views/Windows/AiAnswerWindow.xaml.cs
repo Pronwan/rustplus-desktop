@@ -77,14 +77,26 @@ namespace RustPlusDesk.Views.Windows
         /// slow is paid on every single answer.
         /// </summary>
         private static TimeSpan ReadingTime(int characters) =>
-            TimeSpan.FromSeconds(Math.Clamp(characters / 22.0, 4, 45));
+            TimeSpan.FromSeconds(Math.Clamp(characters / 22.0, 4, 30));
+
+        /// <summary>
+        /// Failures come off a clock of their own.
+        ///
+        /// Their length says nothing about how long they take to read — "rate limit or quota
+        /// reached at the provider" plus whatever the provider added is a long string and a
+        /// two-second thought, and on the reading-time formula it sat on screen for half a
+        /// minute. Ten seconds is enough to take it in, and the history has it afterwards.
+        /// </summary>
+        private static readonly TimeSpan FailureTime = TimeSpan.FromSeconds(10);
 
         private System.Windows.Threading.DispatcherTimer? _hideTimer;
         private TimeSpan _hideAfter = TimeSpan.FromSeconds(5);
 
         private void ScheduleHide(int characters)
         {
-            _hideAfter = ReadingTime(characters);
+            _hideAfter = _service.State == AiAnswerState.Failed
+                ? FailureTime
+                : ReadingTime(characters);
 
             // Not while it is being read — the countdown restarts when the pointer leaves.
             if (IsMouseOver) return;
@@ -146,14 +158,22 @@ namespace RustPlusDesk.Views.Windows
             BeginAnimation(OpacityProperty, fade);
         }
 
+        /// <summary>
+        /// Shows or hides the two buttons without changing the layout.
+        ///
+        /// Hidden rather than Collapsed, which is the whole fix: collapsing them gave the
+        /// header row back its width, the provider line rewrapped, the panel changed height,
+        /// and the pointer that was on its way to the close button ended up outside the
+        /// window — which hid the button again. It flickered, and could not be clicked.
+        /// </summary>
         private void ShowControls(bool show)
         {
-            BtnClose.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+            BtnClose.Visibility = show ? Visibility.Visible : Visibility.Hidden;
 
             // Copy still only appears once there is a whole answer to copy.
             BtnCopy.Visibility = show && _service.State is AiAnswerState.Answered or AiAnswerState.Failed
                 ? Visibility.Visible
-                : Visibility.Collapsed;
+                : Visibility.Hidden;
         }
 
         /// <summary>Positions the panel and brings it up, fading in only if it was away.</summary>

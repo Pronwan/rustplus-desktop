@@ -7652,4 +7652,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>Unter Chat-Befehle kannst du Teammates erlauben, !ai aus dem Spiel-Chat zu nutzen. Es läuft über diesen Client mit deinem Schlüssel und deinen Einstellungen — gleicher Anbieter, gleiches Modell, gleiche Sprache — deshalb ist es aus, bis du es einschaltest, und beim Einschalten kommt ein Stundenlimit pro Teammate dazu. Der Clan hat einen eigenen, getrennten Schalter.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>Was ist neu</value>
+  </data>
 </root>

@@ -7466,4 +7466,112 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>Les membres du clan peuvent interroger l&apos;IA avec ta clé API, et la facture est pour toi. Indépendant du réglage d&apos;équipe ci-dessus.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>Nouveautés</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>La mini-carte devient un centre de commande — et le compagnon IA arrive.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Horloges, interrupteurs connectés, chat d&apos;équipe et de clan, minuteurs d&apos;events, statistiques de session et fréquentation du serveur comme widgets autour de la carte. Le + du dock en ajoute un ; il se place dans la première case libre et se déplace ensuite librement. La carte est elle aussi un widget, déplaçable ou retirable.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>À ton goût</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Couleur du texte, taille et transparence d&apos;un coup pour tout le dock, et chaque widget peut écraser les trois depuis son propre engrenage. Verrouille la disposition contre les déplacements accidentels et enregistre des dispositions sous un nom pour passer de l&apos;une à l&apos;autre.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Compagnon IA</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Maintiens une touche, pose ta question à voix haute et obtiens une réponse sans quitter le jeu — en texte sous le widget ou lue à voix haute. Choisis GPT, Gemini ou Claude avec ta propre clé API : elle reste sur ce PC, n&apos;est jamais envoyée, et les enregistrements vont directement au fournisseur choisi.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>!ai dans le chat d&apos;équipe et de clan</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>Demande depuis le jeu, la réponse revient dans le chat, en une ou deux lignes. Réservé à toi seul tant que tu ne l&apos;actives pas — chaque réponse est facturée sur ta clé — avec une limite horaire par coéquipier quand tu l&apos;actives.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Transforme la mini-carte en un dock de widgets que tu organises toi-même.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Ouvrir la mini-carte</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>Le bouton Mini ouvre la mini-carte dans sa propre fenêtre, flottant au-dessus du jeu. Tout ce tutoriel se passe dans cette fenêtre.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>Ajouter des widgets avec +</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>La carte n&apos;est qu&apos;un widget parmi d&apos;autres. Le + de la barre de titre du dock ajoute une horloge, un interrupteur ou une alarme appairés, le chat d&apos;équipe ou de clan, un minuteur d&apos;event, une règle du Logic Engine, les statistiques de session, la fréquentation du serveur, une ligne Discord — ou le compagnon IA. Chacun se place dans la première case libre à côté de la carte.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Déplacer, redimensionner, verrouiller</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Survole un widget pour le déplacer, tire son coin pour le redimensionner, ou × pour le retirer. Le cadenas de la barre de titre met toute la disposition à l&apos;abri d&apos;un déplacement accidentel, et le bouton Dispositions enregistre le dock sous un nom — survole un nom enregistré pour en voir le contour en place avant de le charger.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Styliser tout le dock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Couleur du texte, taille et transparence pour tous les widgets à la fois. Un dock rendu presque invisible reste lisible, car le texte garde son ombre et seul le fond s&apos;efface.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Ou widget par widget</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>Chaque widget a son propre engrenage avec les mêmes trois réglages. Change-en un ici et ce widget cesse de suivre les valeurs par défaut du dock ; tous les autres continuent d&apos;en hériter, et un bouton le remet en ligne.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>Compagnon IA</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Pose une question à voix haute et obtiens une réponse sans quitter le jeu.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>Ce qu&apos;il fait</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Maintiens une touche ou appuie sur le widget, pose ta question, et la réponse apparaît dans un panneau sous le widget ou est lue à voix haute. Cela fonctionne avec ton propre compte chez un fournisseur d&apos;IA : l&apos;enregistrement part de ce PC directement vers lui et ne passe jamais par nos serveurs.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>À trouver sous Services connectés</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Paramètres → Services connectés → AI Companion. Tout ce qui concerne le compagnon est dans cette carte : le fournisseur, ta clé, la façon dont les réponses arrivent et ce qui est enregistré.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Trois modèles au choix</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT et Gemini prennent ton enregistrement directement — ils entendent donc exactement ce que tu as dit — et lisent la réponse avec leur propre voix. Claude n&apos;accepte pas l&apos;audio : l&apos;enregistrement est d&apos;abord converti en texte sur ce PC, ce qui est plus lent et moins fiable sur les noms et les termes du jeu. Gemini dispose d&apos;un quota d&apos;API gratuit ; GPT et Claude nécessitent leur propre crédit prépayé, indépendamment de tout abonnement de chat.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Colle ta propre clé</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Crée une clé API chez le fournisseur choisi et colle-la dans le champ prévu. Elle reste uniquement sur ce PC, protégée par ton compte Windows, et n&apos;est jamais envoyée — ce qui veut dire aussi qu&apos;elle ne survit ni à une réinstallation ni à un changement de PC. Il y a un emplacement par fournisseur : tu peux garder les trois.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Demander depuis le dock</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>Ajoute le widget « Demander à l&apos;IA » au Command Dock avec le +. Appuie pour enregistrer, appuie à nouveau pour arrêter, puis envoie. Tu peux joindre une capture d&apos;écran : un compte à rebours de trois secondes te laisse revenir dans le jeu avant le déclenchement, et l&apos;application se retire elle-même de l&apos;image.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Laisser l&apos;équipe demander avec !ai</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>Sous Commandes de chat, tu peux autoriser tes coéquipiers à utiliser !ai depuis le chat du jeu. Cela passe par ce client, avec ta clé et tes réglages — même fournisseur, même modèle, même langue — c&apos;est donc désactivé jusqu&apos;à ce que tu l&apos;actives, et l&apos;activation ajoute une limite horaire par coéquipier. Le clan a son propre interrupteur, distinct.</value>
+  </data>
 </root>

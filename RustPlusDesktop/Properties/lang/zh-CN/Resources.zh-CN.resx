@@ -7214,4 +7214,112 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>战队成员可以用你的 API 密钥向 AI 提问，费用算你的。与上面的队伍设置相互独立。</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>新功能</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>小地图变成指挥台，AI 助手也来了。</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>时钟、智能开关、队伍与战队聊天、events 计时、会话统计和服务器人数，都作为磁贴环绕在地图周围。用 dock 上的 + 添加一个，它会落在地图旁第一个空位，之后可随意拖动。地图本身也是磁贴，可以移动，也可以完全移除。</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>随你的喜好</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>文字颜色、字号和透明度一次设定整个 dock，任何磁贴也能用自己的齿轮覆盖这三项。锁定布局以防误拖，并把布局起个名字保存下来，随时切换。</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>AI 助手</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>按住一个键，开口提问，不用离开游戏就能得到答案 —— 以文字显示在磁贴下方，或者读给你听。可选 GPT、Gemini 或 Claude，使用你自己的 API 密钥：密钥只保存在本机、从不上传，录音直接发往你选择的服务商。</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>队伍和战队聊天里的 !ai</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>在游戏里提问，答案回到聊天中，限制在一两行。默认只有你能用 —— 每个回答都记在你的密钥上 —— 开放后还会按队友分别设置每小时上限。</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>把小地图变成一个由你自己排布的磁贴 dock。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>打开小地图</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>Mini 按钮会在一个独立窗口中打开小地图，悬浮在游戏之上。本教程的一切都发生在那个窗口里。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>用 + 添加磁贴</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>地图只是众多磁贴之一。dock 标题栏上的 + 可以添加时钟、已配对的开关或警报、队伍或战队聊天、event 计时、Logic Engine 规则、会话统计、服务器人数、一行 Discord —— 或者 AI 助手。每一个都会落在地图旁第一个空位。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>拖动、缩放、锁定</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>把鼠标移到磁贴上可以移动它，拖动边角可以改变大小，× 则移除。标题栏上的锁把整个布局保护起来，不会被误拖；“布局”按钮则把 dock 以名字保存 —— 把鼠标移到已保存的名字上，就能在加载前看到它在原位的轮廓。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>统一设置整个 dock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>文字颜色、字号和透明度一次作用于所有磁贴。即使 dock 几乎透明也依然清晰，因为只有背景淡出，文字保留了阴影。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>也可以逐个磁贴设置</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>每个磁贴都有自己的齿轮，里面是同样的三项设置。在那里改动后，这个磁贴就不再跟随 dock 的默认值；其余磁贴继续沿用，一个按钮即可恢复。</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>AI 助手</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>开口提问，不用离开游戏就能得到答案。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>它能做什么</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>按住一个键或按下磁贴，说出你的问题，答案会出现在磁贴下方的面板里，或者被读出来。它使用你自己在某个 AI 服务商的账号：录音从这台电脑直接发给对方，从不经过我们的服务器。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>在“已连接服务”中找到它</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>设置 → 已连接服务 → AI Companion。与助手有关的一切都在这张卡片里：服务商、你的密钥、答案如何呈现，以及录什么。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>三种模型可选</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT 和 Gemini 直接接收你的录音，所以它们听到的就是你说的，并且都会用自己的声音读出答案。Claude 不接受音频：录音会先在本机转成文字，这更慢，对人名和游戏术语也更弱。Gemini 有免费的 API 额度；GPT 和 Claude 则需要各自的预付余额，与任何聊天订阅无关。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>粘贴你自己的密钥</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>在你选择的服务商处创建一个 API 密钥，粘贴到密钥栏。它只保存在这台电脑上，由你的 Windows 账户保护，从不上传 —— 这也意味着重装系统或换电脑后不会保留，需要重新输入。每个服务商各有一个位置，三个可以同时保存。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>从 dock 提问</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>用 + 把“问 AI”磁贴添加到 Command Dock。按一下开始录音，再按一下停止，然后发送。你可以附上截图：它会先从三倒数，让你在快门之前回到游戏，并且应用会把自己从画面中排除。</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>让队伍用 !ai 提问</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>在聊天命令中，你可以允许队友从游戏聊天里使用 !ai。它通过这个客户端运行，用的是你的密钥和你的设置 —— 同一个服务商、同一个模型、同一种语言 —— 所以在你开启之前是关闭的，开启后还会按队友加上每小时上限。战队有单独的开关。</value>
+  </data>
 </root>

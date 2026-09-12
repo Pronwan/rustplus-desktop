@@ -7357,4 +7357,112 @@
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>يستطيع أعضاء الـ clan سؤال الذكاء الاصطناعي بمفتاح API الخاص بك، والفاتورة عليك. مستقل عن إعداد الفريق أعلاه.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>ما الجديد</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>الخريطة المصغّرة تصبح مركز قيادة — ويصل مساعد الذكاء الاصطناعي.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>ساعات ومفاتيح ذكية ودردشة الفريق والـ clan ومؤقّتات الـ events وإحصاءات الجلسة وعدد اللاعبين، كلها بطاقات حول الخريطة. زر + في الـ dock يضيف واحدة؛ تحلّ في أول موضع فارغ بجوار الخريطة ثم يمكن سحبها إلى أي مكان. والخريطة نفسها بطاقة: يمكن نقلها أو إزالتها تمامًا.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>على ذوقك</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>لون النص وحجمه والشفافية دفعة واحدة لكل الـ dock، وأي بطاقة تستطيع تجاوز الثلاثة من ترسها الخاص. اقفل التخطيط ضد السحب غير المقصود، واحفظ تخطيطات بأسماء للتنقل بينها.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>مساعد الذكاء الاصطناعي</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>اضغط مفتاحًا مطوّلًا، اسأل بصوتك، واحصل على إجابة دون مغادرة اللعبة — نصًّا أسفل البطاقة أو مقروءة بصوت عالٍ. اختر GPT أو Gemini أو Claude بمفتاح API خاص بك: يبقى على هذا الجهاز ولا يُرفع أبدًا، والتسجيلات تذهب مباشرة إلى المزوّد الذي اخترته.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>‏!ai في دردشة الفريق والـ clan</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>اسأل من داخل اللعبة وتعود الإجابة في الدردشة، في سطر أو سطرين. مقتصر عليك حتى تسمح به — كل إجابة تُحاسب على مفتاحك — ومع السماح يُضاف حد لكل زميل في الساعة.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>حوّل الخريطة المصغّرة إلى dock من البطاقات ترتّبه بنفسك.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>افتح الخريطة المصغّرة</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>زر Mini يفتح الخريطة المصغّرة في نافذة خاصة تطفو فوق اللعبة. كل ما في هذا الشرح يحدث في تلك النافذة.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>أضف بطاقات بالزر +</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>الخريطة واحدة من بطاقات كثيرة. زر + في شريط عنوان الـ dock يضيف ساعة، أو مفتاحًا أو إنذارًا مقترنًا، أو دردشة الفريق أو الـ clan، أو مؤقّت event، أو قاعدة Logic Engine، أو إحصاءات الجلسة، أو عدد اللاعبين، أو سطر Discord — أو مساعد الذكاء الاصطناعي. كل واحدة تحلّ في أول موضع فارغ بجوار الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>اسحب، غيّر الحجم، اقفل</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>مرّر فوق بطاقة لتحريكها، واسحب زاويتها لتغيير حجمها، أو أزلها بعلامة ×. القفل في شريط العنوان يحمي التخطيط كله من السحب غير المقصود، وزر التخطيطات يحفظ الـ dock باسم — مرّر فوق اسم محفوظ لترى مخططه في مكانه قبل تحميله.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>نسّق الـ dock كله</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>لون النص وحجمه والشفافية لكل البطاقات دفعة واحدة. الـ dock الذي جُعل شبه شفاف يبقى مقروءًا، لأن النص يحتفظ بظله ولا يتلاشى سوى الخلفية.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>أو بطاقة بطاقة</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>لكل بطاقة ترسها الخاص بالإعدادات الثلاثة نفسها. إن غيّرت شيئًا هناك توقفت تلك البطاقة عن اتباع إعدادات الـ dock الافتراضية؛ وتظل البقية ترثها، وزر واحد يعيدها.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>مساعد الذكاء الاصطناعي</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>اطرح سؤالًا بصوتك واحصل على إجابة دون مغادرة اللعبة.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>ماذا يفعل</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>اضغط مفتاحًا مطوّلًا أو اضغط البطاقة، اطرح سؤالك، فتظهر الإجابة في لوحة أسفل البطاقة أو تُقرأ بصوت عالٍ. يعمل عبر حسابك أنت لدى مزوّد ذكاء اصطناعي: التسجيل يذهب من هذا الجهاز إليه مباشرة ولا يمر عبر خوادمنا أبدًا.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>تجده تحت «الخدمات المتصلة»</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>الإعدادات ← الخدمات المتصلة ← AI Companion. كل ما يخص المساعد في هذه البطاقة: المزوّد، ومفتاحك، وكيف تصل الإجابات، وما الذي يُسجَّل.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>ثلاثة نماذج للاختيار</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>يستقبل GPT وGemini تسجيلك مباشرة، فيسمعان ما قلته تمامًا، ويقرأ كلاهما الإجابة بصوته الخاص. أما Claude فلا يقبل الصوت: يُحوَّل التسجيل أولًا إلى نص على هذا الجهاز، وهو أبطأ وأضعف مع الأسماء ومصطلحات اللعبة. لدى Gemini حصة API مجانية؛ أما GPT وClaude فيحتاجان رصيدًا مدفوعًا مسبقًا خاصًا بهما، منفصلًا عن أي اشتراك دردشة.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>الصق مفتاحك أنت</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>أنشئ مفتاح API لدى المزوّد الذي اخترته والصقه في حقل المفتاح. يُحفظ على هذا الجهاز فقط، محميًا بحساب Windows الخاص بك، ولا يُرفع أبدًا — ما يعني أيضًا أنه لن يبقى بعد إعادة تثبيت أو انتقال إلى جهاز آخر. هناك موضع لكل مزوّد، فيمكنك الاحتفاظ بالثلاثة.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>اسأل من الـ dock</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>أضف بطاقة «اسأل الذكاء الاصطناعي» إلى الـ Command Dock بالزر +. اضغطها للتسجيل، واضغطها ثانية للإيقاف، ثم أرسل. يمكنك إرفاق لقطة شاشة: يبدأ عدّ تنازلي من ثلاثة أولًا لتعود إلى اللعبة قبل الالتقاط، والتطبيق يُخرج نفسه من الصورة.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>اسمح للفريق بالسؤال عبر !ai</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>تحت أوامر الدردشة يمكنك السماح لزملاء الفريق باستخدام !ai من دردشة اللعبة. يمر عبر هذا العميل بمفتاحك وإعداداتك — المزوّد نفسه والنموذج نفسه واللغة نفسها — لذا فهو معطّل حتى تفعّله، والتفعيل يضيف حدًا لكل زميل في الساعة. وللـ clan مفتاح منفصل خاص به.</value>
+  </data>
 </root>

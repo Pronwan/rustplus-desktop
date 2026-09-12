@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:p="clr-namespace:RustPlusDesk.Properties"
              mc:Ignorable="d" 
@@ -336,7 +337,7 @@
                             because it is the only command that costs money to answer and the
                             money is this client owner's.
                         -->
-                        <StackPanel Margin="0,20,0,0">
+                        <StackPanel Margin="0,20,0,0" tutorials:Tutorial.TargetId="ChatCommands.AskAi">
                             <TextBlock Text="{DynamicResource ChatAiCategory}" Foreground="{DynamicResource Accent}" Margin="0,0,0,2" FontWeight="SemiBold" />
                             <TextBlock Text="{DynamicResource ChatAiDesc}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
 

@@ -7631,4 +7631,7 @@ Close this preview when the panel looks right.</value>
   <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
     <value>Under Chat Commands you can allow teammates to use !ai from in-game chat. It runs through this client on your key and your settings — same provider, same model, same language — so it is off until you switch it on, and turning it on adds an hourly limit per teammate. The clan has its own separate switch.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>What&apos;s new</value>
+  </data>
 </root>

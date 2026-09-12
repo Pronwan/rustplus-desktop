@@ -6499,4 +6499,112 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="ClanCommandsAllowAiHint" xml:space="preserve">
     <value>Klan üyeleri senin API anahtarınla yapay zekâya sorabilir ve fatura senin olur. Yukarıdaki takım ayarından bağımsızdır.</value>
   </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>Yenilikler</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>Mini harita bir komuta merkezine dönüşüyor — ve yapay zekâ yardımcısı geliyor.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Saatler, akıllı anahtarlar, takım ve klan sohbeti, event sayaçları, oturum istatistikleri ve sunucu doluluğu haritanın çevresinde kart olarak. Dock&apos;taki + ile bir tane eklersin; haritanın yanındaki ilk boş yere yerleşir ve oradan istediğin yere sürüklenir. Harita da bir karttır: taşınabilir ya da tamamen kaldırılabilir.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>Senin zevkine göre</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Yazı rengi, yazı boyutu ve saydamlık tek seferde tüm dock için — ve her kart bu üçünü kendi dişlisinden geçersiz kılabilir. Yerleşimi kazara sürüklemelere karşı kilitle ve yerleşimleri bir adla kaydederek aralarında geçiş yap.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Yapay zekâ yardımcısı</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Bir tuşu basılı tut, sesli sor ve oyundan çıkmadan cevabını al — kartın altında metin olarak ya da sesli okunarak. GPT, Gemini veya Claude&apos;u kendi API anahtarınla seç: anahtar yalnızca bu bilgisayarda durur, asla yüklenmez ve kayıtlar doğrudan seçtiğin sağlayıcıya gider.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>Takım ve klan sohbetinde !ai</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>Oyunun içinden sor, cevap sohbete bir iki satır olarak dönsün. Sen izin verene kadar yalnızca sana açık — her cevap senin anahtarına faturalanır — ve izin verdiğinde takım arkadaşı başına saatlik bir sınır eklenir.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Command Dock</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Mini haritayı kendi düzenlediğin bir kart dock&apos;una dönüştür.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Mini haritayı aç</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>Mini düğmesi mini haritayı oyunun üzerinde duran kendi penceresinde açar. Bu eğitimdeki her şey o pencerede geçer.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>+ ile kart ekle</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>Harita yalnızca kartlardan biridir. Dock&apos;un başlık çubuğundaki + ile bir saat, eşleşmiş bir anahtar ya da alarm, takım veya klan sohbeti, bir event sayacı, bir Logic Engine kuralı, oturum istatistikleri, sunucu doluluğu, bir Discord satırı — ya da yapay zekâ yardımcısı eklersin. Her biri haritanın yanındaki ilk boş yere yerleşir.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Sürükle, boyutlandır, kilitle</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Taşımak için kartın üzerine gel, boyutunu değiştirmek için köşesinden çek ya da × ile kaldır. Başlık çubuğundaki kilit tüm yerleşimi kazara sürüklemelerden korur, Yerleşimler düğmesi ise dock&apos;u bir adla kaydeder — kayıtlı bir adın üzerine gelerek yüklemeden önce yerindeki taslağını gör.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Tüm dock&apos;u biçimlendir</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Yazı rengi, boyutu ve saydamlık bütün kartlar için aynı anda. Neredeyse görünmez hale gelmiş bir dock yine okunur kalır, çünkü yazı gölgesini korur ve yalnızca arka plan silikleşir.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Ya da tek tek her kart</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>Her kartın aynı üç ayarı taşıyan kendi dişlisi vardır. Orada bir şey değiştirirsen o kart dock&apos;un varsayılanlarını izlemeyi bırakır; diğerleri onları devralmayı sürdürür ve bir düğme geri alır.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>Yapay zekâ yardımcısı</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Sesli bir soru sor ve oyundan çıkmadan cevabını al.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>Ne işe yarar</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Bir tuşu basılı tut ya da karta bas, sorunu sor — cevap kartın altındaki panelde belirir veya sesli okunur. Bir yapay zekâ sağlayıcısındaki kendi hesabınla çalışır: kayıt bu bilgisayardan doğrudan oraya gider ve asla bizim sunucularımızdan geçmez.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>Bağlı Servisler altında</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Ayarlar → Bağlı Servisler → AI Companion. Yardımcıya dair her şey bu kartta: sağlayıcı, anahtarın, cevapların nasıl geldiği ve neyin kaydedildiği.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Seçebileceğin üç model</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT ve Gemini kaydını doğrudan alır, yani tam olarak söylediğini duyarlar ve ikisi de cevabı kendi sesiyle okur. Claude ses kabul etmez: kayıt önce bu bilgisayarda metne çevrilir, bu da daha yavaştır ve isimlerle oyun terimlerinde daha zayıftır. Gemini&apos;nin ücretsiz bir API kotası vardır; GPT ve Claude ise herhangi bir sohbet aboneliğinden ayrı, kendi ön ödemeli bakiyesini gerektirir.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Kendi anahtarını yapıştır</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Seçtiğin sağlayıcıda bir API anahtarı oluştur ve anahtar alanına yapıştır. Yalnızca bu bilgisayarda, Windows hesabınla korunarak saklanır ve asla yüklenmez — bu da yeniden kurulumdan ya da başka bir bilgisayara geçişten sağ çıkmayacağı anlamına gelir. Sağlayıcı başına bir yer vardır, yani üçünü birden tutabilirsin.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Dock&apos;tan sor</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>+ ile Command Dock&apos;a “Yapay zekâya sor” kartını ekle. Basınca kayıt başlar, tekrar basınca durur, sonra gönder. Ekran görüntüsü ekleyebilirsin: önce üçten geri sayar, böylece deklanşörden önce oyuna dönmüş olursun ve uygulama kendini kareden çıkarır.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Takımın !ai ile sormasına izin ver</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>Sohbet Komutları altında takım arkadaşlarının oyun içi sohbetten !ai kullanmasına izin verebilirsin. Bu istemci üzerinden, senin anahtarın ve senin ayarlarınla çalışır — aynı sağlayıcı, aynı model, aynı dil — bu yüzden sen açana kadar kapalıdır ve açtığında takım arkadaşı başına saatlik bir sınır eklenir. Klanın kendi ayrı anahtarı vardır.</value>
+  </data>
 </root>

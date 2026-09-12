@@ -179,7 +179,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("aicompanion.models", "Settings.AiCompanion", "settings", TutorialPlacement.Right),
             Step("aicompanion.key", "Settings.AiCompanion", "settings", TutorialPlacement.Right),
             Step("aicompanion.ask", placement: TutorialPlacement.Center),
-            Step("aicompanion.chat", "Settings.ChatCommands", "settings", TutorialPlacement.Right,
+            Step("aicompanion.chat", "ChatCommands.AskAi", "settings", TutorialPlacement.Left,
                  image: "pack://application:,,,/Assets/Screenshots/9.3/ai-chat-command.jpg")),
 
         Def("map-3d", 60, "Maps", false,

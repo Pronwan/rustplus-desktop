@@ -476,6 +476,28 @@ namespace RustPlusDesk.Views
             ShowSettingsCategoryList();
         }
 
+        /// <summary>
+        /// Opens the card a tutorial step is about to point at.
+        ///
+        /// Both of these live inside a collapsed expander, and a spotlight on a closed card
+        /// header teaches nothing — the step is describing the settings inside it.
+        /// </summary>
+        public void ExpandTutorialCard(string? targetId)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                switch (targetId)
+                {
+                    case "Settings.AiCompanion":
+                        if (CardAiCompanion != null) CardAiCompanion.IsExpanded = true;
+                        break;
+                    case "Settings.CommandDock":
+                        if (CardCommandDock != null) CardCommandDock.IsExpanded = true;
+                        break;
+                }
+            });
+        }
+
         public void OpenCategory(string category)
         {
             Dispatcher.InvokeAsync(() =>

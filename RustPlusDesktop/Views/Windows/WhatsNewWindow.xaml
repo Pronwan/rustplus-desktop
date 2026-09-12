@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:p="clr-namespace:RustPlusDesk.Properties"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="{DynamicResource UpdateWhatsNewTitle}"
+        Title="{DynamicResource UpdateWhatsNewHeading}"
         Width="560" SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Title="{DynamicResource UpdateWhatsNewTitle}" ShowMaximize="False" ShowMinimize="False"/>
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource UpdateWhatsNewHeading}" ShowMaximize="False" ShowMinimize="False"/>
 
         <Grid Grid.Row="1" Margin="25,0,25,25">
             <Grid.RowDefinitions>
@@ -33,7 +33,7 @@
                     <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
                         <TextBlock Text="v9.3" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
-                    <TextBlock Text="{DynamicResource UpdateWhatsNewTitle}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource UpdateWhatsNewHeading}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
 

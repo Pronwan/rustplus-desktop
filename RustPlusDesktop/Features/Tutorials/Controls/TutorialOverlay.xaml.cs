@@ -30,8 +30,15 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             {
                 window.LocationChanged += (s, e) => UpdatePopupPosition();
                 window.SizeChanged += (s, e) => UpdatePopupPosition();
+
+                // Maximising and restoring change where the client area starts without
+                // always raising LocationChanged.
+                window.StateChanged += (s, e) => Dispatcher.BeginInvoke(
+                    new Action(UpdatePopupPosition), DispatcherPriority.Loaded);
             }
         };
+
+        OverlayPopup.Opened += (_, _) => UpdatePopupPosition();
         PreviewKeyDown += OnPreviewKeyDown;
         SystemParameters.StaticPropertyChanged += (_, e) =>
         {
@@ -39,13 +46,39 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         };
     }
 
+    /// <summary>
+    /// Pins the popup over this control, wherever on the desktop that is.
+    ///
+    /// It used to be placed relative to this control and nudged by a pixel to force a
+    /// refresh. WPF reserves the right to move a relatively-placed popup that it thinks will
+    /// not fit, and a popup the size of a maximised window never fits — so it was moved, and
+    /// on a multi-monitor desktop it landed on the neighbouring screen.
+    ///
+    /// AbsolutePoint is the one mode WPF positions and then leaves alone, so the offsets here
+    /// are the whole answer: this control's top-left corner, in the device-independent units
+    /// the popup measures its offsets in.
+    /// </summary>
     private void UpdatePopupPosition()
     {
-        if (OverlayPopup.IsOpen)
+        if (!OverlayPopup.IsOpen) return;
+
+        try
         {
-            var offset = OverlayPopup.HorizontalOffset;
-            OverlayPopup.HorizontalOffset = offset + 1;
-            OverlayPopup.HorizontalOffset = offset;
+            var source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget is null) return;
+
+            Point device = PointToScreen(new Point(0, 0));
+            Point dip = source.CompositionTarget.TransformFromDevice.Transform(device);
+
+            // Assigned unconditionally rather than only on change: the same value re-applied
+            // is what makes the popup re-evaluate itself after the window has moved.
+            OverlayPopup.HorizontalOffset = dip.X;
+            OverlayPopup.VerticalOffset = dip.Y;
+        }
+        catch
+        {
+            // Between a window closing and its source going away this can throw; the overlay
+            // is about to disappear with it either way.
         }
     }
 
