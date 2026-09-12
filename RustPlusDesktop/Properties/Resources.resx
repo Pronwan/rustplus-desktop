@@ -7700,4 +7700,7 @@ Close this preview when the panel looks right.</value>
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>Leave empty to use {0}. If spoken answers come out in the Windows voice instead of this provider&apos;s, this name is the usual reason.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Last attempt: {0}</value>
+  </data>
 </root>

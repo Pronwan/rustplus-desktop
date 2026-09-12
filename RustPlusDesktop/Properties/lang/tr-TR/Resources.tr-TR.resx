@@ -6613,4 +6613,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>{0} kullanmak için boş bırak. Sesli cevaplar sağlayıcının sesi yerine Windows sesiyle geliyorsa, sebebi genelde bu addır.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Son deneme: {0}</value>
+  </data>
 </root>

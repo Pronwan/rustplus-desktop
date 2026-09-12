@@ -7580,4 +7580,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>Déjalo vacío para usar {0}. Si las respuestas habladas salen con la voz de Windows en lugar de la del proveedor, este nombre suele ser el motivo.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Último intento: {0}</value>
+  </data>
 </root>

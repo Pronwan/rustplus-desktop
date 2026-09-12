@@ -27,6 +27,16 @@ namespace RustPlusDesk.Services.AiCompanion
             AiProviders.HasVoice(provider) && AiCompanionStore.HasKeyFor(provider);
 
         /// <summary>
+        /// Why the provider's voice last refused, or null if it has not.
+        ///
+        /// Falling back to Windows is the right behaviour and the wrong silence: the answer
+        /// still gets read, so a wrong model name or a spent quota sounds exactly like the
+        /// setting having no effect. The settings panel shows this, which is the difference
+        /// between a mystery and a one-line fix.
+        /// </summary>
+        public static string? LastError { get; private set; }
+
+        /// <summary>
         /// Reads one piece of text. Null when the provider refused, or has no voice at all.
         /// </summary>
         public static async Task<byte[]?> SynthesizeAsync(string text, CancellationToken ct)
@@ -39,16 +49,23 @@ namespace RustPlusDesk.Services.AiCompanion
 
             try
             {
-                return provider switch
+                var audio = provider switch
                 {
                     AiProviders.OpenAi => await OpenAi(text, key, ct),
                     AiProviders.Gemini => await Gemini(text, key, ct),
                     _ => null,
                 };
+
+                if (audio != null) LastError = null;
+                return audio;
             }
-            catch
+            catch (OperationCanceledException)
             {
-                // Including a cancelled request. Windows takes over and the answer is still read.
+                return null;   // a new question, not a failure worth reporting
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.Message;
                 return null;
             }
         }
@@ -78,7 +95,12 @@ namespace RustPlusDesk.Services.AiCompanion
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
 
             using var response = await AiHttp.Client.SendAsync(request, ct);
-            if (!response.IsSuccessStatusCode) return null;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                LastError = Describe(response, await AiHttp.ReadBody(response, ct));
+                return null;
+            }
 
             return await response.Content.ReadAsByteArrayAsync(ct);
         }
@@ -121,7 +143,12 @@ namespace RustPlusDesk.Services.AiCompanion
             request.Headers.Add("x-goog-api-key", key);
 
             using var response = await AiHttp.Client.SendAsync(request, ct);
-            if (!response.IsSuccessStatusCode) return null;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                LastError = Describe(response, await AiHttp.ReadBody(response, ct));
+                return null;
+            }
 
             using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));
 
@@ -143,6 +170,13 @@ namespace RustPlusDesk.Services.AiCompanion
             }
 
             return null;
+        }
+
+        /// <summary>The provider's own words where it gave any, with the status as a fallback.</summary>
+        private static string Describe(HttpResponseMessage response, string body)
+        {
+            var failure = AiHttp.Failure(response, body);
+            return failure.Message;
         }
 
         /// <summary>

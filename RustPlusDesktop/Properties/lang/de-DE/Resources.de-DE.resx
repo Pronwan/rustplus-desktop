@@ -7661,4 +7661,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>Leer lassen für {0}. Wenn gesprochene Antworten in der Windows-Stimme statt der des Anbieters kommen, liegt es meist an diesem Namen.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Letzter Versuch: {0}</value>
+  </data>
 </root>

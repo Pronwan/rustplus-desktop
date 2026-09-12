@@ -7580,4 +7580,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>Оставь пустым, чтобы использовать {0}. Если ответы озвучиваются голосом Windows, а не провайдера, дело обычно в этом названии.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Последняя попытка: {0}</value>
+  </data>
 </root>

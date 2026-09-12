@@ -219,6 +219,13 @@ namespace RustPlusDesk.Views
                     "Leave empty to use {0}. If spoken answers come out in the Windows voice instead of this provider's, this name is the usual reason."),
                 AiProviders.DefaultVoiceModel(provider));
 
+            // The one place the quiet failure becomes visible.
+            if (!string.IsNullOrEmpty(AiSpeech.LastError))
+            {
+                TxtAiVoiceModelNote.Text += " " + string.Format(
+                    Loc.Text("AiCompanionVoiceLastError", "Last attempt: {0}"), AiSpeech.LastError);
+            }
+
             // Said in terms of what it fixes and what it costs, because it is the one setting
             // here that meaningfully changes the bill.
             TxtAiGameDataNote.Text = settings.IncludeGameData

@@ -7328,4 +7328,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>留空则使用 {0}。如果语音回答用的是 Windows 的声音而不是服务商的，通常就是这个名称的问题。</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>最近一次尝试：{0}</value>
+  </data>
 </root>

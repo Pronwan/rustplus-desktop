@@ -7501,4 +7501,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>{0}을(를) 쓰려면 비워 두세요. 음성 답변이 제공사 목소리가 아니라 Windows 목소리로 나온다면 보통 이 이름이 원인입니다.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>마지막 시도: {0}</value>
+  </data>
 </root>

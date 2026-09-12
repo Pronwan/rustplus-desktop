@@ -7471,4 +7471,7 @@
   <data name="AiCompanionVoiceModelNote" xml:space="preserve">
     <value>اتركه فارغًا لاستخدام {0}. إذا صدرت الإجابات المنطوقة بصوت Windows بدل صوت المزوّد، فهذا الاسم هو السبب المعتاد.</value>
   </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>آخر محاولة: {0}</value>
+  </data>
 </root>
