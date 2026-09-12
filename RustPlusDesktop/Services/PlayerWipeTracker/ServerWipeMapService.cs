@@ -77,12 +77,17 @@ public sealed class ServerWipeMapService
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey) || extraMonuments is not { Count: > 0 })
             return;
 
-        if (_store.IsExtraMonumentsUploaded(serverKey, wipeKey))
-            return;
-
         if (!CloudAuthManager.IsAuthenticated)
             return;
 
+        // Deliberately no local short-circuit on the "already uploaded" marker.
+        //
+        // Staff can discard a bad parse — monuments projected off the edge of the map, a partial
+        // read of a half-built world — and that is precisely the case where this client believes
+        // it has already done its part. Trusting the local marker meant a reset could never reach
+        // the one machine able to answer it, so the server is asked instead: it is the only party
+        // that knows whether the data is still there. The marker stays as a record, and the cost
+        // is one GET per 3D parse, which happens once per map rather than continuously.
         try
         {
             var status = await _client.GetStatusAsync(serverKey, wipeKey).ConfigureAwait(false);

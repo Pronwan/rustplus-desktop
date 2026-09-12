@@ -22,6 +22,48 @@ public partial class MainWindow
     /// <summary>Last deserialized extra monuments list, kept so we can re-apply filters without re-reading disk.</summary>
     private List<ExtraMonument>? _lastExtraMonuments;
 
+    private bool _extraMonumentResetWired;
+
+    /// <summary>
+    /// Listens for a wipe map's 3D monuments being discarded on the platform.
+    ///
+    /// Without this the correction still happens — the upload path asks the server rather than
+    /// trusting its own marker, so the next map load sends them again — but "next map load" can be
+    /// days away. Since the parsed list is already in hand, a reset that arrives while the app is
+    /// running can be answered immediately.
+    /// </summary>
+    private void EnsureExtraMonumentResetWired()
+    {
+        if (_extraMonumentResetWired) return;
+        _extraMonumentResetWired = true;
+
+        Services.Cloud.RealtimeClient.Shared.EventReceived += OnCloudEventForExtraMonuments;
+    }
+
+    private void OnCloudEventForExtraMonuments(string channel, string eventName, Newtonsoft.Json.Linq.JObject data)
+    {
+        // Laravel marks a custom broadcast name with a leading dot.
+        if (!string.Equals(eventName?.TrimStart('.'), "wipe_map.extra_monuments_reset", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var serverKey = data["server_key"]?.ToString();
+        var wipeKey = data["wipe_key"]?.ToString();
+        if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey)) return;
+
+        // The reset is addressed to every account paired with that server, which may not be the
+        // map this client currently has open. Only the one on screen can be re-sent from memory.
+        Dispatcher.InvokeAsync(() =>
+        {
+            var extras = _lastExtraMonuments;
+            if (extras is not { Count: > 0 }) return;
+
+            var currentServer = _playerWipeTracker.CurrentServerKey ?? GetServerKey();
+            if (!string.Equals(currentServer, serverKey, StringComparison.OrdinalIgnoreCase)) return;
+
+            UploadExtraMonumentsToCloud(extras);
+        });
+    }
+
     private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
@@ -141,6 +183,10 @@ public partial class MainWindow
 
         MergeExtraMonuments(extras);
         UploadExtraMonumentsToCloud(extras);
+
+        // Wired once there is something to re-send, so a reset arriving later can be answered
+        // from memory instead of waiting for the next map load.
+        EnsureExtraMonumentResetWired();
     }
 
     /// <summary>

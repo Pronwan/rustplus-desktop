@@ -99,83 +99,106 @@
         <Grid>
             <Border
                 x:Name="Bd"
+                Margin="0,1"
                 Padding="{TemplateBinding Padding}"
-                Background="{TemplateBinding Background}"
-                CornerRadius="6"
+                Background="Transparent"
+                CornerRadius="5"
                 SnapsToDevicePixels="True">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ui:SymbolIcon
-                        x:Name="CheckIcon"
+                    <Grid
+                        x:Name="IconSlot"
                         Grid.Column="0"
-                        Symbol="Checkmark20"
+                        Width="22"
+                        Height="22"
+                        Margin="0,0,12,0"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Foreground="{DynamicResource Accent}"
-                        Visibility="Collapsed" />
-                    <ContentPresenter
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        ContentSource="Icon" />
+                        VerticalAlignment="Center">
+                        <ui:SymbolIcon
+                            x:Name="CheckIcon"
+                            Symbol="Checkmark20"
+                            FontSize="15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource Accent}"
+                            Visibility="Collapsed" />
+                        <ContentPresenter
+                            x:Name="IconPresenter"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ContentSource="Icon" />
+                    </Grid>
                     <ContentPresenter
                         Grid.Column="1"
-                        Margin="4,0,6,0"
                         VerticalAlignment="Center"
                         ContentSource="Header"
                         RecognizesAccessKey="True" />
-                    <Path
+                    <ui:SymbolIcon
                         Grid.Column="2"
+                        Symbol="ChevronRight20"
+                        FontSize="12"
+                        Margin="12,0,2,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Data="M 0 0 L 4 4 L 0 8"
-                        Stroke="{DynamicResource TextSubtle}"
-                        StrokeEndLineCap="Round"
-                        StrokeStartLineCap="Round"
-                        StrokeThickness="1.5" />
+                        Foreground="{DynamicResource TextSubtle}" />
                 </Grid>
             </Border>
             <Popup
                 x:Name="PART_Popup"
                 AllowsTransparency="True"
                 Focusable="False"
-                HorizontalOffset="0"
+                HorizontalOffset="-2"
                 IsOpen="{TemplateBinding IsSubmenuOpen}"
                 Placement="Right"
                 StaysOpen="False"
-                VerticalOffset="0">
+                VerticalOffset="-4">
                 <Border
-                    Padding="6"
-                    Background="{DynamicResource Surface}"
-                    BorderBrush="{DynamicResource CardBorder}"
+                    Padding="4"
+                    Background="#242424"
+                    BorderBrush="#2EFFFFFF"
                     BorderThickness="1"
-                    CornerRadius="{DynamicResource Radius}"
+                    CornerRadius="8"
                     SnapsToDevicePixels="True">
-                    <ScrollViewer CanContentScroll="True">
-                        <StackPanel IsItemsHost="True" />
-                    </ScrollViewer>
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="24"
+                            Direction="270"
+                            Opacity="0.5"
+                            ShadowDepth="6"
+                            Color="#000000" />
+                    </Border.Effect>
+                    <StackPanel IsItemsHost="True" />
                 </Border>
             </Popup>
         </Grid>
         <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding Icon, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
             <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
                 <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
                 <Setter Property="Foreground" Value="{DynamicResource Accent}" />
             </Trigger>
+            <Trigger Property="IsCheckable" Value="True">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
+            </Trigger>
             <Trigger Property="Tag" Value="Partial">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
                 <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
                 <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Bd" Property="Background" Value="#141A22" />
+                <Setter TargetName="Bd" Property="Background" Value="#1CFFFFFF" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
+                <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -238,62 +261,98 @@
     <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
         <Border
             x:Name="Bd"
+            Margin="0,1"
             Padding="{TemplateBinding Padding}"
-            Background="{TemplateBinding Background}"
-            CornerRadius="6"
+            Background="Transparent"
+            CornerRadius="5"
             SnapsToDevicePixels="True">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="22" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Path
-                    x:Name="CheckIcon"
+                <Grid
+                    x:Name="IconSlot"
                     Grid.Column="0"
-                    Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                    Fill="{DynamicResource Accent}"
-                    Width="13"
-                    Height="13"
-                    Stretch="Uniform"
+                    Width="22"
+                    Height="22"
+                    Margin="0,0,12,0"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="Collapsed" />
-                <ContentPresenter
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    ContentSource="Icon" />
+                    VerticalAlignment="Center">
+                    <ui:SymbolIcon
+                        x:Name="CheckIcon"
+                        Symbol="Checkmark20"
+                        FontSize="15"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource Accent}"
+                        Visibility="Collapsed" />
+                    <ContentPresenter
+                        x:Name="IconPresenter"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        ContentSource="Icon" />
+                </Grid>
                 <ContentPresenter
                     Grid.Column="1"
-                    Margin="6,0,6,0"
                     VerticalAlignment="Center"
                     ContentSource="Header"
                     RecognizesAccessKey="True" />
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="16,0,4,0"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    Foreground="{DynamicResource TextSubtle}"
+                    Text="{TemplateBinding InputGestureText}" />
             </Grid>
         </Border>
         <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding Icon, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
             <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
                 <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
                 <Setter Property="Foreground" Value="{DynamicResource Accent}" />
             </Trigger>
+            <Trigger Property="IsCheckable" Value="True">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Partial">
+                <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
+                <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
+                <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
+            </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
+                <Setter TargetName="Bd" Property="Background" Value="#1CFFFFFF" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
+                <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="DarkMenuItem" TargetType="MenuItem">
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Padding" Value="12,0,12,0" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontFamily" Value="Segoe UI, Segoe UI Variable Text, sans-serif" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template" Value="{StaticResource DarkMenuItem_Item}" />
         <Style.Triggers>
             <Trigger Property="HasItems" Value="True">
+                <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
+            </Trigger>
+            <Trigger Property="Role" Value="TopLevelHeader">
+                <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuHeader">
                 <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
             </Trigger>
         </Style.Triggers>
@@ -308,7 +367,7 @@
                     <Border
                         Height="1"
                         Margin="6,4,6,4"
-                        Background="{DynamicResource WhiteA22}" />
+                        Background="#1CFFFFFF" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -317,19 +376,28 @@
     <Style TargetType="Separator" BasedOn="{StaticResource DarkSeparator}" />
 
     <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
-        <Setter Property="Background" Value="{DynamicResource Surface}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="Background" Value="#242424" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="HasDropShadow" Value="True" />
+        <Setter Property="Padding" Value="4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContextMenu">
                     <Border
-                        Padding="6"
+                        Padding="{TemplateBinding Padding}"
                         Background="{TemplateBinding Background}"
-                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderBrush="#2EFFFFFF"
                         BorderThickness="1"
-                        CornerRadius="{DynamicResource Radius}"
+                        CornerRadius="8"
                         SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="24"
+                                Direction="270"
+                                Opacity="0.5"
+                                ShadowDepth="6"
+                                Color="#000000" />
+                        </Border.Effect>
                         <StackPanel IsItemsHost="True" />
                     </Border>
                 </ControlTemplate>

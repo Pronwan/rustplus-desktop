@@ -2018,6 +2018,21 @@ public partial class LfgOverlay : UserControl
     /// <summary>The message the next line will answer, or null when it answers nothing.</summary>
     private Models.ChatLine? _replyTarget;
 
+    private void ChatMention_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
+
+        var token = line.Handle;
+        if (string.IsNullOrWhiteSpace(token))
+            token = line.SenderName;
+
+        if (string.IsNullOrWhiteSpace(token)) return;
+
+        TxtChat.Text = $"@{token} " + (TxtChat.Text ?? "");
+        TxtChat.CaretIndex = TxtChat.Text.Length;
+        TxtChat.Focus();
+    }
+
     private void ChatReply_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
