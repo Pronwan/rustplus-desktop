@@ -19,12 +19,23 @@ namespace RustPlusDesk.Services.AiCompanion
         public string Provider { get; set; } = AiProviders.OpenAi;
 
         /// <summary>
-        /// The key, protected with the Windows account's own data protection.
+        /// One key per provider, each protected with the Windows account's own data protection.
+        ///
+        /// Per provider because switching between GPT and Gemini is something people do — to
+        /// compare them, or because one is rate-limited — and a single slot meant the other
+        /// account's key was silently overwritten and the next question failed on a wrong key.
         ///
         /// Never the plain key: this file sits in a folder any process running as this user can
         /// read, and a leaked key is somebody else's bill. Protected, it is useless on another
         /// account or another machine — which also means it does not survive a reinstall, and
         /// the settings say so rather than letting it fail mysteriously.
+        /// </summary>
+        public Dictionary<string, string> ProtectedKeys { get; set; } = new();
+
+        /// <summary>
+        /// The single key slot this used to have, read once and migrated into
+        /// <see cref="ProtectedKeys"/> under whichever provider was selected at the time.
+        /// Written back as null so it is migrated only once.
         /// </summary>
         public string? ProtectedKey { get; set; }
 
@@ -61,7 +72,7 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public Dictionary<string, string> Models { get; set; } = new();
 
-        /// <summary>How see-through the answer panel is, 0.3 to 1.</summary>
+        /// <summary>How see-through the answer panel is. Zero leaves only the text.</summary>
         public double AnswerOpacity { get; set; } = 1.0;
 
         /// <summary>How wide the answer panel is, in pixels.</summary>
@@ -99,7 +110,20 @@ namespace RustPlusDesk.Services.AiCompanion
                 if (!File.Exists(FilePath)) return new AiCompanionSettings();
 
                 var json = File.ReadAllText(FilePath);
-                return JsonSerializer.Deserialize<AiCompanionSettings>(json) ?? new AiCompanionSettings();
+                var settings = JsonSerializer.Deserialize<AiCompanionSettings>(json) ?? new AiCompanionSettings();
+
+                // The key that was stored before there was one slot per provider belongs to
+                // whichever provider was selected when it was saved — that is the only thing
+                // it could have been for. Cleared afterwards so this runs once.
+                if (!string.IsNullOrEmpty(settings.ProtectedKey))
+                {
+                    settings.ProtectedKeys[settings.Provider] = settings.ProtectedKey;
+                    settings.ProtectedKey = null;
+                    _cached = settings;
+                    Save(settings);
+                }
+
+                return settings;
             }
             catch
             {
@@ -125,17 +149,22 @@ namespace RustPlusDesk.Services.AiCompanion
             }
         }
 
-        /// <summary>True once a key is stored, without going near the key itself.</summary>
-        public static bool HasKey => !string.IsNullOrEmpty(Current.ProtectedKey);
+        /// <summary>True once a key is stored for the chosen provider, without reading it.</summary>
+        public static bool HasKey => HasKeyFor(Current.Provider);
+
+        public static bool HasKeyFor(string provider) =>
+            Current.ProtectedKeys.TryGetValue(provider, out var stored) && !string.IsNullOrEmpty(stored);
 
         /// <summary>
         /// The key in the clear, for the moment of sending a request. Deliberately a method and
         /// not a property: reading it does real work and should look like it at the call site.
         /// </summary>
-        public static string? ReadKey()
+        public static string? ReadKey() => ReadKeyFor(Current.Provider);
+
+        public static string? ReadKeyFor(string provider)
         {
-            var stored = Current.ProtectedKey;
-            if (string.IsNullOrEmpty(stored)) return null;
+            if (!Current.ProtectedKeys.TryGetValue(provider, out var stored) || string.IsNullOrEmpty(stored))
+                return null;
 
             try
             {
@@ -151,19 +180,21 @@ namespace RustPlusDesk.Services.AiCompanion
             }
         }
 
-        public static void WriteKey(string? key)
+        public static void WriteKey(string? key) => WriteKeyFor(Current.Provider, key);
+
+        public static void WriteKeyFor(string provider, string? key)
         {
             var settings = Current;
 
             if (string.IsNullOrWhiteSpace(key))
             {
-                settings.ProtectedKey = null;
+                settings.ProtectedKeys.Remove(provider);
             }
             else
             {
                 var cipher = ProtectedData.Protect(
                     Encoding.UTF8.GetBytes(key.Trim()), Entropy, DataProtectionScope.CurrentUser);
-                settings.ProtectedKey = Convert.ToBase64String(cipher);
+                settings.ProtectedKeys[provider] = Convert.ToBase64String(cipher);
             }
 
             Save(settings);

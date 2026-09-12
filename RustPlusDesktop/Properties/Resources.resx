@@ -7403,4 +7403,19 @@ Close this preview when the panel looks right.</value>
   <data name="CommandDockAiFailedHistory" xml:space="preserve">
     <value>Failed — see recent questions</value>
   </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>A {0} key is stored on this PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>No {0} key yet — this provider cannot send anything without one.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>Also stored: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Spoken answers use this provider&apos;s own voice.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Spoken answers are read by Windows, which sounds noticeably more synthetic.</value>
+  </data>
 </root>

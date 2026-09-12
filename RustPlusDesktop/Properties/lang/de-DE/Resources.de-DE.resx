@@ -7424,4 +7424,19 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
   <data name="CommandDockAiFailedHistory" xml:space="preserve">
     <value>Fehlgeschlagen — siehe letzte Anfragen</value>
   </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>Ein {0}-Schlüssel ist auf diesem PC gespeichert.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>Noch kein {0}-Schlüssel — ohne den kann dieser Anbieter nichts senden.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>Ebenfalls gespeichert: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Gesprochene Antworten nutzen die Stimme dieses Anbieters.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Gesprochene Antworten liest Windows vor, was deutlich synthetischer klingt.</value>
+  </data>
 </root>

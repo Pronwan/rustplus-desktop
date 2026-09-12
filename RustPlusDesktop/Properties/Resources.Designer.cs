@@ -1016,6 +1016,11 @@ namespace RustPlusDesk.Properties {
         public static string CommandDockAiTextAnswers => GetString("CommandDockAiTextAnswers");
         public static string UiPressESCToClearEnterToSave => GetString("UiPressESCToClearEnterToSave");
         public static string CommandDockAiFailedHistory => GetString("CommandDockAiFailedHistory");
+        public static string AiCompanionKeyStoredFor => GetString("AiCompanionKeyStoredFor");
+        public static string AiCompanionKeyMissingFor => GetString("AiCompanionKeyMissingFor");
+        public static string AiCompanionKeyAlsoStored => GetString("AiCompanionKeyAlsoStored");
+        public static string AiCompanionVoiceNative => GetString("AiCompanionVoiceNative");
+        public static string AiCompanionVoiceWindows => GetString("AiCompanionVoiceWindows");
     }
 }
 

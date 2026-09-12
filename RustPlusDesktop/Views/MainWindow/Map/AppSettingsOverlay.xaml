@@ -1323,7 +1323,7 @@
                                 <ui:TextBlock Text="{DynamicResource AiCompanionAnswerWindowHint}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,10" />
 
                                 <ui:TextBlock x:Name="LblAiAnswerOpacity" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                <Slider x:Name="SliAiAnswerOpacity" Minimum="0.3" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />
+                                <Slider x:Name="SliAiAnswerOpacity" Minimum="0" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />
 
                                 <ui:TextBlock x:Name="LblAiAnswerWidth" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
                                 <Slider x:Name="SliAiAnswerWidth" Minimum="220" Maximum="900" TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />

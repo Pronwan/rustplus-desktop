@@ -51,6 +51,12 @@ namespace RustPlusDesk.Services.AiCompanion
             if (!string.IsNullOrWhiteSpace(question.Context))
                 text.Append("\n\nWhat the app knows right now: ").Append(question.Context);
 
+            // The one set of numbers this app can settle outright. Everything else the model
+            // is asked is judgement; raid costs are a lookup, and getting them from memory is
+            // how someone ends up at a wall with half the rockets they need.
+            var raid = AiGameFacts.RaidCosts();
+            if (raid.Length > 0) text.Append("\n\n").Append(raid);
+
             return text.ToString();
         }
 

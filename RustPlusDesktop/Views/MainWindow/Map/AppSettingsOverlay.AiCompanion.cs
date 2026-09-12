@@ -57,7 +57,7 @@ namespace RustPlusDesk.Views
                 Array.IndexOf(Models.CommandDockTextColors.All,
                     settings.AnswerTextColorKey ?? Models.CommandDockTextColors.Auto));
 
-            SliAiAnswerOpacity.Value = Math.Clamp(settings.AnswerOpacity, 0.3, 1.0);
+            SliAiAnswerOpacity.Value = Math.Clamp(settings.AnswerOpacity, 0.0, 1.0);
             SliAiAnswerWidth.Value = Math.Clamp(settings.AnswerWidth, 220, 900);
             SliAiAnswerHeight.Value = Math.Clamp(settings.AnswerHeight, 80, 800);
 
@@ -95,27 +95,51 @@ namespace RustPlusDesk.Views
                 : Loc.Text("AiCompanionProviderTranscribed",
                     "Does not accept audio. Your recording is turned into text on this PC first, which is slower and less accurate with names and game terms than GPT or Gemini.");
 
-            TxtAiKeyState.Text = AiCompanionStore.HasKey
-                ? Loc.Text("AiCompanionKeyStored", "A key is stored on this PC.")
-                : Loc.Text("AiCompanionKeyMissing", "No key yet — the companion cannot send anything without one.");
+            TxtAiProviderNote.Text += " " + (AiProviders.HasVoice(provider)
+                ? Loc.Text("AiCompanionVoiceNative",
+                    "Spoken answers use this provider's own voice.")
+                : Loc.Text("AiCompanionVoiceWindows",
+                    "Spoken answers are read by Windows, which sounds noticeably more synthetic."));
 
-            BtnRemoveAiKey.Visibility = AiCompanionStore.HasKey ? Visibility.Visible : Visibility.Collapsed;
+            // Per provider, and it says which of the others are set up too — the whole reason
+            // there is a slot each is that people keep more than one and switch between them.
+            bool hasKey = AiCompanionStore.HasKeyFor(provider);
 
-            // Streaming needs three things, and each of them fails differently: a provider with
-            // a voice, a supporter account, and spoken answers switched on at all.
-            bool canStream = AiProviders.HasVoice(provider);
+            var others = AiProviders.All
+                .Where(other => other != provider && AiCompanionStore.HasKeyFor(other))
+                .Select(AiProviders.DisplayName)
+                .ToList();
+
+            TxtAiKeyState.Text = hasKey
+                ? string.Format(Loc.Text("AiCompanionKeyStoredFor",
+                    "A {0} key is stored on this PC."), AiProviders.DisplayName(provider))
+                : string.Format(Loc.Text("AiCompanionKeyMissingFor",
+                    "No {0} key yet — this provider cannot send anything without one."),
+                    AiProviders.DisplayName(provider));
+
+            if (others.Count > 0)
+            {
+                TxtAiKeyState.Text += " " + string.Format(
+                    Loc.Text("AiCompanionKeyAlsoStored", "Also stored: {0}."),
+                    string.Join(", ", others));
+            }
+
+            BtnRemoveAiKey.Visibility = hasKey ? Visibility.Visible : Visibility.Collapsed;
+
+            // Streaming needs two things now: spoken answers switched on at all, and a
+            // supporter account. It used to need a provider with its own voice as well —
+            // that stopped being true once the queue started speaking a sentence at a time,
+            // which Windows can do as readily as GPT can.
             bool premium = SupabaseAuthManager.IsPremium;
             bool speaking = ChkAiAudioAnswers.IsChecked == true;
 
-            ChkAiStreamingVoice.IsEnabled = canStream && premium && speaking;
+            ChkAiStreamingVoice.IsEnabled = premium && speaking;
 
             var reason =
                 !speaking ? Loc.Text("AiCompanionStreamingNeedsVoice",
                     "Only applies when answers are read out loud.")
                 : !premium ? Loc.Text("AiCompanionStreamingSupporter",
                     "Spoken answers start once the model has finished. Supporters hear them as they are written.")
-                : !canStream ? Loc.Text("AiCompanionNoVoice",
-                    "This provider has no voice of its own, so answers are read by Windows and cannot start early.")
                 : Loc.Text("AiCompanionStreamingOn",
                     "The answer is spoken as it is written instead of after it is finished.");
 
@@ -282,7 +306,10 @@ namespace RustPlusDesk.Views
             if (AiCompanionStore.Current.PolicyAcceptedUtc == null && !await AcceptAiPolicyAsync())
                 return;
 
-            AiCompanionStore.WriteKey(key);
+            // Against the provider shown in the dropdown, not against whatever the settings
+            // happen to hold: the two are kept in step, and being explicit is what makes it
+            // safe to keep a key for each of the three at once.
+            AiCompanionStore.WriteKeyFor(provider, key);
             TxtAiKey.Password = "";
             ApplyAiCompanionState();
         }
@@ -302,7 +329,8 @@ namespace RustPlusDesk.Views
 
             if (await box.ShowDialogAsync() != WpfUi.MessageBoxResult.Primary) return;
 
-            AiCompanionStore.WriteKey(null);
+            // Only this provider's. The other two are separate accounts and separate bills.
+            AiCompanionStore.WriteKeyFor(SelectedAiProvider, null);
             ApplyAiCompanionState();
         }
 

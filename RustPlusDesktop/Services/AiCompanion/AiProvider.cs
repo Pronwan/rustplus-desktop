@@ -35,8 +35,10 @@ namespace RustPlusDesk.Services.AiCompanion
         public static bool AcceptsAudio(string provider) => provider is OpenAi or Gemini;
 
         /// <summary>
-        /// Whether the provider can speak the answer. Where it cannot, Windows' own voice reads
-        /// it instead — understandable, but plainly a synthesiser.
+        /// Whether the provider will read an answer back in a voice of its own.
+        ///
+        /// Where it will not, Windows reads it instead — understandable, and plainly a
+        /// synthesiser. Claude has no speech endpoint, so it is always Windows there.
         /// </summary>
         public static bool HasVoice(string provider) => provider is OpenAi or Gemini;
 

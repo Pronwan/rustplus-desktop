@@ -78,7 +78,10 @@ namespace RustPlusDesk.Views.Windows
         {
             var settings = AiCompanionStore.Current;
 
-            double opacity = Math.Clamp(settings.AnswerOpacity, 0.3, 1.0);
+            // All the way to nothing. At zero only the text and the two buttons are left,
+            // floating over the game — which is the point, and the same thing the dock's
+            // tiles already allow.
+            double opacity = Math.Clamp(settings.AnswerOpacity, 0.0, 1.0);
 
             Shell.Background = Fade(Resource("Surface", Color.FromArgb(0xD8, 0x16, 0x1B, 0x22)), opacity);
             Shell.BorderBrush = Fade(Resource("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)), opacity);
