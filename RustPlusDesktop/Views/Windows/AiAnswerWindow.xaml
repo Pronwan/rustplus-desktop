@@ -50,7 +50,7 @@
 
                 <!--  Both are Borders rather than Buttons so they look the same as the icon
                       buttons on the tiles they sit under.  -->
-                <Border x:Name="BtnCopy" Grid.Column="1"
+                <Border x:Name="BtnCopy" Grid.Column="1" Visibility="Collapsed"
                         Width="22" Height="22" CornerRadius="4"
                         Background="#30FFFFFF" Cursor="Hand"
                         MouseLeftButtonUp="BtnCopy_Click">
@@ -59,7 +59,7 @@
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
 
-                <Border x:Name="BtnClose" Grid.Column="2"
+                <Border x:Name="BtnClose" Grid.Column="2" Visibility="Collapsed"
                         Width="22" Height="22" CornerRadius="4" Margin="4,0,0,0"
                         Background="#30FFFFFF" Cursor="Hand"
                         MouseLeftButtonUp="BtnClose_Click">

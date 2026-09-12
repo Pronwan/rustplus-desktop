@@ -35,8 +35,7 @@ namespace RustPlusDesk
             // dock has none — so a cell's position on screen is just the window's plus its own.
             var onScreen = new Rect(Left + cell.X, Top + cell.Y, cell.Width, cell.Height);
 
-            _aiAnswer.Show();
-            _aiAnswer.DockUnder(onScreen, ScreenBoundsFor(this));
+            _aiAnswer.Reveal(onScreen, ScreenBoundsFor(this));
         }
 
         private void HideAiAnswer() => _aiAnswer?.Hide();

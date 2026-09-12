@@ -49,10 +49,122 @@ namespace RustPlusDesk.Views.Windows
             InitializeComponent();
 
             _service.Changed += OnServiceChanged;
-            Closed += (_, __) => _service.Changed -= OnServiceChanged;
+            Closed += (_, __) =>
+            {
+                _service.Changed -= OnServiceChanged;
+                _hideTimer?.Stop();
+            };
+
+            // The controls are not part of the answer, so they are not on screen with it.
+            // Hovering is also what stops the countdown, which makes reaching for the copy
+            // button the same gesture as buying time to read.
+            MouseEnter += (_, __) => { ShowControls(true); CancelHide(); };
+            MouseLeave += (_, __) => { ShowControls(false); RestartHide(); };
 
             ApplyAppearance();
             Render();
+        }
+
+        // ── Showing itself, and getting out of the way again ────────────────────
+
+        /// <summary>
+        /// How long an answer stays up, from its length.
+        ///
+        /// Roughly twenty-two characters a second, which is a brisk read — and deliberately so,
+        /// because the panel is over a game and every extra second it sits there is a second of
+        /// the screen it is covering. Hovering stops the clock, and the history keeps the text
+        /// either way, so the cost of being too quick is one hover and the cost of being too
+        /// slow is paid on every single answer.
+        /// </summary>
+        private static TimeSpan ReadingTime(int characters) =>
+            TimeSpan.FromSeconds(Math.Clamp(characters / 22.0, 4, 45));
+
+        private System.Windows.Threading.DispatcherTimer? _hideTimer;
+        private TimeSpan _hideAfter = TimeSpan.FromSeconds(5);
+
+        private void ScheduleHide(int characters)
+        {
+            _hideAfter = ReadingTime(characters);
+
+            // Not while it is being read — the countdown restarts when the pointer leaves.
+            if (IsMouseOver) return;
+
+            RestartHide();
+        }
+
+        private void RestartHide()
+        {
+            if (_preview) return;
+            if (_service.IsBusy) return;   // still arriving; there is nothing finished to hide
+            if (_service.State == AiAnswerState.None) return;
+
+            _hideTimer ??= new System.Windows.Threading.DispatcherTimer();
+            _hideTimer.Stop();
+            _hideTimer.Interval = _hideAfter;
+
+            _hideTimer.Tick -= OnHideTick;
+            _hideTimer.Tick += OnHideTick;
+            _hideTimer.Start();
+        }
+
+        private void CancelHide() => _hideTimer?.Stop();
+
+        private void OnHideTick(object? sender, EventArgs e)
+        {
+            _hideTimer?.Stop();
+            if (IsMouseOver) return;
+
+            FadeOut();
+        }
+
+        private void FadeIn()
+        {
+            BeginAnimation(OpacityProperty, null);
+            Opacity = 0;
+
+            if (!IsVisible) Show();
+
+            BeginAnimation(OpacityProperty,
+                new System.Windows.Media.Animation.DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
+        }
+
+        private void FadeOut()
+        {
+            var fade = new System.Windows.Media.Animation.DoubleAnimation(
+                Opacity, 0, TimeSpan.FromMilliseconds(400));
+
+            // Hidden rather than closed, and the answer is left alone: the service still holds
+            // it, the history has it, and clearing here would mean a panel that fades out also
+            // throws away what it was showing.
+            fade.Completed += (_, __) =>
+            {
+                BeginAnimation(OpacityProperty, null);
+                Opacity = 1;
+                Hide();
+            };
+
+            BeginAnimation(OpacityProperty, fade);
+        }
+
+        private void ShowControls(bool show)
+        {
+            BtnClose.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+
+            // Copy still only appears once there is a whole answer to copy.
+            BtnCopy.Visibility = show && _service.State is AiAnswerState.Answered or AiAnswerState.Failed
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        /// <summary>Positions the panel and brings it up, fading in only if it was away.</summary>
+        public void Reveal(Rect tile, Rect screen)
+        {
+            bool wasVisible = IsVisible;
+
+            if (!wasVisible) FadeIn();
+            DockUnder(tile, screen);
+
+            ShowControls(IsMouseOver);
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -174,15 +286,17 @@ namespace RustPlusDesk.Views.Windows
 
             TxtProvider.Text = AiProviders.DisplayName(AiCompanionStore.Current.Provider);
 
-            // Copying half an answer is not useful, and a button that does nothing is worse than
-            // one that is plainly not ready yet.
-            BtnCopy.Visibility = _service.State is AiAnswerState.Answered or AiAnswerState.Failed
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            // Copying half an answer is not useful, and a button that does nothing is worse
+            // than one that is plainly not ready yet — on top of which both controls only
+            // appear on hover at all.
+            ShowControls(IsMouseOver);
 
             // Follows the text down while it is being written, so the newest line is the one in
             // view without the player having to reach for a scrollbar mid-game.
             if (_service.State == AiAnswerState.Streaming) Scroller.ScrollToEnd();
+
+            if (_service.IsBusy) CancelHide();
+            else ScheduleHide(TxtAnswer.Text?.Length ?? 0);
         }
 
         private static Brush Resource(string key, Color fallback)
@@ -240,6 +354,7 @@ namespace RustPlusDesk.Views.Windows
                 "short of anything else. The crate on the screenshot is a normal military crate, " +
                 "so it will not have one in it.\n\nClose this preview when the panel looks right.");
             preview.BtnCopy.Visibility = Visibility.Collapsed;
+            preview.BtnClose.Visibility = Visibility.Visible;
 
             // Beside its owner rather than under a tile: the settings window is what is being
             // looked at, and the dock may not even be open.
