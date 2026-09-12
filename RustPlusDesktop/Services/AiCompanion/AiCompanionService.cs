@@ -158,7 +158,18 @@ namespace RustPlusDesk.Services.AiCompanion
 
                           // A sentence at a time, never a fragment: the synthesiser reads
                           // half a clause as a statement and the intonation comes out wrong.
-                          if (speakLive) spokenUpTo += SpeakSentences(Answer.Substring(spokenUpTo));
+                          //
+                          // The first one goes as soon as it is complete, however short,
+                          // because nothing is being heard until it does. After that they are
+                          // gathered into longer pieces — every piece is a round trip to the
+                          // provider and a request against its per-minute limit, and by then
+                          // there is already something playing to cover the wait.
+                          if (speakLive)
+                          {
+                              spokenUpTo += SpeakSentences(
+                                  Answer.Substring(spokenUpTo),
+                                  spokenUpTo == 0 ? 0 : LaterChunk);
+                          }
 
                           Raise();
                       }
@@ -255,10 +266,17 @@ namespace RustPlusDesk.Services.AiCompanion
         }
 
         /// <summary>
-        /// Hands every complete sentence in <paramref name="pending"/> to the voice, and
-        /// returns how many characters of it were taken.
+        /// Roughly two sentences. Long enough that a long answer is not fifty separate
+        /// requests, short enough that the voice never runs dry waiting for the next one.
         /// </summary>
-        private static int SpeakSentences(string pending)
+        private const int LaterChunk = 120;
+
+        /// <summary>
+        /// Hands every complete sentence in <paramref name="pending"/> to the voice, and
+        /// returns how many characters of it were taken. Nothing is taken until there are at
+        /// least <paramref name="minimum"/> characters of finished sentences to take.
+        /// </summary>
+        private static int SpeakSentences(string pending, int minimum)
         {
             int cut = -1;
 
@@ -273,7 +291,7 @@ namespace RustPlusDesk.Services.AiCompanion
                 cut = i + 1;
             }
 
-            if (cut <= 0) return 0;
+            if (cut <= 0 || cut < minimum) return 0;
 
             AiVoice.Speak(pending.Substring(0, cut));
             return cut;
