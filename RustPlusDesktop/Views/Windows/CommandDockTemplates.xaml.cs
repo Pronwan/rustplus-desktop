@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
+using Wpf.Ui.Controls;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace RustPlusDesk
 {
@@ -75,6 +77,7 @@ namespace RustPlusDesk
                         "Nothing saved yet. Arrange the dock, give it a name and save it."),
                     FontSize = 11,
                     TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness(4, 2, 4, 6),
                     Foreground = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray,
                 });
                 return;
@@ -88,11 +91,14 @@ namespace RustPlusDesk
         {
             var row = new Border
             {
-                Padding = new Thickness(10, 7, 6, 7),
-                Margin = new Thickness(0, 0, 0, 4),
-                CornerRadius = new CornerRadius(6),
-                Background = TryFindResource("SurfaceAlt") as Brush ?? Brushes.Transparent,
+                Padding = new Thickness(10, 8, 8, 8),
+                Margin = new Thickness(0, 0, 0, 5),
+                CornerRadius = new CornerRadius(8),
+                Background = new SolidColorBrush(Color.FromRgb(0x18, 0x1E, 0x27)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(0x24, 0x2E, 0x3D)),
+                BorderThickness = new Thickness(1),
                 Cursor = Cursors.Hand,
+                SnapsToDevicePixels = true
             };
 
             var grid = new Grid();
@@ -107,6 +113,7 @@ namespace RustPlusDesk
                 Text = preset.Name,
                 FontSize = 12.5,
                 FontWeight = FontWeights.SemiBold,
+                Foreground = TryFindResource("TextPrimary") as Brush ?? Brushes.White,
                 TextTrimming = TextTrimming.CharacterEllipsis,
             });
             text.Children.Add(new TextBlock
@@ -117,22 +124,33 @@ namespace RustPlusDesk
                     preset.SavedUtc.ToLocalTime().ToString("d MMM, HH:mm")),
                 FontSize = 10,
                 Foreground = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray,
+                Margin = new Thickness(0, 2, 0, 0)
             });
             grid.Children.Add(text);
 
-            var rename = SmallButton("\uE70F", Loc.Text("CommandDockTemplateRename", "Rename"));
+            var rename = SmallButton(SymbolRegular.Edit24, Loc.Text("CommandDockTemplateRename", "Rename"));
             Grid.SetColumn(rename, 1);
             grid.Children.Add(rename);
 
-            var delete = SmallButton("\uE74D", Loc.Text("CommandDockTemplateDelete", "Delete"));
+            var delete = SmallButton(SymbolRegular.Delete24, Loc.Text("CommandDockTemplateDelete", "Delete"), isDanger: true);
             Grid.SetColumn(delete, 2);
             grid.Children.Add(delete);
 
             // The whole row loads; the two buttons stop the press before it gets that far.
             row.MouseLeftButtonUp += (_, __) => { Dock?.ApplyPreset(preset.Id); Close(); };
 
-            row.MouseEnter += (_, __) => Dock?.ShowPresetPreview(preset.Id);
-            row.MouseLeave += (_, __) => Dock?.HidePresetPreview();
+            row.MouseEnter += (_, __) =>
+            {
+                row.Background = new SolidColorBrush(Color.FromRgb(0x22, 0x2A, 0x37));
+                row.BorderBrush = new SolidColorBrush(Color.FromRgb(0x38, 0x47, 0x5C));
+                Dock?.ShowPresetPreview(preset.Id);
+            };
+            row.MouseLeave += (_, __) =>
+            {
+                row.Background = new SolidColorBrush(Color.FromRgb(0x18, 0x1E, 0x27));
+                row.BorderBrush = new SolidColorBrush(Color.FromRgb(0x24, 0x2E, 0x3D));
+                Dock?.HidePresetPreview();
+            };
 
             rename.MouseLeftButtonUp += (_, e) => { e.Handled = true; BeginRename(preset); };
             delete.MouseLeftButtonUp += (_, e) => { e.Handled = true; ConfirmDelete(preset); };
@@ -142,12 +160,9 @@ namespace RustPlusDesk
 
         private void BeginRename(CommandDockPreset preset)
         {
-            // Reuses the name box rather than opening a dialog on top of a window that is itself
-            // a dialog: it is already there, already focused by habit, and Enter already saves.
             TxtName.Text = preset.Name;
             TxtName.Focus();
             TxtName.SelectAll();
-
             _renaming = preset.Id;
         }
 
@@ -172,25 +187,42 @@ namespace RustPlusDesk
             Refresh();
         }
 
-        private Border SmallButton(string glyph, string tooltip)
+        private Border SmallButton(SymbolRegular symbol, string tooltip, bool isDanger = false)
         {
             var button = new Border
             {
-                Width = 24,
-                Height = 24,
+                Width = 26,
+                Height = 26,
                 Margin = new Thickness(4, 0, 0, 0),
-                CornerRadius = new CornerRadius(4),
-                Background = TryFindResource("Surface") as Brush ?? Brushes.Transparent,
+                CornerRadius = new CornerRadius(5),
+                Background = new SolidColorBrush(Color.FromRgb(0x1F, 0x27, 0x34)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(0x2B, 0x37, 0x48)),
+                BorderThickness = new Thickness(1),
                 VerticalAlignment = VerticalAlignment.Center,
                 Cursor = Cursors.Hand,
-                Child = new TextBlock
+                Child = new SymbolIcon
                 {
-                    Text = glyph,
-                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                    FontSize = 11,
+                    Symbol = symbol,
+                    FontSize = 13,
+                    Foreground = isDanger
+                        ? new SolidColorBrush(Color.FromRgb(0xF8, 0x71, 0x71))
+                        : (TryFindResource("TextSubtle") as Brush ?? Brushes.Gray),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
+            };
+
+            button.MouseEnter += (_, __) =>
+            {
+                button.Background = new SolidColorBrush(Color.FromRgb(0x29, 0x34, 0x44));
+                button.BorderBrush = isDanger
+                    ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44))
+                    : new SolidColorBrush(Color.FromRgb(0x3B, 0x82, 0xF6));
+            };
+            button.MouseLeave += (_, __) =>
+            {
+                button.Background = new SolidColorBrush(Color.FromRgb(0x1F, 0x27, 0x34));
+                button.BorderBrush = new SolidColorBrush(Color.FromRgb(0x2B, 0x37, 0x48));
             };
 
             ToolTipService.SetToolTip(button, tooltip);

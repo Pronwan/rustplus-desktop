@@ -9,49 +9,57 @@
         ShowInTaskbar="False"
         Topmost="True"
         SizeToContent="Height"
-        Width="320"
-        MaxHeight="560"
+        Width="350"
+        MaxHeight="600"
         WindowStartupLocation="CenterOwner">
-    <Border Background="{DynamicResource Surface}"
-            BorderBrush="{DynamicResource CardBorder}"
-            BorderThickness="1"
-            CornerRadius="12"
-            Padding="14">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Border Background="Transparent" Padding="12">
+        <Border Background="#141820"
+                BorderBrush="#252F3D"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="16,14,16,14">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="4" Direction="270" Color="#000000" Opacity="0.75" />
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,0,0,10" MouseLeftButtonDown="Header_MouseLeftButtonDown">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Add24" Margin="0,0,6,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="16"/>
-                    <TextBlock Text="{DynamicResource CommandDockAddTile}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
-                </StackPanel>
-                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4"
-                           Appearance="Transparent" Click="BtnClose_Click"
-                           Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+                <Grid Grid.Row="0" Margin="0,0,0,10" MouseLeftButtonDown="Header_MouseLeftButtonDown" Background="Transparent" Cursor="SizeAll">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="28" Height="28" CornerRadius="14" Background="#1C2738" BorderBrush="#263A54" BorderThickness="1" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Add24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"/>
+                        </Border>
+                        <TextBlock Text="{DynamicResource CommandDockAddTile}" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Width="28" Height="28" Padding="0"
+                               Appearance="Transparent" Click="BtnClose_Click"
+                               Icon="{ui:SymbolIcon Symbol=Dismiss24}"
+                               ToolTip="Close"/>
+                </Grid>
+
+                <TextBlock Grid.Row="1"
+                           Text="{DynamicResource CommandDockPickerHint}"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,10"
+                           Foreground="{DynamicResource TextSubtle}"/>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+                    <StackPanel x:Name="Catalogue"/>
+                </ScrollViewer>
+
+                <Border Grid.Row="3" Margin="0,10,0,0" Padding="0,8,0,0" BorderThickness="0,1,0,0" BorderBrush="#1C232E">
+                    <TextBlock Text="{DynamicResource CommandDockEditHint}"
+                               FontSize="10.5"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextSubtle}"/>
+                </Border>
             </Grid>
-
-            <TextBlock Grid.Row="1"
-                       Text="{DynamicResource CommandDockPickerHint}"
-                       FontSize="11"
-                       TextWrapping="Wrap"
-                       Margin="0,0,0,10"
-                       Foreground="{DynamicResource TextSubtle}"/>
-
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                <StackPanel x:Name="Catalogue"/>
-            </ScrollViewer>
-
-            <TextBlock Grid.Row="3"
-                       Text="{DynamicResource CommandDockEditHint}"
-                       FontSize="10"
-                       TextWrapping="Wrap"
-                       Margin="0,10,0,0"
-                       Foreground="{DynamicResource TextSubtle}"/>
-        </Grid>
+        </Border>
     </Border>
 </Window>
