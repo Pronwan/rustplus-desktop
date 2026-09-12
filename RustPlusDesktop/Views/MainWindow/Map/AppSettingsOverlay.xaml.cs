@@ -651,6 +651,7 @@ namespace RustPlusDesk.Views
             ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+            LoadGlobalChatSettings();
 
 #if DEBUG
             RowDevDownloadIcons.Visibility = Visibility.Visible;

@@ -918,6 +918,20 @@
                 <!-- Auth status line -->
                 <ui:TextBlock x:Name="TxtAuthStatus" FontSize="11" Foreground="#888" TextWrapping="Wrap" Margin="0,4,0,10" Text="{DynamicResource UiNotConnected}" />
 
+                <!--  Global chat. Lives with the cloud account because that is what the room runs on:
+                      no account, no room — and this is where somebody who turned the strip off would
+                      come looking for it.  -->
+                <ui:CardExpander Header="{DynamicResource GlobalChatTitle}" Margin="0,6,0,0" Foreground="{DynamicResource TextPrimary}" ContentPadding="12,8">
+                    <StackPanel Margin="0,8,0,0">
+                        <CheckBox x:Name="ChkGlobalChatTicker"
+                                  Content="{DynamicResource GlobalChatTickerSetting}"
+                                  Foreground="{DynamicResource TextPrimary}"
+                                  Checked="OnGlobalChatTickerToggled"
+                                  Unchecked="OnGlobalChatTickerToggled" />
+                        <ui:TextBlock Text="{DynamicResource GlobalChatTickerSettingHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="26,2,0,4" />
+                    </StackPanel>
+                </ui:CardExpander>
+
                 <ui:CardExpander Header="{DynamicResource UiBasicDiscordIntegration}" tutorials:Tutorial.TargetId="Settings.DiscordBasic" Margin="0,0,0,10" Foreground="{DynamicResource TextPrimary}" IsEnabled="{Binding IsCloudConnected}" ContentPadding="12,8">
                     <StackPanel Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
