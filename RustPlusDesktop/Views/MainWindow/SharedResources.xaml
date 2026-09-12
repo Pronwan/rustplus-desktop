@@ -7,6 +7,7 @@
 
     <conv:UpkeepBackgroundConverter x:Key="UpkeepBackgroundConverter" />
     <conv:StorageChipConverter x:Key="StorageChipConverter" />
+    <conv:StorageUpkeepConverter x:Key="StorageUpkeepConverter" />
     <conv:KindToStorageVisibilityConverter x:Key="KindToStorageVisibility" />
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityInv" Invert="True" />

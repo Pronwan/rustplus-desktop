@@ -2598,15 +2598,15 @@
                                                                     </Border>
 
                                                                     <Border
-                                                                        Padding="7,2"
+                                                                        Padding="8,2.5"
                                                                         VerticalAlignment="Center"
                                                                         Background="{Binding Storage, Converter={StaticResource UpkeepBackgroundConverter}}"
                                                                         BorderBrush="{Binding Background, RelativeSource={RelativeSource Self}}"
                                                                         BorderThickness="1"
-                                                                        CornerRadius="7"
+                                                                        CornerRadius="6"
                                                                         PreviewMouseWheel="StorPill_PreviewMouseWheel"
                                                                         ToolTipOpening="StorPill_ToolTipOpening"
-                                                                        ToolTipService.InitialShowDelay="250"
+                                                                        ToolTipService.InitialShowDelay="200"
                                                                         ToolTipService.Placement="Mouse"
                                                                         ToolTipService.ShowDuration="30000"
                                                                         Visibility="{Binding Kind, Converter={StaticResource KindToStorageVisibility}}">
@@ -2620,121 +2620,298 @@
                                                                             Text="{Binding StorageSummary, Mode=OneWay}" />
 
                                                                         <Border.ToolTip>
-                                                                            <ToolTip MaxWidth="520">
+                                                                            <ToolTip
+                                                                                MaxWidth="540"
+                                                                                Padding="0"
+                                                                                Background="Transparent"
+                                                                                BorderBrush="Transparent"
+                                                                                BorderThickness="0"
+                                                                                HasDropShadow="True">
                                                                                 <Border
-                                                                                    Background="{DynamicResource SurfaceAlt}"
-                                                                                    BorderBrush="{DynamicResource CardBorder}"
+                                                                                    Background="#12151B"
+                                                                                    BorderBrush="#2B3444"
                                                                                     BorderThickness="1"
-                                                                                    CornerRadius="8">
-                                                                                    <StackPanel Margin="8,8,8,6">
+                                                                                    CornerRadius="12"
+                                                                                    SnapsToDevicePixels="True">
+                                                                                    <Border.Effect>
+                                                                                        <DropShadowEffect
+                                                                                            BlurRadius="22"
+                                                                                            Direction="270"
+                                                                                            Opacity="0.65"
+                                                                                            ShadowDepth="5"
+                                                                                            Color="#000000" />
+                                                                                    </Border.Effect>
+                                                                                    <StackPanel Margin="14,12,14,12">
+                                                                                        <!-- Header: Icon, Device Name, Type Tag, and Upkeep Status Badge -->
+                                                                                        <Grid Margin="0,0,0,10">
+                                                                                            <Grid.ColumnDefinitions>
+                                                                                                <ColumnDefinition Width="Auto" />
+                                                                                                <ColumnDefinition Width="*" />
+                                                                                                <ColumnDefinition Width="Auto" />
+                                                                                            </Grid.ColumnDefinitions>
 
-                                                                                        <DockPanel Margin="0,0,0,2" LastChildFill="False">
-                                                                                            <Image
-                                                                                                Width="20"
-                                                                                                Height="20"
-                                                                                                Margin="0,0,6,0"
-                                                                                                Opacity="0.9"
-                                                                                                RenderOptions.BitmapScalingMode="HighQuality"
-                                                                                                Source="{StaticResource IconStorageMonitor}" />
-                                                                                            <StackPanel Orientation="Horizontal">
-                                                                                                <ui:SymbolIcon
-                                                                                                    Symbol="Warning20"
-                                                                                                    Foreground="#F04747"
-                                                                                                    Margin="0,0,6,0"
-                                                                                                    VerticalAlignment="Center">
-                                                                                                    <ui:SymbolIcon.Style>
-                                                                                                        <Style TargetType="ui:SymbolIcon">
-                                                                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                                                                            <Style.Triggers>
-                                                                                                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                                                                </DataTrigger>
-                                                                                                            </Style.Triggers>
-                                                                                                        </Style>
-                                                                                                    </ui:SymbolIcon.Style>
-                                                                                                </ui:SymbolIcon>
+                                                                                            <!-- Icon Container -->
+                                                                                            <Border
+                                                                                                Grid.Column="0"
+                                                                                                Width="36"
+                                                                                                Height="36"
+                                                                                                Margin="0,0,10,0"
+                                                                                                Background="#1A202C"
+                                                                                                BorderBrush="#2D384D"
+                                                                                                BorderThickness="1"
+                                                                                                CornerRadius="8">
+                                                                                                <Image
+                                                                                                    Width="22"
+                                                                                                    Height="22"
+                                                                                                    HorizontalAlignment="Center"
+                                                                                                    VerticalAlignment="Center"
+                                                                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                                                                    Source="{StaticResource IconStorageMonitor}" />
+                                                                                            </Border>
+
+                                                                                            <!-- Device Name & Type Subtitle -->
+                                                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                                                <DockPanel LastChildFill="False">
+                                                                                                    <ui:SymbolIcon
+                                                                                                        Symbol="Warning20"
+                                                                                                        Foreground="#F04747"
+                                                                                                        Margin="0,0,4,0"
+                                                                                                        VerticalAlignment="Center">
+                                                                                                        <ui:SymbolIcon.Style>
+                                                                                                            <Style TargetType="ui:SymbolIcon">
+                                                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                                                                <Style.Triggers>
+                                                                                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                                                                    </DataTrigger>
+                                                                                                                </Style.Triggers>
+                                                                                                            </Style>
+                                                                                                        </ui:SymbolIcon.Style>
+                                                                                                    </ui:SymbolIcon>
+                                                                                                    <TextBlock
+                                                                                                        MaxWidth="220"
+                                                                                                        FontSize="13.5"
+                                                                                                        FontWeight="Bold"
+                                                                                                        Foreground="#F3F4F6"
+                                                                                                        TextTrimming="CharacterEllipsis"
+                                                                                                        Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
+                                                                                                </DockPanel>
+
+                                                                                                <!-- Device Subtitle Tag -->
                                                                                                 <TextBlock
-                                                                                                    DockPanel.Dock="Left"
-                                                                                                    FontSize="13"
+                                                                                                    Margin="0,1.5,0,0"
+                                                                                                    FontSize="9.5"
                                                                                                     FontWeight="SemiBold"
-                                                                                                    Foreground="{DynamicResource TextPrimary}"
-                                                                                                    Text="{Binding PureName, TargetNullValue=Storage Monitor}" />
+                                                                                                    Foreground="#8C98A9"
+                                                                                                    Text="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=status_text}" />
                                                                                             </StackPanel>
+
+                                                                                            <!-- Upkeep / Storage Status Pill Badge -->
+                                                                                            <Border
+                                                                                                Grid.Column="2"
+                                                                                                Padding="9,4"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Background="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=badge_bg}"
+                                                                                                BorderBrush="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=badge_border}"
+                                                                                                BorderThickness="1"
+                                                                                                CornerRadius="6">
+                                                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                                    <ui:SymbolIcon
+                                                                                                        Symbol="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=status_icon}"
+                                                                                                        Foreground="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=badge_fg}"
+                                                                                                        FontSize="12"
+                                                                                                        Margin="0,0,5,0"
+                                                                                                        VerticalAlignment="Center" />
+                                                                                                    <TextBlock
+                                                                                                        FontSize="11"
+                                                                                                        FontWeight="Bold"
+                                                                                                        Foreground="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=badge_fg}"
+                                                                                                        Text="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=upkeep_text}"
+                                                                                                        VerticalAlignment="Center" />
+                                                                                                </StackPanel>
+                                                                                            </Border>
+                                                                                        </Grid>
+
+                                                                                        <!-- Tool Cupboard Upkeep Banner Bar (Visible only when TC) -->
+                                                                                        <Border
+                                                                                            Margin="0,0,0,10"
+                                                                                            Padding="10,6"
+                                                                                            Background="#161B23"
+                                                                                            BorderBrush="#252F3F"
+                                                                                            BorderThickness="1"
+                                                                                            CornerRadius="7"
+                                                                                            Visibility="{Binding Storage, Converter={StaticResource StorageUpkeepConverter}, ConverterParameter=is_tc_vis}">
+                                                                                            <DockPanel LastChildFill="False">
+                                                                                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                                    <ui:SymbolIcon
+                                                                                                        Symbol="Shield20"
+                                                                                                        Foreground="#38BDF8"
+                                                                                                        FontSize="13"
+                                                                                                        Margin="0,0,6,0"
+                                                                                                        VerticalAlignment="Center" />
+                                                                                                    <TextBlock
+                                                                                                        FontSize="10.5"
+                                                                                                        FontWeight="Medium"
+                                                                                                        Foreground="#94A3B8"
+                                                                                                        Text="Tool Cupboard Upkeep Protection"
+                                                                                                        VerticalAlignment="Center" />
+                                                                                                </StackPanel>
+                                                                                                <TextBlock
+                                                                                                    DockPanel.Dock="Right"
+                                                                                                    FontSize="11"
+                                                                                                    FontWeight="Bold"
+                                                                                                    Foreground="#E2E8F0"
+                                                                                                    Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}"
+                                                                                                    VerticalAlignment="Center" />
+                                                                                            </DockPanel>
+                                                                                        </Border>
+
+                                                                                        <!-- Items Grid Container -->
+                                                                                        <Border
+                                                                                            Padding="5"
+                                                                                            Background="#0B0D11"
+                                                                                            BorderBrush="#1F2633"
+                                                                                            BorderThickness="1"
+                                                                                            CornerRadius="8">
+                                                                                            <ScrollViewer
+                                                                                                MaxHeight="370"
+                                                                                                Focusable="False"
+                                                                                                SnapsToDevicePixels="True"
+                                                                                                VerticalScrollBarVisibility="Auto">
+                                                                                                <ItemsControl ItemsSource="{Binding Storage.Items}">
+                                                                                                    <ItemsControl.ItemsPanel>
+                                                                                                        <ItemsPanelTemplate>
+                                                                                                            <WrapPanel
+                                                                                                                ItemHeight="62"
+                                                                                                                ItemWidth="62"
+                                                                                                                Orientation="Horizontal"
+                                                                                                                SnapsToDevicePixels="True"
+                                                                                                                UseLayoutRounding="True" />
+                                                                                                        </ItemsPanelTemplate>
+                                                                                                    </ItemsControl.ItemsPanel>
+
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Border
+                                                                                                                Width="60"
+                                                                                                                Height="60"
+                                                                                                                Margin="1"
+                                                                                                                Background="#151820"
+                                                                                                                BorderBrush="#252C3B"
+                                                                                                                BorderThickness="1"
+                                                                                                                CornerRadius="6"
+                                                                                                                SnapsToDevicePixels="True">
+                                                                                                                <Border.Style>
+                                                                                                                    <Style TargetType="Border">
+                                                                                                                        <Setter Property="Background" Value="#151820" />
+                                                                                                                        <Setter Property="BorderBrush" Value="#252C3B" />
+                                                                                                                        <Style.Triggers>
+                                                                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                                                                <Setter Property="Background" Value="#1C212D" />
+                                                                                                                                <Setter Property="BorderBrush" Value="#38BDF8" />
+                                                                                                                            </Trigger>
+                                                                                                                        </Style.Triggers>
+                                                                                                                    </Style>
+                                                                                                                </Border.Style>
+
+                                                                                                                <!-- Item Tooltip for Each Individual Slot -->
+                                                                                                                <Border.ToolTip>
+                                                                                                                    <ToolTip
+                                                                                                                        Background="Transparent"
+                                                                                                                        BorderBrush="Transparent"
+                                                                                                                        BorderThickness="0"
+                                                                                                                        Padding="0"
+                                                                                                                        HasDropShadow="True">
+                                                                                                                        <Border
+                                                                                                                            Background="#13161D"
+                                                                                                                            BorderBrush="#313B4D"
+                                                                                                                            BorderThickness="1"
+                                                                                                                            CornerRadius="6"
+                                                                                                                            Padding="8,6">
+                                                                                                                            <StackPanel>
+                                                                                                                                <TextBlock
+                                                                                                                                    FontSize="12"
+                                                                                                                                    FontWeight="Bold"
+                                                                                                                                    Foreground="#F3F4F6"
+                                                                                                                                    Text="{Binding Display}" />
+                                                                                                                                <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                                                                                                    <TextBlock FontSize="10.5" Foreground="#94A3B8" Text="Quantity: " />
+                                                                                                                                    <TextBlock
+                                                                                                                                        FontSize="10.5"
+                                                                                                                                        FontWeight="Bold"
+                                                                                                                                        Foreground="#38BDF8"
+                                                                                                                                        Text="{Binding Amount, StringFormat={}{0:N0}}" />
+                                                                                                                                </StackPanel>
+                                                                                                                            </StackPanel>
+                                                                                                                        </Border>
+                                                                                                                    </ToolTip>
+                                                                                                                </Border.ToolTip>
+
+                                                                                                                <Grid>
+                                                                                                                    <Image
+                                                                                                                        Width="44"
+                                                                                                                        Height="44"
+                                                                                                                        HorizontalAlignment="Center"
+                                                                                                                        VerticalAlignment="Center"
+                                                                                                                        RenderOptions.BitmapScalingMode="Fant"
+                                                                                                                        Source="{Binding Icon}" />
+
+                                                                                                                    <Border
+                                                                                                                        Margin="0,0,2,2"
+                                                                                                                        Padding="4,1"
+                                                                                                                        HorizontalAlignment="Right"
+                                                                                                                        VerticalAlignment="Bottom"
+                                                                                                                        Background="#D9080A0E"
+                                                                                                                        BorderBrush="#333E50"
+                                                                                                                        BorderThickness="1"
+                                                                                                                        CornerRadius="4">
+                                                                                                                        <TextBlock
+                                                                                                                            FontSize="9.5"
+                                                                                                                            FontWeight="Bold"
+                                                                                                                            Foreground="#FFFFFF">
+                                                                                                                            <Run Text="x" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
+                                                                                                                        </TextBlock>
+                                                                                                                    </Border>
+                                                                                                                </Grid>
+                                                                                                            </Border>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+
+                                                                                                    <ItemsControl.ItemContainerStyle>
+                                                                                                        <Style TargetType="ContentPresenter">
+                                                                                                            <Setter Property="Margin" Value="0" />
+                                                                                                        </Style>
+                                                                                                    </ItemsControl.ItemContainerStyle>
+                                                                                                </ItemsControl>
+                                                                                            </ScrollViewer>
+                                                                                        </Border>
+
+                                                                                        <!-- Footer Summary Bar -->
+                                                                                        <DockPanel Margin="0,8,0,0" LastChildFill="False">
+                                                                                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                                <Border
+                                                                                                    Width="6"
+                                                                                                    Height="6"
+                                                                                                    Margin="0,0,5,0"
+                                                                                                    Background="#10B981"
+                                                                                                    CornerRadius="3"
+                                                                                                    VerticalAlignment="Center" />
+                                                                                                <TextBlock
+                                                                                                    FontSize="9.5"
+                                                                                                    FontWeight="Medium"
+                                                                                                    Foreground="#64748B"
+                                                                                                    Text="Live Storage Snapshot"
+                                                                                                    VerticalAlignment="Center" />
+                                                                                            </StackPanel>
+
+                                                                                            <TextBlock
+                                                                                                DockPanel.Dock="Right"
+                                                                                                FontSize="10"
+                                                                                                FontWeight="SemiBold"
+                                                                                                Foreground="#94A3B8"
+                                                                                                Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}"
+                                                                                                VerticalAlignment="Center" />
                                                                                         </DockPanel>
-
-                                                                                        <TextBlock
-                                                                                            Margin="0,0,0,4"
-                                                                                            FontSize="10.5"
-                                                                                            Foreground="{DynamicResource TextSubtle}"
-                                                                                            Text="{Binding Storage, Converter={StaticResource StorageChipConverter}}" />
-
-                                                                                        <ScrollViewer MaxHeight="390" VerticalScrollBarVisibility="Auto">
-                                                                                            <ItemsControl ItemsSource="{Binding Storage.Items}">
-                                                                                                <ItemsControl.ItemsPanel>
-                                                                                                    <ItemsPanelTemplate>
-                                                                                                        <WrapPanel
-                                                                                                            ItemHeight="64"
-                                                                                                            ItemWidth="64"
-                                                                                                            Orientation="Horizontal"
-                                                                                                            SnapsToDevicePixels="True"
-                                                                                                            UseLayoutRounding="True" />
-                                                                                                    </ItemsPanelTemplate>
-                                                                                                </ItemsControl.ItemsPanel>
-
-                                                                                                <ItemsControl.ItemTemplate>
-                                                                                                    <DataTemplate>
-                                                                                                        <Border
-                                                                                                            Width="64"
-                                                                                                            Height="64"
-                                                                                                            Background="{DynamicResource Surface}"
-                                                                                                            BorderBrush="{DynamicResource CardBorder}"
-                                                                                                            BorderThickness="1"
-                                                                                                            CornerRadius="6"
-                                                                                                            SnapsToDevicePixels="True">
-                                                                                                            <Grid>
-                                                                                                                <Image
-                                                                                                                    Width="48"
-                                                                                                                    Height="48"
-                                                                                                                    HorizontalAlignment="Center"
-                                                                                                                    VerticalAlignment="Center"
-                                                                                                                    RenderOptions.BitmapScalingMode="Fant"
-                                                                                                                    Source="{Binding Icon}" />
-
-                                                                                                                <Border
-                                                                                                                    Margin="1,1,1,1"
-                                                                                                                    Padding="4,1.5"
-                                                                                                                    HorizontalAlignment="Right"
-                                                                                                                    VerticalAlignment="Bottom"
-                                                                                                                    Background="#CC0F1013"
-                                                                                                                    BorderBrush="#1EFFFFFF"
-                                                                                                                    BorderThickness="1"
-                                                                                                                    CornerRadius="4">
-                                                                                                                    <TextBlock
-                                                                                                                        FontSize="10"
-                                                                                                                        FontWeight="SemiBold"
-                                                                                                                        Foreground="{DynamicResource TextPrimary}">
-                                                                                                                        <Run Text="{DynamicResource UiX}" /><Run Text="{Binding Amount, StringFormat={}{0:N0}}" />
-                                                                                                                    </TextBlock>
-                                                                                                                </Border>
-                                                                                                            </Grid>
-                                                                                                        </Border>
-                                                                                                    </DataTemplate>
-                                                                                                </ItemsControl.ItemTemplate>
-
-                                                                                                <ItemsControl.ItemContainerStyle>
-                                                                                                    <Style TargetType="ContentPresenter">
-                                                                                                        <Setter Property="Margin" Value="1" />
-                                                                                                    </Style>
-                                                                                                </ItemsControl.ItemContainerStyle>
-                                                                                            </ItemsControl>
-                                                                                        </ScrollViewer>
-
-                                                                                        <TextBlock
-                                                                                            Margin="0,2,0,0"
-                                                                                            HorizontalAlignment="Right"
-                                                                                            FontSize="9.5"
-                                                                                            Foreground="{DynamicResource TextSubtle}"
-                                                                                            Text="{Binding Storage.ItemsCount, StringFormat={}{0} items}" />
                                                                                     </StackPanel>
                                                                                 </Border>
                                                                             </ToolTip>
