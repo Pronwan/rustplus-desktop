@@ -9,195 +9,330 @@
              Background="Transparent">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="SupText" Color="#FFF4F6FA" />
-        <SolidColorBrush x:Key="SupMuted" Color="#FF94A0B3" />
-        <SolidColorBrush x:Key="SupFaint" Color="#FF6B7686" />
-        <SolidColorBrush x:Key="SupLine" Color="#1FFFFFFF" />
-        <SolidColorBrush x:Key="SupCard" Color="#FF161C24" />
-        <SolidColorBrush x:Key="SupPanel" Color="#FF0E141A" />
-        <SolidColorBrush x:Key="SupAccent" Color="#FFE8683C" />
-
-        <!--  Section label above a field.  -->
+        <!-- Section label above a field -->
         <Style x:Key="SupLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource SupMuted}" />
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,0,0,6" />
         </Style>
 
-        <!--  A small pill (category, status).  -->
-        <Style x:Key="SupPill" TargetType="Border">
-            <Setter Property="Background" Value="#1FFFFFFF" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="6,2" />
-            <Setter Property="Margin" Value="0,0,6,0" />
+        <!-- Ticket list item card style with smooth hover elevation -->
+        <Style x:Key="TicketCardBorder" TargetType="Border">
+            <Setter Property="Background" Value="#141820" />
+            <Setter Property="BorderBrush" Value="#22FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1D232E" />
+                    <Setter Property="BorderBrush" Value="#4560CDFF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AttachmentButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="RootBorder" Background="Transparent" SnapsToDevicePixels="True">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.88" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.70" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <DataTemplate x:Key="CategoryItemTemplate">
-            <TextBlock Text="{Binding}" Foreground="{StaticResource SupText}" />
+            <TextBlock Text="{Binding}" Foreground="{DynamicResource TextPrimary}" FontSize="12.5" />
         </DataTemplate>
     </UserControl.Resources>
 
-    <!--  A card that fills the column, like the other overlays.  -->
-    <Border Background="{StaticResource SupPanel}" CornerRadius="8"
-            BorderBrush="{StaticResource SupLine}" BorderThickness="1">
-        <Grid Margin="18">
+    <!-- Overlay Container: modern Fluent card surface -->
+    <Border Background="{DynamicResource SurfaceAlt}" CornerRadius="10"
+            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+        <Grid Margin="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!--  Header  -->
-            <Grid Grid.Row="0" Margin="0,0,0,18">
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{StaticResource SupAccent}" FontSize="20" />
-                    <TextBlock Text="{DynamicResource SupportTitle}" Foreground="{StaticResource SupText}" FontSize="17" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" />
+                    <Border Width="32" Height="32" CornerRadius="8" Background="#1E60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" Margin="0,0,10,0">
+                        <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{DynamicResource Accent}" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource SupportTitle}" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold" />
+                    </StackPanel>
                 </StackPanel>
-                <ui:Button Grid.Column="1" x:Name="BtnClose" Appearance="Transparent" Padding="6" Click="Close_Click">
-                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="{StaticResource SupMuted}" />
+
+                <ui:Button Grid.Column="1" x:Name="BtnClose" Appearance="Transparent" Padding="7" Click="Close_Click" ToolTip="Close" Width="32" Height="32">
+                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextSubtle}" FontSize="14" />
                 </ui:Button>
             </Grid>
 
-            <!--  Content  -->
+            <!-- Content Area -->
             <Grid Grid.Row="1">
 
-                <!--  Tickets: list  -->
+                <!-- 1. Tickets: List View -->
                 <Grid x:Name="TicketsView">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    
                     <ui:Button Grid.Row="0" x:Name="BtnNewTicket" Content="{DynamicResource SupportNewTicket}" Icon="{ui:SymbolIcon Add24}"
-                               Appearance="Primary" Height="38" Margin="0,0,0,14" HorizontalAlignment="Stretch" Click="NewTicket_Click" />
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                               Appearance="Primary" Height="38" Margin="0,0,0,14" HorizontalAlignment="Stretch" Click="NewTicket_Click" FontWeight="SemiBold" FontSize="13" />
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,2,0">
                         <ItemsControl x:Name="TicketsList">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource SupCard}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10" Cursor="Hand"
-                                            MouseLeftButtonUp="TicketRow_Click" Tag="{Binding Id}">
-                                        <StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Ellipse Width="7" Height="7" Fill="{StaticResource SupAccent}" VerticalAlignment="Center" Margin="0,0,8,0" Visibility="{Binding UnreadVisibility}" />
-                                                <TextBlock Text="{Binding Subject}" Foreground="{StaticResource SupText}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
-                                                <Border Style="{StaticResource SupPill}">
-                                                    <TextBlock Text="{Binding CategoryLabel}" Foreground="{StaticResource SupMuted}" FontSize="10" />
-                                                </Border>
-                                                <!--  Status carries a colour per state so open / in progress / closed read apart.  -->
-                                                <Border Background="{Binding StatusBackground}" CornerRadius="4" Padding="6,2" Margin="0,0,6,0">
-                                                    <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="10" FontWeight="SemiBold" />
-                                                </Border>
-                                                <TextBlock Text="{Binding When}" Foreground="{StaticResource SupFaint}" FontSize="10" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </StackPanel>
+                                    <Border Style="{StaticResource TicketCardBorder}" MouseLeftButtonUp="TicketRow_Click" Tag="{Binding Id}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Row 0: Unread Dot + Subject + Time -->
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Ellipse Width="7" Height="7" Fill="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,7,0" Visibility="{Binding UnreadVisibility}">
+                                                        <Ellipse.Effect>
+                                                            <DropShadowEffect Color="#60CDFF" BlurRadius="6" ShadowDepth="0" Opacity="0.8" />
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
+                                                    <TextBlock Text="{Binding Subject}" Foreground="{DynamicResource TextPrimary}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="10.5" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                            </Grid>
+
+                                            <!-- Row 1: Badges + Chevron -->
+                                            <Grid Grid.Row="1" Margin="0,10,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <!-- Category Pill -->
+                                                    <Border Background="#12FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="0,0,6,0">
+                                                        <TextBlock Text="{Binding CategoryLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" FontWeight="Medium" />
+                                                    </Border>
+                                                    <!-- Status Pill -->
+                                                    <Border Background="{Binding StatusBackground}" BorderBrush="{Binding StatusBackground}" BorderThickness="1" CornerRadius="4" Padding="7,2">
+                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="10.5" FontWeight="SemiBold" />
+                                                    </Border>
+                                                </StackPanel>
+                                                <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="#44FFFFFF" FontSize="11" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <TextBlock x:Name="TicketsEmpty" Grid.Row="1" Text="{DynamicResource SupportNoTickets}" Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,32,0,0" Visibility="Collapsed" />
+
+                    <!-- Empty State -->
+                    <Grid x:Name="TicketsEmpty" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,24,0,0" Visibility="Collapsed">
+                        <StackPanel HorizontalAlignment="Center" MaxWidth="260">
+                            <Border Width="54" Height="54" CornerRadius="27" Background="#0EFFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                <ui:SymbolIcon Symbol="ChatHelp24" FontSize="24" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="{DynamicResource SupportNoTickets}" Foreground="{DynamicResource TextPrimary}" FontSize="13.5" FontWeight="SemiBold" TextAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
                 </Grid>
 
-                <!--  Tickets: compose  -->
+                <!-- 2. Tickets: Compose View -->
                 <Grid x:Name="ComposeView" Visibility="Collapsed">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,2,0">
                         <StackPanel>
+                            <!-- Category Field -->
                             <TextBlock Text="{DynamicResource SupportCategory}" Style="{StaticResource SupLabel}" />
-                            <ComboBox x:Name="ComposeCategory" Foreground="{StaticResource SupText}"
+                            <ComboBox x:Name="ComposeCategory" Foreground="{DynamicResource TextPrimary}"
                                       ItemTemplate="{StaticResource CategoryItemTemplate}"
-                                      SelectionChanged="ComposeCategory_SelectionChanged" Margin="0,0,0,16" />
-                            <TextBlock Text="{DynamicResource SupportSubject}" Style="{StaticResource SupLabel}" />
-                            <ui:TextBox x:Name="ComposeSubject" MaxLength="160" Margin="0,0,0,16" />
-                            <TextBlock Text="{DynamicResource SupportDetails}" Style="{StaticResource SupLabel}" />
-                            <ui:TextBox x:Name="ComposeBody" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" Margin="0,0,0,12" />
+                                      SelectionChanged="ComposeCategory_SelectionChanged" Margin="0,0,0,14" Height="34" />
 
-                            <!--  Previews of what has been attached, before it is sent.  -->
-                            <ItemsControl x:Name="ComposeAttachments" Margin="0,0,0,4">
+                            <!-- Subject Field -->
+                            <TextBlock Text="{DynamicResource SupportSubject}" Style="{StaticResource SupLabel}" />
+                            <ui:TextBox x:Name="ComposeSubject" MaxLength="160" FontSize="12.5" Padding="10,8" Margin="0,0,0,14" />
+
+                            <!-- Details Field -->
+                            <TextBlock Text="{DynamicResource SupportDetails}" Style="{StaticResource SupLabel}" />
+                            <ui:TextBox x:Name="ComposeBody" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" FontSize="12.5" Padding="10,8" Margin="0,0,0,12" />
+
+                            <!-- Attachments Preview List -->
+                            <ItemsControl x:Name="ComposeAttachments" Margin="0,0,0,6">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,0,8,8">
-                                            <Border Visibility="{Binding ImageVisibility}" Width="64" Height="64" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1">
+                                            <!-- Image preview thumbnail -->
+                                            <Border Visibility="{Binding ImageVisibility}" Width="64" Height="64" CornerRadius="6" ClipToBounds="True" BorderBrush="#2EFFFFFF" BorderThickness="1" Background="#14FFFFFF">
                                                 <Image Source="{Binding Thumb}" Stretch="UniformToFill" />
                                             </Border>
-                                            <Border Visibility="{Binding ChipVisibility}" Background="{StaticResource SupCard}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,6">
+                                            <!-- Non-image chip -->
+                                            <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="8,6">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
+                                                    <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </Border>
-                                            <ui:Button Tag="{Binding}" Click="RemoveComposeAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">
-                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
+                                            <!-- Delete button -->
+                                            <ui:Button Tag="{Binding}" Click="RemoveComposeAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="20" Height="20" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">
+                                                <Border Width="18" Height="18" CornerRadius="9" Background="#33EF5350" BorderBrush="#55EF5350" BorderThickness="1">
+                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFFF8585" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
                                             </ui:Button>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
-                                <ui:Button x:Name="BtnComposeAttach" Content="{DynamicResource SupportAttachFiles}" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Click="ComposeAttach_Click" />
-                                <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{StaticResource SupMuted}" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0" />
+                            <!-- Attach File Button & Count -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14" VerticalAlignment="Center">
+                                <ui:Button x:Name="BtnComposeAttach" Content="{DynamicResource SupportAttachFiles}" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Height="32" Padding="12,4" Click="ComposeAttach_Click" />
+                                <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{DynamicResource TextSubtle}" FontSize="11.5" VerticalAlignment="Center" Margin="10,0,0,0" />
                             </StackPanel>
-                            <CheckBox x:Name="ComposeAppeal" Content="{DynamicResource SupportAppeal}" Foreground="{StaticResource SupText}" Visibility="Collapsed" Margin="0,0,0,16" />
-                            <TextBlock x:Name="ComposeError" Foreground="#FFE8695C" FontSize="11" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,12" />
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <ui:Button Content="{DynamicResource SupportCancel}" Appearance="Secondary" Click="ComposeCancel_Click" />
-                                <ui:Button x:Name="BtnComposeSubmit" Content="{DynamicResource SupportSubmit}" Appearance="Primary" Margin="10,0,0,0" Click="ComposeSubmit_Click" />
+
+                            <!-- Appeal Checkbox -->
+                            <CheckBox x:Name="ComposeAppeal" Content="{DynamicResource SupportAppeal}" Foreground="{DynamicResource TextPrimary}" Visibility="Collapsed" Margin="0,0,0,14" />
+
+                            <!-- Error Message Banner -->
+                            <Border x:Name="ComposeErrorBorder" Background="#22EF5350" BorderBrush="#44EF5350" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,14" Visibility="{Binding Visibility, ElementName=ComposeError}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon Symbol="Warning24" Foreground="#FFEF5350" FontSize="15" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" x:Name="ComposeError" Foreground="#FFFCE8E8" FontSize="11.5" TextWrapping="Wrap" LineHeight="16" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Action Buttons -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+                                <ui:Button Content="{DynamicResource SupportCancel}" Appearance="Secondary" Padding="16,6" Click="ComposeCancel_Click" />
+                                <ui:Button x:Name="BtnComposeSubmit" Content="{DynamicResource SupportSubmit}" Icon="{ui:SymbolIcon Send24}" Appearance="Primary" Padding="18,6" Margin="8,0,0,0" Click="ComposeSubmit_Click" />
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
 
-                <!--  Tickets: thread  -->
+                <!-- 3. Tickets: Thread View -->
                 <Grid x:Name="ThreadView" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+
+                    <!-- Thread Header -->
                     <StackPanel Grid.Row="0" Margin="0,0,0,14">
-                        <ui:Button Content="{DynamicResource SupportBackToTickets}" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="8,4" Click="ThreadBack_Click" />
-                        <TextBlock x:Name="ThreadSubject" Foreground="{StaticResource SupText}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,10,0,0" />
-                        <TextBlock x:Name="ThreadStatus" Foreground="{StaticResource SupMuted}" FontSize="11" Margin="0,4,0,0" />
+                        <ui:Button Content="{DynamicResource SupportBackToTickets}" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="6,4" Margin="0,0,0,8" Click="ThreadBack_Click" />
+                        <TextBlock x:Name="ThreadSubject" Foreground="{DynamicResource TextPrimary}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" LineHeight="20" />
+                        <Border Background="#10FFFFFF" BorderBrush="#18FFFFFF" BorderThickness="1" CornerRadius="4" Padding="8,3" Margin="0,6,0,0" HorizontalAlignment="Left">
+                            <TextBlock x:Name="ThreadStatus" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="Medium" />
+                        </Border>
                     </StackPanel>
-                    <ScrollViewer Grid.Row="1" x:Name="ThreadScroll" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+
+                    <!-- Messages List -->
+                    <ScrollViewer Grid.Row="1" x:Name="ThreadScroll" VerticalScrollBarVisibility="Auto" Padding="0,0,2,0">
                         <ItemsControl x:Name="ThreadMessages">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{Binding Background}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,10">
+                                    <Border Background="{Binding Background}" BorderBrush="{Binding MessageBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
                                         <StackPanel>
-                                            <Grid>
-                                                <TextBlock Text="{Binding Author}" Foreground="{StaticResource SupText}" FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Left" />
-                                                <TextBlock Text="{Binding When}" Foreground="{StaticResource SupFaint}" FontSize="10" HorizontalAlignment="Right" />
+                                            <!-- Author Header -->
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Border Width="20" Height="20" CornerRadius="10" Background="{Binding BadgeBackground}" Margin="0,0,6,0" VerticalAlignment="Center">
+                                                        <ui:SymbolIcon Symbol="{Binding BadgeSymbol}" FontSize="11" Foreground="{Binding BadgeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Author}" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                    <Border Visibility="{Binding StaffTagVisibility}" Background="#2260CDFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="STAFF" Foreground="{DynamicResource Accent}" FontSize="9" FontWeight="Bold" />
+                                                    </Border>
+                                                </StackPanel>
+                                                
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="10.5" VerticalAlignment="Center" />
                                             </Grid>
-                                            <TextBlock Text="{Binding Body}" Visibility="{Binding BodyVisibility}" Foreground="{StaticResource SupText}" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,7,0,0" />
 
-                                            <!--  Attachments sent with the message: screenshots inline, files as chips.  -->
+                                            <!-- Message Text Body -->
+                                            <TextBlock Text="{Binding Body}" Visibility="{Binding BodyVisibility}" Foreground="{DynamicResource TextPrimary}" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,2,0,0" />
+
+                                            <!-- Attachments in Message -->
                                             <ItemsControl ItemsSource="{Binding Attachments}" Margin="0,8,0,0">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Grid Margin="0,0,8,8" Cursor="Hand" Background="Transparent" Tag="{Binding}" MouseLeftButtonUp="MessageAttachment_Click" ToolTip="{Binding Name}">
-                                                            <Border Visibility="{Binding ImageVisibility}" MaxWidth="200" MaxHeight="150" MinWidth="60" MinHeight="44" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1" Background="#22000000">
-                                                                <Image Source="{Binding Thumb}" Stretch="Uniform" />
-                                                            </Border>
-                                                            <Border Visibility="{Binding ChipVisibility}" Background="{DynamicResource WhiteA22}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" />
-                                                                    <TextBlock Text="{Binding SizeLabel}" Foreground="{StaticResource SupMuted}" FontSize="10" VerticalAlignment="Center" Margin="6,0,0,0" />
-                                                                </StackPanel>
-                                                            </Border>
-                                                        </Grid>
+                                                        <Button Style="{StaticResource AttachmentButtonStyle}"
+                                                                Tag="{Binding}"
+                                                                Click="MessageAttachment_Click"
+                                                                ToolTip="{Binding Name}">
+                                                            <Grid>
+                                                                <!-- Image Thumbnail -->
+                                                                <Border Visibility="{Binding ImageVisibility}" MaxWidth="240" MaxHeight="180" MinWidth="70" MinHeight="50" CornerRadius="6" ClipToBounds="True" BorderBrush="#35FFFFFF" BorderThickness="1" Background="#22000000">
+                                                                    <Grid>
+                                                                        <Image Source="{Binding Thumb}" Stretch="Uniform" />
+                                                                        <Border Background="#88000000" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Padding="4,2">
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <ui:SymbolIcon Symbol="Eye24" FontSize="11" Foreground="#EEFFFFFF" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                                                <TextBlock Text="View" FontSize="9.5" FontWeight="SemiBold" Foreground="#EEFFFFFF" VerticalAlignment="Center" />
+                                                                            </StackPanel>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </Border>
+                                                                <!-- File Chip -->
+                                                                <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10,6">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11.5" VerticalAlignment="Center" MaxWidth="170" TextTrimming="CharacterEllipsis" />
+                                                                        <TextBlock Text="{Binding SizeLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Button>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
@@ -207,8 +342,10 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <StackPanel Grid.Row="2" Margin="0,12,0,0">
-                        <!--  What is about to be sent with the reply.  -->
+
+                    <!-- Reply Input Section -->
+                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                        <!-- Reply Attachments Preview -->
                         <ItemsControl x:Name="ReplyAttachments" Margin="0,0,0,8">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
@@ -216,37 +353,47 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,8,8">
-                                        <Border Visibility="{Binding ImageVisibility}" Width="52" Height="52" CornerRadius="6" ClipToBounds="True" BorderBrush="{StaticResource SupLine}" BorderThickness="1">
+                                        <Border Visibility="{Binding ImageVisibility}" Width="52" Height="52" CornerRadius="6" ClipToBounds="True" BorderBrush="#25FFFFFF" BorderThickness="1" Background="#14FFFFFF">
                                             <Image Source="{Binding Thumb}" Stretch="UniformToFill" />
                                         </Border>
-                                        <Border Visibility="{Binding ChipVisibility}" Background="{StaticResource SupCard}" BorderBrush="{StaticResource SupLine}" BorderThickness="1" CornerRadius="6" Padding="8,5">
+                                        <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="8,5">
                                             <StackPanel Orientation="Horizontal">
-                                                <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding Name}" Foreground="{StaticResource SupText}" FontSize="11" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
+                                                <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </Border>
                                         <ui:Button Tag="{Binding}" Click="RemoveReplyAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">
-                                            <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFE8695C" FontSize="12" />
+                                            <Border Width="16" Height="16" CornerRadius="8" Background="#33EF5350" BorderBrush="#55EF5350" BorderThickness="1">
+                                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFFF8585" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
                                         </ui:Button>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
+                        <!-- Reply Input Bar -->
                         <Grid x:Name="ReplyBar">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ui:Button Grid.Column="0" x:Name="BtnReplyAttach" Appearance="Transparent" Padding="6" Click="ReplyAttach_Click">
-                                <ui:SymbolIcon Symbol="Attach24" Foreground="{StaticResource SupMuted}" />
+                            <ui:Button Grid.Column="0" x:Name="BtnReplyAttach" Appearance="Secondary" Padding="8" Margin="0,0,6,0" Click="ReplyAttach_Click" ToolTip="{DynamicResource SupportAttachFiles}">
+                                <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource TextSubtle}" FontSize="15" />
                             </ui:Button>
-                            <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="{DynamicResource SupportReplyPlaceholder}" Margin="6,0" />
-                            <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="{DynamicResource SupportSend}" Appearance="Primary" Click="ReplySend_Click" />
+                            <ui:TextBox Grid.Column="1" x:Name="ReplyBox" PlaceholderText="{DynamicResource SupportReplyPlaceholder}" FontSize="12.5" Padding="10,7" Margin="0,0,6,0" />
+                            <ui:Button Grid.Column="2" x:Name="BtnReplySend" Content="{DynamicResource SupportSend}" Icon="{ui:SymbolIcon Send24}" Appearance="Primary" Padding="14,6" Click="ReplySend_Click" />
                         </Grid>
+
+                        <!-- Closed Ticket Message -->
+                        <Border x:Name="ThreadClosedBorder" Background="#10FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,6,0,0" Visibility="{Binding Visibility, ElementName=ThreadClosed}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="LockClosed24" Foreground="{DynamicResource TextSubtle}" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock x:Name="ThreadClosed" Text="{DynamicResource SupportTicketClosed}" Foreground="{DynamicResource TextSubtle}" FontSize="12" VerticalAlignment="Center" Visibility="Collapsed" />
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
-                    <TextBlock Grid.Row="2" x:Name="ThreadClosed" Text="{DynamicResource SupportTicketClosed}" Foreground="{StaticResource SupMuted}" HorizontalAlignment="Center" Margin="0,12,0,0" Visibility="Collapsed" />
                 </Grid>
 
             </Grid>

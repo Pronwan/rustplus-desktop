@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using RustPlusDesk.Services.Data;
 using RustPlusDesk.Services.Support;
 
 namespace RustPlusDesk.Views;
@@ -29,9 +30,19 @@ public partial class SupportOverlay : UserControl
     /// <summary>Raised with the count of the user's tickets that have unread activity, for the rail badge.</summary>
     public event Action<int>? TicketsUnreadChanged;
 
-    private static readonly Brush CardBrush = MakeBrush("#FF161C24");
-    private static readonly Brush StaffBrush = MakeBrush("#FF14202B");
-    private static readonly Brush InternalBrush = MakeBrush("#33E8A33C");
+    private static readonly Brush CardBrush = MakeBrush("#FF141820");
+    private static readonly Brush CardBorderBrush = MakeBrush("#22FFFFFF");
+    private static readonly Brush StaffBrush = MakeBrush("#FF162438");
+    private static readonly Brush StaffBorderBrush = MakeBrush("#354B78");
+    private static readonly Brush InternalBrush = MakeBrush("#FF2D2214");
+    private static readonly Brush InternalBorderBrush = MakeBrush("#45E8A33C");
+
+    private static readonly Brush UserBadgeBg = MakeBrush("#1CFFFFFF");
+    private static readonly Brush UserBadgeFg = MakeBrush("#D0D8E4");
+    private static readonly Brush StaffBadgeBg = MakeBrush("#2260CDFF");
+    private static readonly Brush StaffBadgeFg = MakeBrush("#60CDFF");
+    private static readonly Brush InternalBadgeBg = MakeBrush("#30E8A33C");
+    private static readonly Brush InternalBadgeFg = MakeBrush("#FFBE5C");
 
     private static readonly IReadOnlyList<string> FallbackCategories = new[] { "appeal", "bug", "feature", "help", "other" };
 
@@ -350,17 +361,63 @@ public partial class SupportOverlay : UserControl
         }
     }
 
-    /// <summary>Opens a sent attachment in whatever the OS uses for its type.</summary>
-    private async void MessageAttachment_Click(object sender, MouseButtonEventArgs e)
+    /// <summary>Opens a sent attachment in ImageZoomWindow for images or whatever the OS uses for other types.</summary>
+    private async void MessageAttachment_Click(object sender, RoutedEventArgs e)
     {
+        e.Handled = true;
         if (sender is not FrameworkElement fe || fe.Tag is not MessageAttachmentVm vm)
             return;
 
-        var path = await SupportApi.SaveAttachmentToTempAsync(vm.TicketId, vm.Id, vm.Name).ConfigureAwait(true);
-        if (path == null) return;
+        try
+        {
+            var bytes = await SupportApi.GetAttachmentCachedAsync(vm.TicketId, vm.Id, vm.Name, vm.Url).ConfigureAwait(true);
+            if (bytes is { Length: > 0 })
+            {
+                var isImg = vm.IsImage || HasImageMagicBytes(bytes);
+                if (isImg)
+                {
+                    var fullImg = FullImageFromBytes(bytes) ?? vm.Thumb;
+                    if (fullImg != null)
+                    {
+                        try
+                        {
+                            var zoomWin = new ImageZoomWindow(fullImg);
+                            zoomWin.Owner = Window.GetWindow(this);
+                            zoomWin.Show();
+                            return;
+                        }
+                        catch { /* fall through to OS open */ }
+                    }
+                }
+            }
 
-        try { Process.Start(new ProcessStartInfo(path) { UseShellExecute = true }); }
-        catch { /* nothing we can do if the OS refuses to open it */ }
+            var path = await SupportApi.SaveAttachmentToTempAsync(vm.TicketId, vm.Id, vm.Name, vm.Url).ConfigureAwait(true);
+            if (path != null && File.Exists(path))
+            {
+                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(vm.Url))
+            {
+                var targetUrl = vm.Url;
+                if (!targetUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !targetUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    var baseCloud = (DataManager.CLOUD_API_BASEURL ?? "").TrimEnd('/');
+                    targetUrl = $"{baseCloud}/{targetUrl.TrimStart('/')}";
+                }
+                Process.Start(new ProcessStartInfo(targetUrl) { UseShellExecute = true });
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(vm.TicketId) && !string.IsNullOrEmpty(vm.Id))
+            {
+                var baseCloud = (DataManager.CLOUD_API_BASEURL ?? "").TrimEnd('/');
+                var fallbackUrl = $"{baseCloud}/api/v1/tickets/{vm.TicketId}/attachments/{vm.Id}";
+                Process.Start(new ProcessStartInfo(fallbackUrl) { UseShellExecute = true });
+            }
+        }
+        catch { /* best-effort */ }
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────
@@ -444,12 +501,39 @@ public partial class SupportOverlay : UserControl
         return brush;
     }
 
-    private static bool IsImageMime(string? mime) => mime != null && mime.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
+    private static bool IsImageMime(string? mime) =>
+        mime != null && (mime.StartsWith("image/", StringComparison.OrdinalIgnoreCase) || mime.Contains("png") || mime.Contains("jpeg") || mime.Contains("webp"));
 
-    private static bool IsImagePath(string path)
+    private static bool IsImagePath(string? path)
     {
+        if (string.IsNullOrWhiteSpace(path)) return false;
+        var lower = path.ToLowerInvariant();
+        if (lower.Contains(".png") || lower.Contains(".jpg") || lower.Contains(".jpeg") ||
+            lower.Contains(".gif") || lower.Contains(".webp") || lower.Contains(".bmp") ||
+            lower.EndsWith("png") || lower.EndsWith("jpg") || lower.EndsWith("jpeg") || lower.EndsWith("webp") ||
+            lower.Contains("pictureframe") || lower.Contains("sign.") || lower.Contains("screenshot") ||
+            lower.Contains("screen_") || lower.Contains("photo_") || lower.Contains("img_"))
+            return true;
+
         var ext = Path.GetExtension(path).ToLowerInvariant();
         return ext is ".png" or ".jpg" or ".jpeg" or ".gif" or ".webp" or ".bmp";
+    }
+
+    private static bool HasImageMagicBytes(byte[]? data)
+    {
+        if (data == null || data.Length < 4) return false;
+        // PNG: 89 50 4E 47
+        if (data[0] == 0x89 && data[1] == 0x50 && data[2] == 0x4E && data[3] == 0x47) return true;
+        // JPEG: FF D8 FF
+        if (data[0] == 0xFF && data[1] == 0xD8 && data[2] == 0xFF) return true;
+        // GIF: 47 49 46 38
+        if (data[0] == 0x47 && data[1] == 0x49 && data[2] == 0x46) return true;
+        // BMP: 42 4D
+        if (data[0] == 0x42 && data[1] == 0x4D) return true;
+        // WebP: RIFF....WEBP
+        if (data.Length >= 12 && data[0] == 0x52 && data[1] == 0x49 && data[2] == 0x46 && data[3] == 0x46 &&
+            data[8] == 0x57 && data[9] == 0x45 && data[10] == 0x42 && data[11] == 0x50) return true;
+        return false;
     }
 
     private static ImageSource? ThumbFromFile(string path)
@@ -476,7 +560,7 @@ public partial class SupportOverlay : UserControl
             var bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
-            bmp.DecodePixelWidth = 220;
+            bmp.DecodePixelWidth = 360;
             bmp.StreamSource = ms;
             bmp.EndInit();
             bmp.Freeze();
@@ -484,6 +568,26 @@ public partial class SupportOverlay : UserControl
         }
         catch { return null; }
     }
+
+    private static ImageSource? FullImageFromBytes(byte[] data)
+    {
+        try
+        {
+            using var ms = new MemoryStream(data);
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.StreamSource = ms;
+            bmp.EndInit();
+            bmp.Freeze();
+            return bmp;
+        }
+        catch { return null; }
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex ImageUrlRegex = new(
+        @"https?://[^\s""'<>()]+\.(?:png|jpg|jpeg|gif|webp|bmp)(?:\?[^\s""'<>()]*)?",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
 
     private static string FormatSize(long bytes)
     {
@@ -495,17 +599,17 @@ public partial class SupportOverlay : UserControl
 
     // ── View models ─────────────────────────────────────────────────────────
 
-    // Status palette: each state reads at a glance instead of every pill being the same grey.
-    private static readonly Brush StatusOpenBg = MakeBrush("#243FA9FF");
-    private static readonly Brush StatusOpenFg = MakeBrush("#FF7FC1FF");
-    private static readonly Brush StatusProgBg = MakeBrush("#33E0A33C");
-    private static readonly Brush StatusProgFg = MakeBrush("#FFE7BB63");
-    private static readonly Brush StatusWaitBg = MakeBrush("#2A9B6BFF");
-    private static readonly Brush StatusWaitFg = MakeBrush("#FFB79CFF");
-    private static readonly Brush StatusDoneBg = MakeBrush("#2E3FBF6A");
-    private static readonly Brush StatusDoneFg = MakeBrush("#FF74D89B");
-    private static readonly Brush StatusClosedBg = MakeBrush("#18FFFFFF");
-    private static readonly Brush StatusClosedFg = MakeBrush("#FF7C8794");
+    // Status palette: each state reads at a glance with clean translucent tints.
+    private static readonly Brush StatusOpenBg = MakeBrush("#223B82F6");
+    private static readonly Brush StatusOpenFg = MakeBrush("#FF60A5FA");
+    private static readonly Brush StatusProgBg = MakeBrush("#25F59E0B");
+    private static readonly Brush StatusProgFg = MakeBrush("#FFFBBF24");
+    private static readonly Brush StatusWaitBg = MakeBrush("#25A855F7");
+    private static readonly Brush StatusWaitFg = MakeBrush("#FFC084FC");
+    private static readonly Brush StatusDoneBg = MakeBrush("#2210B981");
+    private static readonly Brush StatusDoneFg = MakeBrush("#FF34D399");
+    private static readonly Brush StatusClosedBg = MakeBrush("#14FFFFFF");
+    private static readonly Brush StatusClosedFg = MakeBrush("#FF94A3B8");
 
     public sealed class TicketVm
     {
@@ -563,18 +667,68 @@ public partial class SupportOverlay : UserControl
         public string Body { get; }
         public string When { get; }
         public Brush Background { get; }
+        public Brush MessageBorderBrush { get; }
+        public Brush BadgeBackground { get; }
+        public Brush BadgeForeground { get; }
+        public Wpf.Ui.Controls.SymbolRegular BadgeSymbol { get; }
+        public Visibility StaffTagVisibility { get; }
         public Visibility BodyVisibility { get; }
         public ObservableCollection<MessageAttachmentVm> Attachments { get; } = new();
 
         public MessageVm(TicketMessage m, string ticketId)
         {
-            Author = m.Kind == "internal" ? (m.AuthorName ?? "Staff") + " · internal" : (m.AuthorName ?? "Staff");
+            var isInternal = m.Kind == "internal";
+            Author = isInternal ? (m.AuthorName ?? "Staff") + " · internal" : (m.AuthorName ?? "Staff");
             Body = m.Body;
             When = m.CreatedAt?.LocalDateTime.ToString("g") ?? "";
-            Background = m.Kind == "internal" ? InternalBrush : (m.IsStaff ? StaffBrush : CardBrush);
+
+            if (isInternal)
+            {
+                Background = InternalBrush;
+                MessageBorderBrush = InternalBorderBrush;
+                BadgeBackground = InternalBadgeBg;
+                BadgeForeground = InternalBadgeFg;
+                BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.LockClosed24;
+                StaffTagVisibility = Visibility.Collapsed;
+            }
+            else if (m.IsStaff)
+            {
+                Background = StaffBrush;
+                MessageBorderBrush = StaffBorderBrush;
+                BadgeBackground = StaffBadgeBg;
+                BadgeForeground = StaffBadgeFg;
+                BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.ShieldPerson20;
+                StaffTagVisibility = Visibility.Visible;
+            }
+            else
+            {
+                Background = CardBrush;
+                MessageBorderBrush = CardBorderBrush;
+                BadgeBackground = UserBadgeBg;
+                BadgeForeground = UserBadgeFg;
+                BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.Person20;
+                StaffTagVisibility = Visibility.Collapsed;
+            }
+
             BodyVisibility = string.IsNullOrWhiteSpace(m.Body) ? Visibility.Collapsed : Visibility.Visible;
             foreach (var a in m.Attachments)
                 Attachments.Add(new MessageAttachmentVm(ticketId, a));
+
+            if (!string.IsNullOrEmpty(m.Body))
+            {
+                var matches = ImageUrlRegex.Matches(m.Body);
+                foreach (System.Text.RegularExpressions.Match match in matches)
+                {
+                    var url = match.Value;
+                    if (!Attachments.Any(att => att.Url == url))
+                    {
+                        var fileName = "image.png";
+                        try { fileName = Path.GetFileName(new Uri(url).LocalPath); } catch { }
+                        if (string.IsNullOrEmpty(fileName)) fileName = "image.png";
+                        Attachments.Add(new MessageAttachmentVm(ticketId, new TicketAttachment(url, fileName, 0, "image/png", url)));
+                    }
+                }
+            }
         }
 
         private MessageVm(string author, string body, string when)
@@ -583,6 +737,11 @@ public partial class SupportOverlay : UserControl
             Body = body;
             When = when;
             Background = CardBrush;
+            MessageBorderBrush = CardBorderBrush;
+            BadgeBackground = UserBadgeBg;
+            BadgeForeground = UserBadgeFg;
+            BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.Person20;
+            StaffTagVisibility = Visibility.Collapsed;
             BodyVisibility = Visibility.Visible;
         }
 
@@ -591,6 +750,23 @@ public partial class SupportOverlay : UserControl
             var vm = new MessageVm("You", d.Body, d.CreatedAt?.LocalDateTime.ToString("g") ?? "");
             foreach (var a in d.Attachments)
                 vm.Attachments.Add(new MessageAttachmentVm(ticketId, a));
+
+            if (!string.IsNullOrEmpty(d.Body))
+            {
+                var matches = ImageUrlRegex.Matches(d.Body);
+                foreach (System.Text.RegularExpressions.Match match in matches)
+                {
+                    var url = match.Value;
+                    if (!vm.Attachments.Any(att => att.Url == url))
+                    {
+                        var fileName = "image.png";
+                        try { fileName = Path.GetFileName(new Uri(url).LocalPath); } catch { }
+                        if (string.IsNullOrEmpty(fileName)) fileName = "image.png";
+                        vm.Attachments.Add(new MessageAttachmentVm(ticketId, new TicketAttachment(url, fileName, 0, "image/png", url)));
+                    }
+                }
+            }
+
             return vm;
         }
     }
@@ -606,12 +782,26 @@ public partial class SupportOverlay : UserControl
         public string Id { get; }
         public string Name { get; }
         public string SizeLabel { get; }
-        public bool IsImage { get; }
+        public string? Url { get; }
 
-        // The image box appears only once there is actually a thumbnail to put in it; the chip
-        // covers every other moment - a non-image, a still-loading image, or one that failed.
-        public Visibility ImageVisibility => _thumb != null ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ChipVisibility => _thumb != null ? Visibility.Collapsed : Visibility.Visible;
+        private bool _isImage;
+        public bool IsImage
+        {
+            get => _isImage;
+            private set
+            {
+                if (_isImage != value)
+                {
+                    _isImage = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsImage)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ImageVisibility)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChipVisibility)));
+                }
+            }
+        }
+
+        public Visibility ImageVisibility => (_thumb != null && _isImage) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ChipVisibility => (_thumb != null && _isImage) ? Visibility.Collapsed : Visibility.Visible;
 
         private ImageSource? _thumb;
         public ImageSource? Thumb
@@ -633,17 +823,33 @@ public partial class SupportOverlay : UserControl
             TicketId = ticketId;
             Id = a.Id;
             Name = a.Name;
+            Url = a.Url;
             SizeLabel = FormatSize(a.Size);
-            IsImage = IsImageMime(a.Mime) || IsImagePath(a.Name);
-            if (IsImage)
-                _ = LoadThumbAsync();
+            _isImage = IsImageMime(a.Mime) || IsImagePath(a.Name) || (!string.IsNullOrEmpty(a.Url) && IsImagePath(a.Url));
+            
+            // Always attempt to fetch thumbnail / bytes
+            _ = LoadThumbAsync();
         }
 
         private async Task LoadThumbAsync()
         {
-            var bytes = await SupportApi.GetAttachmentCachedAsync(TicketId, Id, Name).ConfigureAwait(true);
-            if (bytes != null)
-                Thumb = ThumbFromBytes(bytes);
+            try
+            {
+                var bytes = await SupportApi.GetAttachmentCachedAsync(TicketId, Id, Name, Url).ConfigureAwait(true);
+                if (bytes is { Length: > 0 })
+                {
+                    if (HasImageMagicBytes(bytes) || _isImage)
+                    {
+                        var bmp = ThumbFromBytes(bytes);
+                        if (bmp != null)
+                        {
+                            IsImage = true;
+                            Thumb = bmp;
+                        }
+                    }
+                }
+            }
+            catch { }
         }
     }
 
