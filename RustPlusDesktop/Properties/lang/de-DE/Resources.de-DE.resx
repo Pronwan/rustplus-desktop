@@ -7674,4 +7674,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockAiNoKeyForProvider" xml:space="preserve">
     <value>Kein {0}-Schlüssel hinterlegt. Lege einen unter Verbundene Dienste an oder wähle einen Anbieter, für den du einen hast.</value>
   </data>
+  <data name="AiCompanionPolicyRouting" xml:space="preserve">
+    <value>OpenRouter ist ein Vermittler, nicht das Modell selbst: Deine Aufnahme wird an die Firma weitergereicht, die das gewählte Modell betreibt, und deren Bedingungen gelten dann ebenfalls. Solange „Strict Privacy“ aus ist, können das Anbieter sein, die Anfragen aufbewahren und darauf trainieren dürfen — meist ist genau das der Grund, warum ein Modell kostenlos ist.</value>
+  </data>
 </root>

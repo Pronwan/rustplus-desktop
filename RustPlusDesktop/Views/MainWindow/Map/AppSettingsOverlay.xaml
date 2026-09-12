@@ -1375,7 +1375,7 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
                                                 <ui:TextBlock Text="Strict Privacy (Zero Data Retention)" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                                <ui:TextBlock Text="Route exclusively to OpenRouter providers that enforce zero prompt logging." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                                <ui:TextBlock Text="Route exclusively to OpenRouter providers that enforce zero prompt logging. Off, your recordings and screenshots may be kept and trained on by whoever serves the model. On, most free models become unavailable — permitting that is generally why they are free." FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
                                             </StackPanel>
                                             <ui:ToggleSwitch Grid.Column="1" x:Name="ChkOpenRouterPrivacy" VerticalAlignment="Center" Checked="OnOpenRouterSwitchChanged" Unchecked="OnOpenRouterSwitchChanged" />
                                         </Grid>

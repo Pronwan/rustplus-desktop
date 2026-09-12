@@ -925,6 +925,24 @@ namespace RustPlusDesk.Views
         /// </summary>
         private async System.Threading.Tasks.Task<bool> AcceptAiPolicyAsync()
         {
+            // OpenRouter is a router, so "straight to the provider whose key you entered" is
+            // true of the first hop and quietly wrong about the rest: the request is passed on
+            // to whichever company actually serves the chosen model, under terms the user has
+            // never seen. That is worth a paragraph in a dialog whose whole purpose is telling
+            // someone where their voice and their screen are about to go.
+            //
+            // Its own key rather than an edit to the policy text, because the policy exists in
+            // every language the app ships and a rewrite would leave most of them describing
+            // the old behaviour. A new key falls back to English instead.
+            var routing = SelectedAiProvider == AiProviders.OpenRouter
+                ? Environment.NewLine + Environment.NewLine + Loc.Text("AiCompanionPolicyRouting",
+                    "OpenRouter is a router, not the model itself: it passes your recording on to " +
+                    "whichever company serves the model you picked, and that company's terms apply " +
+                    "to it as well. Unless Strict Privacy is switched on, that can include providers " +
+                    "who keep prompts and may train on them — which is generally why a model is " +
+                    "free.")
+                : "";
+
             var box = new WpfUi.MessageBox
             {
                 Title = Loc.Text("AiCompanionPolicyTitle", "What happens to your recordings"),
@@ -934,7 +952,8 @@ namespace RustPlusDesk.Views
                     + "What happens to it after that is governed by that provider's terms — the ones you agreed to when you created the key, not ours.\n\n"
                     + "Your key is stored only on this PC, protected by your Windows account, and is never uploaded. "
                     + "Because it is tied to this Windows account, it will not survive a reinstall or move to another PC: you will need to enter it again.\n\n"
-                    + "Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes."),
+                    + "Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes.")
+                    + routing,
                 PrimaryButtonText = Loc.Text("AiCompanionPolicyAccept", "Understood"),
                 CloseButtonText = Loc.Text("Cancel", "Cancel"),
                 Owner = Window.GetWindow(this),

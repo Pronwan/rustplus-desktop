@@ -7731,4 +7731,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockAiNoKeyForProvider" xml:space="preserve">
     <value>No {0} key is stored. Add one under Connected Services, or pick a provider you have a key for.</value>
   </data>
+  <data name="AiCompanionPolicyRouting" xml:space="preserve">
+    <value>OpenRouter is a router, not the model itself: it passes your recording on to whichever company serves the model you picked, and that company&apos;s terms apply to it as well. Unless Strict Privacy is switched on, that can include providers who keep prompts and may train on them — which is generally why a model is free.</value>
+  </data>
 </root>
