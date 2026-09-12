@@ -249,13 +249,30 @@ namespace RustPlusDesk.Views.Windows
             return shadow;
         }
 
+        /// <summary>
+        /// Fades a surface, but never all the way out of existence.
+        ///
+        /// This window is layered — AllowsTransparency — and on a layered window Windows
+        /// decides where a click lands from the alpha of the finished pixel, not from whether
+        /// a brush is set. At a true zero the see-through parts stop receiving the mouse
+        /// altogether: hovering the text still worked, because glyphs are opaque, but moving
+        /// towards the close button crossed background that was no longer there, the window
+        /// counted that as the pointer leaving, and the button hid itself a moment before it
+        /// could be pressed. The panel became impossible to close by hand.
+        ///
+        /// One step above nothing — 1 of 255 — is not perceptible on any background and is
+        /// still a surface as far as the compositor is concerned.
+        /// </summary>
         private static Brush Fade(Brush brush, double opacity)
         {
             if (brush is not SolidColorBrush solid) return brush;
 
             var color = solid.Color;
-            var faded = new SolidColorBrush(Color.FromArgb(
-                (byte)Math.Round(color.A * opacity), color.R, color.G, color.B));
+            var alpha = (byte)Math.Round(color.A * opacity);
+
+            if (alpha == 0 && color.A > 0) alpha = 1;
+
+            var faded = new SolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
             faded.Freeze();
             return faded;
         }
