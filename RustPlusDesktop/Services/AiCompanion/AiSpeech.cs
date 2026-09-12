@@ -37,6 +37,12 @@ namespace RustPlusDesk.Services.AiCompanion
         public static string? LastError { get; private set; }
 
         /// <summary>
+        /// Records a failure that happened after the request — decoding or playing the audio.
+        /// Those end in the Windows voice exactly like a refusal does, and were just as silent.
+        /// </summary>
+        internal static void ReportPlaybackFailure(string reason) => LastError = reason;
+
+        /// <summary>
         /// Reads one piece of text. Null when the provider refused, or has no voice at all.
         /// </summary>
         public static async Task<byte[]?> SynthesizeAsync(string text, CancellationToken ct)
@@ -75,6 +81,9 @@ namespace RustPlusDesk.Services.AiCompanion
         private const string OpenAiVoice = "alloy";
         private const string OpenAiUrl = "https://api.openai.com/v1/audio/speech";
 
+        /// <summary>What the endpoint's pcm format is: 24 kHz, 16-bit signed, mono.</summary>
+        private const int OpenAiRate = 24000;
+
         private static async Task<byte[]?> OpenAi(string text, string key, CancellationToken ct)
         {
             var payload = new
@@ -82,9 +91,16 @@ namespace RustPlusDesk.Services.AiCompanion
                 model = AiProviders.VoiceModel(AiProviders.OpenAi),
                 voice = OpenAiVoice,
 
-                // WAV rather than MP3: it plays from a stream with no decoder involved, and the
-                // file never leaves this machine, so its size does not matter.
-                response_format = "wav",
+                // Raw samples rather than the endpoint's own wav.
+                //
+                // Speech is generated as it is spoken, so the wav comes back with a header
+                // written before its length is known — and a reader that believes that header
+                // finds a file claiming to be empty. It threw on the way into the player,
+                // the player said it could not play it, and Windows read the answer instead:
+                // a request that succeeded, an answer that arrived, and the wrong voice, with
+                // nothing anywhere to say why. Wrapping the samples ourselves gives a header
+                // with the real length in it.
+                response_format = "pcm",
                 input = text,
             };
 
@@ -102,7 +118,8 @@ namespace RustPlusDesk.Services.AiCompanion
                 return null;
             }
 
-            return await response.Content.ReadAsByteArrayAsync(ct);
+            var pcm = await response.Content.ReadAsByteArrayAsync(ct);
+            return pcm.Length == 0 ? null : WrapAsWav(pcm, OpenAiRate);
         }
 
         // ── Gemini ──────────────────────────────────────────────────────────────

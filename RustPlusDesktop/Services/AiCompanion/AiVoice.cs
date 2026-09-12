@@ -219,8 +219,11 @@ namespace RustPlusDesk.Services.AiCompanion
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                // Reported rather than swallowed: this ends in the Windows voice just like a
+                // refused request, and used to be the one failure with nothing to show for it.
+                AiSpeech.ReportPlaybackFailure("The audio came back but could not be played: " + ex.Message);
                 return false;
             }
         }
