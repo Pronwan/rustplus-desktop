@@ -174,27 +174,46 @@
             </Setter>
         </Style>
         <Style x:Key="SocialDotRadio" TargetType="RadioButton">
-            <Setter Property="Foreground" Value="{StaticResource LfgText}" />
-            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="FontFamily" Value="Segoe UI, Segoe UI Variable Text, sans-serif" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Margin" Value="0,0,0,7" />
+            <Setter Property="Margin" Value="0,0,0,3" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <StackPanel Orientation="Horizontal" Background="Transparent">
-                            <Grid Width="15" Height="15" Margin="0,0,7,0" VerticalAlignment="Center">
-                                <Ellipse x:Name="Ring" Stroke="#FF5A6675" StrokeThickness="1.5" />
-                                <Ellipse x:Name="Dot" Width="7" Height="7" Fill="#FF4CC38A" Opacity="0" />
+                        <Border
+                            x:Name="ItemBd"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="8,7"
+                            SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="22" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Ellipse x:Name="Ring" Stroke="{DynamicResource TextSubtle}" StrokeThickness="1.5" Fill="#0DFFFFFF" />
+                                    <Ellipse x:Name="Dot" Width="8" Height="8" Fill="{DynamicResource Accent}" Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                                <ContentPresenter Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Center" />
                             </Grid>
-                            <ContentPresenter VerticalAlignment="Center" />
-                        </StackPanel>
+                        </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Ring" Property="Stroke" Value="#FF8894A5" />
+                                <Setter TargetName="ItemBd" Property="Background" Value="#12FFFFFF" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="#B0FFFFFF" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ItemBd" Property="Background" Value="#16FFFFFF" />
+                                <Setter TargetName="ItemBd" Property="BorderBrush" Value="#25FFFFFF" />
                                 <Setter TargetName="Dot" Property="Opacity" Value="1" />
-                                <Setter TargetName="Ring" Property="Stroke" Value="#FF4CC38A" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="{DynamicResource Accent}" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -1585,10 +1604,19 @@
                 did so with consent. Making the room a lookup tool would quietly undo that.
             -->
             <Border x:Name="ProfileSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
-                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
-                <Border VerticalAlignment="Center" Margin="14" Padding="16"
-                        Background="{StaticResource LfgCard}" CornerRadius="8"
-                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    Panel.ZIndex="20" Background="#99000000" Margin="-14">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16" Padding="20"
+                        MaxWidth="440" Width="400"
+                        Background="{DynamicResource SurfaceAlt}" CornerRadius="12"
+                        BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="36"
+                            Direction="270"
+                            Opacity="0.55"
+                            ShadowDepth="10"
+                            Color="#000000" />
+                    </Border.Effect>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Grid Width="56" Height="56" Margin="0,0,12,0">
@@ -1601,32 +1629,32 @@
                                 </Ellipse>
                             </Grid>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock x:Name="ProfileName" Foreground="{StaticResource LfgText}"
-                                           FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
-                                <TextBlock x:Name="ProfileSteamId" Foreground="{StaticResource LfgMuted}"
-                                           FontSize="10.5" FontFamily="Consolas" Margin="0,2,0,0" />
+                                <TextBlock x:Name="ProfileName" Foreground="{DynamicResource TextPrimary}"
+                                           FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock x:Name="ProfileSteamId" Foreground="{DynamicResource TextSubtle}"
+                                           FontSize="11" FontFamily="Consolas" Margin="0,2,0,0" />
                             </StackPanel>
                         </StackPanel>
 
-                        <TextBlock x:Name="ProfileBlurb" Foreground="{StaticResource LfgMuted}" FontSize="11"
+                        <TextBlock x:Name="ProfileBlurb" Foreground="{DynamicResource TextSubtle}" FontSize="12"
                                    TextWrapping="Wrap" Margin="0,10,0,0" Visibility="Collapsed" />
 
                         <StackPanel x:Name="ProfileFacts" Margin="0,10,0,0" />
 
-                        <TextBlock x:Name="ProfileNotice" Foreground="{StaticResource LfgMuted}" FontSize="11"
+                        <TextBlock x:Name="ProfileNotice" Foreground="{DynamicResource TextSubtle}" FontSize="11"
                                    TextWrapping="Wrap" Margin="0,8,0,0" Visibility="Collapsed" />
 
                         <TextBlock x:Name="ProfileVacWarning" Text="{DynamicResource ProfileVac}"
-                                   Foreground="#FFFF8A8A" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource DangerBrush}" FontSize="11.5" FontWeight="SemiBold"
                                    Margin="0,8,0,0" Visibility="Collapsed" />
 
-                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
-                            <ui:Button x:Name="BtnProfileSteam" Click="BtnProfileSteam_Click" Appearance="Primary"
-                                       Content="{DynamicResource ProfileOpenSteam}" Margin="0,0,8,0" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
                             <ui:Button x:Name="BtnProfileCopy" Click="BtnProfileCopy_Click" Appearance="Secondary"
-                                       Content="{DynamicResource ProfileCopyId}" Margin="0,0,8,0" />
+                                       Content="{DynamicResource ProfileCopyId}" Margin="0,0,8,0" Padding="14,6" />
                             <ui:Button x:Name="BtnProfileClose" Click="BtnProfileClose_Click" Appearance="Secondary"
-                                       Content="{DynamicResource ProfileClose}" />
+                                       Content="{DynamicResource ProfileClose}" Margin="0,0,8,0" Padding="14,6" />
+                            <ui:Button x:Name="BtnProfileSteam" Click="BtnProfileSteam_Click" Appearance="Primary"
+                                       Content="{DynamicResource ProfileOpenSteam}" Padding="16,6" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -1640,58 +1668,86 @@
                 being reported is how a queue fills up with reports nobody can act on.
             -->
             <Border x:Name="ReportSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
-                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
-                <Border VerticalAlignment="Center" Margin="14" Padding="16"
-                        Background="{StaticResource LfgCard}" CornerRadius="8"
-                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
+                    Panel.ZIndex="20" Background="#99000000" Margin="-14">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16" Padding="20"
+                        MaxWidth="440" Width="400"
+                        Background="{DynamicResource SurfaceAlt}" CornerRadius="12"
+                        BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="36"
+                            Direction="270"
+                            Opacity="0.55"
+                            ShadowDepth="10"
+                            Color="#000000" />
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock x:Name="ReportHeading" Foreground="{StaticResource LfgText}"
-                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <!-- Header -->
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Symbol="Flag24" FontSize="18"
+                                           Foreground="{DynamicResource Accent}"
+                                           Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" x:Name="ReportHeading"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       FontSize="15" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                        </Grid>
 
                         <!--  The form  -->
                         <StackPanel x:Name="ReportForm">
-                            <TextBlock Text="{DynamicResource ReportIntro}" Margin="0,6,0,12"
-                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
+                            <TextBlock Text="{DynamicResource ReportIntro}" Margin="0,4,0,12"
+                                       Foreground="{DynamicResource TextSubtle}" FontSize="12"
+                                       TextWrapping="Wrap" LineHeight="17" />
 
                             <StackPanel x:Name="ReportReasons" />
 
                             <!--  What is being reported, when it is one line rather than a person  -->
-                            <StackPanel x:Name="ReportQuoted" Visibility="Collapsed" Margin="0,4,0,0">
-                                <TextBlock Text="{DynamicResource ReportQuotedLabel}" Margin="0,0,0,4"
-                                           Foreground="{StaticResource LfgMuted}" FontSize="10" FontWeight="Bold" />
-                                <Border Background="{DynamicResource WhiteA14}" CornerRadius="6" Padding="9,7">
-                                    <TextBlock x:Name="ReportQuotedText" Foreground="{StaticResource LfgText}"
-                                               FontSize="11" TextWrapping="Wrap" MaxHeight="72" />
+                            <StackPanel x:Name="ReportQuoted" Visibility="Collapsed" Margin="0,10,0,0">
+                                <TextBlock Text="{DynamicResource ReportQuotedLabel}" Margin="0,0,0,5"
+                                           Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="SemiBold" />
+                                <Border Background="#12FFFFFF" BorderBrush="{DynamicResource Accent}"
+                                        BorderThickness="3,0,0,0" CornerRadius="0,6,6,0" Padding="12,8">
+                                    <TextBlock x:Name="ReportQuotedText" Foreground="{DynamicResource TextPrimary}"
+                                               FontSize="12" FontStyle="Italic" TextWrapping="Wrap" MaxHeight="72" />
                                 </Border>
                             </StackPanel>
 
                             <TextBlock Text="{DynamicResource ReportNoteLabel}" Margin="0,12,0,5"
-                                       Foreground="{StaticResource LfgMuted}" FontSize="10.5" TextWrapping="Wrap" />
-                            <ui:TextBox x:Name="TxtReportNote" MaxLength="1000" MinHeight="62"
+                                       Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <ui:TextBox x:Name="TxtReportNote" MaxLength="1000" MinHeight="66"
                                         AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top"
+                                        Padding="10,8" FontSize="12"
                                         PlaceholderText="{DynamicResource ReportNotePlaceholder}" />
 
                             <TextBlock x:Name="ReportError" Visibility="Collapsed" Margin="0,8,0,0"
-                                       Text="{DynamicResource ReportFailed}" Foreground="#FFFF8A8A"
-                                       FontSize="11" TextWrapping="Wrap" />
+                                       Text="{DynamicResource ReportFailed}" Foreground="{DynamicResource DangerBrush}"
+                                       FontSize="12" TextWrapping="Wrap" />
 
-                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
-                                <ui:Button x:Name="BtnReportSubmit" Click="BtnReportSubmit_Click" Appearance="Primary"
-                                           Content="{DynamicResource ReportSubmit}" Margin="0,0,8,0" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
                                 <ui:Button x:Name="BtnReportCancel" Click="BtnReportCancel_Click" Appearance="Secondary"
-                                           Content="{DynamicResource ReportCancel}" />
+                                           Content="{DynamicResource ReportCancel}" Padding="16,6" Margin="0,0,8,0" />
+                                <ui:Button x:Name="BtnReportSubmit" Click="BtnReportSubmit_Click" Appearance="Primary"
+                                           Content="{DynamicResource ReportSubmit}" Padding="18,6" />
                             </StackPanel>
                         </StackPanel>
 
                         <!--  The receipt. Same sheet, so the answer arrives where the question was asked.  -->
-                        <StackPanel x:Name="ReportDone" Visibility="Collapsed">
-                            <TextBlock Text="{DynamicResource ReportDoneBody}" Margin="0,8,0,0"
-                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
-                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                        <StackPanel x:Name="ReportDone" Visibility="Collapsed" Margin="0,6,0,0">
+                            <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="34"
+                                           Foreground="{DynamicResource SuccessBrush}"
+                                           HorizontalAlignment="Center" Margin="0,6,0,10" />
+                            <TextBlock Text="{DynamicResource ReportDoneBody}" Margin="0,0,0,8"
+                                       Foreground="{DynamicResource TextPrimary}" FontSize="12.5"
+                                       TextAlignment="Center" TextWrapping="Wrap" LineHeight="18" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
                                 <ui:Button x:Name="BtnReportBlock" Click="BtnReportBlock_Click" Appearance="Secondary"
-                                           Content="{DynamicResource LfgBlockUser}" Margin="0,0,8,0" />
+                                           Content="{DynamicResource LfgBlockUser}" Margin="0,0,8,0" Padding="14,6" />
                                 <ui:Button x:Name="BtnReportClose" Click="BtnReportCancel_Click" Appearance="Primary"
-                                           Content="{DynamicResource ReportClose}" />
+                                           Content="{DynamicResource ReportClose}" Padding="18,6" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
