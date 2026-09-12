@@ -1200,6 +1200,19 @@
                                     <ui:Button x:Name="BtnRemoveAiKey" HorizontalAlignment="Right" Content="{DynamicResource AiCompanionRemoveKey}" Appearance="Transparent" Foreground="{DynamicResource DangerBrush}" Padding="6,2" FontSize="11" Click="BtnRemoveAiKey_Click" />
                                 </Grid>
 
+                                <!--  Providers retire model names faster than this app ships, and the failure that
+                                      produces is a dead end from the outside. Typing one over the top is the way out.  -->
+                                <ui:TextBlock Text="{DynamicResource AiCompanionModel}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBox x:Name="TxtAiModel" MinHeight="32" Padding="8,4" VerticalContentAlignment="Center" TextChanged="TxtAiModel_TextChanged" />
+                                    <ui:Button Grid.Column="1" x:Name="BtnAiModelReset" Content="{DynamicResource AiCompanionModelReset}" Height="32" Margin="6,0,0,0" Click="BtnAiModelReset_Click" />
+                                </Grid>
+                                <ui:TextBlock x:Name="TxtAiModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14" Foreground="{DynamicResource TextSubtle}" />
+
                                 <ui:TextBlock Text="{DynamicResource AiCompanionAnswers}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
 
                                 <Grid MinHeight="36">
@@ -1278,6 +1291,20 @@
                                     <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiScreenshotDefault" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
                                 </Grid>
 
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <Grid MinHeight="36" Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionAutoSend}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                        <ui:TextBlock Text="{DynamicResource AiCompanionAutoSendHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiAutoSend" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
+                                </Grid>
+
                                 <Grid Margin="0,0,0,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -1289,6 +1316,29 @@
                                     </StackPanel>
                                     <ui:Button Grid.Column="1" x:Name="BtnAiHotkey" Content="{DynamicResource AiCompanionSetHotkey}" Height="32" Click="BtnAiHotkey_Click" />
                                 </Grid>
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <ui:TextBlock Text="{DynamicResource AiCompanionAnswerWindow}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,10,0,2" />
+                                <ui:TextBlock Text="{DynamicResource AiCompanionAnswerWindowHint}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,10" />
+
+                                <ui:TextBlock x:Name="LblAiAnswerOpacity" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                <Slider x:Name="SliAiAnswerOpacity" Minimum="0.3" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />
+
+                                <ui:TextBlock x:Name="LblAiAnswerWidth" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                <Slider x:Name="SliAiAnswerWidth" Minimum="220" Maximum="900" TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />
+
+                                <ui:TextBlock x:Name="LblAiAnswerHeight" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                <Slider x:Name="SliAiAnswerHeight" Minimum="80" Maximum="800" TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,0,0,8" ValueChanged="OnAiAnswerAppearanceChanged" />
+
+                                <ui:TextBlock Text="{DynamicResource AiCompanionAnswerColor}" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                <ComboBox x:Name="CmbAiAnswerColor" MinHeight="32" Padding="8,4" Margin="0,2,0,10" SelectionChanged="CmbAiAnswerColor_SelectionChanged" />
+
+                                <ui:Button x:Name="BtnAiAnswerPreview" Content="{DynamicResource AiCompanionAnswerPreview}" Icon="{ui:SymbolIcon Symbol=Eye24}" Appearance="Secondary" HorizontalAlignment="Stretch" Height="34" Margin="0,0,0,10" Click="BtnAiAnswerPreview_Click" />
+
+                                <Border Style="{StaticResource SettingsRowDivider}" />
+
+                                <ui:Button x:Name="BtnAiHistory" Content="{DynamicResource AiCompanionHistoryButton}" Icon="{ui:SymbolIcon Symbol=History24}" Appearance="Secondary" HorizontalAlignment="Stretch" Height="34" Margin="0,10,0,10" Click="BtnAiHistory_Click" />
 
                                 <ui:Button x:Name="BtnAiPolicy" Content="{DynamicResource AiCompanionPolicyButton}" Icon="{ui:SymbolIcon Symbol=ShieldTask24}" Appearance="Secondary" HorizontalAlignment="Stretch" Height="34" Click="BtnAiPolicy_Click" />
                             </StackPanel>

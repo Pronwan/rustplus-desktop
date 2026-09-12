@@ -20,14 +20,15 @@ namespace RustPlusDesk.Services.AiCompanion
     /// </summary>
     public sealed class OpenAiProvider : IAiProvider
     {
-        // In one place so a model that is retired is a one-line change and not a search.
-        private const string ChatModel = "gpt-4o";
+        // Overridable in the settings, because a retired model name is otherwise a dead end
+        // until the next release.
+        private static string ChatModel => AiProviders.Model(AiProviders.OpenAi);
         private const string TranscribeModel = "whisper-1";
 
         private const string ChatUrl = "https://api.openai.com/v1/chat/completions";
         private const string TranscribeUrl = "https://api.openai.com/v1/audio/transcriptions";
 
-        public async Task<string> AskAsync(
+        public async Task<AiAnswerResult> AskAsync(
             AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct)
         {
             var spoken = await Transcribe(question.MicPath, apiKey, ct);
@@ -39,7 +40,8 @@ namespace RustPlusDesk.Services.AiCompanion
             if (!string.IsNullOrWhiteSpace(overheard))
                 prompt.Append("\n\nHeard in the game at the same time: \"").Append(overheard).Append('"');
 
-            return await Chat(question, prompt.ToString(), apiKey, onDelta, ct);
+            var answer = await Chat(question, prompt.ToString(), apiKey, onDelta, ct);
+            return new AiAnswerResult(answer, prompt.ToString());
         }
 
         /// <summary>Turns one track into words, or into nothing when there were none.</summary>

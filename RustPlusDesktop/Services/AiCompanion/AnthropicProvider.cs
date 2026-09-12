@@ -19,11 +19,11 @@ namespace RustPlusDesk.Services.AiCompanion
     /// </summary>
     public sealed class AnthropicProvider : IAiProvider
     {
-        private const string Model = "claude-sonnet-5";
+        private static string Model => AiProviders.Model(AiProviders.Anthropic);
         private const string Url = "https://api.anthropic.com/v1/messages";
         private const string Version = "2023-06-01";
 
-        public async Task<string> AskAsync(
+        public async Task<AiAnswerResult> AskAsync(
             AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct)
         {
             // On a worker: the recogniser chews through the file synchronously and would hold
@@ -101,7 +101,7 @@ namespace RustPlusDesk.Services.AiCompanion
                     if (block.TryGetProperty("text", out var text)) whole.Append(text.GetString());
                 }
 
-                return whole.ToString();
+                return new AiAnswerResult(whole.ToString(), prompt.ToString());
             }
 
             var answer = new StringBuilder();
@@ -135,7 +135,7 @@ namespace RustPlusDesk.Services.AiCompanion
                 onDelta(piece);
             }
 
-            return answer.ToString();
+            return new AiAnswerResult(answer.ToString(), prompt.ToString());
         }
     }
 }

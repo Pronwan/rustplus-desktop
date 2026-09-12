@@ -987,6 +987,35 @@ namespace RustPlusDesk.Properties {
         public static string AiAnswerWriting => GetString("AiAnswerWriting");
         public static string AiAnswerDone => GetString("AiAnswerDone");
         public static string AiAnswerFailed => GetString("AiAnswerFailed");
+        public static string AiCompanionModel => GetString("AiCompanionModel");
+        public static string AiCompanionModelReset => GetString("AiCompanionModelReset");
+        public static string AiCompanionModelNote => GetString("AiCompanionModelNote");
+        public static string AiCompanionAutoSend => GetString("AiCompanionAutoSend");
+        public static string AiCompanionAutoSendHint => GetString("AiCompanionAutoSendHint");
+        public static string AiCompanionAnswerWindow => GetString("AiCompanionAnswerWindow");
+        public static string AiCompanionAnswerWindowHint => GetString("AiCompanionAnswerWindowHint");
+        public static string AiCompanionAnswerOpacity => GetString("AiCompanionAnswerOpacity");
+        public static string AiCompanionAnswerWidth => GetString("AiCompanionAnswerWidth");
+        public static string AiCompanionAnswerHeight => GetString("AiCompanionAnswerHeight");
+        public static string AiCompanionAnswerColor => GetString("AiCompanionAnswerColor");
+        public static string AiCompanionAnswerPreview => GetString("AiCompanionAnswerPreview");
+        public static string AiCompanionHistoryButton => GetString("AiCompanionHistoryButton");
+        public static string AiAnswerPreviewLabel => GetString("AiAnswerPreviewLabel");
+        public static string AiAnswerPreviewText => GetString("AiAnswerPreviewText");
+        public static string AiHistoryTitle => GetString("AiHistoryTitle");
+        public static string AiHistoryIntro => GetString("AiHistoryIntro");
+        public static string AiHistoryClear => GetString("AiHistoryClear");
+        public static string AiHistoryCount => GetString("AiHistoryCount");
+        public static string AiHistoryEmpty => GetString("AiHistoryEmpty");
+        public static string AiHistoryWithScreenshot => GetString("AiHistoryWithScreenshot");
+        public static string AiHistoryWithGameAudio => GetString("AiHistoryWithGameAudio");
+        public static string AiHistoryCopyHint => GetString("AiHistoryCopyHint");
+        public static string CommandDockAiAutoSend => GetString("CommandDockAiAutoSend");
+        public static string CommandDockAiAttachShot => GetString("CommandDockAiAttachShot");
+        public static string CommandDockAiGameAudioSetting => GetString("CommandDockAiGameAudioSetting");
+        public static string CommandDockAiTextAnswers => GetString("CommandDockAiTextAnswers");
+        public static string UiPressESCToClearEnterToSave => GetString("UiPressESCToClearEnterToSave");
+        public static string CommandDockAiFailedHistory => GetString("CommandDockAiFailedHistory");
     }
 }
 

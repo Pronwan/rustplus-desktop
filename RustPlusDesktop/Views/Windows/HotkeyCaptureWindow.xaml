@@ -53,7 +53,7 @@
             </StackPanel>
 
             <!-- Footer Instructions -->
-            <TextBlock Grid.Row="2" 
+            <TextBlock Grid.Row="2" x:Name="TxtFooter" 
                        Text="{DynamicResource UiPressESCToCancelEnterToSave}"
                        FontSize="11" 
                        Foreground="{DynamicResource TextSubtle}"

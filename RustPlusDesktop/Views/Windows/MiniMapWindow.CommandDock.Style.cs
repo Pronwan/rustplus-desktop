@@ -67,7 +67,13 @@ namespace RustPlusDesk
             };
         }
 
-        private (Brush Main, Brush Sub) TextBrushes(string key)
+        /// <summary>
+        /// The palette behind the dock's colour swatches.
+        ///
+        /// Static and internal because the answer panel is not a tile and still has to offer
+        /// the same six choices — two palettes that drift apart would be worse than one.
+        /// </summary>
+        internal static (Brush Main, Brush Sub) TextBrushes(string key)
         {
             switch (key)
             {

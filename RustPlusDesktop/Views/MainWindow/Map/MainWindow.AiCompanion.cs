@@ -28,7 +28,15 @@ public partial class MainWindow
         if (_hotkeyMgr == null) return;
 
         var wanted = AiCompanionStore.Current.Hotkey?.Trim();
-        _aiHotkeyGesture = string.IsNullOrEmpty(wanted) ? null : wanted;
+        if (string.IsNullOrEmpty(wanted)) wanted = null;
+
+        // A gesture that is being replaced or cleared has to be given back, or the old one
+        // keeps firing and Windows keeps refusing it to whatever else wants it.
+        if (_aiHotkeyGesture != null &&
+            !string.Equals(_aiHotkeyGesture, wanted, StringComparison.OrdinalIgnoreCase))
+            _hotkeyMgr.Unregister(_aiHotkeyGesture);
+
+        _aiHotkeyGesture = wanted;
 
         if (_aiHotkeyGesture != null) _hotkeyMgr.Register(_aiHotkeyGesture);
     }

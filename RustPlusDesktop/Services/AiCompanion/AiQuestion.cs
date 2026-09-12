@@ -27,6 +27,15 @@ namespace RustPlusDesk.Services.AiCompanion
         public string? Context { get; init; }
     }
 
+    /// <summary>
+    /// An answer, and what the provider was actually asked.
+    ///
+    /// The transcript matters where the recording was turned into words before it was sent:
+    /// a wrong answer to a mis-heard question looks exactly like a wrong answer until you can
+    /// see what it heard. Null where the provider listened to the recording itself.
+    /// </summary>
+    public sealed record AiAnswerResult(string Answer, string? Transcript);
+
     /// <summary>What went wrong, in the terms the answer panel shows it in.</summary>
     public sealed class AiRequestException : Exception
     {

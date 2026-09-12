@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -125,17 +126,22 @@ namespace RustPlusDesk
             root.Children.Add(flash);
             root.Children.Add(countdown);
 
+            // Kept on the window: the push-to-talk hotkey can start a capture with auto-send
+            // on, and it has no tile in hand to find these from.
+            _aiCountdown = countdown;
+            _aiFlash = flash;
+
             var recorder = AiRecorder.Instance;
             var service = AiCompanionService.Instance;
 
             record.MouseLeftButtonUp += (_, e) => { e.Handled = true; ToggleAiRecording(); };
 
-            send.MouseLeftButtonUp += (_, e) => { e.Handled = true; _ = SendAiQuestion(tile); };
+            send.MouseLeftButtonUp += (_, e) => { e.Handled = true; _ = SendAiQuestion(); };
 
             camera.MouseLeftButtonUp += (_, e) =>
             {
                 e.Handled = true;
-                _ = CaptureAiScreenshot(countdown, flash);
+                _ = CaptureAiScreenshot();
             };
 
             sound.MouseLeftButtonUp += (_, e) =>
@@ -216,8 +222,13 @@ namespace RustPlusDesk
                             break;
 
                         default:
+                            // Where the answer panel is switched off there is no panel to
+                            // look at, and "failed" with no reason anywhere is the complaint
+                            // that put the history in the settings. So it points there.
                             status.Text = service.State == AiAnswerState.Failed
-                                ? Loc.Text("CommandDockAiFailed", "Failed — see the panel")
+                                ? (AiCompanionStore.Current.TextAnswers
+                                    ? Loc.Text("CommandDockAiFailed", "Failed — see the panel")
+                                    : Loc.Text("CommandDockAiFailedHistory", "Failed — see recent questions"))
                                 : recorder.LastError switch
                                 {
                                     "no-microphone" => Loc.Text("CommandDockAiNoMic", "No microphone found"),
@@ -279,6 +290,10 @@ namespace RustPlusDesk
             {
                 recorder.Stop();
                 RefreshTiles();
+
+                // The whole point of auto-send is that stopping is the last thing you do
+                // before going back to the game — reaching for a second button defeats it.
+                if (AiCompanionStore.Current.AutoSendAfterRecording) _ = AutoSendAsync();
                 return;
             }
 
@@ -308,7 +323,7 @@ namespace RustPlusDesk
         }
 
         /// <summary>Sends what has been recorded and attached, and opens the answer panel.</summary>
-        private async Task SendAiQuestion(CommandDockTile tile)
+        private async Task SendAiQuestion()
         {
             var service = AiCompanionService.Instance;
             if (service.IsBusy) return;
@@ -317,12 +332,27 @@ namespace RustPlusDesk
             // it means "that is the question, take it".
             if (AiRecorder.Instance.State == AiRecorderState.Recording) AiRecorder.Instance.Stop();
 
-            if (AiCompanionStore.Current.TextAnswers) ShowAiAnswer(tile);
+            if (AiCompanionStore.Current.TextAnswers) ShowAiAnswer();
             RefreshTiles();
 
             await service.AskAsync(DockContext());
 
             RefreshTiles();
+        }
+
+        /// <summary>
+        /// Stopping the recording is the whole interaction: take the screenshot if one was
+        /// asked for, then send.
+        ///
+        /// The screenshot still counts three down first. That delay is not politeness — it is
+        /// the time it takes to get back into the game after pressing anything at all, and
+        /// skipping it here would attach a picture of the chat box every time.
+        /// </summary>
+        private async Task AutoSendAsync()
+        {
+            if (AiCompanionStore.Current.AttachScreenshotByDefault) await CaptureAiScreenshot();
+
+            await SendAiQuestion();
         }
 
         /// <summary>
@@ -365,32 +395,35 @@ namespace RustPlusDesk
         /// is about what it takes to get back in. The flash and the shutter are then the only way
         /// to know it happened, because by that point the user is looking at the game.
         /// </summary>
-        private async Task CaptureAiScreenshot(TextBlock countdown, Border flash)
+        private async Task CaptureAiScreenshot()
         {
             if (_capturingAiShot) return;
             _capturingAiShot = true;
 
+            var countdown = _aiCountdown;
+            var flash = _aiFlash;
+
             try
             {
-                countdown.Visibility = Visibility.Visible;
+                if (countdown != null) countdown.Visibility = Visibility.Visible;
 
                 for (int i = 3; i > 0; i--)
                 {
-                    countdown.Text = i.ToString();
+                    if (countdown != null) countdown.Text = i.ToString();
                     await Task.Delay(1000);
                 }
 
-                countdown.Visibility = Visibility.Collapsed;
+                if (countdown != null) countdown.Visibility = Visibility.Collapsed;
 
                 // Only one screenshot rides along with a question; a second press replaces the
                 // first rather than leaving it behind in the temp folder.
-                var path = await GameScreenshot.CaptureAsync();
+                var path = await GameScreenshot.CaptureAsync(OurWindowHandles());
                 AiCompanionService.Instance.AttachScreenshot(path);
 
                 if (path != null)
                 {
                     PlayShutter();
-                    flash.BeginAnimation(UIElement.OpacityProperty,
+                    flash?.BeginAnimation(UIElement.OpacityProperty,
                         new DoubleAnimation(0.85, 0.0, TimeSpan.FromMilliseconds(420)));
                 }
 
@@ -398,9 +431,40 @@ namespace RustPlusDesk
             }
             finally
             {
-                countdown.Visibility = Visibility.Collapsed;
+                if (countdown != null) countdown.Visibility = Visibility.Collapsed;
                 _capturingAiShot = false;
             }
+        }
+
+        private TextBlock? _aiCountdown;
+        private Border? _aiFlash;
+
+        /// <summary>
+        /// Every window of ours that sits over the game, so the screenshot is of the game.
+        ///
+        /// The dock and the answer panel are the two that are deliberately on top of Rust at
+        /// all times; anything else of ours that happens to be open is on the screen too, and
+        /// equally not what the question is about.
+        /// </summary>
+        private System.Collections.Generic.List<IntPtr> OurWindowHandles()
+        {
+            var handles = new System.Collections.Generic.List<IntPtr>();
+            var windows = Application.Current?.Windows.OfType<Window>().ToList();
+            if (windows == null) return handles;
+
+            foreach (var window in windows)
+            {
+                if (!window.IsVisible) continue;
+
+                try
+                {
+                    var handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+                    if (handle != IntPtr.Zero) handles.Add(handle);
+                }
+                catch { }
+            }
+
+            return handles;
         }
 
         private MediaPlayer? _shutter;

@@ -18,7 +18,7 @@ namespace RustPlusDesk.Services.AiCompanion
         /// thread. Passing null asks for the answer in one piece, which is the cheaper path
         /// where nothing is waiting to read it as it lands.
         /// </summary>
-        Task<string> AskAsync(AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct);
+        Task<AiAnswerResult> AskAsync(AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct);
     }
 
     public static class AiProviderFactory

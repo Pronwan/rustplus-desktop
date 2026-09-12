@@ -40,6 +40,28 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public static bool HasVoice(string provider) => provider is OpenAi or Gemini;
 
+        /// <summary>
+        /// The model each provider is asked by default.
+        ///
+        /// These go stale. Providers retire a name and every request starts coming back as
+        /// "no such model", which is why the settings let one be typed over the top rather
+        /// than leaving the user waiting for an update.
+        /// </summary>
+        public static string DefaultModel(string provider) => provider switch
+        {
+            OpenAi => "gpt-4o",
+            Gemini => "gemini-3.6-flash",
+            Anthropic => "claude-sonnet-5",
+            _ => "",
+        };
+
+        /// <summary>The model actually used: the user's own where they set one.</summary>
+        public static string Model(string provider)
+        {
+            var chosen = AiCompanionStore.Current.Models.TryGetValue(provider, out var name) ? name : null;
+            return string.IsNullOrWhiteSpace(chosen) ? DefaultModel(provider) : chosen.Trim();
+        }
+
         /// <summary>Where to get a key, for the link next to the field.</summary>
         public static string KeyUrl(string provider) => provider switch
         {

@@ -7335,4 +7335,93 @@ Die Aufnahme läuft nur, solange du den Hotkey hältst oder nachdem du die Kache
   <data name="AiAnswerFailed" xml:space="preserve">
     <value>Fehlgeschlagen</value>
   </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>Leer lassen für {0}. Ändere es, wenn der Anbieter meldet, dass es das Modell nicht mehr gibt.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Direkt nach Aufnahmeende senden</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>Kein zweiter Klick. Wenn immer ein Screenshot angehängt wird, entsteht er vorher.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Antwort-Fenster</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>Das Fenster, das unter der Kachel andockt, wenn Text-Antworten an sind.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Transparenz — {0}% deckend</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Breite — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Höhe bis zum Scrollen — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Textfarbe</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Antwort-Fenster ansehen</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Letzte Anfragen anzeigen</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Zuerst Schwefel — eine Rakete braucht 1400, und davon fehlt dir mehr als von allem anderen. Die Kiste auf dem Screenshot ist eine normale Military Crate, da ist keine drin.
+
+Schließe die Vorschau, wenn das Fenster passt.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Letzte Anfragen</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>Die letzten Anfragen, nur auf diesem PC gespeichert und nie hochgeladen. Vor allem nützlich, um einen Fehler nachzulesen, der bei ausgeschaltetem Antwort-Fenster auftrat.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} von {1} auf diesem PC gespeichert</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Noch nichts gefragt.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>Spielton</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Klicken zum Kopieren</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Direkt nach Aufnahmeende senden</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Immer einen Screenshot anhängen</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Auch den Spielton aufnehmen</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Antwort unter der Kachel zeigen</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC entfernt den Hotkey · Enter speichert · Fenster schließen zum Abbrechen</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Fehlgeschlagen — siehe letzte Anfragen</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -47,6 +48,30 @@ namespace RustPlusDesk.Services.AiCompanion
 
         /// <summary>Attach a screenshot by default, without having to tick it each time.</summary>
         public bool AttachScreenshotByDefault { get; set; }
+
+        /// <summary>Send as soon as the recording stops, without a second press.</summary>
+        public bool AutoSendAfterRecording { get; set; }
+
+        /// <summary>
+        /// A model name per provider, where the user has chosen one.
+        ///
+        /// Providers retire models faster than this app ships, and an answer that fails
+        /// because a name went stale is not something a user can work around from the outside.
+        /// Empty means whatever <see cref="AiProviders.DefaultModel"/> currently says.
+        /// </summary>
+        public Dictionary<string, string> Models { get; set; } = new();
+
+        /// <summary>How see-through the answer panel is, 0.3 to 1.</summary>
+        public double AnswerOpacity { get; set; } = 1.0;
+
+        /// <summary>How wide the answer panel is, in pixels.</summary>
+        public double AnswerWidth { get; set; } = 340;
+
+        /// <summary>How tall it may grow before it scrolls, in pixels.</summary>
+        public double AnswerHeight { get; set; } = 260;
+
+        /// <summary>Its text colour, by the same keys the dock's tiles use.</summary>
+        public string AnswerTextColorKey { get; set; } = RustPlusDesk.Models.CommandDockTextColors.Auto;
 
         /// <summary>When the user accepted what happens to their recordings. Null until they have.</summary>
         public DateTime? PolicyAcceptedUtc { get; set; }

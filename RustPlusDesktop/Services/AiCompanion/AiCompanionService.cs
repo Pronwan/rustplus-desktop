@@ -41,6 +41,9 @@ namespace RustPlusDesk.Services.AiCompanion
         /// <summary>Why it failed, in a sentence meant to be read on the overlay.</summary>
         public string? Error { get; private set; }
 
+        /// <summary>What the provider was asked, where the recording was transcribed first.</summary>
+        public string? Transcript { get; private set; }
+
         /// <summary>
         /// The screenshot waiting to go with the next question.
         ///
@@ -107,6 +110,14 @@ namespace RustPlusDesk.Services.AiCompanion
                 Context = context,
             };
 
+            var record = new AiExchange
+            {
+                Provider = settings.Provider,
+                Model = AiProviders.Model(settings.Provider),
+                HadScreenshot = shot != null,
+                HadGameAudio = game != null,
+            };
+
             bool speak = settings.AudioAnswers && AiVoice.IsAvailable;
 
             // Speaking as the answer is written is the supporter half of the setting. The
@@ -123,6 +134,7 @@ namespace RustPlusDesk.Services.AiCompanion
 
             Answer = "";
             Error = null;
+            Transcript = null;
             State = AiAnswerState.Sending;
             _cancel = new CancellationTokenSource();
 
@@ -150,11 +162,17 @@ namespace RustPlusDesk.Services.AiCompanion
                       }
                     : null;
 
-                var answer = await provider.AskAsync(question, key, onDelta, _cancel.Token);
+                var result = await provider.AskAsync(question, key, onDelta, _cancel.Token);
 
-                Answer = string.IsNullOrWhiteSpace(answer)
+                Answer = string.IsNullOrWhiteSpace(result.Answer)
                     ? "The provider returned an empty answer."
-                    : answer.Trim();
+                    : result.Answer.Trim();
+
+                Transcript = result.Transcript;
+
+                record.Answer = Answer;
+                record.Transcript = Transcript;
+                AiHistory.Add(record);
 
                 State = AiAnswerState.Answered;
 
@@ -173,11 +191,15 @@ namespace RustPlusDesk.Services.AiCompanion
             }
             catch (AiRequestException ex)
             {
+                record.Error = ex.Message;
+                AiHistory.Add(record);
                 Fail(ex.Message);
             }
             catch (Exception ex)
             {
-                Fail(Readable(ex));
+                record.Error = Readable(ex);
+                AiHistory.Add(record);
+                Fail(record.Error);
             }
             finally
             {

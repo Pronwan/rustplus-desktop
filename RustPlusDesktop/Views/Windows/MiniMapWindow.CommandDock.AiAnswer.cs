@@ -17,10 +17,17 @@ namespace RustPlusDesk
     {
         private Views.Windows.AiAnswerWindow? _aiAnswer;
 
-        /// <summary>Opens the panel under this tile, or moves it there if it is already open.</summary>
-        private void ShowAiAnswer(CommandDockTile tile)
+        private CommandDockTile? AiTile =>
+            _dock.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.AiCompanion);
+
+        /// <summary>Opens the panel under the AI tile, or moves it there if it is already open.</summary>
+        private void ShowAiAnswer()
         {
+            var tile = AiTile;
+            if (tile == null) return;
+
             _aiAnswer ??= new Views.Windows.AiAnswerWindow { Owner = this };
+            _aiAnswer.ApplyAppearance();
 
             var cell = CellRect(tile);
 
@@ -44,14 +51,13 @@ namespace RustPlusDesk
         {
             if (_aiAnswer is not { IsVisible: true }) return;
 
-            var tile = _dock.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.AiCompanion);
-            if (tile == null)
+            if (AiTile == null)
             {
                 _aiAnswer.Hide();
                 return;
             }
 
-            ShowAiAnswer(tile);
+            ShowAiAnswer();
         }
 
         /// <summary>Closes the panel for good, when the dock itself is going away.</summary>

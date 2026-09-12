@@ -18,12 +18,12 @@ namespace RustPlusDesk.Services.AiCompanion
     /// </summary>
     public sealed class GeminiProvider : IAiProvider
     {
-        private const string Model = "gemini-2.0-flash";
+        private static string Model => AiProviders.Model(AiProviders.Gemini);
 
         private const string Endpoint =
             "https://generativelanguage.googleapis.com/v1beta/models/{0}:{1}";
 
-        public async Task<string> AskAsync(
+        public async Task<AiAnswerResult> AskAsync(
             AiQuestion question, string apiKey, Action<string>? onDelta, CancellationToken ct)
         {
             var parts = new List<object>();
@@ -89,7 +89,7 @@ namespace RustPlusDesk.Services.AiCompanion
                     throw AiHttp.Failure(response, await AiHttp.ReadBody(response, ct));
 
                 if (onDelta == null)
-                    return TextOf(await AiHttp.ReadBody(response, ct));
+                    return new AiAnswerResult(TextOf(await AiHttp.ReadBody(response, ct)), null);
 
                 var answer = new StringBuilder();
 
@@ -102,7 +102,7 @@ namespace RustPlusDesk.Services.AiCompanion
                     onDelta(piece);
                 }
 
-                return answer.ToString();
+                return new AiAnswerResult(answer.ToString(), null);
             }
             finally
             {

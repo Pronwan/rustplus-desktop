@@ -41,9 +41,40 @@ namespace RustPlusDesk.Views
             ChkAiStreamingVoice.IsChecked = settings.StreamingVoice;
             ChkAiGameAudio.IsChecked = settings.CaptureGameAudio;
             ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
+            ChkAiAutoSend.IsChecked = settings.AutoSendAfterRecording;
+
+            if (CmbAiAnswerColor.Items.Count == 0)
+            {
+                foreach (var key in Models.CommandDockTextColors.All)
+                    CmbAiAnswerColor.Items.Add(new ComboBoxItem
+                    {
+                        Content = AnswerColorLabel(key),
+                        Tag = key,
+                    });
+            }
+
+            CmbAiAnswerColor.SelectedIndex = Math.Max(0,
+                Array.IndexOf(Models.CommandDockTextColors.All,
+                    settings.AnswerTextColorKey ?? Models.CommandDockTextColors.Auto));
+
+            SliAiAnswerOpacity.Value = Math.Clamp(settings.AnswerOpacity, 0.3, 1.0);
+            SliAiAnswerWidth.Value = Math.Clamp(settings.AnswerWidth, 220, 900);
+            SliAiAnswerHeight.Value = Math.Clamp(settings.AnswerHeight, 80, 800);
 
             ApplyAiCompanionState();
         }
+
+        private static string AnswerColorLabel(string key) => key switch
+        {
+            Models.CommandDockTextColors.Auto => Loc.Text("CommandDockColorAuto", "Theme colour"),
+            Models.CommandDockTextColors.White => Loc.Text("CommandDockColorWhite", "White"),
+            Models.CommandDockTextColors.Black => Loc.Text("CommandDockColorBlack", "Black"),
+            Models.CommandDockTextColors.Cyan => Loc.Text("CommandDockColorCyan", "Cyan"),
+            Models.CommandDockTextColors.Amber => Loc.Text("CommandDockColorAmber", "Amber"),
+            Models.CommandDockTextColors.Red => Loc.Text("CommandDockColorRed", "Red"),
+            Models.CommandDockTextColors.Green => Loc.Text("CommandDockColorGreen", "Green"),
+            _ => key,
+        };
 
         private string SelectedAiProvider =>
             (CmbAiProvider.SelectedItem as ComboBoxItem)?.Tag as string ?? AiProviders.OpenAi;
@@ -101,6 +132,96 @@ namespace RustPlusDesk.Views
             TxtAiHotkey.Text = string.IsNullOrWhiteSpace(settings.Hotkey)
                 ? Loc.Text("AiCompanionHotkeyNone", "Not set — click the tile to record instead")
                 : settings.Hotkey;
+
+            // The box is per provider, so switching provider has to bring its own model with
+            // it — otherwise a name typed for Gemini would be sent to Claude.
+            _loadingAiModel = true;
+            TxtAiModel.Text = settings.Models.TryGetValue(provider, out var model) ? model : "";
+            _loadingAiModel = false;
+
+            TxtAiModel.PlaceholderText = AiProviders.DefaultModel(provider);
+            BtnAiModelReset.IsEnabled = !string.IsNullOrWhiteSpace(TxtAiModel.Text);
+
+            TxtAiModelNote.Text = string.Format(
+                Loc.Text("AiCompanionModelNote",
+                    "Leave empty to use {0}. Change it if the provider replies that the model no longer exists."),
+                AiProviders.DefaultModel(provider));
+
+            UpdateAiAnswerLabels();
+        }
+
+        private bool _loadingAiModel;
+
+        private void UpdateAiAnswerLabels()
+        {
+            LblAiAnswerOpacity.Text = string.Format(
+                Loc.Text("AiCompanionAnswerOpacity", "Transparency — {0}% opaque"),
+                (int)Math.Round(SliAiAnswerOpacity.Value * 100));
+
+            LblAiAnswerWidth.Text = string.Format(
+                Loc.Text("AiCompanionAnswerWidth", "Width — {0} px"),
+                (int)SliAiAnswerWidth.Value);
+
+            LblAiAnswerHeight.Text = string.Format(
+                Loc.Text("AiCompanionAnswerHeight", "Height before it scrolls — {0} px"),
+                (int)SliAiAnswerHeight.Value);
+        }
+
+        private void TxtAiModel_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized || _loadingAiModel) return;
+
+            var settings = AiCompanionStore.Current;
+            var provider = SelectedAiProvider;
+            var typed = TxtAiModel.Text?.Trim() ?? "";
+
+            // An empty box means the default, not an empty model name — stored as the absence
+            // of an entry so a later change of default is picked up rather than pinned.
+            if (typed.Length == 0) settings.Models.Remove(provider);
+            else settings.Models[provider] = typed;
+
+            AiCompanionStore.Save(settings);
+            BtnAiModelReset.IsEnabled = typed.Length > 0;
+        }
+
+        private void BtnAiModelReset_Click(object sender, RoutedEventArgs e)
+        {
+            TxtAiModel.Text = "";
+            ApplyAiCompanionState();
+        }
+
+        private void OnAiAnswerAppearanceChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_isSettingsInitialized) return;
+            if (SliAiAnswerOpacity == null || SliAiAnswerWidth == null || SliAiAnswerHeight == null) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.AnswerOpacity = SliAiAnswerOpacity.Value;
+            settings.AnswerWidth = SliAiAnswerWidth.Value;
+            settings.AnswerHeight = SliAiAnswerHeight.Value;
+            AiCompanionStore.Save(settings);
+
+            UpdateAiAnswerLabels();
+        }
+
+        private void CmbAiAnswerColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.AnswerTextColorKey =
+                (CmbAiAnswerColor.SelectedItem as ComboBoxItem)?.Tag as string
+                ?? Models.CommandDockTextColors.Auto;
+            AiCompanionStore.Save(settings);
+        }
+
+        private void BtnAiAnswerPreview_Click(object sender, RoutedEventArgs e)
+            => Windows.AiAnswerWindow.ShowPreview(Window.GetWindow(this));
+
+        private void BtnAiHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var history = new Windows.AiHistoryWindow { Owner = Window.GetWindow(this) };
+            history.ShowDialog();
         }
 
         private void CmbAiProvider_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -134,6 +255,7 @@ namespace RustPlusDesk.Views
             settings.StreamingVoice = ChkAiStreamingVoice.IsChecked == true;
             settings.CaptureGameAudio = ChkAiGameAudio.IsChecked == true;
             settings.AttachScreenshotByDefault = ChkAiScreenshotDefault.IsChecked == true;
+            settings.AutoSendAfterRecording = ChkAiAutoSend.IsChecked == true;
             AiCompanionStore.Save(settings);
 
             ApplyAiCompanionState();
@@ -218,7 +340,7 @@ namespace RustPlusDesk.Views
 
         private void BtnAiHotkey_Click(object sender, RoutedEventArgs e)
         {
-            var capture = new Windows.HotkeyCaptureWindow { Owner = Window.GetWindow(this) };
+            var capture = new Windows.HotkeyCaptureWindow { Owner = Window.GetWindow(this), AllowClear = true };
             if (capture.ShowDialog() != true) return;
 
             // An empty gesture clears it, and having no hotkey is a valid choice: the tile can

@@ -7314,4 +7314,93 @@ Recording only ever runs while you hold the hotkey or after you click the tile, 
   <data name="AiAnswerFailed" xml:space="preserve">
     <value>Failed</value>
   </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>Leave empty to use {0}. Change it if the provider replies that the model no longer exists.</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Send as soon as recording stops</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>No second press. With a screenshot set to attach every time, it is taken first.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Answer window</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>The panel that docks under the tile when text answers are on.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Transparency — {0}% opaque</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Width — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Height before it scrolls — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Text colour</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Preview the answer window</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Show recent questions</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Sulfur first — a rocket needs 1400, and you are short of that before you are short of anything else. The crate on the screenshot is a normal military crate, so it will not have one in it.
+
+Close this preview when the panel looks right.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Recent questions</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>The last few exchanges, kept on this PC and never uploaded. Useful mainly for reading a failure that happened while the answer window was off.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} of the last {1} kept on this PC</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Nothing asked yet.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>screenshot</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>game audio</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Click to copy</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Send as soon as recording stops</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Attach a screenshot every time</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Also record the game&apos;s sound</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Show the answer under the tile</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC removes the hotkey · Enter saves · close this window to cancel</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Failed — see recent questions</value>
+  </data>
 </root>

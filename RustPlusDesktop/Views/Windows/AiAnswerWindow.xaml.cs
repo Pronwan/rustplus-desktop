@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using RustPlusDesk.Helpers;
+using RustPlusDesk.Models;
 using RustPlusDesk.Services.AiCompanion;
 
 namespace RustPlusDesk.Views.Windows
@@ -33,6 +35,15 @@ namespace RustPlusDesk.Views.Windows
 
         private readonly AiCompanionService _service = AiCompanionService.Instance;
 
+        /// <summary>
+        /// A preview shows the settings, not an answer.
+        ///
+        /// Without it the preview would be wiped by the first thing the service did, and the
+        /// only way to see what the colour and size settings look like would be to ask a
+        /// question and hope it was long enough.
+        /// </summary>
+        private bool _preview;
+
         public AiAnswerWindow()
         {
             InitializeComponent();
@@ -40,6 +51,7 @@ namespace RustPlusDesk.Views.Windows
             _service.Changed += OnServiceChanged;
             Closed += (_, __) => _service.Changed -= OnServiceChanged;
 
+            ApplyAppearance();
             Render();
         }
 
@@ -53,6 +65,64 @@ namespace RustPlusDesk.Views.Windows
             // NOACTIVATE keeps the game in front; TOOLWINDOW keeps this out of alt-tab, where a
             // sentence-sized window is only noise.
             SetWindowLongPtr(hwnd, GWL_EXSTYLE, (IntPtr)(styles | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW));
+        }
+
+        /// <summary>
+        /// Colour, transparency and size, from the companion's settings.
+        ///
+        /// Only the panel's own surface fades, never its text — that is the same rule the dock's
+        /// tiles follow, and the reason a panel turned nearly invisible is still readable over
+        /// whatever the game is drawing behind it.
+        /// </summary>
+        public void ApplyAppearance()
+        {
+            var settings = AiCompanionStore.Current;
+
+            double opacity = Math.Clamp(settings.AnswerOpacity, 0.3, 1.0);
+
+            Shell.Background = Fade(Resource("Surface", Color.FromArgb(0xD8, 0x16, 0x1B, 0x22)), opacity);
+            Shell.BorderBrush = Fade(Resource("CardBorder", Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)), opacity);
+
+            Width = Math.Clamp(settings.AnswerWidth, 220, 900);
+            Scroller.MaxHeight = Math.Clamp(settings.AnswerHeight, 80, 800);
+
+            var (main, sub) = MiniMapWindow.TextBrushes(settings.AnswerTextColorKey ?? CommandDockTextColors.Auto);
+            TxtAnswer.Foreground = main;
+            TxtProvider.Foreground = sub;
+
+            // A panel that can be seen through needs the same shadow the tiles use, for the same
+            // reason: white on snow and black on water are both invisible without it.
+            TxtAnswer.Effect = opacity < 0.85 ? TextShadow : null;
+            TxtState.Effect = TxtAnswer.Effect;
+            TxtProvider.Effect = TxtAnswer.Effect;
+        }
+
+        private static readonly System.Windows.Media.Effects.Effect TextShadow = CreateShadow();
+
+        private static System.Windows.Media.Effects.Effect CreateShadow()
+        {
+            var shadow = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 4,
+                ShadowDepth = 1,
+                Direction = 270,
+                Opacity = 0.85,
+                Color = Colors.Black,
+                RenderingBias = System.Windows.Media.Effects.RenderingBias.Performance,
+            };
+            shadow.Freeze();
+            return shadow;
+        }
+
+        private static Brush Fade(Brush brush, double opacity)
+        {
+            if (brush is not SolidColorBrush solid) return brush;
+
+            var color = solid.Color;
+            var faded = new SolidColorBrush(Color.FromArgb(
+                (byte)Math.Round(color.A * opacity), color.R, color.G, color.B));
+            faded.Freeze();
+            return faded;
         }
 
         private void OnServiceChanged()
@@ -69,13 +139,14 @@ namespace RustPlusDesk.Views.Windows
 
         private void Render()
         {
+            if (_preview) return;
+
             switch (_service.State)
             {
                 case AiAnswerState.Sending:
                     TxtState.Text = Loc.Text("AiAnswerThinking", "Thinking…");
-                    TxtState.Foreground = Brush("Accent", Colors.SkyBlue);
+                    TxtState.Foreground = Resource("Accent", Colors.SkyBlue);
                     TxtAnswer.Text = Loc.Text("AiAnswerWaiting", "Sent. Waiting for the first words…");
-                    TxtAnswer.Foreground = Brush("TextSubtle", Colors.Gray);
                     break;
 
                 case AiAnswerState.Streaming:
@@ -83,16 +154,14 @@ namespace RustPlusDesk.Views.Windows
                     TxtState.Text = _service.State == AiAnswerState.Streaming
                         ? Loc.Text("AiAnswerWriting", "Answering…")
                         : Loc.Text("AiAnswerDone", "Answer");
-                    TxtState.Foreground = Brush("Accent", Colors.SkyBlue);
+                    TxtState.Foreground = Resource("Accent", Colors.SkyBlue);
                     TxtAnswer.Text = _service.Answer;
-                    TxtAnswer.Foreground = Brush("TextPrimary", Colors.White);
                     break;
 
                 case AiAnswerState.Failed:
                     TxtState.Text = Loc.Text("AiAnswerFailed", "Failed");
-                    TxtState.Foreground = Brush("DangerBrush", Color.FromRgb(0xE5, 0x39, 0x35));
+                    TxtState.Foreground = Resource("DangerBrush", Color.FromRgb(0xE5, 0x39, 0x35));
                     TxtAnswer.Text = _service.Error ?? "";
-                    TxtAnswer.Foreground = Brush("TextPrimary", Colors.White);
                     break;
 
                 default:
@@ -113,7 +182,7 @@ namespace RustPlusDesk.Views.Windows
             if (_service.State == AiAnswerState.Streaming) Scroller.ScrollToEnd();
         }
 
-        private static Brush Brush(string key, Color fallback)
+        private static Brush Resource(string key, Color fallback)
         {
             if (Application.Current?.TryFindResource(key) is Brush found) return found;
             return new SolidColorBrush(fallback);
@@ -129,8 +198,6 @@ namespace RustPlusDesk.Views.Windows
         public void DockUnder(Rect tile, Rect screen)
         {
             const double Gap = 6;
-
-            Width = Math.Max(300, tile.Width);
 
             // SizeToContent only settles after a layout pass, and the height decides whether
             // there is room below the tile at all.
@@ -151,6 +218,38 @@ namespace RustPlusDesk.Views.Windows
             Top = top;
         }
 
+        /// <summary>
+        /// Opens a sample panel so the colour, transparency and size settings can be judged
+        /// without asking a question first.
+        ///
+        /// It is the real window with real settings applied, not a mock-up — a preview that
+        /// renders differently from the thing it previews is worse than none.
+        /// </summary>
+        public static void ShowPreview(Window? owner)
+        {
+            var preview = new AiAnswerWindow { _preview = true, ShowActivated = false };
+
+            preview.TxtState.Text = Loc.Text("AiAnswerPreviewLabel", "Preview");
+            preview.TxtState.Foreground = Resource("Accent", Colors.SkyBlue);
+            preview.TxtProvider.Text = AiProviders.DisplayName(AiCompanionStore.Current.Provider);
+            preview.TxtAnswer.Text = Loc.Text("AiAnswerPreviewText",
+                "Sulfur first — a rocket needs 1400, and you are short of that before you are " +
+                "short of anything else. The crate on the screenshot is a normal military crate, " +
+                "so it will not have one in it.\n\nClose this preview when the panel looks right.");
+            preview.BtnCopy.Visibility = Visibility.Collapsed;
+
+            // Beside its owner rather than under a tile: the settings window is what is being
+            // looked at, and the dock may not even be open.
+            preview.Show();
+            preview.UpdateLayout();
+
+            if (owner != null && !double.IsNaN(owner.Left))
+            {
+                preview.Left = owner.Left + Math.Max(0, (owner.ActualWidth - preview.Width) / 2);
+                preview.Top = owner.Top + Math.Max(0, (owner.ActualHeight - preview.ActualHeight) / 2);
+            }
+        }
+
         private void BtnCopy_Click(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
@@ -162,6 +261,13 @@ namespace RustPlusDesk.Views.Windows
         private void BtnClose_Click(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+
+            if (_preview)
+            {
+                Close();
+                return;
+            }
+
             _service.ClearAnswer();
             Hide();
         }

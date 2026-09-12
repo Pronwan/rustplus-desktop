@@ -280,6 +280,66 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.AiCompanion:
+                {
+                    // These belong to the companion, not to this tile, and are mirrored here
+                    // because the dock is where you are standing when you want them off — in
+                    // the game, with no reason to go looking through Connected Services.
+                    var box = new StackPanel();
+                    var settings = Services.AiCompanion.AiCompanionStore.Current;
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockAiAutoSend", "Send as soon as recording stops"),
+                        settings.AutoSendAfterRecording,
+                        on =>
+                        {
+                            var current = Services.AiCompanion.AiCompanionStore.Current;
+                            current.AutoSendAfterRecording = on;
+                            Services.AiCompanion.AiCompanionStore.Save(current);
+                            TileSettingChanged(immediate: true);
+                        }));
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockAiAttachShot", "Attach a screenshot every time"),
+                        settings.AttachScreenshotByDefault,
+                        on =>
+                        {
+                            var current = Services.AiCompanion.AiCompanionStore.Current;
+                            current.AttachScreenshotByDefault = on;
+                            Services.AiCompanion.AiCompanionStore.Save(current);
+                            TileSettingChanged(immediate: true);
+                        }));
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockAiGameAudioSetting", "Also record the game's sound"),
+                        settings.CaptureGameAudio,
+                        on =>
+                        {
+                            var current = Services.AiCompanion.AiCompanionStore.Current;
+                            current.CaptureGameAudio = on;
+                            Services.AiCompanion.AiCompanionStore.Save(current);
+                            TileSettingChanged(immediate: true);
+                        }));
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockAiTextAnswers", "Show the answer under the tile"),
+                        settings.TextAnswers,
+                        on =>
+                        {
+                            var current = Services.AiCompanion.AiCompanionStore.Current;
+                            current.TextAnswers = on;
+
+                            // One of the two has to carry the answer, exactly as in the main
+                            // settings — an answer with nowhere to go is a wasted request.
+                            if (!on) current.AudioAnswers = true;
+
+                            Services.AiCompanion.AiCompanionStore.Save(current);
+                            TileSettingChanged(immediate: true);
+                        }));
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.ServerInfo:
                 {
                     var box = new StackPanel();
