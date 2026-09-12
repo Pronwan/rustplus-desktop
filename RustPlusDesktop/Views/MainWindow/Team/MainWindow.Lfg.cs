@@ -68,6 +68,11 @@ public partial class MainWindow
         // after somebody has opened the thing the badge is meant to send them to.
         Services.Social.SocialUnread.Changed += ShowSocialUnread;
         Services.Social.SocialUnread.Start();
+
+        // Held outside the panel for the same reason, one step further: the lines themselves. The
+        // socket was already receiving every one of them from start-up and throwing them away
+        // whenever this panel happened to be closed.
+        Services.Social.GlobalChatFeed.Start();
     }
 
     /// <summary>The same number the Inbox tab carries, on the rail.</summary>
@@ -110,6 +115,10 @@ public partial class MainWindow
     private void SetSocialRailVisible(bool visible)
     {
         var state = visible ? Visibility.Visible : Visibility.Collapsed;
+
+        // The ticker is another door to the same room, so it opens and closes with this one.
+        _socialAvailable = visible;
+        ApplyGlobalChatTickerVisibility();
 
         // The divider above it goes too. The one below stays, so the rule between the tools and
         // the pin/settings pair survives the button disappearing from between them.

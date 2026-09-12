@@ -78,17 +78,18 @@ public partial class LfgOverlay : UserControl
     /// Hooks the push channels. Attached while the control is in the tree rather than while the
     /// panel is visible: hiding a panel is not the same as leaving the room, and a whisper that
     /// arrives with the panel closed should already be there when it is opened again.
+    ///
+    /// The room itself is no longer among them. Its lines are held by
+    /// <see cref="GlobalChatFeed"/> for as long as the app runs, and this panel reads that buffer
+    /// — which is what makes a line that arrived while the panel was shut still be there.
     /// </summary>
     private void AttachRealtime()
     {
         if (_realtimeAttached) return;
         _realtimeAttached = true;
 
-        SocialRealtime.ChatChanged += OnChatChanged;
-        SocialRealtime.ChatMessageReceived += OnChatMessageReceived;
-        SocialRealtime.ChatMessageDeleted += OnChatMessageDeleted;
-        SocialRealtime.SlowModeUpdated += OnSlowModeUpdated;
-        SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
+        GlobalChatFeed.RoomChanged += OnFeedRoomChanged;
+        GlobalChatFeed.SanctionChanged += ApplyChatSanction;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
         SocialRealtime.FriendRequestArrived += OnFriendRequestArrived;
@@ -105,11 +106,8 @@ public partial class LfgOverlay : UserControl
         if (!_realtimeAttached) return;
         _realtimeAttached = false;
 
-        SocialRealtime.ChatChanged -= OnChatChanged;
-        SocialRealtime.ChatMessageReceived -= OnChatMessageReceived;
-        SocialRealtime.ChatMessageDeleted -= OnChatMessageDeleted;
-        SocialRealtime.SlowModeUpdated -= OnSlowModeUpdated;
-        SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
+        GlobalChatFeed.RoomChanged -= OnFeedRoomChanged;
+        GlobalChatFeed.SanctionChanged -= ApplyChatSanction;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
         SocialRealtime.FriendRequestArrived -= OnFriendRequestArrived;
@@ -118,56 +116,19 @@ public partial class LfgOverlay : UserControl
         SocialUnread.Changed -= ShowUnread;
     }
 
-    private void OnChatChanged() => _ = CatchUpChatAsync();
-
-    private void OnChatMessageReceived(Models.ChatLine line)
+    /// <summary>
+    /// The feed's buffer for some room moved. Redraw only when it is the room on screen — the
+    /// other one is still accruing behind this view, which is the point of the feed.
+    /// </summary>
+    private void OnFeedRoomChanged(string room)
     {
-        // Both rooms share one connection, so a line for the room the user is not looking at must be
-        // dropped rather than appended - otherwise supporter lines surface in the public feed and
-        // the reverse.
-        if (!string.Equals(line.Room, _room, StringComparison.OrdinalIgnoreCase)) return;
-        if (_chatLines.Any(l => l.Id == line.Id)) return;
-        _chatLines.Add(line);
-        if (_chatLines.Count > ChatWindow)
-            _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-        ShowChatLines();
-    }
+        if (!string.Equals(room, _room, StringComparison.OrdinalIgnoreCase)) return;
 
-    private void OnChatMessageDeleted(string messageId)
-    {
-        var count = _chatLines.RemoveAll(l => l.Id == messageId);
-        if (count > 0) ShowChatLines();
-    }
+        PullChatFromFeed();
 
-    private void OnSlowModeUpdated(Models.ChatSlowModeEvent e)
-    {
-        _slowModeSeconds = Math.Max(0, e.Seconds);
-        UpdateSlowModeUI();
-    }
-
-    private void OnSanctionEventReceived(Models.SystemSanctionEvent e)
-    {
-        var sanctionLine = Models.ChatLine.FromSanction(e);
-        if (!_chatLines.Any(l => l.Id == sanctionLine.Id))
-        {
-            _chatLines.Add(sanctionLine);
-            if (_chatLines.Count > ChatWindow)
-                _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-            ShowChatLines();
-        }
-
-        var myId = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
-        if (!string.IsNullOrEmpty(myId) && string.Equals(e.Target?.Id, myId, StringComparison.OrdinalIgnoreCase))
-        {
-            if (e.IsLifted)
-            {
-                ApplyChatSanction(null);
-            }
-            else
-            {
-                ApplyChatSanction(new Models.ChatSanction(e.Kind, e.Reason, e.ExpiresAt));
-            }
-        }
+        // It is on screen, so it has been read. Without this the room would carry an unseen count
+        // behind the very view showing the lines.
+        if (ChatSection.Visibility == Visibility.Visible) GlobalChatFeed.MarkSeen(_room);
     }
 
     private void OnRequestArrived() => _ = LoadInboxAsync();
@@ -196,6 +157,25 @@ public partial class LfgOverlay : UserControl
 
     /// <summary>Kept for callers that cannot await; the work still happens.</summary>
     public void Refresh() => _ = RefreshAsync();
+
+    /// <summary>
+    /// Selects the public room.
+    ///
+    /// For callers that mean "the room", not "Community" — the ticker, chiefly. Opening onto the
+    /// section list and letting the user find chat inside it is the depth the ticker exists to
+    /// avoid.
+    /// </summary>
+    public void ShowPublicRoom()
+    {
+        if (SecChat.IsChecked == true)
+        {
+            // Already the selected section, so no Checked event will fire to load it.
+            Section_Checked(SecChat, new RoutedEventArgs());
+            return;
+        }
+
+        SecChat.IsChecked = true;
+    }
 
     /// <summary>Loads the stored state. Safe to call whenever the panel is opened.</summary>
     public async Task RefreshAsync()
@@ -1055,7 +1035,7 @@ public partial class LfgOverlay : UserControl
         _reportTarget = null;
 
         // Their lines, their listing and their thread all go, and the server filters all three.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
     }
@@ -1100,11 +1080,12 @@ public partial class LfgOverlay : UserControl
         }
     }
 
-    /// <summary>What the room currently holds, so a pushed line can be added to it.</summary>
+    /// <summary>
+    /// What is on screen. A copy of the feed's buffer for the room being shown, not the room
+    /// itself — <see cref="GlobalChatFeed"/> holds that, and keeps holding it when this panel goes
+    /// away.
+    /// </summary>
     private readonly System.Collections.Generic.List<Models.ChatLine> _chatLines = new();
-
-    /// <summary>The window the server serves, matched here so an evening in the room stays bounded.</summary>
-    private const int ChatWindow = 200;
 
     private int _slowModeSeconds;
     private System.Windows.Threading.DispatcherTimer? _cooldownTimer;
@@ -1202,11 +1183,9 @@ public partial class LfgOverlay : UserControl
     /// The answer rides on every read of either room, so a plan bought while the panel is open
     /// takes effect on the next refresh rather than on the next restart.
     /// </summary>
-    private void ApplySupporterAccess(Models.ChatSnapshot snapshot)
+    private void ApplySupporterAccess(bool supporterRoomOpen)
     {
-        if (!snapshot.Ok) return;
-
-        _supporterRoom = snapshot.SupporterRoom;
+        _supporterRoom = supporterRoomOpen;
 
         if (SecSupporter.IsChecked != true) return;
 
@@ -1215,27 +1194,60 @@ public partial class LfgOverlay : UserControl
         ChatSection.Visibility = gated ? Visibility.Collapsed : Visibility.Visible;
     }
 
+    /// <summary>
+    /// Shows the room. Reads it only if nobody has yet — by the time the panel is first opened the
+    /// feed has usually been holding the lines for a while, and asking again for what is already
+    /// in hand is a request that buys nothing.
+    /// </summary>
     private async Task LoadChatAsync()
     {
-        var snapshot = await SocialApi.GetChatAsync(room: _room).ConfigureAwait(true);
+        await GlobalChatFeed.EnsureLoadedAsync(_room).ConfigureAwait(true);
 
-        ApplySupporterAccess(snapshot);
-
-        _chatLines.Clear();
-        _chatLines.AddRange(snapshot.Lines);
         _userScrolledUp = false;
+        PullChatFromFeed();
+        GlobalChatFeed.MarkSeen(_room);
+    }
+
+    /// <summary>
+    /// Re-reads the room and redraws it.
+    ///
+    /// For the handful of actions whose whole point is that the server's answer has changed —
+    /// blocking somebody, unblocking them, picking a name colour, sending a line. Showing what is
+    /// already in hand would show exactly the state the action was meant to change.
+    /// </summary>
+    private async Task ReloadChatAsync()
+    {
+        await GlobalChatFeed.ReloadAsync(_room).ConfigureAwait(true);
+        PullChatFromFeed();
+        GlobalChatFeed.MarkSeen(_room);
+    }
+
+    /// <summary>
+    /// Copies the feed's view of the room onto the controls.
+    ///
+    /// The lines are the feed's objects rather than copies, so the grouping flags this sets are
+    /// the same ones any other view of the room sees. That is wanted: two views of one room
+    /// disagreeing about where the headers go would be worse than sharing them.
+    /// </summary>
+    private void PullChatFromFeed()
+    {
+        _chatLines.Clear();
+        _chatLines.AddRange(GlobalChatFeed.Lines(_room));
         ShowChatLines();
 
-        _slowModeSeconds = snapshot.SlowModeSeconds;
+        ApplySupporterAccess(GlobalChatFeed.SupporterRoomOpen);
+
+        _slowModeSeconds = GlobalChatFeed.SlowModeSeconds(_room);
         UpdateSlowModeUI();
 
-        if (snapshot.MaxLength > 0 && TxtChat.MaxLength != snapshot.MaxLength)
+        var max = GlobalChatFeed.MaxLength(_room);
+        if (max > 0 && TxtChat.MaxLength != max)
         {
-            TxtChat.MaxLength = snapshot.MaxLength;
+            TxtChat.MaxLength = max;
             UpdateChatCharCount();
         }
 
-        if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
+        ApplyChatSanction(GlobalChatFeed.Sanction);
     }
 
     private void TxtChat_TextChanged(object sender, TextChangedEventArgs e)
@@ -1295,69 +1307,6 @@ public partial class LfgOverlay : UserControl
             {
                 ChatScrollViewer?.ScrollToEnd();
             }, System.Windows.Threading.DispatcherPriority.Loaded);
-        }
-    }
-
-    private bool _catchUpRunning;
-    private bool _catchUpAgain;
-
-    /// <summary>
-    /// Fetches what was written since the last line we hold, in answer to a push.
-    ///
-    /// Reading rather than trusting the payload is what keeps blocks working: the endpoint knows
-    /// who the reader has blocked and who has blocked them, and the broadcast — one frame for
-    /// the whole room — cannot. A busy room is folded into one request at a time, so ten lines
-    /// arriving together cost one read rather than ten.
-    /// </summary>
-    private async Task CatchUpChatAsync()
-    {
-        if (_catchUpRunning)
-        {
-            _catchUpAgain = true;
-            return;
-        }
-
-        _catchUpRunning = true;
-        try
-        {
-            do
-            {
-                _catchUpAgain = false;
-
-                var since = _chatLines.LastOrDefault()?.SentAtIso;
-                if (since is null)
-                {
-                    // Nothing to count from — an empty room, or one that failed to load.
-                    await LoadChatAsync().ConfigureAwait(true);
-                    continue;
-                }
-
-                var snapshot = await SocialApi.GetChatAsync(since, room: _room).ConfigureAwait(true);
-                if (!snapshot.Ok) continue;
-
-                ApplyChatSanction(snapshot.Sanction);
-                _slowModeSeconds = snapshot.SlowModeSeconds;
-                UpdateSlowModeUI();
-
-                var known = new System.Collections.Generic.HashSet<string>(
-                    _chatLines.Select(line => line.Id), StringComparer.Ordinal);
-
-                var added = false;
-                foreach (var line in snapshot.Lines)
-                    if (known.Add(line.Id)) { _chatLines.Add(line); added = true; }
-
-                if (!added) continue;
-
-                if (_chatLines.Count > ChatWindow)
-                    _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-
-                ShowChatLines();
-            }
-            while (_catchUpAgain);
-        }
-        finally
-        {
-            _catchUpRunning = false;
         }
     }
 
@@ -1461,7 +1410,7 @@ public partial class LfgOverlay : UserControl
             }
         }
 
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     /// <summary>
@@ -1733,6 +1682,33 @@ public partial class LfgOverlay : UserControl
         _ = StartFriendRequestAsync(line.SteamId);
     }
 
+    /// <summary>
+    /// Opens the friends sheet for somebody, from outside this panel.
+    ///
+    /// The global chat lane in the team-chat window offers the same action, and a second friends
+    /// sheet built over there would be a second one to keep true. It opens this panel instead.
+    /// </summary>
+    public void StartFriendRequestFor(string? steamId)
+    {
+        ShowPublicRoom();
+        _ = StartFriendRequestAsync(steamId);
+    }
+
+    /// <summary>
+    /// Opens the report sheet for a line, from outside this panel.
+    ///
+    /// Reporting asks for a reason and optionally a note — the reporter's account of what happened
+    /// is the part a moderator actually reads, and a one-click report that sends neither is worth
+    /// less to them than no report at all.
+    /// </summary>
+    public void StartReportFor(Models.ChatLine line)
+    {
+        if (line.SenderId is null) return;
+
+        ShowPublicRoom();
+        OpenReport(new ReportTarget(line.SenderId, line.SenderName, line.Id, line.Body));
+    }
+
     private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
@@ -1787,7 +1763,7 @@ public partial class LfgOverlay : UserControl
         // Both directions come back at once: their lines reappear in the room, their listing in
         // the board. Reloading here rather than on close means the change is visible where it
         // was made.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
     }
 
@@ -2034,7 +2010,7 @@ public partial class LfgOverlay : UserControl
 
         // Existing lines were rendered with the old colour; a reload is the cheapest way to see
         // the change applied to your own past messages too.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     // ====== REPLIES ======
@@ -2197,7 +2173,7 @@ public partial class LfgOverlay : UserControl
 
         await SocialApi.BlockAsync(line.SenderId).ConfigureAwait(true);
         // Their lines disappear on the next read, since the server filters both directions.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     private void ChatReport_Click(object sender, RoutedEventArgs e)
