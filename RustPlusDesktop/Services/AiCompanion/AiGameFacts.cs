@@ -92,9 +92,19 @@ namespace RustPlusDesk.Services.AiCompanion
             var text = new StringBuilder();
 
             text.Append(
-                "Raid costs and optimal boom combinations for this build of Rust, taken from the game's own values.\n" +
-                "Building Tier Aliases: Top tier / HQM / High Quality Metal = 'Armored' (2000 HP). Metal / Sheet Metal = 'Metal' (1000 HP).\n" +
-                "Sulfur Costs per explosive: Rocket = 1400 sulfur | C4 = 2200 sulfur | Satchel = 480 sulfur | Beancan = 120 sulfur | Explo 5.56 ammo = 25 sulfur/bullet.\n\n" +
+                "Raid costs and explosive crafting recipes for this build of Rust (from game data).\n" +
+                "Building Tier Aliases: Top tier / HQM / High Quality Metal = 'Armored' (2000 HP). Metal / Sheet Metal = 'Metal' (1000 HP).\n\n" +
+                "Boom & Explosives Crafting Recipes (and raw sulfur breakdown):\n" +
+                "- Explosive 5.56 Rifle Ammo / Explo ammo [T3] (makes 2): 10 Metal Frags, 20 Gunpowder, 10 Sulfur (50 raw sulfur total for 2 rounds = 25 raw sulfur per bullet)\n" +
+                "- Timed Explosive Charge / C4 [T3] (makes 1): 20 Explosives, 5 Cloth, 2 Tech Trash (2,200 raw sulfur, 1,000 gunpowder, 60 low grade, 60 metal frags)\n" +
+                "- Rocket [T3] (makes 1): 10 Explosives, 150 Gunpowder, 2 Pipes (1,400 raw sulfur, 650 gunpowder, 30 low grade, 30 metal frags)\n" +
+                "- High Velocity Rocket / HV Rocket [T2] (makes 1): 100 Gunpowder, 1 Pipe (200 raw sulfur)\n" +
+                "- Satchel Charge [T1 / WB0] (makes 1): 4 Beancans, 1 Small Stash, 1 Rope (480 raw sulfur, 240 gunpowder, 80 metal frags)\n" +
+                "- Beancan Grenade [T1 / WB0] (makes 1): 60 Gunpowder, 20 Metal Frags (120 raw sulfur)\n" +
+                "- Explosives (component) [T3] (makes 1): 50 Gunpowder, 3 Low Grade Fuel, 10 Sulfur, 3 Metal Frags (110 raw sulfur)\n" +
+                "- Gunpowder [T1 / mix table] (makes 10): 20 Sulfur, 30 Charcoal (2 raw sulfur per 1 gunpowder)\n" +
+                "- F1 Grenade [T2] (makes 1): 30 Gunpowder, 25 Metal Frags (60 raw sulfur)\n" +
+                "- 40mm HE Grenade & MLRS: Uncraftable (loot only)\n\n" +
                 "Single Explosive Counts (to destroy from 100% HP using only one weapon):\n");
 
             text.Append("Object (tier) | HP | ").Append(string.Join(" | ", sources.Select(Short))).Append('\n');
