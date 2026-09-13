@@ -1,5 +1,6 @@
 using RustPlusDesk.Services.Social;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1576,19 +1577,69 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private string? _friendTargetSteamId;
 
+    private List<Models.Friend> _allFriends = new();
+    private List<Models.Friend> _allIncoming = new();
+    private List<Models.Friend> _allOutgoing = new();
+
     private async void BtnFriends_Click(object sender, RoutedEventArgs e)
     {
+        AddFriendSheet.Visibility = Visibility.Collapsed;
         FriendsSheet.Visibility = Visibility.Visible;
-        FriendsNotice.Visibility = Visibility.Collapsed;
-
-        // Opened by hand, so there is nobody in mind yet: back to the plain id field.
-        ClearFriendTarget();
+        TxtFriendSearch.Text = "";
 
         await LoadFriendsAsync().ConfigureAwait(true);
     }
 
     private void BtnFriendsClose_Click(object sender, RoutedEventArgs e)
         => FriendsSheet.Visibility = Visibility.Collapsed;
+
+    private void BtnOpenAddFriend_Click(object sender, RoutedEventArgs e)
+    {
+        FriendsSheet.Visibility = Visibility.Collapsed;
+        OpenAddFriendManual();
+    }
+
+    private void OpenAddFriendManual()
+    {
+        ClearFriendTarget();
+        TxtFriendMessage.Text = "";
+        FriendsNotice.Visibility = Visibility.Collapsed;
+        AddFriendSheet.Visibility = Visibility.Visible;
+        TxtFriendSteamId.Focus();
+    }
+
+    private void BtnAddFriendClose_Click(object sender, RoutedEventArgs e)
+        => AddFriendSheet.Visibility = Visibility.Collapsed;
+
+    private void TxtFriendSearch_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ApplyFriendFilter();
+    }
+
+    private void ApplyFriendFilter()
+    {
+        var query = TxtFriendSearch?.Text?.Trim() ?? "";
+
+        if (string.IsNullOrEmpty(query))
+        {
+            FriendList.ItemsSource = _allFriends;
+            FriendsSearchEmptyNotice.Visibility = Visibility.Collapsed;
+            FriendsEmptyNotice.Visibility = _allFriends.Count == 0 && _allIncoming.Count == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            return;
+        }
+
+        var filtered = _allFriends
+            .Where(f => (f.DisplayName?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
+                     || (f.SteamId?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
+                     || (f.WhereLabel?.Contains(query, StringComparison.OrdinalIgnoreCase) == true))
+            .ToList();
+
+        FriendList.ItemsSource = filtered;
+        FriendsEmptyNotice.Visibility = Visibility.Collapsed;
+        FriendsSearchEmptyNotice.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
 
     /// <summary>
     /// Reads the list and the requests on both sides.
@@ -1600,20 +1651,18 @@ public partial class LfgOverlay : UserControl
     {
         var list = await SocialApi.GetFriendsAsync().ConfigureAwait(true);
 
-        FriendList.ItemsSource = list.Friends;
-        FriendRequestList.ItemsSource = list.Incoming;
-        FriendOutgoingList.ItemsSource = list.Outgoing;
+        _allFriends = list.Friends;
+        _allIncoming = list.Incoming;
+        _allOutgoing = list.Outgoing;
 
-        FriendsIncomingHeading.Visibility = list.Incoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        FriendsOutgoingHeading.Visibility = list.Outgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendRequestList.ItemsSource = _allIncoming;
+        FriendOutgoingList.ItemsSource = _allOutgoing;
 
-        // The invitation to add somebody only makes sense when there is nothing to look at, and
-        // only when we actually managed to look.
-        FriendsEmptyNotice.Visibility = list.Ok && list.Friends.Count == 0 && list.Incoming.Count == 0
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        FriendsIncomingHeading.Visibility = _allIncoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendsOutgoingHeading.Visibility = _allOutgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        ShowFriendRequests(list.Incoming.Count);
+        ApplyFriendFilter();
+        ShowFriendRequests(_allIncoming.Count);
     }
 
     private void ShowFriendRequests(int count)
@@ -1628,6 +1677,33 @@ public partial class LfgOverlay : UserControl
         var message = TxtFriendMessage.Text?.Trim() ?? "";
 
         if (steamId.Length == 0 || message.Length == 0) return;
+
+        if (SocialFriends.IsSelf(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorNotFound");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (SocialFriends.IsFriend(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (SocialFriends.HasPendingRequest(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
 
         BtnFriendAdd.IsEnabled = false;
         FriendsNotice.Visibility = Visibility.Collapsed;
@@ -1758,6 +1834,7 @@ public partial class LfgOverlay : UserControl
     private void ChatAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
+        if (!SocialFriends.CanBeFriended(line.SteamId, line.SenderId)) return;
         _ = StartFriendRequestAsync(line.SteamId, line.SenderName, line.AvatarUrl);
     }
 
@@ -1769,6 +1846,7 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     public void StartFriendRequestFor(string? steamId, string? name = null, string? avatarUrl = null)
     {
+        if (!SocialFriends.CanBeFriended(steamId)) return;
         ShowPublicRoom();
         _ = StartFriendRequestAsync(steamId, name, avatarUrl);
     }
@@ -1791,6 +1869,7 @@ public partial class LfgOverlay : UserControl
     private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
+        if (!SocialFriends.CanBeFriended(thread.CounterpartSteamId, thread.CounterpartId)) return;
         _ = StartFriendRequestAsync(thread.CounterpartSteamId, thread.CounterpartName, thread.AvatarUrl);
     }
 
@@ -1801,14 +1880,35 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private async Task StartFriendRequestAsync(string? steamId, string? name = null, string? avatarUrl = null)
     {
-        FriendsSheet.Visibility = Visibility.Visible;
+        FriendsSheet.Visibility = Visibility.Collapsed;
+        AddFriendSheet.Visibility = Visibility.Visible;
         FriendsNotice.Visibility = Visibility.Collapsed;
+
+        await LoadFriendsAsync().ConfigureAwait(true);
+
+        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.IsFriend(steamId))
+        {
+            ClearFriendTarget();
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.HasPendingRequest(steamId))
+        {
+            ClearFriendTarget();
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
 
         ShowFriendTarget(steamId, name, avatarUrl);
         TxtFriendMessage.Text = "";
         TxtFriendMessage.Focus();
-
-        await LoadFriendsAsync().ConfigureAwait(true);
     }
 
     /// <summary>

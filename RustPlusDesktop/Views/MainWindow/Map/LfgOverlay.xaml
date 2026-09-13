@@ -392,9 +392,9 @@
                                                                       Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}">
                                                                 <MenuItem.Icon><ui:SymbolIcon Symbol="Translate24" FontSize="16" /></MenuItem.Icon>
                                                             </MenuItem>
-                                                            <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
+                                                            <Separator Visibility="{Binding CanAddAsFriend, Converter={StaticResource BoolToVis}}" />
                                                             <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ChatAddFriend_Click" Tag="{Binding}"
-                                                                      Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}">
+                                                                      Visibility="{Binding CanAddAsFriend, Converter={StaticResource BoolToVis}}">
                                                                 <MenuItem.Icon><ui:SymbolIcon Symbol="PersonAdd24" FontSize="16" /></MenuItem.Icon>
                                                             </MenuItem>
                                                             <Separator Visibility="{Binding IsNotMine, Converter={StaticResource BoolToVis}}" />
@@ -1269,10 +1269,11 @@
                                                 Cursor="Hand" MouseLeftButtonUp="Thread_Click" Tag="{Binding}">
                                             <Border.ContextMenu>
                                                 <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                    <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ThreadAddFriend_Click" Tag="{Binding}">
+                                                    <MenuItem Header="{DynamicResource FriendsAddFriend}" Click="ThreadAddFriend_Click" Tag="{Binding}"
+                                                              Visibility="{Binding CanAddAsFriend, Converter={StaticResource BoolToVis}}">
                                                         <MenuItem.Icon><ui:SymbolIcon Symbol="PersonAdd24" FontSize="16" /></MenuItem.Icon>
                                                     </MenuItem>
-                                                    <Separator />
+                                                    <Separator Visibility="{Binding CanAddAsFriend, Converter={StaticResource BoolToVis}}" />
                                                     <MenuItem Header="{DynamicResource LfgBlockUser}" Click="MenuBlock_Click" Tag="{Binding}">
                                                         <MenuItem.Icon><ui:SymbolIcon Symbol="PersonProhibited24" FontSize="16" /></MenuItem.Icon>
                                                     </MenuItem>
@@ -1424,21 +1425,73 @@
                 them on a list, so the request that arrives carries both decisions separately and
                 this sheet only ever shows the second one.
             -->
+            <!--
+                The friends list (with Search and Add Friend action).
+            -->
             <Border x:Name="FriendsSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
-                    Panel.ZIndex="20" Background="#E60A0F16" Margin="-14">
-                <Border VerticalAlignment="Center" Margin="14" Padding="16"
-                        Background="{StaticResource LfgCard}" CornerRadius="8"
-                        BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource FriendsTitle}" Foreground="{StaticResource LfgText}"
-                                   FontSize="13.5" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    Panel.ZIndex="20" Background="#99000000" Margin="-14">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16" Padding="20"
+                        MaxWidth="440" Width="400"
+                        Background="{DynamicResource SurfaceAlt}" CornerRadius="12"
+                        BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="36"
+                            Direction="270"
+                            Opacity="0.55"
+                            ShadowDepth="10"
+                            Color="#000000" />
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-                        <ScrollViewer MaxHeight="330" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto"
+                        <!-- Header with Title, Add Friend Action, and Close Button -->
+                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{DynamicResource FriendsTitle}" Foreground="{StaticResource LfgText}"
+                                           FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:Button x:Name="BtnOpenAddFriend" Click="BtnOpenAddFriend_Click" Appearance="Primary"
+                                           Height="28" Padding="10,0" Margin="0,0,6,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="PersonAdd24" FontSize="14" Margin="0,0,6,0" />
+                                        <TextBlock Text="{DynamicResource FriendsButtonAdd}" FontSize="11.5" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ui:Button>
+                                <ui:Button x:Name="BtnFriendsCloseTop" Click="BtnFriendsClose_Click" Appearance="Secondary"
+                                           Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="28" Width="30" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Search Bar -->
+                        <ui:TextBox Grid.Row="1" x:Name="TxtFriendSearch" Margin="0,0,0,10"
+                                    PlaceholderText="{DynamicResource FriendsSearchPlaceholder}"
+                                    TextChanged="TxtFriendSearch_TextChanged">
+                            <ui:TextBox.Icon>
+                                <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="{StaticResource LfgMuted}" />
+                            </ui:TextBox.Icon>
+                        </ui:TextBox>
+
+                        <!-- Scrollable Friends & Requests Content -->
+                        <ScrollViewer Grid.Row="2" MaxHeight="380" VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
                             <StackPanel Margin="0,0,4,0">
-                                <TextBlock x:Name="FriendsEmptyNotice" Visibility="Collapsed" Margin="0,0,0,8"
+                                <TextBlock x:Name="FriendsEmptyNotice" Visibility="Collapsed" Margin="0,8,0,8"
                                            Text="{DynamicResource FriendsEmpty}" TextWrapping="Wrap"
-                                           Foreground="{StaticResource LfgMuted}" FontSize="11" />
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11.5" />
+
+                                <TextBlock x:Name="FriendsSearchEmptyNotice" Visibility="Collapsed" Margin="0,8,0,8"
+                                           Text="{DynamicResource FriendsNoSearchResults}" TextWrapping="Wrap"
+                                           Foreground="{StaticResource LfgMuted}" FontSize="11.5" />
 
                                 <!--  Waiting on you: the only rows here with a decision attached.  -->
                                 <TextBlock x:Name="FriendsIncomingHeading" Visibility="Collapsed"
@@ -1459,11 +1512,6 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
 
-                                                    <!--
-                                                        The name above, the two answers below it. Side by side they
-                                                        needed more width than the panel has, and the first thing to
-                                                        fall off the edge was the button you press.
-                                                    -->
                                                     <StackPanel Grid.Column="1">
                                                         <TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource LfgText}"
                                                                    FontSize="12.5" FontWeight="SemiBold"
@@ -1570,20 +1618,47 @@
                                 </ItemsControl>
                             </StackPanel>
                         </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Border>
 
-                        <!--  Adding somebody: an id and one message, which is all you get.  -->
-                        <Border Height="1" Background="{StaticResource LfgLine}" Margin="0,12,0,12" />
+            <!--
+                The Add Friend Sheet (Decoupled from Friends list).
+            -->
+            <Border x:Name="AddFriendSheet" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed"
+                    Panel.ZIndex="25" Background="#99000000" Margin="-14">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16" Padding="20"
+                        MaxWidth="420" Width="380"
+                        Background="{DynamicResource SurfaceAlt}" CornerRadius="12"
+                        BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="36"
+                            Direction="270"
+                            Opacity="0.55"
+                            ShadowDepth="10"
+                            Color="#000000" />
+                    </Border.Effect>
+                    <StackPanel>
+                        <!-- Header with Title and Close button -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{DynamicResource FriendsAddFriendTitle}" Foreground="{StaticResource LfgText}"
+                                           FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock Text="{DynamicResource FriendsAddFriendSubtitle}" Foreground="{StaticResource LfgMuted}"
+                                           FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:Button Grid.Column="1" x:Name="BtnAddFriendCloseTop" Click="BtnAddFriendClose_Click" Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="28" Width="30" VerticalAlignment="Top" />
+                        </Grid>
 
-                        <!--
-                            Who the request is going to, when it was started from a chat line or a
-                            thread rather than typed in here.
-
-                            A face and the name they chat under, which is what the sender actually
-                            recognises — and deliberately not the Steam id. We resolve the request
-                            by id underneath, but nobody should have to put their id on another
-                            player's screen as the price of being invited.
-                        -->
-                        <Border x:Name="FriendTargetCard" Visibility="Collapsed" Padding="10" CornerRadius="6"
+                        <!-- Target player card when adding from chat/thread/profile -->
+                        <Border x:Name="FriendTargetCard" Visibility="Collapsed" Padding="10" CornerRadius="8"
+                                Margin="0,0,0,10"
                                 Background="#14FFFFFF" BorderBrush="{StaticResource LfgLine}" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -1591,9 +1666,8 @@
                                     <ColumnDefinition Width="*" MinWidth="0" />
                                 </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,10,0"
+                                <Grid Grid.Column="0" Width="34" Height="34" Margin="0,0,10,0"
                                       VerticalAlignment="Center">
-                                    <!--  Underneath, so a missing or slow avatar is a quiet disc.  -->
                                     <Ellipse Fill="{StaticResource LfgLine}" />
                                     <Ellipse>
                                         <Ellipse.Fill>
@@ -1606,7 +1680,7 @@
                                     <TextBlock Text="{DynamicResource FriendsAddTarget}"
                                                Foreground="{StaticResource LfgMuted}" FontSize="10" />
                                     <TextBlock x:Name="FriendTargetName" Margin="0,1,0,0"
-                                               Foreground="{StaticResource LfgText}" FontSize="12.5"
+                                               Foreground="{StaticResource LfgText}" FontSize="13"
                                                FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Grid>
@@ -1620,10 +1694,10 @@
                         <TextBlock x:Name="FriendsNotice" Visibility="Collapsed" Margin="0,8,0,0"
                                    Foreground="#FFFF8A8A" FontSize="11" TextWrapping="Wrap" />
 
-                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
                             <ui:Button x:Name="BtnFriendAdd" Click="BtnFriendAdd_Click" Appearance="Primary"
                                        Content="{DynamicResource FriendsAddAction}" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnFriendsClose" Click="BtnFriendsClose_Click" Appearance="Secondary"
+                            <ui:Button x:Name="BtnAddFriendClose" Click="BtnAddFriendClose_Click" Appearance="Secondary"
                                        Content="{DynamicResource ProfileClose}" />
                         </StackPanel>
                     </StackPanel>

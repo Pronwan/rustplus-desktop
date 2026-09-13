@@ -69,10 +69,22 @@ public partial class MainWindow
         Services.Social.SocialUnread.Changed += ShowSocialUnread;
         Services.Social.SocialUnread.Start();
 
+        // Track friends cache so context menus and actions know if someone is already a friend.
+        Services.Social.SocialFriends.Changed += OnSocialFriendsChanged;
+        Services.Social.SocialFriends.Start();
+
         // Held outside the panel for the same reason, one step further: the lines themselves. The
         // socket was already receiving every one of them from start-up and throwing them away
         // whenever this panel happened to be closed.
         Services.Social.GlobalChatFeed.Start();
+    }
+
+    private void OnSocialFriendsChanged()
+    {
+        foreach (var msg in ChatMessages)
+        {
+            msg.RefreshCanAddFriend();
+        }
     }
 
     /// <summary>The same number the Inbox tab carries, on the rail.</summary>

@@ -247,7 +247,11 @@ public partial class MainWindow
         /// entry is hidden rather than shown and refused.
         /// </summary>
         public bool CanAddSenderAsFriend =>
-            CanActOnSender && !string.IsNullOrWhiteSpace(_sourceLine?.SteamId);
+            CanActOnSender
+            && !string.IsNullOrWhiteSpace(_sourceLine?.SteamId)
+            && Services.Social.SocialFriends.CanBeFriended(_sourceLine?.SteamId, _sourceLine?.SenderId);
+
+        public void RefreshCanAddFriend() => OnChanged(nameof(CanAddSenderAsFriend));
 
         /// <summary>
         /// Whether this row draws its own name, badge, time and avatar, or continues the one above.

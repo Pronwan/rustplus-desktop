@@ -122,6 +122,7 @@ public partial class MainWindow
     {
         if (GetContextMessage(sender)?.SourceLine is not { } line) return;
         if (string.IsNullOrWhiteSpace(line.SteamId)) return;
+        if (!SocialFriends.CanBeFriended(line.SteamId, line.SenderId)) return;
 
         EnsureLfgWired();
         LfgPanel.Visibility = Visibility.Visible;

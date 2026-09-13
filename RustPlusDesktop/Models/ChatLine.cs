@@ -215,6 +215,12 @@ public sealed class ChatLine
     /// <summary>Convenience for XAML, which cannot negate a bool in a binding.</summary>
     public bool IsNotMine => !IsMine;
 
+    /// <summary>Whether a friend request can be addressed to this sender.</summary>
+    public bool CanAddAsFriend =>
+        IsNotMine
+        && !string.IsNullOrWhiteSpace(SteamId)
+        && Services.Social.SocialFriends.CanBeFriended(SteamId, SenderId);
+
     /// <summary>The message this one answers, or null when it answers nothing.</summary>
     public ChatReplyReference? ReplyTo { get; init; }
 

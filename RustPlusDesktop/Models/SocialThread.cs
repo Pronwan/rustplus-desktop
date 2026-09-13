@@ -20,6 +20,11 @@ public sealed class SocialThread
 
     public string? CounterpartId { get; init; }
 
+    /// <summary>Whether a friend request can be addressed to this counterpart.</summary>
+    public bool CanAddAsFriend =>
+        !string.IsNullOrWhiteSpace(CounterpartSteamId)
+        && Services.Social.SocialFriends.CanBeFriended(CounterpartSteamId, CounterpartId);
+
     public string? AvatarUrl { get; init; }
 
     public bool IsOnline { get; init; }

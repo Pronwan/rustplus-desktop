@@ -596,7 +596,9 @@ public static class SocialApi
             Fill(data, "incoming", incoming);
             Fill(data, "outgoing", outgoing);
 
-            return new Models.FriendList(friends, incoming, outgoing);
+            var result = new Models.FriendList(friends, incoming, outgoing);
+            SocialFriends.Report(result);
+            return result;
         }
         catch
         {
