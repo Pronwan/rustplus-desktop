@@ -124,7 +124,18 @@ namespace RustPlusDesk
             // Kept on the way out of the tile rather than on every keystroke: this runs on the
             // dock's own thread while the game has the screen, and the state only has to be
             // right by the time something reads it.
-            input.TextChanged += (_, _) => state.Input = input.Text;
+            input.TextChanged += (_, _) =>
+            {
+                state.Input = input.Text;
+
+                // Clearing the box clears the answer under it. It was the answer to what used
+                // to be there, and left up it reads as the answer to whatever is typed next.
+                if (input.Text.Trim().Length > 0 || state.Output.Length == 0) return;
+
+                state.Output = "";
+                state.IsError = false;
+                RefreshTiles();
+            };
             input.KeyDown += (_, e) =>
             {
                 if (e.Key != Key.Enter) return;
@@ -155,6 +166,7 @@ namespace RustPlusDesk
             root.Children.Add(bottom);
 
             var flag = BuildTranslateFlag(tile, style);
+            ApplyTranslateFlag(flag, tile, style);
             Grid.SetColumn(flag, 0);
             bottom.Children.Add(flag);
 
@@ -221,6 +233,10 @@ namespace RustPlusDesk
                 output.Foreground = state.IsError ? failed : normal;
 
                 ToolTipService.SetToolTip(output, text.Length > 0 ? text : null);
+
+                // Changing it from the grid only writes it to the tile; this is what puts it
+                // on screen.
+                ApplyTranslateFlag(flag, tile, style);
             });
 
             return shell;
@@ -233,13 +249,8 @@ namespace RustPlusDesk
         /// game has the screen, and because the same picture is already what the settings picker
         /// and the LFG list use for a language.
         /// </summary>
-        private FrameworkElement BuildTranslateFlag(CommandDockTile tile, TileStyle style)
+        private Border BuildTranslateFlag(CommandDockTile tile, TileStyle style)
         {
-            string target = TranslateTargetOf(tile);
-            var language = AppLanguages.All.FirstOrDefault(l => l.Code == target)
-                        ?? AppLanguages.All.FirstOrDefault(l =>
-                               l.Code.StartsWith(target.Split('-')[0], StringComparison.OrdinalIgnoreCase));
-
             var button = new Border
             {
                 Width = 24,
@@ -252,6 +263,26 @@ namespace RustPlusDesk
                 ClipToBounds = true,
             };
 
+            button.MouseLeftButtonUp += (_, e) => { e.Handled = true; OpenTranslateLanguages(tile, button); };
+            return button;
+        }
+
+        /// <summary>
+        /// Puts the current language on the flag. Separate from building it because the tile is
+        /// refreshed rather than rebuilt, so this is the only thing that ever changes about it.
+        /// </summary>
+        private static void ApplyTranslateFlag(Border button, CommandDockTile tile, TileStyle style)
+        {
+            string target = TranslateTargetOf(tile);
+            var language = AppLanguages.All.FirstOrDefault(l => l.Code == target)
+                        ?? AppLanguages.All.FirstOrDefault(l =>
+                               l.Code.StartsWith(target.Split('-')[0], StringComparison.OrdinalIgnoreCase));
+
+            // Nothing to redraw, and redrawing it every tick would throw away a freshly
+            // decoded image several times a second.
+            if (Equals(button.Tag, target)) return;
+            button.Tag = target;
+
             ToolTipService.SetToolTip(button, string.Format(
                 Loc.Text("CommandDockTranslateInto", "Translating into {0} — click to change"),
                 language?.Name ?? target));
@@ -259,21 +290,17 @@ namespace RustPlusDesk
             if (language != null && FlagImage(language) is { } image)
             {
                 button.Child = new Image { Source = image, Stretch = Stretch.UniformToFill };
-            }
-            else
-            {
-                button.Child = new TextBlock
-                {
-                    Text = target.Split('-')[0].ToUpperInvariant(),
-                    FontSize = style.Size(9),
-                    Foreground = style.TextMain,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                };
+                return;
             }
 
-            button.MouseLeftButtonUp += (_, e) => { e.Handled = true; OpenTranslateLanguages(tile, button); };
-            return button;
+            button.Child = new TextBlock
+            {
+                Text = target.Split('-')[0].ToUpperInvariant(),
+                FontSize = style.Size(9),
+                Foreground = style.TextMain,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
         }
 
         private static BitmapImage? FlagImage(AppLanguage language)
