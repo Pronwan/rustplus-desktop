@@ -161,10 +161,14 @@ namespace RustPlusDesk.Services.AiCompanion
                     .GetProperty("choices")[0]
                     .GetProperty("message");
 
+                string res = "";
                 if (message.TryGetProperty("content", out var contentProp))
-                    return ContentToString(contentProp);
+                    res = ContentToString(contentProp);
 
-                return "";
+                if (string.IsNullOrWhiteSpace(res) && message.TryGetProperty("reasoning", out var reasoningProp))
+                    res = ContentToString(reasoningProp);
+
+                return res;
             }
 
             var answer = new StringBuilder();

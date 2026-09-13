@@ -210,23 +210,67 @@ namespace RustPlusDesk.Services.AiCompanion
         {
             if (string.IsNullOrWhiteSpace(answer)) return "";
 
+            var cleaned = answer.Trim();
+
             // 1. Remove XML-style thought tags: <think>...</think>, <thought>...</thought>, <reasoning>...</reasoning>
-            var cleaned = System.Text.RegularExpressions.Regex.Replace(
-                answer, @"<(think|thought|reasoning)>[\s\S]*?</\1>", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned, @"<(think|thought|reasoning|thought_process)>[\s\S]*?</\1>", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
 
             // 2. Handle unclosed opening tags at the beginning (if response truncated while thinking)
             cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned, @"^<(think|thought|reasoning)>[\s\S]*", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                cleaned, @"^<(think|thought|reasoning|thought_process)>[\s\S]*", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
 
-            // 3. Strip lines where the model talks to itself in internal monologue
-            if (cleaned.Contains("We need to answer:", StringComparison.OrdinalIgnoreCase) ||
+            // 3. Detect plaintext thinking process patterns (e.g. "Here's a thinking process:", "Thinking Process:", "1. **Analyze...")
+            bool isThinkingDumping =
+                cleaned.StartsWith("Here's a thinking process", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("Here is a thinking process", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("Thinking Process", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("Thought Process", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("Let's think step by step", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("1. **Analyze", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("1. Analyze", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("**Thinking:**", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Analyze User Input", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Constraint check:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Identify Key Information", StringComparison.OrdinalIgnoreCase);
+
+            if (isThinkingDumping ||
+                cleaned.Contains("We need to answer:", StringComparison.OrdinalIgnoreCase) ||
                 cleaned.Contains("Let's produce:", StringComparison.OrdinalIgnoreCase) ||
-                cleaned.Contains("Thus answer:", StringComparison.OrdinalIgnoreCase))
+                cleaned.Contains("Thus answer:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Something like:", StringComparison.OrdinalIgnoreCase))
             {
-                var m = System.Text.RegularExpressions.Regex.Match(cleaned, @"(?:Thus answer|Answer|Let's produce)\s*:\s*""?([^""\r\n]+)""?", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                // Try to find the concluding answer marker
+                var m = System.Text.RegularExpressions.Regex.Match(
+                    cleaned,
+                    @"(?:Something like|Let's produce|Thus answer|Final answer|Answer|Conclusion|State that concisely|Output)\s*:\s*""?([^""\r\n]+?)""?(?:\s*(?:That's|\.|\r|\n|$))",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.RightToLeft);
+
                 if (m.Success && m.Groups[1].Value.Trim().Length > 0)
                 {
                     cleaned = m.Groups[1].Value;
+                }
+                else
+                {
+                    // Look for the last quoted phrase in the text which is usually the intended output
+                    var quotes = System.Text.RegularExpressions.Regex.Matches(cleaned, @"""([^""\r\n]{6,250})""");
+                    if (quotes.Count > 0)
+                    {
+                        var lastQuote = quotes[quotes.Count - 1].Groups[1].Value.Trim();
+                        if (!lastQuote.Contains("Analyze", StringComparison.OrdinalIgnoreCase) &&
+                            !lastQuote.Contains("how much", StringComparison.OrdinalIgnoreCase))
+                        {
+                            cleaned = lastQuote;
+                        }
+                    }
+                }
+
+                // If it's still pure thinking text that never concluded, return empty so fallback is clean
+                if (cleaned.StartsWith("Here's a thinking process", StringComparison.OrdinalIgnoreCase) ||
+                    cleaned.StartsWith("1. **Analyze", StringComparison.OrdinalIgnoreCase) ||
+                    cleaned.Contains("Analyze User Input", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "";
                 }
             }
 
