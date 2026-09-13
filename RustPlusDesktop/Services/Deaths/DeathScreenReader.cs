@@ -30,18 +30,25 @@ namespace RustPlusDesk.Services.Deaths
     public static class DeathScreenReader
     {
         /// <summary>
-        /// Where the name sits, as fractions of the screen: the top middle.
+        /// Where the row of boxes sits, as fractions of the screen.
         ///
-        /// A starting point rather than a measurement. Rust's death screen puts the killer's
-        /// name across the top centre, and the band below is wide enough to take the weapon line
-        /// with it; how much of it is name and how much is padding differs with resolution and
-        /// aspect ratio, which is why this is four numbers somebody can drag rather than a
-        /// constant.
+        /// Measured off three real death screens rather than guessed. The killer's name box
+        /// came out at 1113,65–1365,118 on a 1440p screen at 0.9 interface scale, at
+        /// 1093,70–1372,130 on the same screen at 1.0, and at 836,45–1025,86 on a 1080p one.
+        /// As fractions those are left 0.427–0.435, top 0.042–0.049, width 0.098–0.109 and
+        /// height 0.037–0.042 — near enough identical, which is what makes fractions the right
+        /// unit here and a pixel rectangle the wrong one.
+        ///
+        /// The band taken is wider than the name box on purpose: it reaches from the survival
+        /// timer on the left to past the weapon on the right, because all three sit on one line
+        /// and the parser below tells them apart by where the words are rather than by what
+        /// they say. Room to spare costs nothing, and a longer name pushes the boxes outwards —
+        /// a crop fitted tightly around one player's name cuts the next player's in half.
         /// </summary>
-        public const double DefaultLeft = 0.30;
-        public const double DefaultTop = 0.055;
-        public const double DefaultWidth = 0.40;
-        public const double DefaultHeight = 0.075;
+        public const double DefaultLeft = 0.355;
+        public const double DefaultTop = 0.038;
+        public const double DefaultWidth = 0.300;
+        public const double DefaultHeight = 0.060;
 
         /// <summary>Whether this machine has a recogniser at all.</summary>
         public static bool Available => Engine() != null;
@@ -65,17 +72,38 @@ namespace RustPlusDesk.Services.Deaths
 
             if (path == null) return new DeathScreenText(null, null, Array.Empty<string>(), null);
 
-            var lines = await ReadLinesAsync(path).ConfigureAwait(false);
-            var (killer, weapon) = Parse(lines);
+            var words = await ReadWordsAsync(path).ConfigureAwait(false);
+            var (killer, weapon) = Parse(words);
+
+            // Rebuilt into rows for the preview in the settings, which is read by a person
+            // checking the region rather than by the parser.
+            var lines = words
+                .GroupBy(w => Math.Round(w.MiddleY / 12))
+                .OrderBy(row => row.Key)
+                .Select(row => string.Join(" ", row.OrderBy(w => w.Left).Select(w => w.Text)))
+                .ToList();
 
             return new DeathScreenText(killer, weapon, lines, path);
         }
 
-        /// <summary>Every line of text in one image, top to bottom.</summary>
-        private static async Task<IReadOnlyList<string>> ReadLinesAsync(string path)
+        /// <summary>One recognised word, and where on the crop it was.</summary>
+        private readonly record struct Word(string Text, double Left, double Right, double MiddleY)
+        {
+            public double Width => Right - Left;
+        }
+
+        /// <summary>
+        /// Every word in the crop, with its position.
+        ///
+        /// Positions rather than lines, because the three things on this row — how long you
+        /// survived, who killed you, and what with — are one line of text as far as a
+        /// recogniser is concerned. "1m22s iris war iris Rock" cannot be split by reading it.
+        /// It can be split by noticing the gaps.
+        /// </summary>
+        private static async Task<IReadOnlyList<Word>> ReadWordsAsync(string path)
         {
             var engine = Engine();
-            if (engine == null || !File.Exists(path)) return Array.Empty<string>();
+            if (engine == null || !File.Exists(path)) return Array.Empty<Word>();
 
             try
             {
@@ -88,36 +116,74 @@ namespace RustPlusDesk.Services.Deaths
                 var result = await engine.RecognizeAsync(bitmap);
 
                 return result.Lines
-                    .Select(line => string.Join(" ", line.Words.Select(w => w.Text)).Trim())
-                    .Where(line => line.Length > 0)
+                    .SelectMany(line => line.Words)
+                    .Select(w => new Word(
+                        w.Text.Trim(),
+                        w.BoundingRect.Left,
+                        w.BoundingRect.Left + w.BoundingRect.Width,
+                        w.BoundingRect.Top + w.BoundingRect.Height / 2))
+                    .Where(w => w.Text.Length > 0)
+                    .OrderBy(w => w.Left)
                     .ToList();
             }
             catch
             {
                 // A recogniser that is present but refuses an image is not worth an exception
                 // on the way back from a button press.
-                return Array.Empty<string>();
+                return Array.Empty<Word>();
             }
         }
 
         /// <summary>
-        /// Picks the name and the weapon out of what was read.
+        /// Picks the killer and the weapon out of the words and where they sat.
         ///
-        /// The death screen puts the killer's name first and what they used under it, so this
-        /// takes them in that order. Lines short enough to be noise are dropped, and so is the
-        /// survival box that shares the top of the screen — it is localised, so it is spotted by
-        /// shape (a duration) rather than by the word in front of it.
+        /// Rust puts three boxes on this row: how long you were alive, who killed you, and
+        /// what with. Their labels are localised, so nothing here reads them. What is not
+        /// localised is the layout — three groups of words with clear space between them,
+        /// always in that order — so the words are grouped by the gaps, the group shaped like
+        /// a duration is dropped, and what is left is the name and then the weapon.
+        ///
+        /// The bottom row only, for when the crop caught the labels above the boxes as well:
+        /// those come out as their own row of words higher up.
         /// </summary>
-        public static (string? Killer, string? Weapon) Parse(IReadOnlyList<string> lines)
+        private static (string? Killer, string? Weapon) Parse(IReadOnlyList<Word> words)
         {
-            var useful = lines
-                .Select(Tidy)
-                .Where(line => line.Length >= 2 && !LooksLikeDuration(line))
+            if (words.Count == 0) return (null, null);
+
+            // Rows first. Words of one row share a middle within a few pixels, and the labels
+            // sit a row above the boxes — grouped in with them, they would be read as a name.
+            double lineHeight = Math.Max(6, words.Average(w => w.Width) * 1.6);
+
+            var row = words
+                .GroupBy(w => Math.Round(w.MiddleY / lineHeight))
+                .OrderByDescending(g => g.Key)
+                .First()
+                .OrderBy(w => w.Left)
                 .ToList();
 
-            if (useful.Count == 0) return (null, null);
+            // Then the gaps. Inside a name the words are a space apart; between the boxes they
+            // are a good deal more. The threshold sits between the two and is measured in the
+            // crop's own units rather than in pixels, because the crop's size follows the
+            // screen's.
+            double typical = row.Average(w => w.Width);
+            double split = Math.Max(12, typical * 1.2);
 
-            return (useful[0], useful.Count > 1 ? useful[1] : null);
+            var groups = new List<List<Word>> { new() { row[0] } };
+
+            for (int i = 1; i < row.Count; i++)
+            {
+                if (row[i].Left - row[i - 1].Right > split) groups.Add(new List<Word>());
+                groups[^1].Add(row[i]);
+            }
+
+            var text = groups
+                .Select(g => Tidy(string.Join(" ", g.Select(w => w.Text))))
+                .Where(t => t.Length >= 2 && !LooksLikeDuration(t))
+                .ToList();
+
+            if (text.Count == 0) return (null, null);
+
+            return (text[0], text.Count > 1 ? text[1] : null);
         }
 
         /// <summary>
