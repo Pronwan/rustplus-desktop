@@ -19,12 +19,12 @@ public partial class MainWindow
 {
     /// <summary>
     /// Rust truncates a long chat line, so the answer is asked for short and then cut anyway.
-    /// Forty words is about two sentences, which is what fits and gets read.
+    /// Twenty-five words is about one to two concise sentences, matching in-game chat limits.
     /// </summary>
-    private const int ChatAiMaxWords = 40;
+    private const int ChatAiMaxWords = 25;
 
     /// <summary>Hard ceiling in characters, applied after the model has had its say.</summary>
-    private const int ChatAiMaxChars = 300;
+    private const int ChatAiMaxChars = 175;
 
     /// <summary>When each author last asked, newest last, for the per-hour allowance.</summary>
     private readonly Dictionary<ulong, List<DateTime>> _chatAiAsks = new();
@@ -190,8 +190,7 @@ public partial class MainWindow
     /// </summary>
     private static string Shorten(string answer)
     {
-        answer = answer.Replace("\r", " ").Replace("\n", " ").Trim();
-        while (answer.Contains("  ")) answer = answer.Replace("  ", " ");
+        answer = AiPrompt.CleanResponse(answer);
 
         if (answer.Length <= ChatAiMaxChars) return answer;
 

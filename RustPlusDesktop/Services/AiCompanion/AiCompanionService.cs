@@ -213,9 +213,10 @@ namespace RustPlusDesk.Services.AiCompanion
                 var result = await Task.Run(
                     () => provider.AskAsync(question, key, onDelta, token), token);
 
-                Answer = string.IsNullOrWhiteSpace(result.Answer)
+                var cleaned = AiPrompt.CleanResponse(result.Answer);
+                Answer = string.IsNullOrWhiteSpace(cleaned)
                     ? "The provider returned an empty answer."
-                    : result.Answer.Trim();
+                    : cleaned;
 
                 Transcript = result.Transcript;
 
@@ -338,11 +339,12 @@ namespace RustPlusDesk.Services.AiCompanion
                 // to chat until it is whole anyway.
                 var result = await Task.Run(() => provider.AskAsync(asked, key, null, ct), ct);
 
-                record.Answer = result.Answer.Trim();
+                var cleaned = AiPrompt.CleanResponse(result.Answer);
+                record.Answer = cleaned;
                 AiHistory.Add(record);
                 AiLog.Info($"Response received from {settings.Provider}: {record.Answer}");
 
-                return string.IsNullOrWhiteSpace(result.Answer) ? null : result.Answer.Trim();
+                return string.IsNullOrWhiteSpace(cleaned) ? null : cleaned;
             }
             catch (OperationCanceledException)
             {

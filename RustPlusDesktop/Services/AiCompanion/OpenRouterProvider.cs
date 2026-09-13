@@ -107,7 +107,7 @@ namespace RustPlusDesk.Services.AiCompanion
             {
                 reasoning["max_tokens"] = opts.ReasoningMaxTokens;
             }
-            if (opts.ExcludeReasoning)
+            if (opts.ExcludeReasoning || question.MaxWords > 0)
             {
                 reasoning["exclude"] = true;
             }

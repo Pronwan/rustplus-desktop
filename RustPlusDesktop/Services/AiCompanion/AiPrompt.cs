@@ -37,24 +37,16 @@ namespace RustPlusDesk.Services.AiCompanion
                 "Keep answers very short, small, and clear to exactly what the user wants. " +
                 "Do not include lengthy thinking, reasoning steps, preambles, greetings, offers of further help, " +
                 "or conversational filler. Plain text only, no markdown headings or bold. " +
-
-                // Describing the shape rather than showing it. This once read "in the style:
-                // 'Answer: [here]'", which the model took as a template and obeyed exactly —
-                // every reply came back with the word Answer in front of it, and the spoken
-                // ones read the label out loud. The intent was "no preamble", so that is what
-                // it says now, with the label ruled out by name.
                 "Begin with the answer itself: the first words must be the answer, not a label " +
                 "for it and not a restatement of the question. " +
                 "If brief explanation is strictly necessary, add at most one short sentence of reason after the answer. " +
+                "When asked about raid costs or raiding, provide the optimal lowest-sulfur explosive mix (e.g. C4 + Rocket, or Rocket + Explo Ammo) just like a raid calculator to avoid wasted sulfur, alongside pure single-item costs. " +
+                "Note on Rust terminology: 'Armored wall', 'HQM wall', 'High Quality Metal wall', and 'top tier wall' all refer to the same highest tier ('Armored Wall', 2000 HP). 'Sheet metal wall' and 'Metal wall' refer to the metal tier (1000 HP). " +
                 "If you are not sure, say what you are not sure about rather than guessing at " +
                 "numbers — Rust is patched often and remembered values go stale. " +
                 "Be careful naming things you can only partly make out in a screenshot. Many Rust " +
-                "items look alike at that resolution: the electrical deployables are a set of " +
-                "similar grey boxes, doors and walls differ mainly by tier, and weapons and " +
-                "animals read as silhouettes at distance. Describe what you can actually see — " +
-                "where it is, what shape and colour, what it is attached to — and name the item " +
-                "only when you are sure. When you are not, give the likely candidates and say " +
-                "what would tell them apart, so the player can settle it by looking.");
+                "items look alike at a distance, and a guessed compound is worse than a " +
+                "description of what is visible.");
 
             // ── Reference data: large, and identical on every request ────────────
             //
@@ -72,6 +64,14 @@ namespace RustPlusDesk.Services.AiCompanion
                 if (recipes.Length > 0) text.Append("\n\n").Append(recipes);
             }
 
+            // ── User's custom prompt rules ───────────────────────────────────────
+
+            var customRules = AiCompanionStore.Current.CustomPromptRules?.Trim();
+            if (!string.IsNullOrWhiteSpace(customRules))
+            {
+                text.Append("\n\nPlayer's custom instructions and rules:\n").Append(customRules);
+            }
+
             // ── This question in particular ──────────────────────────────────────
 
             text.Append("\n\n");
@@ -79,18 +79,17 @@ namespace RustPlusDesk.Services.AiCompanion
             if (question.MaxWords > 0)
             {
                 // For an answer going into the game's own chat, where the line is truncated
-                // and everyone in the team reads it. One sentence beats a correct paragraph
-                // nobody sees the end of.
+                // and everyone in the team reads it.
                 text.Append("Answer in at most ").Append(question.MaxWords)
-                    .Append(" words. One or two sentences, no lists, no line breaks. If the ")
-                    .Append("honest answer does not fit, give the single most useful number or ")
-                    .Append("fact and stop. ");
+                    .Append(" words. One or two sentences, no lists, no line breaks. ")
+                    .Append("STRICT: Keep answer very short to obey character limits at in-game chat (strictly under 150 characters total, direct facts only, no preamble, no monologue). ")
+                    .Append("For raid questions, state the cheapest/optimal mix with sulfur cost concisely (e.g. 'Sheet Metal Door: 1 Rocket + 8 Explo ammo (1,600 sulfur) or 1 C4'). ");
             }
             else
             {
                 text.Append(
                     "Keep the answer small, concise, and under 40 words unless the question genuinely requires more, " +
-                    "such as crafting ingredients or multi-step breakdown. ");
+                    "such as crafting ingredients or multi-step breakdown. For raid questions, include the optimal mix for lowest sulfur. ");
             }
 
             // Following the question is the default because Rust's own vocabulary is English
@@ -201,6 +200,40 @@ namespace RustPlusDesk.Services.AiCompanion
             {
                 return "English";
             }
+        }
+
+        /// <summary>
+        /// Sanitizes the model's raw response to ensure thinking tags, internal monologue,
+        /// and formatting artifacts are stripped before display or in-game chat transmission.
+        /// </summary>
+        public static string CleanResponse(string? answer)
+        {
+            if (string.IsNullOrWhiteSpace(answer)) return "";
+
+            // 1. Remove XML-style thought tags: <think>...</think>, <thought>...</thought>, <reasoning>...</reasoning>
+            var cleaned = System.Text.RegularExpressions.Regex.Replace(
+                answer, @"<(think|thought|reasoning)>[\s\S]*?</\1>", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            // 2. Handle unclosed opening tags at the beginning (if response truncated while thinking)
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned, @"^<(think|thought|reasoning)>[\s\S]*", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            // 3. Strip lines where the model talks to itself in internal monologue
+            if (cleaned.Contains("We need to answer:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Let's produce:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Thus answer:", StringComparison.OrdinalIgnoreCase))
+            {
+                var m = System.Text.RegularExpressions.Regex.Match(cleaned, @"(?:Thus answer|Answer|Let's produce)\s*:\s*""?([^""\r\n]+)""?", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (m.Success && m.Groups[1].Value.Trim().Length > 0)
+                {
+                    cleaned = m.Groups[1].Value;
+                }
+            }
+
+            cleaned = cleaned.Replace("\r", " ").Replace("\n", " ").Trim();
+            while (cleaned.Contains("  ")) cleaned = cleaned.Replace("  ", " ");
+
+            return cleaned;
         }
     }
 }

@@ -6070,8 +6070,23 @@ You can find more information on the server's official website:
   <data name="FriendsTitle" xml:space="preserve">
     <value>Friends</value>
   </data>
+  <data name="FriendsSearchPlaceholder" xml:space="preserve">
+    <value>Search friends...</value>
+  </data>
+  <data name="FriendsNoSearchResults" xml:space="preserve">
+    <value>No matching friends found.</value>
+  </data>
+  <data name="FriendsButtonAdd" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendTitle" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendSubtitle" xml:space="preserve">
+    <value>Send a friend request by Steam ID or with an introduction message.</value>
+  </data>
   <data name="FriendsEmpty" xml:space="preserve">
-    <value>Nobody on the list yet. Add somebody by their Steam ID below.</value>
+    <value>Nobody on the list yet.</value>
   </data>
   <data name="FriendsAddSteamId" xml:space="preserve">
     <value>Steam ID (17 digits)</value>
@@ -6396,5 +6411,14 @@ You can find more information on the server's official website:
   </data>
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Removes every widget and puts the map back in its corner</value>
+  </data>
+  <data name="AiCompanionCustomPromptRules" xml:space="preserve">
+    <value>Custom Prompt Rules</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesHint" xml:space="preserve">
+    <value>Additional rules or instructions for the AI companion (e.g. tone, favorite items, playstyle). Appended to every question.</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesPlaceholder" xml:space="preserve">
+    <value>e.g. Always mention sulfur cost for explosives. Keep answers under 15 words.</value>
   </data>
 </root>
