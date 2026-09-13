@@ -464,6 +464,33 @@ namespace RustPlusDesk
                         tile.DeathTrackAlwaysVisible,
                         on => { tile.DeathTrackAlwaysVisible = on; TileSettingChanged(immediate: true); }));
 
+                    // Windows reads one script; players come with several. This is the way
+                    // round that, and it is the user's own credit being spent, so it is off
+                    // until they say otherwise.
+                    bool canReadWithAi = AiDeathScreen.Available;
+
+                    var readWithAi = SettingsCheck(
+                        Loc.Text("CommandDockDeathTrackWithAi", "Read the name with the AI model"),
+                        tile.DeathReadWithAi && canReadWithAi,
+                        on => { tile.DeathReadWithAi = on; TileSettingChanged(immediate: true); });
+
+                    readWithAi.IsEnabled = canReadWithAi;
+                    box.Children.Add(readWithAi);
+
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = canReadWithAi
+                            ? Loc.Text("CommandDockDeathTrackWithAiHint",
+                                "Reads names in any alphabet, and uses your own API credit. " +
+                                "Windows only reads the scripts it has a language installed for.")
+                            : Loc.Text("CommandDockDeathTrackWithAiUnavailable",
+                                "Needs an AI Companion key under Connected Services. Any provider will do."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
                     box.Children.Add(new TextBlock
                     {
                         Text = DeathScreenReader.Available

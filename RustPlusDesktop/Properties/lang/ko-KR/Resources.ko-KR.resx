@@ -7691,4 +7691,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>그 사망 화면에는 이름이 없습니다 — 이름이 있는 존재에게 죽은 것이 아닙니다.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>AI 모델로 이름 읽기</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>모든 문자 체계의 이름을 읽으며, 사용자의 API 크레딧을 사용합니다. Windows는 언어가 설치된 문자만 읽습니다.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>연결된 서비스에 AI Companion 키가 필요합니다. 어떤 공급자든 괜찮습니다.</value>
+  </data>
 </root>

@@ -181,7 +181,9 @@ namespace RustPlusDesk
             var state = DeathTrackStateFor(tile.Id);
             if (state.Busy) return;
 
-            if (!DeathScreenReader.Available)
+            bool viaAi = tile.DeathReadWithAi && AiDeathScreen.Available;
+
+            if (!viaAi && !DeathScreenReader.Available)
             {
                 state.Problem = Loc.Text("CommandDockDeathTrackNoOcr",
                     "Windows has no text recognition installed.");
@@ -200,6 +202,19 @@ namespace RustPlusDesk
                     tile.DeathRegionLeft, tile.DeathRegionTop,
                     tile.DeathRegionWidth, tile.DeathRegionHeight,
                     OverlayWindows()).ConfigureAwait(true);
+
+                // The model reads the same crop, and reads scripts Windows cannot. It works
+                // from the picture rather than from the gaps between words, so it is asked
+                // even when Windows found something — that something may be the weapon,
+                // standing in for a name the recogniser could not see.
+                if (viaAi && read.ImagePath != null)
+                {
+                    var better = await AiDeathScreen.ReadAsync(read.ImagePath).ConfigureAwait(true);
+                    if (better.Killer is { Length: > 0 })
+                    {
+                        read = read with { Killer = better.Killer, Weapon = better.Weapon };
+                    }
+                }
 
                 if (read.Killer is not { Length: > 0 })
                 {

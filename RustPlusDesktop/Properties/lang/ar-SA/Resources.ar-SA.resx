@@ -7661,4 +7661,13 @@
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>لا يوجد اسم على شاشة الموت هذه — لم يقتلك شيء له اسم.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>قراءة الاسم بنموذج الذكاء الاصطناعي</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>يقرأ الأسماء بأي أبجدية ويستهلك رصيد API الخاص بك. لا يقرأ Windows سوى الكتابات التي ثُبّتت لغتها.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>يتطلب مفتاح AI Companion ضمن الخدمات المتصلة. أي مزوّد يفي بالغرض.</value>
+  </data>
 </root>

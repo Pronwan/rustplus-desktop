@@ -7770,4 +7770,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>На этом экране смерти нет имени — вас убило нечто безымянное.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>Читать имя с помощью ИИ-модели</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Читает имена в любом алфавите и расходует ваш API-баланс. Windows читает только те письменности, для которых установлен язык.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Нужен ключ AI Companion в разделе «Подключённые сервисы». Подойдёт любой провайдер.</value>
+  </data>
 </root>

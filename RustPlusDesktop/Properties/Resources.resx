@@ -7945,4 +7945,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>No name on that death screen — nothing killed you that has one.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>Read the name with the AI model</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Reads names in any alphabet, and uses your own API credit. Windows only reads the scripts it has a language installed for.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion key under Connected Services. Any provider will do.</value>
+  </data>
 </root>

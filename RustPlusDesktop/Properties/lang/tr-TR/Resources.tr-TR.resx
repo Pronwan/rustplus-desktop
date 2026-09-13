@@ -6803,4 +6803,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>O ölüm ekranında isim yok — seni ismi olan bir şey öldürmedi.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>İsmi AI modeliyle oku</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Her alfabedeki ismi okur ve senin API kredini kullanır. Windows yalnızca dili kurulu olan yazı sistemlerini okur.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Bağlı Hizmetler altında bir AI Companion anahtarı gerekir. Herhangi bir sağlayıcı olur.</value>
+  </data>
 </root>

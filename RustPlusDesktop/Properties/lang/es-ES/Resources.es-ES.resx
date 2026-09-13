@@ -7770,4 +7770,13 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>No hay ningún nombre en esa pantalla de muerte: no te mató nada que tenga uno.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>Leer el nombre con el modelo de IA</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Lee nombres en cualquier alfabeto y usa tu propio crédito de API. Windows solo lee las escrituras cuyo idioma tiene instalado.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Necesita una clave de AI Companion en Servicios conectados. Sirve cualquier proveedor.</value>
+  </data>
 </root>

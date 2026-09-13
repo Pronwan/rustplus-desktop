@@ -1663,4 +1663,13 @@
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>该死亡画面上没有名字——杀死你的东西没有名字。</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>用 AI 模型读取名字</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>能读取任何字母表的名字，并消耗你自己的 API 额度。Windows 只能读取已安装语言的文字。</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>需要在“已连接服务”中配置 AI Companion 密钥。任意提供方均可。</value>
+  </data>
 </root>

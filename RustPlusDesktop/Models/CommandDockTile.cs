@@ -123,13 +123,24 @@ namespace RustPlusDesk.Models
         // The band sits in the same place whatever the resolution; a saved rectangle in
         // pixels would be wrong the first time somebody changed it.
 
-        public double DeathRegionLeft { get; set; } = 0.360;
+        public double DeathRegionLeft { get; set; } = 0.250;
         public double DeathRegionTop { get; set; } = 0.020;
-        public double DeathRegionWidth { get; set; } = 0.310;
+        public double DeathRegionWidth { get; set; } = 0.500;
         public double DeathRegionHeight { get; set; } = 0.034;
 
         /// <summary>Death tracking tiles: stay on the dock even while the player is alive.</summary>
         public bool DeathTrackAlwaysVisible { get; set; }
+
+        /// <summary>
+        /// Death tracking tiles: read the death screen with the AI model rather than with
+        /// Windows.
+        ///
+        /// Worth it for one reason above all: Windows reads the scripts it has a language
+        /// installed for, which is usually one, and a name in Cyrillic or Chinese is not read
+        /// badly by a Latin recogniser — it is not read at all. Off by default, because it
+        /// spends the user's own API credit.
+        /// </summary>
+        public bool DeathReadWithAi { get; set; }
 
         // ── Appearance ──────────────────────────────────────────────────────
         //

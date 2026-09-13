@@ -7864,4 +7864,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockDeathTrackNoName" xml:space="preserve">
     <value>Kein Name auf diesem Todesbildschirm — dich hat nichts getötet, das einen hätte.</value>
   </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>Namen mit dem KI-Modell lesen</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Liest Namen in jeder Schrift und verbraucht dein eigenes API-Guthaben. Windows liest nur die Schriften, für die eine Sprache installiert ist.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Braucht einen AI-Companion-Schlüssel unter Verbundene Dienste. Jeder Anbieter genügt.</value>
+  </data>
 </root>
