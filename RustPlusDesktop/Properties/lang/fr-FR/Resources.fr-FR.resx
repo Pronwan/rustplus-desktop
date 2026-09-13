@@ -7592,4 +7592,65 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Retire tous les widgets et remet la carte dans son coin</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Traduire</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Collez une ligne, lisez-la dans votre langue — Google Traduction</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Écouter le jeu et le micro, et noter ce qui est dit</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Arrêter et noter ce qui a été dit</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Collez ou saisissez un texte, puis envoyez</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Traduire avec Google</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Traduction vers {0} — cliquez pour changer</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Traduction en cours…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Service de traduction indisponible — peut-être limité en nombre de requêtes. Réessayez dans un instant.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>Le micro est utilisé par une autre tuile.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Impossible de démarrer l'enregistrement.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Transcription de ce qui a été dit…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows n'a aucune reconnaissance vocale installée. Ajoutez une langue vocale dans les paramètres Windows.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Rien n'a été reconnu. Windows écoutait en {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>Rien d'intelligible n'a été entendu dans l'enregistrement.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(entendu en {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Utiliser le modèle IA pour la parole</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Il détermine lui-même la langue parlée et consomme votre propre crédit API. Windows ne comprend que les langues dont la reconnaissance est installée.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Nécessite un fournisseur AI Companion acceptant l'audio, avec une clé enregistrée. En attendant, Windows transcrit la parole.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>Le micro est utilisé par la tuile de traduction.</value>
+  </data>
 </root>

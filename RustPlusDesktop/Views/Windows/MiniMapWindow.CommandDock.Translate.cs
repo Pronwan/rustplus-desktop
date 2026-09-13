@@ -148,7 +148,7 @@ namespace RustPlusDesk
             Grid.SetColumn(input, 1);
             top.Children.Add(input);
 
-            var send = IconButton(GlyphSend, style, Loc.Text("CommandDockTranslateSend", "Translate"));
+            var send = IconButton(GlyphSend, style, Loc.Text("CommandDockTranslateSend", "Translate with Google"));
             send.MouseLeftButtonUp += (_, e) =>
             {
                 e.Handled = true;

@@ -6625,4 +6625,65 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Tüm bileşenleri kaldırır ve haritayı köşesine geri koyar</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Çeviri</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Bir satır yapıştır, kendi dilinde oku — Google Çeviri</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Oyun sesini ve mikrofonu dinle, söylenenleri yaz</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Durdur ve söylenenleri yaz</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Bir şey yapıştır veya yaz, sonra gönder</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Google ile çevir</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>{0} diline çevriliyor — değiştirmek için tıkla</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Çevriliyor…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Çeviri servisi kullanılamıyor — istek sınırına takılmış olabilir. Birazdan tekrar dene.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>Mikrofon başka bir kart tarafından kullanılıyor.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Kayıt başlatılamadı.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Söylenenler yazılıyor…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows'ta konuşma tanıma yüklü değil. Windows ayarlarından bir konuşma dili ekle.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Hiçbir şey tanınmadı. Windows {0} dilinde dinliyordu.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>Kayıtta anlaşılır bir şey duyulmadı.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+({0} dilinde duyuldu)</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Konuşma için AI modelini kullan</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Konuşulan dili kendisi belirler ve senin API kredini kullanır. Windows yalnızca tanıyıcısı kurulu dilleri anlar.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Ses kabul eden bir AI Companion sağlayıcısı ve ona ait kayıtlı bir anahtar gerekir. O zamana kadar konuşmayı Windows yazar.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>Mikrofon çeviri kartı tarafından kullanılıyor.</value>
+  </data>
 </root>

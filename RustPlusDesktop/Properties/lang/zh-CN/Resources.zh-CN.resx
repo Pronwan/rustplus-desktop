@@ -7340,4 +7340,65 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>移除所有小部件，并把地图放回它的角落</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>粘贴一句话，用你的语言读它 — 谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>收听游戏声音和麦克风，并记录所说内容</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>停止并记录所说内容</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>粘贴或输入文字，然后按发送</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>用谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>翻译成 {0} — 点击更改</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>正在翻译…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>翻译服务不可用 — 可能是请求过于频繁。请稍后再试。</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>麦克风正被另一个磁贴使用。</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>无法开始录音。</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>正在记录所说内容…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows 未安装语音识别。请在 Windows 设置中添加语音语言。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>未识别到内容。Windows 当时在按 {0} 收听。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>录音中没有听清任何内容。</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+（按 {0} 收听）</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>使用 AI 模型识别语音</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>它会自行判断所说的语言，并消耗你自己的 API 额度。Windows 只能理解已安装识别器的语言。</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>需要一个接受音频的 AI Companion 提供方，并为其保存密钥。在此之前由 Windows 记录语音。</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>麦克风正被翻译磁贴使用。</value>
+  </data>
 </root>

@@ -88,7 +88,7 @@ namespace RustPlusDesk
 
             Entry(Loc.Text("CommandDockTranslateTitle", "Translate"),
                   Loc.Text("CommandDockTranslatePickerHint",
-                      "Paste a line, read it back in your language — or dictate it"),
+                      "Paste a line, read it back in your language — Google Translate"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Translate, ColSpan = 3, RowSpan = 1 },
                   SymbolRegular.Translate24);
 

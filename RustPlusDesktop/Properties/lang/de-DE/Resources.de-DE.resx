@@ -7690,7 +7690,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
     <value>Übersetzen</value>
   </data>
   <data name="CommandDockTranslatePickerHint" xml:space="preserve">
-    <value>Zeile einfügen und in deiner Sprache lesen — oder diktieren</value>
+    <value>Zeile einfügen und in deiner Sprache lesen — Google Übersetzer</value>
   </data>
   <data name="CommandDockTranslateListen" xml:space="preserve">
     <value>Spielton und Mikrofon mithören und mitschreiben</value>
@@ -7702,7 +7702,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
     <value>Etwas einfügen oder tippen, dann senden</value>
   </data>
   <data name="CommandDockTranslateSend" xml:space="preserve">
-    <value>Übersetzen</value>
+    <value>Mit Google übersetzen</value>
   </data>
   <data name="CommandDockTranslateInto" xml:space="preserve">
     <value>Übersetzt nach {0} — zum Ändern klicken</value>

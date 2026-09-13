@@ -7592,4 +7592,65 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Quita todos los widgets y devuelve el mapa a su esquina</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Traducir</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Pega una frase y léela en tu idioma — Google Traductor</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Escucha el juego y el micrófono, y anota lo que se dice</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Detener y anotar lo que se dijo</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Pega o escribe algo y pulsa enviar</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Traducir con Google</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Traduciendo a {0} — haz clic para cambiar</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Traduciendo…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Servicio de traducción no disponible: puede estar limitado por número de peticiones. Inténtalo en un momento.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>Otro panel está usando el micrófono.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>No se pudo iniciar la grabación.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Anotando lo que se dijo…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows no tiene reconocimiento de voz instalado. Añade un idioma de voz en la configuración de Windows.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>No se reconoció nada. Windows estaba escuchando en {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>No se oyó nada inteligible en la grabación.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(escuchado en {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Usar el modelo de IA para el habla</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Detecta por sí mismo el idioma hablado y usa tu propio crédito de API. Windows solo entiende los idiomas para los que tiene un reconocedor instalado.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Necesita un proveedor de AI Companion que acepte audio, con una clave guardada. Hasta entonces, Windows transcribe el habla.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>El panel de traducción está usando el micrófono.</value>
+  </data>
 </root>

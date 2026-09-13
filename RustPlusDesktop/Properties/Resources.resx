@@ -7747,7 +7747,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
     <value>Translate</value>
   </data>
   <data name="CommandDockTranslatePickerHint" xml:space="preserve">
-    <value>Paste a line, read it back in your language — or dictate it</value>
+    <value>Paste a line, read it back in your language — Google Translate</value>
   </data>
   <data name="CommandDockTranslateListen" xml:space="preserve">
     <value>Listen to the game and the microphone, and write down what was said</value>
@@ -7759,7 +7759,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
     <value>Paste or type something, then press send</value>
   </data>
   <data name="CommandDockTranslateSend" xml:space="preserve">
-    <value>Translate</value>
+    <value>Translate with Google</value>
   </data>
   <data name="CommandDockTranslateInto" xml:space="preserve">
     <value>Translating into {0} — click to change</value>

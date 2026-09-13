@@ -1233,4 +1233,65 @@
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>移除所有小工具，並將地圖放回原本的角落</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>翻譯</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>貼上一句話，用你的語言讀它 — Google 翻譯</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>收聽遊戲聲音和麥克風，並記錄所說內容</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>停止並記錄所說內容</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>貼上或輸入文字，然後按傳送</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>用 Google 翻譯</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>翻譯成 {0} — 點擊變更</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>正在翻譯…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>翻譯服務無法使用 — 可能是請求過於頻繁。請稍後再試。</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>麥克風正被另一個磁貼使用。</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>無法開始錄音。</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>正在記錄所說內容…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows 未安裝語音辨識。請在 Windows 設定中新增語音語言。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>未辨識到內容。Windows 當時在按 {0} 收聽。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>錄音中沒有聽清任何內容。</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+（按 {0} 收聽）</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>使用 AI 模型辨識語音</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>它會自行判斷所說的語言，並消耗你自己的 API 額度。Windows 只能理解已安裝辨識器的語言。</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>需要一個接受音訊的 AI Companion 提供方，並為其儲存金鑰。在此之前由 Windows 記錄語音。</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>麥克風正被翻譯磁貼使用。</value>
+  </data>
 </root>

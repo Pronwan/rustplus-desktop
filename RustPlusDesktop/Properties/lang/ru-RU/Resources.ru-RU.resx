@@ -7592,4 +7592,65 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Убирает все виджеты и возвращает карту в её угол</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Перевод</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Вставьте строку и прочтите её на своём языке — Google Переводчик</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Слушать игру и микрофон и записать сказанное</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Остановить и записать сказанное</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Вставьте или введите текст, затем отправьте</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Перевести через Google</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Перевод на {0} — нажмите, чтобы изменить</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Перевод…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Служба перевода недоступна — возможно, превышен лимит запросов. Попробуйте чуть позже.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>Микрофон занят другой плиткой.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Не удалось начать запись.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Записываю сказанное…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>В Windows не установлено распознавание речи. Добавьте язык речи в параметрах Windows.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Ничего не распознано. Windows слушал на языке {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>В записи не слышно ничего разборчивого.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(услышано на языке {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Использовать ИИ-модель для распознавания речи</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Сам определяет язык речи и расходует ваш собственный API-баланс. Windows понимает только те языки, для которых установлен распознаватель.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Нужен провайдер AI Companion, принимающий аудио, и сохранённый ключ для него. До тех пор речь записывает Windows.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>Микрофон занят плиткой перевода.</value>
+  </data>
 </root>

@@ -7483,4 +7483,65 @@
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>يزيل كل الأدوات ويعيد الخريطة إلى زاويتها</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>الترجمة</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>الصق سطرًا واقرأه بلغتك — ترجمة Google</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>الاستماع إلى صوت اللعبة والميكروفون وتدوين ما قيل</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>إيقاف وتدوين ما قيل</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>الصق أو اكتب شيئًا ثم اضغط إرسال</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>الترجمة عبر Google</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>الترجمة إلى {0} — انقر للتغيير</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>جارٍ الترجمة…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>خدمة الترجمة غير متاحة — ربما بسبب تجاوز حد الطلبات. حاول بعد قليل.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>الميكروفون قيد الاستخدام من بطاقة أخرى.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>تعذّر بدء التسجيل.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>جارٍ تدوين ما قيل…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>لا يوجد تعرّف على الكلام مثبّت في Windows. أضف لغة كلام من إعدادات Windows.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>لم يتم التعرّف على شيء. كان Windows يستمع بلغة {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>لم يُسمع أي شيء مفهوم في التسجيل.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(سُمع بلغة {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>استخدام نموذج الذكاء الاصطناعي للكلام</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>يحدّد لغة الكلام بنفسه ويستهلك رصيد API الخاص بك. لا يفهم Windows سوى اللغات التي ثُبّت لها محرك تعرّف.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>يتطلب مزوّد AI Companion يقبل الصوت مع مفتاح محفوظ له. حتى ذلك الحين يقوم Windows بالتدوين.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>الميكروفون قيد الاستخدام من بطاقة الترجمة.</value>
+  </data>
 </root>
