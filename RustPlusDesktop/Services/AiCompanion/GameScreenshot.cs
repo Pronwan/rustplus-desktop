@@ -105,20 +105,32 @@ namespace RustPlusDesk.Services.AiCompanion
         }
 
         /// <summary>
-        /// Captures one part of the game's screen, given as fractions of it.
+        /// <summary>
+        /// <summary>
+        /// The whole game screen, as a PNG, for somebody to draw a rectangle on.
+        ///
+        /// Kept apart from the JPEG one the companion sends: this is looked at closely and
+        /// measured against, and JPEG's artefacts around small text would be measured too.
+        /// </summary>
+        public static Task<string?> CaptureWholeScreenAsync(IReadOnlyList<IntPtr>? exclude = null)
+            => CaptureRegionAsync(0, 0, 1, 1, exclude, whole: true);
+
+        /// Captures one part of the game screen, given as fractions of its WIDTH — all four.
         ///
         /// Fractions rather than pixels because the thing being looked for sits in the same
-        /// place on the screen whatever the resolution: the band across the top of Rust's
-        /// death screen is a third of the way in and a tenth of the way down on a 1080p
-        /// monitor and on a 1440p one alike. A saved rectangle in pixels would be wrong the
-        /// first time somebody changed resolution.
+        /// place whatever the resolution. Fractions of the width rather than one axis each,
+        /// because that is what the measurements say: Rust scales this part of its interface
+        /// with the screen width, so the same band is 0.027 of the width from the top on a
+        /// 2560x1440 screen and on a 1680x1050 one — while as a fraction of the height those
+        /// two are 0.049 and 0.044, and a default tuned on one is wrong on the other.
         ///
         /// Returns a PNG rather than a JPEG: this one is read by a character recogniser, and
         /// JPEG spends its error budget on exactly the small high-contrast edges that letters
         /// are made of.
         /// </summary>
         public static Task<string?> CaptureRegionAsync(
-            double left, double top, double width, double height, IReadOnlyList<IntPtr>? exclude = null)
+            double left, double top, double width, double height,
+            IReadOnlyList<IntPtr>? exclude = null, bool whole = false)
         {
             return Task.Run<string?>(() =>
             {
@@ -128,10 +140,13 @@ namespace RustPlusDesk.Services.AiCompanion
                 {
                     var screen = GameScreenBounds();
 
-                    int x = screen.Left + (int)Math.Round(screen.Width * Math.Clamp(left, 0, 1));
-                    int y = screen.Top + (int)Math.Round(screen.Height * Math.Clamp(top, 0, 1));
-                    int w = (int)Math.Round(screen.Width * Math.Clamp(width, 0.01, 1));
-                    int h = (int)Math.Round(screen.Height * Math.Clamp(height, 0.01, 1));
+                    // Every one of them against the width — see the note above. The whole
+                    // screen is the one case that cannot be expressed that way, since its
+                    // height is not a fraction of its width.
+                    int x = whole ? screen.Left : screen.Left + (int)Math.Round(screen.Width * Math.Clamp(left, 0, 1));
+                    int y = whole ? screen.Top : screen.Top + (int)Math.Round(screen.Width * Math.Clamp(top, 0, 1));
+                    int w = whole ? screen.Width : (int)Math.Round(screen.Width * Math.Clamp(width, 0.01, 1));
+                    int h = whole ? screen.Height : (int)Math.Round(screen.Width * Math.Clamp(height, 0.005, 1));
 
                     // A region that runs off the edge is clipped rather than refused: it is a
                     // setting somebody dragged, and a slightly short crop still reads.
@@ -148,7 +163,7 @@ namespace RustPlusDesk.Services.AiCompanion
 
                     // One name, overwritten each time: this is scratch for the recogniser and
                     // for the preview in the settings, not something to accumulate on disk.
-                    var path = Path.Combine(folder, "death-screen.png");
+                    var path = Path.Combine(folder, whole ? "death-full.png" : "death-screen.png");
 
                     try { if (File.Exists(path)) File.Delete(path); } catch { }
 

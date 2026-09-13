@@ -7820,13 +7820,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
     <value>Von links {0}%</value>
   </data>
   <data name="CommandDockDeathTrackTop" xml:space="preserve">
-    <value>Von oben {0}%</value>
+    <value>Von oben {0}% der Breite</value>
   </data>
   <data name="CommandDockDeathTrackWide" xml:space="preserve">
     <value>Breite {0}%</value>
   </data>
   <data name="CommandDockDeathTrackHigh" xml:space="preserve">
-    <value>Höhe {0}%</value>
+    <value>Höhe {0}% der Breite</value>
   </data>
   <data name="CommandDockDeathTrackTest" xml:space="preserve">
     <value>Jetzt am Bildschirm testen</value>
@@ -7845,5 +7845,20 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>Zuletzt</value>
+  </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Bereich am Screenshot auswählen</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Namen des Täters auswählen</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Zieh einen Rahmen um den Namen des Täters — und um die Waffe daneben, wenn du die auch willst.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Diesen Rahmen übernehmen</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>Der Screenshot konnte nicht gelesen werden.</value>
   </data>
 </root>

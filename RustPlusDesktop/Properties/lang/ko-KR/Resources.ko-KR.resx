@@ -7673,4 +7673,19 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>마지막</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>스크린샷에서 영역 선택</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>가해자 이름 선택</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>가해자 이름 주위로 상자를 드래그하세요 — 무기도 원하면 옆까지 함께 포함하세요.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>이 상자 사용</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>스크린샷을 읽을 수 없습니다.</value>
+  </data>
 </root>

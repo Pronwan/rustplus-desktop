@@ -45,10 +45,10 @@ namespace RustPlusDesk.Services.Deaths
         /// they say. Room to spare costs nothing, and a longer name pushes the boxes outwards —
         /// a crop fitted tightly around one player's name cuts the next player's in half.
         /// </summary>
-        public const double DefaultLeft = 0.355;
-        public const double DefaultTop = 0.038;
-        public const double DefaultWidth = 0.300;
-        public const double DefaultHeight = 0.060;
+        public const double DefaultLeft = 0.360;
+        public const double DefaultTop = 0.020;
+        public const double DefaultWidth = 0.310;
+        public const double DefaultHeight = 0.034;
 
         /// <summary>Whether this machine has a recogniser at all.</summary>
         public static bool Available => Engine() != null;

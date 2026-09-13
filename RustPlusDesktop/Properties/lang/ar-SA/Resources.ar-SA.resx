@@ -7643,4 +7643,19 @@
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>آخر مرة</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>اختر المنطقة من لقطة شاشة</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>حدّد اسم القاتل</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>ارسم مربعًا حول اسم القاتل — وحول السلاح بجانبه إن أردته أيضًا.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>استخدام هذا المربع</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>تعذّرت قراءة لقطة الشاشة.</value>
+  </data>
 </root>

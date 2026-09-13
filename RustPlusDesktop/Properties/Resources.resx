@@ -7901,13 +7901,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
     <value>From the left {0}%</value>
   </data>
   <data name="CommandDockDeathTrackTop" xml:space="preserve">
-    <value>From the top {0}%</value>
+    <value>From the top {0}% of the width</value>
   </data>
   <data name="CommandDockDeathTrackWide" xml:space="preserve">
     <value>Width {0}%</value>
   </data>
   <data name="CommandDockDeathTrackHigh" xml:space="preserve">
-    <value>Height {0}%</value>
+    <value>Height {0}% of the width</value>
   </data>
   <data name="CommandDockDeathTrackTest" xml:space="preserve">
     <value>Test on the screen now</value>
@@ -7926,5 +7926,20 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>Last time</value>
+  </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Pick the area from a screenshot</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Select the killer's name</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Drag a box around the killer's name — and the weapon beside it, if you want that too.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Use this box</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>The screenshot could not be read.</value>
   </data>
 </root>

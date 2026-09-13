@@ -6785,4 +6785,19 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>Son kez</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Alanı ekran görüntüsünden seç</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Öldürenin ismini seç</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Öldürenin isminin çevresine bir kutu çiz — istersen yanındaki silahı da içine al.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Bu kutuyu kullan</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>Ekran görüntüsü okunamadı.</value>
+  </data>
 </root>

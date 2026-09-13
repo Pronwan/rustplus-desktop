@@ -1916,4 +1916,19 @@
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>最近一次</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>在截圖上框選區域</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>選擇擊殺者名字</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>拖出一個框，框住擊殺者的名字——如果也想要武器，把旁邊的武器一起框進去。</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>使用此框</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>無法讀取該截圖。</value>
+  </data>
 </root>

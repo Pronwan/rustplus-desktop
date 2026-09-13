@@ -514,6 +514,51 @@ namespace RustPlusDesk
                         Foreground = Brush("TextSubtle", Colors.Gray),
                     };
 
+                    // The way out for a screen nobody measured. Takes a picture of the
+                    // whole screen and lets the region be drawn on it afterwards, because
+                    // the death screen is up for seconds and drawing a careful box is not a
+                    // thing anybody does in seconds.
+                    var pick = new Wpf.Ui.Controls.Button
+                    {
+                        Content = Loc.Text("CommandDockDeathTrackPick", "Pick the area from a screenshot"),
+                        Appearance = Wpf.Ui.Controls.ControlAppearance.Primary,
+                        FontSize = 11,
+                        Margin = new Thickness(0, 0, 0, 6),
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                    };
+
+                    pick.Click += async (_, __) =>
+                    {
+                        pick.IsEnabled = false;
+
+                        try
+                        {
+                            var shot = await Services.AiCompanion.GameScreenshot
+                                .CaptureWholeScreenAsync(OverlayWindows());
+
+                            if (shot == null) return;
+
+                            var picker = new Views.DeathRegionPicker(shot) { Owner = this };
+                            if (picker.ShowDialog() != true || picker.Region is not { } region) return;
+
+                            tile.DeathRegionLeft = region.Left;
+                            tile.DeathRegionTop = region.Top;
+                            tile.DeathRegionWidth = region.Width;
+                            tile.DeathRegionHeight = region.Height;
+
+                            SaveDock();
+
+                            // Reopened rather than refreshed: the four sliders were built
+                            // with the old numbers and have no idea these changed.
+                            OpenTileSettings(tile);
+                        }
+                        finally
+                        {
+                            pick.IsEnabled = true;
+                        }
+                    };
+
+                    box.Children.Add(pick);
                     var test = new Wpf.Ui.Controls.Button
                     {
                         Content = Loc.Text("CommandDockDeathTrackTest", "Test on the screen now"),

@@ -7752,4 +7752,19 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>Последний раз</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Выбрать область на снимке экрана</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Выделите имя убийцы</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Обведите имя убийцы рамкой — и оружие рядом, если оно тоже нужно.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Использовать эту рамку</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>Не удалось прочитать снимок экрана.</value>
+  </data>
 </root>

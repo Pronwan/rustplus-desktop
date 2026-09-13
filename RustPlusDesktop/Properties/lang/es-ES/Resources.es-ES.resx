@@ -7752,4 +7752,19 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="DeathStatsLastKill" xml:space="preserve">
     <value>Última vez</value>
   </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Elegir el área en una captura</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Selecciona el nombre del asesino</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Arrastra un recuadro alrededor del nombre del asesino, y del arma si también la quieres.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Usar este recuadro</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>No se pudo leer la captura.</value>
+  </data>
 </root>

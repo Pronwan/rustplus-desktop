@@ -123,10 +123,10 @@ namespace RustPlusDesk.Models
         // The band sits in the same place whatever the resolution; a saved rectangle in
         // pixels would be wrong the first time somebody changed it.
 
-        public double DeathRegionLeft { get; set; } = 0.355;
-        public double DeathRegionTop { get; set; } = 0.038;
-        public double DeathRegionWidth { get; set; } = 0.300;
-        public double DeathRegionHeight { get; set; } = 0.060;
+        public double DeathRegionLeft { get; set; } = 0.360;
+        public double DeathRegionTop { get; set; } = 0.020;
+        public double DeathRegionWidth { get; set; } = 0.310;
+        public double DeathRegionHeight { get; set; } = 0.034;
 
         /// <summary>Death tracking tiles: stay on the dock even while the player is alive.</summary>
         public bool DeathTrackAlwaysVisible { get; set; }
