@@ -7942,4 +7942,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>The screenshot could not be read.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>No name on that death screen — nothing killed you that has one.</value>
+  </data>
 </root>

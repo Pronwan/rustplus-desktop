@@ -1660,4 +1660,7 @@
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>无法读取该截图。</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>该死亡画面上没有名字——杀死你的东西没有名字。</value>
+  </data>
 </root>

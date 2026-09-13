@@ -6800,4 +6800,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>Ekran görüntüsü okunamadı.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>O ölüm ekranında isim yok — seni ismi olan bir şey öldürmedi.</value>
+  </data>
 </root>

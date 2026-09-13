@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RustPlusDesk.Services.Deaths
@@ -137,11 +138,13 @@ namespace RustPlusDesk.Services.Deaths
         /// <summary>
         /// Picks the killer and the weapon out of the words and where they sat.
         ///
-        /// Rust puts three boxes on this row: how long you were alive, who killed you, and
-        /// what with. Their labels are localised, so nothing here reads them. What is not
-        /// localised is the layout — three groups of words with clear space between them,
-        /// always in that order — so the words are grouped by the gaps, the group shaped like
-        /// a duration is dropped, and what is left is the name and then the weapon.
+        /// Rust puts up to four boxes on this row: how long you were alive, who killed you,
+        /// what with, and how far off they were. Their labels are localised, so nothing here
+        /// reads them. What is not localised is the layout — groups of words with clear
+        /// space between them, the name before the weapon,
+        /// in that order — so the words are grouped by the gaps, the groups shaped like a
+        /// duration or a distance are dropped, and what is left is the name and then the
+        /// weapon.
         ///
         /// The bottom row only, for when the crop caught the labels above the boxes as well:
         /// those come out as their own row of words higher up.
@@ -178,7 +181,7 @@ namespace RustPlusDesk.Services.Deaths
 
             var text = groups
                 .Select(g => Tidy(string.Join(" ", g.Select(w => w.Text))))
-                .Where(t => t.Length >= 2 && !LooksLikeDuration(t))
+                .Where(t => t.Length >= 2 && !IsNotAName(t))
                 .ToList();
 
             if (text.Count == 0) return (null, null);
@@ -197,25 +200,45 @@ namespace RustPlusDesk.Services.Deaths
             line.Trim().Trim('|', '/', '\\', '"', '\'', '.', ',', ';', ':', '—', '-', '_').Trim();
 
         /// <summary>
-        /// Whether a line is a clock rather than a name.
+        /// Whether a group of words is one of the boxes that is never a name.
         ///
-        /// The "alive for" box next to the name is localised — in German it says something else
-        /// entirely — so the words in it are no use. The duration beside them has the same shape
-        /// in every language, and that is what this looks for.
+        /// Rust puts up to four boxes on this row and only one of them is the killer: how
+        /// long you were alive, who killed you, what with, and how far away they were. Which
+        /// of them are present depends on how you died — a bear brings no weapon, a fall
+        /// brings no name at all — so they cannot be told apart by counting them. The labels
+        /// above them are localised and no use either.
+        ///
+        /// What can be relied on is that a duration and a distance have shapes a name does
+        /// not, so those two are recognised and dropped, and whatever is left is the name and
+        /// then the weapon.
         /// </summary>
-        private static bool LooksLikeDuration(string line)
+        private static bool IsNotAName(string text)
         {
-            int digits = line.Count(char.IsDigit);
-            if (digits == 0) return false;
+            var normal = AsDigits(text);
 
-            bool clock = line.Contains(':') && digits >= 3;
-            bool units = System.Text.RegularExpressions.Regex.IsMatch(
-                line, @"\d+\s*[smhd]\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            // 1m22s, 45s, 2h, 3d — one or more counts, each with its unit.
+            if (Regex.IsMatch(normal, @"^\d+\s*[smhd](\s*\d+\s*[smhd])*$", RegexOptions.IgnoreCase))
+                return true;
 
-            // Mostly digits, or shaped like 12:34, or "5m 20s". A name that merely contains a
-            // number — and plenty do — keeps its place.
-            return clock || units || digits > line.Length / 2;
+            // 0.4m, 24m, 137.5m — how far away they were.
+            return Regex.IsMatch(normal, @"^\d+([.,]\d+)?\s*m$", RegexOptions.IgnoreCase);
         }
+
+        /// <summary>
+        /// Puts back the digits a recogniser turned into letters, for the shape tests only.
+        ///
+        /// This is what let a death at one minute and one second through as a killer called
+        /// "lmls": every character of "1m1s" is a one, and a one is the digit most often read
+        /// as an l or an I. The test that was meant to catch it gave up at the first step,
+        /// because by then there were no digits left in it to find.
+        ///
+        /// Never applied to what is shown or saved — a player called lOl keeps their name.
+        /// </summary>
+        private static string AsDigits(string text) => text
+            .Replace('l', '1').Replace('I', '1').Replace('|', '1').Replace('!', '1')
+            .Replace('O', '0').Replace('o', '0')
+            .Replace('S', '5').Replace('B', '8')
+            .Trim();
 
         private static Windows.Media.Ocr.OcrEngine? Engine()
         {

@@ -7658,4 +7658,7 @@
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>تعذّرت قراءة لقطة الشاشة.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>لا يوجد اسم على شاشة الموت هذه — لم يقتلك شيء له اسم.</value>
+  </data>
 </root>

@@ -7688,4 +7688,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>스크린샷을 읽을 수 없습니다.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>그 사망 화면에는 이름이 없습니다 — 이름이 있는 존재에게 죽은 것이 아닙니다.</value>
+  </data>
 </root>

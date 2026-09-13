@@ -7767,4 +7767,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>Не удалось прочитать снимок экрана.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>На этом экране смерти нет имени — вас убило нечто безымянное.</value>
+  </data>
 </root>

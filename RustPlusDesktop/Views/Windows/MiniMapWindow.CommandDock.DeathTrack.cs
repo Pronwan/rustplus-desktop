@@ -203,8 +203,14 @@ namespace RustPlusDesk
 
                 if (read.Killer is not { Length: > 0 })
                 {
-                    state.Problem = Loc.Text("CommandDockDeathTrackNothing",
-                        "Nothing readable there — check the region in this tile's settings.");
+                    // Two different failures, and the difference matters: text was read and
+                    // none of it was a name — a fall, the cold, a fire — or nothing was read at
+                    // all, which is the region being wrong.
+                    state.Problem = read.Lines.Count > 0
+                        ? Loc.Text("CommandDockDeathTrackNoName",
+                            "No name on that death screen — nothing killed you that has one.")
+                        : Loc.Text("CommandDockDeathTrackNothing",
+                            "Nothing readable there — check the region in this tile's settings.");
 
                     return;
                 }

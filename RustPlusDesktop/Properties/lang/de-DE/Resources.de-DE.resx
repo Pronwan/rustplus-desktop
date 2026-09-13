@@ -7861,4 +7861,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>Der Screenshot konnte nicht gelesen werden.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>Kein Name auf diesem Todesbildschirm — dich hat nichts getötet, das einen hätte.</value>
+  </data>
 </root>

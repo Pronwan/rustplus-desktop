@@ -7767,4 +7767,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="DeathRegionPickerNoShot" xml:space="preserve">
     <value>No se pudo leer la captura.</value>
   </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>No hay ningún nombre en esa pantalla de muerte: no te mató nada que tenga uno.</value>
+  </data>
 </root>
