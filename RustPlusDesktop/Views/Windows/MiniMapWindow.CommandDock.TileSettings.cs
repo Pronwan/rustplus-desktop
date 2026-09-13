@@ -635,6 +635,31 @@ namespace RustPlusDesk
                         }
                     };
 
+                    // A tile keeps the region it was made with, so one set up before these
+                    // numbers were measured stays on the old ones until asked otherwise.
+                    var reset = new Wpf.Ui.Controls.Button
+                    {
+                        Content = Loc.Text("CommandDockDeathTrackResetRegion", "Back to the measured default"),
+                        FontSize = 11,
+                        Margin = new Thickness(0, 0, 0, 6),
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                    };
+
+                    reset.Click += (_, __) =>
+                    {
+                        tile.DeathRegionLeft = DeathScreenReader.DefaultLeft;
+                        tile.DeathRegionTop = DeathScreenReader.DefaultTop;
+                        tile.DeathRegionWidth = DeathScreenReader.DefaultWidth;
+                        tile.DeathRegionHeight = DeathScreenReader.DefaultHeight;
+
+                        SaveDock();
+
+                        // Reopened rather than refreshed: the sliders were built with the old
+                        // numbers and have no idea these changed.
+                        OpenTileSettings(tile);
+                    };
+
+                    box.Children.Add(reset);
                     box.Children.Add(test);
                     box.Children.Add(preview);
                     box.Children.Add(readBack);

@@ -7788,4 +7788,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>Забыть это имя</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Вернуть измеренное значение по умолчанию</value>
+  </data>
 </root>

@@ -7963,4 +7963,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>Forget this name</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Back to the measured default</value>
+  </data>
 </root>

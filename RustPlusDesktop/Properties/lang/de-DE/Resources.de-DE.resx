@@ -7882,4 +7882,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>Diesen Namen vergessen</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Zurück zum gemessenen Standard</value>
+  </data>
 </root>

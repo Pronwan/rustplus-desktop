@@ -46,9 +46,9 @@ namespace RustPlusDesk.Services.Deaths
         /// they say. Room to spare costs nothing, and a longer name pushes the boxes outwards —
         /// a crop fitted tightly around one player's name cuts the next player's in half.
         /// </summary>
-        public const double DefaultLeft = 0.250;
+        public const double DefaultLeft = 0.180;
         public const double DefaultTop = 0.020;
-        public const double DefaultWidth = 0.500;
+        public const double DefaultWidth = 0.640;
         public const double DefaultHeight = 0.034;
 
         /// <summary>Whether this machine has a recogniser at all.</summary>
@@ -179,10 +179,26 @@ namespace RustPlusDesk.Services.Deaths
                 groups[^1].Add(row[i]);
             }
 
-            var text = groups
+            var read = groups
                 .Select(g => Tidy(string.Join(" ", g.Select(w => w.Text))))
-                .Where(t => t.Length >= 2 && !IsNotAName(t))
+                .Where(t => t.Length >= 2)
                 .ToList();
+
+            // The word DEAD is on this row too, out at the left, and a band wide enough for a
+            // long name reaches it. It is localised, so it cannot be recognised by name — but
+            // it is always left of the survival timer, and the timer can be recognised by its
+            // shape. So everything up to and including the timer is dropped, and what follows
+            // is the row proper. Without a timer in the crop there is nothing to anchor to and
+            // the groups are taken as they come.
+            // The duration only. Anchoring on either shape would, in a crop that starts right
+            // of the timer, find the distance at the end instead and throw away the name and
+            // the weapon in front of it.
+            int timer = read.FindIndex(IsDuration);
+            if (timer >= 0) read = read.Skip(timer + 1).ToList();
+
+            // What is left can still hold the distance, which is the same kind of thing and
+            // sits on the other side.
+            var text = read.Where(t => !IsNotAName(t)).ToList();
 
             if (text.Count == 0) return (null, null);
 
@@ -212,17 +228,21 @@ namespace RustPlusDesk.Services.Deaths
         /// not, so those two are recognised and dropped, and whatever is left is the name and
         /// then the weapon.
         /// </summary>
-        private static bool IsNotAName(string text)
-        {
-            var normal = AsDigits(text);
+        private static bool IsNotAName(string text) => IsDuration(text) || IsDistance(text);
 
-            // 1m22s, 45s, 2h, 3d — one or more counts, each with its unit.
-            if (Regex.IsMatch(normal, @"^\d+\s*[smhd](\s*\d+\s*[smhd])*$", RegexOptions.IgnoreCase))
-                return true;
+        /// <summary>
+        /// 1m22s, 45s, 2h, 3d — one or more counts, each with its unit.
+        ///
+        /// Told apart from a distance because this one is an anchor and that one is not: the
+        /// survival time is always the first box on the row, so anything before it belongs to
+        /// the screen rather than to the row. The distance is last and anchors nothing.
+        /// </summary>
+        private static bool IsDuration(string text) => Regex.IsMatch(
+            AsDigits(text), @"^\d+\s*[smhd](\s*\d+\s*[smhd])*$", RegexOptions.IgnoreCase);
 
-            // 0.4m, 24m, 137.5m — how far away they were.
-            return Regex.IsMatch(normal, @"^\d+([.,]\d+)?\s*m$", RegexOptions.IgnoreCase);
-        }
+        /// <summary>0.4m, 24m, 137.5m — how far away they were.</summary>
+        private static bool IsDistance(string text) => Regex.IsMatch(
+            AsDigits(text), @"^\d+([.,]\d+)?\s*m$", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Puts back the digits a recogniser turned into letters, for the shape tests only.

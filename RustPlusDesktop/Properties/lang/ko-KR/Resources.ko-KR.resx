@@ -7709,4 +7709,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>이 이름 지우기</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>측정된 기본값으로 되돌리기</value>
+  </data>
 </root>

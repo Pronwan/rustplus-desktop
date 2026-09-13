@@ -7788,4 +7788,7 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>Oublier ce nom</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Revenir à la valeur mesurée par défaut</value>
+  </data>
 </root>

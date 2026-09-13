@@ -6821,4 +6821,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>Bu ismi unut</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Ölçülmüş varsayılana dön</value>
+  </data>
 </root>

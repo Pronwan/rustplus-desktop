@@ -1429,4 +1429,7 @@
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>忘記這個名字</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>恢復為實測預設值</value>
+  </data>
 </root>

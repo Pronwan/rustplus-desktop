@@ -7536,4 +7536,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>忘记这个名字</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>恢复为实测默认值</value>
+  </data>
 </root>

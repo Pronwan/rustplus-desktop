@@ -7679,4 +7679,7 @@
   <data name="DeathStatsKillerForget" xml:space="preserve">
     <value>نسيان هذا الاسم</value>
   </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>العودة إلى الإعداد الافتراضي المقاس</value>
+  </data>
 </root>
