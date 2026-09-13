@@ -212,7 +212,8 @@ namespace RustPlusDesk
                     var better = await AiDeathScreen.ReadAsync(read.ImagePath).ConfigureAwait(true);
                     if (better.Killer is { Length: > 0 })
                     {
-                        read = read with { Killer = better.Killer, Weapon = better.Weapon };
+                        var (killer, weapon) = Reconcile(better, read);
+                        read = read with { Killer = killer, Weapon = weapon };
                     }
                 }
 
@@ -264,6 +265,39 @@ namespace RustPlusDesk
                 state.Busy = false;
                 RefreshTiles();
             }
+        }
+
+        /// <summary>
+        /// Settles the two readings of the same picture against each other.
+        ///
+        /// The model reads any alphabet, which is why it is asked at all, but a small one —
+        /// the free tiers especially — answers with the name and the weapon run together in
+        /// one piece however plainly it was asked not to. Windows had already split the row by
+        /// the gaps between the boxes, and got that part right; it simply could not read the
+        /// letters. So one supplies the name and the other supplies the seam.
+        ///
+        /// Only ever removes a suffix that the other reading independently called the weapon.
+        /// A player genuinely called "Sassy Rock", killed with a rock, keeps their name unless
+        /// the recogniser also thought the weapon was there — and if it did, the two readings
+        /// agree and there is nothing better to go on.
+        /// </summary>
+        private static (string Killer, string? Weapon) Reconcile(
+            (string? Killer, string? Weapon) ai, DeathScreenText ocr)
+        {
+            string killer = ai.Killer!.Trim();
+            string? weapon = string.IsNullOrWhiteSpace(ai.Weapon) ? ocr.Weapon : ai.Weapon!.Trim();
+
+            if (string.IsNullOrWhiteSpace(weapon)) return (killer, null);
+
+            // The weapon hanging off the end of the name, which is the failure this is for.
+            if (killer.Length > weapon!.Length &&
+                killer.EndsWith(weapon, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var trimmed = killer[..^weapon.Length].TrimEnd(' ', '|', '-', ',', ':');
+                if (trimmed.Length >= 2) killer = trimmed;
+            }
+
+            return (killer, weapon);
         }
 
         /// <summary>Our own windows, so the capture is of the game and not of this app.</summary>

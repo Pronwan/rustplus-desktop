@@ -149,6 +149,68 @@ namespace RustPlusDesk.Services.Deaths
         }
 
         /// <summary>
+        /// Takes one name out, wherever it was recorded.
+        ///
+        /// A read can be wrong — a weapon mistaken for a name, a recogniser having a bad day —
+        /// and a wrong name in a list of who has killed you is worse than a gap. The deaths
+        /// themselves are untouched: this file only ever said who was responsible, and
+        /// removing a line puts that back to not knowing.
+        /// </summary>
+        public static void Forget(string? serverKey, string name)
+        {
+            if (string.IsNullOrEmpty(serverKey) || string.IsNullOrWhiteSpace(name)) return;
+
+            try
+            {
+                var path = PathFor(serverKey!);
+                if (!File.Exists(path)) return;
+
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+                var keep = File.ReadLines(path).Where(line =>
+                {
+                    if (string.IsNullOrWhiteSpace(line)) return false;
+
+                    try
+                    {
+                        var raw = JsonSerializer.Deserialize<RawKiller>(line, options);
+                        return raw?.killer == null ||
+                               !string.Equals(raw.killer.Trim(), name.Trim(),
+                                   StringComparison.CurrentCultureIgnoreCase);
+                    }
+                    catch
+                    {
+                        // A line nobody can read is a line nobody can match either. Kept, so
+                        // a delete never quietly throws away something it did not understand.
+                        return true;
+                    }
+                }).ToList();
+
+                File.WriteAllLines(path, keep);
+            }
+            catch
+            {
+                // Nothing was removed, and the list still shows what it showed.
+            }
+        }
+
+        /// <summary>Throws the whole list away. The deaths themselves stay.</summary>
+        public static void Clear(string? serverKey)
+        {
+            if (string.IsNullOrEmpty(serverKey)) return;
+
+            try
+            {
+                var path = PathFor(serverKey!);
+                if (File.Exists(path)) File.Delete(path);
+            }
+            catch
+            {
+                // Same as above: the list is simply still there.
+            }
+        }
+
+        /// <summary>
         /// Whether a name is the player themselves, which Rust shows for a suicide.
         ///
         /// Worth telling apart: a list of who has killed you, topped by you, is a list nobody

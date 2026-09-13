@@ -6812,4 +6812,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>Bağlı Hizmetler altında bir AI Companion anahtarı gerekir. Herhangi bir sağlayıcı olur.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Temizle</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Bu sunucu için kaydedilen tüm isimler unutulsun mu? Ölümlerin kendisi kalır.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Bu ismi unut</value>
+  </data>
 </root>

@@ -474,6 +474,13 @@
                         </StackPanel.Style>
                         <ui:SymbolIcon Symbol="Target24" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
                         <TextBlock Text="{DynamicResource DeathStatsKillers}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+
+                        <!--  These names were typed by hand, in the sense that somebody pressed  -->
+                        <!--  a button to keep each one. Taking them back out belongs here too.   -->
+                        <ui:Button Margin="12,0,0,0" Padding="8,2" FontSize="11"
+                                   Appearance="Secondary" VerticalAlignment="Center"
+                                   Click="ClearKillers_Click"
+                                   Content="{DynamicResource DeathStatsKillersClear}" />
                     </StackPanel>
                     <ui:Card Padding="10" Margin="0,0,0,16"
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -496,11 +503,13 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="34" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{DynamicResource DeathStatsKiller}" Style="{StaticResource ColHeader}" />
                                 <TextBlock Grid.Column="1" Text="{DynamicResource DeathStatsWeapon}" Style="{StaticResource ColHeader}" />
                                 <TextBlock Grid.Column="2" Text="{DynamicResource DeathStatsKills}" Style="{StaticResource ColHeader}" TextAlignment="Right" />
                                 <TextBlock Grid.Column="3" Text="{DynamicResource DeathStatsLastKill}" Style="{StaticResource ColHeader}" TextAlignment="Right" />
+                                <TextBlock Grid.Column="4" Text="" Style="{StaticResource ColHeader}" />
                             </Grid>
                             <Border Height="1" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,0,4" />
                             <ItemsControl ItemsSource="{Binding ByKiller}">
@@ -523,11 +532,32 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="70" />
                                                     <ColumnDefinition Width="130" />
+                                                    <ColumnDefinition Width="34" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{StaticResource Cell}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Grid.Column="1" Text="{Binding LastWeapon}" Style="{StaticResource Cell}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock Grid.Column="2" Text="{Binding Kills}" Style="{StaticResource Cell}" TextAlignment="Right" />
                                                 <TextBlock Grid.Column="3" Text="{Binding LastAtText}" Style="{StaticResource Cell}" TextAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                                                <!--  Only while the row is under the pointer: a delete on every  -->
+                                                <!--  row at all times is a delete waiting to be pressed by hand. -->
+                                                <ui:Button Grid.Column="4" Width="26" Height="24" Padding="0"
+                                                           Appearance="Transparent" VerticalAlignment="Center"
+                                                           HorizontalAlignment="Right"
+                                                           Tag="{Binding Name}" Click="ForgetKiller_Click"
+                                                           ToolTip="{DynamicResource DeathStatsKillerForget}">
+                                                    <ui:Button.Style>
+                                                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                            <Setter Property="Opacity" Value="0" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                                                                    <Setter Property="Opacity" Value="1" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ui:Button.Style>
+                                                    <ui:SymbolIcon Symbol="Delete24" FontSize="14" />
+                                                </ui:Button>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

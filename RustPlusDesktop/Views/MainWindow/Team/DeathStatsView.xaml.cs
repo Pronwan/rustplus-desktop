@@ -36,6 +36,41 @@ public partial class DeathStatsView : UserControl
 
     private void Close_Click(object sender, RoutedEventArgs e) => CloseRequested?.Invoke(this, e);
 
+    /// <summary>
+    /// Takes one killer back out of the list.
+    ///
+    /// Every name here was read off a screen, and a reading can be wrong — a weapon taken for
+    /// a name, a recogniser having a bad day. A wrong name in a list of who has killed you is
+    /// worse than a gap in it. The deaths themselves are untouched.
+    /// </summary>
+    private void ForgetKiller_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not string name || name.Length == 0) return;
+
+        KillerLogStore.Forget(_serverKey, name);
+        ApplyFilters();
+    }
+
+    /// <summary>Throws the whole list away, once somebody has said so twice.</summary>
+    private async void ClearKillers_Click(object sender, RoutedEventArgs e)
+    {
+        var box = new Wpf.Ui.Controls.MessageBox
+        {
+            Title = Helpers.Loc.Text("DeathStatsKillersClear", "Clear"),
+            Content = Helpers.Loc.Text("DeathStatsKillersClearConfirm",
+                "Forget every name recorded for this server? The deaths themselves stay."),
+            PrimaryButtonText = Helpers.Loc.Text("DeathStatsKillersClear", "Clear"),
+            CloseButtonText = Helpers.Loc.Text("Cancel", "Cancel"),
+            Owner = Window.GetWindow(this),
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+
+        if (await box.ShowDialogAsync() != Wpf.Ui.Controls.MessageBoxResult.Primary) return;
+
+        KillerLogStore.Clear(_serverKey);
+        ApplyFilters();
+    }
+
     private static readonly Brush SparkBrush = MakeFrozen(Color.FromRgb(0xEF, 0x6C, 0x33));
     private static readonly Brush SparkZeroBrush = MakeFrozen(Color.FromArgb(0x55, 0x9D, 0x9D, 0x9D));
 

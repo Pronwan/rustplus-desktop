@@ -1943,4 +1943,13 @@
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>需要在「已連接服務」中設定 AI Companion 金鑰。任一提供方皆可。</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>清空</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>忘記為該伺服器記錄的所有名字？死亡記錄本身會保留。</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>忘記這個名字</value>
+  </data>
 </root>

@@ -7954,4 +7954,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>Needs an AI Companion key under Connected Services. Any provider will do.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Forget every name recorded for this server? The deaths themselves stay.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Forget this name</value>
+  </data>
 </root>

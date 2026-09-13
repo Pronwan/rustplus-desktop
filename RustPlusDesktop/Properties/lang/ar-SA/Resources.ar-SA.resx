@@ -7670,4 +7670,13 @@
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>يتطلب مفتاح AI Companion ضمن الخدمات المتصلة. أي مزوّد يفي بالغرض.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>هل تريد نسيان كل الأسماء المسجّلة لهذا الخادم؟ تبقى الوفيات نفسها.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>نسيان هذا الاسم</value>
+  </data>
 </root>

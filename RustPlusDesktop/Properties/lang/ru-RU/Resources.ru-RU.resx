@@ -7779,4 +7779,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>Нужен ключ AI Companion в разделе «Подключённые сервисы». Подойдёт любой провайдер.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Забыть все имена, записанные для этого сервера? Сами смерти останутся.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Забыть это имя</value>
+  </data>
 </root>

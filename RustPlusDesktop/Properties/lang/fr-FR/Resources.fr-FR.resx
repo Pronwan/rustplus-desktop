@@ -7779,4 +7779,13 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>Nécessite une clé AI Companion dans Services connectés. N'importe quel fournisseur convient.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Vider</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Oublier tous les noms enregistrés pour ce serveur ? Les morts elles-mêmes restent.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Oublier ce nom</value>
+  </data>
 </root>

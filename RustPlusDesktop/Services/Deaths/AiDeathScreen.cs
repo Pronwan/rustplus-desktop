@@ -31,7 +31,7 @@ namespace RustPlusDesk.Services.Deaths
         /// <summary>
         /// Asks the model who is named on the death screen.
         ///
-        /// One line back, with a tab between the two answers, because anything more conversational
+        /// One line back, with a bar between the two answers, because anything more conversational
         /// has to be parsed out of a sentence that changes shape between providers. Names are
         /// copied exactly — a name is not a word to be corrected, and a model that tidies
         /// "KoHЧaHue" into something spellable has produced a different player.
@@ -57,9 +57,10 @@ namespace RustPlusDesk.Services.Deaths
                         "It shows up to four boxes in a row: how long the player was alive, who " +
                         "killed them, what weapon was used, and from what distance. Some of them " +
                         "may be missing. " +
-                        "Answer with the killer's name, then a tab, then the weapon — nothing " +
-                        "else, no labels, no explanation, no quotes. Leave the weapon empty if " +
-                        "there is no weapon box. Answer with nothing at all if there is no name. " +
+                        "Answer with the killer's name, then a vertical bar, then the weapon, " +
+                        "like this: Name | Weapon. Nothing else — no labels, no explanation, " +
+                        "no quotes. Put the bar in even when there is no weapon box, with " +
+                        "nothing after it. Answer with nothing at all if there is no name. " +
                         "Copy the name exactly as it is written, character for character, in its " +
                         "own alphabet: it is a player's name, not a word to be corrected or " +
                         "transliterated. Never answer with the duration or the distance.",
@@ -71,8 +72,11 @@ namespace RustPlusDesk.Services.Deaths
                 var provider = AiProviderFactory.For(AiCompanionStore.Current.Provider);
                 var result = await provider.AskAsync(question, key!, null, ct).ConfigureAwait(false);
 
+                // A bar, a tab or a line break. The bar is what it asks for, because a smaller
+                // model drops a tab and hands back one run of words; the other two are here
+                // because some answer in their own shape whatever they were asked.
                 var parts = result.Answer
-                    .Split('\t', '\n')
+                    .Split('|', '\t', '\n')
                     .Select(p => p.Trim())
                     .Where(p => p.Length > 0)
                     .ToList();

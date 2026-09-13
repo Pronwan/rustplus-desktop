@@ -7873,4 +7873,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
     <value>Braucht einen AI-Companion-Schlüssel unter Verbundene Dienste. Jeder Anbieter genügt.</value>
   </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Alle für diesen Server erfassten Namen vergessen? Die Tode selbst bleiben.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Diesen Namen vergessen</value>
+  </data>
 </root>
