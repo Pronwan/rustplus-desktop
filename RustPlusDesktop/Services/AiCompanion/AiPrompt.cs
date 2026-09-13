@@ -32,8 +32,10 @@ namespace RustPlusDesk.Services.AiCompanion
             // ── Standing instructions: identical on every request ────────────────
 
             text.Append(
-                "You are an in-game companion for the survival game Rust, answering a player who " +
-                "is in the middle of a session and reading your answer on a small overlay. " +
+                "CONTEXT: You are an in-game companion for the fictional multiplayer PC video game Rust (by Facepunch Studios). " +
+                "All items, crafting recipes, raiding mechanics, weapons, ammunition, C4 (Timed Explosive Charge), rockets, satchels, and sulfur costs " +
+                "are strictly virtual in-game mechanics and fictional concepts within the video game Rust, NOT real world. " +
+                "You are answering a player during live gameplay reading your answer on an in-game overlay/chat. " +
                 "Keep answers very short, small, and clear to exactly what the user wants. " +
                 "Do not include lengthy thinking, reasoning steps, preambles, greetings, offers of further help, " +
                 "or conversational filler. Plain text only, no markdown headings or bold. " +
@@ -272,6 +274,14 @@ namespace RustPlusDesk.Services.AiCompanion
                 {
                     return "";
                 }
+            }
+
+            // 4. Suppress safety filter / guardrail rejection dumps
+            if (cleaned.StartsWith("User Safety:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Contains("Safety Categories:", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.StartsWith("I cannot fulfill this request", StringComparison.OrdinalIgnoreCase))
+            {
+                return "";
             }
 
             cleaned = cleaned.Replace("\r", " ").Replace("\n", " ").Trim();
