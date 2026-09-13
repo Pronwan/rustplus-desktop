@@ -97,6 +97,12 @@ namespace RustPlusDesk.Services.AiCompanion
         public bool AutoSendAfterRecording { get; set; }
 
         /// <summary>
+        /// Additional custom prompt rules or instructions supplied by the user.
+        /// Appended to the standing system prompt.
+        /// </summary>
+        public string CustomPromptRules { get; set; } = "";
+
+        /// <summary>
         /// A model name per provider, where the user has chosen one.
         ///
         /// Providers retire models faster than this app ships, and an answer that fails

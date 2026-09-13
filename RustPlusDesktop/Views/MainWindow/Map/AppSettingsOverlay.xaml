@@ -1411,6 +1411,19 @@
                                 <ui:ToggleSwitch Grid.Column="1" x:Name="ChkAiGameData" VerticalAlignment="Center" Checked="OnAiSettingChanged" Unchecked="OnAiSettingChanged" />
                             </Grid>
 
+                            <ui:TextBlock Text="{DynamicResource AiCompanionCustomPromptRules}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,2" />
+                            <ui:TextBlock Text="{DynamicResource AiCompanionCustomPromptRulesHint}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6" Foreground="{DynamicResource TextSubtle}" />
+                            <ui:TextBox x:Name="TxtAiCustomPrompt"
+                                        MinHeight="68"
+                                        MaxHeight="160"
+                                        AcceptsReturn="True"
+                                        TextWrapping="Wrap"
+                                        VerticalScrollBarVisibility="Auto"
+                                        Padding="8,6"
+                                        Margin="0,0,0,14"
+                                        PlaceholderText="{DynamicResource AiCompanionCustomPromptRulesPlaceholder}"
+                                        TextChanged="TxtAiCustomPrompt_TextChanged" />
+
                             <ui:TextBlock Text="{DynamicResource AiCompanionAnswers}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,6" />
 
                             <ui:TextBlock Text="{DynamicResource AiCompanionAnswerLanguage}" FontSize="11" Foreground="{DynamicResource TextSubtle}" />

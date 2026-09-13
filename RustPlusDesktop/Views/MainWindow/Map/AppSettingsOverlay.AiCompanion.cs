@@ -44,6 +44,7 @@ namespace RustPlusDesk.Views
             ChkAiScreenshotDefault.IsChecked = settings.AttachScreenshotByDefault;
             ChkAiAutoSend.IsChecked = settings.AutoSendAfterRecording;
             ChkAiGameData.IsChecked = settings.IncludeGameData;
+            TxtAiCustomPrompt.Text = settings.CustomPromptRules ?? "";
 
             if (CmbAiAnswerLanguage.Items.Count == 0)
             {
@@ -451,6 +452,15 @@ namespace RustPlusDesk.Views
         {
             TxtAiVoiceModel.Text = "";
             ApplyAiCompanionState();
+        }
+
+        private void TxtAiCustomPrompt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            var settings = AiCompanionStore.Current;
+            settings.CustomPromptRules = TxtAiCustomPrompt.Text ?? "";
+            AiCompanionStore.Save(settings);
         }
 
         private bool _isFetchingOpenRouterModels;

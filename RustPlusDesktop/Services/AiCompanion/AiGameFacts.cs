@@ -92,13 +92,17 @@ namespace RustPlusDesk.Services.AiCompanion
             var text = new StringBuilder();
 
             text.Append(
-                "Raid costs for this build of Rust, taken from the game's own values. These are " +
-                "whole items needed to destroy one object from full health. Use these numbers " +
-                "rather than any you remember, and say so if something is not in the table.\n\n");
+                "Raid costs and optimal boom combinations for this build of Rust, taken from the game's own values.\n" +
+                "Building Tier Aliases: Top tier / HQM / High Quality Metal = 'Armored' (2000 HP). Metal / Sheet Metal = 'Metal' (1000 HP).\n" +
+                "Sulfur Costs per explosive: Rocket = 1400 sulfur | C4 = 2200 sulfur | Satchel = 480 sulfur | Beancan = 120 sulfur | Explo 5.56 ammo = 25 sulfur/bullet.\n\n" +
+                "Single Explosive Counts (to destroy from 100% HP using only one weapon):\n");
 
             text.Append("Object (tier) | HP | ").Append(string.Join(" | ", sources.Select(Short))).Append('\n');
 
-            foreach (var target in data.Targets.Where(IsWorthListing).OrderBy(t => t.DisplayName))
+            var engine = new RaidCalculatorEngine(data);
+            var targets = data.Targets.Where(IsWorthListing).OrderBy(t => t.DisplayName).ToList();
+
+            foreach (var target in targets)
             {
                 var counts = sources
                     .Select(source => data.Hits.TryGetValue(source.SourceId, out var byTarget) &&
@@ -115,6 +119,33 @@ namespace RustPlusDesk.Services.AiCompanion
                     .Append(" | ").Append((int)target.StartHealth)
                     .Append(" | ").Append(string.Join(" | ", counts))
                     .Append('\n');
+            }
+
+            text.Append("\nOptimal / Cheapest Mixed Combos (Lowest Sulfur to avoid overkill damage):\n");
+
+            foreach (var target in targets)
+            {
+                var mixes = engine.GetCuratedMixes(target);
+                if (mixes.Count == 0) continue;
+
+                var topMixes = mixes
+                    .Select(mix => new
+                    {
+                        Parts = mix,
+                        Sulfur = mix.Sum(m => m.SulfurCost),
+                        Summary = string.Join(" + ", mix.Select(m => $"{m.RequiredItems} {Short(m.Source)}"))
+                    })
+                    .Where(m => m.Sulfur > 0)
+                    .OrderBy(m => m.Sulfur)
+                    .Take(2)
+                    .ToList();
+
+                if (topMixes.Count > 0)
+                {
+                    var mixStr = string.Join(" OR ", topMixes.Select(m => $"{m.Summary} ({(int)m.Sulfur} sulfur)"));
+                    text.Append("- ").Append(target.DisplayName).Append(" (").Append((int)target.StartHealth).Append(" HP): ")
+                        .Append(mixStr).Append('\n');
+                }
             }
 
             return text.ToString();
