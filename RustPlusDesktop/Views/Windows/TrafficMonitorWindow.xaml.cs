@@ -292,7 +292,7 @@ namespace RustPlusDesk.Views.Windows
                 sb.AppendLine($"Status: {entry.Status}");
                 sb.AppendLine($"Details: {entry.Details}");
 
-                Clipboard.SetText(sb.ToString());
+                RustPlusDesk.Helpers.SafeClipboard.SetText(sb.ToString());
             }
         }
     }

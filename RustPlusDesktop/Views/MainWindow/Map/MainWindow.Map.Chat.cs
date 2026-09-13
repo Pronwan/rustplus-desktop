@@ -1573,8 +1573,8 @@ public partial class MainWindow
         var vm = GetContextMessage(sender);
         if (vm != null && !string.IsNullOrEmpty(vm.Text))
         {
-            Clipboard.SetText(vm.Text);
-            ShowInfoSnackbar("Copied", "Message text copied to clipboard.", WpfUi.ControlAppearance.Success);
+            if (Helpers.SafeClipboard.SetText(vm.Text))
+                ShowInfoSnackbar("Copied", "Message text copied to clipboard.", WpfUi.ControlAppearance.Success);
         }
     }
 
@@ -1583,8 +1583,8 @@ public partial class MainWindow
         var vm = GetContextMessage(sender);
         if (vm != null && vm.SteamId != 0)
         {
-            Clipboard.SetText(vm.SteamId.ToString());
-            ShowInfoSnackbar("Copied", $"Steam ID {vm.SteamId} copied to clipboard.", WpfUi.ControlAppearance.Success);
+            if (Helpers.SafeClipboard.SetText(vm.SteamId.ToString()))
+                ShowInfoSnackbar("Copied", $"Steam ID {vm.SteamId} copied to clipboard.", WpfUi.ControlAppearance.Success);
         }
     }
 

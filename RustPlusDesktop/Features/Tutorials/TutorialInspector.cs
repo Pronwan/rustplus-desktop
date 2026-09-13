@@ -38,7 +38,7 @@ public sealed class TutorialInspector
         else if (_adorner is not null && e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
         {
             string? id = _selected is null ? null : Tutorial.GetTargetId(_selected);
-            if (!string.IsNullOrWhiteSpace(id)) Clipboard.SetText(id);
+            if (!string.IsNullOrWhiteSpace(id)) RustPlusDesk.Helpers.SafeClipboard.SetText(id);
             e.Handled = true;
         }
         else if (_adorner is not null && e.Key == Key.Enter && _selected is not null)
