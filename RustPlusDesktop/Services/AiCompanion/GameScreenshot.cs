@@ -105,6 +105,70 @@ namespace RustPlusDesk.Services.AiCompanion
         }
 
         /// <summary>
+        /// Captures one part of the game's screen, given as fractions of it.
+        ///
+        /// Fractions rather than pixels because the thing being looked for sits in the same
+        /// place on the screen whatever the resolution: the band across the top of Rust's
+        /// death screen is a third of the way in and a tenth of the way down on a 1080p
+        /// monitor and on a 1440p one alike. A saved rectangle in pixels would be wrong the
+        /// first time somebody changed resolution.
+        ///
+        /// Returns a PNG rather than a JPEG: this one is read by a character recogniser, and
+        /// JPEG spends its error budget on exactly the small high-contrast edges that letters
+        /// are made of.
+        /// </summary>
+        public static Task<string?> CaptureRegionAsync(
+            double left, double top, double width, double height, IReadOnlyList<IntPtr>? exclude = null)
+        {
+            return Task.Run<string?>(() =>
+            {
+                var hidden = Exclude(exclude);
+
+                try
+                {
+                    var screen = GameScreenBounds();
+
+                    int x = screen.Left + (int)Math.Round(screen.Width * Math.Clamp(left, 0, 1));
+                    int y = screen.Top + (int)Math.Round(screen.Height * Math.Clamp(top, 0, 1));
+                    int w = (int)Math.Round(screen.Width * Math.Clamp(width, 0.01, 1));
+                    int h = (int)Math.Round(screen.Height * Math.Clamp(height, 0.01, 1));
+
+                    // A region that runs off the edge is clipped rather than refused: it is a
+                    // setting somebody dragged, and a slightly short crop still reads.
+                    w = Math.Min(w, screen.Right - x);
+                    h = Math.Min(h, screen.Bottom - y);
+                    if (w < 8 || h < 8) return null;
+
+                    using var bitmap = new Bitmap(w, h, PixelFormat.Format24bppRgb);
+                    using (var graphics = Graphics.FromImage(bitmap))
+                        graphics.CopyFromScreen(x, y, 0, 0, new Size(w, h), CopyPixelOperation.SourceCopy);
+
+                    var folder = Path.Combine(Path.GetTempPath(), "RustPlusDesk", "deaths");
+                    Directory.CreateDirectory(folder);
+
+                    // One name, overwritten each time: this is scratch for the recogniser and
+                    // for the preview in the settings, not something to accumulate on disk.
+                    var path = Path.Combine(folder, "death-screen.png");
+
+                    try { if (File.Exists(path)) File.Delete(path); } catch { }
+
+                    bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                    return path;
+                }
+                catch
+                {
+                    return null;
+                }
+                finally
+                {
+                    foreach (var hwnd in hidden)
+                    {
+                        try { SetWindowDisplayAffinity(hwnd, WDA_NONE); } catch { }
+                    }
+                }
+            });
+        }
+        /// <summary>
         /// Takes our windows out of the capture and returns the ones that accepted it.
         ///
         /// Only those, because the flag has to come back off afterwards and a window that

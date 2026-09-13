@@ -7686,4 +7686,70 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>Une pression masque toutes les autres tuiles là où elles sont ; la suivante restitue la disposition à l'identique.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Qui vous a tué ?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Apparaît à la mort : une pression lit le nom sur l'écran de mort</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Enregistrer la mort</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Relire</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Lecture…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Rien de lisible à cet endroit — vérifiez la zone dans les réglages de cette tuile.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows n'a aucune reconnaissance de texte installée.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>Aucune mort enregistrée à laquelle rattacher ceci.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Suicide</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Garder la tuile sur le dock en vie</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows lit le texte en {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Où se trouve le nom</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>Depuis la gauche {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>Depuis le haut {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Largeur {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Hauteur {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Tester sur l'écran maintenant</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Tueurs</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Tueur</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Arme</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Éliminations</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Dernière fois</value>
+  </data>
 </root>

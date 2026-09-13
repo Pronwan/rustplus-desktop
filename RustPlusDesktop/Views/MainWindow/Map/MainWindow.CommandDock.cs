@@ -54,6 +54,23 @@ public partial class MainWindow : ICommandDockHost
         return int.TryParse(head, out var players) ? players : 0;
     }
 
+    /// <summary>
+    /// When the player last died, filled in as the death is reported.
+    ///
+    /// Kept here rather than read back out of the log because the log is written for every
+    /// team member and this is only about one of them, and because the value is wanted the
+    /// moment the death happens — that is when the dock puts its button up.
+    /// </summary>
+    private long _lastOwnDeathAt;
+
+    public bool DockPlayerDead =>
+        TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.IsDead == true;
+
+    public long DockLastOwnDeathAt => _lastOwnDeathAt;
+
+    public string? DockPlayerName =>
+        TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name;
+
     public string? DockServerKey
     {
         get

@@ -1327,4 +1327,70 @@
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>按一次即把其他磁貼就地隱藏，再按一次原樣恢復整個版面。</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>誰殺了你？</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>死亡時出現：按一次即從死亡畫面讀出名字</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>記錄死亡</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>重新讀取</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>讀取中…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>該區域沒有可讀內容——請在此磁貼的設定中檢查區域。</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows 未安裝文字辨識。</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>還沒有可以關聯的死亡記錄。</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>自殺</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>存活時也保留該磁貼</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows 以 {0} 辨識文字。</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>名字的位置</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>距左側 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>距頂部 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>寬度 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>高度 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>立即在螢幕上測試</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>擊殺者</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>擊殺者</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>武器</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>擊殺數</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>最近一次</value>
+  </data>
 </root>

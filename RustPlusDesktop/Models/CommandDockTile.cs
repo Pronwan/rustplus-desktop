@@ -117,6 +117,20 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool CollapseIncludesMap { get; set; }
 
+        // ── Death tracking ──────────────────────────────────────────────────
+        //
+        // Where on the screen the killer's name is, as fractions of it rather than pixels.
+        // The band sits in the same place whatever the resolution; a saved rectangle in
+        // pixels would be wrong the first time somebody changed it.
+
+        public double DeathRegionLeft { get; set; } = 0.30;
+        public double DeathRegionTop { get; set; } = 0.055;
+        public double DeathRegionWidth { get; set; } = 0.40;
+        public double DeathRegionHeight { get; set; } = 0.075;
+
+        /// <summary>Death tracking tiles: stay on the dock even while the player is alive.</summary>
+        public bool DeathTrackAlwaysVisible { get; set; }
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the
@@ -203,6 +217,14 @@ namespace RustPlusDesk.Models
         /// expanding puts the arrangement back exactly as it was rather than re-flowing it.
         /// </summary>
         public const string Collapse = "Collapse";
+
+        /// <summary>
+        /// After a death: one press to read the killer's name off the death screen.
+        ///
+        /// Only on the dock while the player is dead, because that is the only time the
+        /// screen it reads is on screen. It gives its cells back on respawn.
+        /// </summary>
+        public const string DeathTrack = "DeathTrack";
     }
 
     /// <summary>

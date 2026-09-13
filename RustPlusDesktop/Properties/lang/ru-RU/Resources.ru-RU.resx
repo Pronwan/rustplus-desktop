@@ -7686,4 +7686,70 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>Одно нажатие прячет остальные плитки там, где они стоят; следующее возвращает расстановку без изменений.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Кто вас убил?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Появляется после смерти: одно нажатие считывает имя с экрана смерти</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Записать смерть</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Считать заново</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Читаю…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Там нечего прочитать — проверьте область в настройках этой плитки.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>В Windows не установлено распознавание текста.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>Пока нет записанной смерти, к которой это отнести.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Самоубийство</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Оставлять плитку на доке при жизни</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows читает текст на языке {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Где находится имя</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>Слева {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>Сверху {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Ширина {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Высота {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Проверить на экране сейчас</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Убийцы</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Убийца</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Оружие</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Убийств</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Последний раз</value>
+  </data>
 </root>

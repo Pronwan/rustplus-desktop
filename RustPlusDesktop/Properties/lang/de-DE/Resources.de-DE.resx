@@ -7780,4 +7780,70 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>Ein Druck blendet alle anderen Kacheln dort aus, wo sie stehen; der nächste holt die Anordnung unverändert zurück.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Wer hat dich getötet?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Erscheint beim Tod: ein Druck liest den Namen vom Todesbildschirm</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Tod erfassen</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Erneut lesen</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Lese …</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Dort ist nichts lesbar — prüfe den Bereich in den Einstellungen dieser Kachel.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows hat keine Texterkennung installiert.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>Noch kein Tod erfasst, dem sich das zuordnen ließe.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Selbsttötung</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Kachel auch im Leben auf dem Dock lassen</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows liest Text auf {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Wo der Name steht</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>Von links {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>Von oben {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Breite {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Höhe {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Jetzt am Bildschirm testen</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Täter</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Täter</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Waffe</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Tötungen</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Zuletzt</value>
+  </data>
 </root>

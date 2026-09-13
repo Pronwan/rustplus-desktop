@@ -47,6 +47,15 @@ namespace RustPlusDesk.Services.Deaths
         public IReadOnlyList<RecentDeath> Recent { get; init; } = Array.Empty<RecentDeath>();
         public IReadOnlyList<DayCount> DeathsPerDay { get; init; } = Array.Empty<DayCount>();
 
+        /// <summary>
+        /// Who has killed the player, from the names read off death screens.
+        ///
+        /// Empty until somebody has pressed the button on the dock's death tile at least
+        /// once: the game reports that a death happened, never who caused it, so this is the
+        /// one part of these statistics that is not collected on its own.
+        /// </summary>
+        public IReadOnlyList<KillerStat> ByKiller { get; init; } = Array.Empty<KillerStat>();
+
         public bool HasData => Total > 0;
 
         public string Headline => Total == 0
@@ -115,13 +124,19 @@ namespace RustPlusDesk.Services.Deaths
         }
 
         public static DeathStatsSummary LoadForServer(string? serverKey)
-            => Summarize(LoadEntries(serverKey));
+            => Summarize(LoadEntries(serverKey), KillerLogStore.Summarize(serverKey));
 
         /// <summary>Aggregate a (possibly filtered) set of entries into the view model.</summary>
-        public static DeathStatsSummary Summarize(IReadOnlyList<DeathEntry> entries)
+        /// <param name="killers">
+        /// Who was behind the deaths, where anybody has written it down. Passed in rather than
+        /// looked up here because this is also called with a filtered set of entries, which has
+        /// no server to look anything up for.
+        /// </param>
+        public static DeathStatsSummary Summarize(
+            IReadOnlyList<DeathEntry> entries, IReadOnlyList<KillerStat>? killers = null)
         {
             if (entries.Count == 0)
-                return new DeathStatsSummary();
+                return new DeathStatsSummary { ByKiller = killers ?? Array.Empty<KillerStat>() };
 
             int total = entries.Count;
 
@@ -186,6 +201,7 @@ namespace RustPlusDesk.Services.Deaths
 
             return new DeathStatsSummary
             {
+                ByKiller = killers ?? Array.Empty<KillerStat>(),
                 Total = total,
                 Victims = byVictim.Count,
                 AvgSurvival = AverageSurvival(entries),

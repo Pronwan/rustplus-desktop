@@ -7577,4 +7577,70 @@
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>ضغطة واحدة تُخفي بقية البطاقات في أماكنها، والضغطة التالية تعيد الترتيب كما كان.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>من قتلك؟</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>يظهر عند الموت: ضغطة واحدة تقرأ الاسم من شاشة الموت</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>تسجيل الموت</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>إعادة القراءة</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>جارٍ القراءة…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>لا يوجد شيء مقروء هناك — تحقّق من المنطقة في إعدادات هذه البطاقة.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>لا يوجد تعرّف على النصوص مثبّت في Windows.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>لا توجد وفاة مسجّلة بعد لإرفاق هذا بها.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>انتحار</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>إبقاء البطاقة على اللوحة أثناء الحياة</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>يقرأ Windows النص بلغة {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>موضع الاسم</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>من اليسار {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>من الأعلى {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>العرض {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>الارتفاع {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>اختبر على الشاشة الآن</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>القَتَلة</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>القاتل</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>السلاح</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>عمليات القتل</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>آخر مرة</value>
+  </data>
 </root>

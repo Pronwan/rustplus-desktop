@@ -7607,4 +7607,70 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>한 번 누르면 다른 타일이 있던 자리에서 숨겨지고, 다시 누르면 배치가 그대로 돌아옵니다.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>누가 당신을 죽였나요?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>사망 시 나타납니다: 한 번 누르면 사망 화면에서 이름을 읽습니다</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>죽음 기록</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>다시 읽기</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>읽는 중…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>읽을 수 있는 내용이 없습니다 — 이 타일의 설정에서 영역을 확인하세요.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows에 텍스트 인식이 설치되어 있지 않습니다.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>이것을 붙일 사망 기록이 아직 없습니다.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>자살</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>살아 있을 때도 타일 유지</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows는 {0}(으)로 텍스트를 읽습니다.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>이름이 있는 위치</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>왼쪽에서 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>위에서 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>너비 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>높이 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>지금 화면에서 테스트</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>가해자</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>가해자</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>무기</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>처치</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>마지막</value>
+  </data>
 </root>

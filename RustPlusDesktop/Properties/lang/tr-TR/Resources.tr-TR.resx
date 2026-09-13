@@ -6719,4 +6719,70 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>Bir basış diğer tüm kartları bulundukları yerde gizler; bir sonraki basış düzeni olduğu gibi geri getirir.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Seni kim öldürdü?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Öldüğünde belirir: bir basışla ölüm ekranındaki ismi okur</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Ölümü kaydet</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Yeniden oku</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Okunuyor…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Orada okunabilir bir şey yok — bu kartın ayarlarından bölgeyi kontrol et.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows'ta metin tanıma yüklü değil.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>Buna eklenecek kayıtlı bir ölüm henüz yok.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>İntihar</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Hayattayken de kartı panelde tut</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows metni {0} dilinde okur.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>İsmin bulunduğu yer</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>Soldan {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>Üstten {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Genişlik {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Yükseklik {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Şimdi ekranda test et</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Öldürenler</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Öldüren</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Silah</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Öldürme</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Son kez</value>
+  </data>
 </root>

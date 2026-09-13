@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
+using RustPlusDesk.Services.Deaths;
 
 namespace RustPlusDesk
 {
@@ -454,6 +455,121 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.DeathTrack:
+                {
+                    var box = new StackPanel();
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockDeathTrackAlways", "Keep the tile on the dock while alive"),
+                        tile.DeathTrackAlwaysVisible,
+                        on => { tile.DeathTrackAlwaysVisible = on; TileSettingChanged(immediate: true); }));
+
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = DeathScreenReader.Available
+                            ? string.Format(
+                                Loc.Text("CommandDockDeathTrackReader", "Windows reads text in {0}."),
+                                DeathScreenReader.RecognizerLanguage)
+                            : Loc.Text("CommandDockDeathTrackNoOcr",
+                                "Windows has no text recognition installed."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
+                    // The region, as a share of the screen rather than in pixels — see the
+                    // tile model. Four sliders and a preview: the numbers mean nothing on
+                    // their own, and the only way to know a region is right is to look at
+                    // what came out of it.
+                    box.Children.Add(SettingsHeading(
+                        Loc.Text("CommandDockDeathTrackRegion", "Where the name is")));
+
+                    AddRegionSlider(box, tile, Loc.Text("CommandDockDeathTrackLeft", "From the left {0}%"),
+                        () => tile.DeathRegionLeft, v => tile.DeathRegionLeft = v, 0, 0.9);
+
+                    AddRegionSlider(box, tile, Loc.Text("CommandDockDeathTrackTop", "From the top {0}%"),
+                        () => tile.DeathRegionTop, v => tile.DeathRegionTop = v, 0, 0.9);
+
+                    AddRegionSlider(box, tile, Loc.Text("CommandDockDeathTrackWide", "Width {0}%"),
+                        () => tile.DeathRegionWidth, v => tile.DeathRegionWidth = v, 0.05, 1);
+
+                    AddRegionSlider(box, tile, Loc.Text("CommandDockDeathTrackHigh", "Height {0}%"),
+                        () => tile.DeathRegionHeight, v => tile.DeathRegionHeight = v, 0.02, 0.5);
+
+                    var preview = new Image
+                    {
+                        MaxHeight = 90,
+                        Stretch = Stretch.Uniform,
+                        StretchDirection = StretchDirection.DownOnly,
+                        Margin = new Thickness(0, 4, 0, 4),
+                        Visibility = Visibility.Collapsed,
+                    };
+
+                    var readBack = new TextBlock
+                    {
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 8),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    };
+
+                    var test = new Wpf.Ui.Controls.Button
+                    {
+                        Content = Loc.Text("CommandDockDeathTrackTest", "Test on the screen now"),
+                        FontSize = 11,
+                        Margin = new Thickness(0, 0, 0, 6),
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                    };
+
+                    test.Click += async (_, __) =>
+                    {
+                        test.IsEnabled = false;
+
+                        try
+                        {
+                            var read = await DeathScreenReader.ReadAsync(
+                                tile.DeathRegionLeft, tile.DeathRegionTop,
+                                tile.DeathRegionWidth, tile.DeathRegionHeight,
+                                OverlayWindows());
+
+                            if (read.ImagePath != null)
+                            {
+                                // Loaded rather than referenced: the same file is overwritten
+                                // on the next test, and a referenced one stays locked.
+                                var image = new System.Windows.Media.Imaging.BitmapImage();
+                                image.BeginInit();
+                                image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                                image.CreateOptions = System.Windows.Media.Imaging.BitmapCreateOptions.IgnoreImageCache;
+                                image.UriSource = new Uri(read.ImagePath);
+                                image.EndInit();
+
+                                preview.Source = image;
+                                preview.Visibility = Visibility.Visible;
+                            }
+
+                            readBack.Text = read.Lines.Count > 0
+                                ? string.Join("  ·  ", read.Lines)
+                                : Loc.Text("CommandDockDeathTrackNothing",
+                                    "Nothing readable there — check the region in this tile's settings.");
+                        }
+                        catch (Exception ex)
+                        {
+                            readBack.Text = ex.Message;
+                        }
+                        finally
+                        {
+                            test.IsEnabled = true;
+                        }
+                    };
+
+                    box.Children.Add(test);
+                    box.Children.Add(preview);
+                    box.Children.Add(readBack);
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.Collapse:
                 {
                     var box = new StackPanel();
@@ -592,6 +708,45 @@ namespace RustPlusDesk
         };
 
         // ── Small builders shared by the panel ──────────────────────────────
+
+        /// <summary>
+        /// One edge of the death-screen region, as a share of the screen.
+        ///
+        /// Shown as a percentage because that is what it is — the region has to hold its
+        /// meaning across resolutions, and a pixel offset does not.
+        /// </summary>
+        private void AddRegionSlider(
+            Panel box, CommandDockTile tile, string format,
+            Func<double> read, Action<double> write, double min, double max)
+        {
+            var label = SettingsLabel("");
+            box.Children.Add(label);
+
+            var slider = new Slider
+            {
+                Minimum = min,
+                Maximum = max,
+                TickFrequency = 0.005,
+                IsSnapToTickEnabled = true,
+                Value = Math.Clamp(read(), min, max),
+                Margin = new Thickness(0, 0, 0, 8),
+            };
+
+            void Show() => label.Text = string.Format(format, Math.Round(slider.Value * 100, 1));
+            Show();
+
+            slider.ValueChanged += (_, __) =>
+            {
+                Show();
+                write(slider.Value);
+
+                // Nothing on screen changes with these, so there is no rebuild to coalesce —
+                // only the value to keep.
+                SaveDock();
+            };
+
+            box.Children.Add(slider);
+        }
 
         private static TextBlock SettingsHeading(string text) => new()
         {

@@ -98,6 +98,12 @@ namespace RustPlusDesk
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Collapse },
                   SymbolRegular.ArrowMinimize24);
 
+            Entry(Loc.Text("CommandDockDeathTrackTitle", "Who killed you?"),
+                  Loc.Text("CommandDockDeathTrackPickerHint",
+                      "Appears when you die: one press reads the name off the death screen"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.DeathTrack, ColSpan = 2, RowSpan = 2 },
+                  SymbolRegular.HeartBroken24);
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"), SymbolRegular.Chat24);
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

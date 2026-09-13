@@ -380,6 +380,14 @@ namespace RustPlusDesk
                 if (CollapseTakesMap) return false;
             }
 
+            // Nothing to read while alive, and a button offering to read it would be a
+            // button that does nothing. It takes its cells back on respawn.
+            if (tile.Kind == CommandDockTileKinds.DeathTrack &&
+                !tile.DeathTrackAlwaysVisible && !PlayerIsDead)
+            {
+                return false;
+            }
+
             if (tile.Kind == CommandDockTileKinds.Map) return MapOccupiesCells;
             if (tile.ServerKey == null) return true;
 
@@ -889,6 +897,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.Collapse => BuildCollapseTile(tile),
+            CommandDockTileKinds.DeathTrack => BuildDeathTrackTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,

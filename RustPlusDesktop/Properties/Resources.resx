@@ -7861,4 +7861,70 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>One press hides every other tile where it stands; the next press brings the arrangement back unchanged.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Who killed you?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Appears when you die: one press reads the name off the death screen</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Track death</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Read again</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Nothing readable there — check the region in this tile's settings.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows has no text recognition installed.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>No death recorded yet to attach this to.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Suicide</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Keep the tile on the dock while alive</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows reads text in {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Where the name is</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>From the left {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>From the top {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Width {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Height {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Test on the screen now</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Killers</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Killer</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Weapon</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Kills</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Last time</value>
+  </data>
 </root>

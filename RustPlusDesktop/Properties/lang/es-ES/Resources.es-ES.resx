@@ -7686,4 +7686,70 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockCollapseHint" xml:space="preserve">
     <value>Una pulsación oculta el resto de paneles donde están; la siguiente devuelve la disposición sin cambios.</value>
   </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>¿Quién te mató?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Aparece al morir: una pulsación lee el nombre de la pantalla de muerte</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Registrar muerte</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Leer de nuevo</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Leyendo…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Ahí no hay nada legible: revisa la región en los ajustes de este panel.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows no tiene reconocimiento de texto instalado.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>Todavía no hay ninguna muerte registrada a la que asociarlo.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Suicidio</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Mantener el panel visible estando vivo</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows lee el texto en {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Dónde está el nombre</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>Desde la izquierda {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>Desde arriba {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Ancho {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Alto {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Probar ahora en la pantalla</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Asesinos</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Asesino</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Arma</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Muertes</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Última vez</value>
+  </data>
 </root>

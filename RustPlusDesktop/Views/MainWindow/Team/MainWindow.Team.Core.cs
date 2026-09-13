@@ -411,6 +411,10 @@ public partial class MainWindow
         var deaths = _deathTracker.Observe(team, classifier);
         foreach (var death in deaths)
         {
+            // Our own: the dock offers to write down who did it, and needs the time the game
+            // gave for the death to file the name under.
+            if (death.SteamId == _mySteamId) _lastOwnDeathAt = death.DeathTime;
+
             try
             {
                 await RustPlusDesk.Services.Deaths.DeathReporter.ReportAsync(death, serverKey);

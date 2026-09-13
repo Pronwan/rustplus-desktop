@@ -35,6 +35,20 @@ namespace RustPlusDesk.Services
         /// <summary>Flips a smart switch through the same guarded path the device list uses.</summary>
         Task ToggleDockSwitchAsync(SmartDevice device, bool on);
 
+        /// <summary>Whether the player is dead right now, as the team info reports it.</summary>
+        bool DockPlayerDead { get; }
+
+        /// <summary>
+        /// When the player last died, in unix seconds, or zero if not this session.
+        ///
+        /// This is the key a killer's name is filed under, so the two have to agree exactly:
+        /// it is the time the game reported, not the time the button was pressed.
+        /// </summary>
+        long DockLastOwnDeathAt { get; }
+
+        /// <summary>The player's own name, to tell a suicide from a killer.</summary>
+        string? DockPlayerName { get; }
+
         /// <summary>The event dock's current entries, keyed by <c>cargo</c>, <c>deepsea</c>, …</summary>
         IReadOnlyList<CommandDockEvent> DockEvents { get; }
 
