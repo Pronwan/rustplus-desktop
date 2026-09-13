@@ -7743,4 +7743,65 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="FriendsAddTarget" xml:space="preserve">
     <value>Sending to</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Paste a line, read it back in your language — or dictate it</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Listen to the game and the microphone, and write down what was said</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Stop and write down what was said</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Paste or type something, then press send</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Translating into {0} — click to change</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Translating…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Translation service unavailable — it may be rate-limited. Try again shortly.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>The microphone is in use by another tile.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Recording could not be started.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Writing down what was said…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows has no speech recognition installed. Add a speech language in Windows settings.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Nothing was recognised. Windows was listening in {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>Nothing intelligible was heard in the recording.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(heard in {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Use the AI model for speech</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Works out the spoken language itself, and uses your own API credit. Windows only understands the languages it has a recogniser installed for.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion provider that accepts audio, with a key stored for it. Speech is written down by Windows until then.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>The microphone is in use by the translate tile.</value>
+  </data>
 </root>

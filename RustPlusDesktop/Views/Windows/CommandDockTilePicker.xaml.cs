@@ -86,6 +86,12 @@ namespace RustPlusDesk
                   () => new CommandDockTile { Kind = CommandDockTileKinds.AiCompanion, ColSpan = 2, RowSpan = 1 },
                   SymbolRegular.Sparkle24);
 
+            Entry(Loc.Text("CommandDockTranslateTitle", "Translate"),
+                  Loc.Text("CommandDockTranslatePickerHint",
+                      "Paste a line, read it back in your language — or dictate it"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.Translate, ColSpan = 3, RowSpan = 1 },
+                  SymbolRegular.Translate24);
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"), SymbolRegular.Chat24);
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

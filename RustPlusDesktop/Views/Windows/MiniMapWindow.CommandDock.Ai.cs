@@ -29,6 +29,20 @@ namespace RustPlusDesk
         private const string GlyphVolume = "\uE767";
         private const string GlyphSend = "\uE724";
 
+        /// <summary>The owner's name for the companion itself.</summary>
+        internal const string AiRecorderOwner = "ai";
+
+        /// <summary>
+        /// Which tile is holding the microphone, or null while nothing is.
+        ///
+        /// There is one recorder for the whole app because there is one microphone, and more
+        /// than one tile can ask for it — the companion, and any number of translate tiles.
+        /// Without a name on it each of them reads somebody else's recording as its own: the
+        /// companion would show the clock running for a translation, and its button would
+        /// stop that recording and send it off as a question.
+        /// </summary>
+        internal string? RecorderOwner { get; set; }
+
         private FrameworkElement BuildAiTile(CommandDockTile tile)
         {
             var style = StyleFor(tile);
@@ -170,10 +184,16 @@ namespace RustPlusDesk
             _tileRefreshers.Add(() =>
             {
                 bool ready = AiCompanionStore.HasKey;
-                bool recording = recorder.State == AiRecorderState.Recording;
+
+                // Somebody else's recording is not this tile's business, and showing it here
+                // as "Recording 0:12" invites the press that would take it away from them.
+                bool mine = RecorderOwner is null or AiRecorderOwner;
+                var state = mine ? recorder.State : AiRecorderState.Idle;
+
+                bool recording = state == AiRecorderState.Recording;
                 bool hasScreenshot = service.Screenshot != null;
                 bool sendable = !service.IsBusy &&
-                                (recorder.State == AiRecorderState.Ready || hasScreenshot);
+                                (state == AiRecorderState.Ready || hasScreenshot);
 
                 shell.Opacity = ready ? 1.0 : 0.45;
                 ToolTipService.SetToolTip(shell, ready
@@ -207,7 +227,7 @@ namespace RustPlusDesk
                 }
                 else
                 {
-                    switch (recorder.State)
+                    switch (state)
                     {
                         case AiRecorderState.Recording:
                             status.Text = string.Format(
@@ -249,7 +269,7 @@ namespace RustPlusDesk
                 }
 
                 // Nothing to throw away means no button to throw it away with.
-                discard.Visibility = recorder.State != AiRecorderState.Idle || hasScreenshot
+                discard.Visibility = state != AiRecorderState.Idle || hasScreenshot
                     ? Visibility.Visible
                     : Visibility.Collapsed;
 
@@ -288,6 +308,19 @@ namespace RustPlusDesk
         {
             var recorder = AiRecorder.Instance;
 
+            // Held by a translate tile. Said out loud, because this is also the push-to-talk
+            // key and a silent refusal there looks like a broken hotkey.
+            if (recorder.State != AiRecorderState.Idle &&
+                RecorderOwner is not (null or AiRecorderOwner))
+            {
+                AiCompanionService.Instance.ShowProblem(Loc.Text(
+                    "CommandDockAiMicBusy",
+                    "The microphone is in use by the translate tile."));
+
+                ShowAiAnswer();
+                return;
+            }
+
             if (recorder.State == AiRecorderState.Recording)
             {
                 recorder.Stop();
@@ -323,6 +356,7 @@ namespace RustPlusDesk
             HideAiAnswer();
 
             recorder.Start(AiCompanionStore.Current.CaptureGameAudio);
+            RecorderOwner = AiRecorderOwner;
             RefreshTiles();
         }
 
@@ -330,6 +364,7 @@ namespace RustPlusDesk
         internal void DiscardAiQuestion()
         {
             AiRecorder.Instance.Discard();
+            RecorderOwner = null;
 
             var service = AiCompanionService.Instance;
             service.AttachScreenshot(null);

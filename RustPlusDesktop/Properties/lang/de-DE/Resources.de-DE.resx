@@ -7686,4 +7686,65 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="FriendsAddTarget" xml:space="preserve">
     <value>Anfrage an</value>
   </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Zeile einfügen und in deiner Sprache lesen — oder diktieren</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Spielton und Mikrofon mithören und mitschreiben</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Stoppen und Gesagtes mitschreiben</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Etwas einfügen oder tippen, dann senden</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Übersetzt nach {0} — zum Ändern klicken</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Übersetze …</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Übersetzungsdienst nicht erreichbar — womöglich zu viele Anfragen. Gleich nochmal versuchen.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>Das Mikrofon wird gerade von einer anderen Kachel benutzt.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Aufnahme konnte nicht gestartet werden.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Schreibe mit, was gesagt wurde …</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows hat keine Spracherkennung installiert. Füge in den Windows-Einstellungen eine Sprache hinzu.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Nichts erkannt. Windows hat auf {0} gehört.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>In der Aufnahme war nichts Verständliches zu hören.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(gehört auf {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>KI-Modell für Spracherkennung nutzen</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Erkennt die gesprochene Sprache selbst und verbraucht dein eigenes API-Guthaben. Windows versteht nur die Sprachen, für die eine Erkennung installiert ist.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Braucht einen AI-Companion-Anbieter, der Audio annimmt, und einen hinterlegten Schlüssel dafür. Bis dahin schreibt Windows mit.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>Das Mikrofon wird gerade von der Übersetzer-Kachel benutzt.</value>
+  </data>
 </root>

@@ -454,6 +454,41 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.Translate:
+                {
+                    var box = new StackPanel();
+
+                    // Off unless there is a provider that takes audio and a key for it. The
+                    // policy behind it was read when that key was entered, so there is
+                    // nothing further to agree to here.
+                    bool canUseAi = Services.AiCompanion.AiTranscription.Available;
+
+                    var useAi = SettingsCheck(
+                        Loc.Text("CommandDockTranslateUseAi", "Use the AI model for speech"),
+                        tile.TranslateUseAi && canUseAi,
+                        on => { tile.TranslateUseAi = on; TileSettingChanged(immediate: true); });
+
+                    useAi.IsEnabled = canUseAi;
+                    box.Children.Add(useAi);
+
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = canUseAi
+                            ? Loc.Text("CommandDockTranslateUseAiHint",
+                                "Works out the spoken language itself, and uses your own API credit. " +
+                                "Windows only understands the languages it has a recogniser installed for.")
+                            : Loc.Text("CommandDockTranslateUseAiUnavailable",
+                                "Needs an AI Companion provider that accepts audio, with a key stored for it. " +
+                                "Speech is written down by Windows until then."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 4),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
+                    return box;
+                }
+
                 // The map never reaches this panel — its gear opens the mini-map settings, where
                 // its shape, size and layers already live.
 
@@ -476,6 +511,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.ServerInfo => Loc.Text("CommandDockServerInfoTitle", "Server"),
             CommandDockTileKinds.TeamChat => Loc.Text("TeamChat", "Team chat"),
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
+            CommandDockTileKinds.Translate => Loc.Text("CommandDockTranslateTitle", "Translate"),
             _ => tile.Kind,
         };
 

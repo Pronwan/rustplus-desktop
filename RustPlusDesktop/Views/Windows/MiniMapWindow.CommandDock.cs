@@ -862,6 +862,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Discord => BuildDiscordTile(tile),
             CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
+            CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,
@@ -1820,7 +1821,9 @@ namespace RustPlusDesk
                 var now = e.GetPosition(DockCanvas);
                 double step = CommandDockLayout.CellSize + CommandDockLayout.CellGap;
 
-                int minCols = tile.Kind is CommandDockTileKinds.TeamChat or CommandDockTileKinds.ClanChat ? 2 : 1;
+                int minCols = tile.Kind is CommandDockTileKinds.TeamChat
+                                         or CommandDockTileKinds.ClanChat
+                                         or CommandDockTileKinds.Translate ? 2 : 1;
                 tile.ColSpan = Math.Max(minCols, startCols + (int)Math.Round((now.X - start.X) / step));
                 tile.RowSpan = Math.Max(1, startRows + (int)Math.Round((now.Y - start.Y) / step));
 

@@ -76,6 +76,28 @@ namespace RustPlusDesk.Models
         /// <summary>Server info tiles: draw the population line, not just the figure.</summary>
         public bool ShowGraph { get; set; } = true;
 
+        /// <summary>
+        /// Translate tiles: the language to translate into, as a culture name such as "ru-RU".
+        ///
+        /// Null means the language the app is running in, which is the useful default for the
+        /// common direction — reading what somebody else wrote. The other direction, writing
+        /// something for them to read, is what the flag is for, and two tiles side by side set
+        /// to different languages is a perfectly sensible dock.
+        /// </summary>
+        public string? TranslateTarget { get; set; }
+
+        /// <summary>
+        /// Translate tiles: write down speech with the configured AI model rather than with
+        /// Windows.
+        ///
+        /// Off by default and never turned on by the app, because it spends the user's own
+        /// API credit. It is worth turning on: Windows only knows the languages it has a
+        /// recogniser installed for, which is normally the display language and nothing else,
+        /// while a model that takes audio works out the language itself. That is the whole
+        /// case for the microphone on this tile.
+        /// </summary>
+        public bool TranslateUseAi { get; set; }
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the
@@ -146,6 +168,14 @@ namespace RustPlusDesk.Models
         /// recorder and the same key, so the two would only fight over one microphone.
         /// </summary>
         public const string AiCompanion = "AiCompanion";
+
+        /// <summary>
+        /// Type or dictate something and read it back in another language.
+        ///
+        /// Shares the recorder with the AI companion, and for the same reason: there is one
+        /// microphone. Whichever tile started is the one that finishes.
+        /// </summary>
+        public const string Translate = "Translate";
     }
 
     /// <summary>

@@ -62,27 +62,56 @@ namespace RustPlusDesk.Services.AiCompanion
             }
         }
 
+        /// <summary>
+        /// The language this will listen in, or null when Windows has no recogniser at all.
+        ///
+        /// Worth showing beside a transcript. A recogniser only knows the language it was
+        /// built for, and given another one it does not fail — it returns the nearest words
+        /// it does know, confidently. Someone reading "what did that player just say" needs
+        /// to be able to see that the machine was listening for English.
+        /// </summary>
+        public static CultureInfo? RecognizerLanguage => PickRecognizer()?.Culture;
+
+        /// <summary>
+        /// The recogniser to use: the user's own language first.
+        ///
+        /// A recogniser for the wrong language produces confident nonsense rather than
+        /// nothing, which is far harder to spot in an answer.
+        /// </summary>
+        private static System.Speech.Recognition.RecognizerInfo? PickRecognizer()
+        {
+            try
+            {
+                var installed = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers();
+                if (installed.Count == 0) return null;
+
+                var exact = CultureInfo.CurrentUICulture.Name;
+                var family = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+                return installed.FirstOrDefault(r => r.Culture.Name == exact)
+                    ?? installed.FirstOrDefault(r => r.Culture.TwoLetterISOLanguageName == family)
+                    ?? installed.FirstOrDefault(r => r.Culture.TwoLetterISOLanguageName == "en")
+                    ?? installed[0];
+            }
+            catch
+            {
+                // Speech is an optional Windows component and enumerating it can throw on a
+                // machine where it was never installed.
+                return null;
+            }
+        }
+
         private static System.Speech.Recognition.SpeechRecognitionEngine CreateEngine()
         {
-            var installed = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers();
+            var pick = PickRecognizer();
 
-            if (installed.Count == 0)
+            if (pick == null)
             {
                 throw new AiRequestException(
                     "Windows has no speech recognition installed, so a spoken question cannot be " +
                     "turned into text for this provider. Add a speech language under Windows " +
                     "settings, or choose a provider that takes audio directly.");
             }
-
-            // The user's own language first: a recogniser for the wrong one produces confident
-            // nonsense rather than nothing, which is far harder to spot in an answer.
-            var exact = CultureInfo.CurrentUICulture.Name;
-            var family = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-
-            var pick = installed.FirstOrDefault(r => r.Culture.Name == exact)
-                    ?? installed.FirstOrDefault(r => r.Culture.TwoLetterISOLanguageName == family)
-                    ?? installed.FirstOrDefault(r => r.Culture.TwoLetterISOLanguageName == "en")
-                    ?? installed[0];
 
             return new System.Speech.Recognition.SpeechRecognitionEngine(pick);
         }

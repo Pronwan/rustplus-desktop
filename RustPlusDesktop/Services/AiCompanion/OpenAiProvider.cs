@@ -174,7 +174,10 @@ namespace RustPlusDesk.Services.AiCompanion
         }
 
         /// <summary>Turns one track into words, or into nothing when there were none.</summary>
-        private static async Task<string> Transcribe(string? path, string apiKey, CancellationToken ct)
+        /// <summary>
+        /// Also used on its own by the translate tile, which wants the words and no answer.
+        /// </summary>
+        internal static async Task<string> Transcribe(string? path, string apiKey, CancellationToken ct)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return "";
 
