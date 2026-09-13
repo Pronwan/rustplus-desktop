@@ -101,7 +101,10 @@ public partial class DeathStatsView : UserControl
             query = query.Where(e => e.DiedAt >= cutoff);
         }
 
-        var summary = DeathLogStore.Summarize(query.ToList());
+        // The names are read from their own file and joined here, so the Killers table
+        // follows the same filters as everything else on the page.
+        var summary = DeathLogStore.Summarize(
+            query.ToList(), KillerLogStore.LoadByDeath(_serverKey));
         DataContext = summary;
         BuildSparkline(summary.DeathsPerDay);
     }

@@ -112,13 +112,27 @@ namespace RustPlusDesk.Services.Deaths
         /// <summary>
         /// Who has killed this player, most often first.
         ///
-        /// Grouped case-insensitively, because a name read off a screen twice can differ in case
-        /// where the recogniser was unsure, and two entries for one player would be a worse
-        /// answer than one slightly misspelt. The spelling kept is the most recent.
+        /// Grouped case-insensitively, because a name read off a screen twice can differ in
+        /// case where the recogniser was unsure, and two entries for one player would be a
+        /// worse answer than one slightly misspelt. The spelling kept is the most recent.
         /// </summary>
-        public static IReadOnlyList<KillerStat> Summarize(string? serverKey)
+        /// <param name="only">
+        /// The deaths to count, when the view is showing a filtered set of them. Null counts
+        /// every death there is a name for — a table that ignored the date filter above it
+        /// would disagree with every other table on the page.
+        /// </param>
+        public static IReadOnlyList<KillerStat> Summarize(
+            IReadOnlyDictionary<long, (string Killer, string? Weapon)> byDeath,
+            IEnumerable<long>? only = null)
         {
-            var entries = LoadByDeath(serverKey);
+            if (byDeath.Count == 0) return Array.Empty<KillerStat>();
+
+            var entries = only == null
+                ? byDeath
+                : only.Where(byDeath.ContainsKey)
+                      .Distinct()
+                      .ToDictionary(at => at, at => byDeath[at]);
+
             if (entries.Count == 0) return Array.Empty<KillerStat>();
 
             return entries

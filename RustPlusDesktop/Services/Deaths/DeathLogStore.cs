@@ -124,19 +124,20 @@ namespace RustPlusDesk.Services.Deaths
         }
 
         public static DeathStatsSummary LoadForServer(string? serverKey)
-            => Summarize(LoadEntries(serverKey), KillerLogStore.Summarize(serverKey));
+            => Summarize(LoadEntries(serverKey), KillerLogStore.LoadByDeath(serverKey));
 
         /// <summary>Aggregate a (possibly filtered) set of entries into the view model.</summary>
         /// <param name="killers">
-        /// Who was behind the deaths, where anybody has written it down. Passed in rather than
-        /// looked up here because this is also called with a filtered set of entries, which has
-        /// no server to look anything up for.
+        /// Who was behind each death, by the time of that death, where anybody has written it
+        /// down. Passed in rather than looked up here because this is also called with a
+        /// filtered set of entries, which has no server to look anything up for — and it is
+        /// joined against the entries given, so a filtered page's tables all agree.
         /// </param>
         public static DeathStatsSummary Summarize(
-            IReadOnlyList<DeathEntry> entries, IReadOnlyList<KillerStat>? killers = null)
+            IReadOnlyList<DeathEntry> entries,
+            IReadOnlyDictionary<long, (string Killer, string? Weapon)>? killers = null)
         {
-            if (entries.Count == 0)
-                return new DeathStatsSummary { ByKiller = killers ?? Array.Empty<KillerStat>() };
+            if (entries.Count == 0) return new DeathStatsSummary();
 
             int total = entries.Count;
 
@@ -201,7 +202,9 @@ namespace RustPlusDesk.Services.Deaths
 
             return new DeathStatsSummary
             {
-                ByKiller = killers ?? Array.Empty<KillerStat>(),
+                ByKiller = killers == null
+                    ? Array.Empty<KillerStat>()
+                    : KillerLogStore.Summarize(killers, entries.Select(e => e.DiedAt)),
                 Total = total,
                 Victims = byVictim.Count,
                 AvgSurvival = AverageSurvival(entries),
