@@ -4,10 +4,19 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Visibility="Collapsed" IsTabStop="False" FlowDirection="LeftToRight">
     <Grid>
-        <Popup x:Name="OverlayPopup" AllowsTransparency="True" Placement="AbsolutePoint">
-            <Canvas x:Name="OverlayCanvas" ClipToBounds="True" FlowDirection="LeftToRight"
-                    Width="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ActualWidth}"
-                    Height="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ActualHeight}">
+        <!--
+            The canvas below is declared here so the names in it belong to this control, and
+            is moved into a window of its own the moment the control is built — a transparent
+            popup cannot be made large enough to cover a maximised window. See EnsureHost.
+            This grid is what it is taken out of, and is empty from then on.
+        -->
+        <Grid x:Name="CanvasHost">
+            <!--
+                Sized from code rather than bound to the overlay, because the overlay reports
+                nothing while it is collapsed and a zero-sized canvas covers nothing at all.
+                ApplyCoverSize is the one place that decides how big this is.
+            -->
+            <Canvas x:Name="OverlayCanvas" ClipToBounds="True" FlowDirection="LeftToRight">
                 <Path x:Name="DimPath" Fill="#B8000000" Stretch="None" />
         <Border x:Name="TargetBlocker" Background="Transparent" />
         <Border x:Name="SpotlightBorder" BorderBrush="#FF60CDFF" BorderThickness="3" CornerRadius="10"
@@ -87,6 +96,6 @@
             </Grid>
         </Border>
             </Canvas>
-        </Popup>
+        </Grid>
     </Grid>
 </UserControl>
