@@ -23,6 +23,10 @@ namespace RustPlusDesk.Services.AiCompanion
         /// </summary>
         public static string SystemMessage(AiQuestion question)
         {
+            // A question that brought its own is not the companion answering, and none of
+            // what follows applies to it.
+            if (!string.IsNullOrWhiteSpace(question.Instructions)) return question.Instructions!;
+
             var text = new StringBuilder();
 
             // ── Standing instructions: identical on every request ────────────────

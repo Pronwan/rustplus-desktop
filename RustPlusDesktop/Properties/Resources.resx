@@ -7804,4 +7804,19 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>The microphone is in use by the translate tile.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Translate with AI</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Use Google Translate</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Use the AI model to translate</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Better on chat — slang, abbreviations and typos — and uses your own API credit.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion key under Connected Services. Any provider will do.</value>
+  </data>
 </root>

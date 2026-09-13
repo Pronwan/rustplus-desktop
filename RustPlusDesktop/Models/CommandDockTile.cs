@@ -98,6 +98,16 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool TranslateUseAi { get; set; }
 
+        /// <summary>
+        /// Translate tiles: translate with the configured AI model rather than with Google.
+        ///
+        /// Separate from <see cref="TranslateUseAi"/>, which is about speech, because the two
+        /// need different things. Translating is text in and text out, so any provider can do
+        /// it and a key is all it takes; writing down speech needs a provider that accepts
+        /// audio at all. Off by default, again because it spends the user's own credit.
+        /// </summary>
+        public bool TranslateTextWithAi { get; set; }
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the

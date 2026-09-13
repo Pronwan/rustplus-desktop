@@ -7653,4 +7653,19 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>El panel de traducción está usando el micrófono.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Traducir con IA</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Usar Google Traductor</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Usar el modelo de IA para traducir</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Mejor con el chat —jerga, abreviaturas y erratas— y usa tu propio crédito de API.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Necesita una clave de AI Companion en Servicios conectados. Sirve cualquier proveedor.</value>
+  </data>
 </root>

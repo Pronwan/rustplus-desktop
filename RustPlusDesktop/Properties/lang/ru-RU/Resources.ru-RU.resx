@@ -7653,4 +7653,19 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>Микрофон занят плиткой перевода.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Перевести с помощью ИИ</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Использовать Google Переводчик</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Переводить с помощью ИИ-модели</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Лучше справляется с чатом — сленгом, сокращениями и опечатками — и расходует ваш API-баланс.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Нужен ключ AI Companion в разделе «Подключённые сервисы». Подойдёт любой провайдер.</value>
+  </data>
 </root>

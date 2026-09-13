@@ -7653,4 +7653,19 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>Le micro est utilisé par la tuile de traduction.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Traduire avec l'IA</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Utiliser Google Traduction</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Utiliser le modèle IA pour traduire</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Meilleur sur le chat — argot, abréviations et fautes de frappe — et consomme votre propre crédit API.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Nécessite une clé AI Companion dans Services connectés. N'importe quel fournisseur convient.</value>
+  </data>
 </root>

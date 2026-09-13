@@ -60,6 +60,16 @@ namespace RustPlusDesk
             return state;
         }
 
+        /// <summary>
+        /// Whether this tile translates with the model rather than with Google.
+        ///
+        /// The key can be removed after the tile was set to use it, so the setting alone is
+        /// not enough: without one this falls back to Google rather than failing, which is
+        /// the behaviour the tile had before the switch existed.
+        /// </summary>
+        private static bool TranslateWithAi(CommandDockTile tile) =>
+            tile.TranslateTextWithAi && AiTranslation.Available;
+
         /// <summary>The language a tile translates into: its own, or the app's.</summary>
         private static string TranslateTargetOf(CommandDockTile tile) =>
             string.IsNullOrWhiteSpace(tile.TranslateTarget)
@@ -148,7 +158,7 @@ namespace RustPlusDesk
             Grid.SetColumn(input, 1);
             top.Children.Add(input);
 
-            var send = IconButton(GlyphSend, style, Loc.Text("CommandDockTranslateSend", "Translate with Google"));
+            var send = IconButton(GlyphSend, style, "");
             send.MouseLeftButtonUp += (_, e) =>
             {
                 e.Handled = true;
@@ -217,6 +227,12 @@ namespace RustPlusDesk
                         "Listen to the game and the microphone, and write down what was said"));
 
                 send.Opacity = state.Busy ? 0.4 : 1;
+
+                // Which service is about to be used is not obvious from a paper-plane glyph,
+                // and it is the difference between a free call and one the user pays for.
+                ToolTipService.SetToolTip(send, TranslateWithAi(tile)
+                    ? Loc.Text("CommandDockTranslateSendAi", "Translate with AI")
+                    : Loc.Text("CommandDockTranslateSend", "Translate with Google"));
 
                 // Never while it is being typed in: the state is only ahead of the box when
                 // something else put words there, which is the microphone.
@@ -423,7 +439,13 @@ namespace RustPlusDesk
             string text = state.Input.Trim();
             if (text.Length == 0 || state.Busy) return;
 
-            if (!TrackingService.TranslationConsentGiven && !await AskTranslateConsentAsync()) return;
+            bool viaAi = TranslateWithAi(tile);
+
+            // Only the Google path needs this. The model's own policy was read when its key
+            // was entered, and asking about Google before a request that never reaches it
+            // would be a promise about the wrong company.
+            if (!viaAi && !TrackingService.TranslationConsentGiven &&
+                !await AskTranslateConsentAsync()) return;
 
             state.Busy = true;
             state.IsError = false;
@@ -432,23 +454,34 @@ namespace RustPlusDesk
 
             try
             {
-                var result = await TranslationService
-                    .TranslateAsync(text, TranslateTargetOf(tile))
-                    .ConfigureAwait(true);
-
-                if (!result.Ok)
+                if (viaAi)
                 {
-                    // The usual failure by a distance is Google's rate limit, which is a 429 on
-                    // an endpoint with no key behind it. Saying so is more use than "failed",
-                    // because the answer is to wait rather than to change anything.
-                    state.IsError = true;
-                    state.Output = Loc.Text("CommandDockTranslateFailed",
-                        "Translation service unavailable — it may be rate-limited. Try again shortly.");
+                    state.Output = await AiTranslation
+                        .TranslateAsync(text, TranslateTargetOf(tile), default)
+                        .ConfigureAwait(true);
+
+                    state.IsError = false;
                 }
                 else
                 {
-                    state.Output = result.Text;
-                    state.IsError = false;
+                    var result = await TranslationService
+                        .TranslateAsync(text, TranslateTargetOf(tile))
+                        .ConfigureAwait(true);
+
+                    if (!result.Ok)
+                    {
+                        // The usual failure by a distance is Google's rate limit, a 429 on an
+                        // endpoint with no key behind it. Saying so is more use than "failed",
+                        // because the answer is to wait rather than to change anything.
+                        state.IsError = true;
+                        state.Output = Loc.Text("CommandDockTranslateFailed",
+                            "Translation service unavailable — it may be rate-limited. Try again shortly.");
+                    }
+                    else
+                    {
+                        state.Output = result.Text;
+                        state.IsError = false;
+                    }
                 }
             }
             catch (Exception ex)

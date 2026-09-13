@@ -458,6 +458,39 @@ namespace RustPlusDesk
                 {
                     var box = new StackPanel();
 
+                    // Which service translates. Two of them, so radio buttons: a pair of
+                    // checkboxes would let both be off, and there is no such state.
+                    bool canAskAi = Services.AiCompanion.AiTranslation.Available;
+                    string group = "translator-" + tile.Id;
+
+                    box.Children.Add(SettingsRadio(
+                        Loc.Text("CommandDockTranslateWithGoogle", "Use Google Translate"),
+                        group,
+                        !tile.TranslateTextWithAi || !canAskAi,
+                        on => { if (on) { tile.TranslateTextWithAi = false; TileSettingChanged(immediate: true); } }));
+
+                    var withAi = SettingsRadio(
+                        Loc.Text("CommandDockTranslateWithAi", "Use the AI model to translate"),
+                        group,
+                        tile.TranslateTextWithAi && canAskAi,
+                        on => { if (on) { tile.TranslateTextWithAi = true; TileSettingChanged(immediate: true); } });
+
+                    withAi.IsEnabled = canAskAi;
+                    box.Children.Add(withAi);
+
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = canAskAi
+                            ? Loc.Text("CommandDockTranslateWithAiHint",
+                                "Better on chat — slang, abbreviations and typos — and uses your own API credit.")
+                            : Loc.Text("CommandDockTranslateWithAiUnavailable",
+                                "Needs an AI Companion key under Connected Services. Any provider will do."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 8),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
                     // Off unless there is a provider that takes audio and a key for it. The
                     // policy behind it was read when that key was entered, so there is
                     // nothing further to agree to here.
@@ -547,6 +580,23 @@ namespace RustPlusDesk
             Margin = new Thickness(0, 0, 0, 4),
             Foreground = Brush("TextSubtle", Colors.Gray),
         };
+
+        private static RadioButton SettingsRadio(
+            string text, string group, bool isChecked, Action<bool> onChanged)
+        {
+            var button = new RadioButton
+            {
+                Content = text,
+                GroupName = group,
+                IsChecked = isChecked,
+                FontSize = 11,
+                Margin = new Thickness(0, 0, 0, 4),
+            };
+
+            button.Checked += (_, __) => onChanged(true);
+            button.Unchecked += (_, __) => onChanged(false);
+            return button;
+        }
 
         private static CheckBox SettingsCheck(string text, bool isChecked, Action<bool> onChanged)
         {

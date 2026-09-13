@@ -7574,4 +7574,19 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>번역 타일이 마이크를 사용 중입니다.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>AI로 번역</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Google 번역 사용</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>번역에 AI 모델 사용</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>채팅에 더 강합니다 — 은어, 약어, 오타 — 그리고 사용자의 API 크레딧을 사용합니다.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>연결된 서비스에 AI Companion 키가 필요합니다. 어떤 공급자든 괜찮습니다.</value>
+  </data>
 </root>

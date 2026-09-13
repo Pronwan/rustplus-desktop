@@ -1294,4 +1294,19 @@
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>麥克風正被翻譯磁貼使用。</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>用 AI 翻譯</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>使用 Google 翻譯</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>使用 AI 模型翻譯</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>更適合聊天內容——俚語、縮寫和錯字——並消耗你自己的 API 額度。</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>需要在「已連接服務」中設定 AI Companion 金鑰。任一提供方皆可。</value>
+  </data>
 </root>

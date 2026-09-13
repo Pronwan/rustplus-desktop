@@ -7544,4 +7544,19 @@
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>الميكروفون قيد الاستخدام من بطاقة الترجمة.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>الترجمة بالذكاء الاصطناعي</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>استخدام ترجمة Google</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>استخدام نموذج الذكاء الاصطناعي للترجمة</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>أفضل مع الدردشة — العامية والاختصارات والأخطاء المطبعية — ويستهلك رصيد API الخاص بك.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>يتطلب مفتاح AI Companion ضمن الخدمات المتصلة. أي مزوّد يفي بالغرض.</value>
+  </data>
 </root>

@@ -7401,4 +7401,19 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>麦克风正被翻译磁贴使用。</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>用 AI 翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>使用谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>使用 AI 模型翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>更适合聊天内容——俚语、缩写和错别字——并消耗你自己的 API 额度。</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>需要在“已连接服务”中配置 AI Companion 密钥。任意提供方均可。</value>
+  </data>
 </root>

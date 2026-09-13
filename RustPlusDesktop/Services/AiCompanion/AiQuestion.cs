@@ -20,6 +20,17 @@ namespace RustPlusDesk.Services.AiCompanion
         public string? Text { get; init; }
 
         /// <summary>
+        /// Instructions to send instead of the companion's own, for a job that is not one.
+        ///
+        /// The standing prompt describes a Rust companion answering a player mid-session,
+        /// and carries the raid table and every recipe with it. Asked to translate a line of
+        /// chat, a model told all that answers as the companion — it comments on the line
+        /// instead of translating it, and pays to re-read ten thousand tokens of recipes to
+        /// do it. Set this and none of that is sent.
+        /// </summary>
+        public string? Instructions { get; init; }
+
+        /// <summary>
         /// A hard ceiling on the answer, in words, or zero for the usual limit.
         ///
         /// Rust's chat truncates a long line and shows it to everyone in the team, so an

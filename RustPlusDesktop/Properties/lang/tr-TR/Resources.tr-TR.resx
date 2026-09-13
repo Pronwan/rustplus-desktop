@@ -6686,4 +6686,19 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>Mikrofon çeviri kartı tarafından kullanılıyor.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>AI ile çevir</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Google Çeviri'yi kullan</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Çeviri için AI modelini kullan</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Sohbette daha iyi — argo, kısaltma ve yazım hataları — ve senin API kredini kullanır.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Bağlı Hizmetler altında bir AI Companion anahtarı gerekir. Herhangi bir sağlayıcı olur.</value>
+  </data>
 </root>

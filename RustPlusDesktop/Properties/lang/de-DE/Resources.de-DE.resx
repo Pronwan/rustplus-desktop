@@ -7747,4 +7747,19 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockAiMicBusy" xml:space="preserve">
     <value>Das Mikrofon wird gerade von der Übersetzer-Kachel benutzt.</value>
   </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Mit KI übersetzen</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Google Übersetzer nutzen</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>KI-Modell zum Übersetzen nutzen</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Besser bei Chat — Slang, Abkürzungen, Tippfehler — und verbraucht dein eigenes API-Guthaben.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Braucht einen AI-Companion-Schlüssel unter Verbundene Dienste. Jeder Anbieter genügt.</value>
+  </data>
 </root>
