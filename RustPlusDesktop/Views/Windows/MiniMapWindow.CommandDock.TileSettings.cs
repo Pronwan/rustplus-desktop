@@ -454,6 +454,36 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.Collapse:
+                {
+                    var box = new StackPanel();
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockCollapseWithMap", "Hide the mini-map too"),
+                        tile.CollapseIncludesMap,
+                        on =>
+                        {
+                            tile.CollapseIncludesMap = on;
+
+                            // Applied at once when the dock is already collapsed, or the
+                            // setting would only take effect after collapsing twice.
+                            TileSettingChanged(immediate: true);
+                        }));
+
+                    box.Children.Add(new TextBlock
+                    {
+                        Text = Loc.Text("CommandDockCollapseHint",
+                            "One press hides every other tile where it stands; the next press " +
+                            "brings the arrangement back unchanged."),
+                        FontSize = 10,
+                        TextWrapping = TextWrapping.Wrap,
+                        Margin = new Thickness(0, 0, 0, 4),
+                        Foreground = Brush("TextSubtle", Colors.Gray),
+                    });
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.Translate:
                 {
                     var box = new StackPanel();
@@ -545,6 +575,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.TeamChat => Loc.Text("TeamChat", "Team chat"),
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             CommandDockTileKinds.Translate => Loc.Text("CommandDockTranslateTitle", "Translate"),
+            CommandDockTileKinds.Collapse => Loc.Text("CommandDockCollapseTitle", "Collapse"),
             _ => tile.Kind,
         };
 

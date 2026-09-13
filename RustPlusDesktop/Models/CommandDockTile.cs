@@ -108,6 +108,15 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool TranslateTextWithAi { get; set; }
 
+        /// <summary>
+        /// Collapse tiles: hide the map along with everything else.
+        ///
+        /// Off by default, because the usual reason to clear the dock is to see the game
+        /// with the map still on it. On, it becomes a way to put the whole dock away and
+        /// leave one button behind.
+        /// </summary>
+        public bool CollapseIncludesMap { get; set; }
+
         // ── Appearance ──────────────────────────────────────────────────────
         //
         // All three are null until the tile's own settings are touched, and fall back to the
@@ -186,6 +195,14 @@ namespace RustPlusDesk.Models
         /// microphone. Whichever tile started is the one that finishes.
         /// </summary>
         public const string Translate = "Translate";
+
+        /// <summary>
+        /// Hides every other tile, and shows them again. One button, one cell.
+        ///
+        /// The tiles are hidden rather than moved or removed: their cells are untouched, so
+        /// expanding puts the arrangement back exactly as it was rather than re-flowing it.
+        /// </summary>
+        public const string Collapse = "Collapse";
     }
 
     /// <summary>
@@ -233,6 +250,15 @@ namespace RustPlusDesk.Models
         /// are building the dock and a hazard for every hour after it.
         /// </summary>
         public bool Locked { get; set; } = true;
+
+        /// <summary>
+        /// Whether the dock is currently collapsed to its collapse tile.
+        ///
+        /// Saved, because it is a state somebody put the dock into on purpose and a restart
+        /// that quietly undid it would be the dock disobeying. A layout with no collapse tile
+        /// ignores this, so a dock cannot end up hidden with no way to bring it back.
+        /// </summary>
+        public bool Collapsed { get; set; }
 
         // ── Appearance defaults ─────────────────────────────────────────────
         // What a tile uses until it is given its own value.

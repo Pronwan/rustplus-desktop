@@ -7589,4 +7589,22 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>연결된 서비스에 AI Companion 키가 필요합니다. 어떤 공급자든 괜찮습니다.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>접기</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>다른 모든 타일을 숨기고 다시 되돌리는 한 칸</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>다른 모든 타일 숨기기</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>독 다시 표시</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>미니맵도 함께 숨기기</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>한 번 누르면 다른 타일이 있던 자리에서 숨겨지고, 다시 누르면 배치가 그대로 돌아옵니다.</value>
+  </data>
 </root>

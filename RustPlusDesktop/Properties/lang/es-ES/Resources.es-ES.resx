@@ -7668,4 +7668,22 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>Necesita una clave de AI Companion en Servicios conectados. Sirve cualquier proveedor.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Contraer</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>Una celda que oculta el resto de paneles y los devuelve</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Ocultar el resto de paneles</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Mostrar el panel de nuevo</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Ocultar también el minimapa</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>Una pulsación oculta el resto de paneles donde están; la siguiente devuelve la disposición sin cambios.</value>
+  </data>
 </root>

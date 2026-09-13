@@ -7762,4 +7762,22 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>Braucht einen AI-Companion-Schlüssel unter Verbundene Dienste. Jeder Anbieter genügt.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Einklappen</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>Eine Zelle, die alle anderen Kacheln ausblendet — und zurückholt</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Alle anderen Kacheln ausblenden</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Dock wieder einblenden</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Mini-Karte mit ausblenden</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>Ein Druck blendet alle anderen Kacheln dort aus, wo sie stehen; der nächste holt die Anordnung unverändert zurück.</value>
+  </data>
 </root>

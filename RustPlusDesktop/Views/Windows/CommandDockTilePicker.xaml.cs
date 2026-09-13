@@ -92,6 +92,12 @@ namespace RustPlusDesk
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Translate, ColSpan = 3, RowSpan = 1 },
                   SymbolRegular.Translate24);
 
+            Entry(Loc.Text("CommandDockCollapseTitle", "Collapse"),
+                  Loc.Text("CommandDockCollapsePickerHint",
+                      "One cell that hides every other tile, and brings them back"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.Collapse },
+                  SymbolRegular.ArrowMinimize24);
+
             Section(Loc.Text("CommandDockSectionChat", "Chat"), SymbolRegular.Chat24);
             Entry(Loc.Text("TeamChat", "Team chat"),
                   Loc.Text("CommandDockChatHint", "Two cells wide, resizable in edit mode"),

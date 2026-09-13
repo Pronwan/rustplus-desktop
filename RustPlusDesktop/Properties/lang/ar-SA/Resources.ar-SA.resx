@@ -7559,4 +7559,22 @@
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>يتطلب مفتاح AI Companion ضمن الخدمات المتصلة. أي مزوّد يفي بالغرض.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>طيّ</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>خلية واحدة تُخفي كل البطاقات الأخرى وتعيدها</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>إخفاء كل البطاقات الأخرى</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>إظهار اللوحة مجددًا</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>إخفاء الخريطة المصغّرة أيضًا</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>ضغطة واحدة تُخفي بقية البطاقات في أماكنها، والضغطة التالية تعيد الترتيب كما كان.</value>
+  </data>
 </root>

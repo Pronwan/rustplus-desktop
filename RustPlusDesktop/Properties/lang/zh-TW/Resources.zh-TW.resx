@@ -1832,4 +1832,22 @@
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>需要在「已連接服務」中設定 AI Companion 金鑰。任一提供方皆可。</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>摺疊</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>一個格子，隱藏其他所有磁貼，再點一次恢復</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>隱藏其他所有磁貼</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>重新顯示面板</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>同時隱藏小地圖</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>按一次即把其他磁貼就地隱藏，再按一次原樣恢復整個版面。</value>
+  </data>
 </root>

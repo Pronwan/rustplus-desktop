@@ -7843,4 +7843,22 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="AiCompanionCustomPromptRulesPlaceholder" xml:space="preserve">
     <value>e.g. Always mention sulfur cost for explosives. Keep answers under 15 words.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Collapse</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>One cell that hides every other tile, and brings them back</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Hide every other tile</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Show the dock again</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Hide the mini-map too</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>One press hides every other tile where it stands; the next press brings the arrangement back unchanged.</value>
+  </data>
 </root>

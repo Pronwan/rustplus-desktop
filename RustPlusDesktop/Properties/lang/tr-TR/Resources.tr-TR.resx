@@ -6701,4 +6701,22 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>Bağlı Hizmetler altında bir AI Companion anahtarı gerekir. Herhangi bir sağlayıcı olur.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Daralt</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>Diğer tüm kartları gizleyen ve geri getiren tek hücre</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Diğer tüm kartları gizle</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Paneli yeniden göster</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Mini haritayı da gizle</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>Bir basış diğer tüm kartları bulundukları yerde gizler; bir sonraki basış düzeni olduğu gibi geri getirir.</value>
+  </data>
 </root>

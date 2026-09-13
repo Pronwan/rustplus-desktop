@@ -371,11 +371,33 @@ namespace RustPlusDesk
 
         private bool BelongsHere(CommandDockTile tile)
         {
+            // Collapsed: the button that did it stays, and the map stays unless that button
+            // was set to take it too. Everything else is hidden where it stands — no cell is
+            // touched, so expanding puts the arrangement back rather than re-flowing it.
+            if (IsCollapsed && tile.Kind != CommandDockTileKinds.Collapse)
+            {
+                if (tile.Kind != CommandDockTileKinds.Map) return false;
+                if (CollapseTakesMap) return false;
+            }
+
             if (tile.Kind == CommandDockTileKinds.Map) return MapOccupiesCells;
             if (tile.ServerKey == null) return true;
 
             return string.Equals(tile.ServerKey, DockHost?.DockServerKey, StringComparison.OrdinalIgnoreCase);
         }
+
+        /// <summary>
+        /// Whether the dock is collapsed.
+        ///
+        /// A saved collapsed state with no collapse tile left on the dock is ignored: the tile
+        /// is the only way back, and without it every other tile would be hidden for good.
+        /// </summary>
+        private bool IsCollapsed =>
+            _dock.Collapsed && _dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.Collapse);
+
+        /// <summary>Whether the collapse tile in charge was told to take the map with it.</summary>
+        private bool CollapseTakesMap =>
+            _dock.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.Collapse)?.CollapseIncludesMap == true;
 
         /// <summary>
         /// The rectangle the dock's tiles fit into, derived from their cells rather than read
@@ -779,7 +801,9 @@ namespace RustPlusDesk
                 if (wireMouse)
                 {
                     AttachTileInteraction(el, tile.Id,
-                        onClick: isMap ? () => OnClicked?.Invoke() : null);
+                        onClick: isMap ? () => OnClicked?.Invoke()
+                            : tile.Kind == CommandDockTileKinds.Collapse ? ToggleDockCollapsed
+                            : null);
                     if (isMap) _mapMouseWired = true;
                 }
             }
@@ -806,6 +830,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Device => false,
             CommandDockTileKinds.Session => false,
             CommandDockTileKinds.Discord => false,
+            CommandDockTileKinds.Collapse => false,
             _ => true,
         };
 
@@ -863,6 +888,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
+            CommandDockTileKinds.Collapse => BuildCollapseTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
             _ => null,

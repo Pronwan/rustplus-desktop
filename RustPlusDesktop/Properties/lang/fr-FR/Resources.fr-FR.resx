@@ -7668,4 +7668,22 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
     <value>Nécessite une clé AI Companion dans Services connectés. N'importe quel fournisseur convient.</value>
   </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Réduire</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>Une cellule qui masque toutes les autres tuiles et les ramène</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Masquer toutes les autres tuiles</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Réafficher le dock</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Masquer aussi la mini-carte</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>Une pression masque toutes les autres tuiles là où elles sont ; la suivante restitue la disposition à l'identique.</value>
+  </data>
 </root>
