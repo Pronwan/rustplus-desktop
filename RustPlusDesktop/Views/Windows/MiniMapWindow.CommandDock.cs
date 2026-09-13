@@ -248,6 +248,11 @@ namespace RustPlusDesk
             if (_dock.Locked) CloseTileSettings();
 
             ApplyLockState();
+
+            // Unlocking shows the tiles that only exist in certain states — the death tile is
+            // hidden while alive, and hidden exactly while somebody is trying to place it is
+            // no use to them. Locking hides them again.
+            RebuildTiles();
             UpdateTileHandles();
         }
 
@@ -382,8 +387,11 @@ namespace RustPlusDesk
 
             // Nothing to read while alive, and a button offering to read it would be a
             // button that does nothing. It takes its cells back on respawn.
+            //
+            // Unless the dock is unlocked, which means somebody is arranging it: a tile that
+            // is invisible exactly while it is being placed cannot be placed at all.
             if (tile.Kind == CommandDockTileKinds.DeathTrack &&
-                !tile.DeathTrackAlwaysVisible && !PlayerIsDead)
+                !tile.DeathTrackAlwaysVisible && !PlayerIsDead && _dock.Locked)
             {
                 return false;
             }
@@ -842,6 +850,9 @@ namespace RustPlusDesk
             _ => true,
         };
 
+        /// <summary>What the dock was last built for, so a change of state is noticed.</summary>
+        private bool _lastPlayerDead;
+
         private void RefreshTiles()
         {
             // Cheaper than wiring an event through the host: the server changes rarely, and a
@@ -852,6 +863,22 @@ namespace RustPlusDesk
                 _lastServerKey = serverKey;
                 RebuildTiles();
                 return;
+            }
+
+            // Dying and respawning change which tiles exist, not just what they say, and that
+            // is a rebuild rather than a refresh. Checked here for the same reason as the
+            // server above: this runs anyway, and one comparison a tick is cheaper than an
+            // event routed from the team list into a window that opens and closes freely.
+            bool dead = PlayerIsDead;
+            if (dead != _lastPlayerDead)
+            {
+                _lastPlayerDead = dead;
+
+                if (_dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.DeathTrack))
+                {
+                    RebuildTiles();
+                    return;
+                }
             }
 
             foreach (var refresh in _tileRefreshers)
