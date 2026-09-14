@@ -443,6 +443,7 @@ public partial class MainWindow
 
         RenewConnectionPolling();
         ResetBuildingBlockedZonesForServerChange();
+        ResetCargoPathForServerChange();
 
         try
         {

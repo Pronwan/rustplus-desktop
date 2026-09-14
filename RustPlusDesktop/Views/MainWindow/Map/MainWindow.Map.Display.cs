@@ -47,6 +47,15 @@ public partial class MainWindow
         GridLayer.Opacity = 1.0;   // the wrapper carries the user opacity, see ApplyIndependentLayerVisibility
         GridLayer.IsHitTestVisible = false;
 
+        // Independent of the grid: its own canvas, never dimmed by the grid opacity.
+        NoBuildLayer.Width = wDip;
+        NoBuildLayer.Height = hDip;
+        NoBuildLayer.IsHitTestVisible = false;
+
+        CargoPathLayer.Width = wDip;
+        CargoPathLayer.Height = hDip;
+        CargoPathLayer.IsHitTestVisible = true;
+
         // WICHTIG: Overlay groesser machen, aber Map nicht anfassen
         Overlay.Width = wDip + padPx * 2;
         Overlay.Height = hDip + padPx * 2;
@@ -72,6 +81,8 @@ public partial class MainWindow
         (ImgMap.Parent as Panel)?.Children.Remove(ImgMap);
         (ImgHeatmap.Parent as Panel)?.Children.Remove(ImgHeatmap);
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
+        (NoBuildLayer.Parent as Panel)?.Children.Remove(NoBuildLayer);
+        (CargoPathLayer.Parent as Panel)?.Children.Remove(CargoPathLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
         (IconLayer.Parent as Panel)?.Children.Remove(IconLayer);
         (PlayerLayer.Parent as Panel)?.Children.Remove(PlayerLayer);
@@ -84,11 +95,13 @@ public partial class MainWindow
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
         _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
         _scene.Children.Add(Wrap(ref _gridWrapper, GridLayer)); Panel.SetZIndex(_gridWrapper!, 2);
-        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 3);
-        _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 4);
-        _scene.Children.Add(Wrap(ref _deathWrapper, DeathLayer)); Panel.SetZIndex(_deathWrapper!, 5);
-        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 6);
-        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 7);
+        _scene.Children.Add(NoBuildLayer); Panel.SetZIndex(NoBuildLayer, 3);
+        _scene.Children.Add(CargoPathLayer); Panel.SetZIndex(CargoPathLayer, 4);
+        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 5);
+        _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 6);
+        _scene.Children.Add(Wrap(ref _deathWrapper, DeathLayer)); Panel.SetZIndex(_deathWrapper!, 7);
+        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 8);
+        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 9);
 
         ApplyIndependentLayerVisibility();
 
@@ -211,6 +224,8 @@ public partial class MainWindow
         ImgMap.Source = null;
         ImgHeatmap.Source = null;
         GridLayer.Children.Clear();
+        NoBuildLayer?.Children.Clear();
+        CargoPathLayer?.Children.Clear();
 
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;

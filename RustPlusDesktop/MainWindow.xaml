@@ -5384,6 +5384,20 @@
                                                 </ui:Button>
 
                                                 <Border Margin="0,14,0,12" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0" />
+                                                <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource CargoShip}" />
+                                                <CheckBox
+                                                    x:Name="ChkCargoPath"
+                                                    Margin="0,0,0,8"
+                                                    Checked="ChkCargoPath_Checked"
+                                                    Content="{DynamicResource CargoShip}"
+                                                    IsChecked="False"
+                                                    IsEnabled="False"
+                                                    Style="{StaticResource DotCheckBox}"
+                                                    ToolTip="{DynamicResource UiGenerateThe3DMapToEnableNoBuildZones}"
+                                                    ToolTipService.ShowOnDisabled="True"
+                                                    Unchecked="ChkCargoPath_Checked" />
+
+                                                <Border Margin="0,14,0,12" BorderBrush="{DynamicResource WhiteA20}" BorderThickness="0,1,0,0" />
                                                 <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{DynamicResource Shops}" />
                                                 <CheckBox
                                                     x:Name="ChkLayerAutoLoadShops"
@@ -8075,6 +8089,10 @@
                         </StackPanel>
 
                         <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
+                        <!--  No Build zones get their own canvas: they used to live on GridLayer, whose
+                              wrapper opacity follows the Grid toggle, so turning the grid off hid them too.  -->
+                        <Canvas x:Name="NoBuildLayer" IsHitTestVisible="False" />
+                        <Canvas x:Name="CargoPathLayer" IsHitTestVisible="False" />
                         <!--  Overlay = user drawings only. Icons and players get their own canvases so the
                               mini-map can mirror each layer on its own: a VisualBrush can only show or hide
                               a whole visual subtree, never a filtered selection of one canvas.  -->

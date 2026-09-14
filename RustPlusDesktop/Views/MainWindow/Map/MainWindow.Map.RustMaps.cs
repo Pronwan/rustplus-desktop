@@ -61,6 +61,8 @@ namespace RustPlusDesk.Views
                 _worldSizeS = parsedSize;
                 _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
 
+                LoadCargoPathForCurrentMap(folder);
+
                 AppendLog($"[Offline Map] Restored worldSize={parsedSize} from cached map_data.json. worldRectPx=[{(int)_worldRectPx.X},{(int)_worldRectPx.Y},{(int)_worldRectPx.Width}x{(int)_worldRectPx.Height}]");
             }
             catch (Exception ex)
@@ -598,6 +600,7 @@ namespace RustPlusDesk.Views
             GenerateAndLoadExtraMonumentsForCurrentMap(result.FolderPath);
             await GenerateBuildingBlockedZonesForCurrentMap(result.FolderPath);
             LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
+            LoadCargoPathForCurrentMap(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
             bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));

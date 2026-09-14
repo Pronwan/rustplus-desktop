@@ -18,6 +18,7 @@ public partial class MainWindow
     {
         GridLayer.Children.Clear();
         RedrawBuildingBlockedZones();
+        RedrawCargoPath();
 
         // Drawn whenever either map wants it. The main map hides its copy through the wrapper's
         // opacity instead of leaving the layer empty, because the mini-map mirrors this very

@@ -569,6 +569,7 @@ public partial class MainWindow
             MergeCachedExtraMonumentsForCurrentMap();
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
+            LoadCachedCargoPathForCurrentServer();
 
             var activeProfile = _vm?.Selected;
             if (activeProfile != null)

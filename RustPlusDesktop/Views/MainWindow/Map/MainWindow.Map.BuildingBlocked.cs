@@ -34,7 +34,7 @@ public partial class MainWindow
 
         foreach (var shape in _buildingBlockedZoneEls)
         {
-            GridLayer.Children.Remove(shape);
+            NoBuildLayer.Children.Remove(shape);
         }
         _buildingBlockedZoneEls.Clear();
         RedrawGrid();
@@ -116,7 +116,7 @@ public partial class MainWindow
     {
         foreach (var shape in _buildingBlockedZoneEls)
         {
-            GridLayer.Children.Remove(shape);
+            NoBuildLayer.Children.Remove(shape);
         }
         _buildingBlockedZoneEls.Clear();
 
@@ -146,7 +146,7 @@ public partial class MainWindow
                 poly.Points.Add(CenteredRustToImagePx(corner.X, corner.Y));
             }
             ToolTipService.SetToolTip(poly, BuildZoneTooltip(box.Owner, "No-build box"));
-            GridLayer.Children.Add(poly);
+            NoBuildLayer.Children.Add(poly);
             Panel.SetZIndex(poly, 40);
             _buildingBlockedZoneEls.Add(poly);
         }
@@ -168,7 +168,7 @@ public partial class MainWindow
             ToolTipService.SetToolTip(ellipse, BuildZoneTooltip(sphere.Owner, $"No-build radius {sphere.Radius:0}m"));
             Canvas.SetLeft(ellipse, center.X - r);
             Canvas.SetTop(ellipse, center.Y - r);
-            GridLayer.Children.Add(ellipse);
+            NoBuildLayer.Children.Add(ellipse);
             Panel.SetZIndex(ellipse, 41);
             _buildingBlockedZoneEls.Add(ellipse);
         }
