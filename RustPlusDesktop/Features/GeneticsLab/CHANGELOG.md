@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.3.1) (2026-09-11)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): take capture frames off the track, not the video element ([56e3dbe](https://github.com/JawadYzbk/rust-genetics-lab/commit/56e3dbe670ef1f32f0c48aefb411f82d00738775))
+* fix(scanner): read gene rows from the badges instead of saved coordinates ([c997f2b](https://github.com/JawadYzbk/rust-genetics-lab/commit/c997f2b581a462e4355e193cb4f3dd37598cb283))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.3.0...v1.3.1
+All notable changes to this project will be documented in this file.
+
 ## [1.3.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.3.0) (2026-09-07)
 
 ### 🚀 Features
