@@ -5875,7 +5875,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         PopulateHotkeyTriggersSubMenu();
         UpdateAlertEnabledBadge(masterOn);
 
-        if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
+        if (ChatAlertsConfigureButton.ContextMenu is ContextMenu cm)
         {
             SyncContextMenu(cm, masterOn);
         }
@@ -8253,6 +8253,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         double y = targetSize.Height + 4;
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
+
+    private long _chatAlertsMenuClosedTimestamp;
+
+    private void ChatAlertsContextMenu_Closed(object sender, RoutedEventArgs e)
+    {
+        _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+    }
+
+    private void ChatAlertsConfigureButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm != null && cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+            e.Handled = true;
+        }
+    }
+
+    private void ChatAlertsConfigureButton_Click(object sender, RoutedEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm == null) return;
+
+        if (Environment.TickCount64 - _chatAlertsMenuClosedTimestamp < 350)
+        {
+            return;
+        }
+
+        if (cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            return;
+        }
+
+        cm.PlacementTarget = ChatAlertsConfigureButton;
+        cm.IsOpen = true;
+    }
+
 
     private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
