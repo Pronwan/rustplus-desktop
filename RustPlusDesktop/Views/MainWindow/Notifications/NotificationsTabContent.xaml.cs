@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -110,14 +110,23 @@ namespace RustPlusDesk.Views
             });
         }
 
-        private void LstNotifications_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <summary>
+        /// The row itself is the click target now — a ui:CardControl, not a
+        /// selected ListViewItem — so nothing has to be unselected afterwards.
+        ///
+        /// RustPlusNotification raises no change notification, so marking one read
+        /// changes nothing on screen until the view is rebuilt; the bulk action has
+        /// always refreshed for that reason and a single row needs the same. It is
+        /// queued rather than run inline so the container is not rebuilt underneath
+        /// the click that is still being delivered to it.
+        /// </summary>
+        private void Notification_Click(object sender, RoutedEventArgs e)
         {
-            if (LstNotifications.SelectedItem is RustPlusNotification notif)
-            {
-                NotificationCenterService.MarkAsRead(notif.Id);
-                // Clear selection so it is not highlighted permanently
-                LstNotifications.SelectedItem = null;
-            }
+            if (sender is not Wpf.Ui.Controls.CardControl { Tag: RustPlusNotification notif }) return;
+            if (notif.IsRead) return;
+
+            NotificationCenterService.MarkAsRead(notif.Id);
+            Dispatcher.InvokeAsync(() => _notificationsView?.Refresh());
         }
 
         private void BtnMarkAllRead_Click(object sender, RoutedEventArgs e)
