@@ -1,4 +1,4 @@
-<Application x:Class="RustPlusDesk.App"
+﻿<Application x:Class="RustPlusDesk.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -9,6 +9,8 @@
                 <!-- Wpf.Ui (WPF-UI lepo.co): WinUI 3 Fluent controls -->
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
+                <!-- Last, so the app's menu styles win over the WPF-UI implicit ones. -->
+                <ResourceDictionary Source="Views/Themes/MenuFlyout.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Converters -->
@@ -82,10 +84,16 @@
              instead of a solid block competing with the content. -->
         <Color x:Key="AccentTintColor">#2260CDFF</Color>
         <Color x:Key="SuccessTintColor">#2639A96B</Color>
+        <Color x:Key="DangerTintColor">#26EF5350</Color>
+        <Color x:Key="WarnTintColor">#26FF8A00</Color>
+        <Color x:Key="InfoTintColor">#2658A6FF</Color>
         <Color x:Key="SuccessTextColor">#71E39A</Color>
         <Color x:Key="TrackColor">#1FFFFFFF</Color>
         <SolidColorBrush x:Key="AccentTintBrush"  Color="{StaticResource AccentTintColor}"/>
         <SolidColorBrush x:Key="SuccessTintBrush" Color="{StaticResource SuccessTintColor}"/>
+        <SolidColorBrush x:Key="DangerTintBrush"  Color="{StaticResource DangerTintColor}"/>
+        <SolidColorBrush x:Key="WarnTintBrush"    Color="{StaticResource WarnTintColor}"/>
+        <SolidColorBrush x:Key="InfoTintBrush"    Color="{StaticResource InfoTintColor}"/>
         <SolidColorBrush x:Key="SuccessTextBrush" Color="{StaticResource SuccessTextColor}"/>
         <SolidColorBrush x:Key="TrackBrush"       Color="{StaticResource TrackColor}"/>
 
@@ -208,268 +216,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!-- HEADER-TEMPLATE: Border + Popup gemeinsam in einem Grid -->
-        <!-- HEADER-TEMPLATE: Border + Popup gemeinsam in einem Grid -->
-        <ControlTemplate x:Key="DarkMenuItem_Header" TargetType="MenuItem">
-            <Grid>
-                <Border
-                    x:Name="Bd"
-                    Margin="0,1"
-                    Padding="{TemplateBinding Padding}"
-                    Background="Transparent"
-                    CornerRadius="5"
-                    SnapsToDevicePixels="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid
-                            x:Name="IconSlot"
-                            Grid.Column="0"
-                            Width="22"
-                            Height="22"
-                            Margin="0,0,12,0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <ui:SymbolIcon
-                                x:Name="CheckIcon"
-                                Symbol="Checkmark20"
-                                FontSize="15"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Foreground="{DynamicResource Accent}"
-                                Visibility="Collapsed" />
-                            <ContentPresenter
-                                x:Name="IconPresenter"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ContentSource="Icon" />
-                        </Grid>
-                        <ContentPresenter
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            ContentSource="Header"
-                            RecognizesAccessKey="True" />
-                        <ui:SymbolIcon
-                            Grid.Column="2"
-                            Symbol="ChevronRight20"
-                            FontSize="12"
-                            Margin="12,0,2,0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource TextSubtle}" />
-                    </Grid>
-                </Border>
-                <Popup
-                    x:Name="PART_Popup"
-                    AllowsTransparency="True"
-                    Focusable="False"
-                    HorizontalOffset="-2"
-                    IsOpen="{TemplateBinding IsSubmenuOpen}"
-                    Placement="Right"
-                    StaysOpen="False"
-                    VerticalOffset="-4">
-                    <Border
-                        Padding="4"
-                        Background="#242424"
-                        BorderBrush="#2EFFFFFF"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        SnapsToDevicePixels="True">
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="24"
-                                Direction="270"
-                                Opacity="0.5"
-                                ShadowDepth="6"
-                                Color="#000000" />
-                        </Border.Effect>
-                        <StackPanel IsItemsHost="True" />
-                    </Border>
-                </Popup>
-            </Grid>
-            <ControlTemplate.Triggers>
-                <DataTrigger Binding="{Binding Icon, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Collapsed" />
-                </DataTrigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-                </Trigger>
-                <Trigger Property="IsCheckable" Value="True">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                </Trigger>
-                <Trigger Property="Tag" Value="Partial">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter TargetName="Bd" Property="Background" Value="#1CFFFFFF" />
-                    <Setter Property="Foreground" Value="#FFFFFF" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                    <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <!-- ITEM-TEMPLATE (Leaf) -->
-        <ControlTemplate x:Key="DarkMenuItem_Item" TargetType="MenuItem">
-            <Border
-                x:Name="Bd"
-                Margin="0,1"
-                Padding="{TemplateBinding Padding}"
-                Background="Transparent"
-                CornerRadius="5"
-                SnapsToDevicePixels="True">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid
-                        x:Name="IconSlot"
-                        Grid.Column="0"
-                        Width="22"
-                        Height="22"
-                        Margin="0,0,12,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                        <ui:SymbolIcon
-                            x:Name="CheckIcon"
-                            Symbol="Checkmark20"
-                            FontSize="15"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource Accent}"
-                            Visibility="Collapsed" />
-                        <ContentPresenter
-                            x:Name="IconPresenter"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            ContentSource="Icon" />
-                    </Grid>
-                    <ContentPresenter
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        ContentSource="Header"
-                        RecognizesAccessKey="True" />
-                    <TextBlock
-                        Grid.Column="2"
-                        Margin="16,0,4,0"
-                        VerticalAlignment="Center"
-                        FontSize="11"
-                        Foreground="{DynamicResource TextSubtle}"
-                        Text="{TemplateBinding InputGestureText}" />
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <DataTrigger Binding="{Binding Icon, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Collapsed" />
-                </DataTrigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter Property="Foreground" Value="{DynamicResource Accent}" />
-                </Trigger>
-                <Trigger Property="IsCheckable" Value="True">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                </Trigger>
-                <Trigger Property="Tag" Value="Partial">
-                    <Setter TargetName="IconSlot" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="CheckIcon" Property="Opacity" Value="0.6" />
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter TargetName="Bd" Property="Background" Value="#1CFFFFFF" />
-                    <Setter Property="Foreground" Value="#FFFFFF" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-                    <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <!-- STYLE: DarkMenuItem -->
-        <Style x:Key="DarkMenuItem" TargetType="MenuItem">
-            <Setter Property="Foreground" Value="#FFFFFF" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Padding" Value="12,0,12,0" />
-            <Setter Property="MinHeight" Value="36" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontFamily" Value="Segoe UI, Segoe UI Variable Text, sans-serif" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template" Value="{StaticResource DarkMenuItem_Item}" />
-            <Style.Triggers>
-                <Trigger Property="HasItems" Value="True">
-                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
-                </Trigger>
-                <Trigger Property="Role" Value="TopLevelHeader">
-                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
-                </Trigger>
-                <Trigger Property="Role" Value="SubmenuHeader">
-                    <Setter Property="Template" Value="{StaticResource DarkMenuItem_Header}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}" />
-
-        <!-- dunkler Separator -->
-        <Style x:Key="DarkSeparator" TargetType="Separator">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Separator">
-                        <Border
-                            Height="1"
-                            Margin="6,4,6,4"
-                            Background="#1CFFFFFF" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="Separator" BasedOn="{StaticResource DarkSeparator}" />
-
-        <!-- dunkles ContextMenu-Gehäuse -->
-        <Style x:Key="DarkContextMenu" TargetType="ContextMenu">
-            <Setter Property="Background" Value="#242424" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-            <Setter Property="HasDropShadow" Value="True" />
-            <Setter Property="Padding" Value="4" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContextMenu">
-                        <Border
-                            Padding="{TemplateBinding Padding}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="#2EFFFFFF"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            SnapsToDevicePixels="True">
-                            <Border.Effect>
-                                <DropShadowEffect
-                                    BlurRadius="24"
-                                    Direction="270"
-                                    Opacity="0.5"
-                                    ShadowDepth="6"
-                                    Color="#000000" />
-                            </Border.Effect>
-                            <StackPanel IsItemsHost="True" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="ContextMenu" BasedOn="{StaticResource DarkContextMenu}" />
+        <!-- Context menus live in Views/Themes/MenuFlyout.xaml, merged above. -->
 
         <!-- TabItem: echte „Reiter“-Optik mit eckigem Fuß, bündig zur Card -->
         <Style x:Key="PrettyTabItem" TargetType="TabItem">

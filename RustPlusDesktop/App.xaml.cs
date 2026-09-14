@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,6 +54,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         CrashReporter.Initialize(Dispatcher);
+        Controls.Menus.MenuFlyout.Initialize();
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
         base.OnStartup(e);
         _ = StartupWithSplashAsync(e.Args);
