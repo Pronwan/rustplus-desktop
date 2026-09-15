@@ -7539,4 +7539,19 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>恢复为实测默认值</value>
   </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM 矿石节点</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>玩家出生点</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>解析地图文件？</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>热力图从服务器的地图文件中读取。现在查找并解析对应的地图吗？这同时会添加额外的纪念碑和热点。不会生成 3D 地图。</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>立即解析</value>
+  </data>
 </root>

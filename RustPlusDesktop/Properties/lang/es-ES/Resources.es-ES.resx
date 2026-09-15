@@ -7791,4 +7791,19 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>Volver al valor medido por defecto</value>
   </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>Nodos HQM</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Puntos de aparicion</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Analizar el archivo del mapa?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Los mapas de calor se leen del archivo de mapa del servidor. Buscar ahora el mapa correspondiente y analizarlo? Esto tambien anade los monumentos adicionales y los puntos de interes. No se genera el mapa 3D.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Analizar ahora</value>
+  </data>
 </root>

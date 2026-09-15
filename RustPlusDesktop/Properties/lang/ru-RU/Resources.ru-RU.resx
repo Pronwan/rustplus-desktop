@@ -7791,4 +7791,19 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>Вернуть измеренное значение по умолчанию</value>
   </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>Узлы HQM</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Точки появления</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Разобрать файл карты?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Тепловые карты считываются из файла карты сервера. Найти подходящую карту и разобрать её сейчас? Это также добавит дополнительные монументы и точки интереса. 3D-карта при этом не создаётся.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Разобрать</value>
+  </data>
 </root>

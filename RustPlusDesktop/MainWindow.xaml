@@ -7211,7 +7211,7 @@
                                                         <ui:SymbolIcon Symbol="Info20" Foreground="#FF8C00" Margin="0,0,7,0" />
                                                         <TextBlock Text="{DynamicResource UiHeatmapsUnavailable}" FontSize="13" FontWeight="SemiBold" Foreground="White" />
                                                     </StackPanel>
-                                                    <TextBlock x:Name="TxtHeatmapAvailabilityMessage" Text="{DynamicResource UiGenerateThe3DMapBeforeUsingHeatmaps}" TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
+                                                    <TextBlock x:Name="TxtHeatmapAvailabilityMessage" Text="{DynamicResource UiLogInToYourRustDeskAccountToGenerate3DMapsAndHeatmaps}" TextWrapping="Wrap" FontSize="12" Foreground="#D8FFFFFF" />
                                                 </StackPanel>
                                             </ui:Card>
                                         </Popup>
@@ -7455,10 +7455,29 @@
                                                                         </Border>
                                                                     </Grid>
                                                                     <Grid Margin="0,6,0,0">
-                                                                        <Border x:Name="Bento_flowers" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Border x:Name="Bento_flowers" Grid.Column="0" Style="{StaticResource HeatmapTileContainer}">
                                                                             <Button Tag="flowers" ToolTip="{DynamicResource UiFlowers}" Style="{StaticResource HeatmapTileButton}"
                                                                                     Click="BtnHeatmapIcon_Click">
                                                                                 <Image Source="pack://application:,,,/Assets/heatmap icons/Flowers/flowers.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_ore_hqm" Grid.Column="1" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="ore_hqm" ToolTip="{DynamicResource UiHqmNodes}" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/hq-metal-ore.png" Stretch="Uniform"
+                                                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                            </Button>
+                                                                        </Border>
+                                                                        <Border x:Name="Bento_playerspawn" Grid.Column="2" Style="{StaticResource HeatmapTileContainer}">
+                                                                            <Button Tag="playerspawn" ToolTip="{DynamicResource UiPlayerSpawns}" Style="{StaticResource HeatmapTileButton}"
+                                                                                    Click="BtnHeatmapIcon_Click">
+                                                                                <Image Source="pack://application:,,,/Assets/heatmap icons/player-spawn.png" Stretch="Uniform"
                                                                                        RenderOptions.BitmapScalingMode="HighQuality" />
                                                                             </Button>
                                                                         </Border>

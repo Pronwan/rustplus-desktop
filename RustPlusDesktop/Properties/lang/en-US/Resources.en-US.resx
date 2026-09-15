@@ -3683,6 +3683,21 @@ Please pair this server first.</value>
   <data name="UiOrGroupName" xml:space="preserve">
     <value>or Group Name</value>
   </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Parse map file?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Heatmaps are read from the server's map file. Search for the matching map now and parse it? This also adds the extra monuments and hot spots. The 3D map is not built.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Parse now</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Player Spawns</value>
+  </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM Nodes</value>
+  </data>
   <data name="UiOres" xml:space="preserve">
     <value>Ores</value>
   </data>

@@ -7712,4 +7712,19 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>측정된 기본값으로 되돌리기</value>
   </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM 노드</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>플레이어 스폰 지점</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>맵 파일을 분석할까요?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>히트맵은 서버의 맵 파일에서 읽어옵니다. 지금 해당 맵을 찾아 분석할까요? 추가 기념물과 핫스팟도 함께 불러옵니다. 3D 맵은 생성되지 않습니다.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>지금 분석</value>
+  </data>
 </root>

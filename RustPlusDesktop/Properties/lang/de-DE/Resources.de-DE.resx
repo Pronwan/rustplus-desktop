@@ -3713,6 +3713,21 @@ Bitte koppeln Sie diesen Server zuerst.</value>
   <data name="UiOrGroupName" xml:space="preserve">
     <value>oder Gruppenname</value>
   </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Map-Datei einlesen?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Heatmaps werden aus der Map-Datei des Servers gelesen. Jetzt die passende Map suchen und einlesen? Damit kommen auch die zusätzlichen Monumente und Hot-Spots dazu. Die 3D-Karte wird nicht gebaut.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Jetzt einlesen</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Spieler-Spawns</value>
+  </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM-Erz</value>
+  </data>
   <data name="UiOres" xml:space="preserve">
     <value>Erze</value>
   </data>

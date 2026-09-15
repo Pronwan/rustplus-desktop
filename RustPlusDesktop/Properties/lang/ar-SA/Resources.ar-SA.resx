@@ -7682,4 +7682,19 @@
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>العودة إلى الإعداد الافتراضي المقاس</value>
   </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>عقد HQM</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>نقاط ظهور اللاعبين</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>تحليل ملف الخريطة؟</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>تُقرأ الخرائط الحرارية من ملف خريطة الخادم. هل تريد البحث عن الخريطة المطابقة وتحليلها الآن؟ سيضيف هذا أيضًا المعالم الإضافية والنقاط المهمة. لن يتم إنشاء الخريطة ثلاثية الأبعاد.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>حلّل الآن</value>
+  </data>
 </root>
