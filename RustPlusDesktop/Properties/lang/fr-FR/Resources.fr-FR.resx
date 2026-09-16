@@ -7806,4 +7806,25 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Analyser</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Carte de chaleur</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Cartes</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Lecteurs de carte</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Analysez le fichier de carte pour activer les calques de cartes.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Cartes</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>Aucun sur cette carte.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Analyser toutes les donnees de la carte</value>
+  </data>
 </root>

@@ -14,6 +14,7 @@ namespace RustPlusDesk
     /// </summary>
     public sealed record MiniMapLayers(
         Visual? Texture,
+        Visual? Heatmap,
         Visual? Grid,
         Visual? Drawings,
         Visual? Icons,
@@ -171,6 +172,7 @@ namespace RustPlusDesk
         public void SetLayers(MiniMapLayers layers)
         {
             BrushTexture.Visual = layers.Texture;
+            BrushHeatmap.Visual = layers.Heatmap;
             BrushGrid.Visual = layers.Grid;
             BrushDrawings.Visual = layers.Drawings;
             BrushIcons.Visual = layers.Icons;
@@ -342,7 +344,7 @@ namespace RustPlusDesk
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
 
-            foreach (var brush in new[] { BrushTexture, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths })
+            foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths })
             {
                 if (brush == null) continue;
                 brush.ViewboxUnits = BrushMappingMode.Absolute;
@@ -473,6 +475,9 @@ namespace RustPlusDesk
         public void ApplyLayerVisibility(RustPlusDesk.Services.MiniMapSettings settings)
         {
             Vis(LayerTexture, settings.ShowTexture);
+            // Nothing to show unless a heatmap is active on the main map, in which
+            // case ImgHeatmap carries it and the brush picks it up on its own.
+            Vis(LayerHeatmap, settings.ShowHeatmap);
             Vis(LayerGrid, settings.ShowGrid);
             Vis(LayerDrawings, settings.ShowDrawings);
             Vis(LayerIcons, settings.ShowIcons);

@@ -47,6 +47,14 @@
                                 <VisualBrush x:Name="BrushTexture" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
                             </Rectangle.Fill>
                         </Rectangle>
+                        <!--  Over the texture, as on the main map, but its own layer: with the
+                              texture switched off the heatmap still has to show, which is the
+                              case it is most useful in.  -->
+                        <Rectangle x:Name="LayerHeatmap">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushHeatmap" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <Rectangle x:Name="LayerGrid">
                             <Rectangle.Fill>
                                 <VisualBrush x:Name="BrushGrid" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>

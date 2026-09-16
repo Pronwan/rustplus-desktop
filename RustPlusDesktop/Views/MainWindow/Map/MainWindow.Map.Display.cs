@@ -56,6 +56,10 @@ public partial class MainWindow
         CargoPathLayer.Height = hDip;
         CargoPathLayer.IsHitTestVisible = true;
 
+        KeycardLayer.Width = wDip;
+        KeycardLayer.Height = hDip;
+        KeycardLayer.IsHitTestVisible = false;
+
         // WICHTIG: Overlay groesser machen, aber Map nicht anfassen
         Overlay.Width = wDip + padPx * 2;
         Overlay.Height = hDip + padPx * 2;
@@ -83,6 +87,7 @@ public partial class MainWindow
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
         (NoBuildLayer.Parent as Panel)?.Children.Remove(NoBuildLayer);
         (CargoPathLayer.Parent as Panel)?.Children.Remove(CargoPathLayer);
+        (KeycardLayer.Parent as Panel)?.Children.Remove(KeycardLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
         (IconLayer.Parent as Panel)?.Children.Remove(IconLayer);
         (PlayerLayer.Parent as Panel)?.Children.Remove(PlayerLayer);
@@ -93,10 +98,19 @@ public partial class MainWindow
 
         // Map bei (padPx, padPx)? -> NEIN, jetzt bei (0,0)!
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
-        _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
+        // Wrapped rather than added directly: the image sits on the world rect via a
+        // Margin, so its own origin is offset from the scene's. The mini-map mirrors
+        // layers through VisualBrushes that all share one absolute viewbox, and an
+        // offset origin would slide the heatmap out of place there. The wrapper grid
+        // fills the scene, so the brush sees the same coordinates as every other layer.
+        _scene.Children.Add(Wrap(ref _heatmapWrapper, ImgHeatmap)); Panel.SetZIndex(_heatmapWrapper!, 1);
         _scene.Children.Add(Wrap(ref _gridWrapper, GridLayer)); Panel.SetZIndex(_gridWrapper!, 2);
         _scene.Children.Add(NoBuildLayer); Panel.SetZIndex(NoBuildLayer, 3);
         _scene.Children.Add(CargoPathLayer); Panel.SetZIndex(CargoPathLayer, 4);
+        // Above the monument icons it annotates. Shares ZIndex 7 with the death
+        // wrapper added below, and loses to it on insertion order, which is what we
+        // want: a death marker is news, a keycard icon is reference.
+        _scene.Children.Add(KeycardLayer); Panel.SetZIndex(KeycardLayer, 7);
         _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 5);
         _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 6);
         _scene.Children.Add(Wrap(ref _deathWrapper, DeathLayer)); Panel.SetZIndex(_deathWrapper!, 7);
@@ -133,6 +147,7 @@ public partial class MainWindow
     // a collapsed parent never lays its children out, and the brush would come back empty.
 
     private Grid? _gridWrapper;
+    private Grid? _heatmapWrapper;
     private Grid? _deathWrapper;
 
     private static Grid Wrap(ref Grid? wrapper, UIElement layer)

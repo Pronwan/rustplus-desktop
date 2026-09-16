@@ -358,6 +358,12 @@
 	
 	<ItemGroup>
 		<Resource Include="Assets\heatmap icons\**\*" />
+		<!-- Keycard overlay art. Without these the layers build and run but draw
+		     nothing, because a missing pack:// URI only throws at load time. -->
+		<Resource Include="Assets\keycards\**\*" />
+		<Resource Include="Assets\icons\reader_green.png" />
+		<Resource Include="Assets\icons\reader_blue.png" />
+		<Resource Include="Assets\icons\reader_red.png" />
 	</ItemGroup>
 
 

@@ -444,6 +444,7 @@ public partial class MainWindow
         RenewConnectionPolling();
         ResetBuildingBlockedZonesForServerChange();
         ResetCargoPathForServerChange();
+        ResetKeycardsForServerChange();
 
         try
         {

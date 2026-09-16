@@ -63,6 +63,8 @@
                 <CheckBox x:Name="ChkLayerDrawings" Content="{DynamicResource MiniMapLayerDrawings}" Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerIcons"    Content="{DynamicResource MiniMapLayerIcons}"    Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerPlayers"  Content="{DynamicResource MiniMapLayerPlayers}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
+                <!--  Shows whichever heatmap the main map has active; nothing when none is.  -->
+                <CheckBox x:Name="ChkLayerHeatmap"  Content="{DynamicResource MiniMapLayerHeatmap}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <!--  Independent of the main map's own death-marker setting: the point is to see
                       them here while the big map stays clean, or the other way round.  -->
                 <CheckBox x:Name="ChkLayerDeaths"   Content="{DynamicResource MiniMapLayerDeaths}"   Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="14,0,0,0"/>

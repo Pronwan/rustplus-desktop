@@ -7697,4 +7697,25 @@
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>حلّل الآن</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>الخريطة الحرارية</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>البطاقات</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>قارئات البطاقات</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>حلّل ملف الخريطة لتفعيل طبقات البطاقات.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>البطاقات</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>لا يوجد في هذه الخريطة.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>تحليل كل بيانات الخريطة</value>
+  </data>
 </root>

@@ -274,9 +274,9 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         _miniMap.SetViewbox(new Rect(vx, vy, side, side), _isSmoothingFollow);
     }
 
-    /// <summary>The five scene layers the mini-map mirrors, or nulls before a map is loaded.</summary>
+    /// <summary>The scene layers the mini-map mirrors, or nulls before a map is loaded.</summary>
     private MiniMapLayers CurrentMiniMapLayers()
-        => new(ImgMap, GridLayer, Overlay, IconLayer, PlayerLayer, DeathLayer);
+        => new(ImgMap, _heatmapWrapper, GridLayer, Overlay, IconLayer, PlayerLayer, DeathLayer);
 
     /// <summary>Repoints the mini-map's brushes after the scene was rebuilt for a new map.</summary>
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());

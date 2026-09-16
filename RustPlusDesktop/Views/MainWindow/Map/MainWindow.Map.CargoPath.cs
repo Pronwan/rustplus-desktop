@@ -31,8 +31,26 @@ public partial class MainWindow
     private CargoPathData? _cargoPathData;
     private readonly List<UIElement> _cargoPathElements = new();
 
-    private void ChkCargoPath_Checked(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Same treatment as the keycard layers: ticking it before the map has been parsed
+    /// offers the parse instead of being a dead control. Left enabled and only dimmed,
+    /// because a disabled CheckBox never sees the click.
+    /// </summary>
+    private async void ChkCargoPath_Checked(object sender, RoutedEventArgs e)
     {
+        if (sender is CheckBox box && box.IsChecked == true && _cargoPathData == null)
+        {
+            box.IsChecked = false;
+
+            var profile = _vm?.Selected;
+            if (profile == null) return;
+            if (!await OfferMapParseForHeatmapAsync(profile)) return;
+
+            // The parse loads the route; show it if one was actually found.
+            if (_cargoPathData != null) box.IsChecked = true;
+            return;
+        }
+
         RedrawCargoPath();
     }
 
@@ -42,7 +60,7 @@ public partial class MainWindow
         if (ChkCargoPath != null)
         {
             ChkCargoPath.IsChecked = false;
-            ChkCargoPath.IsEnabled = false;
+            ChkCargoPath.Opacity = 0.45;
             ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
 
@@ -78,7 +96,7 @@ public partial class MainWindow
         _cargoPathData = null;
         if (ChkCargoPath != null)
         {
-            ChkCargoPath.IsEnabled = false;
+            ChkCargoPath.Opacity = 0.45;
             ChkCargoPath.IsChecked = false;
             ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
         }
@@ -128,7 +146,7 @@ public partial class MainWindow
 
             if (ChkCargoPath != null)
             {
-                ChkCargoPath.IsEnabled = true;
+                ChkCargoPath.Opacity = 1.0;
                 ChkCargoPath.IsChecked = true;
                 ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("CargoShip") ?? "Cargo Ship Path";
             }
@@ -141,7 +159,7 @@ public partial class MainWindow
             _cargoPathData = null;
             if (ChkCargoPath != null)
             {
-                ChkCargoPath.IsEnabled = false;
+                ChkCargoPath.Opacity = 0.45;
                 ChkCargoPath.IsChecked = false;
             }
             RedrawCargoPath();

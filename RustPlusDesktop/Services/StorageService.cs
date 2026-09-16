@@ -47,5 +47,6 @@ public record MiniMapSettings(
     bool ShowDrawings = true,
     bool ShowIcons = true,
     bool ShowPlayers = true,
-    bool ShowDeaths = true);
+    bool ShowDeaths = true,
+    bool ShowHeatmap = true);
 

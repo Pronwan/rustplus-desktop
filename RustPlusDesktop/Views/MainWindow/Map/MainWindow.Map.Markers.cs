@@ -570,6 +570,7 @@ public partial class MainWindow
             BuildMonumentOverlays();
             LoadCachedBuildingBlockedZonesForCurrentServer();
             LoadCachedCargoPathForCurrentServer();
+            LoadCachedKeycardSitesForCurrentServer();
 
             var activeProfile = _vm?.Selected;
             if (activeProfile != null)

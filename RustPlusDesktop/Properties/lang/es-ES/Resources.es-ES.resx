@@ -7806,4 +7806,25 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Analizar ahora</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Mapa de calor</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Tarjetas</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Lectores de tarjetas</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Analiza el archivo del mapa para activar las capas de tarjetas.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Tarjetas</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>No hay en este mapa.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Analizar todos los datos del mapa</value>
+  </data>
 </root>

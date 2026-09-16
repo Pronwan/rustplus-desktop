@@ -6436,4 +6436,25 @@ You can find more information on the server's official website:
   <data name="AiCompanionCustomPromptRulesPlaceholder" xml:space="preserve">
     <value>e.g. Always mention sulfur cost for explosives. Keep answers under 15 words.</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Heatmap</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Card Readers</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Parse the map file to enable keycard layers.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>None on this map.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Parse all map data</value>
+  </data>
 </root>

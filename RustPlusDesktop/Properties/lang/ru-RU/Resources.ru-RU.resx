@@ -7806,4 +7806,25 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>Разобрать</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Тепловая карта</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Ключ-карты</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Считыватели карт</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Разберите файл карты, чтобы включить слои ключ-карт.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Ключ-карты</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>На этой карте отсутствует.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Разобрать все данные карты</value>
+  </data>
 </root>

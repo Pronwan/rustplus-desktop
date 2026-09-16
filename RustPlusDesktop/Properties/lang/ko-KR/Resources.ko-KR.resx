@@ -7727,4 +7727,25 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>지금 분석</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>히트맵</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>키카드</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>카드 리더기</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>키카드 레이어를 사용하려면 맵 파일을 분석하세요.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>키카드</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>이 맵에는 없습니다.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>모든 맵 데이터 분석</value>
+  </data>
 </root>

@@ -565,14 +565,7 @@ namespace RustPlusDesk.Views
                     return false;
                 }
 
-                // The parse produces far more than heatmaps - icebergs, oases, caves,
-                // water wells, ice lakes and the building blocked zones all come out
-                // of the same map_data.json. Pick them up here too, otherwise they
-                // would sit unread until someone opened the 3D map.
-                _currentMapFolderPath = result.FolderPath;
-                GenerateAndLoadExtraMonumentsForCurrentMap(result.FolderPath);
-                await GenerateBuildingBlockedZonesForCurrentMap(result.FolderPath);
-                LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
+                await LoadParsedMapDataAsync(result.FolderPath);
 
                 AppendLog($"[Heatmap] Map data ready, extra monuments and blocked zones loaded. Map file: {result.MapFilePath}");
                 return true;
@@ -707,13 +700,31 @@ namespace RustPlusDesk.Views
             });
         }
 
+        /// <summary>
+        /// Everything a parsed map file feeds, in one place.
+        ///
+        /// Both entry points - opening the 3D view and parsing for a heatmap - need
+        /// the same set, and having it twice is exactly how it went wrong: the cargo
+        /// path was only ever loaded by the 3D path, and the keycard layers by
+        /// neither, so both stayed greyed out however the map had been parsed.
+        /// </summary>
+        private async Task LoadParsedMapDataAsync(string folderPath)
+        {
+            _currentMapFolderPath = folderPath;
+            GenerateAndLoadExtraMonumentsForCurrentMap(folderPath);
+            await GenerateBuildingBlockedZonesForCurrentMap(folderPath);
+            LoadBuildingBlockedZonesForCurrentMap(folderPath);
+            LoadCargoPathForCurrentMap(folderPath);
+            LoadKeycardSitesForCurrentMap(folderPath);
+
+            // Freshly parsed data is the reason someone waited for the parse, so the
+            // keycard layers come up shown rather than needing another two clicks.
+            EnableKeycardLayersAfterParse();
+        }
+
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
         {
-            _currentMapFolderPath = result.FolderPath;
-            GenerateAndLoadExtraMonumentsForCurrentMap(result.FolderPath);
-            await GenerateBuildingBlockedZonesForCurrentMap(result.FolderPath);
-            LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
-            LoadCargoPathForCurrentMap(result.FolderPath);
+            await LoadParsedMapDataAsync(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
             bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));

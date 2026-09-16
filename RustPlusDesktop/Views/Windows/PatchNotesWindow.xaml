@@ -96,7 +96,7 @@
                             <TextBlock Text="🗺️ Heatmaps Without the 3D Map" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Just Press Heatmaps:</Run>
-                                Heatmaps used to require building the whole 3D map first. Now the button asks whether to read the server's map file, finds it the same way the 3D map does, and shows the layer — no 3D build, no waiting for a world to be rendered.
+                                Heatmaps used to require building the whole 3D map first. Now the button asks whether to read the server's map file, finds it the same way the 3D map does, and shows the layer — no 3D build, no waiting for a world to be rendered. The keycard layers ask the same question, and Layers has a "Parse all map data" button for doing it up front.
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Extra Monuments Come Along:</Run>
@@ -115,10 +115,29 @@
                                 The ore heatmap is built from the spawn rules shipped with Rust, weighted by the density each region actually uses, instead of an estimate. Separate sulfur, metal and stone layers are gone — all three spawn from the same pool in equal measure, so only the node density differs and one Ores layer says everything there is to say.
                             </TextBlock>
 
+                            <TextBlock Text="🔑 Keycards" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Two Questions, Two Layers:</Run>
+                                Card Readers shows which cards the doors at a place want. Keycards shows which card you can walk away with. Most monuments do one and not the other — Launch Site has readers but holds nothing, a supermarket the reverse — so they switch on separately.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Read From the Game, Not a Wiki:</Run>
+                                Which reader sits in which monument comes out of Rust's own files, so it keeps up with the game rather than with somebody's table. Underwater labs are worked out per map: the generator picks which modules a lab gets, which is why one lab wants two blue rooms and the next one none.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Counts Only Where They Mean Something:</Run>
+                                A number appears on a card only when there really are that many separate rooms. Launch Site's four red doors are one puzzle, not four, so it stays a single icon.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; In the 3D Map Too:</Run>
+                                Both layers float over the monuments they belong to. They took the places of the Patrol Helicopter, Chinook and Travelling Vendor buttons, which had nothing left to show since those stopped arriving over the API.
+                            </TextBlock>
+
                             <views:ImageGallery>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/CommandDock.jpg" Description="The Command Dock: the mini-map as one widget among clocks, smart switches, chat, session stats and server population, each styled globally or on its own"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/ai-chat-command.jpg" Description="The AI Companion answering !ai from in-game chat — your own key, your own model, and a per-teammate hourly limit when you let the team use it"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/heatmaps.jpg" Description="HQM Nodes as a heatmap layer, with Player Spawns beside it — reachable straight from the 2D map, without building the 3D world first"/>
+                                <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/keycards.jpg" Description="Card Readers and Keycards as separate layers: what the doors here want, and what you can pick up — an underwater lab wanting two blue rooms, a ferry terminal holding a green and a blue card"/>
                             </views:ImageGallery>
                         </StackPanel>
                     </Border>

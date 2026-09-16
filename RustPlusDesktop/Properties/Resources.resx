@@ -7981,4 +7981,25 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>Back to the measured default</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Heatmap</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Card Readers</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Parse the map file to enable keycard layers.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>None on this map.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Parse all map data</value>
+  </data>
 </root>

@@ -7554,4 +7554,25 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="HeatmapParseMapConfirm" xml:space="preserve">
     <value>立即解析</value>
   </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>热力图</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>门卡</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>读卡器</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>解析地图文件以启用门卡图层。</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>门卡</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>此地图上没有。</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>解析全部地图数据</value>
+  </data>
 </root>
