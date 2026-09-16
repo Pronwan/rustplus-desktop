@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 
 namespace RustPlusDesk.Views;
@@ -42,6 +41,35 @@ public partial class MainWindow
 
     /// <summary>Icons already reported as missing, so the log is not flooded on redraw.</summary>
     private readonly HashSet<string> _keycardIconWarnings = new();
+
+    /// <summary>
+    /// Decoded icons, shared by every marker that uses them.
+    ///
+    /// A fully zoomed-out map draws up to a hundred of these, and decoding the same
+    /// PNG that many times - at 180x180 for a 22px icon - was what made panning
+    /// stutter. Decoded once at display size and frozen, so WPF can hand the same
+    /// bitmap to every marker and use it off the UI thread.
+    /// </summary>
+    private static readonly Dictionary<string, BitmapImage> KeycardIconCache = new();
+
+    /// <summary>Decode size. Above the 22px draw size so it stays sharp on scaled displays.</summary>
+    private const int KeycardIconDecodePx = 48;
+
+    private static BitmapImage? GetKeycardIcon(string packUri)
+    {
+        if (KeycardIconCache.TryGetValue(packUri, out var cached)) return cached;
+
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.UriSource = new Uri(packUri, UriKind.Absolute);
+        bitmap.DecodePixelWidth = KeycardIconDecodePx;
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+
+        KeycardIconCache[packUri] = bitmap;
+        return bitmap;
+    }
 
     private static readonly string[] KeycardColours = { "green", "blue", "red" };
 
@@ -302,24 +330,20 @@ public partial class MainWindow
                 ? "pack://application:,,,/Assets/icons/reader_" + colour + ".png"
                 : "pack://application:,,,/Assets/keycards/keycard-" + colour + ".png";
 
+            // No DropShadowEffect here. Every effect is its own render pass, and a
+            // hundred of them is felt directly when panning. The icons carry their
+            // own dark borders, so they read fine over water and snow without one.
             var img = new Image
             {
                 Width = size,
                 Height = size,
                 Stretch = Stretch.Uniform,
-                IsHitTestVisible = false,
-                Effect = new DropShadowEffect
-                {
-                    BlurRadius = 4,
-                    ShadowDepth = 1,
-                    Opacity = 0.85,
-                    Color = Colors.Black
-                }
+                IsHitTestVisible = false
             };
 
             try
             {
-                img.Source = new BitmapImage(new Uri(asset, UriKind.Absolute));
+                img.Source = GetKeycardIcon(asset);
             }
             catch (Exception ex)
             {
@@ -333,7 +357,9 @@ public partial class MainWindow
                 continue;
             }
 
-            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+            // Linear rather than HighQuality: the bitmap is already decoded close to
+            // its drawn size, so the expensive filter buys nothing here.
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.Linear);
             Canvas.SetLeft(img, startX + i * step);
             Canvas.SetTop(img, y);
             Panel.SetZIndex(img, 10 + i);
