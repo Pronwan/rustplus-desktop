@@ -3512,7 +3512,10 @@
                                             <TextBlock Text="{DynamicResource Markers}" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#AAA" FontSize="11" />
                                             
                                             <!-- Profile Markers -->
-                                            <CheckBox x:Name="ChkProfileMarkers" tutorials:Tutorial.TargetId="Team.Markers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
+                                            <!--  Click as well as Checked/Unchecked: those two also fire when the
+                                                  box is set from stored settings, and the achievement is about
+                                                  deliberately switching to the dot, not about starting up on it.  -->
+                                            <CheckBox x:Name="ChkProfileMarkers" tutorials:Tutorial.TargetId="Team.Markers" IsChecked="True" Checked="ChkProfileMarkers_Toggled" Unchecked="ChkProfileMarkers_Toggled" Click="ChkProfileMarkers_Clicked" Margin="0,0,12,0" Style="{StaticResource DotCheckBox}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Viewbox Width="18" Height="18" Margin="0,0,6,0" Stretch="Uniform">
                                                         <Grid Width="40" Height="40">

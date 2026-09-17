@@ -444,11 +444,19 @@ public partial class MainWindow
         }
     }
 
+    /// <summary>
+    /// Only fires when someone actually clicks the box, unlike Checked/Unchecked,
+    /// which also fire when it is set from stored settings on the way in. Unchecked
+    /// means the dot.
+    /// </summary>
+    private void ChkProfileMarkers_Clicked(object sender, RoutedEventArgs e)
+    {
+        if (ChkProfileMarkers?.IsChecked != true) Ach.Unlock(Ach.DotMarker);
+    }
+
     private void ChkProfileMarkers_Toggled(object? sender, RoutedEventArgs e)
     {
         _showProfileMarkers = ChkProfileMarkers.IsChecked == true;
-        // Unchecked is the dot; only a deliberate switch counts, not the startup restore.
-        if (!_showProfileMarkers && sender != null) Ach.Unlock(Ach.DotMarker);
         if (_vm != null && !_vm.IsInitializing) TrackingService.MapShowSteamMarkers = _showProfileMarkers;
 
         foreach (var kv in _dynEls.ToList())

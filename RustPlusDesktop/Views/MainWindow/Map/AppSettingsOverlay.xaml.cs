@@ -1025,6 +1025,10 @@ namespace RustPlusDesk.Views
             if (!_isSettingsInitialized) return;
 
             TrackingService.MapShowSteamMarkers  = ChkShowProfileMarkers.IsChecked == true;
+
+            // Guarded by _isSettingsInitialized above, so this is a real change,
+            // not the overlay restoring what was already stored.
+            if (ChkShowProfileMarkers.IsChecked != true) Ach.Unlock(Ach.DotMarker);
             TrackingService.MapShowPlayerArrows  = ChkShowPlayerArrows.IsChecked == true;
             TrackingService.MapShowDeathTags     = ChkShowDeathMarkers.IsChecked == true;
             TrackingService.MapAbbreviateNames   = ChkStreamerModeMarkers.IsChecked == true;
