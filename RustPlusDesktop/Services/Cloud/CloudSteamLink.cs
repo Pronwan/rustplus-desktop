@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Services.Auth;
 
 namespace RustPlusDesk.Services.Cloud
@@ -134,6 +135,8 @@ namespace RustPlusDesk.Services.Cloud
                     PrimaryButtonText = "Link to this account",
                     CloseButtonText = "Not now",
                 };
+
+                dialog.CenterOnOwner(window);
 
                 if (await dialog.ShowDialogAsync() != Wpf.Ui.Controls.MessageBoxResult.Primary)
                     return;
