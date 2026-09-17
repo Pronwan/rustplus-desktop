@@ -7361,31 +7361,31 @@
     <value>ما الجديد</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>الخريطة المصغّرة تصبح مركز قيادة — ويصل مساعد الذكاء الاصطناعي.</value>
+    <value>الخريطة المصغّرة تصبح مركز قيادة، ويصل مساعد الذكاء الاصطناعي، وتقرأ الخريطة ملفات الخادم بنفسها.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>ساعات ومفاتيح ذكية ودردشة الفريق والـ clan ومؤقّتات الـ events وإحصاءات الجلسة وعدد اللاعبين، كلها بطاقات حول الخريطة. زر + في الـ dock يضيف واحدة؛ تحلّ في أول موضع فارغ بجوار الخريطة ثم يمكن سحبها إلى أي مكان. والخريطة نفسها بطاقة: يمكن نقلها أو إزالتها تمامًا.</value>
+    <value>ساعات ومفاتيح ذكية ودردشة الفريق والعشيرة والترجمة وإحصاءات الجلسة وعدد اللاعبين، كلها بطاقات حول الخريطة — والخريطة نفسها بطاقة أيضًا. نسّقها كلها دفعة واحدة أو واحدة تلو الأخرى، واقفل التخطيط ضد السحب غير المقصود، واحفظ الترتيبات باسم.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>على ذوقك</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>لون النص وحجمه والشفافية دفعة واحدة لكل الـ dock، وأي بطاقة تستطيع تجاوز الثلاثة من ترسها الخاص. اقفل التخطيط ضد السحب غير المقصود، واحفظ تخطيطات بأسماء للتنقل بينها.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>مساعد الذكاء الاصطناعي</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>اضغط مفتاحًا مطوّلًا، اسأل بصوتك، واحصل على إجابة دون مغادرة اللعبة — نصًّا أسفل البطاقة أو مقروءة بصوت عالٍ. اختر GPT أو Gemini أو Claude أو OpenRouter بمفتاح API خاص بك: يبقى على هذا الجهاز ولا يُرفع أبدًا. ويمكن لرفاق فريقك السؤال بـ !ai إذا سمحت بذلك.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>الخرائط الحرارية وبطاقات المفاتيح</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>اضغط مفتاحًا مطوّلًا، اسأل بصوتك، واحصل على إجابة دون مغادرة اللعبة — نصًّا أسفل البطاقة أو مقروءة بصوت عالٍ. اختر GPT أو Gemini أو Claude بمفتاح API خاص بك: يبقى على هذا الجهاز ولا يُرفع أبدًا، والتسجيلات تذهب مباشرة إلى المزوّد الذي اخترته.</value>
+    <value>لم تعد الخرائط الحرارية تحتاج إلى بناء الخريطة ثلاثية الأبعاد أولًا — يُقرأ ملف خريطة الخادم عند الطلب. تنضم عُقد HQM ونقاط ظهور اللاعبين إلى طبقات الخام، وتُظهر طبقتان جديدتان أي بطاقات تطلبها أبواب المعلم وأيها يمكنك أخذها من هناك.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>‏!ai في دردشة الفريق والـ clan</value>
+    <value>الدردشة العامة والمزيد</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>اسأل من داخل اللعبة وتعود الإجابة في الدردشة، في سطر أو سطرين. مقتصر عليك حتى تسمح به — كل إجابة تُحاسب على مفتاحك — ومع السماح يُضاف حد لكل زميل في الساعة.</value>
+    <value>سطر من الدردشة العامة في كل تبويب، مع إشارات بلون كهرماني وتنبيه عندما يذكرك أحد. اقرأ من شاشة الموت من قتلك، وشاهد الترتيب في إحصاءات الموت. بالإضافة إلى 31 إنجازًا لاكتشافها، وشعار جديد ونوافذ بنمط Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

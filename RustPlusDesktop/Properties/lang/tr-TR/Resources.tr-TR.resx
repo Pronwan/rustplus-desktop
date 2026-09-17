@@ -6503,31 +6503,31 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>Yenilikler</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>Mini harita bir komuta merkezine dönüşüyor — ve yapay zekâ yardımcısı geliyor.</value>
+    <value>Mini harita bir komuta merkezine dönüşüyor, yapay zekâ yardımcısı geliyor — ve harita sunucunun kendi dosyalarını okuyor.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>Saatler, akıllı anahtarlar, takım ve klan sohbeti, event sayaçları, oturum istatistikleri ve sunucu doluluğu haritanın çevresinde kart olarak. Dock&apos;taki + ile bir tane eklersin; haritanın yanındaki ilk boş yere yerleşir ve oradan istediğin yere sürüklenir. Harita da bir karttır: taşınabilir ya da tamamen kaldırılabilir.</value>
+    <value>Saatler, akıllı anahtarlar, takım ve klan sohbeti, çeviri, oturum istatistikleri ve sunucu doluluğu haritanın çevresinde birer kart olarak — harita da bir kart. Hepsini birden ya da tek tek biçimlendir, düzeni yanlışlıkla kaymaya karşı kilitle ve yerleşimleri bir adla kaydet.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>Senin zevkine göre</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>Yazı rengi, yazı boyutu ve saydamlık tek seferde tüm dock için — ve her kart bu üçünü kendi dişlisinden geçersiz kılabilir. Yerleşimi kazara sürüklemelere karşı kilitle ve yerleşimleri bir adla kaydederek aralarında geçiş yap.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>Yapay zekâ yardımcısı</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Bir tuşu basılı tut, sesli sor ve oyundan çıkmadan cevabını al — kartın altında metin olarak ya da sesli okunarak. GPT, Gemini, Claude veya OpenRouter&apos;ı kendi API anahtarınla seç: anahtar yalnızca bu bilgisayarda durur, asla yüklenmez. İzin verdiğinde takım arkadaşların !ai ile sorabilir.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Isı haritaları ve anahtar kartlar</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>Bir tuşu basılı tut, sesli sor ve oyundan çıkmadan cevabını al — kartın altında metin olarak ya da sesli okunarak. GPT, Gemini veya Claude&apos;u kendi API anahtarınla seç: anahtar yalnızca bu bilgisayarda durur, asla yüklenmez ve kayıtlar doğrudan seçtiğin sağlayıcıya gider.</value>
+    <value>Isı haritaları artık önce 3B haritanın kurulmasını gerektirmiyor — sunucunun harita dosyası istendiğinde okunuyor. HQM yatakları ve oyuncu doğuş noktaları cevher katmanlarına katıldı; iki yeni katman da bir anıtın kapılarının hangi kartları istediğini ve oradan hangilerini alabileceğini gösteriyor.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>Takım ve klan sohbetinde !ai</value>
+    <value>Küresel sohbet ve dahası</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>Oyunun içinden sor, cevap sohbete bir iki satır olarak dönsün. Sen izin verene kadar yalnızca sana açık — her cevap senin anahtarına faturalanır — ve izin verdiğinde takım arkadaşı başına saatlik bir sınır eklenir.</value>
+    <value>Her sekmede bir satır küresel sohbet, kehribar renginde anmalar ve biri seni andığında bildirim. Ölüm ekranından seni kimin öldürdüğünü oku, sıralamayı ölüm istatistiklerinde gör. Ayrıca keşfedilecek 31 başarım, yeni bir logo ve Fluent pencereler.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

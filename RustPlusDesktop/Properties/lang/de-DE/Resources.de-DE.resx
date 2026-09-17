@@ -7563,31 +7563,31 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Clan-Mitglieder können die KI über deinen API-Schlüssel fragen, die Rechnung ist deine. Unabhängig von der Team-Einstellung oben.</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>Die Mini-Map wird zur Kommandozentrale — und der KI-Begleiter kommt dazu.</value>
+    <value>Die Mini-Map wird zur Kommandozentrale, der KI-Begleiter kommt dazu — und die Karte liest die Serverdateien selbst.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>Uhren, Smart Switches, Team- und Clan-Chat, Event-Timer, Session-Statistiken und Serverauslastung als Widgets rund um die Karte. Mit + im Dock fügst du eines hinzu; es landet im ersten freien Feld und lässt sich von dort beliebig ziehen. Auch die Karte ist ein Widget und kann verschoben oder ganz entfernt werden.</value>
+    <value>Uhren, smarte Schalter, Team- und Clan-Chat, Übersetzung, Sitzungsstatistiken und Serverauslastung als Widgets rund um die Karte — und die Karte ist selbst ein Widget. Gestalte alle auf einmal oder einzeln, sperre das Layout gegen versehentliches Ziehen und speichere Anordnungen unter einem Namen.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>Nach deinem Geschmack</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>Textfarbe, Schriftgröße und Transparenz auf einmal für das ganze Dock — und jedes Widget kann alle drei über sein eigenes Zahnrad überschreiben. Sperre das Layout gegen versehentliches Ziehen und speichere Anordnungen unter einem Namen, um zwischen ihnen zu wechseln.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>KI-Begleiter</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Taste halten, laut fragen und eine Antwort bekommen, ohne das Spiel zu verlassen — als Text unter dem Widget oder vorgelesen. Wähle GPT, Gemini, Claude oder OpenRouter mit deinem eigenen API-Schlüssel: Er liegt nur auf diesem PC und wird nie hochgeladen. Mitspieler können mit !ai fragen, sobald du es erlaubst.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Heatmaps &amp; Keycards</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>Taste halten, laut fragen und eine Antwort bekommen, ohne das Spiel zu verlassen — als Text unter dem Widget oder vorgelesen. Wähle GPT, Gemini oder Claude und nutze deinen eigenen API-Schlüssel: Er liegt nur auf diesem PC und wird nie hochgeladen, und Aufnahmen gehen direkt an den gewählten Anbieter.</value>
+    <value>Heatmaps brauchen die 3D-Karte nicht mehr vorab — auf Wunsch wird die Kartendatei des Servers direkt gelesen. HQM-Vorkommen und Spieler-Spawns kommen zu den Erz-Ebenen dazu, und zwei neue Ebenen zeigen, welche Keycards die Türen eines Monuments verlangen und welche du dort mitnehmen kannst.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>!ai im Team- und Clan-Chat</value>
+    <value>Globaler Chat &amp; mehr</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>Frag direkt aus dem Spiel heraus, die Antwort kommt im Chat zurück, auf ein bis zwei Zeilen begrenzt. Standardmäßig nur für dich freigegeben — jede Antwort geht auf deinen Schlüssel — und beim Freischalten mit Stundenlimit pro Teammate.</value>
+    <value>Eine Zeile globaler Chat auf jedem Tab, Erwähnungen in Bernstein und eine Benachrichtigung, wenn dich jemand nennt. Lies vom Todesbildschirm ab, wer dich getötet hat, und sieh die Rangliste in den Todesstatistiken. Dazu 31 Erfolge zum Entdecken, ein neues Logo und Fluent-Fenster.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

@@ -7218,31 +7218,31 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>新功能</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>小地图变成指挥台，AI 助手也来了。</value>
+    <value>小地图变成指挥台，AI 助手登场，地图还能直接读取服务器文件。</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>时钟、智能开关、队伍与战队聊天、events 计时、会话统计和服务器人数，都作为磁贴环绕在地图周围。用 dock 上的 + 添加一个，它会落在地图旁第一个空位，之后可随意拖动。地图本身也是磁贴，可以移动，也可以完全移除。</value>
+    <value>时钟、智能开关、队伍与部落聊天、翻译、本局统计和服务器人数，都能作为磁贴环绕在地图周围 —— 地图本身也是一块磁贴。可以统一或逐个设置样式，锁定布局以防误拖，并把排布保存为命名方案。</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>随你的喜好</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>文字颜色、字号和透明度一次设定整个 dock，任何磁贴也能用自己的齿轮覆盖这三项。锁定布局以防误拖，并把布局起个名字保存下来，随时切换。</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>AI 助手</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>按住一个键，开口提问，不用离开游戏就能得到答案 —— 以文字显示在磁贴下方，或者读给你听。可选 GPT、Gemini、Claude 或 OpenRouter，使用你自己的 API 密钥：密钥只保存在本机、从不上传。开启权限后，队友也能用 !ai 提问。</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>热力图与门禁卡</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>按住一个键，开口提问，不用离开游戏就能得到答案 —— 以文字显示在磁贴下方，或者读给你听。可选 GPT、Gemini 或 Claude，使用你自己的 API 密钥：密钥只保存在本机、从不上传，录音直接发往你选择的服务商。</value>
+    <value>热力图不再需要先构建 3D 地图 —— 按需直接读取服务器的地图文件。矿石图层新增 HQM 矿点和玩家出生点；另有两个新图层，显示纪念物的门需要哪些门禁卡，以及你能在那里捡到哪些。</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>队伍和战队聊天里的 !ai</value>
+    <value>全球聊天及更多</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>在游戏里提问，答案回到聊天中，限制在一两行。默认只有你能用 —— 每个回答都记在你的密钥上 —— 开放后还会按队友分别设置每小时上限。</value>
+    <value>每个标签页都有一行全球聊天，被提到时以琥珀色显示并弹出通知。可以从死亡界面读出是谁杀了你，并在死亡统计中查看排名。此外还有 31 项成就等你发现，以及全新徽标和 Fluent 风格窗口。</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

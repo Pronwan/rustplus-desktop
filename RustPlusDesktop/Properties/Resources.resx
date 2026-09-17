@@ -7629,31 +7629,31 @@ Close this preview when the panel looks right.</value>
     <value>Clan members can ask the AI on your API key, and the bill is yours. Separate from the team setting above.</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>The mini-map becomes a command centre — and the AI Companion arrives.</value>
+    <value>The mini-map becomes a command centre, the AI Companion arrives, and the map reads the server's own files.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>Clocks, smart switches, team and clan chat, event timers, session stats and server population as widgets around the map. Press + in the dock to add one; it lands in the first free cell and can be dragged anywhere from there. The map is a widget too, and can be moved or removed entirely.</value>
+    <value>Clocks, smart switches, team and clan chat, translation, session stats and server population as widgets around the map — and the map is a widget too. Style them all at once or one at a time, lock the layout against accidental dragging, and save arrangements under a name.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>Styled Your Way</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>Text colour, text size and transparency for the whole dock at once, and any widget can override all three from its own gear. Lock the layout against accidental dragging, and save arrangements under a name to switch between them.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>AI Companion</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Hold a key, ask out loud, and get an answer without leaving the game — as text under the widget or read aloud. Choose GPT, Gemini, Claude or OpenRouter with your own API key: it is stored on this PC only and never uploaded. Teammates can ask with !ai once you allow it.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Heatmaps &amp; Keycards</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>Hold a key, ask out loud, and get an answer without leaving the game — as text under the widget or read aloud. Choose GPT, Gemini or Claude and use your own API key: it is stored on this PC only and never uploaded, and recordings go straight to the provider you chose.</value>
+    <value>Heatmaps no longer need the 3D map built first — the server's own map file is read on request. HQM nodes and player spawns join the ore layers, and two new layers show which keycards a monument's doors want, and which ones you can pick up there.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>!ai in Team and Clan Chat</value>
+    <value>Global Chat &amp; More</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>Ask from inside the game and the answer comes back in chat, kept to a line or two. Off for everyone but you until you allow it — every answer is billed to your key — with an hourly limit per teammate when you do.</value>
+    <value>A line of global chat on every tab, with mentions drawn in amber and a notification when someone names you. Read who killed you off the death screen and see them ranked in Death Stats. Plus 31 achievements to discover, a new logo and Fluent-styled windows.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

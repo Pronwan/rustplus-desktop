@@ -7470,31 +7470,31 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>Novedades</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>El minimapa se convierte en un centro de mando, y llega el compañero IA.</value>
+    <value>El minimapa se convierte en un centro de mando, llega el compañero IA y el mapa lee los archivos del servidor.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>Relojes, interruptores inteligentes, chat de equipo y de clan, temporizadores de events, estadísticas de sesión y jugadores conectados como widgets alrededor del mapa. Con el + del dock añades uno; se coloca en el primer hueco libre y desde ahí lo mueves donde quieras. El mapa también es un widget: se puede mover o quitar del todo.</value>
+    <value>Relojes, interruptores inteligentes, chat de equipo y clan, traducción, estadísticas de sesión y población del servidor como widgets alrededor del mapa, y el mapa también es un widget. Dales estilo a todos a la vez o uno a uno, bloquea el diseño contra arrastres accidentales y guarda disposiciones con un nombre.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>A tu gusto</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>Color del texto, tamaño y transparencia de una vez para todo el dock, y cualquier widget puede sobrescribir los tres desde su propio engranaje. Bloquea la disposición para que no se mueva sin querer y guarda disposiciones con un nombre para alternar entre ellas.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>Compañero IA</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Mantén una tecla, pregunta en voz alta y recibe una respuesta sin salir del juego: como texto bajo el widget o leída en voz alta. Elige GPT, Gemini, Claude u OpenRouter con tu propia clave API: se guarda solo en este PC y nunca se sube. Tus compañeros pueden preguntar con !ai si lo permites.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Mapas de calor y tarjetas</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>Mantén una tecla, pregunta en voz alta y recibe una respuesta sin salir del juego: como texto bajo el widget o leída en voz alta. Elige GPT, Gemini o Claude con tu propia clave API: se guarda solo en este PC y nunca se sube, y las grabaciones van directas al proveedor que elijas.</value>
+    <value>Los mapas de calor ya no necesitan el mapa 3D: el archivo del servidor se lee cuando lo pides. Los nodos de HQM y los puntos de aparición se suman a las capas de mineral, y dos capas nuevas muestran qué tarjetas piden las puertas de cada monumento y cuáles puedes llevarte de allí.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>!ai en el chat de equipo y de clan</value>
+    <value>Chat global y más</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>Pregunta desde dentro del juego y la respuesta vuelve al chat, en una o dos líneas. Solo para ti hasta que lo permitas — cada respuesta se factura a tu clave — y al permitirlo se añade un límite por hora para cada compañero.</value>
+    <value>Una línea de chat global en cada pestaña, con menciones en ámbar y un aviso cuando alguien te nombra. Lee en la pantalla de muerte quién te mató y consulta la clasificación en las estadísticas de muertes. Además, 31 logros por descubrir, un logo nuevo y ventanas Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

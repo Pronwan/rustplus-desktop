@@ -43,14 +43,14 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel x:Name="PatchNotesContent" Margin="0,0,0,12">
                     <!-- ============================================== -->
-                    <!-- NEW v10.0 PATCH NOTES -->
+                    <!-- NEW v10.0.0 PATCH NOTES -->
                     <!-- ============================================== -->
                     <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="v10.0 | The Command Dock &amp; the AI Companion" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="v10.0.0 | Command Dock, AI Companion, Map Layers &amp; Global Chat" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8" Foreground="{DynamicResource Accent}"/>
 
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Foreground="{DynamicResource TextBodyBrush}">
-                                The mini-map has grown into a command centre you can build yourself: the map is now one widget among many, and clocks, smart switches, chat, session stats, server population and Discord can sit around it in any arrangement you like. Alongside it comes the AI Companion — hold a key, ask a question out loud, and get an answer without leaving the game.
+                                The mini-map has grown into a command centre you can build yourself: the map is now one widget among many, and clocks, smart switches, chat, translation, session stats, server population and Discord can sit around it in any arrangement you like. Alongside it comes the AI Companion — hold a key, ask a question out loud, and get an answer without leaving the game. The map learned to read the server's own files, so heatmaps and keycard layers no longer need the 3D world built first. Global chat now comes to you instead of waiting four levels down. The death screen can be read for the name of whoever killed you. And there are 31 achievements to find along the way.
                             </TextBlock>
 
                             <TextBlock Text="🎛️ Command Dock" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
@@ -68,7 +68,15 @@
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Lock It, and Save Arrangements:</Run>
-                                A lock in the title bar puts the layout beyond accidental dragging. Arrangements save the whole dock under a name — hover one to see it outlined in place before you load it.
+                                A lock in the title bar puts the layout beyond accidental dragging. Arrangements save the whole dock under a name — hover one to see it outlined in place before you load it, and a default template is always there to start from.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Translate Tile, With a Microphone On It:</Run>
+                                Paste a line out of game chat and read it back in your own language, or type your own and read it back in theirs. The answer sits behind the flag of the language it came back in; click the flag for a grid of every language the app ships. The microphone writes down what it hears and translates that — Windows&apos; own recogniser by default, or the AI model if you have a key, which works the language out for itself. Google or the model is a choice in the tile&apos;s settings, and a key removed later falls back to Google rather than failing.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; One Button to Clear the Dock:</Run>
+                                A collapse tile hides every other tile where it stands, and brings the arrangement back unchanged on the second press — nothing is moved or removed, so there is nothing to re-flow. A setting decides whether the mini-map goes with them; off by default, since the usual reason to clear the dock is to see the game with the map still on it. The collapsed state survives a restart.
                             </TextBlock>
 
                             <TextBlock Text="🤖 AI Companion" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
@@ -77,8 +85,8 @@
                                 Press the widget or hold your push-to-talk key, ask, and the answer appears in a panel under the tile or is read to you. You can attach a screenshot — it counts three down first, so you are back in the game before the shutter, and the app takes itself out of the picture.
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                <Run FontWeight="Bold">&#x2022; Your Key, Your Account, Three Models:</Run>
-                                Choose GPT, Gemini or Claude and paste your own API key. GPT and Gemini take the recording itself; Claude does not accept audio, so it is transcribed on your PC first, which is slower and weaker on names. Gemini has a free allowance; GPT and Claude need their own prepaid credit, separately from any chat subscription.
+                                <Run FontWeight="Bold">&#x2022; Your Key, Your Account, Your Model:</Run>
+                                Choose GPT, Gemini, Claude or OpenRouter and paste your own API key. GPT and Gemini take the recording itself; Claude and OpenRouter do not accept audio, so it is transcribed on your PC first, which is slower and weaker on names. Gemini has a free allowance; the others need their own prepaid credit, separately from any chat subscription.
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; Stored Locally, Sent Nowhere Else:</Run>
@@ -91,6 +99,14 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
                                 <Run FontWeight="Bold">&#x2022; !ai in Team and Clan Chat:</Run>
                                 Ask from inside the game and the answer comes back in chat, kept to a line or two. Off for everyone but you until you allow it, with a per-teammate hourly limit when you do — every answer is billed to your key.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Hundreds of Models Through One Key:</Run>
+                                The OpenRouter picker fetches the free models on its own and lets you search every other one by name, provider or vision support, with its price and context length shown before you pick it. Reasoning effort, temperature, token ceiling, provider fallbacks and whether your prompts may be logged are all yours to set.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Tell It How to Answer:</Run>
+                                Your own prompt rules are carried with every question. Answers are kept short enough for a chat line, the model&apos;s own thinking is stripped out of the reply, and questions about raiding are understood as being about a video game rather than refused.
                             </TextBlock>
 
                             <TextBlock Text="🗺️ Heatmaps Without the 3D Map" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
@@ -133,9 +149,102 @@
                                 Both layers float over the monuments they belong to. They took the places of the Patrol Helicopter, Chinook and Travelling Vendor buttons, which had nothing left to show since those stopped arriving over the API.
                             </TextBlock>
 
+                            <TextBlock Text="💬 Global Chat" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; One Line of It on Every Tab:</Run>
+                                A strip along the bottom of the window shows whoever is talking, wherever you are in the app — chat is no longer somewhere you have to decide to go. New lines roll in from above rather than replacing the old one, so an arrival reads as an arrival. It is never blank: with nothing to show it carries the occupant count, and failing that, says what the room is. Clicking it lands in the room itself. The chevron hides it for good, and Settings carries a switch to bring it back.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Lane in the Team Chat Window:</Run>
+                                Global chat sits beside team chat instead of behind its own panel, and the room stays connected while that panel is closed, so you are not rejoining every time you look.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; You Are Told When You Are Mentioned:</Run>
+                                Type @ and pick someone: the mention carries their handle, which is the thing that resolves, rather than a display name that is neither unique nor stable. A line addressed to you is drawn in amber and raises a toast when the room is not on screen. The strip counts mentions apart from ordinary traffic — "3 people mentioned you" is a reason to look in a way that "247 messages" is not.
+                            </TextBlock>
+
+                            <TextBlock Text="💀 Who Killed You" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Read Off the Death Screen, on a Button Press:</Run>
+                                Rust names the killer and the weapon across the top of the death screen and takes it away again on respawn. A tile appears on the dock the moment the game reports a death and gives its cells back when you respawn; one press reads that band and files the name against the death. Deliberately a button — nothing reads the game&apos;s memory or sends it input, this is a copy of what the display is already showing.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Region You Can Check:</Run>
+                                Windows&apos; own recogniser does the reading, with no download and no language data to carry. The region is stored as fractions of the screen rather than a pixel rectangle, so it survives a change of resolution, and its settings have a test button that shows the crop and every line that came out of it. A name matching your own is Rust reporting a suicide, and is marked as one rather than topping a list of killers; a wrong reading can be taken back out.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Killers Table in Death Stats:</Run>
+                                Who, with what, how often, and when they last managed it. Hidden entirely while empty, because an empty table there would read as nobody having killed you.
+                            </TextBlock>
+
+                            <TextBlock Text="📍 More on the Map" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; The Cargo Route, Drawn:</Run>
+                                The path the Cargo Ship follows is parsed from the map and drawn as its own layer, with its own toggle in the map options.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Building Blocked Has Its Own Switch:</Run>
+                                No-build zones move off the grid layer, so turning the grid off no longer takes them with it.
+                            </TextBlock>
+
+                            <TextBlock Text="👥 Friends &amp; Group Finding" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Invite by Name and Face:</Run>
+                                Search for people the way you would recognise them rather than by pasting a Steam ID, with their profile picture beside the name. Someone already on your list cannot be added twice.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A List of Its Own:</Run>
+                                The friends list stands apart from the rest of the hub and can be filtered as you type, which matters once it is longer than a screen.
+                            </TextBlock>
+
+                            <TextBlock Text="🎨 Interface" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A New Logo, and Windows That Match:</Run>
+                                The app has a new icon, and its windows are rebuilt on the same Fluent chrome with one shared set of colours — including the cloud account window, the report dialog and the profile card. Context menus follow the Windows 11 flyout shape, at one icon size throughout.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; A Quieter Sidebar:</Run>
+                                Rail buttons lose their borders and show themselves on hover, with larger centred icons.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Rebuilt Panels:</Run>
+                                The notifications tab is laid out afresh, Tool Cupboard and Storage Monitor share a redesigned popover, and the device list is drawn as cards. Chat gains clearer replies, a smoother jump to the quoted line and a reworked compose box.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Ticket Attachments:</Run>
+                                Images attached to a support ticket are recognised by their contents rather than their file name, and open in a lightbox.
+                            </TextBlock>
+
                             <TextBlock Text="🏆 Achievements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
-                                Earn achievements by discovering the app's features — the trophy next to the tutorials button keeps the list. Got them all? Let us know!
+                                <Run FontWeight="Bold">&#x2022; 31 of Them, for Finding Things:</Run>
+                                Earned by discovering what the app can do — pairing a smart device, building the 3D map, adding a widget. The trophy next to the tutorials button keeps the list, with a badge for how many are waiting.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; The New Ones Stand Out:</Run>
+                                Anything earned since you last looked carries a warm border and a NEW tag, so a badge saying "3" tells you which three. Got them all? Let us know!
+                            </TextBlock>
+
+                            <TextBlock Text="🛠️ Also Fixed" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Startup Crashes:</Run>
+                                A WebView2 failure could bring the app down before it was on screen. It is handled now, and when the browser component genuinely refuses, the app names the reason instead of leaving the map stranded.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Copying While Something Else Holds the Clipboard:</Run>
+                                Windows hands the clipboard to one program at a time; another app holding it used to be enough to crash a copy. It now waits its turn.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Genetics Lab:</Run>
+                                The scanner reads gene rows from the badges themselves rather than from saved coordinates, and takes capture frames from the source instead of the video element. The window can be minimised, and closing it releases the browser.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Wipe Maps and Alerts:</Run>
+                                A 3D parse discarded by staff can be uploaded again rather than being stuck. The chat alert configuration menu closes when its toggle says it should.
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                <Run FontWeight="Bold">&#x2022; Console Helper:</Run>
+                                Six more commands sent in by players, and the descriptions can now be translated.
                             </TextBlock>
 
                             <views:ImageGallery>

@@ -7470,31 +7470,31 @@ Ferme cet aperçu quand le panneau te convient.</value>
     <value>Nouveautés</value>
   </data>
   <data name="UpdateWhatsNew93Summary" xml:space="preserve">
-    <value>La mini-carte devient un centre de commande — et le compagnon IA arrive.</value>
+    <value>La mini-carte devient un centre de commande, le compagnon IA arrive — et la carte lit les fichiers du serveur.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
     <value>Command Dock</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
-    <value>Horloges, interrupteurs connectés, chat d&apos;équipe et de clan, minuteurs d&apos;events, statistiques de session et fréquentation du serveur comme widgets autour de la carte. Le + du dock en ajoute un ; il se place dans la première case libre et se déplace ensuite librement. La carte est elle aussi un widget, déplaçable ou retirable.</value>
+    <value>Horloges, interrupteurs connectés, chat d&apos;équipe et de clan, traduction, statistiques de session et population du serveur en widgets autour de la carte — la carte est elle aussi un widget. Mets-les en forme d&apos;un coup ou un par un, verrouille la disposition contre les déplacements accidentels et enregistre des agencements sous un nom.</value>
   </data>
   <data name="UpdateWhatsNew93Title2" xml:space="preserve">
-    <value>À ton goût</value>
-  </data>
-  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
-    <value>Couleur du texte, taille et transparence d&apos;un coup pour tout le dock, et chaque widget peut écraser les trois depuis son propre engrenage. Verrouille la disposition contre les déplacements accidentels et enregistre des dispositions sous un nom pour passer de l&apos;une à l&apos;autre.</value>
-  </data>
-  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
     <value>Compagnon IA</value>
   </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Maintiens une touche, pose ta question à voix haute et obtiens une réponse sans quitter le jeu — en texte sous le widget ou lue à voix haute. Choisis GPT, Gemini, Claude ou OpenRouter avec ta propre clé API : elle reste sur ce PC et n&apos;est jamais envoyée. Tes coéquipiers peuvent demander avec !ai si tu l&apos;autorises.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Cartes de chaleur &amp; cartes d&apos;accès</value>
+  </data>
   <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
-    <value>Maintiens une touche, pose ta question à voix haute et obtiens une réponse sans quitter le jeu — en texte sous le widget ou lue à voix haute. Choisis GPT, Gemini ou Claude avec ta propre clé API : elle reste sur ce PC, n&apos;est jamais envoyée, et les enregistrements vont directement au fournisseur choisi.</value>
+    <value>Les cartes de chaleur n&apos;exigent plus la carte 3D : le fichier du serveur est lu à la demande. Les nœuds HQM et les points d&apos;apparition rejoignent les couches de minerai, et deux nouvelles couches montrent quelles cartes d&apos;accès réclament les portes d&apos;un monument, et lesquelles tu peux y récupérer.</value>
   </data>
   <data name="UpdateWhatsNew93Title4" xml:space="preserve">
-    <value>!ai dans le chat d&apos;équipe et de clan</value>
+    <value>Chat global &amp; plus</value>
   </data>
   <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
-    <value>Demande depuis le jeu, la réponse revient dans le chat, en une ou deux lignes. Réservé à toi seul tant que tu ne l&apos;actives pas — chaque réponse est facturée sur ta clé — avec une limite horaire par coéquipier quand tu l&apos;actives.</value>
+    <value>Une ligne de chat global sur chaque onglet, les mentions en ambre et une notification quand on te nomme. Lis sur l&apos;écran de mort qui t&apos;a tué et retrouve le classement dans les statistiques de morts. Plus 31 succès à découvrir, un nouveau logo et des fenêtres Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
     <value>Command Dock</value>

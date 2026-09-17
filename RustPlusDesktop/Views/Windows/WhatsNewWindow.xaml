@@ -65,7 +65,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Color24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Bot24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title2}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNew93Desc2}"/>
@@ -78,7 +78,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Mic24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Map24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title3}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNew93Desc3}"/>
