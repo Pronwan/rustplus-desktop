@@ -7599,4 +7599,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>已解锁全部成就</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>新</value>
+  </data>
 </root>

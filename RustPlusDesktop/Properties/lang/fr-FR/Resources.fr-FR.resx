@@ -7851,4 +7851,7 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>Tous les succes obtenus</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NOUVEAU</value>
+  </data>
 </root>

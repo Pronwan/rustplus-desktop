@@ -138,6 +138,8 @@ public partial class MainWindow
 
     private async void ChkShops_Checked(object sender, RoutedEventArgs e)
     {
+        // The layer toggle in the top bar counts as much as the map button.
+        if ((sender as System.Windows.Controls.CheckBox)?.IsChecked == true) Ach.Unlock(Ach.Shops);
         // Shops removed from the Rust+ feed — never poll for them.
         if (Services.RustApiFeatures.EventsAndShopsRemoved)
         {

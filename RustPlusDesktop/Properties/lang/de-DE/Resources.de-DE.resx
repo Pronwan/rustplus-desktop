@@ -7945,4 +7945,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>Alle Erfolge freigeschaltet</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NEU</value>
+  </data>
 </root>

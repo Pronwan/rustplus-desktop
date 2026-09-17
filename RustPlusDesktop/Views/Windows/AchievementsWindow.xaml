@@ -39,11 +39,15 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="6,3" Padding="10,8" CornerRadius="8"
-                                Background="{Binding RowBackground}">
+                                Background="{Binding RowBackground}"
+                                BorderBrush="{Binding RowBorder}"
+                                BorderThickness="{Binding RowBorderThickness}"
+                                Effect="{Binding RowGlow}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--  Earned icons show in full; the rest stay as a dim
@@ -79,6 +83,19 @@
                                                Foreground="{DynamicResource TextSubtle}"
                                                Visibility="{Binding EarnedTextVisibility}" />
                                 </StackPanel>
+
+                                <!--  Earned since the list was last opened.  -->
+                                <Border Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        Padding="7,2"
+                                        CornerRadius="9"
+                                        Background="#FFD27A1E"
+                                        Visibility="{Binding NewBadgeVisibility}">
+                                    <TextBlock Text="{DynamicResource AchievementsNew}"
+                                               FontSize="9"
+                                               FontWeight="Bold"
+                                               Foreground="White" />
+                                </Border>
                             </Grid>
                         </Border>
                     </DataTemplate>

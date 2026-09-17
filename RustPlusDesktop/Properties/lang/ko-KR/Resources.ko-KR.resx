@@ -7772,4 +7772,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>모든 업적 달성</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>신규</value>
+  </data>
 </root>

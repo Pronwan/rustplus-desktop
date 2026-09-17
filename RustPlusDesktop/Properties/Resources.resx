@@ -8026,4 +8026,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>All Achievements unlocked</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NEW</value>
+  </data>
 </root>

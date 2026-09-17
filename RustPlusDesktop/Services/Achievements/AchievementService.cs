@@ -66,6 +66,12 @@ public static class AchievementService
 
     public static bool IsEarned(string id) => State.Earned.ContainsKey(id);
 
+    /// <summary>
+    /// Earned but not yet looked at. Read before <see cref="MarkAllSeen"/> clears it,
+    /// which is what lets the list highlight what is new on the way in.
+    /// </summary>
+    public static bool IsUnseen(string id) => State.Unseen.Contains(id);
+
     public static DateTime? EarnedAt(string id)
         => State.Earned.TryGetValue(id, out var when) ? when : null;
 

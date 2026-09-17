@@ -6481,4 +6481,7 @@ You can find more information on the server's official website:
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>All Achievements unlocked</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NEW</value>
+  </data>
 </root>

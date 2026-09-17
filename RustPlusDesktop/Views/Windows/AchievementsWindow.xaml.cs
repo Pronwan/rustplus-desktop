@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using RustPlusDesk.Services.Achievements;
 
@@ -22,6 +23,12 @@ public partial class AchievementsWindow
         public Brush NameBrush { get; init; } = Brushes.White;
         public FontWeight NameWeight { get; init; }
         public Brush RowBackground { get; init; } = Brushes.Transparent;
+
+        /// <summary>Earned since the list was last opened - lit up so it stands out.</summary>
+        public Brush RowBorder { get; init; } = Brushes.Transparent;
+        public Thickness RowBorderThickness { get; init; }
+        public Visibility NewBadgeVisibility { get; init; }
+        public Effect? RowGlow { get; init; }
     }
 
     /// <summary>
@@ -56,6 +63,9 @@ public partial class AchievementsWindow
         {
             bool isEarned = AchievementService.IsEarned(def.Id);
 
+            // Read before MarkAllSeen runs in the constructor, so "new" is still known.
+            bool isNew = isEarned && AchievementService.IsUnseen(def.Id);
+
             // A secret stays hidden until earned: no name, no icon, just a question mark.
             bool hideEntirely = def.IsSecret && !isEarned;
 
@@ -74,9 +84,25 @@ public partial class AchievementsWindow
                 UnknownGlyphVisibility = hideEntirely ? Visibility.Visible : Visibility.Collapsed,
                 NameBrush = isEarned ? Brushes.White : new SolidColorBrush(Color.FromArgb(0x7A, 0xFF, 0xFF, 0xFF)),
                 NameWeight = isEarned ? FontWeights.SemiBold : FontWeights.Normal,
-                RowBackground = isEarned
-                    ? new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF))
-                    : Brushes.Transparent
+                RowBackground = isNew
+                    ? new SolidColorBrush(Color.FromArgb(0x2E, 0xD2, 0x7A, 0x1E))
+                    : isEarned
+                        ? new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF))
+                        : Brushes.Transparent,
+                RowBorder = isNew
+                    ? new SolidColorBrush(Color.FromArgb(0xCC, 0xFF, 0xC1, 0x4D))
+                    : Brushes.Transparent,
+                RowBorderThickness = new Thickness(isNew ? 1 : 0),
+                NewBadgeVisibility = isNew ? Visibility.Visible : Visibility.Collapsed,
+                RowGlow = isNew
+                    ? new DropShadowEffect
+                    {
+                        Color = Color.FromRgb(0xFF, 0xC1, 0x4D),
+                        BlurRadius = 14,
+                        ShadowDepth = 0,
+                        Opacity = 0.55
+                    }
+                    : null
             });
         }
 

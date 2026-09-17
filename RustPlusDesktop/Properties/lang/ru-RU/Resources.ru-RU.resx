@@ -7851,4 +7851,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
     <value>Все достижения получены</value>
   </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>НОВОЕ</value>
+  </data>
 </root>
