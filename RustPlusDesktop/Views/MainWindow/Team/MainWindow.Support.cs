@@ -72,6 +72,12 @@ public partial class MainWindow
 
         await LoadNotificationsAsync().ConfigureAwait(true);
         NotificationsPopup.IsOpen = true;
+
+        // Auto mark all as read at server, and clear the bell badge.
+        // Locally on this first open, the items were rendered with their unread state.
+        // On subsequent opens/refreshes, the server will return them as read, displaying them as seen.
+        _ = SupportApi.MarkAllNotificationsReadAsync();
+        UpdateNotificationBadge(0);
     }
 
     private void OnSupportNotificationArrived(SocialRealtime.NotificationInfo info)
