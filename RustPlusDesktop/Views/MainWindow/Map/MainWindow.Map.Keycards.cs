@@ -80,6 +80,7 @@ public partial class MainWindow
     /// </summary>
     private async void ChkKeycards_Checked(object sender, RoutedEventArgs e)
     {
+        if (_keycardSites != null) Ach.Unlock(Ach.Keycards);
         if (sender is System.Windows.Controls.CheckBox box && box.IsChecked == true && _keycardSites == null)
         {
             box.IsChecked = false;

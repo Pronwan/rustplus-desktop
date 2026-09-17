@@ -648,6 +648,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
             UpdatePairingGuideSnackbar();
             UpdateCloudSyncUI();
+            WireAchievements();
         }));
 
         // One-time migration notice for v5.2.0
@@ -1068,6 +1069,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void ShowOverlay()
     {
+        Ach.Unlock(Ach.Crosshair);
         if (_overlay == null)
             _overlay = new CrosshairWindow
             {
@@ -2996,6 +2998,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (_alarmWin is null || !_alarmWin.IsLoaded)
         {
+            // The in-app alert popup means a smart alarm actually fired.
+            Ach.Unlock(Ach.Raided);
             _alarmWin = new AlarmWindow { Owner = this };
             _alarmWin.Closed += (_, __) => _alarmWin = null;
             _alarmWin.Show();
@@ -3097,6 +3101,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeathStatsPanel.Visibility = deathStatsSelected ? Visibility.Visible : Visibility.Collapsed;
         if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
         if (wipeTrackerSelected) OpenPlayerWipeTrackerWorkspace();
+
+        // Opening these is the whole condition, so the tab switch is the trigger.
+        if (raidSelected) Ach.Unlock(Ach.RaidCalculator);
+        if (geneticsSelected) Ach.Unlock(Ach.GeneticsLab);
+        if (deathStatsSelected) Ach.Unlock(Ach.DeathStats);
         if (deathStatsSelected) OpenDeathStatsWorkspace();
         // Tickets is an inline tab like Recycler: re-read on open, and it takes the workspace over
         // the map without touching the device/servers panel beside it.
@@ -4174,6 +4183,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     };
                     prof.Devices.Add(dev);
                     AppendLog($"Device added → {dev.Display}");
+                    // Any kind counts: switch, alarm or storage monitor.
+                    Ach.Unlock(Ach.SmartDevicePaired);
                 }
                 else
                 {
@@ -6348,6 +6359,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         _alertRules.Add(rule);
+        Ach.Unlock(Ach.Automation);
 
         RefreshAlertListUI();
     }

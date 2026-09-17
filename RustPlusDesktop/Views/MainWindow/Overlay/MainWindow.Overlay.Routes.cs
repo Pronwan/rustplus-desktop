@@ -684,6 +684,9 @@ public sealed class MapRouteItem : System.ComponentModel.INotifyPropertyChanged
 
         double metres = RouteMeasure.PathLength(Points) * metresPerPixel;
 
+        // A measured route is a drawn route - this only runs once one exists.
+        Ach.Unlock(Ach.FarmingRoute);
+
         Measurement = RouteMeasure.FormatDistance(metres)
             + "  ·  "
             + RouteMeasure.FormatDuration(RouteMeasure.SprintTime(metres));

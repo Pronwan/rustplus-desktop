@@ -212,6 +212,7 @@ namespace RustPlusDesk.Views
             };
 
             _vm.Selected.LogicRules.Add(newRule);
+            Ach.Unlock(Ach.LogicRule);
             RefreshListBindings();
             _vm.Save();
         }

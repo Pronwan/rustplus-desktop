@@ -7827,4 +7827,28 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>Разобрать все данные карты</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>Получено {0} из {1}</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Достижение получено</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Достижения</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Достижения Rust+ Desktop</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>Все достижения получены. Отлично! Сообщить разработчикам?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Отправлено - мы ответим.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>Не удалось отправить. Можно создать обращение в поддержке.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>Все достижения получены</value>
+  </data>
 </root>

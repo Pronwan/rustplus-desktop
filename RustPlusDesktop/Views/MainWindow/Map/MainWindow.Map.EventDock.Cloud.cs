@@ -126,6 +126,8 @@ public partial class MainWindow
                 TimerText = timer,
                 ToolTip = tip,
             });
+            // Active means the real countdown is running, not just a heartbeat.
+            if (oilRig?.IsActive == true) Ach.Unlock(Ach.OilrigCrate);
         }
 
         return items;

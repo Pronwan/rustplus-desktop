@@ -7827,4 +7827,28 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>Analizar todos los datos del mapa</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} de {1} conseguidos</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Logro desbloqueado</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Logros</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Logros de Rust+ Desktop</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>Has conseguido todos los logros. Enhorabuena! Avisamos a los desarrolladores?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Enviado: te responderemos.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>No se pudo enviar. Puedes abrir un ticket desde Soporte.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>Todos los logros conseguidos</value>
+  </data>
 </root>

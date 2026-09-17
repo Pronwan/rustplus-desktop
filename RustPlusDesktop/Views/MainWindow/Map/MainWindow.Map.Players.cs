@@ -447,6 +447,8 @@ public partial class MainWindow
     private void ChkProfileMarkers_Toggled(object? sender, RoutedEventArgs e)
     {
         _showProfileMarkers = ChkProfileMarkers.IsChecked == true;
+        // Unchecked is the dot; only a deliberate switch counts, not the startup restore.
+        if (!_showProfileMarkers && sender != null) Ach.Unlock(Ach.DotMarker);
         if (_vm != null && !_vm.IsInitializing) TrackingService.MapShowSteamMarkers = _showProfileMarkers;
 
         foreach (var kv in _dynEls.ToList())

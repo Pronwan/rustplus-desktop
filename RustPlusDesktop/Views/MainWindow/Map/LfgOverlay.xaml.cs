@@ -508,6 +508,8 @@ public partial class LfgOverlay : UserControl
 
     private async Task PublishAsync(LfgMode mode)
     {
+        // Publishing an LFG/LFM listing is the action; the consent panel before it is not.
+        Ach.Unlock(Ach.Lfg);
         if (mode == LfgMode.None) return;
 
         var blurb = TxtBlurb.Text?.Trim();

@@ -7748,4 +7748,28 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>모든 맵 데이터 분석</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{1}개 중 {0}개 달성</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>업적 달성</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>업적</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Rust+ Desktop 업적</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>모든 업적을 달성했습니다. 축하합니다! 개발자에게 알릴까요?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>전송했습니다 - 곧 회신드리겠습니다.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>전송하지 못했습니다. 지원에서 티켓을 열 수 있습니다.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>모든 업적 달성</value>
+  </data>
 </root>

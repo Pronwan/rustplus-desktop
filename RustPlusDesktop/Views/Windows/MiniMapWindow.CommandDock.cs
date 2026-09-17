@@ -2238,6 +2238,9 @@ namespace RustPlusDesk
 
         public void AddTile(CommandDockTile tile)
         {
+            Ach.Unlock(Ach.Widget);
+            if (tile.Kind == CommandDockTileKinds.AiCompanion) Ach.Unlock(Ach.AiCompanion);
+
             // The map is never a second copy of itself — the picker's map entry means "bring the
             // one back", and it has its own path because it may only need its layers switched on.
             if (tile.Kind == CommandDockTileKinds.Map) { AddMapTile(); return; }

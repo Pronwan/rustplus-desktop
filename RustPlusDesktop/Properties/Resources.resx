@@ -8002,4 +8002,28 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>Parse all map data</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} of {1} earned</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Achievement unlocked</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Achievements</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Rust+ Desktop App Achievements</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>All Achievements unlocked. Well done! Let the developers know?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Sent - we will get back to you.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>That could not be sent. You can open a ticket from Support instead.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>All Achievements unlocked</value>
+  </data>
 </root>

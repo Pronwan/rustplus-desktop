@@ -1463,6 +1463,8 @@ private bool _overlayToolsVisible = false;
         bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
         bool isEmail = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
         _vm.IsCloudConnected = isDiscord || isEmail;
+        // The green cloud state is exactly the condition, so read it where it is set.
+        if (_vm.IsCloudConnected) Ach.Unlock(Ach.CloudSync);
         _vm.IsPremium = Services.Auth.SupabaseAuthManager.IsPremium;
         _vm.CloudAccountActionText = _vm.IsCloudConnected ? "Manage" : "Sign in";
         _vm.CloudAccountStatusText = _vm.IsCloudConnected

@@ -1541,6 +1541,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <!--  Supporter CTA  -->
@@ -1615,6 +1616,42 @@
                             ToolTip="{DynamicResource Tutorials.Center.Title}"
                             AutomationProperties.Name="{DynamicResource Tutorials.Center.Title}"
                             tutorials:Tutorial.TargetId="Tutorials.NavigationItem" />
+
+                        <!--  Achievements, with an unread count that clears once the list
+                              has been opened. The badge overhangs the corner, so it never
+                              changes the button's footprint.  -->
+                        <Grid Grid.Column="3" Margin="6,0,0,0">
+                            <ui:Button
+                                x:Name="BtnAchievements"
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                Appearance="Secondary"
+                                Click="BtnAchievements_Click"
+                                Icon="{ui:SymbolIcon Symbol=Trophy24}"
+                                Foreground="#FFD27A1E"
+                                ToolTip="{DynamicResource AchievementsTitle}"
+                                AutomationProperties.Name="{DynamicResource AchievementsTitle}" />
+
+                            <Border x:Name="AchievementBadge"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="0,-4,-4,0"
+                                    MinWidth="16"
+                                    Height="16"
+                                    Padding="4,0"
+                                    CornerRadius="8"
+                                    Background="#FFE03131"
+                                    IsHitTestVisible="False"
+                                    Visibility="Collapsed">
+                                <TextBlock x:Name="TxtAchievementBadge"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="9"
+                                           FontWeight="Bold"
+                                           Foreground="White" />
+                            </Border>
+                        </Grid>
                     </Grid>
 
                     <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->

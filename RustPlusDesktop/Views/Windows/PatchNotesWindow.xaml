@@ -133,6 +133,11 @@
                                 Both layers float over the monuments they belong to. They took the places of the Patrol Helicopter, Chinook and Travelling Vendor buttons, which had nothing left to show since those stopped arriving over the API.
                             </TextBlock>
 
+                            <TextBlock Text="🏆 Achievements" FontWeight="SemiBold" FontSize="14" Margin="0,4,0,6" Foreground="{DynamicResource Accent}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6">
+                                Earn achievements by discovering the app's features — the trophy next to the tutorials button keeps the list. Got them all? Let us know!
+                            </TextBlock>
+
                             <views:ImageGallery>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/CommandDock.jpg" Description="The Command Dock: the mini-map as one widget among clocks, smart switches, chat, session stats and server population, each styled globally or on its own"/>
                                 <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/ai-chat-command.jpg" Description="The AI Companion answering !ai from in-game chat — your own key, your own model, and a per-teammate hourly limit when you let the team use it"/>

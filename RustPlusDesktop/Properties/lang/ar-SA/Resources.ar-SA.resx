@@ -7718,4 +7718,28 @@
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>تحليل كل بيانات الخريطة</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} من {1}</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>تم فتح إنجاز</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>الإنجازات</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>إنجازات Rust+ Desktop</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>تم فتح جميع الإنجازات. أحسنت! هل نُبلغ المطورين؟</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>تم الإرسال - سنعود إليك.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>تعذّر الإرسال. يمكنك فتح تذكرة من الدعم.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>تم فتح جميع الإنجازات</value>
+  </data>
 </root>

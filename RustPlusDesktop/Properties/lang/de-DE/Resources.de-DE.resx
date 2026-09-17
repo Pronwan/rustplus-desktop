@@ -7921,4 +7921,28 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>Alle Map-Daten einlesen</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} von {1} erreicht</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Erfolg freigeschaltet</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Erfolge</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Rust+ Desktop App Erfolge</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>Alle Erfolge freigeschaltet. Gut gemacht! Den Entwicklern Bescheid geben?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Gesendet - wir melden uns.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>Konnte nicht gesendet werden. Du kannst stattdessen ein Ticket im Support eroeffnen.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>Alle Erfolge freigeschaltet</value>
+  </data>
 </root>

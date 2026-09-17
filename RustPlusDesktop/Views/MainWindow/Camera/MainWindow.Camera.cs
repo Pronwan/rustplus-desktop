@@ -293,6 +293,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
     private async void BtnToggleMiniMap_Click(object? sender, RoutedEventArgs? e)
     {
+        Ach.Unlock(Ach.MiniMap);
         if (_vm.Selected?.IsFullConnected != true)
         {
             var prompt = new Wpf.Ui.Controls.MessageBox
@@ -549,6 +550,8 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             try { await ready.Task.WaitAsync(TimeSpan.FromSeconds(8)); } catch { /* use whatever accumulated */ }
             session.FrameRendered -= OnFrame;
 
+            // Frames actually arrived and the stream rendered, so the camera works.
+            if (latest != null) Ach.Unlock(Ach.CameraImage);
             return (latest, session.Width, session.Height, kind);
         }
         catch { return (null, 0, 0, string.Empty); }

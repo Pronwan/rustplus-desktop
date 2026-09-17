@@ -724,6 +724,7 @@ namespace RustPlusDesk.Views
 
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
         {
+            Ach.Unlock(Ach.Map3D);
             await LoadParsedMapDataAsync(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
@@ -1638,6 +1639,7 @@ namespace RustPlusDesk.Views
 
         private async void BtnHeatmapIcon_Click(object sender, RoutedEventArgs e)
         {
+            Ach.Unlock(Ach.Heatmap);
             if (sender is FrameworkElement btn && btn.Tag is string heatmapType)
             {
                 // Toggle behavior: if they click the active one, clear it

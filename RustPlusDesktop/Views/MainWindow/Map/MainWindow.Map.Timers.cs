@@ -89,6 +89,7 @@ public partial class MainWindow
         };
 
         _vm.Selected.CustomTimers.Add(timer);
+        Ach.Unlock(Ach.Timer);
 
         TxtTimerName.Text = "";
         TxtTimerHours.Text = "";

@@ -19,6 +19,7 @@ namespace RustPlusDesk.Views
 
         public PatchNotesWindow()
         {
+            Ach.Unlock(Ach.PatchNotes);
             InitializeComponent();
         }
 

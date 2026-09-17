@@ -7827,4 +7827,28 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UiParseAllMonuments" xml:space="preserve">
     <value>Analyser toutes les donnees de la carte</value>
   </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} sur {1} obtenus</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Succes debloque</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Succes</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Succes de Rust+ Desktop</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>Tous les succes obtenus. Bravo ! Prevenir les developpeurs ?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Envoye - nous reviendrons vers vous.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>Envoi impossible. Vous pouvez ouvrir un ticket depuis le support.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>Tous les succes obtenus</value>
+  </data>
 </root>

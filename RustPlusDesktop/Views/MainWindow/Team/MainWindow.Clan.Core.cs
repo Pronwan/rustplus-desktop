@@ -33,7 +33,14 @@ namespace RustPlusDesk.Views
         public string ClanName
         {
             get => _clanName;
-            set { if (_clanName == value) return; _clanName = value; OnPropertyChanged(nameof(ClanName)); }
+            set
+            {
+                if (_clanName == value) return;
+                _clanName = value;
+                OnPropertyChanged(nameof(ClanName));
+                // A name arriving means a clan actually exists; empty stays empty.
+                if (!string.IsNullOrWhiteSpace(value)) Ach.Unlock(Ach.Clan);
+            }
         }
 
         private string _clanMotd = "";

@@ -257,6 +257,7 @@ public partial class MainWindow
     /// </summary>
     private async Task<bool> SendGlobalChatAsync(string text)
     {
+        Ach.Unlock(Ach.GlobalChat);
         var replyToId = _globalReplyTarget?.Id;
 
         var outcome = await SocialApi.PostChatAsync(text, replyToId: replyToId).ConfigureAwait(true);
