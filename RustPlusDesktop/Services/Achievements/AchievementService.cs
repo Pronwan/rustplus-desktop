@@ -35,6 +35,17 @@ public static class AchievementService
     /// <summary>Raised when the unseen count changes, in either direction.</summary>
     public static event Action<int>? UnseenChanged;
 
+    /// <summary>
+    /// While true, achievements are still recorded and still count towards the badge,
+    /// but no <see cref="Unlocked"/> event fires.
+    ///
+    /// Startup re-establishes a lot of state at once - a team is already joined, the
+    /// cloud is already connected, devices are already paired - and without this the
+    /// first launch after an update would bury the app under toasts for things the
+    /// player did weeks ago. The badge still tells them there is something to look at.
+    /// </summary>
+    public static bool SuppressUnlockedEvents { get; set; } = true;
+
     private static AchievementState State
     {
         get
@@ -84,7 +95,8 @@ public static class AchievementService
 
         if (!isNew || def == null) return;
 
-        Unlocked?.Invoke(def);
+        // The badge always updates; only the celebration is held back during startup.
+        if (!SuppressUnlockedEvents) Unlocked?.Invoke(def);
         UnseenChanged?.Invoke(UnseenCount);
     }
 

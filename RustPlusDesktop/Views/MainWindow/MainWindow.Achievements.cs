@@ -25,6 +25,15 @@ public partial class MainWindow
         AchievementService.UnseenChanged += OnAchievementUnseenChanged;
 
         UpdateAchievementBadge(AchievementService.UnseenCount);
+
+        // Connecting, restoring the team, reading the device list and reloading the
+        // cloud state all happen in the first seconds and can each earn something.
+        // Those are recorded silently; toasts start once the app has settled.
+        _ = Dispatcher.InvokeAsync(async () =>
+        {
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(12));
+            AchievementService.SuppressUnlockedEvents = false;
+        }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void OnAchievementUnlocked(AchievementDef def)

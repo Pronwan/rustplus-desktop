@@ -586,6 +586,7 @@ public partial class MainWindow
                         Notified3 = totalMins <= 3
                     };
                     Dispatcher.Invoke(() => profile.CustomTimers.Add(timer));
+                    Ach.Unlock(Ach.Timer);
 
                     if (profile.AlertCustomTimer)
                     {

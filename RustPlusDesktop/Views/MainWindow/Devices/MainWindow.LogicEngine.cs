@@ -350,6 +350,7 @@ namespace RustPlusDesk.Views
                     Notified3 = minutes <= 3,
                 });
 
+                Ach.Unlock(Ach.Timer);
                 AppendLog($"[LogicEngine] Started {minutes} min timer '{name}'.");
 
                 if (profile.AlertCustomTimer)
