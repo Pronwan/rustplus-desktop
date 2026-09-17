@@ -105,9 +105,9 @@ namespace RustPlusDesk.Views
             ApplyFilters();
         }
 
-        private void FilterCategory_Checked(object sender, RoutedEventArgs e)
+        private void CmbCategoryFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is RadioButton rb && rb.Tag is string cat)
+            if (CmbCategoryFilter?.SelectedItem is ComboBoxItem item && item.Tag is string cat)
             {
                 _activeCategoryFilter = cat;
                 ApplyFilters();

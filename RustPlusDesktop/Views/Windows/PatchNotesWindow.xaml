@@ -118,12 +118,33 @@
                         </Border>
                     </Grid>
 
-                    <!-- Filter Category Chips -->
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="2,0,2,8">
-                        <RadioButton Content="All" GroupName="PatchCatFilter" Tag="All" IsChecked="True" Checked="FilterCategory_Checked" Margin="0,0,6,0" FontSize="11" Style="{DynamicResource DefaultRadioButtonStyle}"/>
-                        <RadioButton Content="Major" GroupName="PatchCatFilter" Tag="Major" Checked="FilterCategory_Checked" Margin="0,0,6,0" FontSize="11" Style="{DynamicResource DefaultRadioButtonStyle}"/>
-                        <RadioButton Content="Hotfixes" GroupName="PatchCatFilter" Tag="Hotfix" Checked="FilterCategory_Checked" FontSize="11" Style="{DynamicResource DefaultRadioButtonStyle}"/>
-                    </StackPanel>
+                    <!-- Filter Category Select Component -->
+                    <ComboBox x:Name="CmbCategoryFilter"
+                              Grid.Row="1"
+                              Height="34"
+                              Margin="2,0,2,8"
+                              Padding="8,4"
+                              VerticalContentAlignment="Center"
+                              SelectionChanged="CmbCategoryFilter_SelectionChanged">
+                        <ComboBoxItem Tag="All" IsSelected="True">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Layer24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource Accent}"/>
+                                <TextBlock Text="All Releases" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem Tag="Major">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Sparkle24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource BrandOrangeBrush}"/>
+                                <TextBlock Text="Major Updates" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem Tag="Hotfix">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Wrench24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource Accent}"/>
+                                <TextBlock Text="Hotfixes Only" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
 
                     <!-- Version Navigation Items -->
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
