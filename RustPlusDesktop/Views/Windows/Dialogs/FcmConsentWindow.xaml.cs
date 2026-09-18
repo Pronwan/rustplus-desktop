@@ -1,21 +1,14 @@
 using System.Windows;
-using System.Windows.Input;
 
 namespace RustPlusDesk.Views.Windows.Dialogs
 {
-    public partial class FcmConsentWindow : Window
+    public partial class FcmConsentWindow : Wpf.Ui.Controls.FluentWindow
     {
         public bool Accepted { get; private set; }
 
         public FcmConsentWindow()
         {
             InitializeComponent();
-        }
-
-        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2) return; // Prevent maximizing
-            DragMove();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

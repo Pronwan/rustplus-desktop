@@ -5765,4 +5765,13 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Elimini pe {0} din echipă?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Trimite către</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Doar harta (implicit)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Elimină toate widgeturile și readuce harta în colțul ei</value>
+  </data>
 </root>

@@ -13,7 +13,7 @@ public partial class ChatCommandsOverlay : UserControl
         // Ask the central capability service rather than being told from outside. The overlay
         // is created and shown independently of the connect flow, so pushing state into it
         // would mean remembering to do so from every call site.
-        Loaded += (_, __) => ApplyEventCapabilities();
+        Loaded += (_, __) => { ApplyEventCapabilities(); LoadAiPerHour(); };
         EventCapabilities.Changed += OnCapabilitiesChanged;
         Unloaded += (_, __) => EventCapabilities.Changed -= OnCapabilitiesChanged;
     }
@@ -81,5 +81,53 @@ public partial class ChatCommandsOverlay : UserControl
         {
             fe.ToolTip = RustPlusDesk.Properties.Resources.GetString("Saved") ?? "Saved";
         }
+    }
+
+    /// <summary>
+    /// How many AI questions each teammate gets an hour.
+    ///
+    /// Built in code rather than bound, because "unlimited" is zero in the profile and a
+    /// number in the list — a converter for four fixed choices is more machinery than the
+    /// choices are worth.
+    /// </summary>
+    private static readonly int[] AiPerHourChoices = { 3, 5, 10, 0 };
+
+    private bool _loadingAiPerHour;
+
+    private void LoadAiPerHour()
+    {
+        if (ChatAiPerHourBox == null) return;
+
+        _loadingAiPerHour = true;
+
+        if (ChatAiPerHourBox.Items.Count == 0)
+        {
+            foreach (var limit in AiPerHourChoices)
+            {
+                ChatAiPerHourBox.Items.Add(new ComboBoxItem
+                {
+                    Content = limit == 0
+                        ? Helpers.Loc.Text("ChatAiPerHourUnlimited", "Unlimited")
+                        : string.Format(Helpers.Loc.Text("ChatAiPerHourCount", "{0} per hour"), limit),
+                    Tag = limit,
+                });
+            }
+        }
+
+        var profile = DataContext as Models.ServerProfile;
+        int current = profile?.ChatAiPerHour ?? 5;
+
+        int index = System.Array.IndexOf(AiPerHourChoices, current);
+        ChatAiPerHourBox.SelectedIndex = index >= 0 ? index : 1;
+
+        _loadingAiPerHour = false;
+    }
+
+    private void ChatAiPerHour_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loadingAiPerHour) return;
+        if (DataContext is not Models.ServerProfile profile) return;
+
+        profile.ChatAiPerHour = (ChatAiPerHourBox.SelectedItem as ComboBoxItem)?.Tag as int? ?? 5;
     }
 }

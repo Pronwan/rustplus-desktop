@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using RustPlusDesk.Services.Cloud;
+using RustPlusDesk.Services.Data;
 
 namespace RustPlusDesk.Services.Support;
 
@@ -20,7 +22,7 @@ public sealed record TicketSummary(
     DateTimeOffset? LastActivityAt);
 
 /// <summary>A file hung off a ticket or one of its replies.</summary>
-public sealed record TicketAttachment(string Id, string Name, long Size, string Mime);
+public sealed record TicketAttachment(string Id, string Name, long Size, string Mime, string? Url = null, string? ThumbUrl = null);
 
 /// <summary>One line in a ticket's thread.</summary>
 public sealed record TicketMessage(
@@ -178,9 +180,89 @@ public static class SupportApi
         return await CloudApiClient.PostMultipartAsync($"tickets/{ticketId}/messages", content).ConfigureAwait(false);
     }
 
+    private static readonly HttpClient DirectHttp = new();
+
     /// <summary>The raw bytes of an attachment - for a thumbnail, or to stage before opening.</summary>
-    public static Task<byte[]?> GetAttachmentBytesAsync(string ticketId, string mediaId)
-        => CloudApiClient.GetBytesAsync($"tickets/{ticketId}/attachments/{mediaId}");
+    public static async Task<byte[]?> GetAttachmentBytesAsync(string ticketId, string mediaId, string? directUrl = null)
+    {
+        var cloudBase = (DataManager.CLOUD_API_BASEURL ?? "").TrimEnd('/');
+
+        if (!string.IsNullOrEmpty(directUrl))
+        {
+            if (directUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || directUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    using var response = await DirectHttp.GetAsync(directUrl).ConfigureAwait(false);
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                }
+                catch { }
+
+                try
+                {
+                    using var req = new HttpRequestMessage(HttpMethod.Get, directUrl);
+                    if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
+                        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
+                    using var resp = await DirectHttp.SendAsync(req).ConfigureAwait(false);
+                    if (resp.IsSuccessStatusCode)
+                        return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                }
+                catch { }
+            }
+            else
+            {
+                // Relative URL: e.g. /storage/... or storage/... or api/v1/...
+                var cleanRel = directUrl.TrimStart('/');
+                if (!string.IsNullOrEmpty(cloudBase))
+                {
+                    var fullUrl = $"{cloudBase}/{cleanRel}";
+                    try
+                    {
+                        using var req = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+                        if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
+                            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
+                        using var resp = await DirectHttp.SendAsync(req).ConfigureAwait(false);
+                        if (resp.IsSuccessStatusCode)
+                            return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    }
+                    catch { }
+                }
+
+                var bytes = await CloudApiClient.GetBytesAsync(cleanRel).ConfigureAwait(false);
+                if (bytes != null) return bytes;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(mediaId))
+        {
+            var routes = new List<string>();
+            if (!string.IsNullOrEmpty(ticketId))
+            {
+                routes.Add($"tickets/{ticketId}/attachments/{mediaId}");
+                routes.Add($"tickets/{ticketId}/attachments/{mediaId}/download");
+                routes.Add($"tickets/{ticketId}/media/{mediaId}");
+                routes.Add($"tickets/{ticketId}/media/{mediaId}/download");
+                routes.Add($"tickets/{ticketId}/attachment/{mediaId}");
+                routes.Add($"support/tickets/{ticketId}/attachments/{mediaId}");
+            }
+            routes.Add($"tickets/attachments/{mediaId}");
+            routes.Add($"tickets/attachments/{mediaId}/download");
+            routes.Add($"media/{mediaId}");
+            routes.Add($"media/{mediaId}/download");
+            routes.Add($"attachments/{mediaId}");
+            routes.Add($"attachments/{mediaId}/download");
+            routes.Add($"support/attachments/{mediaId}");
+
+            foreach (var route in routes)
+            {
+                var bytes = await CloudApiClient.GetBytesAsync(route).ConfigureAwait(false);
+                if (bytes is { Length: > 0 }) return bytes;
+            }
+        }
+
+        return null;
+    }
 
     private static string CacheDir => Path.Combine(Path.GetTempPath(), "rpd-tickets", "cache");
 
@@ -208,7 +290,7 @@ public static class SupportApi
     /// thumbnail draws instantly on the next open and survives a dropped connection. Falls back to a
     /// plain fetch if the cache cannot be written.
     /// </summary>
-    public static async Task<byte[]?> GetAttachmentCachedAsync(string ticketId, string mediaId, string fileName)
+    public static async Task<byte[]?> GetAttachmentCachedAsync(string ticketId, string mediaId, string fileName, string? directUrl = null)
     {
         try
         {
@@ -219,7 +301,7 @@ public static class SupportApi
             if (File.Exists(path) && new FileInfo(path).Length > 0)
                 return await File.ReadAllBytesAsync(path).ConfigureAwait(false);
 
-            var bytes = await GetAttachmentBytesAsync(ticketId, mediaId).ConfigureAwait(false);
+            var bytes = await GetAttachmentBytesAsync(ticketId, mediaId, directUrl).ConfigureAwait(false);
             if (bytes is { Length: > 0 })
             {
                 try { await File.WriteAllBytesAsync(path, bytes).ConfigureAwait(false); } catch { /* cache is best-effort */ }
@@ -228,7 +310,7 @@ public static class SupportApi
         }
         catch
         {
-            return await GetAttachmentBytesAsync(ticketId, mediaId).ConfigureAwait(false);
+            return await GetAttachmentBytesAsync(ticketId, mediaId, directUrl).ConfigureAwait(false);
         }
     }
 
@@ -236,14 +318,25 @@ public static class SupportApi
     /// Downloads an attachment to a temp file and returns its path, so it can be opened in whatever
     /// the OS uses for that type. Null if it could not be fetched.
     /// </summary>
-    public static async Task<string?> SaveAttachmentToTempAsync(string ticketId, string mediaId, string fileName)
+    public static async Task<string?> SaveAttachmentToTempAsync(string ticketId, string mediaId, string fileName, string? directUrl = null)
     {
         // Cached path first, so opening a file the client uploaded never round-trips to the server.
-        var bytes = await GetAttachmentCachedAsync(ticketId, mediaId, fileName).ConfigureAwait(false);
+        var bytes = await GetAttachmentCachedAsync(ticketId, mediaId, fileName, directUrl).ConfigureAwait(false);
         if (bytes == null)
             return null;
 
         var safe = string.Join("_", (fileName ?? "attachment").Split(Path.GetInvalidFileNameChars()));
+        if (!Path.HasExtension(safe) || string.IsNullOrEmpty(Path.GetExtension(safe)))
+        {
+            if (bytes.Length >= 4 && ((bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47) ||
+                                      (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) ||
+                                      (bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46) ||
+                                      (bytes[0] == 0x42 && bytes[1] == 0x4D)))
+            {
+                safe += ".png";
+            }
+        }
+
         var dir = Path.Combine(Path.GetTempPath(), "rpd-tickets");
         Directory.CreateDirectory(dir);
         var path = Path.Combine(dir, safe);
@@ -381,14 +474,54 @@ public static class SupportApi
 
     private static IReadOnlyList<TicketAttachment> ParseAttachments(JsonElement e)
     {
-        if (!e.TryGetProperty("attachments", out var arr) || arr.ValueKind != JsonValueKind.Array)
-            return Array.Empty<TicketAttachment>();
+        var list = new List<TicketAttachment>();
 
-        return arr.EnumerateArray().Select(a => new TicketAttachment(
-            Str(a, "id") ?? "",
-            Str(a, "name") ?? "file",
-            a.TryGetProperty("size", out var sz) && sz.TryGetInt64(out var n) ? n : 0,
-            Str(a, "mime") ?? "application/octet-stream")).ToList();
+        foreach (var prop in new[] { "attachments", "media", "files" })
+        {
+            if (e.TryGetProperty(prop, out var arr) && arr.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var a in arr.EnumerateArray())
+                {
+                    if (a.ValueKind == JsonValueKind.Object)
+                    {
+                        list.Add(new TicketAttachment(
+                            Str(a, "id") ?? Str(a, "uuid") ?? Str(a, "media_id") ?? "",
+                            Str(a, "name") ?? Str(a, "file_name") ?? Str(a, "filename") ?? "file",
+                            (a.TryGetProperty("size", out var sz) && sz.TryGetInt64(out var n)) ? n : 0,
+                            Str(a, "mime") ?? Str(a, "mime_type") ?? Str(a, "content_type") ?? "application/octet-stream",
+                            Str(a, "url") ?? Str(a, "original_url") ?? Str(a, "download_url") ?? Str(a, "preview_url") ?? Str(a, "path") ?? Str(a, "full_url"),
+                            Str(a, "thumbnail_url") ?? Str(a, "thumb_url") ?? Str(a, "preview_url")));
+                    }
+                    else if (a.ValueKind == JsonValueKind.String)
+                    {
+                        var url = a.GetString() ?? "";
+                        var fileName = "attachment";
+                        try { fileName = Path.GetFileName(new Uri(url).LocalPath); } catch { }
+                        list.Add(new TicketAttachment(url, fileName, 0, "application/octet-stream", url));
+                    }
+                }
+            }
+            else if (e.TryGetProperty(prop, out var single) && single.ValueKind == JsonValueKind.Object)
+            {
+                list.Add(new TicketAttachment(
+                    Str(single, "id") ?? Str(single, "uuid") ?? Str(single, "media_id") ?? "",
+                    Str(single, "name") ?? Str(single, "file_name") ?? Str(single, "filename") ?? "file",
+                    (single.TryGetProperty("size", out var sz) && sz.TryGetInt64(out var n)) ? n : 0,
+                    Str(single, "mime") ?? Str(single, "mime_type") ?? Str(single, "content_type") ?? "application/octet-stream",
+                    Str(single, "url") ?? Str(single, "original_url") ?? Str(single, "download_url") ?? Str(single, "preview_url") ?? Str(single, "path") ?? Str(single, "full_url"),
+                    Str(single, "thumbnail_url") ?? Str(single, "thumb_url") ?? Str(single, "preview_url")));
+            }
+        }
+
+        var directUrl = Str(e, "attachment_url") ?? Str(e, "media_url") ?? Str(e, "file_url") ?? Str(e, "image_url");
+        if (!string.IsNullOrEmpty(directUrl) && !list.Any(x => x.Url == directUrl))
+        {
+            var fileName = Str(e, "attachment_name") ?? Str(e, "file_name") ?? "attachment";
+            try { fileName = Path.GetFileName(new Uri(directUrl).LocalPath); } catch { }
+            list.Add(new TicketAttachment(Str(e, "media_id") ?? directUrl, fileName, 0, "application/octet-stream", directUrl));
+        }
+
+        return list;
     }
 
     private static NotificationItem ParseNotification(JsonElement e) => new(
@@ -403,7 +536,18 @@ public static class SupportApi
         Date(e, "created_at"));
 
     private static string? Str(JsonElement element, string name)
-        => element.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+    {
+        if (!element.TryGetProperty(name, out var v))
+            return null;
+
+        if (v.ValueKind == JsonValueKind.String)
+            return v.GetString();
+
+        if (v.ValueKind == JsonValueKind.Number)
+            return v.GetRawText();
+
+        return null;
+    }
 
     private static DateTimeOffset? Date(JsonElement element, string name)
         => element.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String

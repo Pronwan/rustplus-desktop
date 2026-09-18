@@ -69,7 +69,6 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private DateTime _lastPairingPingAt = DateTime.MinValue;
     private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
-    private WebView2? _webView;
     private IPairingListener _pairing;
     private readonly Dictionary<uint, DateTime> _entityPairSeen = new();
     private string? _lastPairSig;
@@ -509,6 +508,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (FindName("TxtAppVersion") is TextBlock txt)
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
+        StartSessionTracking();
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
         ApplySettings();
@@ -648,10 +648,23 @@ public partial class MainWindow : WpfUi.FluentWindow
 
             UpdatePairingGuideSnackbar();
             UpdateCloudSyncUI();
+            WireAchievements();
         }));
 
         // One-time migration notice for v5.2.0
         var appVersion = VersionHelper.GetClientVersion();
+
+        // Strictly less than, for a notice aimed at everyone arriving from before a release
+        // rather than everyone up to and including one. "9.3.0" is below "10.0"; "10.0.0" is
+        // not, because System.Version orders an absent build component below a zero one.
+        bool IsVersionLessThan(string versionStr, string targetStr)
+        {
+            string cleanVer = versionStr.Split('-')[0];
+            string cleanTarget = targetStr.Split('-')[0];
+            return System.Version.TryParse(cleanVer, out var v1)
+                && System.Version.TryParse(cleanTarget, out var v2)
+                && v1 < v2;
+        }
 
         bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
         {
@@ -724,7 +737,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // Everyone arriving from 9.0.4 or earlier gets the what's-new notice once. A fresh install
+        // Everyone arriving from before 10.0 gets the what's-new notice once. A fresh install
         // starts on the current version and has nothing to catch up on, so it is left alone.
         //
         // The flag is latched here rather than re-derived on every start: LastSeenVersion has
@@ -736,7 +749,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // ticked — and the notice could never be dismissed.
         if (!string.IsNullOrEmpty(versionBeforeThisStart)
             && versionBeforeThisStart != appVersion
-            && IsVersionLessThanOrEqual(versionBeforeThisStart, "9.0.4"))
+            && IsVersionLessThan(versionBeforeThisStart, "10.0"))
         {
             TrackingService.PendingWhatsNewNotice = true;
         }
@@ -974,7 +987,14 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Let WPF present the first usable frame before initializing the embedded
         // browser and parsing catalogs that are not required to construct the shell.
         await Dispatcher.Yield(DispatcherPriority.ContextIdle);
-        _ = EnsureWebView2Async();
+        try
+        {
+            await EnsureWebView2Async();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WebView2] EnsureWebView2Async error: {ex.Message}");
+        }
 
         // Whether the Community entry belongs in the rail at all. Asked once on start and again
         // whenever the account changes; a stored token means the auth event has already fired by
@@ -1049,6 +1069,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void ShowOverlay()
     {
+        Ach.Unlock(Ach.Crosshair);
         if (_overlay == null)
             _overlay = new CrosshairWindow
             {
@@ -2977,6 +2998,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (_alarmWin is null || !_alarmWin.IsLoaded)
         {
+            // The in-app alert popup means a smart alarm actually fired.
+            Ach.Unlock(Ach.Raided);
             _alarmWin = new AlarmWindow { Owner = this };
             _alarmWin.Closed += (_, __) => _alarmWin = null;
             _alarmWin.Show();
@@ -3078,6 +3101,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeathStatsPanel.Visibility = deathStatsSelected ? Visibility.Visible : Visibility.Collapsed;
         if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
         if (wipeTrackerSelected) OpenPlayerWipeTrackerWorkspace();
+
+        // Opening these is the whole condition, so the tab switch is the trigger.
+        if (raidSelected) Ach.Unlock(Ach.RaidCalculator);
+        if (geneticsSelected) Ach.Unlock(Ach.GeneticsLab);
+        if (deathStatsSelected) Ach.Unlock(Ach.DeathStats);
         if (deathStatsSelected) OpenDeathStatsWorkspace();
         // Tickets is an inline tab like Recycler: re-read on open, and it takes the workspace over
         // the map without touching the device/servers panel beside it.
@@ -4155,6 +4183,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     };
                     prof.Devices.Add(dev);
                     AppendLog($"Device added → {dev.Display}");
+                    // Any kind counts: switch, alarm or storage monitor.
+                    Ach.Unlock(Ach.SmartDevicePaired);
                 }
                 else
                 {
@@ -5856,7 +5886,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         PopulateHotkeyTriggersSubMenu();
         UpdateAlertEnabledBadge(masterOn);
 
-        if (ChatAlertsConfigureButton.Flyout is ContextMenu cm)
+        if (ChatAlertsConfigureButton.ContextMenu is ContextMenu cm)
         {
             SyncContextMenu(cm, masterOn);
         }
@@ -6329,6 +6359,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         _alertRules.Add(rule);
+        Ach.Unlock(Ach.Automation);
 
         RefreshAlertListUI();
     }
@@ -8235,6 +8266,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
     }
 
+    private long _chatAlertsMenuClosedTimestamp;
+
+    private void ChatAlertsContextMenu_Closed(object sender, RoutedEventArgs e)
+    {
+        _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+    }
+
+    private void ChatAlertsConfigureButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm != null && cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+            e.Handled = true;
+        }
+    }
+
+    private void ChatAlertsConfigureButton_Click(object sender, RoutedEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm == null) return;
+
+        if (Environment.TickCount64 - _chatAlertsMenuClosedTimestamp < 350)
+        {
+            return;
+        }
+
+        if (cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            return;
+        }
+
+        cm.PlacementTarget = ChatAlertsConfigureButton;
+        cm.IsOpen = true;
+    }
+
+
     private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
     {
         try
@@ -8692,6 +8762,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         _lastGestureAt[gesture] = now;
 
+        if (HandledByAiCompanion(gesture)) return;
+
         var map = MapForCurrentServer();
         if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;
 
@@ -9006,6 +9078,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _hotkeyMgr?.UnregisterAll();
         _hotkeysActive = false;
+
+        // Push to talk is not a device binding and does not belong to this switch.
+        ApplyAiHotkey();
+
         UpdateHotkeyButtonUi();
     }
 
@@ -9023,6 +9099,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             any |= _hotkeyMgr.Register(gesture);
 
         _hotkeysActive = any;
+
+        ApplyAiHotkey();
+
         UpdateHotkeyButtonUi();
     }
 

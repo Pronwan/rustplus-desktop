@@ -5765,4 +5765,13 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Ukloniti igrača {0} iz tima?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Šalje se korisniku</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Samo mapa (podrazumevano)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Uklanja sve vidžete i vraća mapu u njen ugao</value>
+  </data>
 </root>

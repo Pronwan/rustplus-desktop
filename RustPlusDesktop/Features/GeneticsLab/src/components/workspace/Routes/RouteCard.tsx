@@ -10,8 +10,10 @@ import {
 } from '@mui/material';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { ScoredRoute, useCalculation } from '../../../context/CalculationContext.tsx';
+import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { GeneticsSequence } from '../../common/GeneticsSequence.tsx';
 import { generationVisual } from '../../../utils/generationStyle.ts';
+import { isExactMatch } from '../../../utils/targetMatch.ts';
 
 interface RouteCardProps {
   scoredRoute: ScoredRoute;
@@ -31,9 +33,13 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 }) => {
   const { group, analysis } = scoredRoute;
   const { setSelectedGroup, setSelectedMapIndex, setIsInspectorOpen, comparedGroups, toggleCompareGroup } = useCalculation();
+  const { targetConfig } = useWorkspace();
   const isCompared = comparedGroups.some(g => g.resultSaplingGeneString === group.resultSaplingGeneString);
   const isBest = rankIndex === 0;
   const generation = generationVisual(analysis.generationCount);
+  const isExactTarget = targetConfig.targetGenetics
+    ? isExactMatch(group.resultSaplingGeneString, targetConfig.targetGenetics)
+    : false;
 
   const selectRoute = () => {
     setSelectedGroup(group);
@@ -42,13 +48,32 @@ export const RouteCard: React.FC<RouteCardProps> = ({
     onInspect?.();
   };
 
-  const readiness = analysis.inventoryStatus === 'available'
-    ? { label: 'Ready now', color: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.35)', tint: 'rgba(76, 175, 80, 0.12)' }
-    : { label: `Missing ${analysis.missingClonesCount}`, color: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.35)', tint: 'rgba(255, 167, 38, 0.12)' };
+  const readiness = analysis.missingClonesCount > 0
+    ? {
+        label: `Missing ${analysis.missingClonesCount}`,
+        color: 'var(--gl-warning)',
+        border: 'rgba(255, 167, 38, 0.35)',
+        tint: 'rgba(255, 167, 38, 0.12)'
+      }
+    : analysis.additionalCuttingsNeeded > 0
+    ? {
+        label: `Ready (${analysis.additionalCuttingsNeeded} cuttings)`,
+        color: 'var(--gl-success)',
+        border: 'rgba(76, 175, 80, 0.35)',
+        tint: 'rgba(76, 175, 80, 0.12)'
+      }
+    : {
+        label: 'Ready now',
+        color: 'var(--gl-success)',
+        border: 'rgba(76, 175, 80, 0.35)',
+        tint: 'rgba(76, 175, 80, 0.12)'
+      };
 
-  const reason = analysis.inventoryStatus === 'available'
-    ? `Ready with your clone bank; uses ${analysis.totalPlacementsCount} total plant${analysis.totalPlacementsCount === 1 ? '' : 's'}`
-    : `Collect ${analysis.missingClonesCount} clone${analysis.missingClonesCount === 1 ? '' : 's'} to make this route ready`;
+  const reason = analysis.missingClonesCount > 0
+    ? `Collect ${analysis.missingClonesCount} new clone${analysis.missingClonesCount === 1 ? '' : 's'} to make this route ready`
+    : analysis.additionalCuttingsNeeded > 0
+    ? `All ${analysis.uniqueCloneCount} parent clones owned; take ${analysis.additionalCuttingsNeeded} cutting${analysis.additionalCuttingsNeeded === 1 ? '' : 's'} to breed`
+    : `Ready with your clone bank; uses ${analysis.totalPlacementsCount} total plant${analysis.totalPlacementsCount === 1 ? '' : 's'}`;
 
   return (
     <Paper
@@ -118,6 +143,20 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         </Box>
 
         <Box sx={{ gridArea: 'metrics', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 0.75, flexWrap: 'wrap' }}>
+          {isExactTarget && (
+            <Chip
+              size="small"
+              label="EXACT"
+              sx={{
+                height: 24,
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                color: 'var(--gl-primary)',
+                border: '1px solid rgba(0, 229, 255, 0.5)',
+                backgroundColor: 'rgba(0, 229, 255, 0.12)'
+              }}
+            />
+          )}
           <Chip
             size="small"
             label={readiness.label}

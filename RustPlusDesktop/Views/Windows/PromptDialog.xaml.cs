@@ -1,8 +1,9 @@
 using System.Windows;
+using Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class PromptDialog : Window
+    public partial class PromptDialog : FluentWindow
     {
         public string DialogTitle { get; set; }
         public string InputText { get; set; }

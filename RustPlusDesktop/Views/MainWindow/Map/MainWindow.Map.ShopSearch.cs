@@ -221,6 +221,7 @@ public partial class MainWindow
     // ── Button entry-point ───────────────────────────────────────────────────
     private void BtnShopSearch_Click(object sender, RoutedEventArgs e)
     {
+        Ach.Unlock(Ach.Shops);
         ToggleShopSearch();
         if (ShopSearchContent.Visibility == Visibility.Visible)
         {

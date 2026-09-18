@@ -31,13 +31,20 @@
         <!-- Custom TitleBar -->
         <Border Grid.Row="0"
                 Background="#0F1013"
-                BorderBrush="#1AFFFFFF"
+                BorderBrush="{DynamicResource WhiteA1A}"
                 BorderThickness="0,0,0,1">
             <ui:TitleBar Title="{DynamicResource ImportDevicesTitle}"
                          Background="Transparent"
                          Foreground="White">
                 <ui:TitleBar.Icon>
-                    <ui:ImageIcon Source="pack://application:,,,/Assets/rustplus-desktop-icon.ico" />
+                    <ui:ImageIcon
+                        Width="18"
+                        Height="18"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,2,0"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="pack://application:,,,/Assets/logo-light-mode.png" />
                 </ui:TitleBar.Icon>
             </ui:TitleBar>
         </Border>
@@ -191,7 +198,7 @@
                                                 <Border Grid.Column="1"
                                                         Width="36"
                                                         Height="36"
-                                                        Background="#14FFFFFF"
+                                                        Background="{DynamicResource WhiteA14}"
                                                         CornerRadius="6"
                                                         Padding="6"
                                                         Margin="0,0,12,0"

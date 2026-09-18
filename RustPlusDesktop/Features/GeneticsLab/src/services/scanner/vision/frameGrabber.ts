@@ -8,8 +8,17 @@ import { RasterImage } from '../scannerTypes.ts';
  * pixel buffers, and gives the locator a single seam to fake in tests.
  */
 export interface CameraFrameGrabber {
-  /** Whole frame, downscaled to at most `maxWidth`, for candidate discovery. */
-  grabAnalysis(video: HTMLVideoElement, maxWidth: number): AnalysisFrame | null;
+  /**
+   * Whole frame, downscaled to at most `maxWidth`, for candidate discovery.
+   *
+   * `sourceSize` is for drawables that do not carry their own dimensions -- a `VideoFrame`
+   * off a capture track, for instance. A video element supplies its own.
+   */
+  grabAnalysis(
+    video: CanvasImageSource,
+    maxWidth: number,
+    sourceSize?: { width: number; height: number }
+  ): AnalysisFrame | null;
   /** A native-resolution crop, in camera pixels, for perspective normalisation and OCR. */
   grabRegion(video: HTMLVideoElement, x: number, y: number, width: number, height: number): RasterImage | null;
   /** Materialises a warped row as a canvas, which is what the OCR modules consume. */
@@ -30,9 +39,13 @@ export class CanvasFrameGrabber implements CameraFrameGrabber {
   private regionCanvas: HTMLCanvasElement | null = null;
   private outputCanvas: HTMLCanvasElement | null = null;
 
-  grabAnalysis(video: HTMLVideoElement, maxWidth: number): AnalysisFrame | null {
-    const sourceWidth = video.videoWidth;
-    const sourceHeight = video.videoHeight;
+  grabAnalysis(
+    video: CanvasImageSource,
+    maxWidth: number,
+    sourceSize?: { width: number; height: number }
+  ): AnalysisFrame | null {
+    const sourceWidth = sourceSize?.width ?? (video as HTMLVideoElement).videoWidth;
+    const sourceHeight = sourceSize?.height ?? (video as HTMLVideoElement).videoHeight;
     if (!sourceWidth || !sourceHeight) return null;
 
     const ratio = Math.min(1, maxWidth / sourceWidth);

@@ -196,7 +196,6 @@ export class GeneImagePreprocessor {
   public static computeRegionActivityScore(data: Uint8ClampedArray): number {
     let whiteTextPixels = 0;
     let badgeColorPixels = 0;
-    let darkBackgroundPixels = 0;
     let totalSamples = 0;
 
     // Sample every pixel for small ROIs (ensures 1px text at 0.5/0.7 scale is never missed)
@@ -219,8 +218,6 @@ export class GeneImagePreprocessor {
         whiteTextPixels++;
       } else if (isGreenBadge || isRedBadge) {
         badgeColorPixels++;
-      } else if (maxVal < 65) {
-        darkBackgroundPixels++;
       }
     }
 
@@ -228,14 +225,22 @@ export class GeneImagePreprocessor {
 
     const whiteTextRatio = whiteTextPixels / totalSamples;
     const badgeRatio = badgeColorPixels / totalSamples;
-    const darkRatio = darkBackgroundPixels / totalSamples;
 
-    // Authentic gene tooltip requires both vibrant circular badges and white text
-    let score = 0;
-    if (badgeRatio >= 0.05 && whiteTextRatio >= 0.015) {
-      score = Math.min(1.0, (whiteTextRatio * 16) + (badgeRatio * 4) + (darkRatio * 0.4));
-    }
-
+    /*
+     * A cheap "is anything here" pre-filter, and nothing more.
+     *
+     * It used to be a gate in its own right: unless the ROI held at least 5% badge colour
+     * AND 1.5% white text it scored a flat zero, and a zero meant the region was declared
+     * idle and never handed to the recogniser at all. A region sitting slightly low on the
+     * tooltip clears neither bar, so the scanner would report the tooltip as absent while it
+     * was plainly on screen -- no error, no rejection, nothing to debug.
+     *
+     * Deciding whether an ROI holds a gene row is the reader's job; it locates the badges
+     * and can say so properly. This only has to be sure the region is not empty, cheaply
+     * enough to run on every frame, and it must degrade smoothly rather than fall off a
+     * cliff when the crop is imperfect.
+     */
+    const score = Math.min(1, badgeRatio * 3 + whiteTextRatio * 8);
     return Math.round(score * 100) / 100;
   }
 }

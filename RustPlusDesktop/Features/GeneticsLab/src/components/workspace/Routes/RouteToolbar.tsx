@@ -16,7 +16,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TuneIcon from '@mui/icons-material/Tune';
 import CheckIcon from '@mui/icons-material/Check';
-import { useCalculation, RouteSortOption } from '../../../context/CalculationContext.tsx';
+import { useCalculation, RouteSortOption, MIN_ROUTES_TO_GROUP } from '../../../context/CalculationContext.tsx';
 import { useWorkspace } from '../../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../../context/ScannerContext.tsx';
 
@@ -138,9 +138,9 @@ export const RouteToolbar: React.FC = () => {
             onChange={(event) => setCalculationPreset(event.target.value as 'fast' | 'balanced' | 'thorough')}
             sx={{ height: 34, minWidth: 150, fontSize: '0.75rem', fontWeight: 800, backgroundColor: 'var(--gl-panel-header-bg)', '& fieldset': { borderColor: 'var(--gl-surface-hover)' } }}
           >
-            <MenuItem value="fast" sx={{ fontSize: '0.75rem' }}>Search: Fast</MenuItem>
-            <MenuItem value="balanced" sx={{ fontSize: '0.75rem' }}>Search: Balanced</MenuItem>
-            <MenuItem value="thorough" sx={{ fontSize: '0.75rem' }}>Search: Thorough</MenuItem>
+            <MenuItem value="fast" sx={{ fontSize: '0.75rem' }}>1 Generation</MenuItem>
+            <MenuItem value="balanced" sx={{ fontSize: '0.75rem' }}>2 Generations</MenuItem>
+            <MenuItem value="thorough" sx={{ fontSize: '0.75rem' }}>3 Generations</MenuItem>
           </Select>
         </Box>
 
@@ -181,7 +181,14 @@ export const RouteToolbar: React.FC = () => {
               <Menu anchorEl={viewMenuAnchor} open={Boolean(viewMenuAnchor)} onClose={() => setViewMenuAnchor(null)}>
                 <MenuItem onClick={() => { setGroupSimilar(!groupSimilar); setViewMenuAnchor(null); }} sx={{ minWidth: 220, fontSize: '0.78rem' }}>
                   <Box sx={{ width: 24 }}>{groupSimilar && <CheckIcon sx={{ fontSize: 18, color: 'var(--gl-primary)' }} />}</Box>
-                  Group similar routes
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <span>Group similar routes</span>
+                    {rawRouteCount <= MIN_ROUTES_TO_GROUP && rawRouteCount > 0 && (
+                      <Typography variant="caption" sx={{ fontSize: '0.68rem', color: 'var(--gl-text-muted)' }}>
+                        Inactive when route count is low (≤ {MIN_ROUTES_TO_GROUP})
+                      </Typography>
+                    )}
+                  </Box>
                 </MenuItem>
               </Menu>
             </>

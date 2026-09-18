@@ -4,7 +4,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class OfflineDeathsHistoryWindow : Window
+    public partial class OfflineDeathsHistoryWindow : Wpf.Ui.Controls.FluentWindow
     {
         public OfflineDeathsHistoryWindow()
         {

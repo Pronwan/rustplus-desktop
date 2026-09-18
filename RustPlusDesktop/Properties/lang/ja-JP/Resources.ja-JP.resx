@@ -5858,4 +5858,13 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon が Rust+ Desktop との接続を受け付けなくなったため、襲撃アラームが Alexa に届かなくなりました。音声操作は引き続き利用できます。Alexa アプリを開き、Rust+ Desktop スキルを無効にしてから、もう一度リンクしてください。</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>送信先</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>マップのみ（既定）</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>すべてのウィジェットを外し、マップを元の隅に戻します</value>
+  </data>
 </root>

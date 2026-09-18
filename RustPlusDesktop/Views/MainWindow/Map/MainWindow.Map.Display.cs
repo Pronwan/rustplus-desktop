@@ -44,14 +44,39 @@ public partial class MainWindow
 
         GridLayer.Width = wDip;
         GridLayer.Height = hDip;
-        GridLayer.Opacity = TrackingService.MapGridOpacity;
+        GridLayer.Opacity = 1.0;   // the wrapper carries the user opacity, see ApplyIndependentLayerVisibility
         GridLayer.IsHitTestVisible = false;
+
+        // Independent of the grid: its own canvas, never dimmed by the grid opacity.
+        NoBuildLayer.Width = wDip;
+        NoBuildLayer.Height = hDip;
+        NoBuildLayer.IsHitTestVisible = false;
+
+        CargoPathLayer.Width = wDip;
+        CargoPathLayer.Height = hDip;
+        CargoPathLayer.IsHitTestVisible = true;
+
+        KeycardLayer.Width = wDip;
+        KeycardLayer.Height = hDip;
+        KeycardLayer.IsHitTestVisible = false;
 
         // WICHTIG: Overlay groesser machen, aber Map nicht anfassen
         Overlay.Width = wDip + padPx * 2;
         Overlay.Height = hDip + padPx * 2;
         Overlay.IsHitTestVisible = true;
         Overlay.Background = Brushes.Transparent;
+
+        // Icons, players and the transient inline panels used to share the Overlay canvas and
+        // sort themselves by per-element ZIndex. They are separate canvases now, because the
+        // mini-map mirrors each one through its own VisualBrush and a brush can only take a
+        // whole visual — the stacking order below reproduces the ZIndex bands they had.
+        foreach (var layer in new[] { IconLayer, PlayerLayer, DeathLayer, MapUiLayer })
+        {
+            layer.Width = Overlay.Width;
+            layer.Height = Overlay.Height;
+            layer.IsHitTestVisible = true;
+            layer.Background = null;   // null, not Transparent: gaps stay click-through to Overlay
+        }
 
         _scene ??= new Grid();
         _scene.Width = wDip + padPx * 2;
@@ -60,15 +85,39 @@ public partial class MainWindow
         (ImgMap.Parent as Panel)?.Children.Remove(ImgMap);
         (ImgHeatmap.Parent as Panel)?.Children.Remove(ImgHeatmap);
         (GridLayer.Parent as Panel)?.Children.Remove(GridLayer);
+        (NoBuildLayer.Parent as Panel)?.Children.Remove(NoBuildLayer);
+        (CargoPathLayer.Parent as Panel)?.Children.Remove(CargoPathLayer);
+        (KeycardLayer.Parent as Panel)?.Children.Remove(KeycardLayer);
         (Overlay.Parent as Panel)?.Children.Remove(Overlay);
+        (IconLayer.Parent as Panel)?.Children.Remove(IconLayer);
+        (PlayerLayer.Parent as Panel)?.Children.Remove(PlayerLayer);
+        (DeathLayer.Parent as Panel)?.Children.Remove(DeathLayer);
+        (MapUiLayer.Parent as Panel)?.Children.Remove(MapUiLayer);
 
         _scene.Children.Clear();
 
         // Map bei (padPx, padPx)? -> NEIN, jetzt bei (0,0)!
         _scene.Children.Add(ImgMap); Panel.SetZIndex(ImgMap, 0);
-        _scene.Children.Add(ImgHeatmap); Panel.SetZIndex(ImgHeatmap, 1);
-        _scene.Children.Add(GridLayer); Panel.SetZIndex(GridLayer, 2);
-        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 3);
+        // Wrapped rather than added directly: the image sits on the world rect via a
+        // Margin, so its own origin is offset from the scene's. The mini-map mirrors
+        // layers through VisualBrushes that all share one absolute viewbox, and an
+        // offset origin would slide the heatmap out of place there. The wrapper grid
+        // fills the scene, so the brush sees the same coordinates as every other layer.
+        _scene.Children.Add(Wrap(ref _heatmapWrapper, ImgHeatmap)); Panel.SetZIndex(_heatmapWrapper!, 1);
+        _scene.Children.Add(Wrap(ref _gridWrapper, GridLayer)); Panel.SetZIndex(_gridWrapper!, 2);
+        _scene.Children.Add(NoBuildLayer); Panel.SetZIndex(NoBuildLayer, 3);
+        _scene.Children.Add(CargoPathLayer); Panel.SetZIndex(CargoPathLayer, 4);
+        // Above the monument icons it annotates. Shares ZIndex 7 with the death
+        // wrapper added below, and loses to it on insertion order, which is what we
+        // want: a death marker is news, a keycard icon is reference.
+        _scene.Children.Add(KeycardLayer); Panel.SetZIndex(KeycardLayer, 7);
+        _scene.Children.Add(Overlay); Panel.SetZIndex(Overlay, 5);
+        _scene.Children.Add(IconLayer); Panel.SetZIndex(IconLayer, 6);
+        _scene.Children.Add(Wrap(ref _deathWrapper, DeathLayer)); Panel.SetZIndex(_deathWrapper!, 7);
+        _scene.Children.Add(PlayerLayer); Panel.SetZIndex(PlayerLayer, 8);
+        _scene.Children.Add(MapUiLayer); Panel.SetZIndex(MapUiLayer, 9);
+
+        ApplyIndependentLayerVisibility();
 
         _scene.RenderTransform = MapTransform;
 
@@ -80,6 +129,107 @@ public partial class MainWindow
         }
         _mapView.Child = _scene;
         ApplyMapPerformanceSettings();
+
+        // The layers were just reparented; an open mini-map has to be told, or it keeps
+        // mirroring whatever its brushes were pointed at before the new map arrived.
+        RefreshMiniMapLayers();
+    }
+
+    // ── Layers the mini-map can switch on its own ───────────────────────────────
+    //
+    // The grid and the death markers are the two the user can want in one place and not the
+    // other. Both used to be hidden by emptying or collapsing the layer itself — which the
+    // mini-map mirrors, so its own switch could only ever turn them further off.
+    //
+    // Each now sits in a wrapper that only the main map owns. Hiding means the wrapper goes to
+    // zero opacity, and a VisualBrush of the layer inside renders its own subtree without an
+    // ancestor's opacity — so the mini-map still sees it. Collapsing the wrapper would not work:
+    // a collapsed parent never lays its children out, and the brush would come back empty.
+
+    private Grid? _gridWrapper;
+    private Grid? _heatmapWrapper;
+    private Grid? _deathWrapper;
+
+    private static Grid Wrap(ref Grid? wrapper, UIElement layer)
+    {
+        wrapper ??= new Grid();
+        wrapper.Children.Clear();
+        wrapper.Children.Add(layer);
+        return wrapper;
+    }
+
+    /// <summary>True while an open mini-map is asking for a layer the main map has switched off.</summary>
+    private bool MiniMapWantsGrid => _miniMap is { IsVisible: true } m && m.WantsGridLayer;
+
+    private bool MiniMapWantsDeathMarkers => _miniMap is { IsVisible: true } m && m.WantsDeathLayer;
+
+    /// <summary>
+    /// Applies the main map's own choice to the wrappers. Opacity rather than visibility, and
+    /// hit testing off with it — a pin nobody can see must not swallow clicks.
+    /// </summary>
+    private void ApplyIndependentLayerVisibility()
+    {
+        if (_gridWrapper != null)
+        {
+            bool on = ChkGrid?.IsChecked == true;
+            _gridWrapper.Opacity = on ? TrackingService.MapGridOpacity : 0;
+            _gridWrapper.IsHitTestVisible = false;   // the grid never takes the mouse anyway
+        }
+
+        if (_deathWrapper != null)
+        {
+            bool on = _showDeathMarkers;
+            _deathWrapper.Opacity = on ? 1 : 0;
+            _deathWrapper.IsHitTestVisible = on;
+        }
+    }
+
+    /// <summary>
+    /// Redraws whatever the mini-map's layer switches just started or stopped asking for.
+    /// Both layers are only built when someone wants them, so a change of mind has to rebuild.
+    /// </summary>
+    internal void RefreshIndependentLayers()
+    {
+        try { RedrawGrid(); } catch { }
+        try { RedrawDeathPins(); } catch { }
+        ApplyIndependentLayerVisibility();
+    }
+
+    /// <summary>
+    /// Takes an element off whichever map layer holds it.
+    ///
+    /// Callers that add to a specific layer still remove through here on purpose: the element
+    /// may have been placed before a layout change moved its kind to another canvas, and
+    /// Children.Remove on a canvas that does not hold it is a no-op. One call that always
+    /// works beats a classification that has to stay in sync at 30 removal sites.
+    /// </summary>
+    private void RemoveFromMapLayers(UIElement? el)
+    {
+        if (el == null) return;
+        Overlay?.Children.Remove(el);
+        IconLayer?.Children.Remove(el);
+        PlayerLayer?.Children.Remove(el);
+        DeathLayer?.Children.Remove(el);
+        MapUiLayer?.Children.Remove(el);
+    }
+
+    /// <summary>
+    /// Swaps an element for its rebuilt version, keeping the position it held in its canvas —
+    /// that index is the draw order among same-ZIndex siblings, so losing it makes markers
+    /// flicker past each other on every avatar or online-state change.
+    /// </summary>
+    private void ReplaceOnMapLayer(UIElement oldEl, UIElement newEl, Canvas fallback)
+    {
+        foreach (var layer in new[] { PlayerLayer, IconLayer, Overlay, DeathLayer, MapUiLayer })
+        {
+            if (layer == null) continue;
+            int idx = layer.Children.IndexOf(oldEl);
+            if (idx < 0) continue;
+            layer.Children.RemoveAt(idx);
+            layer.Children.Insert(idx, newEl);
+            return;
+        }
+        fallback.Children.Add(newEl);
     }
 
     private void ResetMapDisplay()
@@ -89,6 +239,8 @@ public partial class MainWindow
         ImgMap.Source = null;
         ImgHeatmap.Source = null;
         GridLayer.Children.Clear();
+        NoBuildLayer?.Children.Clear();
+        CargoPathLayer?.Children.Clear();
 
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;
@@ -115,14 +267,12 @@ public partial class MainWindow
         {
             _miniMap.Close();
             _miniMap = null;
-            _miniMapBrush = null;
+
         }
     }
 
     private void ShowMapBasic(BitmapSource bmp)
     {
-        if (_webView != null) _webView.Visibility = Visibility.Collapsed;
-
         _mapBaseBmp = bmp;
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
         if (_mapView != null) _mapView.Visibility = Visibility.Visible;
@@ -166,6 +316,8 @@ public partial class MainWindow
         if (Overlay != null)
         {
             RenderOptions.SetEdgeMode(Overlay, edgeMode);
+            if (IconLayer != null) RenderOptions.SetEdgeMode(IconLayer, edgeMode);
+            if (PlayerLayer != null) RenderOptions.SetEdgeMode(PlayerLayer, edgeMode);
         }
         RefreshGridLineThickness();
 

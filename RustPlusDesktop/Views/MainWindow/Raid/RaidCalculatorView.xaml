@@ -562,14 +562,14 @@
                                     <DataTemplate DataType="{x:Type vm:RaidItemTotalViewModel}">
                                         <Grid Margin="0,0,0,7">
                                             <Grid.ColumnDefinitions><ColumnDefinition Width="34" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                                            <Border Width="28" Height="28" Background="#1AFFFFFF" CornerRadius="6"><Image Source="{Binding Icon}" Width="24" Height="24" /></Border>
+                                            <Border Width="28" Height="28" Background="{DynamicResource WhiteA1A}" CornerRadius="6"><Image Source="{Binding Icon}" Width="24" Height="24" /></Border>
                                             <TextBlock Grid.Column="1" Margin="7,0" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#FFFFC857" Text="{Binding AmountText}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Border Height="1" Margin="0,6,0,10" Background="#22FFFFFF" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
+                            <Border Height="1" Margin="0,6,0,10" Background="{DynamicResource WhiteA22}" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
                             <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiRAWRESOURCES}"
                                        Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
                             <ItemsControl ItemsSource="{Binding ResourceTotals}" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}">
@@ -577,7 +577,7 @@
                                     <DataTemplate DataType="{x:Type vm:RaidResourceTotalViewModel}">
                                         <Grid Margin="0,0,0,7">
                                             <Grid.ColumnDefinitions><ColumnDefinition Width="34" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                                            <Border Width="28" Height="28" Background="#1AFFFFFF" CornerRadius="6"><Image Source="{Binding Icon}" Width="24" Height="24" /></Border>
+                                            <Border Width="28" Height="28" Background="{DynamicResource WhiteA1A}" CornerRadius="6"><Image Source="{Binding Icon}" Width="24" Height="24" /></Border>
                                             <TextBlock Grid.Column="1" Margin="7,0" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" Text="{Binding AmountText}" />
                                         </Grid>

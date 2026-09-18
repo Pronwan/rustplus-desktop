@@ -1476,4 +1476,212 @@
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon 不再接受与 Rust+ Desktop 的连接，突袭警报无法送达 Alexa。语音控制仍可正常使用。请打开 Alexa 应用，停用 Rust+ Desktop 技能后重新关联。</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>发送给</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>仅地图（默认）</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>移除所有小部件，并把地图放回它的角落</value>
+  </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>翻译</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>粘贴一句话，用你的语言读它 — 谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>收听游戏声音和麦克风，并记录所说内容</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>停止并记录所说内容</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>粘贴或输入文字，然后按发送</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>用谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>翻译成 {0} — 点击更改</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>正在翻译…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>翻译服务不可用 — 可能是请求过于频繁。请稍后再试。</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>麦克风正被另一个磁贴使用。</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>无法开始录音。</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>正在记录所说内容…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows 未安装语音识别。请在 Windows 设置中添加语音语言。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>未识别到内容。Windows 当时在按 {0} 收听。</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>录音中没有听清任何内容。</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+（按 {0} 收听）</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>使用 AI 模型识别语音</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>它会自行判断所说的语言，并消耗你自己的 API 额度。Windows 只能理解已安装识别器的语言。</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>需要一个接受音频的 AI Companion 提供方，并为其保存密钥。在此之前由 Windows 记录语音。</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>麦克风正被翻译磁贴使用。</value>
+  </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>用 AI 翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>使用谷歌翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>使用 AI 模型翻译</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>更适合聊天内容——俚语、缩写和错别字——并消耗你自己的 API 额度。</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>需要在“已连接服务”中配置 AI Companion 密钥。任意提供方均可。</value>
+  </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>折叠</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>一个格子，隐藏其他所有磁贴，再点一次恢复</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>隐藏其他所有磁贴</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>重新显示面板</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>同时隐藏小地图</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>按一次即把其他磁贴就地隐藏，再按一次原样恢复整个布局。</value>
+  </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>谁杀了你？</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>死亡时出现：按一次即从死亡画面读出名字</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>记录死亡</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>重新读取</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>读取中…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>该区域没有可读内容——请在此磁贴的设置中检查区域。</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows 未安装文字识别。</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>还没有可以关联的死亡记录。</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>自杀</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>存活时也保留该磁贴</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows 以 {0} 识别文字。</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>名字的位置</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>距左侧 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>距顶部 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>宽度 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>高度 {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>立即在屏幕上测试</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>击杀者</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>击杀者</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>武器</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>击杀数</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>最近一次</value>
+  </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>在截图上框选区域</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>选择击杀者名字</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>拖出一个框，框住击杀者的名字——如果也想要武器，把旁边的武器一起框进去。</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>使用此框</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>无法读取该截图。</value>
+  </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>该死亡画面上没有名字——杀死你的东西没有名字。</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>用 AI 模型读取名字</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>能读取任何字母表的名字，并消耗你自己的 API 额度。Windows 只能读取已安装语言的文字。</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>需要在“已连接服务”中配置 AI Companion 密钥。任意提供方均可。</value>
+  </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>清空</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>忘记为该服务器记录的所有名字？死亡记录本身会保留。</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>忘记这个名字</value>
+  </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>恢复为实测默认值</value>
+  </data>
 </root>

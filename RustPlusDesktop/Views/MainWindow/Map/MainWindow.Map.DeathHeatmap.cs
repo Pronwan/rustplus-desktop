@@ -34,7 +34,7 @@ public partial class MainWindow
         if (Overlay != null)
         {
             foreach (var el in _deathHeatEls)
-                Overlay.Children.Remove(el);
+                RemoveFromMapLayers(el);
         }
 
         _deathHeatEls.Clear();
@@ -84,7 +84,7 @@ public partial class MainWindow
             Canvas.SetTop(ellipse, px.Y - radiusPx);
             // Above the map/grid, below markers and death pins.
             Panel.SetZIndex(ellipse, 50);
-            Overlay.Children.Add(ellipse);
+            IconLayer.Children.Add(ellipse);
             _deathHeatEls.Add(ellipse);
         }
     }

@@ -26,7 +26,7 @@
                         Fill="#26FF4B4B" />
                     <ui:SymbolIcon
                         FontSize="32"
-                        Foreground="#FFFF4B4B"
+                        Foreground="{DynamicResource DangerBrush}"
                         Symbol="Delete24" />
                 </Grid>
                 <TextBlock
@@ -61,8 +61,8 @@
                         Padding="12"
                         HorizontalAlignment="Stretch"
                         Appearance="Primary"
-                        Background="#FFFF4B4B"
-                        BorderBrush="#FFFF4B4B"
+                        Background="{DynamicResource DangerBrush}"
+                        BorderBrush="{DynamicResource DangerBrush}"
                         Click="BtnConfirm_Click"
                         Content="{DynamicResource DeleteAction}" />
                 </Grid>

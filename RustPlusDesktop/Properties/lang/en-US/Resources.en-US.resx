@@ -3662,6 +3662,9 @@ Please pair this server first.</value>
   <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
     <value>Open or close Team panel (Ctrl+Shift+T)</value>
   </data>
+  <data name="UiOpenWebPortal" xml:space="preserve">
+    <value>Open web portal</value>
+  </data>
   <data name="UiOpenShopFilters" xml:space="preserve">
     <value>Open shop filters</value>
   </data>
@@ -3679,6 +3682,21 @@ Please pair this server first.</value>
   </data>
   <data name="UiOrGroupName" xml:space="preserve">
     <value>or Group Name</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Parse map file?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Heatmaps are read from the server's map file. Search for the matching map now and parse it? This also adds the extra monuments and hot spots. The 3D map is not built.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Parse now</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Player Spawns</value>
+  </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM Nodes</value>
   </data>
   <data name="UiOres" xml:space="preserve">
     <value>Ores</value>
@@ -6067,8 +6085,23 @@ You can find more information on the server's official website:
   <data name="FriendsTitle" xml:space="preserve">
     <value>Friends</value>
   </data>
+  <data name="FriendsSearchPlaceholder" xml:space="preserve">
+    <value>Search friends...</value>
+  </data>
+  <data name="FriendsNoSearchResults" xml:space="preserve">
+    <value>No matching friends found.</value>
+  </data>
+  <data name="FriendsButtonAdd" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendTitle" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendSubtitle" xml:space="preserve">
+    <value>Send a friend request by Steam ID or with an introduction message.</value>
+  </data>
   <data name="FriendsEmpty" xml:space="preserve">
-    <value>Nobody on the list yet. Add somebody by their Steam ID below.</value>
+    <value>Nobody on the list yet.</value>
   </data>
   <data name="FriendsAddSteamId" xml:space="preserve">
     <value>Steam ID (17 digits)</value>
@@ -6384,5 +6417,71 @@ You can find more information on the server's official website:
   </data>
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon no longer accepts the connection to Rust+ Desktop, so raid alarms have stopped reaching Alexa. Voice control still works. Open the Alexa app, disable the Rust+ Desktop skill and link it again.</value>
+  </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Sending to</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Map only (default)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Removes every widget and puts the map back in its corner</value>
+  </data>
+  <data name="AiCompanionCustomPromptRules" xml:space="preserve">
+    <value>Custom Prompt Rules</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesHint" xml:space="preserve">
+    <value>Additional rules or instructions for the AI companion (e.g. tone, favorite items, playstyle). Appended to every question.</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesPlaceholder" xml:space="preserve">
+    <value>e.g. Always mention sulfur cost for explosives. Keep answers under 15 words.</value>
+  </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Heatmap</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Card Readers</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Parse the map file to enable keycard layers.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>None on this map.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Parse all map data</value>
+  </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} of {1} earned</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Achievement unlocked</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Achievements</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Rust+ Desktop App Achievements</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>All Achievements unlocked. Well done! Let the developers know?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Sent - we will get back to you.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>That could not be sent. You can open a ticket from Support instead.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>All Achievements unlocked</value>
+  </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NEW</value>
   </data>
 </root>

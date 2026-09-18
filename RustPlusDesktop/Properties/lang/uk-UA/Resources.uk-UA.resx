@@ -5765,4 +5765,13 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Вилучити {0} з команди?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Надіслати</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Лише карта (за умовчанням)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Прибирає всі віджети та повертає карту в її кут</value>
+  </data>
 </root>

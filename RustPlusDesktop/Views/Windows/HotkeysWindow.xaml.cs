@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace RustPlusDesk.Views
 {
-    public partial class HotkeysWindow : Window
+    public partial class HotkeysWindow : Wpf.Ui.Controls.FluentWindow
     {
         public sealed class RowVM
         {
@@ -152,8 +152,6 @@ namespace RustPlusDesk.Views
             GridDevices.Items.Refresh();
         }
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
-
         private void SldDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (TxtDelayLabel == null || _options == null) return;
@@ -168,15 +166,6 @@ namespace RustPlusDesk.Views
             bool parallel = CbMode.SelectedIndex == 1;
             _options.ParallelMode = parallel;
             PanelDelay.Visibility = parallel ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

@@ -1,0 +1,318 @@
+using System;
+using System.Collections.Generic;
+
+namespace RustPlusDesk.Models
+{
+    /// <summary>
+    /// One tile on the mini-map's command dock.
+    ///
+    /// <see cref="Kind"/> is a string rather than an enum on purpose: a layout saved by a newer
+    /// build can be read by an older one, which drops the tiles it cannot render instead of
+    /// failing to parse the file and wiping the whole dock.
+    /// </summary>
+    public sealed class CommandDockTile
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString("N");
+
+        /// <summary>Clock | Device | TeamChat | ClanChat | Event | Rule</summary>
+        public string Kind { get; set; } = CommandDockTileKinds.Clock;
+
+        public int Col { get; set; }
+        public int Row { get; set; }
+        public int ColSpan { get; set; } = 1;
+        public int RowSpan { get; set; } = 1;
+
+        /// <summary>Device tiles: the paired entity this tile controls or reports on.</summary>
+        public uint EntityId { get; set; }
+
+        /// <summary>
+        /// The server this tile belongs to, as "{host}-{port}", or null for one that belongs
+        /// everywhere.
+        ///
+        /// Only device tiles get one: an entity id means nothing on another server, so a switch
+        /// from last wipe would sit there as a permanent "not paired". Tiles for a server other
+        /// than the current one are hidden rather than deleted, and since two servers' devices
+        /// are never on screen together they are free to hold the same cells — go back and the
+        /// arrangement is as it was.
+        /// </summary>
+        public string? ServerKey { get; set; }
+
+        /// <summary>Rule tiles: the Logic Engine rule this tile launches.</summary>
+        public string? RuleId { get; set; }
+
+        /// <summary>Event tiles: cargo | deepsea | oilrig | heli | chinook | vendor.</summary>
+        public string? EventKey { get; set; }
+
+        /// <summary>Clock tiles: 0 digital, 1 analog, 2 Rust style.</summary>
+        public int ClockStyle { get; set; }
+
+        /// <summary>Clock tiles: append the time left until sunrise or sunset.</summary>
+        public bool ClockShowDayNight { get; set; } = true;
+
+        /// <summary>Clock tiles: 3:20 PM rather than 15:20.</summary>
+        public bool Clock12Hour { get; set; }
+
+        /// <summary>
+        /// Device tiles: show the icon chosen in the device list instead of the device's name.
+        ///
+        /// The icon is what the device is recognised by — it is the same picture as in the list,
+        /// and at one cell there is room for it and a state word, but not for a name as well.
+        /// </summary>
+        public bool ShowDeviceIcon { get; set; } = true;
+
+        /// <summary>Chat tiles: shorten long names so the message still fits on one line.</summary>
+        public bool ChatAbbreviateNames { get; set; } = true;
+
+        /// <summary>
+        /// Discord tiles: which configured notification channel to post into — "chat", "events"
+        /// or "shop". Null follows whichever is configured first, so a tile keeps working when
+        /// the channel it was pointed at is removed.
+        /// </summary>
+        public string? DiscordChannel { get; set; }
+
+        /// <summary>Discord tiles: 0 none, 1 @here, 2 @everyone.</summary>
+        public int DiscordMention { get; set; }
+
+        /// <summary>Server info tiles: draw the population line, not just the figure.</summary>
+        public bool ShowGraph { get; set; } = true;
+
+        /// <summary>
+        /// Translate tiles: the language to translate into, as a culture name such as "ru-RU".
+        ///
+        /// Null means the language the app is running in, which is the useful default for the
+        /// common direction — reading what somebody else wrote. The other direction, writing
+        /// something for them to read, is what the flag is for, and two tiles side by side set
+        /// to different languages is a perfectly sensible dock.
+        /// </summary>
+        public string? TranslateTarget { get; set; }
+
+        /// <summary>
+        /// Translate tiles: write down speech with the configured AI model rather than with
+        /// Windows.
+        ///
+        /// Off by default and never turned on by the app, because it spends the user's own
+        /// API credit. It is worth turning on: Windows only knows the languages it has a
+        /// recogniser installed for, which is normally the display language and nothing else,
+        /// while a model that takes audio works out the language itself. That is the whole
+        /// case for the microphone on this tile.
+        /// </summary>
+        public bool TranslateUseAi { get; set; }
+
+        /// <summary>
+        /// Translate tiles: translate with the configured AI model rather than with Google.
+        ///
+        /// Separate from <see cref="TranslateUseAi"/>, which is about speech, because the two
+        /// need different things. Translating is text in and text out, so any provider can do
+        /// it and a key is all it takes; writing down speech needs a provider that accepts
+        /// audio at all. Off by default, again because it spends the user's own credit.
+        /// </summary>
+        public bool TranslateTextWithAi { get; set; }
+
+        /// <summary>
+        /// Collapse tiles: hide the map along with everything else.
+        ///
+        /// Off by default, because the usual reason to clear the dock is to see the game
+        /// with the map still on it. On, it becomes a way to put the whole dock away and
+        /// leave one button behind.
+        /// </summary>
+        public bool CollapseIncludesMap { get; set; }
+
+        // ── Death tracking ──────────────────────────────────────────────────
+        //
+        // Where on the screen the killer's name is, as fractions of it rather than pixels.
+        // The band sits in the same place whatever the resolution; a saved rectangle in
+        // pixels would be wrong the first time somebody changed it.
+
+        public double DeathRegionLeft { get; set; } = 0.180;
+        public double DeathRegionTop { get; set; } = 0.020;
+        public double DeathRegionWidth { get; set; } = 0.640;
+        public double DeathRegionHeight { get; set; } = 0.034;
+
+        /// <summary>Death tracking tiles: stay on the dock even while the player is alive.</summary>
+        public bool DeathTrackAlwaysVisible { get; set; }
+
+        /// <summary>
+        /// Death tracking tiles: read the death screen with the AI model rather than with
+        /// Windows.
+        ///
+        /// Worth it for one reason above all: Windows reads the scripts it has a language
+        /// installed for, which is usually one, and a name in Cyrillic or Chinese is not read
+        /// badly by a Latin recogniser — it is not read at all. Off by default, because it
+        /// spends the user's own API credit.
+        /// </summary>
+        public bool DeathReadWithAi { get; set; }
+
+        // ── Appearance ──────────────────────────────────────────────────────
+        //
+        // All three are null until the tile's own settings are touched, and fall back to the
+        // dock's defaults. Two places that set the same thing drift apart — one says 70% while
+        // the tile shows 40% and nobody can tell which wins — so the global values are
+        // defaults rather than a second switch, and "back to global" is putting null back.
+
+        /// <summary>Background and border opacity, 0 to 1. Text is never faded.</summary>
+        public double? Opacity { get; set; }
+
+        /// <summary>Multiplier on every font size in the tile.</summary>
+        public double? FontScale { get; set; }
+
+        /// <summary>A key from <see cref="CommandDockTextColors"/>, or null for the theme's own.</summary>
+        public string? TextColorKey { get; set; }
+    }
+
+    /// <summary>
+    /// The text colours a tile can be set to.
+    ///
+    /// Deliberately few, and each one picked to hold up on both a bright desert and a night-time
+    /// screen — a tile turned fully transparent sits directly on the game, and the theme's grey
+    /// stops being readable the moment its background goes.
+    /// </summary>
+    public static class CommandDockTextColors
+    {
+        public const string Auto = "auto";
+        public const string White = "white";
+        public const string Black = "black";
+        public const string Cyan = "cyan";
+        public const string Amber = "amber";
+        public const string Red = "red";
+        public const string Green = "green";
+
+        public static readonly string[] All =
+            { Auto, White, Black, Cyan, Amber, Red, Green };
+    }
+
+    public static class CommandDockTileKinds
+    {
+        /// <summary>
+        /// The mini-map. One per dock, and the only tile whose size is free rather than derived
+        /// from its cell span — but otherwise an ordinary occupant of the grid.
+        /// </summary>
+        public const string Map = "Map";
+
+        /// <summary>
+        /// The map tile's id is fixed rather than a fresh Guid.
+        ///
+        /// Its element is the one declared in XAML and survives every rebuild, so its mouse
+        /// handlers are attached once and capture this id. A new id per map would leave those
+        /// handlers pointing at a tile that no longer exists.
+        /// </summary>
+        public const string MapTileId = "map";
+
+        public const string Clock = "Clock";
+        public const string Device = "Device";
+        public const string TeamChat = "TeamChat";
+        public const string ClanChat = "ClanChat";
+        public const string Event = "Event";
+        public const string Rule = "Rule";
+        public const string Session = "Session";
+        public const string Discord = "Discord";
+        public const string ServerInfo = "ServerInfo";
+
+        /// <summary>
+        /// The AI companion. One per dock in practice — a second one would share the same
+        /// recorder and the same key, so the two would only fight over one microphone.
+        /// </summary>
+        public const string AiCompanion = "AiCompanion";
+
+        /// <summary>
+        /// Type or dictate something and read it back in another language.
+        ///
+        /// Shares the recorder with the AI companion, and for the same reason: there is one
+        /// microphone. Whichever tile started is the one that finishes.
+        /// </summary>
+        public const string Translate = "Translate";
+
+        /// <summary>
+        /// Hides every other tile, and shows them again. One button, one cell.
+        ///
+        /// The tiles are hidden rather than moved or removed: their cells are untouched, so
+        /// expanding puts the arrangement back exactly as it was rather than re-flowing it.
+        /// </summary>
+        public const string Collapse = "Collapse";
+
+        /// <summary>
+        /// After a death: one press to read the killer's name off the death screen.
+        ///
+        /// Only on the dock while the player is dead, because that is the only time the
+        /// screen it reads is on screen. It gives its cells back on respawn.
+        /// </summary>
+        public const string DeathTrack = "DeathTrack";
+    }
+
+    /// <summary>
+    /// The dock's saved arrangement. Positions are grid cells whose origin is the map tile's
+    /// top-left corner, so the dock keeps its shape when the map is resized: only the number of
+    /// cells the map covers changes, and the auto-arrange pushes tiles out of the way.
+    /// </summary>
+    public sealed class CommandDockLayout
+    {
+        public List<CommandDockTile> Tiles { get; set; } = new();
+
+        /// <summary>
+        /// Where a newly added tile goes: below the map by default, beside it when set.
+        ///
+        /// Only the auto-placement follows this. Dragging puts a tile anywhere, including left
+        /// of or above the map — that is how a bar along the top or the left edge of the screen
+        /// gets built, and the window resizes around whatever shape comes out.
+        /// </summary>
+        public bool GrowRight { get; set; }
+
+        /// <summary>
+        /// Where the dock last sat on screen. Global rather than per server: it is a place on the
+        /// user's desk, not a property of the server they happen to be on. Null until the dock
+        /// has been moved once, which is what keeps the first-run position up to the caller.
+        /// </summary>
+        public double? WindowLeft { get; set; }
+
+        public double? WindowTop { get; set; }
+
+        /// <summary>
+        /// True once the map has been taken off the dock on purpose.
+        ///
+        /// Needed because "no map tile in the list" also describes every layout written before
+        /// the map was a tile at all, and those have to get one back. Without this flag, removing
+        /// the map would look identical to an old layout and it would reappear on the next start.
+        /// </summary>
+        public bool MapRemoved { get; set; }
+
+        /// <summary>
+        /// While locked, hovering a tile offers nothing to drag, resize or delete — the dock is
+        /// only used, not rearranged.
+        ///
+        /// Locked is the resting state and the saved default, because arranging happens once and
+        /// using happens every session. A hover-armed delete button is fine for the minute you
+        /// are building the dock and a hazard for every hour after it.
+        /// </summary>
+        public bool Locked { get; set; } = true;
+
+        /// <summary>
+        /// Whether the dock is currently collapsed to its collapse tile.
+        ///
+        /// Saved, because it is a state somebody put the dock into on purpose and a restart
+        /// that quietly undid it would be the dock disobeying. A layout with no collapse tile
+        /// ignores this, so a dock cannot end up hidden with no way to bring it back.
+        /// </summary>
+        public bool Collapsed { get; set; }
+
+        // ── Appearance defaults ─────────────────────────────────────────────
+        // What a tile uses until it is given its own value.
+
+        public double DefaultOpacity { get; set; } = 1.0;
+
+        public double DefaultFontScale { get; set; } = 1.0;
+
+        public string DefaultTextColorKey { get; set; } = CommandDockTextColors.Auto;
+
+        /// <summary>Cell size and gap in device-independent pixels.</summary>
+        public const double CellSize = 74;
+        public const double CellGap = 8;
+
+        public static double CellsToPixels(int cells) =>
+            cells <= 0 ? 0 : cells * CellSize + (cells - 1) * CellGap;
+
+        public static double CellOffset(int index) => index * (CellSize + CellGap);
+
+        /// <summary>How many cells a free-size element such as the map tile covers.</summary>
+        public static int PixelsToCells(double pixels) =>
+            Math.Max(1, (int)Math.Ceiling((pixels + CellGap) / (CellSize + CellGap)));
+    }
+}

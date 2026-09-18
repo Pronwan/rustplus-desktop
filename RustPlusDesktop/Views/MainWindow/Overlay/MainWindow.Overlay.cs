@@ -1463,6 +1463,8 @@ private bool _overlayToolsVisible = false;
         bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
         bool isEmail = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
         _vm.IsCloudConnected = isDiscord || isEmail;
+        // The green cloud state is exactly the condition, so read it where it is set.
+        if (_vm.IsCloudConnected) Ach.Unlock(Ach.CloudSync);
         _vm.IsPremium = Services.Auth.SupabaseAuthManager.IsPremium;
         _vm.CloudAccountActionText = _vm.IsCloudConnected ? "Manage" : "Sign in";
         _vm.CloudAccountStatusText = _vm.IsCloudConnected
@@ -4361,8 +4363,8 @@ private bool _overlayToolsVisible = false;
 
     private void RemoveInlinePanel(Border panel, Border dismissLayer)
     {
-        Overlay.Children.Remove(panel);
-        Overlay.Children.Remove(dismissLayer);
+        RemoveFromMapLayers(panel);
+        RemoveFromMapLayers(dismissLayer);
     }
 
     private void ShowInlineIconPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
@@ -4433,8 +4435,8 @@ private bool _overlayToolsVisible = false;
         (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
     }
 
     private void ShowInlineColorPicker(FrameworkElement iconEl, OverlayTag meta, string currentShape, string currentColor)
@@ -4513,8 +4515,8 @@ private bool _overlayToolsVisible = false;
         (panel, dismissLayer) = CreateInlinePanel(iconEl, container);
         dismissLayer.MouseLeftButtonDown += (_, __) => RemoveInlinePanel(panel, dismissLayer);
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
     }
 
     private void ShowInlineNotePicker(FrameworkElement iconEl, OverlayTag meta)
@@ -4628,8 +4630,8 @@ private bool _overlayToolsVisible = false;
         // Clicking the dismiss layer saves & closes
         dismissLayer.MouseLeftButtonDown += (_, __) => doSave();
 
-        Overlay.Children.Add(dismissLayer);
-        Overlay.Children.Add(panel);
+        MapUiLayer.Children.Add(dismissLayer);
+        MapUiLayer.Children.Add(panel);
 
         // Focus and select-all after layout
         panel.Loaded += (_, __) => { tb.Focus(); tb.SelectAll(); };

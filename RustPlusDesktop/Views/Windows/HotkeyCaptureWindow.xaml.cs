@@ -5,14 +5,34 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class HotkeyCaptureWindow : Window
+    public partial class HotkeyCaptureWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string? Gesture { get; private set; }
+
+        /// <summary>
+        /// Lets Escape remove the hotkey instead of cancelling.
+        ///
+        /// Off by default: for the device hotkeys this window is one step of a longer
+        /// assignment, where Escape has always meant never mind. Where a single hotkey is
+        /// being set, though, there is no other way to get rid of one — so the caller asks
+        /// for it, and the footer says which of the two this window is doing.
+        /// </summary>
+        public bool AllowClear { get; set; }
 
         public HotkeyCaptureWindow()
         {
             InitializeComponent();
             PreviewKeyDown += OnPreviewKeyDown;
+
+            Loaded += (_, __) =>
+            {
+                if (AllowClear)
+                {
+                    TxtFooter.Text = Helpers.Loc.Text(
+                        "UiPressESCToClearEnterToSave",
+                        "ESC removes the hotkey · Enter saves · close this window to cancel");
+                }
+            };
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -20,10 +40,20 @@ namespace RustPlusDesk.Views.Windows
             if (e.Key == Key.System) return;
             var key = (e.Key == Key.ImeProcessed) ? e.ImeProcessedKey : e.Key;
             
-            // Allow closing/cancelling via Escape
             if (key == Key.Escape)
             {
-                DialogResult = false;
+                // Applied as an empty gesture rather than refused: having no hotkey is a
+                // real choice, and the caller stores it the way it stores any other.
+                if (AllowClear)
+                {
+                    Gesture = "";
+                    DialogResult = true;
+                }
+                else
+                {
+                    DialogResult = false;
+                }
+
                 Close();
                 e.Handled = true;
                 return;
@@ -58,15 +88,6 @@ namespace RustPlusDesk.Views.Windows
             Gesture = GlobalHotkeyManager.Format(key, ctrl, alt, shift, win);
             TxtGesture.Text = Gesture;
             e.Handled = true;
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

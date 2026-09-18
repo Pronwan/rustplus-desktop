@@ -71,7 +71,7 @@ public partial class MainWindow
         try
         {
             foreach (var el in _shopEls.Values)
-                Overlay.Children.Remove(el);
+                RemoveFromMapLayers(el);
             _shopEls.Clear();
         }
         catch { }

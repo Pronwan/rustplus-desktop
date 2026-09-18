@@ -137,6 +137,7 @@ public partial class ConsoleHelperOverlay : UserControl
 
     private void BtnCopyCommand_Click(object sender, RoutedEventArgs e)
     {
+        Ach.Unlock(Ach.ConsoleCommand);
         if ((sender as FrameworkElement)?.Tag is ConsoleCommandDef cmd)
             CopyToClipboard(cmd.ResolvedCommand, "command");
     }

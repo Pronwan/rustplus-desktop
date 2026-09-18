@@ -5765,4 +5765,13 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Odebrat hráče {0} z týmu?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Odeslat uživateli</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Jen mapa (výchozí)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Odebere všechny widgety a vrátí mapu do jejího rohu</value>
+  </data>
 </root>

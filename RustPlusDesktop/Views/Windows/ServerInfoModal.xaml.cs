@@ -13,7 +13,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views
 {
-    public partial class ServerInfoModal : Window
+    public partial class ServerInfoModal : Wpf.Ui.Controls.FluentWindow
     {
         private readonly ServerProfile _profile;
         private readonly MainViewModel _vm;
@@ -185,14 +185,6 @@ namespace RustPlusDesk.Views
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(_websiteUrl) { UseShellExecute = true });
             }
             catch { }
-        }
-
-        // Allow dragging the window
-        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
-                DragMove();
         }
     }
 }

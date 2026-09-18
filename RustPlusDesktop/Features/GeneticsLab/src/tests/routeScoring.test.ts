@@ -114,6 +114,7 @@ describe('compareScoredRoutes', () => {
         intermediateCount: 0,
         inventoryStatus: 'available' as const,
         missingClonesCount: 0,
+        additionalCuttingsNeeded: 0,
         difficulty: 'Easy' as const,
         requirements: [],
         ...(options.analysisOverrides || {})
@@ -241,6 +242,45 @@ describe('compareScoredRoutes', () => {
     expect(sorted[0].group.resultSaplingGeneString).toBe('YYYYYY');
     expect(sorted[1].group.resultSaplingGeneString).toBe('GGGGYY');
     expect(sorted[2].group.resultSaplingGeneString).toBe('GGYYYY');
+  });
+
+  it('prioritizes exact target matches first then best-possible near matches when target is provided in recommended sort', () => {
+    // Target is GGGYYY
+    const exactMatch = makeRoute('GGGYYY', { score: 5.9, chance: 0.5, generationIndex: 3 });
+    const nearBestPossible = makeRoute('GGGGYY', { score: 6.0, chance: 1.0, generationIndex: 1 });
+    const distantMatch = makeRoute('GGHHHH', { score: 4.0, chance: 1.0, generationIndex: 1 });
+
+    const sorted = [distantMatch, nearBestPossible, exactMatch].sort((a, b) =>
+      compareScoredRoutes(a, b, 'recommended', 'GGGYYY')
+    );
+
+    // Exact match must be first
+    expect(sorted[0].group.resultSaplingGeneString).toBe('GGGYYY');
+    // Closest best-possible match (5 greens / GGGGYY) must be next
+    expect(sorted[1].group.resultSaplingGeneString).toBe('GGGGYY');
+    // Distant match last
+    expect(sorted[2].group.resultSaplingGeneString).toBe('GGHHHH');
+  });
+
+  it('marks route as available when all unique parent genotypes are owned even if multiple placements/cuttings are needed', () => {
+    const parent1 = new Sapling('GGYYHH', 0, 0);
+    const parent2 = new Sapling('YYGGHH', 0, 1);
+    // Route uses parent1 twice
+    const map = new GeneticsMap(new Sapling('GGYYHH', 1), [parent1, parent1, parent2], undefined, 1.0);
+
+    // Owned clones has quantity 1 for each
+    const ownedClones = [
+      CloneUtils.create('GGYYHH', 'hemp', { quantity: 1 }),
+      CloneUtils.create('YYGGHH', 'hemp', { quantity: 1 })
+    ];
+
+    const analysis = analyzeRoute(map, ownedClones, 'GGYYHH');
+
+    // All unique genotypes are owned in bank -> status is available
+    expect(analysis.inventoryStatus).toBe('available');
+    expect(analysis.missingClonesCount).toBe(0);
+    // 1 extra cutting needed from parent1
+    expect(analysis.additionalCuttingsNeeded).toBe(1);
   });
 });
 

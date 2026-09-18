@@ -6,7 +6,7 @@ using System.Windows.Navigation;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class EmailLoginWindow : Window
+    public partial class EmailLoginWindow : Wpf.Ui.Controls.FluentWindow
     {
         public bool LoginSuccessful { get; private set; }
 

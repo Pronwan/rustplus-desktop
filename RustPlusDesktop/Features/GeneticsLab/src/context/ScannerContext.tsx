@@ -447,7 +447,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const autoCalibrateScanner = useCallback(async (regionIndex?: number): Promise<boolean> => {
     // Ensure screen capture stream is active
-    if (!scannerService.getVideoElement() || scannerService.getVideoElement()?.videoWidth === 0) {
+    if (!scannerService.isCaptureReady()) {
       notifyInfo('Screen capture is not active. Please select your Rust screen to start capture.');
       const started = await scannerService.start();
       if (!started) {

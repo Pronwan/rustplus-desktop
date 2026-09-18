@@ -50,6 +50,16 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>Channels the server has confirmed on the current connection.</summary>
         private readonly HashSet<string> _confirmedChannels = new(StringComparer.Ordinal);
 
+        /// <summary>
+        /// How many people are in each presence channel.
+        ///
+        /// The protocol already sends this — the subscription reply carries the member list and
+        /// every join and leave follows as its own frame — and it was being dropped with the rest
+        /// of the internal frames. A room is the difference between an abandoned box and a place
+        /// with people in it, so the one number that says which is worth keeping.
+        /// </summary>
+        private readonly Dictionary<string, int> _occupants = new(StringComparer.Ordinal);
+
         private RealtimeConnectionInfo? _connectionInfo;
         private ClientWebSocket? _socket;
         private CancellationTokenSource? _cts;
@@ -63,6 +73,26 @@ namespace RustPlusDesk.Services.Cloud
         /// Pusher protocol frames are handled internally and never surface here.
         /// </summary>
         public event Action<string, string, JObject>? EventReceived;
+
+        /// <summary>
+        /// Raised with the channel and its new occupant count whenever a presence channel's
+        /// membership changes. Fires on the receive loop, so handlers that touch controls must
+        /// marshal for themselves.
+        /// </summary>
+        public event Action<string, int>? PresenceChanged;
+
+        /// <summary>
+        /// How many people are in a presence channel right now, or 0 when it is not subscribed or
+        /// is not a presence channel. Zero and "we do not know yet" are the same answer here:
+        /// both mean there is no count worth showing.
+        /// </summary>
+        public int OccupantCount(string channel)
+        {
+            if (string.IsNullOrWhiteSpace(channel)) return 0;
+            var name = Normalize(channel);
+            lock (_occupants)
+                return _occupants.TryGetValue(name, out var count) ? count : 0;
+        }
 
         /// <summary>True once the connection is established and a socket id is known.</summary>
         public bool IsConnected => _socket?.State == WebSocketState.Open && _socketId != null;
@@ -93,6 +123,7 @@ namespace RustPlusDesk.Services.Cloud
 
             lock (_desiredChannels) _desiredChannels.Clear();
             lock (_confirmedChannels) _confirmedChannels.Clear();
+            ClearOccupants();
 
             _socketId = null;
             _connectionInfo = null;
@@ -129,6 +160,8 @@ namespace RustPlusDesk.Services.Cloud
             var name = Normalize(channel);
             lock (_desiredChannels) _desiredChannels.Remove(name);
             lock (_confirmedChannels) _confirmedChannels.Remove(name);
+            SetOccupants(name, 0);
+            lock (_occupants) _occupants.Remove(name);
 
             if (_socket?.State == WebSocketState.Open)
             {
@@ -181,6 +214,7 @@ namespace RustPlusDesk.Services.Cloud
                 {
                     _socketId = null;
                     lock (_confirmedChannels) _confirmedChannels.Clear();
+                    ClearOccupants();
                 }
 
                 if (ct.IsCancellationRequested || !CloudAuth.IsAuthenticated) break;
@@ -290,6 +324,22 @@ namespace RustPlusDesk.Services.Cloud
                 case "pusher_internal:subscription_succeeded":
                     lock (_confirmedChannels) _confirmedChannels.Add(channel);
                     Log($"[Realtime] Subscribed to {channel}.");
+                    // A presence channel answers with the whole member list. Take the count from it
+                    // rather than counting joins from zero, which would be wrong for everyone who
+                    // was already in the room before we arrived.
+                    if (channel.StartsWith("presence-", StringComparison.Ordinal))
+                    {
+                        var count = data?["presence"]?["count"]?.Value<int>();
+                        if (count.HasValue) SetOccupants(channel, count.Value);
+                    }
+                    break;
+
+                case "pusher_internal:member_added":
+                    AdjustOccupants(channel, +1);
+                    break;
+
+                case "pusher_internal:member_removed":
+                    AdjustOccupants(channel, -1);
                     break;
 
                 case "pusher:error":
@@ -302,6 +352,63 @@ namespace RustPlusDesk.Services.Cloud
                         EventReceived?.Invoke(channel, eventName, data);
                     break;
             }
+        }
+
+        /// <summary>Records an authoritative count and tells anybody watching.</summary>
+        private void SetOccupants(string channel, int count)
+        {
+            if (count < 0) count = 0;
+
+            lock (_occupants)
+            {
+                if (_occupants.TryGetValue(channel, out var existing) && existing == count) return;
+                _occupants[channel] = count;
+            }
+
+            PresenceChanged?.Invoke(channel, count);
+        }
+
+        /// <summary>
+        /// Moves a count by one join or leave.
+        ///
+        /// Ignored for a channel we hold no count for: the subscription reply is what establishes
+        /// the number, and counting from an assumed zero would report a busy room as empty until
+        /// the next reconnect.
+        /// </summary>
+        private void AdjustOccupants(string channel, int delta)
+        {
+            int updated;
+
+            lock (_occupants)
+            {
+                if (!_occupants.TryGetValue(channel, out var current)) return;
+                updated = Math.Max(0, current + delta);
+                if (updated == current) return;
+                _occupants[channel] = updated;
+            }
+
+            PresenceChanged?.Invoke(channel, updated);
+        }
+
+        /// <summary>
+        /// Forgets every count.
+        ///
+        /// Called when the connection drops: the numbers describe a membership we are no longer
+        /// party to, and a stale count is worse than none — it reads as current.
+        /// </summary>
+        private void ClearOccupants()
+        {
+            string[] channels;
+
+            lock (_occupants)
+            {
+                if (_occupants.Count == 0) return;
+                channels = _occupants.Keys.ToArray();
+                _occupants.Clear();
+            }
+
+            foreach (var channel in channels)
+                PresenceChanged?.Invoke(channel, 0);
         }
 
         /// <summary>

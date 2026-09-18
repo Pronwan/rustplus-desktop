@@ -1,9 +1,8 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 
 namespace RustPlusDesk.Views.Windows;
 
-public partial class Map3DConsentWindow : Window
+public partial class Map3DConsentWindow : Wpf.Ui.Controls.FluentWindow
 {
     public bool Accepted { get; private set; }
     public bool Remember { get; private set; }
@@ -12,11 +11,6 @@ public partial class Map3DConsentWindow : Window
     {
         InitializeComponent();
         Owner = owner;
-    }
-
-    private void DragHandle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ButtonState == MouseButtonState.Pressed) DragMove();
     }
 
     private void BtnAccept_Click(object sender, RoutedEventArgs e)

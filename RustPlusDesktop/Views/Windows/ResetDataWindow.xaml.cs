@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace RustPlusDesk.Views
 {
-    public partial class ResetDataWindow : Window
+    public partial class ResetDataWindow : Wpf.Ui.Controls.FluentWindow
     {
         public bool ResetConnection => ChkConnection.IsChecked == true;
         public bool ResetProfiles => ChkProfiles.IsChecked == true;
@@ -26,16 +26,6 @@ namespace RustPlusDesk.Views
         {
             DialogResult = false;
             Close();
-        }
-
-        // Allow dragging the window from empty spaces
-        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

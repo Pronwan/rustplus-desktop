@@ -33,6 +33,7 @@ export interface RouteAnalysis {
   intermediateCount: number;
   inventoryStatus: 'available' | 'partial' | 'missing';
   missingClonesCount: number;
+  additionalCuttingsNeeded: number;
   difficulty: 'Easy' | 'Medium' | 'Advanced';
   requirements: RouteCloneRequirement[];
 }
@@ -145,7 +146,7 @@ export function analyzeRoute(
 
   const requirements: RouteCloneRequirement[] = [];
   let missingClonesCount = 0;
-  let allAvailable = true;
+  let additionalCuttingsNeeded = 0;
   let someAvailable = false;
 
   for (const [genetics, reqQty] of requiredMap.entries()) {
@@ -153,12 +154,13 @@ export function analyzeRoute(
     const availQty = avail ? avail.quantity : 0;
     const isAvail = availQty >= reqQty;
 
-    if (!isAvail) {
-      allAvailable = false;
-      missingClonesCount += Math.max(0, reqQty - availQty);
-    }
-    if (availQty > 0) {
+    if (availQty === 0) {
+      missingClonesCount++;
+    } else {
       someAvailable = true;
+      if (availQty < reqQty) {
+        additionalCuttingsNeeded += (reqQty - availQty);
+      }
     }
 
     requirements.push({
@@ -171,8 +173,10 @@ export function analyzeRoute(
     });
   }
 
+  // If all unique parent genotypes exist in the clone bank, the route is ready/available.
+  // In Rust, owned clones can be multiplied by taking cuttings from existing plants.
   const inventoryStatus: 'available' | 'partial' | 'missing' =
-    allAvailable
+    missingClonesCount === 0
       ? 'available'
       : someAvailable
       ? 'partial'
@@ -192,7 +196,7 @@ export function analyzeRoute(
   const genScore = genCount === 1 ? 25 : genCount === 2 ? 18 : 10;
 
   // 3. Inventory match (up to 20 pts)
-  const invScore = allAvailable ? 20 : someAvailable ? 10 : 2;
+  const invScore = inventoryStatus === 'available' ? (additionalCuttingsNeeded === 0 ? 20 : 18) : someAvailable ? 10 : 2;
 
   // 4. Clone simplicity (up to 15 pts) - fewer unique clones & fewer placements
   const simplicityScore = Math.max(0, 15 - (uniqueCloneCount - 2) * 2 - Math.max(0, totalPlacementsCount - 4));
@@ -217,6 +221,7 @@ export function analyzeRoute(
     intermediateCount,
     inventoryStatus,
     missingClonesCount,
+    additionalCuttingsNeeded,
     difficulty,
     requirements
   };
@@ -360,6 +365,21 @@ export function compareScoredRoutes(
   }
 
   // 'recommended' (default): 2-level Rust Breeder ranking:
+  // If target is specified: exact target matches come first, then best-possible near matches
+  if (hasTarget) {
+    const ea = isExactMatch(ra, target) ? 1 : 0;
+    const eb = isExactMatch(rb, target) ? 1 : 0;
+    if (ea !== eb) return eb - ea;
+
+    const ca = targetCloseness(ra, target);
+    const cb = targetCloseness(rb, target);
+    if (ca !== cb) return cb - ca;
+
+    const pa = positionMatches(ra, target);
+    const pb = positionMatches(rb, target);
+    if (pa !== pb) return pb - pa;
+  }
+
   // 1. Higher genotype score first
   if (Math.abs(scoreB - scoreA) > 0.001) {
     return scoreB - scoreA;
@@ -375,12 +395,6 @@ export function compareScoredRoutes(
   // 4. Lower sumOfComposingSaplingsGenerations first
   if (sumA !== sumB) {
     return sumA - sumB;
-  }
-  // Target closeness tiebreaker if target specified
-  if (hasTarget) {
-    const ca = targetCloseness(ra, target);
-    const cb = targetCloseness(rb, target);
-    if (ca !== cb) return cb - ca;
   }
   // 5. Genotype string alphabetically/lexicographically as deterministic tie breaker
   return ra.localeCompare(rb);

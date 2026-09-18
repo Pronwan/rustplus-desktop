@@ -57,6 +57,20 @@ public sealed class GlobalHotkeyManager : IDisposable
         return success;
     }
 
+    /// <summary>
+    /// Gives up one gesture. Needed where a single hotkey can be changed or removed on its
+    /// own — UnregisterAll would take every device binding with it.
+    /// </summary>
+    public void Unregister(string gesture)
+    {
+        if (!_gestureToId.TryGetValue(gesture, out var id)) return;
+
+        UnregisterHotKey(_hwnd, id);
+        _gestureToId.Remove(gesture);
+        _idToGesture.Remove(id);
+        _registrationStatus.Remove(gesture);
+    }
+
     public void UnregisterAll()
     {
         foreach (var id in _idToGesture.Keys)

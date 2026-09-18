@@ -61,6 +61,8 @@ namespace RustPlusDesk.Views
                 _worldSizeS = parsedSize;
                 _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
 
+                LoadCargoPathForCurrentMap(folder);
+
                 AppendLog($"[Offline Map] Restored worldSize={parsedSize} from cached map_data.json. worldRectPx=[{(int)_worldRectPx.X},{(int)_worldRectPx.Y},{(int)_worldRectPx.Width}x{(int)_worldRectPx.Height}]");
             }
             catch (Exception ex)
@@ -119,16 +121,15 @@ namespace RustPlusDesk.Views
             if (isAuthenticated)
                 HideMap3DAuthPopup();
 
-            string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
-            bool mapDataExists = System.IO.File.Exists(System.IO.Path.Combine(folderPath, "map_data.json"));
+            // Missing map data is no longer a reason to block the button: clicking it
+            // now offers to parse the map file, which is all a heatmap needs. Only a
+            // missing login still gates it.
             BtnToggleHeatmap.Visibility = hasLocal3DMapContext ? Visibility.Visible : Visibility.Collapsed;
-            BtnToggleHeatmap.IsEnabled = hasLocal3DMapContext && mapDataExists && isAuthenticated;
+            BtnToggleHeatmap.IsEnabled = hasLocal3DMapContext && isAuthenticated;
 
-            string? heatmapUnavailableReason = !mapDataExists
-                ? "Generate the 3D map before using heatmaps."
-                : !isAuthenticated
-                    ? "Log in to your Rust+ Desk account to use generated heatmaps."
-                    : null;
+            string? heatmapUnavailableReason = !isAuthenticated
+                ? "Log in to your Rust+ Desk account to use generated heatmaps."
+                : null;
             BtnToggleHeatmapGate.Visibility = hasLocal3DMapContext && heatmapUnavailableReason != null
                 ? Visibility.Visible
                 : Visibility.Collapsed;
@@ -413,49 +414,9 @@ namespace RustPlusDesk.Views
 
             try
             {
-                BitmapSource? texture = null;
-                if (profile != null)
-                {
-                    string host = profile.Host ?? "unknown";
-                    int port = profile.Port;
-                    string cacheKey = MapCacheKey(host, port);
-                    var serverCached = TryLoadMapCache(cacheKey);
-                    if (serverCached?.Bitmap != null)
-                    {
-                        texture = serverCached.Bitmap;
-                    }
-                }
-                if (texture == null)
-                {
-                    texture = ImgMap.Source as BitmapSource;
-                }
-                var references = (_monData ?? new List<(double X, double Y, string Name)>())
-                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                    .Take(12)
-                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                    .ToList();
+                var result = await RunMapParserAsync(profile!, isPlaceholder, "[3D Map]");
 
-                var result = await Map3DLocalBuildService.PrepareAsync(profile!, texture, profile!.RustMapsMapId, references, _worldSizeS, isPlaceholder ? profile!.LocalMapFilePath : null);
-                if (result.NeedsManualMapSelection)
-                {
-                    AppendLog($"[3D Map] Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
-                    var picker = new Microsoft.Win32.OpenFileDialog
-                    {
-                        Title = Properties.Resources.GetString("SelectRustMapFile"),
-                        Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
-                        InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
-                        CheckFileExists = true,
-                        Multiselect = false
-                    };
-
-                    if (picker.ShowDialog(this) == true)
-                    {
-                        result = await Map3DLocalBuildService.PrepareAsync(profile, texture, profile.RustMapsMapId, references, _worldSizeS, picker.FileName);
-                    }
-                }
-
-                AppendLog($"[3D Map] {result.StatusMessage} Folder: {result.FolderPath}");
-                if (result.ParserReady)
+                if (result != null && result.ParserReady)
                 {
                     AppendLog($"[3D Map] Parser output ready for viewer. Map file: {result.MapFilePath}");
                     await OpenMap3DViewAsync(result);
@@ -464,6 +425,155 @@ namespace RustPlusDesk.Views
             catch (Exception ex)
             {
                 AppendLog($"[3D Map] Preparation failed: {ex.Message}");
+                AppendLog($"[3D Map] {Services.WebView2Diagnostics.Explain(ex)}");
+                RestoreMap2DAfterFailedOpen();
+            }
+            finally
+            {
+                _isMap3DPreparing = false;
+                UpdateRustMapsUi();
+            }
+        }
+
+        /// <summary>
+        /// Finds the server's map file and runs the parser over it, which is what
+        /// produces map_data.json: the extra monuments, hot spots and heatmaps.
+        /// Deliberately stops short of opening the 3D view, so the heatmap button
+        /// can ask for the same work without building the whole map.
+        /// Returns null when the user cancelled the manual file picker.
+        /// </summary>
+        private async Task<Map3DLocalBuildResult?> RunMapParserAsync(
+            ServerProfile profile, bool isPlaceholder, string logPrefix)
+        {
+            BitmapSource? texture = null;
+            string host = profile.Host ?? "unknown";
+            int port = profile.Port;
+            var serverCached = TryLoadMapCache(MapCacheKey(host, port));
+            if (serverCached?.Bitmap != null)
+            {
+                texture = serverCached.Bitmap;
+            }
+            if (texture == null)
+            {
+                texture = ImgMap.Source as BitmapSource;
+            }
+
+            var references = (_monData ?? new List<(double X, double Y, string Name)>())
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                .Take(12)
+                .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                .ToList();
+
+            var result = await Map3DLocalBuildService.PrepareAsync(
+                profile, texture, profile.RustMapsMapId, references, _worldSizeS,
+                isPlaceholder ? profile.LocalMapFilePath : null);
+
+            if (result.NeedsManualMapSelection)
+            {
+                AppendLog($"{logPrefix} Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
+                var picker = new Microsoft.Win32.OpenFileDialog
+                {
+                    Title = Properties.Resources.GetString("SelectRustMapFile"),
+                    Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
+                    InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
+                    CheckFileExists = true,
+                    Multiselect = false
+                };
+
+                if (picker.ShowDialog(this) != true)
+                {
+                    AppendLog($"{logPrefix} Map selection canceled.");
+                    return null;
+                }
+
+                result = await Map3DLocalBuildService.PrepareAsync(
+                    profile, texture, profile.RustMapsMapId, references, _worldSizeS, picker.FileName);
+            }
+
+            AppendLog($"{logPrefix} {result.StatusMessage} Folder: {result.FolderPath}");
+            return result;
+        }
+
+        /// <summary>
+        /// Asks whether to parse the map file now, so a heatmap can be shown without
+        /// building the 3D map first. Same gates as the 3D flow, because it is the
+        /// same work on the same local files.
+        /// </summary>
+        private async Task<bool> OfferMapParseForHeatmapAsync(ServerProfile profile)
+        {
+            if (_isMap3DPreparing)
+            {
+                AppendLog("[Heatmap] A map build is already running.");
+                return false;
+            }
+
+            bool isPlaceholder = !string.IsNullOrEmpty(profile.LocalMapFilePath);
+            if (!profile.IsFullConnected && !isPlaceholder)
+            {
+                AppendLog("[Heatmap] Fully connect to a server or select an imported offline map first.");
+                return false;
+            }
+
+            if (!SupabaseAuthManager.IsDiscordAuthenticated && !SupabaseAuthManager.IsEmailAuthenticated)
+            {
+                AppendLog("[Heatmap] Account or Discord login required before parsing the map file.");
+                ShowMap3DAuthPopup();
+                return false;
+            }
+
+            var ask = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Helpers.Loc.Text("HeatmapParseMapTitle", "Parse map file?"),
+                Content = Helpers.Loc.Text(
+                    "HeatmapParseMapPrompt",
+                    "Heatmaps are read from the server's map file. Search for the matching map now and parse it? "
+                    + "This also adds the extra monuments and hot spots. The 3D map is not built."),
+                PrimaryButtonText = Helpers.Loc.Text("HeatmapParseMapConfirm", "Parse now"),
+                CloseButtonText = Helpers.Loc.Text("Cancel", "Cancel"),
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            if (await ask.ShowDialogAsync() != Wpf.Ui.Controls.MessageBoxResult.Primary)
+            {
+                return false;
+            }
+
+            if (!Map3DConsentService.HasRememberedConsent())
+            {
+                var consent = new Map3DConsentWindow(this);
+                if (consent.ShowDialog() != true || !consent.Accepted)
+                {
+                    AppendLog("[Heatmap] Local map import canceled.");
+                    return false;
+                }
+
+                if (consent.Remember)
+                {
+                    Map3DConsentService.RememberConsent();
+                }
+            }
+
+            _isMap3DPreparing = true;
+            UpdateRustMapsUi();
+            try
+            {
+                var result = await RunMapParserAsync(profile, isPlaceholder, "[Heatmap]");
+                if (result == null || !result.ParserReady)
+                {
+                    AppendLog("[Heatmap] Map file could not be parsed.");
+                    return false;
+                }
+
+                await LoadParsedMapDataAsync(result.FolderPath);
+
+                AppendLog($"[Heatmap] Map data ready, extra monuments and blocked zones loaded. Map file: {result.MapFilePath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Heatmap] Parsing failed: {ex.Message}");
+                return false;
             }
             finally
             {
@@ -547,12 +657,75 @@ namespace RustPlusDesk.Views
             HeatmapAvailabilityPopup.IsOpen = false;
         }
 
+        /// <summary>
+        /// Puts the 2D map back after the 3D view failed to open.
+        ///
+        /// The switch to 3D happens before the browser is asked for, so a failure
+        /// used to leave the host panel visible and empty, the map image hidden,
+        /// and _isMap3DActive still false — which meant the button back to 2D had
+        /// nothing to switch back from, and the player was left staring at black
+        /// with no way out but a restart.
+        /// </summary>
+        private void RestoreMap2DAfterFailedOpen()
+        {
+            if (_isMap3DActive) return;
+
+            try
+            {
+                CloseMap3DView();
+                Map3DHost.Visibility = Visibility.Collapsed;
+                ImgMap.Visibility = Visibility.Visible;
+                UpdateRustMapsUi();
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// The browser process behind the 3D view died while it was open.
+        ///
+        /// Something outside the app can end it at any moment — a crash of its own,
+        /// security software, memory pressure. Nothing here can prevent that, but
+        /// leaving the panel up afterwards shows a black rectangle that looks like
+        /// the map failed to render, which sends people looking in the wrong place.
+        /// </summary>
+        private void Map3DProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                AppendLog($"[3D Map] The browser process ended unexpectedly ({e.ProcessFailedKind}). Returning to the 2D map.");
+                AppendLog($"[3D Map] {Services.WebView2Diagnostics.Explain(null)}");
+
+                _isMap3DActive = false;
+                RestoreMap2DAfterFailedOpen();
+            });
+        }
+
+        /// <summary>
+        /// Everything a parsed map file feeds, in one place.
+        ///
+        /// Both entry points - opening the 3D view and parsing for a heatmap - need
+        /// the same set, and having it twice is exactly how it went wrong: the cargo
+        /// path was only ever loaded by the 3D path, and the keycard layers by
+        /// neither, so both stayed greyed out however the map had been parsed.
+        /// </summary>
+        private async Task LoadParsedMapDataAsync(string folderPath)
+        {
+            _currentMapFolderPath = folderPath;
+            GenerateAndLoadExtraMonumentsForCurrentMap(folderPath);
+            await GenerateBuildingBlockedZonesForCurrentMap(folderPath);
+            LoadBuildingBlockedZonesForCurrentMap(folderPath);
+            LoadCargoPathForCurrentMap(folderPath);
+            LoadKeycardSitesForCurrentMap(folderPath);
+
+            // Freshly parsed data is the reason someone waited for the parse, so the
+            // keycard layers come up shown rather than needing another two clicks.
+            EnableKeycardLayersAfterParse();
+        }
+
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
         {
-            _currentMapFolderPath = result.FolderPath;
-            GenerateAndLoadExtraMonumentsForCurrentMap(result.FolderPath);
-            await GenerateBuildingBlockedZonesForCurrentMap(result.FolderPath);
-            LoadBuildingBlockedZonesForCurrentMap(result.FolderPath);
+            Ach.Unlock(Ach.Map3D);
+            await LoadParsedMapDataAsync(result.FolderPath);
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             const string host = "rustplus3d.local";
             bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));
@@ -583,6 +756,7 @@ namespace RustPlusDesk.Views
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
             await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
+            _map3DWebView.CoreWebView2.ProcessFailed += Map3DProcessFailed;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
             _map3DWebView.CoreWebView2.WebResourceRequested += _map3DResourceRequestHandler;
@@ -1352,21 +1526,43 @@ namespace RustPlusDesk.Views
 
         private string? _currentActiveHeatmap = null;
 
-        private void BtnToggleHeatmap_Click(object sender, RoutedEventArgs e)
+        private async void BtnToggleHeatmap_Click(object sender, RoutedEventArgs e)
         {
-            if (HeatmapPopup != null)
+            if (HeatmapPopup == null)
             {
-                HeatmapPopup.IsOpen = !HeatmapPopup.IsOpen;
-                if (HeatmapPopup.IsOpen)
+                return;
+            }
+
+            // Closing never needs data.
+            if (HeatmapPopup.IsOpen)
+            {
+                HeatmapPopup.IsOpen = false;
+                return;
+            }
+
+            var profile = _vm.Selected;
+            if (profile != null)
+            {
+                string folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+                if (!System.IO.File.Exists(System.IO.Path.Combine(folderPath, "map_data.json")))
                 {
-                    UpdateBentoActiveStates();
+                    // Offer to parse rather than sending them off to build the 3D map.
+                    if (!await OfferMapParseForHeatmapAsync(profile))
+                    {
+                        return;
+                    }
+
+                    UpdateRustMapsUi();
                 }
             }
+
+            HeatmapPopup.IsOpen = true;
+            UpdateBentoActiveStates();
         }
 
         private static readonly Dictionary<string, string> HeatmapLabels = new()
         {
-            { "ores", "Ores" }, { "wood", "Wood Piles" }, { "logs", "Log Piles" },
+            { "ores", "Ores" }, { "ore_hqm", "HQM Nodes" }, { "playerspawn", "Player Spawns" }, { "wood", "Wood Piles" }, { "logs", "Log Piles" },
             { "mushroom", "Mushrooms" }, { "berries", "Berries" }, { "corn", "Corn" },
             { "pumpkin", "Pumpkins" }, { "potato", "Potatoes" }, { "wheat", "Wheat" },
             { "bear", "Bears" }, { "boar", "Boars" }, { "chicken", "Chickens" },
@@ -1380,7 +1576,7 @@ namespace RustPlusDesk.Views
 
         private void UpdateBentoActiveStates()
         {
-            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
             foreach (var cat in allCategories)
             {
                 var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
@@ -1418,7 +1614,7 @@ namespace RustPlusDesk.Views
 
             string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
 
-            string[] allCategories = { "ores", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
 
             foreach (var cat in allCategories)
             {
@@ -1443,6 +1639,7 @@ namespace RustPlusDesk.Views
 
         private async void BtnHeatmapIcon_Click(object sender, RoutedEventArgs e)
         {
+            Ach.Unlock(Ach.Heatmap);
             if (sender is FrameworkElement btn && btn.Tag is string heatmapType)
             {
                 // Toggle behavior: if they click the active one, clear it
@@ -1500,8 +1697,19 @@ namespace RustPlusDesk.Views
             string dataPath = System.IO.Path.Combine(folderPath, "map_data.json");
             if (!System.IO.File.Exists(dataPath))
             {
-                AppendLog("[Heatmap] No map data found for 2D map. Try building 3D Map first.");
-                return;
+                // No need to build the whole 3D map for this - offer to just parse.
+                if (!await OfferMapParseForHeatmapAsync(profile))
+                {
+                    return;
+                }
+
+                folderPath = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+                dataPath = System.IO.Path.Combine(folderPath, "map_data.json");
+                if (!System.IO.File.Exists(dataPath))
+                {
+                    AppendLog("[Heatmap] Parser finished but produced no map data.");
+                    return;
+                }
             }
 
             try

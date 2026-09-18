@@ -5765,4 +5765,13 @@ Du kan finde mere information på serverens officielle hjemmeside:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Fjern {0} fra holdet?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Sendes til</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Kun kort (standard)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Fjerner alle widgets og sætter kortet tilbage i hjørnet</value>
+  </data>
 </root>

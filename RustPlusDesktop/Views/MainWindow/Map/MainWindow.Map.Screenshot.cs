@@ -80,11 +80,14 @@ public partial class MainWindow
                     // of the Canvas *itself* (not its transformed parent).
                     
                     var gridBrush = new VisualBrush(GridLayer) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
+                    // No Build zones sit on their own canvas now, so they need their own brush here.
+                    var noBuildBrush = new VisualBrush(NoBuildLayer) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
                     var overlayBrush = new VisualBrush(Overlay) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
 
                     // We apply the scale transform to the context so the overlays scale down matching the map
                     ctx.PushTransform(new ScaleTransform(scale, scale));
                     ctx.DrawRectangle(gridBrush, null, new Rect(0, 0, mapW, mapH));
+                    ctx.DrawRectangle(noBuildBrush, null, new Rect(0, 0, mapW, mapH));
                     ctx.DrawRectangle(overlayBrush, null, new Rect(0, 0, mapW, mapH));
                     ctx.Pop();
                 }

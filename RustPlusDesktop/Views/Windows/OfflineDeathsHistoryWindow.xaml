@@ -1,16 +1,26 @@
-<Window x:Class="RustPlusDesk.Views.Windows.OfflineDeathsHistoryWindow"
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.OfflineDeathsHistoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Title="{DynamicResource OfflineDeathLogTitle}" 
-        Height="400" Width="450"
-        Background="{DynamicResource Surface}"
+        Title="{DynamicResource OfflineDeathLogTitle}"
+        Height="420" Width="450"
         Foreground="{DynamicResource TextPrimary}"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
 
-    <Grid Margin="12">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource OfflineDeathLogTitle}" ShowMaximize="False" ShowMinimize="False"/>
+
+    <Grid Grid.Row="1" Margin="12,4,12,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -62,7 +72,7 @@
                                         <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}">
                                             <Run Text="{DynamicResource KilledBy}"/>
                                             <Run Text=" "/>
-                                            <Run Text="{Binding AttackerName}" Foreground="#EF5350" FontWeight="Bold"/>
+                                            <Run Text="{Binding AttackerName}" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"/>
                                         </TextBlock>
                                         <TextBlock Text="{Binding ServerName}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
@@ -80,4 +90,5 @@
             </Grid>
         </Border>
     </Grid>
-</Window>
+    </Grid>
+</ui:FluentWindow>

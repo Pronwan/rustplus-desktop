@@ -18,20 +18,43 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
     public TutorialOverlay()
     {
         InitializeComponent();
-        SizeChanged += (_, _) => 
+
+        // Straight out of this control and into a window of its own. See EnsureHost.
+        CanvasHost.Children.Remove(OverlayCanvas);
+
+        SizeChanged += (_, _) =>
         {
+            ApplyCoverSize();
             RenderPresentation();
-            UpdatePopupPosition();
+            PositionHost();
         };
+
+        // Everything that hides the overlay does it by setting Visibility, here and from
+        // the window that drives the tutorial, so that is what the host follows.
+        IsVisibleChanged += (_, e) =>
+        {
+            if ((bool)e.NewValue) ShowHost();
+            else HideHost();
+        };
+
         Loaded += (_, _) =>
         {
             var window = Window.GetWindow(this);
-            if (window != null)
-            {
-                window.LocationChanged += (s, e) => UpdatePopupPosition();
-                window.SizeChanged += (s, e) => UpdatePopupPosition();
-            }
+            if (window == null) return;
+
+            window.LocationChanged += (_, _) => PositionHost();
+            window.SizeChanged += (_, _) => PositionHost();
+
+            // Maximising and restoring move where the client area starts without always
+            // raising LocationChanged, and the size is only settled a pass later.
+            window.StateChanged += (_, _) =>
+                Dispatcher.BeginInvoke(new Action(PositionHost), DispatcherPriority.Loaded);
+
+            // The keys belong to the tutorial wherever the focus happens to be. The host
+            // window is deliberately never activated, so Enter and Escape arrive here.
+            window.PreviewKeyDown += OnPreviewKeyDown;
         };
+
         PreviewKeyDown += OnPreviewKeyDown;
         SystemParameters.StaticPropertyChanged += (_, e) =>
         {
@@ -39,16 +62,146 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         };
     }
 
-    private void UpdatePopupPosition()
+    /// <summary>The window the overlay is drawn in, owned by the app's. See EnsureHost.</summary>
+    private Window? _host;
+
+    /// <summary>The area the overlay covers, which everything inside the host is drawn to.</summary>
+    private Size _cover = Size.Empty;
+
+    private double CoverWidth => _cover.Width;
+    private double CoverHeight => _cover.Height;
+
+    /// <summary>
+    /// How big the overlay is meant to be, asking its parent when it cannot say itself.
+    ///
+    /// A collapsed control reports nothing — WPF does not arrange it — and the overlay is
+    /// collapsed right up to the moment the tutorial starts. Its own reading is used when
+    /// there is one; the slot it sits in answers the same question the rest of the time.
+    /// </summary>
+    private Size CoverSize()
     {
-        if (OverlayPopup.IsOpen)
-        {
-            var offset = OverlayPopup.HorizontalOffset;
-            OverlayPopup.HorizontalOffset = offset + 1;
-            OverlayPopup.HorizontalOffset = offset;
-        }
+        if (ActualWidth > 0 && ActualHeight > 0) return new Size(ActualWidth, ActualHeight);
+
+        return VisualTreeHelper.GetParent(this) is FrameworkElement parent &&
+               parent.ActualWidth > 0 && parent.ActualHeight > 0
+            ? new Size(parent.ActualWidth, parent.ActualHeight)
+            : _cover;
     }
 
+    /// <summary>Gives the canvas the size the overlay covers.</summary>
+    private void ApplyCoverSize()
+    {
+        var size = CoverSize();
+        if (size.Width <= 0 || size.Height <= 0) return;
+
+        _cover = size;
+
+        OverlayCanvas.Width = size.Width;
+        OverlayCanvas.Height = size.Height;
+    }
+
+    /// <summary>
+    /// The window that holds the dimming, the spotlight and the popover.
+    ///
+    /// This was a Popup, for one good reason: the 3D map is a WebView2, which draws in a
+    /// window of its own and covers anything WPF puts over it. A popup is a window too, so
+    /// it sat above it.
+    ///
+    /// But a transparent popup is given at most three quarters of the monitor's area —
+    /// measured here on three screens of different sizes, 75% of each, to the pixel — and a
+    /// window maximised on a 2560x1440 screen needs 2560x1343, a quarter past the
+    /// allowance. WPF handed back a shorter window without saying so, and the dimming
+    /// stopped part-way down the screen with the app bright below it. Asking again did not
+    /// help: the limit is the same every time, on every monitor.
+    ///
+    /// A window of its own has no such limit, and keeps what the popup was there for:
+    /// owned by the app's window, so it stays above it and above the WebView2, minimises
+    /// with it and closes with it. Never activated, so the app keeps the keyboard.
+    /// </summary>
+    private void EnsureHost()
+    {
+        if (_host != null) return;
+
+        var owner = Window.GetWindow(this);
+        if (owner == null) return;
+
+        _host = new Window
+        {
+            Owner = owner,
+            Title = "Tutorial",
+            WindowStyle = WindowStyle.None,
+            ResizeMode = ResizeMode.NoResize,
+            AllowsTransparency = true,
+            Background = Brushes.Transparent,
+            ShowInTaskbar = false,
+            ShowActivated = false,
+            SnapsToDevicePixels = true,
+            Content = OverlayCanvas,
+        };
+
+        _host.PreviewKeyDown += OnPreviewKeyDown;
+    }
+
+    /// <summary>Brings the host up over the app, at the size and place it belongs.</summary>
+    private void ShowHost()
+    {
+        EnsureHost();
+        if (_host == null) return;
+
+        PositionHost();
+
+        try
+        {
+            if (!_host.IsVisible) _host.Show();
+        }
+        catch
+        {
+            // The owner is on its way out; there is nothing left to put a tutorial over.
+            return;
+        }
+
+        // Again once layout has run: until it has, a control that was collapsed a moment
+        // ago can still be reporting the position and size it had before.
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            PositionHost();
+            RenderPresentation();
+        }), DispatcherPriority.Loaded);
+    }
+
+    private void HideHost()
+    {
+        try { _host?.Hide(); }
+        catch { /* already gone with its owner */ }
+    }
+
+    /// <summary>Lays the host exactly over the area this control occupies on the desktop.</summary>
+    private void PositionHost()
+    {
+        if (_host == null) return;
+
+        try
+        {
+            var source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget is null) return;
+
+            ApplyCoverSize();
+            if (_cover.Width <= 0 || _cover.Height <= 0) return;
+
+            Point device = PointToScreen(new Point(0, 0));
+            Point dip = source.CompositionTarget.TransformFromDevice.Transform(device);
+
+            _host.Left = dip.X;
+            _host.Top = dip.Y;
+            _host.Width = _cover.Width;
+            _host.Height = _cover.Height;
+        }
+        catch
+        {
+            // Between a window closing and its source going away this can throw; the
+            // overlay is about to disappear with it either way.
+        }
+    }
     public event EventHandler? NextRequested;
     public event EventHandler? BackRequested;
     public event EventHandler? SkipRequested;
@@ -100,7 +253,8 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             !Tutorial.GetAllowInteraction(presentation.Target.Element)
             ? Visibility.Visible : Visibility.Collapsed;
         Visibility = Visibility.Visible;
-        OverlayPopup.IsOpen = true;
+
+        ShowHost();
         FlowDirection = FlowDirection.LeftToRight;
         Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -113,10 +267,10 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             (UIElementAutomationPeer.CreatePeerForElement(StepTitleText) ?? new TextBlockAutomationPeer(StepTitleText))
                 .RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
         }, DispatcherPriority.Loaded);
-        if (SystemParameters.ClientAreaAnimation)
+        if (SystemParameters.ClientAreaAnimation && _host != null)
         {
-            Opacity = 0;
-            BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(180)));
+            _host.Opacity = 0;
+            _host.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(180)));
         }
     }
 
@@ -130,7 +284,8 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         SpotlightBorder.Visibility = Visibility.Collapsed;
         TargetBlocker.Visibility = Visibility.Collapsed;
         Visibility = Visibility.Visible;
-        OverlayPopup.IsOpen = true;
+
+        ShowHost();
         FlowDirection = FlowDirection.LeftToRight;
         Popover.FlowDirection = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -141,7 +296,7 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
     public void Hide()
     {
         Visibility = Visibility.Collapsed;
-        OverlayPopup.IsOpen = false;
+        HideHost();
         _presentation = null;
         if (_previousFocus is not null) Keyboard.Focus(_previousFocus);
         _previousFocus = null;
@@ -179,30 +334,30 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
             TutorialPlacement.Bottom => target.Bottom + gap,
             _ => target.Top + (target.Height - height) / 2
         };
-        Canvas.SetLeft(Popover, Math.Clamp(x, 12, Math.Max(12, ActualWidth - width - 12)));
-        Canvas.SetTop(Popover, Math.Clamp(y, 12, Math.Max(12, ActualHeight - height - 12)));
+        Canvas.SetLeft(Popover, Math.Clamp(x, 12, Math.Max(12, CoverWidth - width - 12)));
+        Canvas.SetTop(Popover, Math.Clamp(y, 12, Math.Max(12, CoverHeight - height - 12)));
     }
 
     private TutorialPlacement PickPlacement(TutorialPlacement requested, Rect target, double width, double height)
     {
         if (requested != TutorialPlacement.Auto) return requested;
-        if (target.Right + width + 16 <= ActualWidth) return TutorialPlacement.Right;
+        if (target.Right + width + 16 <= CoverWidth) return TutorialPlacement.Right;
         if (target.Left - width - 16 >= 0) return TutorialPlacement.Left;
-        if (target.Bottom + height + 16 <= ActualHeight) return TutorialPlacement.Bottom;
+        if (target.Bottom + height + 16 <= CoverHeight) return TutorialPlacement.Bottom;
         return TutorialPlacement.Top;
     }
 
     private void RenderCentered()
     {
         double height = Popover.ActualHeight > 0 ? Popover.ActualHeight : 300;
-        Canvas.SetLeft(Popover, Math.Max(12, (ActualWidth - Popover.Width) / 2));
-        Canvas.SetTop(Popover, Math.Max(12, (ActualHeight - height) / 2));
+        Canvas.SetLeft(Popover, Math.Max(12, (CoverWidth - Popover.Width) / 2));
+        Canvas.SetTop(Popover, Math.Max(12, (CoverHeight - height) / 2));
     }
 
     private Geometry CreateDimGeometry(Rect cutout)
     {
         var geometry = new GeometryGroup { FillRule = FillRule.EvenOdd };
-        geometry.Children.Add(new RectangleGeometry(new Rect(0, 0, Math.Max(0, ActualWidth), Math.Max(0, ActualHeight))));
+        geometry.Children.Add(new RectangleGeometry(new Rect(0, 0, Math.Max(0, CoverWidth), Math.Max(0, CoverHeight))));
         if (!cutout.IsEmpty) geometry.Children.Add(new RectangleGeometry(cutout, 10, 10));
         return geometry;
     }
@@ -223,6 +378,11 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
 
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
+        // Also hung on the app window, because the host is never activated and the keys
+        // would otherwise never reach the tutorial. That makes every key in the app come
+        // through here, so a tutorial that is not on screen must not take any of them.
+        if (Visibility != Visibility.Visible) return;
+
         if (e.Key == Key.Escape && WelcomePanel.Visibility != Visibility.Visible)
         {
             StepPanel.Visibility = Visibility.Collapsed;

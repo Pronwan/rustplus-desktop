@@ -1,0 +1,200 @@
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace RustPlusDesk.Services.AiCompanion
+{
+    /// <summary>
+    /// The provider's own voice, where it has one.
+    ///
+    /// Windows' synthesiser is the fallback and sounds like one — which is fine for "cargo in
+    /// four minutes" and poor for a paragraph. Both GPT and Gemini will read text back in a
+    /// voice that is worth listening to, so where a key for one of them is already stored,
+    /// that is what reads the answer.
+    ///
+    /// Everything here returns a playable WAV or MP3 as bytes, or null. Null always means "use
+    /// Windows instead" — a voice that failed must never cost the user the answer.
+    /// </summary>
+    public static class AiSpeech
+    {
+        /// <summary>Whether this provider can read an answer aloud with a key already stored.</summary>
+        public static bool IsAvailable(string provider) =>
+            AiProviders.HasVoice(provider) && AiCompanionStore.HasKeyFor(provider);
+
+        /// <summary>
+        /// Why the provider's voice last refused, or null if it has not.
+        ///
+        /// Falling back to Windows is the right behaviour and the wrong silence: the answer
+        /// still gets read, so a wrong model name or a spent quota sounds exactly like the
+        /// setting having no effect. The settings panel shows this, which is the difference
+        /// between a mystery and a one-line fix.
+        /// </summary>
+        public static string? LastError { get; private set; }
+
+        /// <summary>
+        /// Records a failure that happened after the request — decoding or playing the audio.
+        /// Those end in the Windows voice exactly like a refusal does, and were just as silent.
+        /// </summary>
+        internal static void ReportPlaybackFailure(string reason) => LastError = reason;
+
+        /// <summary>
+        /// Reads one piece of text. Null when the provider refused, or has no voice at all.
+        /// </summary>
+        public static async Task<byte[]?> SynthesizeAsync(string text, CancellationToken ct)
+        {
+            var provider = AiCompanionStore.Current.Provider;
+            if (!IsAvailable(provider)) return null;
+
+            var key = AiCompanionStore.ReadKeyFor(provider);
+            if (string.IsNullOrEmpty(key)) return null;
+
+            try
+            {
+                var audio = provider switch
+                {
+                    AiProviders.OpenAi => await OpenAi(text, key, ct),
+                    AiProviders.Gemini => await Gemini(text, key, ct),
+                    _ => null,
+                };
+
+                if (audio != null) LastError = null;
+                return audio;
+            }
+            catch (OperationCanceledException)
+            {
+                return null;   // a new question, not a failure worth reporting
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.Message;
+                return null;
+            }
+        }
+
+        // ── OpenAI ──────────────────────────────────────────────────────────────
+
+        private const string OpenAiVoice = "alloy";
+        private const string OpenAiUrl = "https://api.openai.com/v1/audio/speech";
+
+        /// <summary>What the endpoint's pcm format is: 24 kHz, 16-bit signed, mono.</summary>
+        private const int OpenAiRate = 24000;
+
+        private static async Task<byte[]?> OpenAi(string text, string key, CancellationToken ct)
+        {
+            var payload = new
+            {
+                model = AiProviders.VoiceModel(AiProviders.OpenAi),
+                voice = OpenAiVoice,
+
+                // Raw samples rather than the endpoint's own wav.
+                //
+                // Speech is generated as it is spoken, so the wav comes back with a header
+                // written before its length is known — and a reader that believes that header
+                // finds a file claiming to be empty. It threw on the way into the player,
+                // the player said it could not play it, and Windows read the answer instead:
+                // a request that succeeded, an answer that arrived, and the wrong voice, with
+                // nothing anywhere to say why. Wrapping the samples ourselves gives a header
+                // with the real length in it.
+                response_format = "pcm",
+                input = text,
+            };
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, OpenAiUrl)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
+
+            using var response = await AiHttp.Client.SendAsync(request, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                LastError = Describe(response, await AiHttp.ReadBody(response, ct));
+                return null;
+            }
+
+            var pcm = await response.Content.ReadAsByteArrayAsync(ct);
+            return pcm.Length == 0 ? null : WavTools.Wrap(pcm, OpenAiRate);
+        }
+
+        // ── Gemini ──────────────────────────────────────────────────────────────
+
+        private const string GeminiVoice = "Kore";
+
+        private const string GeminiUrl =
+            "https://generativelanguage.googleapis.com/v1beta/models/{0}:generateContent";
+
+        /// <summary>
+        /// Gemini answers with raw signed 16-bit PCM at 24 kHz, mono, and no header on it.
+        /// </summary>
+        private const int GeminiRate = 24000;
+
+        private static async Task<byte[]?> Gemini(string text, string key, CancellationToken ct)
+        {
+            var payload = new
+            {
+                contents = new[] { new { parts = new[] { new { text } } } },
+                generationConfig = new
+                {
+                    responseModalities = new[] { "AUDIO" },
+                    speechConfig = new
+                    {
+                        voiceConfig = new
+                        {
+                            prebuiltVoiceConfig = new { voiceName = GeminiVoice },
+                        },
+                    },
+                },
+            };
+
+            using var request = new HttpRequestMessage(
+                HttpMethod.Post, string.Format(GeminiUrl, AiProviders.VoiceModel(AiProviders.Gemini)))
+            {
+                Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"),
+            };
+            request.Headers.Add("x-goog-api-key", key);
+
+            using var response = await AiHttp.Client.SendAsync(request, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                LastError = Describe(response, await AiHttp.ReadBody(response, ct));
+                return null;
+            }
+
+            using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));
+
+            if (!doc.RootElement.TryGetProperty("candidates", out var candidates) ||
+                candidates.GetArrayLength() == 0)
+                return null;
+
+            if (!candidates[0].TryGetProperty("content", out var content) ||
+                !content.TryGetProperty("parts", out var parts))
+                return null;
+
+            foreach (var part in parts.EnumerateArray())
+            {
+                if (!part.TryGetProperty("inlineData", out var inline) ||
+                    !inline.TryGetProperty("data", out var data)) continue;
+
+                var pcm = Convert.FromBase64String(data.GetString() ?? "");
+                return pcm.Length == 0 ? null : WavTools.Wrap(pcm, GeminiRate);
+            }
+
+            return null;
+        }
+
+        /// <summary>The provider's own words where it gave any, with the status as a fallback.</summary>
+        private static string Describe(HttpResponseMessage response, string body)
+        {
+            var failure = AiHttp.Failure(response, body);
+            return failure.Message;
+        }
+
+    }
+}

@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>9.2.2</Version>
+		<Version>10.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -69,6 +69,13 @@
 	<ItemGroup Condition="Exists('Assets\notification-incoming.mp3')">
 	  <None Remove="Assets\notification-incoming.mp3" />
 	  <Content Include="Assets\notification-incoming.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Assets\sounds\screenshot.mp3" />
+	  <Content Include="Assets\sounds\screenshot.mp3">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
@@ -191,6 +198,7 @@
 	  <None Remove="Assets\icons\vendor.png" />
 	  <None Remove="Assets\icons\watertreatment.png" />
 	  <None Remove="Assets\icons\waterwell.png" />
+	  <None Remove="Assets\Data\Crafting-Data.json" />
 	  <None Remove="Assets\Data\rust-item-list.json" />
 	  <None Remove="Assets\Data\recycler-items.json" />
 	  <None Remove="Assets\Data\raid-data.json" />
@@ -237,6 +245,7 @@
 	  <None Remove="Assets\Images\7.0\No-Build-Zones-3D.png" />
 	  <None Remove="Assets\Images\7.0\Recycling-Calculator.png" />
 	  <None Remove="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
+	  <None Remove="Assets\logo-light-mode.png" />
 	  <None Remove="Assets\rustplus-desktop-icon.ico" />
 	  <None Remove="Assets\Data\rust_items.json" />
 	  <None Remove="Assets\Screenshots\3.0_1.png" />
@@ -265,6 +274,7 @@
 	  <None Remove="Assets\Screenshots\7.1.8\*.png" />
 	  <None Remove="Assets\Screenshots\8.0\*.png" />
 	  <None Remove="Assets\Screenshots\v9.0.0\*.png" />
+	  <None Remove="Assets\Screenshots\10.0\*.jpg" />
 	  <None Remove="Assets\Screenshots\9.1\*.jpg" />
 	  <None Remove="Assets\Screenshots\v4_map_overhaul.png" />
 	  <None Remove="Assets\Screenshots\v4_shop_hover.png" />
@@ -348,23 +358,42 @@
 	
 	<ItemGroup>
 		<Resource Include="Assets\heatmap icons\**\*" />
+		<!-- Keycard overlay art. Without these the layers build and run but draw
+		     nothing, because a missing pack:// URI only throws at load time. -->
+		<Resource Include="Assets\keycards\**\*" />
+		<!-- Achievement icons: one sprite sheet, cropped per cell at display time. -->
+		<Resource Include="Assets\achievements\**\*" />
+		<Resource Include="Assets\icons\reader_green.png" />
+		<Resource Include="Assets\icons\reader_blue.png" />
+		<Resource Include="Assets\icons\reader_red.png" />
 	</ItemGroup>
 
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.8" />
-    <PackageReference Include="RustPlusApi.Camera" Version="2.0.0-beta.8" />
-    <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.8" />
+    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.9" />
+    <PackageReference Include="RustPlusApi.Camera" Version="2.0.0-beta.9" />
+    <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.9" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MapParser\MapParser.csproj" ReferenceOutputAssembly="false" Private="false" />
+      <!--
+        No ProjectReference to MapParser on purpose.
+
+        It never carried a reference — ReferenceOutputAssembly was false and Private was false,
+        so its only job was build ordering, and BuildMapParserRuntime below already does that by
+        invoking MapParser itself. What it did carry was MapParser's whole framework list into
+        restore: it multi-targets net8.0 and net10.0 for a migration that has not reached this
+        project, so every machine without the .NET 10 SDK failed before a line was compiled,
+        over an output it was never going to use. SetTargetFramework does not help — that is a
+        build-time decision and this happens during restore.
+      -->
     </ItemGroup>
 
   <PropertyGroup>
@@ -376,14 +405,10 @@
   <!-- Source inputs for the MapParser publish, so it only re-publishes when MapParser actually
        changes (a self-contained single-file compressed publish is expensive to run every build). -->
   <ItemGroup>
-    <MapParserSource Include="$(MSBuildProjectDirectory)\..\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\MapParser\**\*.json"
-                     Exclude="$(MSBuildProjectDirectory)\..\MapParser\bin\**;$(MSBuildProjectDirectory)\..\MapParser\obj\**;$(MSBuildProjectDirectory)\..\MapParser\node_modules\**" />
+    <MapParserSource Include="$(MSBuildProjectDirectory)\..\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\MapParser\**\*.json" Exclude="$(MSBuildProjectDirectory)\..\MapParser\bin\**;$(MSBuildProjectDirectory)\..\MapParser\obj\**;$(MSBuildProjectDirectory)\..\MapParser\node_modules\**" />
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime"
-          Inputs="@(MapParserSource)"
-          Outputs="$(MapParserPublishedExe)"
-          Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="BuildMapParserRuntime" Inputs="@(MapParserSource)" Outputs="$(MapParserPublishedExe)" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
@@ -453,6 +478,10 @@
   <ItemGroup>
     <Content Include="Assets\cash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Assets\Data\Crafting-Data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="Assets\Data\rust-item-list.json">
@@ -559,8 +588,10 @@
           user cannot break detection by deleting or replacing a file on disk.  -->
     <EmbeddedResource Include="Assets\audio-alerts\*.wav" />
     <EmbeddedResource Include="Assets\Data\recycler-items.json" />
+    <EmbeddedResource Include="Assets\Data\Crafting-Data.json" />
     <EmbeddedResource Include="Assets\Data\Recycling-Data.json" />
     <EmbeddedResource Include="Assets\Data\raid-data.json" />
+    <Resource Include="Assets\icons\app-icons\logo-dark-mode.png" />
     <Resource Include="Assets\icons\discord.png" />
     <Resource Include="Assets\icons\r+desktop-icon.png" />
     <Resource Include="Assets\icq-message.wav" />
@@ -601,6 +632,7 @@
     <Resource Include="Assets\Images\7.0\No-Build-Zones-3D.png" />
     <Resource Include="Assets\Images\7.0\Recycling-Calculator.png" />
     <Resource Include="Assets\Images\RustPlus_V5_Thumbnail.jpg" />
+    <Resource Include="Assets\logo-light-mode.png" />
     <Resource Include="Assets\rustplus-desktop-icon.ico" />
     <Resource Include="Assets\Screenshots\3.0_1.png" />
     <Resource Include="Assets\Screenshots\3.0_2.png" />
@@ -628,6 +660,7 @@
     <Resource Include="Assets\Screenshots\7.1.8\*.png" />
     <Resource Include="Assets\Screenshots\8.0\*.png" />
     <Resource Include="Assets\Screenshots\v9.0.0\*.png" />
+    <Resource Include="Assets\Screenshots\10.0\*.jpg" />
     <Resource Include="Assets\Screenshots\9.1\*.jpg" />
     <Resource Include="Assets\Screenshots\8.0\clan_chat.jpg" />
     <Resource Include="Assets\Screenshots\v4_map_overhaul.png" />

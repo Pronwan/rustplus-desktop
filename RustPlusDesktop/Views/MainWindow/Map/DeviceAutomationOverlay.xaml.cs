@@ -45,6 +45,7 @@ public partial class DeviceAutomationOverlay : UserControl
         {
             Name = $"Automation {_vm.Selected.DeviceAutomationRules.Count + 1}"
         });
+        Ach.Unlock(Ach.Automation);
         _vm.Save();
         RefreshListBindings();
     }

@@ -1,11 +1,13 @@
 using RustPlusDesk.Services.Social;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace RustPlusDesk.Views;
 
@@ -78,17 +80,18 @@ public partial class LfgOverlay : UserControl
     /// Hooks the push channels. Attached while the control is in the tree rather than while the
     /// panel is visible: hiding a panel is not the same as leaving the room, and a whisper that
     /// arrives with the panel closed should already be there when it is opened again.
+    ///
+    /// The room itself is no longer among them. Its lines are held by
+    /// <see cref="GlobalChatFeed"/> for as long as the app runs, and this panel reads that buffer
+    /// — which is what makes a line that arrived while the panel was shut still be there.
     /// </summary>
     private void AttachRealtime()
     {
         if (_realtimeAttached) return;
         _realtimeAttached = true;
 
-        SocialRealtime.ChatChanged += OnChatChanged;
-        SocialRealtime.ChatMessageReceived += OnChatMessageReceived;
-        SocialRealtime.ChatMessageDeleted += OnChatMessageDeleted;
-        SocialRealtime.SlowModeUpdated += OnSlowModeUpdated;
-        SocialRealtime.SanctionEventReceived += OnSanctionEventReceived;
+        GlobalChatFeed.RoomChanged += OnFeedRoomChanged;
+        GlobalChatFeed.SanctionChanged += ApplyChatSanction;
         SocialRealtime.MessageArrived += OnMessageArrived;
         SocialRealtime.RequestArrived += OnRequestArrived;
         SocialRealtime.FriendRequestArrived += OnFriendRequestArrived;
@@ -105,11 +108,8 @@ public partial class LfgOverlay : UserControl
         if (!_realtimeAttached) return;
         _realtimeAttached = false;
 
-        SocialRealtime.ChatChanged -= OnChatChanged;
-        SocialRealtime.ChatMessageReceived -= OnChatMessageReceived;
-        SocialRealtime.ChatMessageDeleted -= OnChatMessageDeleted;
-        SocialRealtime.SlowModeUpdated -= OnSlowModeUpdated;
-        SocialRealtime.SanctionEventReceived -= OnSanctionEventReceived;
+        GlobalChatFeed.RoomChanged -= OnFeedRoomChanged;
+        GlobalChatFeed.SanctionChanged -= ApplyChatSanction;
         SocialRealtime.MessageArrived -= OnMessageArrived;
         SocialRealtime.RequestArrived -= OnRequestArrived;
         SocialRealtime.FriendRequestArrived -= OnFriendRequestArrived;
@@ -118,56 +118,19 @@ public partial class LfgOverlay : UserControl
         SocialUnread.Changed -= ShowUnread;
     }
 
-    private void OnChatChanged() => _ = CatchUpChatAsync();
-
-    private void OnChatMessageReceived(Models.ChatLine line)
+    /// <summary>
+    /// The feed's buffer for some room moved. Redraw only when it is the room on screen — the
+    /// other one is still accruing behind this view, which is the point of the feed.
+    /// </summary>
+    private void OnFeedRoomChanged(string room)
     {
-        // Both rooms share one connection, so a line for the room the user is not looking at must be
-        // dropped rather than appended - otherwise supporter lines surface in the public feed and
-        // the reverse.
-        if (!string.Equals(line.Room, _room, StringComparison.OrdinalIgnoreCase)) return;
-        if (_chatLines.Any(l => l.Id == line.Id)) return;
-        _chatLines.Add(line);
-        if (_chatLines.Count > ChatWindow)
-            _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-        ShowChatLines();
-    }
+        if (!string.Equals(room, _room, StringComparison.OrdinalIgnoreCase)) return;
 
-    private void OnChatMessageDeleted(string messageId)
-    {
-        var count = _chatLines.RemoveAll(l => l.Id == messageId);
-        if (count > 0) ShowChatLines();
-    }
+        PullChatFromFeed();
 
-    private void OnSlowModeUpdated(Models.ChatSlowModeEvent e)
-    {
-        _slowModeSeconds = Math.Max(0, e.Seconds);
-        UpdateSlowModeUI();
-    }
-
-    private void OnSanctionEventReceived(Models.SystemSanctionEvent e)
-    {
-        var sanctionLine = Models.ChatLine.FromSanction(e);
-        if (!_chatLines.Any(l => l.Id == sanctionLine.Id))
-        {
-            _chatLines.Add(sanctionLine);
-            if (_chatLines.Count > ChatWindow)
-                _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-            ShowChatLines();
-        }
-
-        var myId = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
-        if (!string.IsNullOrEmpty(myId) && string.Equals(e.Target?.Id, myId, StringComparison.OrdinalIgnoreCase))
-        {
-            if (e.IsLifted)
-            {
-                ApplyChatSanction(null);
-            }
-            else
-            {
-                ApplyChatSanction(new Models.ChatSanction(e.Kind, e.Reason, e.ExpiresAt));
-            }
-        }
+        // It is on screen, so it has been read. Without this the room would carry an unseen count
+        // behind the very view showing the lines.
+        if (ChatSection.Visibility == Visibility.Visible) GlobalChatFeed.MarkSeen(_room);
     }
 
     private void OnRequestArrived() => _ = LoadInboxAsync();
@@ -196,6 +159,25 @@ public partial class LfgOverlay : UserControl
 
     /// <summary>Kept for callers that cannot await; the work still happens.</summary>
     public void Refresh() => _ = RefreshAsync();
+
+    /// <summary>
+    /// Selects the public room.
+    ///
+    /// For callers that mean "the room", not "Community" — the ticker, chiefly. Opening onto the
+    /// section list and letting the user find chat inside it is the depth the ticker exists to
+    /// avoid.
+    /// </summary>
+    public void ShowPublicRoom()
+    {
+        if (SecChat.IsChecked == true)
+        {
+            // Already the selected section, so no Checked event will fire to load it.
+            Section_Checked(SecChat, new RoutedEventArgs());
+            return;
+        }
+
+        SecChat.IsChecked = true;
+    }
 
     /// <summary>Loads the stored state. Safe to call whenever the panel is opened.</summary>
     public async Task RefreshAsync()
@@ -526,6 +508,8 @@ public partial class LfgOverlay : UserControl
 
     private async Task PublishAsync(LfgMode mode)
     {
+        // Publishing an LFG/LFM listing is the action; the consent panel before it is not.
+        Ach.Unlock(Ach.Lfg);
         if (mode == LfgMode.None) return;
 
         var blurb = TxtBlurb.Text?.Trim();
@@ -1055,7 +1039,7 @@ public partial class LfgOverlay : UserControl
         _reportTarget = null;
 
         // Their lines, their listing and their thread all go, and the server filters all three.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
     }
@@ -1100,16 +1084,62 @@ public partial class LfgOverlay : UserControl
         }
     }
 
-    /// <summary>What the room currently holds, so a pushed line can be added to it.</summary>
+    /// <summary>
+    /// What is on screen. A copy of the feed's buffer for the room being shown, not the room
+    /// itself — <see cref="GlobalChatFeed"/> holds that, and keeps holding it when this panel goes
+    /// away.
+    /// </summary>
     private readonly System.Collections.Generic.List<Models.ChatLine> _chatLines = new();
-
-    /// <summary>The window the server serves, matched here so an evening in the room stays bounded.</summary>
-    private const int ChatWindow = 200;
 
     private int _slowModeSeconds;
     private System.Windows.Threading.DispatcherTimer? _cooldownTimer;
     private int _remainingCooldownSeconds;
     private bool _userScrolledUp;
+    private bool _isScrollingToBottomAnimationActive;
+
+    private void SetScrollToBottomVisibility(bool show)
+    {
+        if (BtnScrollToBottom == null) return;
+
+        if (show)
+        {
+            if (BtnScrollToBottom.Visibility != Visibility.Visible || BtnScrollToBottom.Opacity < 0.95)
+            {
+                BtnScrollToBottom.Visibility = Visibility.Visible;
+                var fadeIn = new DoubleAnimation
+                {
+                    To = 1.0,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+                BtnScrollToBottom.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            }
+        }
+        else
+        {
+            if (BtnScrollToBottom.Visibility == Visibility.Visible && BtnScrollToBottom.Opacity > 0.05)
+            {
+                var fadeOut = new DoubleAnimation
+                {
+                    To = 0.0,
+                    Duration = TimeSpan.FromMilliseconds(160),
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                };
+                fadeOut.Completed += (s, e) =>
+                {
+                    if (!_userScrolledUp)
+                    {
+                        BtnScrollToBottom.Visibility = Visibility.Collapsed;
+                    }
+                };
+                BtnScrollToBottom.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+            }
+            else if (BtnScrollToBottom.Opacity <= 0.05)
+            {
+                BtnScrollToBottom.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
 
     private void ChatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
@@ -1118,26 +1148,34 @@ public partial class LfgOverlay : UserControl
         if (e.ExtentHeightChange > 0 && !_userScrolledUp)
         {
             ChatScrollViewer.ScrollToEnd();
-            if (BtnScrollToBottom != null)
-                BtnScrollToBottom.Visibility = Visibility.Collapsed;
+            SetScrollToBottomVisibility(false);
+            return;
+        }
+
+        if (_isScrollingToBottomAnimationActive)
+        {
             return;
         }
 
         bool isScrolledUp = ChatScrollViewer.VerticalOffset < (ChatScrollViewer.ScrollableHeight - 30);
         _userScrolledUp = isScrolledUp;
 
-        if (BtnScrollToBottom != null)
-        {
-            BtnScrollToBottom.Visibility = (isScrolledUp && _chatLines.Count > 5) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        SetScrollToBottomVisibility(isScrolledUp && _chatLines.Count > 5);
     }
 
     private void BtnScrollToBottom_Click(object sender, RoutedEventArgs e)
     {
         _userScrolledUp = false;
-        ChatScrollViewer?.ScrollToEnd();
-        if (BtnScrollToBottom != null)
-            BtnScrollToBottom.Visibility = Visibility.Collapsed;
+        SetScrollToBottomVisibility(false);
+
+        if (ChatScrollViewer == null) return;
+
+        _isScrollingToBottomAnimationActive = true;
+        ChatScrollViewer.SmoothScrollTo(ChatScrollViewer.ScrollableHeight, 300, () =>
+        {
+            _isScrollingToBottomAnimationActive = false;
+            ChatScrollViewer.ScrollToEnd();
+        });
     }
 
     private void UpdateSlowModeUI()
@@ -1202,11 +1240,9 @@ public partial class LfgOverlay : UserControl
     /// The answer rides on every read of either room, so a plan bought while the panel is open
     /// takes effect on the next refresh rather than on the next restart.
     /// </summary>
-    private void ApplySupporterAccess(Models.ChatSnapshot snapshot)
+    private void ApplySupporterAccess(bool supporterRoomOpen)
     {
-        if (!snapshot.Ok) return;
-
-        _supporterRoom = snapshot.SupporterRoom;
+        _supporterRoom = supporterRoomOpen;
 
         if (SecSupporter.IsChecked != true) return;
 
@@ -1215,32 +1251,78 @@ public partial class LfgOverlay : UserControl
         ChatSection.Visibility = gated ? Visibility.Collapsed : Visibility.Visible;
     }
 
+    /// <summary>
+    /// Shows the room. Reads it only if nobody has yet — by the time the panel is first opened the
+    /// feed has usually been holding the lines for a while, and asking again for what is already
+    /// in hand is a request that buys nothing.
+    /// </summary>
     private async Task LoadChatAsync()
     {
-        var snapshot = await SocialApi.GetChatAsync(room: _room).ConfigureAwait(true);
+        await GlobalChatFeed.EnsureLoadedAsync(_room).ConfigureAwait(true);
 
-        ApplySupporterAccess(snapshot);
-
-        _chatLines.Clear();
-        _chatLines.AddRange(snapshot.Lines);
         _userScrolledUp = false;
+        PullChatFromFeed();
+        GlobalChatFeed.MarkSeen(_room);
+    }
+
+    /// <summary>
+    /// Re-reads the room and redraws it.
+    ///
+    /// For the handful of actions whose whole point is that the server's answer has changed —
+    /// blocking somebody, unblocking them, picking a name colour, sending a line. Showing what is
+    /// already in hand would show exactly the state the action was meant to change.
+    /// </summary>
+    private async Task ReloadChatAsync()
+    {
+        await GlobalChatFeed.ReloadAsync(_room).ConfigureAwait(true);
+        PullChatFromFeed();
+        GlobalChatFeed.MarkSeen(_room);
+    }
+
+    /// <summary>
+    /// Copies the feed's view of the room onto the controls.
+    ///
+    /// The lines are the feed's objects rather than copies, so the grouping flags this sets are
+    /// the same ones any other view of the room sees. That is wanted: two views of one room
+    /// disagreeing about where the headers go would be worse than sharing them.
+    /// </summary>
+    private void PullChatFromFeed()
+    {
+        _chatLines.Clear();
+        _chatLines.AddRange(GlobalChatFeed.Lines(_room));
         ShowChatLines();
 
-        _slowModeSeconds = snapshot.SlowModeSeconds;
+        ApplySupporterAccess(GlobalChatFeed.SupporterRoomOpen);
+
+        _slowModeSeconds = GlobalChatFeed.SlowModeSeconds(_room);
         UpdateSlowModeUI();
 
-        if (snapshot.MaxLength > 0 && TxtChat.MaxLength != snapshot.MaxLength)
+        var max = GlobalChatFeed.MaxLength(_room);
+        if (max > 0 && TxtChat.MaxLength != max)
         {
-            TxtChat.MaxLength = snapshot.MaxLength;
+            TxtChat.MaxLength = max;
             UpdateChatCharCount();
         }
 
-        if (snapshot.Ok) ApplyChatSanction(snapshot.Sanction);
+        ApplyChatSanction(GlobalChatFeed.Sanction);
     }
 
     private void TxtChat_TextChanged(object sender, TextChangedEventArgs e)
     {
         UpdateChatCharCount();
+        if (BtnChatClear != null)
+        {
+            BtnChatClear.Visibility = string.IsNullOrEmpty(TxtChat?.Text) ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
+    private void BtnChatClear_Click(object sender, RoutedEventArgs e)
+    {
+        if (TxtChat != null)
+        {
+            TxtChat.Text = "";
+            TxtChat.Focus();
+        }
     }
 
     private void UpdateChatCharCount()
@@ -1295,69 +1377,6 @@ public partial class LfgOverlay : UserControl
             {
                 ChatScrollViewer?.ScrollToEnd();
             }, System.Windows.Threading.DispatcherPriority.Loaded);
-        }
-    }
-
-    private bool _catchUpRunning;
-    private bool _catchUpAgain;
-
-    /// <summary>
-    /// Fetches what was written since the last line we hold, in answer to a push.
-    ///
-    /// Reading rather than trusting the payload is what keeps blocks working: the endpoint knows
-    /// who the reader has blocked and who has blocked them, and the broadcast — one frame for
-    /// the whole room — cannot. A busy room is folded into one request at a time, so ten lines
-    /// arriving together cost one read rather than ten.
-    /// </summary>
-    private async Task CatchUpChatAsync()
-    {
-        if (_catchUpRunning)
-        {
-            _catchUpAgain = true;
-            return;
-        }
-
-        _catchUpRunning = true;
-        try
-        {
-            do
-            {
-                _catchUpAgain = false;
-
-                var since = _chatLines.LastOrDefault()?.SentAtIso;
-                if (since is null)
-                {
-                    // Nothing to count from — an empty room, or one that failed to load.
-                    await LoadChatAsync().ConfigureAwait(true);
-                    continue;
-                }
-
-                var snapshot = await SocialApi.GetChatAsync(since, room: _room).ConfigureAwait(true);
-                if (!snapshot.Ok) continue;
-
-                ApplyChatSanction(snapshot.Sanction);
-                _slowModeSeconds = snapshot.SlowModeSeconds;
-                UpdateSlowModeUI();
-
-                var known = new System.Collections.Generic.HashSet<string>(
-                    _chatLines.Select(line => line.Id), StringComparer.Ordinal);
-
-                var added = false;
-                foreach (var line in snapshot.Lines)
-                    if (known.Add(line.Id)) { _chatLines.Add(line); added = true; }
-
-                if (!added) continue;
-
-                if (_chatLines.Count > ChatWindow)
-                    _chatLines.RemoveRange(0, _chatLines.Count - ChatWindow);
-
-                ShowChatLines();
-            }
-            while (_catchUpAgain);
-        }
-        finally
-        {
-            _catchUpRunning = false;
         }
     }
 
@@ -1461,7 +1480,7 @@ public partial class LfgOverlay : UserControl
             }
         }
 
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     /// <summary>
@@ -1551,16 +1570,78 @@ public partial class LfgOverlay : UserControl
 
     // ── Friends ─────────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Who the pending request is for, when the sheet was opened from somebody's chat line.
+    ///
+    /// The card above the form shows their name and face; this is the id it stands for. Held
+    /// here rather than in the text box because the text box is what the user can see, and an
+    /// id belongs to the person it identifies, not to whoever happens to be adding them.
+    /// </summary>
+    private string? _friendTargetSteamId;
+
+    private List<Models.Friend> _allFriends = new();
+    private List<Models.Friend> _allIncoming = new();
+    private List<Models.Friend> _allOutgoing = new();
+
     private async void BtnFriends_Click(object sender, RoutedEventArgs e)
     {
+        AddFriendSheet.Visibility = Visibility.Collapsed;
         FriendsSheet.Visibility = Visibility.Visible;
-        FriendsNotice.Visibility = Visibility.Collapsed;
+        TxtFriendSearch.Text = "";
 
         await LoadFriendsAsync().ConfigureAwait(true);
     }
 
     private void BtnFriendsClose_Click(object sender, RoutedEventArgs e)
         => FriendsSheet.Visibility = Visibility.Collapsed;
+
+    private void BtnOpenAddFriend_Click(object sender, RoutedEventArgs e)
+    {
+        FriendsSheet.Visibility = Visibility.Collapsed;
+        OpenAddFriendManual();
+    }
+
+    private void OpenAddFriendManual()
+    {
+        ClearFriendTarget();
+        TxtFriendMessage.Text = "";
+        FriendsNotice.Visibility = Visibility.Collapsed;
+        AddFriendSheet.Visibility = Visibility.Visible;
+        TxtFriendSteamId.Focus();
+    }
+
+    private void BtnAddFriendClose_Click(object sender, RoutedEventArgs e)
+        => AddFriendSheet.Visibility = Visibility.Collapsed;
+
+    private void TxtFriendSearch_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ApplyFriendFilter();
+    }
+
+    private void ApplyFriendFilter()
+    {
+        var query = TxtFriendSearch?.Text?.Trim() ?? "";
+
+        if (string.IsNullOrEmpty(query))
+        {
+            FriendList.ItemsSource = _allFriends;
+            FriendsSearchEmptyNotice.Visibility = Visibility.Collapsed;
+            FriendsEmptyNotice.Visibility = _allFriends.Count == 0 && _allIncoming.Count == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            return;
+        }
+
+        var filtered = _allFriends
+            .Where(f => (f.DisplayName?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
+                     || (f.SteamId?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
+                     || (f.WhereLabel?.Contains(query, StringComparison.OrdinalIgnoreCase) == true))
+            .ToList();
+
+        FriendList.ItemsSource = filtered;
+        FriendsEmptyNotice.Visibility = Visibility.Collapsed;
+        FriendsSearchEmptyNotice.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
 
     /// <summary>
     /// Reads the list and the requests on both sides.
@@ -1572,20 +1653,18 @@ public partial class LfgOverlay : UserControl
     {
         var list = await SocialApi.GetFriendsAsync().ConfigureAwait(true);
 
-        FriendList.ItemsSource = list.Friends;
-        FriendRequestList.ItemsSource = list.Incoming;
-        FriendOutgoingList.ItemsSource = list.Outgoing;
+        _allFriends = list.Friends;
+        _allIncoming = list.Incoming;
+        _allOutgoing = list.Outgoing;
 
-        FriendsIncomingHeading.Visibility = list.Incoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        FriendsOutgoingHeading.Visibility = list.Outgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendRequestList.ItemsSource = _allIncoming;
+        FriendOutgoingList.ItemsSource = _allOutgoing;
 
-        // The invitation to add somebody only makes sense when there is nothing to look at, and
-        // only when we actually managed to look.
-        FriendsEmptyNotice.Visibility = list.Ok && list.Friends.Count == 0 && list.Incoming.Count == 0
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        FriendsIncomingHeading.Visibility = _allIncoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        FriendsOutgoingHeading.Visibility = _allOutgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        ShowFriendRequests(list.Incoming.Count);
+        ApplyFriendFilter();
+        ShowFriendRequests(_allIncoming.Count);
     }
 
     private void ShowFriendRequests(int count)
@@ -1596,10 +1675,37 @@ public partial class LfgOverlay : UserControl
 
     private async void BtnFriendAdd_Click(object sender, RoutedEventArgs e)
     {
-        var steamId = TxtFriendSteamId.Text?.Trim() ?? "";
+        var steamId = _friendTargetSteamId ?? TxtFriendSteamId.Text?.Trim() ?? "";
         var message = TxtFriendMessage.Text?.Trim() ?? "";
 
         if (steamId.Length == 0 || message.Length == 0) return;
+
+        if (SocialFriends.IsSelf(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorNotFound");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (SocialFriends.IsFriend(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (SocialFriends.HasPendingRequest(steamId))
+        {
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
 
         BtnFriendAdd.IsEnabled = false;
         FriendsNotice.Visibility = Visibility.Collapsed;
@@ -1610,7 +1716,7 @@ public partial class LfgOverlay : UserControl
 
             if (result == SocialApi.FriendRequestResult.Ok)
             {
-                TxtFriendSteamId.Text = "";
+                ClearFriendTarget();
                 TxtFriendMessage.Text = "";
 
                 // Green rather than red: this one is not a refusal.
@@ -1730,30 +1836,149 @@ public partial class LfgOverlay : UserControl
     private void ChatAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
-        _ = StartFriendRequestAsync(line.SteamId);
+        if (!SocialFriends.CanBeFriended(line.SteamId, line.SenderId)) return;
+        _ = StartFriendRequestAsync(line.SteamId, line.SenderName, line.AvatarUrl);
+    }
+
+    /// <summary>
+    /// Opens the friends sheet for somebody, from outside this panel.
+    ///
+    /// The global chat lane in the team-chat window offers the same action, and a second friends
+    /// sheet built over there would be a second one to keep true. It opens this panel instead.
+    /// </summary>
+    public void StartFriendRequestFor(string? steamId, string? name = null, string? avatarUrl = null)
+    {
+        if (!SocialFriends.CanBeFriended(steamId)) return;
+        ShowPublicRoom();
+        _ = StartFriendRequestAsync(steamId, name, avatarUrl);
+    }
+
+    /// <summary>
+    /// Opens the report sheet for a line, from outside this panel.
+    ///
+    /// Reporting asks for a reason and optionally a note — the reporter's account of what happened
+    /// is the part a moderator actually reads, and a one-click report that sends neither is worth
+    /// less to them than no report at all.
+    /// </summary>
+    public void StartReportFor(Models.ChatLine line)
+    {
+        if (line.SenderId is null) return;
+
+        ShowPublicRoom();
+        OpenReport(new ReportTarget(line.SenderId, line.SenderName, line.Id, line.Body));
     }
 
     private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
-        _ = StartFriendRequestAsync(thread.CounterpartSteamId);
+        if (!SocialFriends.CanBeFriended(thread.CounterpartSteamId, thread.CounterpartId)) return;
+        _ = StartFriendRequestAsync(thread.CounterpartSteamId, thread.CounterpartName, thread.AvatarUrl);
     }
 
     /// <summary>
-    /// Opens the friends sheet with the id already filled in, so the one message they get is all
+    /// Opens the friends sheet already aimed at somebody, so the one message they get is all
     /// that is left to write. Somebody who has no Steam id on their account cannot be added, and
     /// the empty field says so more plainly than a refusal afterwards would.
     /// </summary>
-    private async Task StartFriendRequestAsync(string? steamId)
+    private async Task StartFriendRequestAsync(string? steamId, string? name = null, string? avatarUrl = null)
     {
-        FriendsSheet.Visibility = Visibility.Visible;
+        FriendsSheet.Visibility = Visibility.Collapsed;
+        AddFriendSheet.Visibility = Visibility.Visible;
         FriendsNotice.Visibility = Visibility.Collapsed;
 
-        TxtFriendSteamId.Text = steamId ?? "";
+        await LoadFriendsAsync().ConfigureAwait(true);
+
+        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.IsFriend(steamId))
+        {
+            ClearFriendTarget();
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.HasPendingRequest(steamId))
+        {
+            ClearFriendTarget();
+            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
+            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
+            FriendsNotice.Visibility = Visibility.Visible;
+            return;
+        }
+
+        ShowFriendTarget(steamId, name, avatarUrl);
         TxtFriendMessage.Text = "";
         TxtFriendMessage.Focus();
+    }
 
-        await LoadFriendsAsync().ConfigureAwait(true);
+    /// <summary>
+    /// Puts the person on the card and takes the id off the screen.
+    ///
+    /// Without a name there is nothing to put on the card, and falling back to the id field is
+    /// the only way such a request can still be sent — every caller here has a name, so that is
+    /// a path for somebody we genuinely know nothing about rather than the ordinary case.
+    /// </summary>
+    private void ShowFriendTarget(string? steamId, string? name, string? avatarUrl)
+    {
+        if (string.IsNullOrWhiteSpace(steamId) || string.IsNullOrWhiteSpace(name))
+        {
+            ClearFriendTarget();
+            TxtFriendSteamId.Text = steamId ?? "";
+            return;
+        }
+
+        _friendTargetSteamId = steamId.Trim();
+
+        FriendTargetName.Text = name;
+        FriendTargetAvatar.ImageSource = LoadAvatar(avatarUrl);
+
+        FriendTargetCard.Visibility = Visibility.Visible;
+
+        // Collapsed rather than disabled: a greyed-out box still shows what is in it.
+        TxtFriendSteamId.Text = "";
+        TxtFriendSteamId.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>Back to the plain id field, with nothing of the last person left behind.</summary>
+    private void ClearFriendTarget()
+    {
+        _friendTargetSteamId = null;
+
+        FriendTargetCard.Visibility = Visibility.Collapsed;
+        FriendTargetName.Text = "";
+        FriendTargetAvatar.ImageSource = null;
+
+        TxtFriendSteamId.Text = "";
+        TxtFriendSteamId.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>
+    /// The avatar, or nothing. Frozen so it can be handed straight to the brush, and http only:
+    /// a url from the server is still a url somebody else wrote.
+    /// </summary>
+    private static ImageSource? LoadAvatar(string? url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return null;
+        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) return null;
+
+        try
+        {
+            var image = new System.Windows.Media.Imaging.BitmapImage();
+            image.BeginInit();
+            image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+            image.UriSource = uri;
+            image.EndInit();
+            if (image.CanFreeze) image.Freeze();
+
+            return image;
+        }
+        catch
+        {
+            // A face that will not load is not a reason to lose the request.
+            return null;
+        }
     }
 
     // ── The block list ──────────────────────────────────────────────────────
@@ -1787,7 +2012,7 @@ public partial class LfgOverlay : UserControl
         // Both directions come back at once: their lines reappear in the room, their listing in
         // the board. Reloading here rather than on close means the change is visible where it
         // was made.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
         await LoadListingsAsync().ConfigureAwait(true);
     }
 
@@ -2034,13 +2259,28 @@ public partial class LfgOverlay : UserControl
 
         // Existing lines were rendered with the old colour; a reload is the cheapest way to see
         // the change applied to your own past messages too.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     // ====== REPLIES ======
 
     /// <summary>The message the next line will answer, or null when it answers nothing.</summary>
     private Models.ChatLine? _replyTarget;
+
+    private void ChatMention_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
+
+        var token = line.Handle;
+        if (string.IsNullOrWhiteSpace(token))
+            token = line.SenderName;
+
+        if (string.IsNullOrWhiteSpace(token)) return;
+
+        TxtChat.Text = $"@{token} " + (TxtChat.Text ?? "");
+        TxtChat.CaretIndex = TxtChat.Text.Length;
+        TxtChat.Focus();
+    }
 
     private void ChatReply_Click(object sender, RoutedEventArgs e)
     {
@@ -2085,6 +2325,7 @@ public partial class LfgOverlay : UserControl
     /// </summary>
     private void ChatJumpToOriginal_Click(object sender, RoutedEventArgs e)
     {
+        e.Handled = true;
         if ((sender as FrameworkElement)?.Tag is not string originalId || string.IsNullOrEmpty(originalId)) return;
 
         var target = _chatLines.FirstOrDefault(line => line.Id == originalId);
@@ -2096,7 +2337,76 @@ public partial class LfgOverlay : UserControl
         }
 
         var container = ChatList.ItemContainerGenerator.ContainerFromItem(target) as FrameworkElement;
-        container?.BringIntoView();
+        if (container == null)
+        {
+            ChatList.UpdateLayout();
+            container = ChatList.ItemContainerGenerator.ContainerFromItem(target) as FrameworkElement;
+        }
+
+        if (container != null && ChatScrollViewer != null)
+        {
+            try
+            {
+                var transform = container.TransformToAncestor(ChatScrollViewer);
+                var point = transform.Transform(new Point(0, 0));
+                double targetOffset = ChatScrollViewer.VerticalOffset + point.Y - (ChatScrollViewer.ActualHeight / 3);
+                targetOffset = Math.Max(0, Math.Min(targetOffset, ChatScrollViewer.ScrollableHeight));
+
+                _userScrolledUp = true;
+                ChatScrollViewer.SmoothScrollTo(targetOffset, 280, () =>
+                {
+                    FlashMessageContainer(container);
+                });
+                return;
+            }
+            catch
+            {
+                // Fallback to instant bring into view if transform fails
+            }
+
+            container.BringIntoView();
+            FlashMessageContainer(container);
+        }
+        else
+        {
+            container?.BringIntoView();
+            if (container != null)
+            {
+                FlashMessageContainer(container);
+            }
+        }
+    }
+
+    private static void FlashMessageContainer(FrameworkElement container)
+    {
+        var border = container as Border ?? FindChild<Border>(container);
+        if (border != null)
+        {
+            var anim = new System.Windows.Media.Animation.ColorAnimation
+            {
+                From = Color.FromArgb(0x55, 0x38, 0xBD, 0xF8),
+                To = Colors.Transparent,
+                Duration = TimeSpan.FromMilliseconds(1600),
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+            var brush = new SolidColorBrush(Color.FromArgb(0x55, 0x38, 0xBD, 0xF8));
+            border.Background = brush;
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, anim);
+        }
+    }
+
+    private static T? FindChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent == null) return null;
+        int count = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < count; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typed) return typed;
+            var sub = FindChild<T>(child);
+            if (sub != null) return sub;
+        }
+        return null;
     }
 
     /// <summary>Copies the message body — the one action that makes sense on your own lines too.</summary>
@@ -2197,7 +2507,7 @@ public partial class LfgOverlay : UserControl
 
         await SocialApi.BlockAsync(line.SenderId).ConfigureAwait(true);
         // Their lines disappear on the next read, since the server filters both directions.
-        await LoadChatAsync().ConfigureAwait(true);
+        await ReloadChatAsync().ConfigureAwait(true);
     }
 
     private void ChatReport_Click(object sender, RoutedEventArgs e)
@@ -2214,4 +2524,59 @@ public partial class LfgOverlay : UserControl
 
     private void BtnClose_Click(object sender, RoutedEventArgs e)
         => CloseRequested?.Invoke(this, e);
+}
+
+public static class ScrollViewerExtensions
+{
+    public static readonly DependencyProperty AnimatedVerticalOffsetProperty =
+        DependencyProperty.RegisterAttached(
+            "AnimatedVerticalOffset",
+            typeof(double),
+            typeof(ScrollViewerExtensions),
+            new PropertyMetadata(0.0, OnAnimatedVerticalOffsetChanged));
+
+    public static double GetAnimatedVerticalOffset(DependencyObject obj) =>
+        (double)obj.GetValue(AnimatedVerticalOffsetProperty);
+
+    public static void SetAnimatedVerticalOffset(DependencyObject obj, double value) =>
+        obj.SetValue(AnimatedVerticalOffsetProperty, value);
+
+    private static void OnAnimatedVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ScrollViewer sv)
+        {
+            sv.ScrollToVerticalOffset((double)e.NewValue);
+        }
+    }
+
+    public static void SmoothScrollTo(this ScrollViewer scrollViewer, double targetOffset, double durationMs = 280, Action? onCompleted = null)
+    {
+        if (scrollViewer == null) return;
+
+        targetOffset = Math.Max(0, Math.Min(targetOffset, scrollViewer.ScrollableHeight));
+        double startOffset = scrollViewer.VerticalOffset;
+        if (Math.Abs(startOffset - targetOffset) < 1.0)
+        {
+            scrollViewer.ScrollToVerticalOffset(targetOffset);
+            onCompleted?.Invoke();
+            return;
+        }
+
+        scrollViewer.SetValue(AnimatedVerticalOffsetProperty, startOffset);
+
+        var anim = new DoubleAnimation
+        {
+            From = startOffset,
+            To = targetOffset,
+            Duration = TimeSpan.FromMilliseconds(durationMs),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+
+        if (onCompleted != null)
+        {
+            anim.Completed += (s, e) => onCompleted();
+        }
+
+        scrollViewer.BeginAnimation(AnimatedVerticalOffsetProperty, anim);
+    }
 }

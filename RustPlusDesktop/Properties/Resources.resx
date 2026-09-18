@@ -801,6 +801,66 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="TeamChatTitle" xml:space="preserve">
     <value>TEAM CHAT</value>
   </data>
+  <data name="GlobalChatTitle" xml:space="preserve">
+    <value>GLOBAL</value>
+  </data>
+  <data name="GlobalChatTickerOnline" xml:space="preserve">
+    <value>{0} online</value>
+  </data>
+  <data name="GlobalChatTickerQuiet" xml:space="preserve">
+    <value>Global chat is quiet — say something.</value>
+  </data>
+  <data name="GlobalChatTickerIdle" xml:space="preserve">
+    <value>Global chat — find a team, a trade, or a raid.</value>
+  </data>
+  <data name="GlobalChatTickerHide" xml:space="preserve">
+    <value>Hide this strip</value>
+  </data>
+  <data name="GlobalChatTickerSetting" xml:space="preserve">
+    <value>Show the global chat strip at the bottom of the window</value>
+  </data>
+  <data name="GlobalChatTickerSettingHint" xml:space="preserve">
+    <value>One line of the room on every tab, with how many people are in it. Turning it off does not leave the room — chat stays on the Community rail.</value>
+  </data>
+  <data name="GlobalChatPlaceholder" xml:space="preserve">
+    <value>Message global chat…</value>
+  </data>
+  <data name="GlobalChatSignInNotice" xml:space="preserve">
+    <value>Sign in to a cloud account to use global chat.</value>
+  </data>
+  <data name="ChatTranslate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="ChatReport" xml:space="preserve">
+    <value>Report message</value>
+  </data>
+  <data name="ChatBlock" xml:space="preserve">
+    <value>Block this player</value>
+  </data>
+  <data name="ChatReportSent" xml:space="preserve">
+    <value>Reported. Moderators will take a look.</value>
+  </data>
+  <data name="ChatReportFailed" xml:space="preserve">
+    <value>Could not send that report. Try again in a moment.</value>
+  </data>
+  <data name="ChatBlockDone" xml:space="preserve">
+    <value>Blocked. You will not see each other in chat.</value>
+  </data>
+  <data name="ChatBlockFailed" xml:space="preserve">
+    <value>Could not block that player. Try again in a moment.</value>
+  </data>
+  <data name="GlobalChatMentionToastTitle" xml:space="preserve">
+    <value>{0} mentioned you in global chat</value>
+  </data>
+  <data name="ChatSlowModeActive" xml:space="preserve">
+    <value>Slow mode: one message every {0} seconds.</value>
+  </data>
+  <data name="GlobalChatConsentNotice" xml:space="preserve">
+    <value>Read and accept the room rules in Community before posting.</value>
+  </data>
+  <data name="ChatRefusedSanctioned" xml:space="preserve">
+    <value>You cannot post in global chat right now. Open Community to see until when, and why.</value>
+  </data>
   <data name="ClanChatTitle" xml:space="preserve">
     <value>CLAN CHAT</value>
   </data>
@@ -3689,6 +3749,9 @@ Please pair this server first.</value>
   <data name="UiOpenOrCloseTeamPanelCtrlShiftT" xml:space="preserve">
     <value>Open or close Team panel (Ctrl+Shift+T)</value>
   </data>
+  <data name="UiOpenWebPortal" xml:space="preserve">
+    <value>Open web portal</value>
+  </data>
   <data name="UiOpenShopFilters" xml:space="preserve">
     <value>Open shop filters</value>
   </data>
@@ -3706,6 +3769,21 @@ Please pair this server first.</value>
   </data>
   <data name="UiOrGroupName" xml:space="preserve">
     <value>or Group Name</value>
+  </data>
+  <data name="HeatmapParseMapTitle" xml:space="preserve">
+    <value>Parse map file?</value>
+  </data>
+  <data name="HeatmapParseMapPrompt" xml:space="preserve">
+    <value>Heatmaps are read from the server's map file. Search for the matching map now and parse it? This also adds the extra monuments and hot spots. The 3D map is not built.</value>
+  </data>
+  <data name="HeatmapParseMapConfirm" xml:space="preserve">
+    <value>Parse now</value>
+  </data>
+  <data name="UiPlayerSpawns" xml:space="preserve">
+    <value>Player Spawns</value>
+  </data>
+  <data name="UiHqmNodes" xml:space="preserve">
+    <value>HQM Nodes</value>
   </data>
   <data name="UiOres" xml:space="preserve">
     <value>Ores</value>
@@ -6396,8 +6474,23 @@ You can find more information on the server&apos;s official website:
   <data name="FriendsTitle" xml:space="preserve">
     <value>Friends</value>
   </data>
+  <data name="FriendsSearchPlaceholder" xml:space="preserve">
+    <value>Search friends...</value>
+  </data>
+  <data name="FriendsNoSearchResults" xml:space="preserve">
+    <value>No matching friends found.</value>
+  </data>
+  <data name="FriendsButtonAdd" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendTitle" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="FriendsAddFriendSubtitle" xml:space="preserve">
+    <value>Send a friend request by Steam ID or with an introduction message.</value>
+  </data>
   <data name="FriendsEmpty" xml:space="preserve">
-    <value>Nobody on the list yet. Add somebody by their Steam ID below.</value>
+    <value>Nobody on the list yet.</value>
   </data>
   <data name="FriendsAddSteamId" xml:space="preserve">
     <value>Steam ID (17 digits)</value>
@@ -6791,5 +6884,1149 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="AlexaLinkExpiredMessage" xml:space="preserve">
     <value>Amazon no longer accepts the connection to Rust+ Desktop, so raid alarms have stopped reaching Alexa. Voice control still works. Open the Alexa app, disable the Rust+ Desktop skill and link it again.</value>
+  </data>
+  <data name="MiniMapLayers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="MiniMapLayerTexture" xml:space="preserve">
+    <value>Map texture</value>
+  </data>
+  <data name="MiniMapLayerGrid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="MiniMapLayerDrawings" xml:space="preserve">
+    <value>Overlay</value>
+  </data>
+  <data name="MiniMapLayerIcons" xml:space="preserve">
+    <value>Icons</value>
+  </data>
+  <data name="MiniMapLayerPlayers" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="CommandDockAddTile" xml:space="preserve">
+    <value>Add tile</value>
+  </data>
+  <data name="CommandDockPickerHint" xml:space="preserve">
+    <value>Pick a tile to place it on the dock. It lands in the first free spot next to the map.</value>
+  </data>
+  <data name="CommandDockEditHint" xml:space="preserve">
+    <value>Drag to move · × to remove</value>
+  </data>
+  <data name="CommandDockSectionClock" xml:space="preserve">
+    <value>Clock</value>
+  </data>
+  <data name="CommandDockSectionChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="CommandDockSectionEvents" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="CommandDockSectionDevices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="CommandDockSectionRules" xml:space="preserve">
+    <value>Logic Engine</value>
+  </data>
+  <data name="CommandDockClockDigital" xml:space="preserve">
+    <value>Digital clock</value>
+  </data>
+  <data name="CommandDockClockDigitalHint" xml:space="preserve">
+    <value>Server time with the day and night phase</value>
+  </data>
+  <data name="CommandDockClockAnalog" xml:space="preserve">
+    <value>Analogue clock</value>
+  </data>
+  <data name="CommandDockClockAnalogHint" xml:space="preserve">
+    <value>A dial that follows the server clock</value>
+  </data>
+  <data name="CommandDockClockRust" xml:space="preserve">
+    <value>Rust clock</value>
+  </data>
+  <data name="CommandDockClockRustHint" xml:space="preserve">
+    <value>Server time in the game&apos;s own lettering</value>
+  </data>
+  <data name="CommandDockChatHint" xml:space="preserve">
+    <value>Two cells wide, resizable in edit mode</value>
+  </data>
+  <data name="CommandDockDeviceMissing" xml:space="preserve">
+    <value>not paired</value>
+  </data>
+  <data name="CommandDockAlarmTriggered" xml:space="preserve">
+    <value>Triggered</value>
+  </data>
+  <data name="CommandDockAlarmIdle" xml:space="preserve">
+    <value>Armed</value>
+  </data>
+  <data name="CommandDockRuleMissing" xml:space="preserve">
+    <value>This rule no longer exists.</value>
+  </data>
+  <data name="CommandDockRuleInactive" xml:space="preserve">
+    <value>Activate Logic Engine Mechanics or Rule</value>
+  </data>
+  <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
+    <value>This rule no longer uses the Widget Overlay trigger.</value>
+  </data>
+  <data name="CommandDockRuleReady" xml:space="preserve">
+    <value>Runs on click</value>
+  </data>
+  <data name="CommandDockNoRules" xml:space="preserve">
+    <value>No rule uses the Widget Overlay trigger yet. Set a rule&apos;s trigger to Widget Overlay to launch it from here.</value>
+  </data>
+  <data name="UiCommandDockTrigger" xml:space="preserve">
+    <value>Widget Overlay</value>
+  </data>
+  <data name="CommandDockResizeHint" xml:space="preserve">
+    <value>Drag to resize</value>
+  </data>
+  <data name="CommandDockGrowth" xml:space="preserve">
+    <value>New tiles go</value>
+  </data>
+  <data name="CommandDockGrowDown" xml:space="preserve">
+    <value>Below the map</value>
+  </data>
+  <data name="CommandDockGrowRight" xml:space="preserve">
+    <value>Beside the map</value>
+  </data>
+  <data name="CommandDockRemoveTile" xml:space="preserve">
+    <value>Remove tile</value>
+  </data>
+  <data name="CommandDockTitle" xml:space="preserve">
+    <value>Widget Overlay</value>
+  </data>
+  <data name="CommandDockSectionMap" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="CommandDockAddMapHint" xml:space="preserve">
+    <value>Brings the map back with all layers on</value>
+  </data>
+  <data name="CommandDockTileSettings" xml:space="preserve">
+    <value>Tile settings</value>
+  </data>
+  <data name="CommandDockTileOpacity" xml:space="preserve">
+    <value>Opacity {0}%</value>
+  </data>
+  <data name="CommandDockTileFontSize" xml:space="preserve">
+    <value>Text size {0}%</value>
+  </data>
+  <data name="CommandDockTileTextColor" xml:space="preserve">
+    <value>Text colour</value>
+  </data>
+  <data name="CommandDockTileResetToGlobal" xml:space="preserve">
+    <value>Back to the dock&apos;s defaults</value>
+  </data>
+  <data name="CommandDockClockDayNight" xml:space="preserve">
+    <value>Show time until day or night</value>
+  </data>
+  <data name="CommandDockChatAbbreviate" xml:space="preserve">
+    <value>Shorten long names</value>
+  </data>
+  <data name="CommandDockColorAuto" xml:space="preserve">
+    <value>Theme colour</value>
+  </data>
+  <data name="CommandDockColorWhite" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="CommandDockColorBlack" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="CommandDockColorCyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="CommandDockColorAmber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="CommandDockColorRed" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="CommandDockColorGreen" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="CommandDockDefaultsHint" xml:space="preserve">
+    <value>What a tile looks like until its own gear is used. Tiles you have already adjusted keep their own values.</value>
+  </data>
+  <data name="CommandDockDefaultOpacity" xml:space="preserve">
+    <value>Default opacity</value>
+  </data>
+  <data name="CommandDockDefaultFontSize" xml:space="preserve">
+    <value>Default text size</value>
+  </data>
+  <data name="CommandDockReset" xml:space="preserve">
+    <value>Reset the dock</value>
+  </data>
+  <data name="CommandDockResetConfirm" xml:space="preserve">
+    <value>Every tile, its position and its settings are removed. The mini-map itself is not affected.</value>
+  </data>
+  <data name="CommandDockLockHint" xml:space="preserve">
+    <value>Lock the layout</value>
+  </data>
+  <data name="CommandDockUnlockHint" xml:space="preserve">
+    <value>Unlock to move, resize and remove tiles</value>
+  </data>
+  <data name="CommandDockSwitchOn" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="CommandDockSwitchOff" xml:space="preserve">
+    <value>OFF</value>
+  </data>
+  <data name="CommandDockAlarmActive" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="CommandDockAlarmInactive" xml:space="preserve">
+    <value>INACTIVE</value>
+  </data>
+  <data name="CommandDockClock12Hour" xml:space="preserve">
+    <value>12-hour clock (AM/PM)</value>
+  </data>
+  <data name="CommandDockDeviceShowIcon" xml:space="preserve">
+    <value>Show the device&apos;s icon</value>
+  </data>
+  <data name="CommandDockDeviceShowIconHint" xml:space="preserve">
+    <value>Off shows the device name instead — useful when several switches share an icon.</value>
+  </data>
+  <data name="MiniMapLayerDeaths" xml:space="preserve">
+    <value>Death markers</value>
+  </data>
+  <data name="CommandDockSectionSession" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="CommandDockSessionTitle" xml:space="preserve">
+    <value>Session stats</value>
+  </data>
+  <data name="CommandDockSessionHint" xml:space="preserve">
+    <value>Online time, distance, idle time and deaths</value>
+  </data>
+  <data name="CommandDockSessionOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="CommandDockSessionDistance" xml:space="preserve">
+    <value>Walked</value>
+  </data>
+  <data name="CommandDockSessionAfk" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="CommandDockSessionDeaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="CommandDockSessionTeamDeaths" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="CommandDockSessionSince" xml:space="preserve">
+    <value>Session since {0}</value>
+  </data>
+  <data name="CommandDockSessionWaiting" xml:space="preserve">
+    <value>Counting starts once you are connected to a server.</value>
+  </data>
+  <data name="CommandDockSessionWipe" xml:space="preserve">
+    <value>Start a new session</value>
+  </data>
+  <data name="CommandDockSessionWipeHint" xml:space="preserve">
+    <value>Resets the figures for this server. Counting continues from zero.</value>
+  </data>
+  <data name="CommandDockSupporterOnly" xml:space="preserve">
+    <value>A supporter feature. Sign in with a supporter account to use this tile.</value>
+  </data>
+  <data name="CommandDockSupporterOnlyShort" xml:space="preserve">
+    <value>Supporter feature</value>
+  </data>
+  <data name="CommandDockDiscordHint" xml:space="preserve">
+    <value>Send a line or the current map view</value>
+  </data>
+  <data name="CommandDockDiscordSend" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="CommandDockDiscordSendMap" xml:space="preserve">
+    <value>Send the current map view</value>
+  </data>
+  <data name="CommandDockDiscordChannel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="CommandDockDiscordMention" xml:space="preserve">
+    <value>Mention</value>
+  </data>
+  <data name="CommandDockDiscordMentionNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CommandDockDiscordChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="CommandDockDiscordEvents" xml:space="preserve">
+    <value>events</value>
+  </data>
+  <data name="CommandDockDiscordShop" xml:space="preserve">
+    <value>shop</value>
+  </data>
+  <data name="CommandDockDiscordSendsTo" xml:space="preserve">
+    <value>Sends to your {0} channel</value>
+  </data>
+  <data name="CommandDockDiscordNoChannels" xml:space="preserve">
+    <value>No Discord channel is configured. Set one up under Connected Services first.</value>
+  </data>
+  <data name="CommandDockDiscordTtsHint" xml:space="preserve">
+    <value>Text-to-speech follows this channel&apos;s own setting under Connected Services.</value>
+  </data>
+  <data name="CommandDockSectionServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="CommandDockServerInfoTitle" xml:space="preserve">
+    <value>Server info</value>
+  </data>
+  <data name="CommandDockServerInfoHint" xml:space="preserve">
+    <value>Players on now, and how that has moved this session</value>
+  </data>
+  <data name="CommandDockServerPlayers" xml:space="preserve">
+    <value>players</value>
+  </data>
+  <data name="CommandDockServerQueue" xml:space="preserve">
+    <value>{0} waiting</value>
+  </data>
+  <data name="CommandDockServerShowGraph" xml:space="preserve">
+    <value>Show the population graph</value>
+  </data>
+  <data name="CommandDockTemplates" xml:space="preserve">
+    <value>Arrangements</value>
+  </data>
+  <data name="CommandDockTemplatesHint" xml:space="preserve">
+    <value>Save the dock as it is now, or load one you saved earlier. Hover a name to see it outlined on the dock.</value>
+  </data>
+  <data name="CommandDockTemplatesEmpty" xml:space="preserve">
+    <value>Nothing saved yet. Arrange the dock, give it a name and save it.</value>
+  </data>
+  <data name="CommandDockTemplateNamePlaceholder" xml:space="preserve">
+    <value>Name this arrangement</value>
+  </data>
+  <data name="CommandDockTemplateSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CommandDockTemplateRename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="CommandDockTemplateDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CommandDockTemplateDeleteConfirm" xml:space="preserve">
+    <value>Delete the arrangement “{0}”?</value>
+  </data>
+  <data name="CommandDockTemplateSummary" xml:space="preserve">
+    <value>{0} tiles · saved {1}</value>
+  </data>
+  <data name="CommandDockOilRigTrigger" xml:space="preserve">
+    <value>From your Oil Rig trigger</value>
+  </data>
+  <data name="CommandDockOilRigHeard" xml:space="preserve">
+    <value>Heard by other players</value>
+  </data>
+  <data name="AiCompanionIntro" xml:space="preserve">
+    <value>Ask a question by voice and get an answer without leaving the game. It runs on your own account with an AI provider: the recording goes straight from this PC to them, never through our servers, and your key is stored here and never uploaded.</value>
+  </data>
+  <data name="AiCompanionProvider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="AiCompanionProviderNative" xml:space="preserve">
+    <value>Takes your recording directly, so what it hears is what you said.</value>
+  </data>
+  <data name="AiCompanionProviderTranscribed" xml:space="preserve">
+    <value>Does not accept audio. Your recording is turned into text on this PC first, which is slower and less accurate with names and game terms than GPT or Gemini.</value>
+  </data>
+  <data name="AiCompanionApiKey" xml:space="preserve">
+    <value>API key</value>
+  </data>
+  <data name="AiCompanionSaveKey" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AiCompanionRemoveKey" xml:space="preserve">
+    <value>Remove key</value>
+  </data>
+  <data name="AiCompanionRemoveKeyConfirm" xml:space="preserve">
+    <value>Remove the stored key from this PC? The companion stops working until a new one is entered. Nothing is changed at your provider — revoke it there too if it may have leaked.</value>
+  </data>
+  <data name="AiCompanionKeyStored" xml:space="preserve">
+    <value>A key is stored on this PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissing" xml:space="preserve">
+    <value>No key yet — the companion cannot send anything without one.</value>
+  </data>
+  <data name="AiCompanionKeyRejectedTitle" xml:space="preserve">
+    <value>That does not look like a key</value>
+  </data>
+  <data name="AiCompanionKeyRejected" xml:space="preserve">
+    <value>A {0} key does not look like that. Check you pasted the whole thing, without the surrounding quotes.</value>
+  </data>
+  <data name="AiCompanionAnswers" xml:space="preserve">
+    <value>Answers</value>
+  </data>
+  <data name="AiCompanionTextAnswers" xml:space="preserve">
+    <value>Show as text</value>
+  </data>
+  <data name="AiCompanionAudioAnswers" xml:space="preserve">
+    <value>Read out loud</value>
+  </data>
+  <data name="AiCompanionStreamingVoice" xml:space="preserve">
+    <value>Start speaking before the answer is finished</value>
+  </data>
+  <data name="AiCompanionStreamingSupporter" xml:space="preserve">
+    <value>Spoken answers start once the model has finished. Supporters hear them as they are written.</value>
+  </data>
+  <data name="AiCompanionNoVoice" xml:space="preserve">
+    <value>This provider has no voice of its own, so answers are read by Windows and cannot start early.</value>
+  </data>
+  <data name="AiCompanionRecording" xml:space="preserve">
+    <value>Recording</value>
+  </data>
+  <data name="AiCompanionGameAudio" xml:space="preserve">
+    <value>Record the game&apos;s sound as well</value>
+  </data>
+  <data name="AiCompanionScreenshotDefault" xml:space="preserve">
+    <value>Attach a screenshot by default</value>
+  </data>
+  <data name="AiCompanionHotkey" xml:space="preserve">
+    <value>Push to talk</value>
+  </data>
+  <data name="AiCompanionSetHotkey" xml:space="preserve">
+    <value>Set hotkey</value>
+  </data>
+  <data name="AiCompanionHotkeyNone" xml:space="preserve">
+    <value>Not set — click the tile to record instead</value>
+  </data>
+  <data name="AiCompanionPolicyButton" xml:space="preserve">
+    <value>What happens to your recordings</value>
+  </data>
+  <data name="AiCompanionPolicyTitle" xml:space="preserve">
+    <value>What happens to your recordings</value>
+  </data>
+  <data name="AiCompanionPolicyAccept" xml:space="preserve">
+    <value>Understood</value>
+  </data>
+  <data name="AiCompanionPolicy" xml:space="preserve">
+    <value>The recording is made on this PC and sent straight to the AI provider whose key you entered. It does not pass through our servers and we never receive it.
+
+What happens to it after that is governed by that provider&apos;s terms — the ones you agreed to when you created the key, not ours.
+
+Your key is stored only on this PC, protected by your Windows account, and is never uploaded. Because it is tied to this Windows account, it will not survive a reinstall or move to another PC: you will need to enter it again.
+
+Recording only ever runs while you hold the hotkey or after you click the tile, and stops by itself after five minutes.</value>
+  </data>
+  <data name="AiCompanionTextAnswersHint" xml:space="preserve">
+    <value>The answer appears under the tile on the dock.</value>
+  </data>
+  <data name="AiCompanionAudioAnswersHint" xml:space="preserve">
+    <value>The answer is spoken, so you can keep both hands on the game.</value>
+  </data>
+  <data name="AiCompanionGameAudioHint" xml:space="preserve">
+    <value>Records the game&apos;s own sound on a second track — useful for having something said in game translated.</value>
+  </data>
+  <data name="AiCompanionScreenshotDefaultHint" xml:space="preserve">
+    <value>Saves ticking the box each time when you record by hotkey.</value>
+  </data>
+  <data name="AiCompanionStreamingNeedsVoice" xml:space="preserve">
+    <value>Only applies when answers are read out loud.</value>
+  </data>
+  <data name="AiCompanionStreamingOn" xml:space="preserve">
+    <value>The answer is spoken as it is written instead of after it is finished.</value>
+  </data>
+  <data name="CommandDockSectionAi" xml:space="preserve">
+    <value>AI companion</value>
+  </data>
+  <data name="CommandDockAiTitle" xml:space="preserve">
+    <value>Ask AI</value>
+  </data>
+  <data name="CommandDockAiPickerHint" xml:space="preserve">
+    <value>Record a question, attach the screen, get an answer</value>
+  </data>
+  <data name="CommandDockAiPickerNoKey" xml:space="preserve">
+    <value>Needs your own AI key under Connected Services</value>
+  </data>
+  <data name="CommandDockAiRecord" xml:space="preserve">
+    <value>Record a question</value>
+  </data>
+  <data name="CommandDockAiStop" xml:space="preserve">
+    <value>Stop recording</value>
+  </data>
+  <data name="CommandDockAiScreenshot" xml:space="preserve">
+    <value>Attach a screenshot</value>
+  </data>
+  <data name="CommandDockAiGameAudio" xml:space="preserve">
+    <value>Also record the game&apos;s sound</value>
+  </data>
+  <data name="CommandDockAiDiscard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="CommandDockAiHint" xml:space="preserve">
+    <value>Press to record your question, press again to stop.</value>
+  </data>
+  <data name="CommandDockAiNoKey" xml:space="preserve">
+    <value>No AI key stored yet. Add one under Connected Services first.</value>
+  </data>
+  <data name="CommandDockAiRecording" xml:space="preserve">
+    <value>Recording {0}</value>
+  </data>
+  <data name="CommandDockAiReady" xml:space="preserve">
+    <value>{0} recorded</value>
+  </data>
+  <data name="CommandDockAiIdle" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="CommandDockAiNoMic" xml:space="preserve">
+    <value>No microphone found</value>
+  </data>
+  <data name="CommandDockAiCutoff" xml:space="preserve">
+    <value>Stopped after five minutes</value>
+  </data>
+  <data name="CommandDockAiShotAttached" xml:space="preserve">
+    <value>Screenshot attached</value>
+  </data>
+  <data name="CommandDockAiSend" xml:space="preserve">
+    <value>Send the question</value>
+  </data>
+  <data name="CommandDockAiSending" xml:space="preserve">
+    <value>Sending…</value>
+  </data>
+  <data name="CommandDockAiAnswering" xml:space="preserve">
+    <value>Answering…</value>
+  </data>
+  <data name="CommandDockAiFailed" xml:space="preserve">
+    <value>Failed — see the panel</value>
+  </data>
+  <data name="AiAnswerTitle" xml:space="preserve">
+    <value>AI answer</value>
+  </data>
+  <data name="AiAnswerThinking" xml:space="preserve">
+    <value>Thinking…</value>
+  </data>
+  <data name="AiAnswerWaiting" xml:space="preserve">
+    <value>Sent. Waiting for the first words…</value>
+  </data>
+  <data name="AiAnswerWriting" xml:space="preserve">
+    <value>Answering…</value>
+  </data>
+  <data name="AiAnswerDone" xml:space="preserve">
+    <value>Answer</value>
+  </data>
+  <data name="AiAnswerFailed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="AiCompanionModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="AiCompanionModelReset" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="AiCompanionModelNote" xml:space="preserve">
+    <value>Leave empty to use {0}. Change it if the provider replies that the model no longer exists.</value>
+  </data>
+  <data name="AiCompanionOpenRouterBrowse" xml:space="preserve">
+    <value>Browse &amp; Search Models...</value>
+  </data>
+  <data name="AiCompanionOpenRouterRefreshTip" xml:space="preserve">
+    <value>Refresh model catalog from OpenRouter</value>
+  </data>
+  <data name="AiCompanionOpenRouterFreeSection" xml:space="preserve">
+    <value>─── 🎁 Free Models ───</value>
+  </data>
+  <data name="AiCompanionOpenRouterPopularSection" xml:space="preserve">
+    <value>─── ⚡ Popular Models ───</value>
+  </data>
+  <data name="AiCompanionAutoSend" xml:space="preserve">
+    <value>Send as soon as recording stops</value>
+  </data>
+  <data name="AiCompanionAutoSendHint" xml:space="preserve">
+    <value>No second press. With a screenshot set to attach every time, it is taken first.</value>
+  </data>
+  <data name="AiCompanionAnswerWindow" xml:space="preserve">
+    <value>Answer window</value>
+  </data>
+  <data name="AiCompanionAnswerWindowHint" xml:space="preserve">
+    <value>The panel that docks under the tile when text answers are on.</value>
+  </data>
+  <data name="AiCompanionAnswerOpacity" xml:space="preserve">
+    <value>Transparency — {0}% opaque</value>
+  </data>
+  <data name="AiCompanionAnswerWidth" xml:space="preserve">
+    <value>Width — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerHeight" xml:space="preserve">
+    <value>Height before it scrolls — {0} px</value>
+  </data>
+  <data name="AiCompanionAnswerColor" xml:space="preserve">
+    <value>Text colour</value>
+  </data>
+  <data name="AiCompanionAnswerPreview" xml:space="preserve">
+    <value>Preview the answer window</value>
+  </data>
+  <data name="AiCompanionHistoryButton" xml:space="preserve">
+    <value>Show recent questions</value>
+  </data>
+  <data name="AiAnswerPreviewLabel" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="AiAnswerPreviewText" xml:space="preserve">
+    <value>Sulfur first — a rocket needs 1400, and you are short of that before you are short of anything else. The crate on the screenshot is a normal military crate, so it will not have one in it.
+
+Close this preview when the panel looks right.</value>
+  </data>
+  <data name="AiHistoryTitle" xml:space="preserve">
+    <value>Recent questions</value>
+  </data>
+  <data name="AiHistoryIntro" xml:space="preserve">
+    <value>The last few exchanges, kept on this PC and never uploaded. Useful mainly for reading a failure that happened while the answer window was off.</value>
+  </data>
+  <data name="AiHistoryClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="AiHistoryCount" xml:space="preserve">
+    <value>{0} of the last {1} kept on this PC</value>
+  </data>
+  <data name="AiHistoryEmpty" xml:space="preserve">
+    <value>Nothing asked yet.</value>
+  </data>
+  <data name="AiHistoryWithScreenshot" xml:space="preserve">
+    <value>screenshot</value>
+  </data>
+  <data name="AiHistoryWithGameAudio" xml:space="preserve">
+    <value>game audio</value>
+  </data>
+  <data name="AiHistoryCopyHint" xml:space="preserve">
+    <value>Click to copy</value>
+  </data>
+  <data name="CommandDockAiAutoSend" xml:space="preserve">
+    <value>Send as soon as recording stops</value>
+  </data>
+  <data name="CommandDockAiAttachShot" xml:space="preserve">
+    <value>Attach a screenshot every time</value>
+  </data>
+  <data name="CommandDockAiGameAudioSetting" xml:space="preserve">
+    <value>Also record the game&apos;s sound</value>
+  </data>
+  <data name="CommandDockAiTextAnswers" xml:space="preserve">
+    <value>Show the answer under the tile</value>
+  </data>
+  <data name="UiPressESCToClearEnterToSave" xml:space="preserve">
+    <value>ESC removes the hotkey · Enter saves · close this window to cancel</value>
+  </data>
+  <data name="CommandDockAiFailedHistory" xml:space="preserve">
+    <value>Failed — see recent questions</value>
+  </data>
+  <data name="AiCompanionKeyStoredFor" xml:space="preserve">
+    <value>A {0} key is stored on this PC.</value>
+  </data>
+  <data name="AiCompanionKeyMissingFor" xml:space="preserve">
+    <value>No {0} key yet — this provider cannot send anything without one.</value>
+  </data>
+  <data name="AiCompanionKeyAlsoStored" xml:space="preserve">
+    <value>Also stored: {0}.</value>
+  </data>
+  <data name="AiCompanionVoiceNative" xml:space="preserve">
+    <value>Spoken answers use this provider&apos;s own voice.</value>
+  </data>
+  <data name="AiCompanionVoiceWindows" xml:space="preserve">
+    <value>Spoken answers are read by Windows, which sounds noticeably more synthetic.</value>
+  </data>
+  <data name="AiCompanionBillingFree" xml:space="preserve">
+    <value>Google gives the API a free allowance, so a key from AI Studio works without paying. Busy sessions can still hit the per-minute limit.</value>
+  </data>
+  <data name="AiCompanionBillingPrepaid" xml:space="preserve">
+    <value>This API is billed separately from any chat subscription and needs its own prepaid credit.</value>
+  </data>
+  <data name="AiCompanionShotArea" xml:space="preserve">
+    <value>Screenshot area</value>
+  </data>
+  <data name="AiCompanionShotFull" xml:space="preserve">
+    <value>Whole screen</value>
+  </data>
+  <data name="AiCompanionShotHalf" xml:space="preserve">
+    <value>Middle half — closer look</value>
+  </data>
+  <data name="AiCompanionShotQuarter" xml:space="preserve">
+    <value>Middle quarter — closest look</value>
+  </data>
+  <data name="AiCompanionShotFullNote" xml:space="preserve">
+    <value>Everything you can see, including the HUD and the map. Small things far from the crosshair may be too small for the model to identify.</value>
+  </data>
+  <data name="AiCompanionShotCropNote" xml:space="preserve">
+    <value>Only what you are aiming at, at full resolution. Much better at naming a switch on a wall or an item on the ground, and it cannot see the rest of the screen.</value>
+  </data>
+  <data name="AiCompanionAnswerLanguage" xml:space="preserve">
+    <value>Answer language</value>
+  </data>
+  <data name="AiCompanionLanguageMatch" xml:space="preserve">
+    <value>Same language as the question</value>
+  </data>
+  <data name="AiCompanionLanguageApp" xml:space="preserve">
+    <value>App language ({0})</value>
+  </data>
+  <data name="AiCompanionLanguageEnglish" xml:space="preserve">
+    <value>Always English</value>
+  </data>
+  <data name="AiCompanionLanguageMatchNote" xml:space="preserve">
+    <value>Ask in English and the answer is English; ask in {0} and it is {0}. Falls back to {0} when the recording has no words in it.</value>
+  </data>
+  <data name="AiCompanionLanguageAppNote" xml:space="preserve">
+    <value>Answers always come back in the app&apos;s language, even when you ask in another one.</value>
+  </data>
+  <data name="AiCompanionLanguageEnglishNote" xml:space="preserve">
+    <value>Always English. Useful because Rust&apos;s own item and monument names are English.</value>
+  </data>
+  <data name="AiCompanionLanguageVoiceWarn" xml:space="preserve">
+    <value>Windows reads every answer in one language, so an answer in another one will sound wrong.</value>
+  </data>
+  <data name="AiCompanionGameData" xml:space="preserve">
+    <value>Send Rust data with each question</value>
+  </data>
+  <data name="AiCompanionGameDataOn" xml:space="preserve">
+    <value>Current recipes and raid costs go with every question, so the model is not answering from an old patch. Adds about 10,000 tokens a question, most of it cached after the first.</value>
+  </data>
+  <data name="AiCompanionGameDataOnFree" xml:space="preserve">
+    <value>Current recipes and raid costs go with every question, so the model is not answering from an old patch. Free on Gemini.</value>
+  </data>
+  <data name="AiCompanionGameDataOff" xml:space="preserve">
+    <value>Cheaper, but recipes and raid costs come from the model&apos;s memory — which holds every retired version of them and cannot tell which is current.</value>
+  </data>
+  <data name="ChatAiCategory" xml:space="preserve">
+    <value>Ask AI</value>
+  </data>
+  <data name="ChatAiDesc" xml:space="preserve">
+    <value>Ask the AI companion from in-game chat and get the answer in chat. Answers are kept to a line or two, without screenshots.</value>
+  </data>
+  <data name="ChatAiCommand" xml:space="preserve">
+    <value>Ask AI</value>
+  </data>
+  <data name="ChatAiAllowTeammates" xml:space="preserve">
+    <value>Allow for teammates</value>
+  </data>
+  <data name="ChatAiCreditTooltip" xml:space="preserve">
+    <value>Off by default, so only you can use it. Switched on, every teammate question is answered by your provider on your API key and billed to you — with your settings: same provider, same model, same language.</value>
+  </data>
+  <data name="ChatAiPerHour" xml:space="preserve">
+    <value>Questions per teammate</value>
+  </data>
+  <data name="ChatAiPerHourCount" xml:space="preserve">
+    <value>{0} per hour</value>
+  </data>
+  <data name="ChatAiPerHourUnlimited" xml:space="preserve">
+    <value>Unlimited</value>
+  </data>
+  <data name="ChatAiPerHourHint" xml:space="preserve">
+    <value>Counted per person over a rolling hour. Your own questions are never counted.</value>
+  </data>
+  <data name="ChatAiUsage" xml:space="preserve">
+    <value>Ask a question after the command.</value>
+  </data>
+  <data name="ChatAiNoKey" xml:space="preserve">
+    <value>No AI is set up on this client.</value>
+  </data>
+  <data name="ChatAiSupporter" xml:space="preserve">
+    <value>Asking the AI from chat is a supporter feature.</value>
+  </data>
+  <data name="ChatAiFailed" xml:space="preserve">
+    <value>The AI could not answer that.</value>
+  </data>
+  <data name="ChatAiRateLimited" xml:space="preserve">
+    <value>{0} has used their AI questions for this hour.</value>
+  </data>
+  <data name="ClanCommandsAllowAi" xml:space="preserve">
+    <value>Allow Ask AI</value>
+  </data>
+  <data name="ClanCommandsAllowAiHint" xml:space="preserve">
+    <value>Clan members can ask the AI on your API key, and the bill is yours. Separate from the team setting above.</value>
+  </data>
+  <data name="UpdateWhatsNew93Summary" xml:space="preserve">
+    <value>The mini-map becomes a command centre, the AI Companion arrives, and the map reads the server's own files.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title1" xml:space="preserve">
+    <value>Widget Overlay</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
+    <value>Clocks, smart switches, team and clan chat, translation, session stats and server population as widgets around the map — and the map is a widget too. Style them all at once or one at a time, lock the layout against accidental dragging, and save arrangements under a name.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title2" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc2" xml:space="preserve">
+    <value>Hold a key, ask out loud, and get an answer without leaving the game — as text under the widget or read aloud. Choose GPT, Gemini, Claude or OpenRouter with your own API key: it is stored on this PC only and never uploaded. Teammates can ask with !ai once you allow it.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title3" xml:space="preserve">
+    <value>Heatmaps &amp; Keycards</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc3" xml:space="preserve">
+    <value>Heatmaps no longer need the 3D map built first — the server's own map file is read on request. HQM nodes and player spawns join the ore layers, and two new layers show which keycards a monument's doors want, and which ones you can pick up there.</value>
+  </data>
+  <data name="UpdateWhatsNew93Title4" xml:space="preserve">
+    <value>Global Chat &amp; More</value>
+  </data>
+  <data name="UpdateWhatsNew93Desc4" xml:space="preserve">
+    <value>A line of global chat on every tab, with mentions drawn in amber and a notification when someone names you. Read who killed you off the death screen and see them ranked in Death Stats. Plus 31 achievements to discover, a new logo and Fluent-styled windows.</value>
+  </data>
+  <data name="Tutorials.command-dock.Title" xml:space="preserve">
+    <value>Widget Overlay</value>
+  </data>
+  <data name="Tutorials.command-dock.Description" xml:space="preserve">
+    <value>Turn the mini-map into a dock of widgets you arrange yourself.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Title" xml:space="preserve">
+    <value>Open the Mini Map</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
+    <value>The Mini button opens the mini-map in its own window, floating above the game. Everything in this tutorial happens in that window.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
+    <value>Add Widgets with +</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
+    <value>The map is one widget among many. Press + in the dock&apos;s title bar to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
+    <value>Drag, Resize, Lock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
+    <value>Hover a widget to move it, drag its corner to resize, or use × to remove it. The lock in the title bar puts the whole layout beyond accidental dragging, and the Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
+    <value>Style the Whole Dock</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.style.Description" xml:space="preserve">
+    <value>Text colour, text size and transparency for every widget at once. A dock turned nearly invisible stays readable, because the text keeps its shadow while only the background fades.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Title" xml:space="preserve">
+    <value>Or One Widget at a Time</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.pertile.Description" xml:space="preserve">
+    <value>Every widget has its own gear with the same three settings. Change one there and that widget stops following the dock&apos;s defaults; everything else keeps inheriting them, and a button puts it back.</value>
+  </data>
+  <data name="Tutorials.ai-companion.Title" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="Tutorials.ai-companion.Description" xml:space="preserve">
+    <value>Ask a question out loud and get an answer without leaving the game.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Title" xml:space="preserve">
+    <value>What It Does</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.intro.Description" xml:space="preserve">
+    <value>Hold a key or press the widget, ask your question, and the answer appears in a panel under the widget or is read aloud. It runs on your own account with an AI provider: the recording goes from this PC straight to them and never passes through our servers.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Title" xml:space="preserve">
+    <value>Find It in AI Companion Settings</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.settings.Description" xml:space="preserve">
+    <value>Settings → AI Companion. Everything for the companion lives in this section: the provider, your key, how answers arrive and what gets recorded.</value>
+  </data>
+  <data name="AiCompanionTitle" xml:space="preserve">
+    <value>AI Companion</value>
+  </data>
+  <data name="AiCompanionCategoryDesc" xml:space="preserve">
+    <value>Voice and text companion, provider, hotkey, and appearance</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Title" xml:space="preserve">
+    <value>Three Models to Choose From</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.models.Description" xml:space="preserve">
+    <value>GPT and Gemini take your recording directly, so what they hear is what you said, and both read the answer back in their own voice. Claude does not accept audio: the recording is turned into text on this PC first, which is slower and weaker on names and game terms. Gemini has a free API allowance; GPT and Claude need their own prepaid credit, separately from any chat subscription.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Title" xml:space="preserve">
+    <value>Paste Your Own Key</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.key.Description" xml:space="preserve">
+    <value>Create an API key with the provider you chose and paste it into the key field. It is stored on this PC only, protected by your Windows account, and is never uploaded — which also means it does not survive a reinstall or a move to another PC. There is one slot per provider, so you can keep all three.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Title" xml:space="preserve">
+    <value>Ask from the Dock</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
+    <value>Add the Ask AI widget to the Widget Overlay with +. Press it to record, press again to stop, then send. You can attach a screenshot: it counts three down first, so you are back in the game before the shutter, and the app leaves itself out of the picture.</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
+    <value>Let the Team Ask with !ai</value>
+  </data>
+  <data name="Tutorials.Step.aicompanion.chat.Description" xml:space="preserve">
+    <value>Under Chat Commands you can allow teammates to use !ai from in-game chat. It runs through this client on your key and your settings — same provider, same model, same language — so it is off until you switch it on, and turning it on adds an hourly limit per teammate. The clan has its own separate switch.</value>
+  </data>
+  <data name="UpdateWhatsNewHeading" xml:space="preserve">
+    <value>What&apos;s new</value>
+  </data>
+  <data name="AiCompanionVoiceModel" xml:space="preserve">
+    <value>Voice model</value>
+  </data>
+  <data name="AiCompanionVoiceModelNote" xml:space="preserve">
+    <value>Leave empty to use {0}. If spoken answers come out in the Windows voice instead of this provider&apos;s, this name is the usual reason.</value>
+  </data>
+  <data name="AiCompanionVoiceLastError" xml:space="preserve">
+    <value>Last attempt: {0}</value>
+  </data>
+  <data name="AiHistoryVoiceFailedTitle" xml:space="preserve">
+    <value>Spoken answers are coming from Windows, not the provider</value>
+  </data>
+  <data name="AiHistoryVoiceFailedBody" xml:space="preserve">
+    <value>The provider refused the last request for speech: {0}
+The answer itself was unaffected. If the model name is the problem, change it under Connected Services.</value>
+  </data>
+  <data name="CommandDockAiNoKeyForProvider" xml:space="preserve">
+    <value>No {0} key is stored. Add one under Connected Services, or pick a provider you have a key for.</value>
+  </data>
+  <data name="AiCompanionPolicyRouting" xml:space="preserve">
+    <value>OpenRouter is a router, not the model itself: it passes your recording on to whichever company serves the model you picked, and that company&apos;s terms apply to it as well. Unless Strict Privacy is switched on, that can include providers who keep prompts and may train on them — which is generally why a model is free.</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Map only (default)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Removes every widget and puts the map back in its corner</value>
+  </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Sending to</value>
+  </data>
+  <data name="CommandDockTranslateTitle" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="CommandDockTranslatePickerHint" xml:space="preserve">
+    <value>Paste a line, read it back in your language — Google Translate</value>
+  </data>
+  <data name="CommandDockTranslateListen" xml:space="preserve">
+    <value>Listen to the game and the microphone, and write down what was said</value>
+  </data>
+  <data name="CommandDockTranslateStop" xml:space="preserve">
+    <value>Stop and write down what was said</value>
+  </data>
+  <data name="CommandDockTranslateInputHint" xml:space="preserve">
+    <value>Paste or type something, then press send</value>
+  </data>
+  <data name="CommandDockTranslateSend" xml:space="preserve">
+    <value>Translate with Google</value>
+  </data>
+  <data name="CommandDockTranslateInto" xml:space="preserve">
+    <value>Translating into {0} — click to change</value>
+  </data>
+  <data name="CommandDockTranslateWorking" xml:space="preserve">
+    <value>Translating…</value>
+  </data>
+  <data name="CommandDockTranslateFailed" xml:space="preserve">
+    <value>Translation service unavailable — it may be rate-limited. Try again shortly.</value>
+  </data>
+  <data name="CommandDockTranslateMicBusy" xml:space="preserve">
+    <value>The microphone is in use by another tile.</value>
+  </data>
+  <data name="CommandDockTranslateNoMic" xml:space="preserve">
+    <value>Recording could not be started.</value>
+  </data>
+  <data name="CommandDockTranslateHearing" xml:space="preserve">
+    <value>Writing down what was said…</value>
+  </data>
+  <data name="CommandDockTranslateNoRecognizer" xml:space="preserve">
+    <value>Windows has no speech recognition installed. Add a speech language in Windows settings.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeard" xml:space="preserve">
+    <value>Nothing was recognised. Windows was listening in {0}.</value>
+  </data>
+  <data name="CommandDockTranslateNothingHeardAi" xml:space="preserve">
+    <value>Nothing intelligible was heard in the recording.</value>
+  </data>
+  <data name="CommandDockTranslateHeardIn" xml:space="preserve">
+    <value>
+(heard in {0})</value>
+  </data>
+  <data name="CommandDockTranslateUseAi" xml:space="preserve">
+    <value>Use the AI model for speech</value>
+  </data>
+  <data name="CommandDockTranslateUseAiHint" xml:space="preserve">
+    <value>Works out the spoken language itself, and uses your own API credit. Windows only understands the languages it has a recogniser installed for.</value>
+  </data>
+  <data name="CommandDockTranslateUseAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion provider that accepts audio, with a key stored for it. Speech is written down by Windows until then.</value>
+  </data>
+  <data name="CommandDockAiMicBusy" xml:space="preserve">
+    <value>The microphone is in use by the translate tile.</value>
+  </data>
+  <data name="CommandDockTranslateSendAi" xml:space="preserve">
+    <value>Translate with AI</value>
+  </data>
+  <data name="CommandDockTranslateWithGoogle" xml:space="preserve">
+    <value>Use Google Translate</value>
+  </data>
+  <data name="CommandDockTranslateWithAi" xml:space="preserve">
+    <value>Use the AI model to translate</value>
+  </data>
+  <data name="CommandDockTranslateWithAiHint" xml:space="preserve">
+    <value>Better on chat — slang, abbreviations and typos — and uses your own API credit.</value>
+  </data>
+  <data name="CommandDockTranslateWithAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion key under Connected Services. Any provider will do.</value>
+  </data>
+  <data name="AiCompanionCustomPromptRules" xml:space="preserve">
+    <value>Custom Prompt Rules</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesHint" xml:space="preserve">
+    <value>Additional rules or instructions for the AI companion (e.g. tone, favorite items, playstyle). Appended to every question.</value>
+  </data>
+  <data name="AiCompanionCustomPromptRulesPlaceholder" xml:space="preserve">
+    <value>e.g. Always mention sulfur cost for explosives. Keep answers under 15 words.</value>
+  </data>
+  <data name="CommandDockCollapseTitle" xml:space="preserve">
+    <value>Collapse</value>
+  </data>
+  <data name="CommandDockCollapsePickerHint" xml:space="preserve">
+    <value>One cell that hides every other tile, and brings them back</value>
+  </data>
+  <data name="CommandDockCollapseHide" xml:space="preserve">
+    <value>Hide every other tile</value>
+  </data>
+  <data name="CommandDockCollapseExpand" xml:space="preserve">
+    <value>Show the dock again</value>
+  </data>
+  <data name="CommandDockCollapseWithMap" xml:space="preserve">
+    <value>Hide the mini-map too</value>
+  </data>
+  <data name="CommandDockCollapseHint" xml:space="preserve">
+    <value>One press hides every other tile where it stands; the next press brings the arrangement back unchanged.</value>
+  </data>
+  <data name="CommandDockDeathTrackTitle" xml:space="preserve">
+    <value>Who killed you?</value>
+  </data>
+  <data name="CommandDockDeathTrackPickerHint" xml:space="preserve">
+    <value>Appears when you die: one press reads the name off the death screen</value>
+  </data>
+  <data name="CommandDockDeathTrackRead" xml:space="preserve">
+    <value>Track death</value>
+  </data>
+  <data name="CommandDockDeathTrackAgain" xml:space="preserve">
+    <value>Read again</value>
+  </data>
+  <data name="CommandDockDeathTrackReading" xml:space="preserve">
+    <value>Reading…</value>
+  </data>
+  <data name="CommandDockDeathTrackNothing" xml:space="preserve">
+    <value>Nothing readable there — check the region in this tile's settings.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoOcr" xml:space="preserve">
+    <value>Windows has no text recognition installed.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoDeath" xml:space="preserve">
+    <value>No death recorded yet to attach this to.</value>
+  </data>
+  <data name="CommandDockDeathTrackSuicide" xml:space="preserve">
+    <value>Suicide</value>
+  </data>
+  <data name="CommandDockDeathTrackAlways" xml:space="preserve">
+    <value>Keep the tile on the dock while alive</value>
+  </data>
+  <data name="CommandDockDeathTrackReader" xml:space="preserve">
+    <value>Windows reads text in {0}.</value>
+  </data>
+  <data name="CommandDockDeathTrackRegion" xml:space="preserve">
+    <value>Where the name is</value>
+  </data>
+  <data name="CommandDockDeathTrackLeft" xml:space="preserve">
+    <value>From the left {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackTop" xml:space="preserve">
+    <value>From the top {0}% of the width</value>
+  </data>
+  <data name="CommandDockDeathTrackWide" xml:space="preserve">
+    <value>Width {0}%</value>
+  </data>
+  <data name="CommandDockDeathTrackHigh" xml:space="preserve">
+    <value>Height {0}% of the width</value>
+  </data>
+  <data name="CommandDockDeathTrackTest" xml:space="preserve">
+    <value>Test on the screen now</value>
+  </data>
+  <data name="DeathStatsKillers" xml:space="preserve">
+    <value>Killers</value>
+  </data>
+  <data name="DeathStatsKiller" xml:space="preserve">
+    <value>Killer</value>
+  </data>
+  <data name="DeathStatsWeapon" xml:space="preserve">
+    <value>Weapon</value>
+  </data>
+  <data name="DeathStatsKills" xml:space="preserve">
+    <value>Kills</value>
+  </data>
+  <data name="DeathStatsLastKill" xml:space="preserve">
+    <value>Last time</value>
+  </data>
+  <data name="CommandDockDeathTrackPick" xml:space="preserve">
+    <value>Pick the area from a screenshot</value>
+  </data>
+  <data name="DeathRegionPickerTitle" xml:space="preserve">
+    <value>Select the killer's name</value>
+  </data>
+  <data name="DeathRegionPickerHint" xml:space="preserve">
+    <value>Drag a box around the killer's name — and the weapon beside it, if you want that too.</value>
+  </data>
+  <data name="DeathRegionPickerUse" xml:space="preserve">
+    <value>Use this box</value>
+  </data>
+  <data name="DeathRegionPickerNoShot" xml:space="preserve">
+    <value>The screenshot could not be read.</value>
+  </data>
+  <data name="CommandDockDeathTrackNoName" xml:space="preserve">
+    <value>No name on that death screen — nothing killed you that has one.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAi" xml:space="preserve">
+    <value>Read the name with the AI model</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiHint" xml:space="preserve">
+    <value>Reads names in any alphabet, and uses your own API credit. Windows only reads the scripts it has a language installed for.</value>
+  </data>
+  <data name="CommandDockDeathTrackWithAiUnavailable" xml:space="preserve">
+    <value>Needs an AI Companion key under Connected Services. Any provider will do.</value>
+  </data>
+  <data name="DeathStatsKillersClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="DeathStatsKillersClearConfirm" xml:space="preserve">
+    <value>Forget every name recorded for this server? The deaths themselves stay.</value>
+  </data>
+  <data name="DeathStatsKillerForget" xml:space="preserve">
+    <value>Forget this name</value>
+  </data>
+  <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
+    <value>Back to the measured default</value>
+  </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Heatmap</value>
+  </data>
+  <data name="UiKeycards" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiCardReaders" xml:space="preserve">
+    <value>Card Readers</value>
+  </data>
+  <data name="UiParseMapToEnableKeycards" xml:space="preserve">
+    <value>Parse the map file to enable keycard layers.</value>
+  </data>
+  <data name="UiKeycardsSection" xml:space="preserve">
+    <value>Keycards</value>
+  </data>
+  <data name="UiNoneOnThisMap" xml:space="preserve">
+    <value>None on this map.</value>
+  </data>
+  <data name="UiParseAllMonuments" xml:space="preserve">
+    <value>Parse all map data</value>
+  </data>
+  <data name="AchievementsProgress" xml:space="preserve">
+    <value>{0} of {1} earned</value>
+  </data>
+  <data name="AchievementUnlocked" xml:space="preserve">
+    <value>Achievement unlocked</value>
+  </data>
+  <data name="AchievementsTitle" xml:space="preserve">
+    <value>Achievements</value>
+  </data>
+  <data name="AchievementsHeading" xml:space="preserve">
+    <value>Rust+ Desktop App Achievements</value>
+  </data>
+  <data name="AchievementsAllUnlockedBody" xml:space="preserve">
+    <value>All Achievements unlocked. Well done! Let the developers know?</value>
+  </data>
+  <data name="AchievementsTicketSent" xml:space="preserve">
+    <value>Sent - we will get back to you.</value>
+  </data>
+  <data name="AchievementsTicketFailed" xml:space="preserve">
+    <value>That could not be sent. You can open a ticket from Support instead.</value>
+  </data>
+  <data name="AchievementsAllUnlockedTitle" xml:space="preserve">
+    <value>All Achievements unlocked</value>
+  </data>
+  <data name="AchievementsNew" xml:space="preserve">
+    <value>NEW</value>
   </data>
 </root>

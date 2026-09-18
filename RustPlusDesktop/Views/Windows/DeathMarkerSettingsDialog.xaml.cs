@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class DeathMarkerSettingsDialog : Window
+    public partial class DeathMarkerSettingsDialog : Wpf.Ui.Controls.FluentWindow
     {
         public int MaxSelf { get; private set; }
         public int MaxTeam { get; private set; }

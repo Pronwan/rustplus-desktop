@@ -12,7 +12,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views.Windows
 {
-    public partial class TrafficMonitorWindow : Window, INotifyPropertyChanged
+    public partial class TrafficMonitorWindow : Wpf.Ui.Controls.FluentWindow, INotifyPropertyChanged
     {
         private readonly NetworkTrafficMonitor _monitor = NetworkTrafficMonitor.Instance;
         private readonly ICollectionView _entriesView;
@@ -292,7 +292,7 @@ namespace RustPlusDesk.Views.Windows
                 sb.AppendLine($"Status: {entry.Status}");
                 sb.AppendLine($"Details: {entry.Details}");
 
-                Clipboard.SetText(sb.ToString());
+                RustPlusDesk.Helpers.SafeClipboard.SetText(sb.ToString());
             }
         }
     }

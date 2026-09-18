@@ -65,6 +65,9 @@ public class TrackingSettings
     public string LastServerName { get; set; } = string.Empty;
     public string? LastBMId { get; set; } = null;
     public bool MapShowSteamMarkers { get; set; } = true;
+
+    /// <summary>Asked once whether to tell the developers about a full set; no is remembered too.</summary>
+    public bool AllAchievementsTicketOffered { get; set; } = false;
     public bool MapShowPlayerArrows { get; set; } = true;
     public bool MapShowDeathTags { get; set; } = false;
     public bool MapShowDeathHeatmap { get; set; } = false;
@@ -1053,6 +1056,12 @@ public static class TrackingService
         set { _settings.LastServerName = value; SaveDB(); }
     }
 
+
+    public static bool AllAchievementsTicketOffered
+    {
+        get => _settings.AllAchievementsTicketOffered;
+        set { _settings.AllAchievementsTicketOffered = value; SaveDB(); }
+    }
     public static bool MapShowSteamMarkers
     {
         get => _settings.MapShowSteamMarkers;

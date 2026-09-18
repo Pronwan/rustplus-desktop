@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace RustPlusDesk.Views;
 
-public partial class CloudDisclaimerWindow : Window
+public partial class CloudDisclaimerWindow : Wpf.Ui.Controls.FluentWindow
 {
     public bool HasMadeChoice { get; private set; } = false;
     public bool CloudSyncAccepted { get; private set; } = false;
@@ -24,12 +24,6 @@ public partial class CloudDisclaimerWindow : Window
         CloudSyncAccepted = false;
         HasMadeChoice = true;
         Close();
-    }
-
-    private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
-            DragMove();
     }
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

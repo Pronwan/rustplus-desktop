@@ -171,6 +171,7 @@ namespace RustPlusDesk.Views
                 Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync wipe tracker player backup", SectionCloud),
                 Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
                 Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
+                Section("ai-companion", "ai-companion", T("AiCompanionTitle", "AI Companion"), "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
                 Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
                 Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
                 Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
@@ -465,6 +466,7 @@ namespace RustPlusDesk.Views
             "connected" => ("Connected Services", "Cloud, integrations, chat, and account connections"),
             "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
             "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
+            "ai-companion" => (T("AiCompanionTitle", "AI Companion"), T("AiCompanionCategoryDesc", "Voice and text companion, provider, hotkey, and appearance")),
             "system" => ("System", "Maintenance, backup, reset, and application information"),
             _ => ("General", "Language, startup, and application behavior")
         };
@@ -474,6 +476,27 @@ namespace RustPlusDesk.Views
             _isShowingSearchResults = false;
             SettingsSearchBox.Clear();
             ShowSettingsCategoryList();
+        }
+
+        /// <summary>
+        /// Opens the card a tutorial step is about to point at.
+        ///
+        /// Both of these live inside a collapsed expander, and a spotlight on a closed card
+        /// header teaches nothing — the step is describing the settings inside it.
+        /// </summary>
+        public void ExpandTutorialCard(string? targetId)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                switch (targetId)
+                {
+                    case "Settings.AiCompanion":
+                        break;
+                    case "Settings.CommandDock":
+                        if (CardCommandDock != null) CardCommandDock.IsExpanded = true;
+                        break;
+                }
+            });
         }
 
         public void OpenCategory(string category)
@@ -629,6 +652,7 @@ namespace RustPlusDesk.Views
             ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
             ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+            LoadGlobalChatSettings();
 
 #if DEBUG
             RowDevDownloadIcons.Visibility = Visibility.Visible;
@@ -710,6 +734,9 @@ namespace RustPlusDesk.Views
             ChkShowDeathMarkers.IsChecked    = TrackingService.MapShowDeathTags;
             ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
             SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
+
+            LoadCommandDockDefaults();
+            LoadAiCompanionSettings();
 
             // Server events (audio fallback)
             ChkListenForServerEvents.IsChecked = TrackingService.ListenForServerEvents;
@@ -804,10 +831,6 @@ namespace RustPlusDesk.Views
                 if (Services.Cloud.CloudBackend.UsePlatform)
                 {
                     _ = LoadHomeAssistantSettingsAsync();
-
-                    PopulateGoogleServers();
-                    _ = LoadGoogleSettingsAsync();
-
                     _ = InitFeatureFlagsAsync();
                 }
             }
@@ -1002,6 +1025,10 @@ namespace RustPlusDesk.Views
             if (!_isSettingsInitialized) return;
 
             TrackingService.MapShowSteamMarkers  = ChkShowProfileMarkers.IsChecked == true;
+
+            // Guarded by _isSettingsInitialized above, so this is a real change,
+            // not the overlay restoring what was already stored.
+            if (ChkShowProfileMarkers.IsChecked != true) Ach.Unlock(Ach.DotMarker);
             TrackingService.MapShowPlayerArrows  = ChkShowPlayerArrows.IsChecked == true;
             TrackingService.MapShowDeathTags     = ChkShowDeathMarkers.IsChecked == true;
             TrackingService.MapAbbreviateNames   = ChkStreamerModeMarkers.IsChecked == true;
@@ -2404,218 +2431,6 @@ namespace RustPlusDesk.Views
             await box.ShowDialogAsync();
         }
 
-        // --- Google Home integration (platform-only) ---
-
-        private void PopulateGoogleServers()
-        {
-            CmbGoogleServer.Items.Clear();
-            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            if (vm?.Servers != null)
-            {
-                foreach (var s in vm.Servers)
-                {
-                    if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
-                    {
-                        CmbGoogleServer.Items.Add(new ComboBoxItem
-                        {
-                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
-                            Tag = $"{s.Host}-{s.Port}"
-                        });
-                    }
-                }
-            }
-        }
-
-        private async Task LoadGoogleSettingsAsync()
-        {
-            try
-            {
-                if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
-
-                var activeServerKey = await Services.Cloud.CloudSmartHomeAdapter.GetActiveServerKeyAsync();
-                if (string.IsNullOrEmpty(activeServerKey)) return;
-
-                foreach (ComboBoxItem item in CmbGoogleServer.Items)
-                {
-                    if (item.Tag?.ToString() == activeServerKey)
-                    {
-                        CmbGoogleServer.SelectedItem = item;
-                        break;
-                    }
-                }
-            }
-            catch
-            {
-                // Not linked yet, or endpoint unreachable — leave the panel unselected.
-            }
-        }
-
-        private async void BtnGenerateGooglePIN_Click(object sender, RoutedEventArgs e)
-        {
-            if (!Services.Cloud.CloudBackend.UsePlatform)
-            {
-                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (!Services.Cloud.CloudAuth.IsAuthenticated)
-            {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var vm = RustPlusDesk.App.Current.MainWindow.DataContext as RustPlusDesk.ViewModels.MainViewModel;
-            var steamId = vm?.SteamId64;
-            if (string.IsNullOrEmpty(steamId))
-            {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            BtnGenerateGooglePIN.IsEnabled = false;
-            try
-            {
-                var random = new Random();
-                string pin = random.Next(100000, 999999).ToString();
-
-                // The PIN is platform-agnostic (it resolves to a steam id regardless of
-                // which assistant links), so this reuses the same mechanism as Alexa.
-                if (!await Services.Cloud.CloudAlexaAdapter.SetAlexaPinAsync(steamId, pin, DateTime.UtcNow.AddMinutes(15)))
-                {
-                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                TxtGooglePIN.Text = pin;
-                TxtGooglePIN.Visibility = Visibility.Visible;
-                BtnGenerateGooglePIN.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiPINGeneratedValidFor15m");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedGeneratePin"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                BtnGenerateGooglePIN.IsEnabled = true;
-            }
-        }
-
-        private async void BtnLinkGoogle_Click(object sender, RoutedEventArgs e)
-        {
-            if (!Services.Cloud.CloudBackend.UsePlatform)
-            {
-                MessageBox.Show("Google Home integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (!Services.Cloud.CloudAuth.IsAuthenticated)
-            {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var selected = CmbGoogleServer.SelectedItem as ComboBoxItem;
-            var serverKey = selected?.Tag?.ToString();
-            if (string.IsNullOrEmpty(serverKey))
-            {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("PleaseSelectServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (ParentWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm) return;
-            var steamId = vm.SteamId64;
-            if (string.IsNullOrEmpty(steamId))
-            {
-                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            BtnLinkGoogle.IsEnabled = false;
-            try
-            {
-                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
-                if (serverProfile != null)
-                {
-                    // Pair the server (uploads credentials the worker uses) and point the
-                    // generic smart-home active server at it. No FCM sync needed — Google
-                    // control does not use push alarms.
-                    await Services.Cloud.CloudSmartHomeAdapter.LinkServerAsync(
-                        steamId,
-                        serverProfile.Host,
-                        serverProfile.Port,
-                        serverProfile.Name,
-                        serverProfile.PlayerToken);
-
-                    // Force a device snapshot so Google's SYNC has switches to discover.
-                    if (ulong.TryParse(steamId, out var steamIdUlong))
-                    {
-                        var currentOverlay = Services.Data.OverlayDataModule.LoadLocalOverlay(serverKey, steamIdUlong);
-                        _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
-                    }
-
-                    var msgBox = new Wpf.Ui.Controls.MessageBox
-                    {
-                        Title = Properties.Resources.GetString("CodeUiSuccess"),
-                        Content = "Google Home server linked. Now open the Google Home app, add the RustPlusDesktop service under 'Works with Google', and enter your PIN. Then say \"Hey Google, sync my devices\".",
-                        PrimaryButtonText = Properties.Resources.OK
-                    };
-                    await msgBox.ShowDialogAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                var msgBox = new Wpf.Ui.Controls.MessageBox
-                {
-                    Title = Properties.Resources.GetString("ErrorTitle"),
-                    Content = $"Failed to link Google Home server: {ex.Message}",
-                    PrimaryButtonText = Properties.Resources.OK
-                };
-                await msgBox.ShowDialogAsync();
-            }
-            finally
-            {
-                BtnLinkGoogle.IsEnabled = true;
-            }
-        }
-
-        private async void BtnRevokeGoogle_Click(object sender, RoutedEventArgs e)
-        {
-            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
-
-            BtnRevokeGoogle.IsEnabled = false;
-            try
-            {
-                await Services.Cloud.CloudSmartHomeAdapter.RevokeAsync();
-                CmbGoogleServer.SelectedItem = null;
-                ParentWindow?.ShowInfoSnackbar("Success", "Google Home access revoked.", WpfUi.ControlAppearance.Success);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to revoke Google Home access: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                BtnRevokeGoogle.IsEnabled = true;
-            }
-        }
-
-        private async void BtnGoogleHelp_Click(object sender, RoutedEventArgs e)
-        {
-            var msg = "How to use the Google Home integration:\n\n" +
-                      "1. Click 'Generate Login PIN' (valid 15 minutes).\n" +
-                      "2. Select the server whose smart switches you want to control and click 'Link Selected Server'.\n" +
-                      "3. In the Google Home app: + → Set up a device → Works with Google, choose RustPlusDesktop, and enter the PIN.\n" +
-                      "4. Your smart switches appear in Google Home and respond to voice commands, e.g. \"Hey Google, turn on Turrets\".\n" +
-                      "5. Smart alarms appear as occupancy/motion sensors — when a raid alarm fires they report motion in Google Home, so you can trigger Google Home automations from them.\n\n" +
-                      "You can also use the Smart Home Webhook URL field for raid/death alerts (e.g. phone notifications) in addition to this.";
-
-            var box = new WpfUi.MessageBox
-            {
-                Title = "Google Home Setup",
-                Content = msg,
-                PrimaryButtonText = Properties.Resources.OK,
-            };
-            await box.ShowDialogAsync();
-        }
-
         // --- Global feature flags (admin on/off + status note) ---
 
         private async Task InitFeatureFlagsAsync()
@@ -2638,8 +2453,6 @@ namespace RustPlusDesk.Views
             // existing token/snippet is harmless even when the feature is off.
             ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
                 BtnGenerateHaToken, BtnRevokeHa);
-            ApplyFeatureFlag("google", TxtGoogleStatusNote,
-                BtnGenerateGooglePIN, CmbGoogleServer, BtnLinkGoogle, BtnRevokeGoogle);
         }
 
         private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)

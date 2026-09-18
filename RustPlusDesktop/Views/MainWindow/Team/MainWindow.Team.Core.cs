@@ -411,6 +411,10 @@ public partial class MainWindow
         var deaths = _deathTracker.Observe(team, classifier);
         foreach (var death in deaths)
         {
+            // Our own: the dock offers to write down who did it, and needs the time the game
+            // gave for the death to file the name under.
+            if (death.SteamId == _mySteamId) _lastOwnDeathAt = death.DeathTime;
+
             try
             {
                 await RustPlusDesk.Services.Deaths.DeathReporter.ReportAsync(death, serverKey);
@@ -571,6 +575,8 @@ public partial class MainWindow
                     vm.PropertyChanged += TeamMember_PropertyChanged;
                     TeamMembers.Add(vm);
                     _hasCriticalPresenceChange = true;
+                    // More than just yourself in the list.
+                    if (TeamMembers.Count > 1) Ach.Unlock(Ach.TeamMate);
                 }
                 else
                 {
@@ -652,7 +658,7 @@ public partial class MainWindow
                         if (_playerOverlayElements.TryGetValue(id, out var listToHide))
                         {
                             foreach (var fe in listToHide)
-                                Overlay.Children.Remove(fe);
+                                RemoveFromMapLayers(fe);
                             _playerOverlayElements.Remove(id);
                         }
                     }
@@ -907,6 +913,7 @@ public partial class MainWindow
 
     private void StartFollowing(ulong steamId, string name)
     {
+        Ach.Unlock(Ach.FollowMe);
         if (_vm.FollowingSteamId == steamId)
         {
             StopTracking();

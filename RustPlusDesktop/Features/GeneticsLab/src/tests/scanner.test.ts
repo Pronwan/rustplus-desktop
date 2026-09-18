@@ -83,6 +83,36 @@ describe('Scanner Subsystem & Modules', () => {
       expect(voted?.geneString).toBe('GGYHYX');
     });
 
+    it('confirms a row whose single flickering slot never repeats consecutively', () => {
+      // The old rule cleared the window on any difference, so this sequence confirmed
+      // nothing however long it ran: five steady slots kept being made to start over by the
+      // sixth. Each position now counts its own votes, so the steady five are never lost and
+      // the wobbling one is decided by majority.
+      const samples = ['GGYHYX', 'GGYHYW', 'GGYHYX', 'GGYHYW', 'GGYHYX'];
+      let confirmed: ReturnType<TemporalVotingService['addCandidate']> = null;
+      for (const geneString of samples) {
+        confirmed = votingService.addCandidate('inventory', { geneString, confidence: 80 });
+        if (confirmed) break;
+      }
+
+      expect(confirmed).not.toBeNull();
+      expect(confirmed?.geneString).toBe('GGYHYX');
+    });
+
+    it('never lets an outgoing plant lend votes to a genuinely different one', () => {
+      votingService.addCandidate('inventory', { geneString: 'GGGGGG', confidence: 90 });
+      votingService.addCandidate('inventory', { geneString: 'GGGGGG', confidence: 90 });
+      // A completely different plant: the window must restart, not confirm on borrowed votes.
+      expect(votingService.addCandidate('inventory', { geneString: 'XXXXXX', confidence: 90 })).toBeNull();
+      expect(votingService.getSampleCount('inventory')).toBe(1);
+    });
+
+    it('accepts a single frame the caller vouched for', () => {
+      const confirmed = votingService.addCandidate('inventory', { geneString: 'GGYHYX', confidence: 96 }, true);
+      expect(confirmed?.geneString).toBe('GGYHYX');
+      expect(votingService.getSampleCount('inventory')).toBe(0);
+    });
+
     it('rejects candidate if confidence is below threshold', () => {
       const result = votingService.addCandidate('inventory', {
         geneString: 'GGYHYX',

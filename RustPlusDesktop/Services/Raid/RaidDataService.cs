@@ -14,6 +14,24 @@ public sealed class RaidDataService
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
+    /// <summary>
+    /// The same data, read synchronously.
+    ///
+    /// For callers that are already on a background thread and would otherwise have to block
+    /// on <see cref="LoadAsync"/>. Blocking on that one from the UI thread deadlocks: its
+    /// awaits capture the dispatcher, and the continuation then waits for the thread that is
+    /// waiting for it.
+    /// </summary>
+    public RaidDataSet Load()
+    {
+        using Stream stream = OpenDataStream();
+        var data = JsonSerializer.Deserialize<RaidDataSet>(stream, JsonOptions)
+                   ?? throw new InvalidDataException("Raid data is empty.");
+        RemoveUnsupportedTargets(data);
+        Validate(data);
+        return data;
+    }
+
     public async Task<RaidDataSet> LoadAsync(CancellationToken cancellationToken = default)
     {
         await using Stream stream = OpenDataStream();

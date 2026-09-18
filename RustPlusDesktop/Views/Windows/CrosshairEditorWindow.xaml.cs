@@ -11,7 +11,7 @@ using RustPlusDesk.Services;
 
 namespace RustPlusDesk;
 
-    public partial class CrosshairEditorWindow : Window
+    public partial class CrosshairEditorWindow : Wpf.Ui.Controls.FluentWindow
     {
         private enum ToolType { Pixel, Pen, Line, Rectangle, Ellipse }
         

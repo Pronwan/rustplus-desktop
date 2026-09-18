@@ -5765,4 +5765,13 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>Poistetaanko {0} joukkueesta?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>Lähetetään käyttäjälle</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>Vain kartta (oletus)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>Poistaa kaikki vimpaimet ja palauttaa kartan nurkkaansa</value>
+  </data>
 </root>

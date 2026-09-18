@@ -143,20 +143,44 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("minimap.timepop", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected,
                  BeforeShowAsync: async (c, ct) => { 
                      Application.Current.Dispatcher.Invoke(() => {
-                         // Find MiniMapWindow from opened windows
+                         // Find MiniMapWindow from opened windows. The panel lives in a popup
+                         // now, so showing the control itself would not open it — the window
+                         // has to place it, which is what OpenSettings does.
                          var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "MiniMapWindow");
-                         if (mmw != null)
-                         {
-                             if (mmw.GetType().GetProperty("SettingsOverlay")?.GetValue(mmw) is UIElement overlay)
-                                 overlay.Visibility = Visibility.Visible;
-                             if (mmw.GetType().GetProperty("SettingsHoverBorder")?.GetValue(mmw) is UIElement hoverBorder)
-                                 hoverBorder.Visibility = Visibility.Collapsed;
-                         }
+                         mmw?.GetType().GetMethod("OpenSettings")?.Invoke(mmw, null);
                      }); 
                      await Task.Delay(150, ct); 
                  }),
             Step("minimap.controls", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected),
             Step("minimap.follow", "BtnFollowPlayer", "map", TutorialPlacement.Bottom, condition: c => c.IsFullConnected)),
+
+        // Maps rather than Tools: the dock is the mini-map — it is where the map lives once
+        // you have one — so it belongs beside the mini-map tutorial that precedes it.
+        Def("command-dock", 56, "Maps", false, true,
+            Step("commanddock.open", "Map.MiniMap", "map", TutorialPlacement.Bottom, condition: c => c.IsFullConnected),
+            Step("commanddock.widgets", placement: TutorialPlacement.Center,
+                 image: "pack://application:,,,/Assets/Screenshots/10.0/CommandDock.jpg",
+                 BeforeShowAsync: async (c, ct) =>
+                 {
+                     Application.Current.Dispatcher.Invoke(() =>
+                         Application.Current.MainWindow?.GetType()
+                             .GetMethod("EnsureMiniMapOpen")?.Invoke(Application.Current.MainWindow, null));
+                     await Task.Delay(150, ct);
+                 }),
+            Step("commanddock.arrange", placement: TutorialPlacement.Center),
+            Step("commanddock.style", "Settings.CommandDock", "settings", TutorialPlacement.Right),
+            Step("commanddock.pertile", placement: TutorialPlacement.Center)),
+
+        // Tools rather than Maps: it happens to be reachable from the dock, but it is a
+        // utility of its own — you set it up once, in settings, and then use it from anywhere.
+        Def("ai-companion", 155, "Tools", false, true,
+            Step("aicompanion.intro", placement: TutorialPlacement.Center),
+            Step("aicompanion.settings", "Settings.AiCompanion", "settings", TutorialPlacement.Right),
+            Step("aicompanion.models", "Settings.AiCompanion", "settings", TutorialPlacement.Right),
+            Step("aicompanion.key", "Settings.AiCompanion", "settings", TutorialPlacement.Right),
+            Step("aicompanion.ask", placement: TutorialPlacement.Center),
+            Step("aicompanion.chat", "ChatCommands.AskAi", "settings", TutorialPlacement.Left,
+                 image: "pack://application:,,,/Assets/Screenshots/10.0/ai-chat-command.jpg")),
 
         Def("map-3d", 60, "Maps", false,
             Step("map3d.open", "Map.Open3D", "map", TutorialPlacement.Left, allowInteraction: true),

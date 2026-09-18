@@ -5765,4 +5765,13 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="KickFromTeamConfirm" xml:space="preserve">
     <value>להסיר את {0} מהצוות?</value>
   </data>
+  <data name="FriendsAddTarget" xml:space="preserve">
+    <value>שליחה אל</value>
+  </data>
+  <data name="CommandDockTemplateDefault" xml:space="preserve">
+    <value>מפה בלבד (ברירת מחדל)</value>
+  </data>
+  <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
+    <value>מסיר את כל הווידג'טים ומחזיר את המפה לפינה שלה</value>
+  </data>
 </root>

@@ -102,3 +102,7 @@ Corel Auto-Preserve/
 RustPlusDesktop/Features/GeneticsLab/dist/assets/
 RustPlusDesktop/Features/GeneticsLab/dist/index.html
 RustPlusDesktop/Features/GeneticsLab/node_modules/
+
+# WPF emits a temp project per build with a random name; the single literal entry
+# above only ever matched one of them.
+RustPlusDesktop/*_wpftmp.csproj

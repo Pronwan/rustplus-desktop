@@ -16,8 +16,16 @@ namespace RustPlusDesk.Views
             Loaded += MiniMapSettingsOverlay_Loaded;
         }
 
+        private bool _loadedOnce;
+
         private void MiniMapSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
         {
+            // A popup's child is disconnected when it closes, so this fires again on every open.
+            // Re-reading the file each time would overwrite whatever the user has changed since
+            // with what was on disk when the panel first appeared.
+            if (_loadedOnce) return;
+            _loadedOnce = true;
+
             _isInitializing = true;
             try
             {
@@ -29,6 +37,7 @@ namespace RustPlusDesk.Views
                     ChkShowTime.IsChecked = settings.ShowTime;
                     ChkShowPop.IsChecked = settings.ShowPop;
                     SliSize.Value = settings.Size;
+                    ApplyLayerChecks(settings);
                     ParentWindow?.ApplyLoadedSettings(settings);
                 }
                 else
@@ -38,8 +47,14 @@ namespace RustPlusDesk.Views
                     ChkShowTime.IsChecked = false;
                     ChkShowPop.IsChecked = false;
                     SliSize.Value = 260.0;
-                    ParentWindow?.ApplyLoadedSettings(new MiniMapSettings(0, 260.0, 1.0, false, false));
+                    var defaults = new MiniMapSettings(0, 260.0, 1.0, false, false);
+                    ApplyLayerChecks(defaults);
+                    ParentWindow?.ApplyLoadedSettings(defaults);
                 }
+
+                // The dock layout is the window's, not part of MiniMapSettings — it is saved
+                // and loaded with the tiles it describes.
+                CmbGrowth.SelectedIndex = ParentWindow?.DockGrowsRight == true ? 1 : 0;
 
                 // Apply current labels
                 UpdateOpacityLabel(SliOpacity.Value);
@@ -70,18 +85,73 @@ namespace RustPlusDesk.Views
         }
 
         private void BtnSettingsClose_Click(object sender, RoutedEventArgs e)
+            => ParentWindow?.CloseSettings();
+
+        private void ApplyLayerChecks(MiniMapSettings settings)
         {
-            Visibility = Visibility.Collapsed;
-            if (ParentWindow != null)
+            ChkLayerTexture.IsChecked = settings.ShowTexture;
+            ChkLayerGrid.IsChecked = settings.ShowGrid;
+            ChkLayerDrawings.IsChecked = settings.ShowDrawings;
+            ChkLayerIcons.IsChecked = settings.ShowIcons;
+            ChkLayerPlayers.IsChecked = settings.ShowPlayers;
+            ChkLayerDeaths.IsChecked = settings.ShowDeaths;
+            ChkLayerHeatmap.IsChecked = settings.ShowHeatmap;
+        }
+
+        private void CmbGrowth_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isInitializing || ParentWindow == null) return;
+            ParentWindow.DockGrowsRight = CmbGrowth.SelectedIndex == 1;
+        }
+
+        /// <summary>
+        /// Switches every map layer back on. Called when the map is added back to the dock: it
+        /// may well have been removed because it was invisible, and handing it back in that state
+        /// would look like nothing happened.
+        /// </summary>
+        public void TurnAllLayersOn()
+        {
+            _isInitializing = true;
+            try
             {
-                ParentWindow.SettingsHoverBorder.Visibility = Visibility.Visible;
+                ChkLayerTexture.IsChecked = true;
+                ChkLayerGrid.IsChecked = true;
+                ChkLayerDrawings.IsChecked = true;
+                ChkLayerIcons.IsChecked = true;
+                ChkLayerPlayers.IsChecked = true;
+                ChkLayerDeaths.IsChecked = true;
+                ChkLayerHeatmap.IsChecked = true;
             }
+            finally
+            {
+                _isInitializing = false;
+            }
+
+            var settings = CurrentSettings();
+            if (settings == null) return;
+
+            ParentWindow?.ApplyLayerVisibility(settings);
+            StorageService.SaveCache("minimap_settings", settings);
+        }
+
+        private void ChkLayer_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+
+            var settings = CurrentSettings();
+            if (settings == null) return;
+
+            ParentWindow?.ApplyLayerVisibility(settings);
+            StorageService.SaveCache("minimap_settings", settings);
         }
 
         private void CmbShape_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_isInitializing || ParentWindow == null) return;
-            ParentWindow.UpdateSize(ParentWindow.Width, updateSlider: true);
+
+            // The slider is the map size; the window's own Width is the whole dock, which since
+            // the command dock arrived is a different number entirely.
+            ParentWindow.UpdateSize(SliSize.Value, updateSlider: false);
             SaveSettings();
         }
 
@@ -105,6 +175,11 @@ namespace RustPlusDesk.Views
 
             if (_isInitializing || ParentWindow == null) return;
             ParentWindow.UpdateSize(e.NewValue, updateSlider: false);
+
+            // UpdateSize only saves on the path that writes the slider back — which is every
+            // path except this one, where the slider is already where the user put it. So
+            // dragging it changed the map and saved nothing, and the next load undid it.
+            SaveSettings();
         }
 
         private void ChkShowTime_Changed(object sender, RoutedEventArgs e)
@@ -151,17 +226,28 @@ namespace RustPlusDesk.Views
 
         public void SaveSettings()
         {
-            if (CmbShape == null || SliOpacity == null || SliSize == null || ChkShowTime == null) return;
+            var settings = CurrentSettings();
+            if (settings != null) StorageService.SaveCache("minimap_settings", settings);
+        }
 
-            var settings = new MiniMapSettings(
+        private MiniMapSettings? CurrentSettings()
+        {
+            if (CmbShape == null || SliOpacity == null || SliSize == null || ChkShowTime == null) return null;
+
+            return new MiniMapSettings(
                 CmbShape.SelectedIndex,
                 SliSize.Value,
                 SliOpacity.Value,
                 ChkShowTime.IsChecked == true,
-                ChkShowPop.IsChecked == true
+                ChkShowPop.IsChecked == true,
+                ChkLayerTexture?.IsChecked != false,
+                ChkLayerGrid?.IsChecked != false,
+                ChkLayerDrawings?.IsChecked != false,
+                ChkLayerIcons?.IsChecked != false,
+                ChkLayerPlayers?.IsChecked != false,
+                ChkLayerDeaths?.IsChecked != false,
+                ChkLayerHeatmap?.IsChecked != false
             );
-
-            StorageService.SaveCache("minimap_settings", settings);
         }
     }
 }

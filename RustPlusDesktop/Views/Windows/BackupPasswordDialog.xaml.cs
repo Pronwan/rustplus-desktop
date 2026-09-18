@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace RustPlusDesk.Views
 {
-    public partial class BackupPasswordDialog : Window
+    public partial class BackupPasswordDialog : Wpf.Ui.Controls.FluentWindow
     {
         public string Password => PbPassword.Password;
 
@@ -38,16 +38,6 @@ namespace RustPlusDesk.Views
         {
             DialogResult = false;
             Close();
-        }
-
-        // Allow dragging the window from empty spaces
-        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
-        {
-            base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

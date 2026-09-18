@@ -57,6 +57,8 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
         TutorialOverlay.WelcomeDismissed += async (_, _) => await DismissWelcomeAsync();
         TutorialsPagePanel.CloseRequested += (_, _) => TutorialsPagePanel.Visibility = Visibility.Collapsed;
         _tutorialService.TutorialCompleted += TutorialStateChanged;
+        // Two completed tutorials earns it; the store is the authority on how many.
+        _tutorialService.TutorialCompleted += (_, _) => _ = CheckTutorialAchievementAsync();
         _tutorialService.TutorialSkipped += TutorialStateChanged;
         _tutorialService.TutorialCancelled += TutorialStateChanged;
         _tutorialService.TutorialStarted += (_, _) => _preparedTutorialStepId = null;
@@ -129,6 +131,7 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
 
     private async void BtnTutorials_Click(object sender, RoutedEventArgs e) => await ShowTutorialCenterAsync();
 
+
     private async Task ShowTutorialCenterAsync()
     {
         if (_tutorialRegistry is null || _tutorialProgressStore is null || _tutorialService is null) return;
@@ -193,14 +196,20 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
                     SetSidebarExpanded(true);
                     AppSettingsPanel.LoadSettings();
                     AppSettingsPanel.Visibility = Visibility.Visible;
+                    // A target with no entry here lands on "general", which is why a step
+                    // pointing at something further down reported the feature as unavailable:
+                    // the section holding it was never shown, so the element was never visible.
                     AppSettingsPanel.OpenCategory(step.TargetId switch
                     {
+                        "Settings.AiCompanion" => "ai-companion",
                         "Settings.Cloud" or "Settings.DiscordBasic" or "Settings.DiscordAdvanced" or "Settings.OfflineAlerts" or "Settings.Alexa" => "connected",
-                        "Settings.ChatCommands" => "chat-commands",
-                        "Settings.Map" => "map",
+                        "Settings.ChatCommands" or "ChatCommands.AskAi" => "chat-commands",
+                        "Settings.Map" or "Settings.CommandDock" => "map",
                         "Settings.Maintenance" => "system",
                         _ => "general"
                     });
+
+                    AppSettingsPanel.ExpandTutorialCard(step.TargetId);
                     break;
             }
 

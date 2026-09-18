@@ -1,3 +1,10 @@
+/**
+ * How much the ROI's pixel signature must move before the same genotype counts as a new
+ * item. Tooltip redraws shift it by far more than this; compositor dithering and the cursor
+ * moving within a still tooltip shift it by far less.
+ */
+const NEW_ITEM_SIGNATURE_SHIFT = 0.05;
+
 export class PlantScanDeduplicator {
   private lastAcceptedGenes: Record<string | number, string> = {};
   private lastAcceptedSignatures: Record<string | number, number> = {};
@@ -39,9 +46,20 @@ export class PlantScanDeduplicator {
       return true;
     }
 
-    // Candidate has identical genetics to the last accepted plant.
-    // Suppress re-emitting the same plant while it is continuously visible.
-    // This prevents background graphic flicker from re-triggering duplicate sounds!
+    // Identical genetics. Whether this is the same plant or a different one that happens to
+    // share a genotype is not answerable from the letters, so the ROI's own appearance
+    // decides: a tooltip that redrew for a different item looks materially different, while
+    // one the cursor is still resting on does not. Without this, hovering two clones with the
+    // same genes in a row silently drops the second -- and identical genotypes are common
+    // enough in a breeding tray that the loss would not look like a bug.
+    const signatureShift = Math.abs(currentRoiSignature - lastSig) / Math.max(1, Math.abs(lastSig));
+    if (signatureShift > NEW_ITEM_SIGNATURE_SHIFT) {
+      this.lastAcceptedSignatures[key] = currentRoiSignature;
+      return true;
+    }
+
+    // Same plant, still on screen. Suppressing here is what stops background flicker from
+    // re-triggering the accept sound on every frame.
     return false;
   }
 

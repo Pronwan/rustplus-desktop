@@ -135,9 +135,14 @@ export const MissingCloneAdvisor: React.FC<MissingCloneAdvisorProps> = ({ open, 
           </Typography>
 
           {recommendedPatterns.length === 0 ? (
-            <Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 700, p: 2, backgroundColor: 'rgba(76, 175, 80, 0.08)', borderRadius: '4px', textAlign: 'center' }}>
-              ✓ Your inventory already has strong donors for all positions in this target!
-            </Typography>
+            <Box sx={{ p: 2, backgroundColor: 'rgba(76, 175, 80, 0.08)', border: '1px solid rgba(76, 175, 80, 0.25)', borderRadius: '4px', textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'var(--gl-success)', fontWeight: 800, mb: 0.5 }}>
+                ✓ Your inventory already has strong donors for all positions in this target!
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'var(--gl-text-secondary)', display: 'block', lineHeight: 1.5 }}>
+                You own all required parent genetics in your clone bank. For multi-generation routes, simply grow your parent clones to Clone stage and take cuttings to multiply them.
+              </Typography>
+            </Box>
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {recommendedPatterns.map((rec, idx) => (
