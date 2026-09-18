@@ -21,6 +21,26 @@ public partial class MainWindow
 {
     private bool _isSoftConnecting = false;
 
+    /// <summary>
+    /// The server this app told the cloud it is driving, so it can hand it back.
+    ///
+    /// Releasing is an optimisation, not a requirement: the platform holds a short
+    /// lease that expires on its own, which is what covers the case this app cannot
+    /// report at all - being killed. Calling it turns a ninety-second gap in cover
+    /// into a couple of seconds.
+    /// </summary>
+    private string? _cloudHeldServerKey;
+
+    /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
+    private void ReleaseCloudHold()
+    {
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+        _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key!);
+    }
+
     private void UpdateFullConnectButtonsEnabled()
     {
         void Apply()
@@ -375,6 +395,7 @@ public partial class MainWindow
                 _shopTimer = null;
                 StopDynPolling();
                 StopTeamPolling();
+                ReleaseCloudHold();
                 TeamMembers.Clear();
                 ClanMembers.Clear();
                 _lastClanPoll = DateTime.MinValue;
@@ -401,6 +422,7 @@ public partial class MainWindow
                 _shopTimer = null;
                 StopDynPolling();
                 StopTeamPolling();
+                ReleaseCloudHold();
                 TeamMembers.Clear();
                 ClanMembers.Clear();
                 _lastClanPoll = DateTime.MinValue;
@@ -431,6 +453,7 @@ public partial class MainWindow
                 _shopTimer?.Stop();
                 StopDynPolling(clearKnown: false);
                 StopTeamPolling();
+                ReleaseCloudHold();
                 _alertsNeedRebaseline = true;
             }
         }
@@ -612,6 +635,13 @@ public partial class MainWindow
                 connectedProfile.Name,
                 connectedProfile.PlayerToken,
                 _mySteamId);
+
+            // Cloud 24/7: this app is driving the server now, so the cloud should
+            // stand down. Fire-and-forget on purpose - a failure costs at most one
+            // duplicate connection until the next heartbeat, which is not worth
+            // holding up a connect over, and the lease expires on its own anyway.
+            _cloudHeldServerKey = GetServerKey();
+            _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
 
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
