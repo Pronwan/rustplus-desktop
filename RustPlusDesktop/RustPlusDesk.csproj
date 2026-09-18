@@ -410,6 +410,16 @@
 
   <Target Name="BuildMapParserRuntime" Inputs="@(MapParserSource)" Outputs="$(MapParserPublishedExe)" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
+
+    <!--
+      MapParser is not in the solution (see the note above), so the solution restore never
+      reaches it and a fresh clone publishes against a missing project.assets.json - NETSDK1004.
+      Restoring it here keeps that self-contained: TargetFrameworks is pinned to net8.0 so this
+      restore resolves only the framework the publish below asks for, and net10.0 stays out of
+      the graph for the same reason the ProjectReference was dropped.
+    -->
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Restore" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;TargetFrameworks=net8.0" />
+
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
     <ItemGroup>
