@@ -176,7 +176,7 @@ namespace RustPlusDesk
                 Catalogue.Children.Add(new TextBlock
                 {
                     Text = Loc.Text("CommandDockNoRules",
-                        "No rule uses the Command Dock trigger yet. Set a rule's trigger to Command Dock to launch it from here."),
+                        "No rule uses the Widget Overlay trigger yet. Set a rule's trigger to Widget Overlay to launch it from here."),
                     FontSize = 10.5,
                     TextWrapping = TextWrapping.Wrap,
                     Margin = new Thickness(4, 2, 4, 6),

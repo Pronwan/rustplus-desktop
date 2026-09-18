@@ -6,7 +6,7 @@ using RustPlusDesk.Models;
 namespace RustPlusDesk.Services
 {
     /// <summary>
-    /// Everything the mini-map's command dock needs from the main window.
+    /// Everything the mini-map's Widget Overlay needs from the main window.
     ///
     /// The dock polls rather than subscribes: half its content is a countdown that has to tick
     /// on its own anyway, and one timer that re-reads current state is both simpler and harder
@@ -29,7 +29,7 @@ namespace RustPlusDesk.Services
         /// <summary>False while the Logic Engine's master switch is off — rule tiles grey out.</summary>
         bool IsDockLogicEngineActive { get; }
 
-        /// <summary>Runs a rule as if a Command Dock trigger had fired.</summary>
+        /// <summary>Runs a rule as if a Widget Overlay trigger had fired.</summary>
         void RunDockRule(string ruleId);
 
         /// <summary>Flips a smart switch through the same guarded path the device list uses.</summary>

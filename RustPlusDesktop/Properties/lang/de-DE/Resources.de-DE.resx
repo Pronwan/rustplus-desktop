@@ -6916,10 +6916,10 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Startet per Klick</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>Noch nutzt keine Regel den Command-Dock-Trigger. Setze den Trigger einer Regel auf Command Dock, um sie von hier aus zu starten.</value>
+    <value>Noch nutzt keine Regel den Command-Dock-Trigger. Setze den Trigger einer Regel auf Widget Overlay, um sie von hier aus zu starten.</value>
   </data>
   <data name="UiCommandDockTrigger" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Ziehen zum Skalieren</value>
@@ -6937,7 +6937,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Kachel entfernen</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>Karte</value>
@@ -7566,7 +7566,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Die Mini-Map wird zur Kommandozentrale, der KI-Begleiter kommt dazu — und die Karte liest die Serverdateien selbst.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>Uhren, smarte Schalter, Team- und Clan-Chat, Übersetzung, Sitzungsstatistiken und Serverauslastung als Widgets rund um die Karte — und die Karte ist selbst ein Widget. Gestalte alle auf einmal oder einzeln, sperre das Layout gegen versehentliches Ziehen und speichere Anordnungen unter einem Namen.</value>
@@ -7590,7 +7590,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Eine Zeile globaler Chat auf jedem Tab, Erwähnungen in Bernstein und eine Benachrichtigung, wenn dich jemand nennt. Lies vom Todesbildschirm ab, wer dich getötet hat, und sieh die Rangliste in den Todesstatistiken. Dazu 31 Erfolge zum Entdecken, ein neues Logo und Fluent-Fenster.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>Mach aus der Mini-Map ein Dock aus Widgets, das du selbst anordnest.</value>
@@ -7659,7 +7659,7 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Aus dem Dock fragen</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>Füge das Widget „KI fragen“ mit + zum Command Dock hinzu. Drücken startet die Aufnahme, erneut drücken beendet sie, dann senden. Du kannst einen Screenshot anhängen: Es zählt erst von drei herunter, damit du vor dem Auslöser wieder im Spiel bist — und die App lässt sich selbst aus dem Bild.</value>
+    <value>Füge das Widget „KI fragen“ mit + zum Widget Overlay hinzu. Drücken startet die Aufnahme, erneut drücken beendet sie, dann senden. Du kannst einen Screenshot anhängen: Es zählt erst von drei herunter, damit du vor dem Auslöser wieder im Spiel bist — und die App lässt sich selbst aus dem Bild.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>Dem Team !ai erlauben</value>

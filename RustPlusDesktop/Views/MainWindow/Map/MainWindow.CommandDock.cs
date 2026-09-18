@@ -8,7 +8,7 @@ using RustPlusDesk.Services;
 namespace RustPlusDesk.Views;
 
 /// <summary>
-/// The main window's side of the mini-map command dock: it owns the data, the dock only draws.
+/// The main window's side of the mini-map Widget Overlay: it owns the data, the dock only draws.
 /// Every member here is a read of state that already exists somewhere else in the window — the
 /// dock is a second view of the map page, not a second source of truth.
 /// </summary>
@@ -104,11 +104,11 @@ public partial class MainWindow : ICommandDockHost
 
         if (!IsDockLogicEngineActive)
         {
-            AppendLog("[LogicEngine] Command Dock tile ignored: the Logic Engine is not active.");
+            AppendLog("[LogicEngine] Widget Overlay tile ignored: the Logic Engine is not active.");
             return;
         }
 
-        AppendLog($"[LogicEngine] Command Dock: running '{rule.Name}'.");
+        AppendLog($"[LogicEngine] Widget Overlay: running '{rule.Name}'.");
         _ = EnqueueRuleExecutionAsync(rule);
     }
 

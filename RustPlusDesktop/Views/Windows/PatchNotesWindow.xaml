@@ -230,7 +230,7 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v10.0.0 | Command Dock, AI Companion, Map Layers &amp; Global Chat"
+                                            <TextBlock Text="v10.0.0 | Widget Overlay, AI Companion, Map Layers &amp; Global Chat"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
@@ -242,13 +242,30 @@
                                         </TextBlock>
                                     </Border>
 
-                                    <!-- Command Dock -->
+                                    <!-- Backers: quiet, but visible enough to read as a thank-you -->
+                                    <Border Background="#14FFC14D" BorderBrush="#4DFFC14D" BorderThickness="1" CornerRadius="8"
+                                            Padding="12,9" Margin="0,0,0,14" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="Heart24" Foreground="#FFC14D" FontSize="15"
+                                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="Big shoutout to our September backers"
+                                                           FontSize="11" FontWeight="SemiBold" Foreground="#FFC14D"
+                                                           Opacity="0.9"/>
+                                                <TextBlock Text="Søster Frank Den Koselige Sauen  ·  Donald Farrar"
+                                                           FontSize="13" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextPrimary}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Widget Overlay -->
                                     <StackPanel Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                             <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
                                                 <ui:SymbolIcon Symbol="Grid24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Command Dock" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Widget Overlay" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                             <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Widgets Around the Map:</Run>
@@ -394,7 +411,7 @@
 
                                     <!-- Gallery for v10.0 -->
                                     <views:ImageGallery Margin="0,4,0,4">
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/CommandDock.jpg" Description="The Command Dock: the mini-map as one widget among clocks, smart switches, chat, session stats and server population, each styled globally or on its own"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/CommandDock.jpg" Description="The Widget Overlay: the mini-map as one widget among clocks, smart switches, chat, session stats and server population, each styled globally or on its own"/>
                                         <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/ai-chat-command.jpg" Description="The AI Companion answering !ai from in-game chat — your own key, your own model, and a per-teammate hourly limit when you let the team use it"/>
                                         <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/heatmaps.jpg" Description="HQM Nodes as a heatmap layer, with Player Spawns beside it — reachable straight from the 2D map, without building the 3D world first"/>
                                         <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/keycards.jpg" Description="Card Readers and Keycards as separate layers: what the doors here want, and what you can pick up — an underwater lab wanting two blue rooms, a ferry terminal holding a green and a blue card"/>

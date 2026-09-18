@@ -5850,13 +5850,13 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
     <value>Logic Engine&apos;i ya da kuralı etkinleştir</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>Bu kural artık Command Dock tetikleyicisini kullanmıyor.</value>
+    <value>Bu kural artık Widget Overlay tetikleyicisini kullanmıyor.</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>Tıklayınca çalışır</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>Henüz hiçbir kural Command Dock tetikleyicisini kullanmıyor. Buradan çalıştırmak için bir kuralın tetikleyicisini Command Dock yap.</value>
+    <value>Henüz hiçbir kural Widget Overlay tetikleyicisini kullanmıyor. Buradan çalıştırmak için bir kuralın tetikleyicisini Widget Overlay yap.</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Boyutlandırmak için sürükle</value>
@@ -5874,7 +5874,7 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
     <value>Kartı kaldır</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>Harita</value>
@@ -6506,7 +6506,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>Mini harita bir komuta merkezine dönüşüyor, yapay zekâ yardımcısı geliyor — ve harita sunucunun kendi dosyalarını okuyor.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>Saatler, akıllı anahtarlar, takım ve klan sohbeti, çeviri, oturum istatistikleri ve sunucu doluluğu haritanın çevresinde birer kart olarak — harita da bir kart. Hepsini birden ya da tek tek biçimlendir, düzeni yanlışlıkla kaymaya karşı kilitle ve yerleşimleri bir adla kaydet.</value>
@@ -6530,7 +6530,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>Her sekmede bir satır küresel sohbet, kehribar renginde anmalar ve biri seni andığında bildirim. Ölüm ekranından seni kimin öldürdüğünü oku, sıralamayı ölüm istatistiklerinde gör. Ayrıca keşfedilecek 31 başarım, yeni bir logo ve Fluent pencereler.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>Mini haritayı kendi düzenlediğin bir kart dock&apos;una dönüştür.</value>
@@ -6599,7 +6599,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>Dock&apos;tan sor</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>+ ile Command Dock&apos;a “Yapay zekâya sor” kartını ekle. Basınca kayıt başlar, tekrar basınca durur, sonra gönder. Ekran görüntüsü ekleyebilirsin: önce üçten geri sayar, böylece deklanşörden önce oyuna dönmüş olursun ve uygulama kendini kareden çıkarır.</value>
+    <value>+ ile Widget Overlay&apos;a “Yapay zekâya sor” kartını ekle. Basınca kayıt başlar, tekrar basınca durur, sonra gönder. Ekran görüntüsü ekleyebilirsin: önce üçten geri sayar, böylece deklanşörden önce oyuna dönmüş olursun ve uygulama kendini kareden çıkarır.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>Takımın !ai ile sormasına izin ver</value>

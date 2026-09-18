@@ -6738,13 +6738,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>Logic Engine 또는 규칙을 활성화하세요</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>이 규칙은 더 이상 Command Dock 트리거를 쓰지 않습니다.</value>
+    <value>이 규칙은 더 이상 Widget Overlay 트리거를 쓰지 않습니다.</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>클릭하면 실행</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>아직 Command Dock 트리거를 쓰는 규칙이 없습니다. 여기서 실행하려면 규칙의 트리거를 Command Dock으로 설정하세요.</value>
+    <value>아직 Widget Overlay 트리거를 쓰는 규칙이 없습니다. 여기서 실행하려면 규칙의 트리거를 Widget Overlay으로 설정하세요.</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>드래그해서 크기 조절</value>
@@ -6762,7 +6762,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>타일 제거</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>지도</value>
@@ -7394,7 +7394,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>미니맵이 지휘 본부가 되고, AI 컴패니언이 도착하고, 지도가 서버 파일을 직접 읽습니다.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>시계, 스마트 스위치, 팀·클랜 채팅, 번역, 세션 통계, 서버 인원을 지도 주위에 타일로 배치하세요 — 지도 자체도 하나의 타일입니다. 전체를 한 번에 또는 하나씩 꾸미고, 실수로 끌리지 않도록 배치를 잠그고, 구성을 이름으로 저장할 수 있습니다.</value>
@@ -7418,7 +7418,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>모든 탭에 글로벌 채팅 한 줄이 흐르고, 누군가 당신을 언급하면 호박색으로 표시되며 알림이 뜹니다. 사망 화면에서 누가 죽였는지 읽어 사망 통계의 순위로 확인하세요. 여기에 찾아낼 업적 31개, 새 로고와 Fluent 스타일 창까지.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>미니맵을 직접 배치하는 타일 독으로 바꿔 보세요.</value>
@@ -7487,7 +7487,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>독에서 묻기</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>+로 Command Dock에 “AI에게 묻기” 타일을 추가하세요. 누르면 녹음이 시작되고 다시 누르면 멈추며, 그다음 보냅니다. 스크린샷을 붙일 수 있습니다: 먼저 셋을 세므로 셔터가 내려가기 전에 게임으로 돌아가 있고, 앱은 화면에서 자신을 빼 둡니다.</value>
+    <value>+로 Widget Overlay에 “AI에게 묻기” 타일을 추가하세요. 누르면 녹음이 시작되고 다시 누르면 멈추며, 그다음 보냅니다. 스크린샷을 붙일 수 있습니다: 먼저 셋을 세므로 셔터가 내려가기 전에 게임으로 돌아가 있고, 앱은 화면에서 자신을 빼 둡니다.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>팀이 !ai로 묻게 하기</value>

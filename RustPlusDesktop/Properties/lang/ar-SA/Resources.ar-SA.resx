@@ -6708,13 +6708,13 @@
     <value>فعّل Logic Engine أو القاعدة نفسها</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>لم تعد هذه القاعدة تستخدم مشغّل Command Dock.</value>
+    <value>لم تعد هذه القاعدة تستخدم مشغّل Widget Overlay.</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>تعمل عند النقر</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>لا توجد بعد قاعدة تستخدم مشغّل Command Dock. اضبط مشغّل إحدى القواعد على Command Dock لتشغيلها من هنا.</value>
+    <value>لا توجد بعد قاعدة تستخدم مشغّل Widget Overlay. اضبط مشغّل إحدى القواعد على Widget Overlay لتشغيلها من هنا.</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>اسحب لتغيير الحجم</value>
@@ -6732,7 +6732,7 @@
     <value>إزالة البطاقة</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>الخريطة</value>
@@ -7364,7 +7364,7 @@
     <value>الخريطة المصغّرة تصبح مركز قيادة، ويصل مساعد الذكاء الاصطناعي، وتقرأ الخريطة ملفات الخادم بنفسها.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>ساعات ومفاتيح ذكية ودردشة الفريق والعشيرة والترجمة وإحصاءات الجلسة وعدد اللاعبين، كلها بطاقات حول الخريطة — والخريطة نفسها بطاقة أيضًا. نسّقها كلها دفعة واحدة أو واحدة تلو الأخرى، واقفل التخطيط ضد السحب غير المقصود، واحفظ الترتيبات باسم.</value>
@@ -7388,7 +7388,7 @@
     <value>سطر من الدردشة العامة في كل تبويب، مع إشارات بلون كهرماني وتنبيه عندما يذكرك أحد. اقرأ من شاشة الموت من قتلك، وشاهد الترتيب في إحصاءات الموت. بالإضافة إلى 31 إنجازًا لاكتشافها، وشعار جديد ونوافذ بنمط Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>حوّل الخريطة المصغّرة إلى dock من البطاقات ترتّبه بنفسك.</value>
@@ -7457,7 +7457,7 @@
     <value>اسأل من الـ dock</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>أضف بطاقة «اسأل الذكاء الاصطناعي» إلى الـ Command Dock بالزر +. اضغطها للتسجيل، واضغطها ثانية للإيقاف، ثم أرسل. يمكنك إرفاق لقطة شاشة: يبدأ عدّ تنازلي من ثلاثة أولًا لتعود إلى اللعبة قبل الالتقاط، والتطبيق يُخرج نفسه من الصورة.</value>
+    <value>أضف بطاقة «اسأل الذكاء الاصطناعي» إلى الـ Widget Overlay بالزر +. اضغطها للتسجيل، واضغطها ثانية للإيقاف، ثم أرسل. يمكنك إرفاق لقطة شاشة: يبدأ عدّ تنازلي من ثلاثة أولًا لتعود إلى اللعبة قبل الالتقاط، والتطبيق يُخرج نفسه من الصورة.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>اسمح للفريق بالسؤال عبر !ai</value>

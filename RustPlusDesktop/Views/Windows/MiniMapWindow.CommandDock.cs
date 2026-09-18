@@ -15,7 +15,7 @@ using RustPlusDesk.Services;
 namespace RustPlusDesk
 {
     /// <summary>
-    /// The mini-map's command dock: the map is one tile on a cell grid, and the rest of the
+    /// The mini-map's Widget Overlay: the map is one tile on a cell grid, and the rest of the
     /// grid holds clocks, devices, events, chat and Logic Engine launchers.
     ///
     /// Tiles are built in code rather than through an ItemsControl because the dock is a
@@ -1621,7 +1621,7 @@ namespace RustPlusDesk
             if (rule.TriggerType != "CommandDock")
             {
                 reason = Loc.Text("CommandDockRuleWrongTrigger",
-                    "This rule no longer uses the Command Dock trigger.");
+                    "This rule no longer uses the Widget Overlay trigger.");
                 return false;
             }
             if (DockHost?.IsDockLogicEngineActive != true || !rule.IsEnabled)

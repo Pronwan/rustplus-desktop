@@ -6817,13 +6817,13 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Activa el Logic Engine o la regla</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>Esta regla ya no usa el disparador Command Dock.</value>
+    <value>Esta regla ya no usa el disparador Widget Overlay.</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>Se ejecuta al hacer clic</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>Ninguna regla usa todavía el disparador Command Dock. Pon el disparador de una regla en Command Dock para lanzarla desde aquí.</value>
+    <value>Ninguna regla usa todavía el disparador Widget Overlay. Pon el disparador de una regla en Widget Overlay para lanzarla desde aquí.</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Arrastra para redimensionar</value>
@@ -6841,7 +6841,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Quitar widget</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>Mapa</value>
@@ -7473,7 +7473,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>El minimapa se convierte en un centro de mando, llega el compañero IA y el mapa lee los archivos del servidor.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>Relojes, interruptores inteligentes, chat de equipo y clan, traducción, estadísticas de sesión y población del servidor como widgets alrededor del mapa, y el mapa también es un widget. Dales estilo a todos a la vez o uno a uno, bloquea el diseño contra arrastres accidentales y guarda disposiciones con un nombre.</value>
@@ -7497,7 +7497,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>Una línea de chat global en cada pestaña, con menciones en ámbar y un aviso cuando alguien te nombra. Lee en la pantalla de muerte quién te mató y consulta la clasificación en las estadísticas de muertes. Además, 31 logros por descubrir, un logo nuevo y ventanas Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>Convierte el minimapa en un dock de widgets que organizas tú.</value>
@@ -7566,7 +7566,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>Preguntar desde el dock</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>Añade el widget «Preguntar a la IA» al Command Dock con el +. Púlsalo para grabar, púlsalo otra vez para parar y envía. Puedes adjuntar una captura: primero cuenta tres atrás, así estás de vuelta en el juego antes del disparo, y la app se deja a sí misma fuera de la imagen.</value>
+    <value>Añade el widget «Preguntar a la IA» al Widget Overlay con el +. Púlsalo para grabar, púlsalo otra vez para parar y envía. Puedes adjuntar una captura: primero cuenta tres atrás, así estás de vuelta en el juego antes del disparo, y la app se deja a sí misma fuera de la imagen.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>Dejar que el equipo pregunte con !ai</value>

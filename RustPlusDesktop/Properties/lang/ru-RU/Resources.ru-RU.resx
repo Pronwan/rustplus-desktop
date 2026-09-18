@@ -6817,13 +6817,13 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Включи Logic Engine или само правило</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>Это правило больше не использует триггер Command Dock.</value>
+    <value>Это правило больше не использует триггер Widget Overlay.</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>Запускается по клику</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>Пока ни одно правило не использует триггер Command Dock. Поставь у правила триггер Command Dock, чтобы запускать его отсюда.</value>
+    <value>Пока ни одно правило не использует триггер Widget Overlay. Поставь у правила триггер Widget Overlay, чтобы запускать его отсюда.</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>Потяни, чтобы изменить размер</value>
@@ -6841,7 +6841,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Убрать виджет</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>Карта</value>
@@ -7473,7 +7473,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Мини-карта становится командным центром, появляется ИИ-компаньон — и карта сама читает файлы сервера.</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>Часы, умные переключатели, чат команды и клана, перевод, статистика сессии и населённость сервера — виджеты вокруг карты, и сама карта тоже виджет. Оформляй их все сразу или по отдельности, блокируй раскладку от случайного перетаскивания и сохраняй компоновки под именем.</value>
@@ -7497,7 +7497,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Строка глобального чата на каждой вкладке, упоминания янтарным цветом и уведомление, когда тебя назвали. Прочитай с экрана смерти, кто тебя убил, и посмотри рейтинг в статистике смертей. Плюс 31 достижение, новый логотип и окна в стиле Fluent.</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>Преврати мини-карту в док из виджетов, который ты собираешь сам.</value>
@@ -7566,7 +7566,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Спросить из дока</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>Добавь виджет «Спросить ИИ» в Command Dock через +. Нажми, чтобы начать запись, нажми ещё раз, чтобы остановить, затем отправь. Можно приложить скриншот: сначала идёт отсчёт от трёх, чтобы ты успел вернуться в игру до срабатывания, и приложение убирает себя из кадра.</value>
+    <value>Добавь виджет «Спросить ИИ» в Widget Overlay через +. Нажми, чтобы начать запись, нажми ещё раз, чтобы остановить, затем отправь. Можно приложить скриншот: сначала идёт отсчёт от трёх, чтобы ты успел вернуться в игру до срабатывания, и приложение убирает себя из кадра.</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>Разрешить команде спрашивать через !ai</value>

@@ -6565,13 +6565,13 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>请启用 Logic Engine 或该规则</value>
   </data>
   <data name="CommandDockRuleWrongTrigger" xml:space="preserve">
-    <value>该规则已不再使用 Command Dock 触发器。</value>
+    <value>该规则已不再使用 Widget Overlay 触发器。</value>
   </data>
   <data name="CommandDockRuleReady" xml:space="preserve">
     <value>点击即运行</value>
   </data>
   <data name="CommandDockNoRules" xml:space="preserve">
-    <value>还没有规则使用 Command Dock 触发器。把某条规则的触发器设为 Command Dock，就能从这里启动它。</value>
+    <value>还没有规则使用 Widget Overlay 触发器。把某条规则的触发器设为 Widget Overlay，就能从这里启动它。</value>
   </data>
   <data name="CommandDockResizeHint" xml:space="preserve">
     <value>拖动调整大小</value>
@@ -6589,7 +6589,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>移除磁贴</value>
   </data>
   <data name="CommandDockTitle" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="CommandDockSectionMap" xml:space="preserve">
     <value>地图</value>
@@ -7221,7 +7221,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>小地图变成指挥台，AI 助手登场，地图还能直接读取服务器文件。</value>
   </data>
   <data name="UpdateWhatsNew93Title1" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="UpdateWhatsNew93Desc1" xml:space="preserve">
     <value>时钟、智能开关、队伍与部落聊天、翻译、本局统计和服务器人数，都能作为磁贴环绕在地图周围 —— 地图本身也是一块磁贴。可以统一或逐个设置样式，锁定布局以防误拖，并把排布保存为命名方案。</value>
@@ -7245,7 +7245,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>每个标签页都有一行全球聊天，被提到时以琥珀色显示并弹出通知。可以从死亡界面读出是谁杀了你，并在死亡统计中查看排名。此外还有 31 项成就等你发现，以及全新徽标和 Fluent 风格窗口。</value>
   </data>
   <data name="Tutorials.command-dock.Title" xml:space="preserve">
-    <value>Command Dock</value>
+    <value>Widget Overlay</value>
   </data>
   <data name="Tutorials.command-dock.Description" xml:space="preserve">
     <value>把小地图变成一个由你自己排布的磁贴 dock。</value>
@@ -7314,7 +7314,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>从 dock 提问</value>
   </data>
   <data name="Tutorials.Step.aicompanion.ask.Description" xml:space="preserve">
-    <value>用 + 把“问 AI”磁贴添加到 Command Dock。按一下开始录音，再按一下停止，然后发送。你可以附上截图：它会先从三倒数，让你在快门之前回到游戏，并且应用会把自己从画面中排除。</value>
+    <value>用 + 把“问 AI”磁贴添加到 Widget Overlay。按一下开始录音，再按一下停止，然后发送。你可以附上截图：它会先从三倒数，让你在快门之前回到游戏，并且应用会把自己从画面中排除。</value>
   </data>
   <data name="Tutorials.Step.aicompanion.chat.Title" xml:space="preserve">
     <value>让队伍用 !ai 提问</value>
