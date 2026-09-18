@@ -41,7 +41,8 @@ namespace RustPlusDesk.Services.Cloud
             string Owner,
             DateTime? LastConnectedAt,
             string? LastError,
-            bool NeedsRepair);
+            bool NeedsRepair,
+            bool IsPreferred);
 
         /// <summary>The plan's ceiling, so the UI can be honest about it.</summary>
         public sealed record CloudPlan(
@@ -98,6 +99,19 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>Stop covering a server.</summary>
         public static Task<bool> DisableAsync(string userServerId)
             => PostAsync($"me/cloud-sessions/{userServerId}/disable");
+
+        /// <summary>
+        /// Give this server the live cloud connection.
+        ///
+        /// The only decision there is. Raid alarms already reach every paired
+        /// server whether or not anything is enrolled — the push listener is one
+        /// socket per account, not per server — so what this picks is which server
+        /// gets the live socket, and with it the map, chat commands and device
+        /// control. It enrols as part of the same call, because asking the user to
+        /// switch a server on and then choose it was two steps for one intent.
+        /// </summary>
+        public static Task<bool> SetPreferredAsync(string userServerId)
+            => PostAsync($"me/cloud-sessions/{userServerId}/preferred");
 
         /// <summary>
         /// Set which servers keep their live connection when the budget is full.
@@ -172,7 +186,8 @@ namespace RustPlusDesk.Services.Cloud
                 Str(item, "owner") ?? "none",
                 Date(item, "last_connected_at"),
                 Str(item, "last_error"),
-                Bool(item, "needs_repair"));
+                Bool(item, "needs_repair"),
+                Bool(item, "is_preferred"));
         }
 
         private static CloudPlan ReadPlan(JsonElement meta)

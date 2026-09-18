@@ -95,14 +95,17 @@
                                                    Visibility="{Binding RepairVisibility}" Margin="0,0,8,0"
                                                    Click="BtnRepair_Click" Tag="{Binding}"/>
 
-                                        <ui:Button x:Name="BtnPriority" Content="{DynamicResource Cloud247Priority}"
-                                                   Appearance="Secondary" Margin="0,0,8,0"
-                                                   Visibility="{Binding PriorityVisibility}"
-                                                   Click="BtnPriority_Click" Tag="{Binding}"/>
-
-                                        <ui:ToggleSwitch IsChecked="{Binding Enrolled, Mode=OneWay}"
-                                                         IsEnabled="{Binding CanToggle}"
-                                                         Click="ToggleCover_Click" Tag="{Binding}"/>
+                                        <!--
+                                            One action, because there is one decision.
+                                            Raid alarms reach every paired server
+                                            whatever this says, so a server switched
+                                            on but not chosen changed nothing the
+                                            user could see.
+                                        -->
+                                        <ui:Button Content="{Binding ActionText}"
+                                                   MinWidth="160"
+                                                   IsEnabled="{Binding CanToggle}"
+                                                   Click="ToggleCover_Click" Tag="{Binding}"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>

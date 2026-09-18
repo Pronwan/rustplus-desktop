@@ -8113,4 +8113,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="Cloud247Imported" xml:space="preserve">
     <value>Added {0} server(s) and {1} device(s) paired while this app was closed.</value>
   </data>
+  <data name="Cloud247GiveConnection" xml:space="preserve">
+    <value>Give live connection</value>
+  </data>
+  <data name="Cloud247Release" xml:space="preserve">
+    <value>Release connection</value>
+  </data>
+  <data name="Cloud247AlarmsOnly" xml:space="preserve">
+    <value>Raid alarms only</value>
+  </data>
 </root>

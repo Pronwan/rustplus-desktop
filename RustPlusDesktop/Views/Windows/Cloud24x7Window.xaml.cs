@@ -57,7 +57,11 @@ namespace RustPlusDesk.Views.Windows
 
             public Visibility RepairVisibility { get; init; } = Visibility.Collapsed;
 
-            public Visibility PriorityVisibility { get; init; } = Visibility.Collapsed;
+            /// <summary>This server currently holds the live connection.</summary>
+            public bool IsPreferred { get; init; }
+
+            /// <summary>Label on the single action: give it the connection, or release it.</summary>
+            public string ActionText { get; init; } = string.Empty;
         }
 
         private async System.Threading.Tasks.Task RefreshAsync()
@@ -152,8 +156,10 @@ namespace RustPlusDesk.Views.Windows
                 OwnerBrush = ownerBrush,
                 DetailText = detail,
                 RepairVisibility = server.NeedsRepair ? Visibility.Visible : Visibility.Collapsed,
-                // Priority only means something once there is competition for a slot.
-                PriorityVisibility = server.Enrolled && plan.Access ? Visibility.Visible : Visibility.Collapsed,
+                IsPreferred = server.IsPreferred,
+                ActionText = server.IsPreferred
+                    ? Str("Cloud247Release", "Release connection")
+                    : Str("Cloud247GiveConnection", "Give live connection"),
             };
         }
 
@@ -166,8 +172,11 @@ namespace RustPlusDesk.Views.Windows
         /// </summary>
         private (string, Brush) DescribeOwner(CloudSessionsApi.CloudServer server)
         {
-            if (!server.Enrolled)
-                return (Str("Cloud247NotCovered", "Not covered"), Brush("TextSubtle"));
+            // Not "offline" and not "not covered": raid alarms already arrive for
+            // every paired server, because the push listener is one socket per
+            // account. What this server is missing is the live connection.
+            if (!server.IsPreferred && !server.Enrolled)
+                return (Str("Cloud247AlarmsOnly", "Raid alarms only"), Brush("TextSubtle"));
 
             if (server.NeedsRepair)
                 return (Str("Cloud247NeedsRepair", "Pairing needs renewing"), Brush("DangerBrush", Brushes.IndianRed));
@@ -182,15 +191,22 @@ namespace RustPlusDesk.Views.Windows
             return (Str("Cloud247Dormant", "Alarms only, until you play on it"), Brush("TextSubtle"));
         }
 
+        /// <summary>
+        /// The one action: give this server the live connection, or release it.
+        ///
+        /// There is only one decision to make. Alarms reach every paired server
+        /// regardless, so a server enrolled but not chosen had no effect the user
+        /// could observe — which made two controls for one intent.
+        /// </summary>
         private async void ToggleCover_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not FrameworkElement { Tag: ServerRow row }) return;
 
             SetStatus(Str("Cloud247Saving", "Saving..."));
 
-            var ok = row.Enrolled
+            var ok = row.IsPreferred
                 ? await CloudSessionsApi.DisableAsync(row.UserServerId)
-                : await CloudSessionsApi.EnableAsync(row.UserServerId);
+                : await CloudSessionsApi.SetPreferredAsync(row.UserServerId);
 
             if (!ok)
             {
@@ -201,18 +217,6 @@ namespace RustPlusDesk.Views.Windows
             // this app cannot see, and showing the toggle flipped anyway would be a
             // lie about what is covered.
             await RefreshAsync();
-        }
-
-        private async void BtnPriority_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not FrameworkElement { Tag: ServerRow row }) return;
-
-            // A simple bump rather than a dialog: priority only has to express
-            // "prefer this one", and the automatic promotion handles the rest.
-            SetStatus(Str("Cloud247Saving", "Saving..."));
-            await CloudSessionsApi.SetPriorityAsync(row.UserServerId, 10);
-            SetStatus(string.Format(CultureInfo.CurrentCulture,
-                Str("Cloud247Prioritised", "{0} will keep its live connection when slots are short."), row.Name));
         }
 
         private void BtnRepair_Click(object sender, RoutedEventArgs e)
