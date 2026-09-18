@@ -43,6 +43,7 @@ so you don’t have to install dependencies manually.
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+[![YouTube V9](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
 [![YouTube V8](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
 [![YouTube V7](https://github.com/Pronwan/rustplus-desktop/blob/master/Thumbnail.png?raw=true)](https://www.youtube.com/watch?v=dajHSihKwQs)
 [![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
@@ -50,6 +51,51 @@ so you don’t have to install dependencies manually.
 
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
+
+# v10.0.0 — Widget Overlay, AI Companion, Map Layers & Global Chat
+
+The mini-map has grown into a command centre you can build yourself. Alongside it: an AI companion you can talk to mid-raid, map layers that no longer need the 3D world built first, and chat that follows you around the app.
+
+## 🧩 Widget Overlay
+
+The feature formerly known as *Command Dock*.
+
+- **Widgets around the map** — press `+` to add digital/analogue/Rust-styled clocks, any paired smart switch or alarm, team and clan chat, event timers, Logic Engine rules, session stats, server population, or a Discord line. Each lands in the first free cell and drags anywhere.
+- **The map is a widget too** — move it, or remove it entirely for a bar of switches along your screen edge. Its five layers (texture, grid, drawings, icons, players) toggle separately; death markers have their own.
+- **Styling** — text colour, size and transparency set once for the whole dock, overridable per widget. A near-invisible dock still reads over snow and water: the text keeps its shadow while the background fades.
+- **Lock & arrangements** — lock the layout against accidental dragging; save the whole dock under a name and hover to preview it outlined in place before loading.
+- **Translate tile** — paste a line from game chat and read it in your language, or type yours and read it in theirs. Microphone input transcribes and translates, via Windows' own recogniser or your AI model. Google/model is a per-tile choice; removing a key falls back to Google rather than failing.
+- **Collapse button** — hides every tile in place and restores the arrangement unchanged on the second press. Optionally takes the mini-map with it (off by default). Survives a restart.
+
+## 🎙️ AI Companion
+
+- **Ask out loud, keep playing** — press the widget or hold push-to-talk. Answer appears under the tile or is read to you. Optional screenshot counts three down first and removes the app from the picture.
+- **Your key, your model** — GPT, Gemini, Claude or OpenRouter. GPT and Gemini take the audio directly; Claude and OpenRouter transcribe on your PC first (slower, weaker on names). Gemini has a free allowance; the others need prepaid credit.
+- **Local only** — keys are stored on your PC under your Windows account and never uploaded. Recordings go straight to your chosen provider, never through our servers. One key per provider.
+- **Current patch data** — crafting recipes and raid costs travel with every question, so it answers with today's numbers.
+- **`!ai` in team and clan chat** — answers come back in-game, kept to a line or two. Off for teammates until you allow it, with a per-teammate hourly limit, since every answer bills your key.
+- **OpenRouter picker** — fetches free models automatically, searches the rest by name, provider or vision support, with price and context length shown up front. Reasoning effort, temperature, token ceiling, provider fallbacks and prompt-logging are all configurable.
+- **Prompt rules** — your own rules ride along with every question. Replies are kept chat-length, the model's thinking is stripped, and raid questions are understood as being about a video game.
+
+## 🗺️ Heatmaps Without the 3D Map
+
+- **Just press Heatmaps** — the button now offers to read the server's map file directly and shows the layer. No 3D build, no rendered world. Keycard layers ask the same question, and Layers has a **Parse all map data** button to do it up front.
+- **Extra monuments** — the same read surfaces what the server never reports: icebergs, oases, caves, water wells, ice lakes, jungle ruins, swamps, plus building-blocked zones. They appear on the 2D map immediately.
+- **HQM nodes & player spawns** — High Quality Metal gets its own layer, and spawn zones show where a fresh spawn washes up (beach, tier 0/1, temperate or tundra, never on cliff, monument, road or river).
+
+## 🔑 Keycards
+
+- **Two questions, two layers** — *Card Readers* shows which cards the doors at a place want. *Keycards* shows which card you can walk away with. Most monuments do one and not the other (Launch Site has readers but holds nothing; a supermarket is the reverse), so they toggle separately.
+
+## 💀 Who Killed You
+
+- **Read off the death screen** — a tile appears the moment the game reports a death and files the killer's name and weapon using native Windows OCR.
+
+## 🏆 Achievements & Fluent Interface
+
+- **31 discoverable achievements** — earned by finding what the app can do: pairing devices, building the 3D map, arranging widgets. The trophy icon keeps your list, with unread badges.
+
+---
 
 # Rust+ Desktop 9.2.2
 
