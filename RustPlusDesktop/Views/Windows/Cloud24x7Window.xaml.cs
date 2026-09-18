@@ -64,6 +64,12 @@ namespace RustPlusDesk.Views.Windows
         {
             SetStatus(Str("Cloud247Loading", "Checking what the cloud is watching..."));
 
+            // Pull down anything paired in game while this app was closed, before
+            // listing. A server the cloud received but this app has never seen would
+            // otherwise show here as covered while being absent from the server list,
+            // which is a confusing way to learn the two are the same thing.
+            var imported = await CloudPairingImporter.ImportAsync();
+
             var overview = await CloudSessionsApi.GetOverviewAsync();
 
             if (overview == null)
@@ -85,7 +91,12 @@ namespace RustPlusDesk.Views.Windows
                 _rows.Add(BuildRow(server, overview.Plan));
 
             EmptyText.Visibility = _rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-            SetStatus(string.Empty);
+
+            SetStatus(imported is { ChangedAnything: true }
+                ? string.Format(CultureInfo.CurrentCulture,
+                    Str("Cloud247Imported", "Added {0} server(s) and {1} device(s) paired while this app was closed."),
+                    imported.Added, imported.DevicesAdded)
+                : string.Empty);
         }
 
         private void ApplyPlan(CloudSessionsApi.CloudPlan plan)

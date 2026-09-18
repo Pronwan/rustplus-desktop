@@ -643,6 +643,11 @@ public partial class MainWindow
             _cloudHeldServerKey = GetServerKey();
             _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
 
+            // Send the command words up so the cloud answers to exactly what this
+            // user configured. Without it a teammate would get different replies
+            // depending on whether this app happened to be running.
+            _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, _cloudHeldServerKey);
+
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
             {

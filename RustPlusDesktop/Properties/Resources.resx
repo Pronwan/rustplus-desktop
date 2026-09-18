@@ -8110,4 +8110,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="Cloud247Prioritised" xml:space="preserve">
     <value>{0} will keep its live connection when slots are short.</value>
   </data>
+  <data name="Cloud247Imported" xml:space="preserve">
+    <value>Added {0} server(s) and {1} device(s) paired while this app was closed.</value>
+  </data>
 </root>
