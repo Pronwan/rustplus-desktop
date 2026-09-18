@@ -60,12 +60,36 @@ namespace RustPlusDesk.Services.Cloud
                 .Select(m => new { command = m.Command, entity_id = m.EntityId })
                 .ToList();
 
+            // The user's real prefix, not a hard-coded "!". Sending the wrong one
+            // left the cloud deaf to the word their team actually types while the
+            // app answered it - two bots disagreeing in front of the team, which is
+            // the exact failure syncing this config exists to prevent.
+            var prefix = string.IsNullOrWhiteSpace(profile.ChatCommandPrefix)
+                ? "!"
+                : profile.ChatCommandPrefix;
+
             var payload = new
             {
                 server_key = serverKey,
-                prefix = "!",
+                prefix,
+                // Somebody who switched commands off in the app meant it, and the
+                // cloud answering during the hours the app is shut would be the
+                // feature overriding that rather than extending it.
+                commands_enabled = profile.ChatCommandsEnabled,
+                use_clan_channel = profile.ChatAlertsUseClanChannel,
                 words = cleaned,
                 device_mappings = mappings,
+                alerts = new Dictionary<string, bool>
+                {
+                    ["player_online"] = TrackingService.AnnouncePlayerOnline,
+                    ["player_offline"] = TrackingService.AnnouncePlayerOffline,
+                    ["player_afk"] = TrackingService.AnnouncePlayerAfk,
+                    ["player_afk_return"] = TrackingService.AnnouncePlayerAfkReturn,
+                    ["player_death_self"] = TrackingService.AnnouncePlayerDeathSelf,
+                    ["player_death_team"] = TrackingService.AnnouncePlayerDeathTeam,
+                    ["player_respawn_self"] = TrackingService.AnnouncePlayerRespawnSelf,
+                    ["player_respawn_team"] = TrackingService.AnnouncePlayerRespawnTeam,
+                },
             };
 
             var signature = System.Text.Json.JsonSerializer.Serialize(payload).GetHashCode();
