@@ -821,7 +821,17 @@ namespace RustPlusDesk
                 top = Math.Max(bounds.Top, bounds.Bottom - Height);
 
             double left;
-            if (pullIntoView && Width <= bounds.Width)
+            if (pullIntoView && Width > bounds.Width)
+            {
+                // Wider than the screen, so it cannot all be shown. Aligned to the left edge
+                // anyway, rather than left wherever it happened to be: the built-in default
+                // parks the dock against the right edge, and from there every arrangement too
+                // wide to fit was simply abandoned across the monitor boundary. Aligned left,
+                // the overflow hangs off the right of the correct screen, which is somewhere it
+                // can be dragged back from.
+                left = bounds.Left;
+            }
+            else if (pullIntoView)
             {
                 left = Math.Min(Left, bounds.Right - Width);
                 left = Math.Max(left, bounds.Left);
