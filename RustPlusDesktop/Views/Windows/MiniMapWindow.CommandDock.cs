@@ -2109,8 +2109,8 @@ namespace RustPlusDesk
         /// </summary>
         private (int Col, int Row) CellUnderPoint(Point corner) =>
         (
-            NearestCell(corner.X, CellX),
-            NearestCell(corner.Y, CellY)
+            NearestCell(corner.X),
+            NearestCell(corner.Y)
         );
 
         /// <summary>
@@ -2144,26 +2144,24 @@ namespace RustPlusDesk
         /// <summary>
         /// The cell index whose edge sits closest to a dropped pixel position.
         ///
-        /// Searched rather than solved: the grid has a seam at the map, so the mapping is
-        /// piecewise and not worth inverting by hand for a range this small. Negative indices are
-        /// included on purpose — they are how a bar gets built along the top or the left edge.
+        /// Solved rather than searched. It used to walk a fixed range of indices, because the
+        /// grid had a seam at the map and the mapping was piecewise - but a fixed range of cells
+        /// is a shrinking range of pixels as the zoom comes down, so below 100% the last columns
+        /// before the screen's right edge could not be reached at all. Only tiles wide enough to
+        /// start further left and reach over could get there.
+        ///
+        /// With the grid uniform the mapping is linear and inverts in one line, which has no
+        /// range to run out of. Negative indices fall out of it for free, and they matter - they
+        /// are how a bar gets built along the top or the left edge.
         /// </summary>
-        private static int NearestCell(double pixels, Func<int, double> edgeAt)
+        private int NearestCell(double pixels)
         {
             if (double.IsNaN(pixels)) return 0;
 
-            int best = 0;
-            double bestDistance = double.MaxValue;
+            double pitch = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
+            if (pitch <= 0) return 0;
 
-            for (int index = -16; index <= 32; index++)
-            {
-                double distance = Math.Abs(edgeAt(index) - pixels);
-                if (distance >= bestDistance) continue;
-                bestDistance = distance;
-                best = index;
-            }
-
-            return best;
+            return (int)Math.Round(pixels / pitch, MidpointRounding.AwayFromZero);
         }
 
         private bool Overlaps(CommandDockTile tile)
