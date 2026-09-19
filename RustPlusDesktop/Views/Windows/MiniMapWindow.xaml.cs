@@ -695,8 +695,8 @@ namespace RustPlusDesk
 
             // The preview extra grows the window without moving anything, so an arrangement
             // larger than the dock can be outlined in full.
-            Width = Math.Max(1, bounds.Width + _previewExtra.Width);
-            Height = Math.Max(1, bounds.Height + _previewExtra.Height);
+            Width = Math.Max(1, bounds.Width);
+            Height = Math.Max(1, bounds.Height);
 
             if (!double.IsNaN(Left) && !double.IsNaN(Top))
             {

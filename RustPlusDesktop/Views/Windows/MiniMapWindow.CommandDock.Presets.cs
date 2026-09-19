@@ -197,8 +197,6 @@ namespace RustPlusDesk
 
         // ── Preview ─────────────────────────────────────────────────────────────
 
-        private Canvas? _presetPreview;
-
         /// <summary>
         /// Fades an outline of the arrangement over the dock.
         ///
@@ -213,9 +211,6 @@ namespace RustPlusDesk
         {
             var preset = FindPreset(id);
             if (preset == null) return;
-
-            EnsurePreviewCanvas();
-            _presetPreview!.Children.Clear();
 
             // The preset's own zoom, not the dock's: the outline is of the arrangement as saved,
             // and drawing it at the live pitch would show the right shape at the wrong scale.
@@ -251,63 +246,61 @@ namespace RustPlusDesk
 
             if (rects.Count == 0) return;
 
-            // Shifted so the arrangement's own top-left corner meets the dock's, which is where
-            // it would actually land once loaded.
+            // Normalised to its own top-left, which is what loading does: NormaliseCells slides
+            // every tile so the first occupied cell is (0,0).
             double shiftX = -rects.Min(r => r.Rect.X);
             double shiftY = -rects.Min(r => r.Rect.Y);
 
-            foreach (var (rect, isMap) in rects)
-            {
-                var outline = new System.Windows.Shapes.Rectangle
-                {
-                    Width = rect.Width,
-                    Height = rect.Height,
-                    RadiusX = isMap ? Math.Min(rect.Width, rect.Height) / 2 : 10,
-                    RadiusY = isMap ? Math.Min(rect.Width, rect.Height) / 2 : 10,
-                    Fill = new SolidColorBrush(Color.FromArgb(0x26, 0x3F, 0xD7, 0xFF)),
-                    Stroke = new SolidColorBrush(Color.FromArgb(0xCC, 0x3F, 0xD7, 0xFF)),
-                    StrokeThickness = isMap ? 2 : 1.5,
-                };
-                Canvas.SetLeft(outline, rect.X + shiftX);
-                Canvas.SetTop(outline, rect.Y + shiftY);
-                _presetPreview.Children.Add(outline);
-            }
+            double width = rects.Max(r => r.Rect.Right) + shiftX;
+            double height = rects.Max(r => r.Rect.Bottom) + shiftY;
 
-            // Room for an arrangement larger than the dock currently is. Added to the size only,
-            // so nothing already on screen moves.
-            _previewExtra = new Size(
-                Math.Max(0, rects.Max(r => r.Rect.Right) + shiftX - Width),
-                Math.Max(0, rects.Max(r => r.Rect.Bottom) + shiftY - Height));
-            LayoutDock();
+            var corner = PreviewCorner(id, new Size(width, height));
 
-            Fade(_presetPreview, 1, 160);
+            var overlay = Overlay();
+            overlay.ShowPreview(rects.Select(r => (
+                new Rect(
+                    corner.X + r.Rect.X + shiftX - overlay.Left,
+                    corner.Y + r.Rect.Y + shiftY - overlay.Top,
+                    r.Rect.Width,
+                    r.Rect.Height),
+                r.IsMap)));
         }
 
-        public void HidePresetPreview()
+        /// <summary>
+        /// Where on screen the arrangement's top-left corner would end up.
+        ///
+        /// Every preset but one leaves the dock where it is - position belongs to the desk, not
+        /// to the layout - so the corner is simply the dock's. The built-in default is the
+        /// exception: it is the way back to the beginning and moves the dock to its original
+        /// corner, which used to make its preview a lie, drawn over a dock that was about to
+        /// move out from under it.
+        ///
+        /// The same clamp the load will apply is applied here too, so an arrangement wider than
+        /// the screen is outlined where it will actually sit rather than where it would sit if
+        /// the screen were bigger.
+        /// </summary>
+        private Point PreviewCorner(string id, Size size)
         {
-            if (_presetPreview == null) return;
+            var screen = ScreenBoundsFor(this);
 
-            Fade(_presetPreview, 0, 220);
+            double x = id == DefaultPresetId
+                ? screen.Right - DefaultMapSize - 20
+                : (double.IsNaN(Left) ? screen.Left : Left);
 
-            if (_previewExtra != default)
-            {
-                _previewExtra = default;
-                LayoutDock();
-            }
+            double y = id == DefaultPresetId
+                ? screen.Top + 20
+                : (double.IsNaN(Top) ? screen.Top : Top);
+
+            if (size.Width <= screen.Width)
+                x = Math.Max(screen.Left, Math.Min(x, screen.Right - size.Width));
+
+            y = Math.Max(screen.Top, y);
+            if (y + size.Height > screen.Bottom)
+                y = Math.Max(screen.Top, screen.Bottom - size.Height);
+
+            return new Point(x, y);
         }
 
-        private Size _previewExtra;
-
-        private void EnsurePreviewCanvas()
-        {
-            if (_presetPreview != null) return;
-
-            _presetPreview = new Canvas { IsHitTestVisible = false, Opacity = 0 };
-            PresetPreviewLayer.Children.Add(_presetPreview);
-        }
-
-        private static void Fade(UIElement element, double to, int ms) =>
-            element.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(to, TimeSpan.FromMilliseconds(ms)) { FillBehavior = FillBehavior.HoldEnd });
+        public void HidePresetPreview() => _overlay?.HidePreview();
     }
 }

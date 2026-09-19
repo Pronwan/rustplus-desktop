@@ -377,5 +377,63 @@ namespace RustPlusDesk.Views.Windows
             _highlight = null;
             _ghost = null;
         }
+
+        // ── The template preview ────────────────────────────────────────────────
+
+        /// <summary>
+        /// Outlines an arrangement where it would actually land, in this window's coordinates.
+        ///
+        /// Drawn rather than applied: swapping the live layout to show a preview would resize
+        /// the window, move the tiles, and leave the dock half-changed if the pointer moved on
+        /// mid-way. An outline says the same thing and can be dropped at any moment.
+        ///
+        /// It lives here rather than on the dock because the dock is only as big as its own
+        /// tiles. An arrangement larger than the current one had to grow the dock window just to
+        /// have somewhere to be drawn, and one that lands somewhere else entirely - the built-in
+        /// default, which parks in a corner - could not be shown in the right place at all.
+        /// </summary>
+        public void ShowPreview(IEnumerable<(Rect Rect, bool IsMap)> shapes)
+        {
+            PreviewLayer.Children.Clear();
+
+            var fill = new SolidColorBrush(Color.FromArgb(0x26, 0x3F, 0xD7, 0xFF));
+            var edge = new SolidColorBrush(Color.FromArgb(0xCC, 0x3F, 0xD7, 0xFF));
+            fill.Freeze();
+            edge.Freeze();
+
+            bool any = false;
+            foreach (var (rect, isMap) in shapes)
+            {
+                if (rect.Width <= 0 || rect.Height <= 0) continue;
+                any = true;
+
+                var outline = new Rectangle
+                {
+                    Width = rect.Width,
+                    Height = rect.Height,
+                    RadiusX = isMap ? Math.Min(rect.Width, rect.Height) / 2 : 10,
+                    RadiusY = isMap ? Math.Min(rect.Width, rect.Height) / 2 : 10,
+                    Fill = fill,
+                    Stroke = edge,
+                    StrokeThickness = isMap ? 2 : 1.5,
+                };
+                Canvas.SetLeft(outline, rect.X);
+                Canvas.SetTop(outline, rect.Y);
+                PreviewLayer.Children.Add(outline);
+            }
+
+            if (!any) return;
+
+            PreviewLayer.BeginAnimation(UIElement.OpacityProperty,
+                new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(160)) { FillBehavior = FillBehavior.HoldEnd });
+        }
+
+        public void HidePreview()
+        {
+            if (PreviewLayer == null) return;
+
+            PreviewLayer.BeginAnimation(UIElement.OpacityProperty,
+                new DoubleAnimation(0.0, TimeSpan.FromMilliseconds(220)) { FillBehavior = FillBehavior.HoldEnd });
+        }
     }
 }

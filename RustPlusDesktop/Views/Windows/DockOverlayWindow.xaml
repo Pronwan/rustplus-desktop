@@ -21,6 +21,12 @@
               Never hit-testable - it is a picture of what a release would do, not a target.  -->
         <Canvas x:Name="PaintLayer" IsHitTestVisible="False"/>
 
+        <!--  An outline of a saved arrangement, faded in while its name is hovered in the
+              templates window. On this window rather than on the dock because it shows where
+              the arrangement will land, which is a place on the screen and not an offset from
+              whatever the dock currently happens to be.  -->
+        <Canvas x:Name="PreviewLayer" IsHitTestVisible="False" Opacity="0"/>
+
         <!--  The bar lives here rather than in the dock window because it has to reach the top
               of the screen and span it. Inside the dock it was clipped to the dock's own
               rectangle, which is what made it travel whenever the dock resized.  -->
