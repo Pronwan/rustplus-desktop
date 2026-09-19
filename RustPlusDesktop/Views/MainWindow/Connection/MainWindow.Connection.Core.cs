@@ -1,4 +1,4 @@
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -39,6 +39,38 @@ public partial class MainWindow
 
         _cloudHeldServerKey = null;
         _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key!);
+    }
+
+    /// <summary>
+    /// The same hand-back, but awaited, for the one caller that cannot fire and
+    /// forget: shutdown.
+    ///
+    /// Everywhere else the process carries on and an unawaited call completes on
+    /// its own. On exit it does not — the process is gone before the request
+    /// leaves — so closing the app would cost the full ninety-second lease at
+    /// exactly the moment cover matters most, which is the moment the user walked
+    /// away.
+    ///
+    /// Bounded, because a hand-back is an optimisation and the lease already
+    /// covers us: an unreachable platform must not hold the window open.
+    /// </summary>
+    internal async Task ReleaseCloudHoldOnExitAsync()
+    {
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+
+        try
+        {
+            await Services.Cloud.CloudSessionsApi.ReleaseAsync(key!)
+                .WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        catch
+        {
+            // Timed out or refused. The lease expiring is the fallback this was
+            // only ever shortening.
+        }
     }
 
     private void UpdateFullConnectButtonsEnabled()

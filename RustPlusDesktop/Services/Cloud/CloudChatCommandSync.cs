@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -89,6 +89,16 @@ namespace RustPlusDesk.Services.Cloud
                     ["player_death_team"] = TrackingService.AnnouncePlayerDeathTeam,
                     ["player_respawn_self"] = TrackingService.AnnouncePlayerRespawnSelf,
                     ["player_respawn_team"] = TrackingService.AnnouncePlayerRespawnTeam,
+                    // A smart alarm firing, and the special case of one the user
+                    // set as an oil rig trigger — which means a crate is being
+                    // hacked rather than somebody being in their base.
+                    ["smart_alerts"] = TrackingService.AnnounceSmartAlerts,
+                    ["event_oil_rig"] = TrackingService.AnnounceOilRig,
+                    // The master switch, sent as its own value rather than folded
+                    // into the others. Folding it in would read on the web as the
+                    // user having turned every alert off one by one, and turning
+                    // the master back on would not restore what they actually had.
+                    ["announce_master"] = TrackingService.AnnounceSpawnsMaster,
                 },
             };
 

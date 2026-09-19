@@ -1,4 +1,4 @@
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -3670,6 +3670,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try
             {
                 await DisposePlayerWipeTrackerAsync();
+            }
+            catch { }
+            try
+            {
+                // Hand the server back before the process goes, so the cloud
+                // picks it up in seconds rather than waiting out the lease.
+                await ReleaseCloudHoldOnExitAsync();
             }
             catch { }
             finally
