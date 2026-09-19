@@ -152,22 +152,39 @@ namespace RustPlusDesk
             _dock.GrowRight = preset.GrowRight;
             _dock.MapRemoved = preset.Tiles.All(t => t.Kind != CommandDockTileKinds.Map);
 
+            // The geometry goes in before anything is laid out, and quietly - the public setters
+            // each lay the dock out as a side effect, which is the whole problem here.
+            //
+            // Overlap resolution measures tiles against the map's cell footprint, and that
+            // footprint comes from the map's size, its shape and the grid's pitch. Applying the
+            // preset's values *after* the first layout meant the tiles were resolved against the
+            // previous arrangement's map: a tile this preset puts beside a small map was pushed
+            // out from under the big one that was still there. ResolveOverlaps writes to
+            // tile.Col and tile.Row, so the push stuck - and loading the same preset again
+            // looked like a fix, because by then the geometry already matched.
+            if (preset.GridZoom is { } zoom) _dock.GridZoom = CommandDockLayout.ClampZoom(zoom);
+            if (preset.MapShapeIndex is { } shape) _shapeIndex = Math.Max(0, Math.Min(2, shape));
+            if (preset.MapSize is { } size)
+            {
+                _mapWidth = Math.Max(160, Math.Min(size, 800));
+                _mapHeight = MapHeightFor(_mapWidth, _shapeIndex);
+            }
+
             SaveDock();
 
-            // The rebuild comes first and unconditionally: every element on the canvas belongs
-            // to the tiles that were just replaced, and UpdateSize only repositions what is
-            // already there.
+            // Every element on the canvas belongs to the tiles that were just replaced, so this
+            // is a rebuild rather than a re-layout - and it now measures against the geometry
+            // above rather than whatever was on screen a moment ago.
             RebuildTiles();
 
-            // Zoom first: it changes how many pixels a cell is, which both the shape and the
-            // size calculations below are measured against.
-            if (preset.GridZoom is { } zoom) SetGridZoom(zoom);
+            // Applies what was set quietly: the map container's size, its corner radius, the
+            // clip and the viewbox, and the sliders that show them.
+            UpdateSize(_mapWidth, updateSlider: true);
 
-            // Shape before size: UpdateSize derives the height and the corner radius from it, so
-            // setting it afterwards would lay the dock out once against the wrong footprint.
-            if (preset.MapShapeIndex is { } shape) SetMapShape(shape);
-
-            if (preset.MapSize is { } size) UpdateSize(size, updateSlider: true);
+            PersistMapShape(_shapeIndex);
+            SettingsOverlay?.SyncShapeSelection(_shapeIndex);
+            SettingsOverlay?.SyncGridZoom(DockZoom);
+            _overlay?.SetZoom(DockZoom);
 
             // The one arrangement that moves the window as well.
             //

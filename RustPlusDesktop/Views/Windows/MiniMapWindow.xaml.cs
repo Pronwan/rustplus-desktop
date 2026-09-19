@@ -586,6 +586,23 @@ namespace RustPlusDesk
         /// the panel's own save is a no-op until its popup has been opened once: its controls do
         /// not exist before that, and CurrentSettings returns null when they are missing.
         /// </summary>
+        /// <summary>
+        /// Writes the shape to the settings file directly.
+        ///
+        /// Not through the settings panel: its own save is a no-op until its popup has been
+        /// opened once, because its controls do not exist before that.
+        /// </summary>
+        internal void PersistMapShape(int shapeIndex)
+        {
+            var stored = RustPlusDesk.Services.StorageService.LoadCache<RustPlusDesk.Services.MiniMapSettings>("minimap_settings");
+            if (stored != null)
+                RustPlusDesk.Services.StorageService.SaveCache("minimap_settings", stored with { ShapeIndex = shapeIndex });
+        }
+
+        /// <summary>The map's height for a given width, which only the 16:9 shape changes.</summary>
+        internal double MapHeightFor(double width, int shapeIndex) =>
+            shapeIndex == 2 ? width * 9.0 / 16.0 : width;
+
         public void SetMapShape(int shapeIndex, bool persist = true)
         {
             shapeIndex = Math.Max(0, Math.Min(2, shapeIndex));
@@ -593,12 +610,7 @@ namespace RustPlusDesk
 
             _shapeIndex = shapeIndex;
 
-            if (persist)
-            {
-                var stored = RustPlusDesk.Services.StorageService.LoadCache<RustPlusDesk.Services.MiniMapSettings>("minimap_settings");
-                if (stored != null)
-                    RustPlusDesk.Services.StorageService.SaveCache("minimap_settings", stored with { ShapeIndex = shapeIndex });
-            }
+            if (persist) PersistMapShape(shapeIndex);
 
             SettingsOverlay?.SyncShapeSelection(shapeIndex);
 
