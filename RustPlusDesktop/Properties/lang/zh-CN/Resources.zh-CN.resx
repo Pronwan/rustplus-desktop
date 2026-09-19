@@ -7608,4 +7608,34 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>请先解析地图</value>
   </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>清除死亡标记</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>一个格子，清除地图上的死亡标记并显示数量</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>清除全部死亡标记</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>仅保留最后一个</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>保留最后一个会为你和每位队友各保留最新的标记。</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>地图上没有死亡标记</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>每位玩家保留数</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>每位玩家保留多少个死亡标记。调低不会移除地图上已有的标记。</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>你</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>队友</value>
+  </data>
 </root>

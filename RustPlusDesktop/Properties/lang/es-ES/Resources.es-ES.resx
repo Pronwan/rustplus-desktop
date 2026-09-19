@@ -3342,7 +3342,7 @@ Primero empareje este servidor.</value>
     <value>Genere el mapa 3D antes de usar mapas de calor.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Analiza primero el mapa para activar las zonas sin construccion.</value>
+    <value>Analiza primero el mapa para activar las zonas sin construcción.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Opciones genéricas de audio de alarma</value>
@@ -7855,9 +7855,39 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>NUEVO</value>
   </data>
   <data name="MiniMapLayerNoBuild" xml:space="preserve">
-    <value>Zonas sin construccion</value>
+    <value>Zonas sin construcción</value>
   </data>
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>Primero analiza el mapa</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Borrar marcadores de muerte</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Una casilla que borra los marcadores de muerte del mapa y los cuenta</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Borrar todos los marcadores</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Borrar todos menos el último</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Conservar el último mantiene el marcador más reciente tuyo y de cada compañero.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>No hay marcadores de muerte en el mapa</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Marcadores por jugador</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Cuántos marcadores de muerte conserva cada jugador. Bajarlo no elimina los marcadores que ya están en el mapa.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Tú</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Compañeros</value>
   </data>
 </root>

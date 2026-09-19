@@ -8035,4 +8035,34 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>Please parse the map first</value>
   </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Wipe death markers</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>One cell that clears the map&apos;s death markers, and counts them</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Wipe all death markers</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Wipe all but the last one</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Keeping the last one keeps the newest marker for you and for each teammate.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>No death markers on the map</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Markers kept per player</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>How many death markers each player keeps. Lowering this does not remove markers already on the map.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>You</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Teammates</value>
+  </data>
 </root>

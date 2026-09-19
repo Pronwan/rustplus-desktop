@@ -819,6 +819,7 @@ namespace RustPlusDesk
                     AttachTileInteraction(el, tile.Id,
                         onClick: isMap ? () => OnClicked?.Invoke()
                             : tile.Kind == CommandDockTileKinds.Collapse ? ToggleDockCollapsed
+                            : tile.Kind == CommandDockTileKinds.DeathWipe ? () => WipeDeathMarkers(tile)
                             : null);
                     if (isMap) _mapMouseWired = true;
                 }
@@ -847,6 +848,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.Session => false,
             CommandDockTileKinds.Discord => false,
             CommandDockTileKinds.Collapse => false,
+            CommandDockTileKinds.DeathWipe => false,
             _ => true,
         };
 
@@ -924,6 +926,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.Collapse => BuildCollapseTile(tile),
+            CommandDockTileKinds.DeathWipe => BuildDeathWipeTile(tile),
             CommandDockTileKinds.DeathTrack => BuildDeathTrackTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),

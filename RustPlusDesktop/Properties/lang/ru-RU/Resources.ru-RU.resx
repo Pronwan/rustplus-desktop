@@ -7860,4 +7860,34 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>Сначала разберите карту</value>
   </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Очистить метки смерти</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Одна ячейка, которая очищает метки смерти на карте и считает их</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Очистить все метки смерти</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Очистить все, кроме последней</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Сохранение последней оставляет самую свежую метку для вас и для каждого союзника.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>На карте нет меток смерти</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Меток на игрока</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Сколько меток смерти сохраняется для каждого игрока. Уменьшение не удаляет метки, уже стоящие на карте.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Вы</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Союзники</value>
+  </data>
 </root>

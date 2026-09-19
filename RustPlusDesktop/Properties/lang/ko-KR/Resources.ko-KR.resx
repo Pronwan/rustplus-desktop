@@ -7781,4 +7781,34 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>먼저 맵을 파싱하세요</value>
   </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>사망 표식 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>지도의 사망 표식을 지우고 개수를 세는 한 칸</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>모든 사망 표식 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>마지막 하나만 남기고 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>마지막 하나를 남기면 본인과 각 팀원의 가장 최근 표식이 유지됩니다.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>지도에 사망 표식이 없습니다</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>플레이어당 표식 수</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>각 플레이어가 유지하는 사망 표식 수입니다. 값을 낮춰도 이미 지도에 있는 표식은 사라지지 않습니다.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>본인</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>팀원</value>
+  </data>
 </root>

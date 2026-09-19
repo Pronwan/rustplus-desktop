@@ -98,6 +98,12 @@ namespace RustPlusDesk
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Collapse },
                   SymbolRegular.ArrowMinimize24);
 
+            Entry(Loc.Text("CommandDockDeathWipeTitle", "Wipe death markers"),
+                  Loc.Text("CommandDockDeathWipePickerHint",
+                      "One cell that clears the map's death markers, and counts them"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.DeathWipe },
+                  SymbolRegular.Eraser24);
+
             Entry(Loc.Text("CommandDockDeathTrackTitle", "Who killed you?"),
                   Loc.Text("CommandDockDeathTrackPickerHint",
                       "Appears when you die: one press reads the name off the death screen"),

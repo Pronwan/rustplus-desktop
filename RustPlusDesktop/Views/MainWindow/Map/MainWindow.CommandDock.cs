@@ -71,6 +71,27 @@ public partial class MainWindow : ICommandDockHost
     public string? DockPlayerName =>
         TeamMembers.FirstOrDefault(t => t.SteamId == _mySteamId)?.Name;
 
+    public int DockDeathMarkerCount => VisibleDeathMarkers.Count();
+
+    /// <summary>
+    /// Clears death markers on behalf of the overlay's wipe tile.
+    ///
+    /// Clearing everything matches the wipe button under the team list, Deep Sea markers
+    /// included: the tile offers one press for "start over", and leaving markers behind on a
+    /// map the user is not currently looking at would make that press mean something different
+    /// depending on where they happened to be standing.
+    /// </summary>
+    public void WipeDockDeathMarkers(bool keepLatest)
+    {
+        if (_vm?.Selected == null) return;
+
+        if (keepLatest) TrimDeathMarkersPerPlayer(1, 1);
+        else _vm.Selected.DeathMarkers.Clear();
+
+        _vm.Save();
+        RedrawDeathPins();
+    }
+
     public string? DockServerKey
     {
         get

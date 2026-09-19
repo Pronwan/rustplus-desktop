@@ -3339,7 +3339,7 @@
     <value>قم بإنشاء الخريطة ثلاثية الأبعاد قبل استخدام الخرائط الحرارية.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>حلل الخريطة أولا لتفعيل مناطق منع البناء.</value>
+    <value>حلّل الخريطة أولاً لتفعيل مناطق منع البناء.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>خيارات صوت التنبيه العامة</value>
@@ -7749,6 +7749,36 @@
     <value>مناطق ممنوع البناء</value>
   </data>
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
-    <value>يرجى تحليل الخريطة أولا</value>
+    <value>يرجى تحليل الخريطة أولاً</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>مسح علامات الموت</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>خلية واحدة تمسح علامات الموت على الخريطة وتعدّها</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>مسح كل علامات الموت</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>مسح الكل عدا الأخيرة</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>الإبقاء على الأخيرة يحفظ أحدث علامة لك ولكل زميل.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>لا توجد علامات موت على الخريطة</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>العلامات لكل لاعب</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>كم علامة موت يحتفظ بها كل لاعب. الخفض لا يزيل العلامات الموجودة على الخريطة.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>أنت</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>الزملاء</value>
   </data>
 </root>

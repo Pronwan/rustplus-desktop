@@ -49,6 +49,22 @@ namespace RustPlusDesk.Services
         /// <summary>The player's own name, to tell a suicide from a killer.</summary>
         string? DockPlayerName { get; }
 
+        /// <summary>
+        /// How many death markers are on the map right now.
+        ///
+        /// The number the map is actually showing, not the number stored: the Deep Sea map and
+        /// the island each hold their own, and a tile reporting markers the user cannot see
+        /// would be counting the wrong thing.
+        /// </summary>
+        int DockDeathMarkerCount { get; }
+
+        /// <summary>
+        /// Clears death markers. With <paramref name="keepLatest"/> the newest marker per player
+        /// survives - the player's own and each teammate's - which is the same shape as the
+        /// per-player caps in the death marker settings.
+        /// </summary>
+        void WipeDockDeathMarkers(bool keepLatest);
+
         /// <summary>The event dock's current entries, keyed by <c>cargo</c>, <c>deepsea</c>, …</summary>
         IReadOnlyList<CommandDockEvent> DockEvents { get; }
 

@@ -7860,4 +7860,34 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
     <value>Veuillez d'abord analyser la carte</value>
   </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Effacer les marqueurs de mort</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Une case qui efface les marqueurs de mort de la carte et les compte</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Effacer tous les marqueurs</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Effacer tout sauf le dernier</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Garder le dernier conserve le marqueur le plus récent pour vous et pour chaque coéquipier.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>Aucun marqueur de mort sur la carte</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Marqueurs conservés par joueur</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Combien de marqueurs de mort chaque joueur conserve. Réduire cette valeur ne supprime pas les marqueurs déjà sur la carte.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Vous</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Coéquipiers</value>
+  </data>
 </root>

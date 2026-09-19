@@ -132,6 +132,16 @@ namespace RustPlusDesk.Models
         public bool DeathTrackAlwaysVisible { get; set; }
 
         /// <summary>
+        /// Death wipe tiles: keep the newest marker per player instead of clearing every one.
+        ///
+        /// Off by default, so one press does the obvious thing. On, it is the setting for
+        /// somebody who wants the map clean but still wants to know where everyone last went
+        /// down - which is the more useful state mid-wipe and the less obvious one, so it is
+        /// the one you have to ask for.
+        /// </summary>
+        public bool DeathWipeKeepLatest { get; set; }
+
+        /// <summary>
         /// Death tracking tiles: read the death screen with the AI model rather than with
         /// Windows.
         ///
@@ -228,6 +238,16 @@ namespace RustPlusDesk.Models
         /// expanding puts the arrangement back exactly as it was rather than re-flowing it.
         /// </summary>
         public const string Collapse = "Collapse";
+
+        /// <summary>
+        /// One cell that clears the map's death markers.
+        ///
+        /// Separate from <see cref="DeathTrack"/>, which is about the death that just happened.
+        /// This one is about the ones that already did: a wipe's worth of pins builds up, and
+        /// the only way to clear them was a button under the team list, four levels away from
+        /// the map they cover.
+        /// </summary>
+        public const string DeathWipe = "DeathWipe";
 
         /// <summary>
         /// After a death: one press to read the killer's name off the death screen.

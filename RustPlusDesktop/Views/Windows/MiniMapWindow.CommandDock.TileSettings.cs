@@ -667,6 +667,35 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.DeathWipe:
+                {
+                    var box = new StackPanel();
+
+                    // Two named choices rather than one checkbox: "wipe all" and "wipe all but
+                    // the last one" are both things people mean by clearing the map, and a
+                    // checkbox would leave the press ambiguous until you read its label.
+                    string group = "deathwipe_" + tile.Id;
+
+                    // Only the checked side acts: a radio group raises Unchecked on the one
+                    // being left as well, and letting both write would save twice per press.
+                    box.Children.Add(SettingsRadio(
+                        Loc.Text("CommandDockDeathWipeAll", "Wipe all death markers"),
+                        group,
+                        !tile.DeathWipeKeepLatest,
+                        on => { if (on) { tile.DeathWipeKeepLatest = false; TileSettingChanged(immediate: true); } }));
+
+                    box.Children.Add(SettingsRadio(
+                        Loc.Text("CommandDockDeathWipeKeepLatest", "Wipe all but the last one"),
+                        group,
+                        tile.DeathWipeKeepLatest,
+                        on => { if (on) { tile.DeathWipeKeepLatest = true; TileSettingChanged(immediate: true); } }));
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockDeathWipeKeepHint",
+                        "Keeping the last one keeps the newest marker for you and for each teammate.")));
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.Collapse:
                 {
                     var box = new StackPanel();
@@ -789,6 +818,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             CommandDockTileKinds.Translate => Loc.Text("CommandDockTranslateTitle", "Translate"),
             CommandDockTileKinds.Collapse => Loc.Text("CommandDockCollapseTitle", "Collapse"),
+            CommandDockTileKinds.DeathWipe => Loc.Text("CommandDockDeathWipeTitle", "Wipe death markers"),
             _ => tile.Kind,
         };
 

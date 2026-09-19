@@ -3324,7 +3324,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Isı haritalarını kullanmadan önce 3B haritayı oluşturun.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Insa yasagi bolgelerini etkinlestirmek icin once haritayi ayristirin.</value>
+    <value>İnşa yasağı bölgelerini etkinleştirmek için önce haritayı ayrıştırın.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Genel alarm sesi seçenekleri</value>
@@ -6825,9 +6825,42 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>Ölçülmüş varsayılana dön</value>
   </data>
   <data name="MiniMapLayerNoBuild" xml:space="preserve">
-    <value>Insa yasagi bolgeleri</value>
+    <value>İnşa yasağı bölgeleri</value>
   </data>
   <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
-    <value>Lutfen once haritayi ayristirin</value>
+    <value>Lütfen önce haritayı ayrıştırın</value>
+  </data>
+  <data name="MiniMapLayerHeatmap" xml:space="preserve">
+    <value>Isı haritası</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Ölüm işaretlerini sil</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Haritadaki ölüm işaretlerini silen ve sayan tek hücre</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Tüm ölüm işaretlerini sil</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Sonuncusu hariç hepsini sil</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Sonuncuyu tutmak, senin ve her takım arkadaşının en yeni işaretini korur.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>Haritada ölüm işareti yok</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Oyuncu başına işaret</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Her oyuncunun kaç ölüm işareti tuttuğu. Azaltmak haritadaki mevcut işaretleri silmez.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Sen</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Takım arkadaşları</value>
   </data>
 </root>
