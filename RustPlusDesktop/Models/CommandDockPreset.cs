@@ -63,6 +63,11 @@ namespace RustPlusDesk.Models
         /// than jumping it to the top-left of the screen.
         /// </summary>
         public bool CellsAreAbsolute { get; set; }
+
+        /// <summary>Where the map sat, in screen pixels, or null for an arrangement without one.</summary>
+        public double? MapX { get; set; }
+
+        public double? MapY { get; set; }
     }
 
     public sealed class CommandDockPresetStore

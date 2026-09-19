@@ -106,6 +106,8 @@ namespace RustPlusDesk
                 MapShapeIndex = MapTile != null ? _shapeIndex : null,
                 GridZoom = _dock.GridZoom,
                 CellsAreAbsolute = true,
+                MapX = _dock.MapX,
+                MapY = _dock.MapY,
             });
 
             SavePresets(presets);
@@ -167,6 +169,12 @@ namespace RustPlusDesk
             }
 
             _dock.CellsAreAbsolute = true;
+
+            // The map's own position travels with the arrangement, like its size and shape.
+            // Null in one saved before the map was freed, which leaves it where it is.
+            if (preset.MapX.HasValue) _dock.MapX = preset.MapX;
+            if (preset.MapY.HasValue) _dock.MapY = preset.MapY;
+
             _dock.GrowRight = preset.GrowRight;
             _dock.MapRemoved = preset.Tiles.All(t => t.Kind != CommandDockTileKinds.Map);
 
@@ -270,8 +278,8 @@ namespace RustPlusDesk
             // Uniform, exactly as the live grid is: the map sits over the cells rather than
             // displacing the ones past it. The outline has to agree with what loading the
             // preset will actually produce.
-            double X(int col) => CommandDockLayout.CellOffset(col, previewZoom);
-            double Y(int row) => CommandDockLayout.CellOffset(row, previewZoom);
+            double X(int col) => col * PitchFor(previewZoom);
+            double Y(int row) => row * PitchFor(previewZoom);
 
             var rects = new List<(Rect Rect, bool IsMap)>();
             foreach (var tile in preset.Tiles)
@@ -280,8 +288,8 @@ namespace RustPlusDesk
                 var rect = isMap
                     ? new Rect(X(tile.Col), Y(tile.Row), mapW, mapH)
                     : new Rect(X(tile.Col), Y(tile.Row),
-                        CommandDockLayout.CellsToPixels(tile.ColSpan, previewZoom),
-                        CommandDockLayout.CellsToPixels(tile.RowSpan, previewZoom));
+                        CellsToPixelsFor(tile.ColSpan, previewZoom),
+                        CellsToPixelsFor(tile.RowSpan, previewZoom));
 
                 if (rect.Width <= 0 || rect.Height <= 0) continue;
                 rects.Add((rect, isMap));

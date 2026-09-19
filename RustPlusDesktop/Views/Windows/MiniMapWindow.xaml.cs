@@ -74,13 +74,28 @@ namespace RustPlusDesk
 
                 startDragPos = e.GetPosition(this);
 
-                // Where the window was before Windows moved it, so the move can be turned into
-                // the only thing that means anything now: a number of cells.
                 double fromLeft = Left, fromTop = Top;
 
                 DragMove();
 
-                MoveDockByPixels(Left - fromLeft, Top - fromTop);
+                // Dragging the map moves the map, not the dock. It has a position of its own
+                // now, so the window Windows just moved has to be handed back and the distance
+                // applied to the thing the pointer was actually on. Everything else - a press
+                // on the dock's background - still moves the arrangement.
+                bool onMap = PressedOnMap(e.OriginalSource);
+
+                double dx = Left - fromLeft, dy = Top - fromTop;
+
+                if (onMap)
+                {
+                    Left = fromLeft;
+                    Top = fromTop;
+                    MoveMapByPixels(dx, dy);
+                }
+                else
+                {
+                    MoveDockByPixels(dx, dy);
+                }
             };
             MouseLeftButtonUp += (s, e) =>
             {
@@ -422,6 +437,33 @@ namespace RustPlusDesk
         /// open on the neighbouring screen: "does it fit before the right edge" was asking about
         /// the far edge of the last monitor, not the one the mini-map is on.
         /// </summary>
+        /// <summary>
+        /// The working area of the monitor containing one point, in device-independent pixels.
+        ///
+        /// Used where the window cannot be asked yet - the grid has to know its monitor before
+        /// the first layout, and the window's geometry at that moment is whatever the XAML said.
+        /// </summary>
+        private Rect ScreenBoundsForPoint(double x, double y)
+        {
+            try
+            {
+                double scale = 1.0;
+                var source = PresentationSource.FromVisual(this);
+                if (source?.CompositionTarget != null)
+                    scale = source.CompositionTarget.TransformToDevice.M11;
+                if (scale <= 0) scale = 1.0;
+
+                var at = new System.Drawing.Point((int)Math.Round(x * scale), (int)Math.Round(y * scale));
+                var area = System.Windows.Forms.Screen.FromPoint(at).WorkingArea;
+
+                return new Rect(area.Left / scale, area.Top / scale, area.Width / scale, area.Height / scale);
+            }
+            catch
+            {
+                return ScreenBoundsFor(this);
+            }
+        }
+
         private static Rect ScreenBoundsFor(Window window)
         {
             try

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using RustPlusDesk.Models;
@@ -37,13 +38,26 @@ namespace RustPlusDesk
         {
             get
             {
-                if (!_gridScreenKnown)
-                {
-                    _gridScreen = ScreenBoundsFor(this);
-                    _gridScreenKnown = true;
-                }
+                if (!_gridScreenKnown) AnchorGridFromSavedPosition();
                 return _gridScreen;
             }
+        }
+
+        /// <summary>
+        /// Picks the grid's monitor from the saved dock corner, before anything is drawn.
+        ///
+        /// Asking the window would be too late and wrong: at that point it still has whatever
+        /// geometry the XAML gave it, which can straddle both screens - so the first layout was
+        /// measured against a monitor the dock was not on, and the map flashed up on the wrong
+        /// screen at the wrong size before the next pass corrected it.
+        /// </summary>
+        private void AnchorGridFromSavedPosition()
+        {
+            _gridScreenKnown = true;
+
+            _gridScreen = _dock?.WindowLeft is { } left && _dock.WindowTop is { } top
+                ? ScreenBoundsForPoint(left, top)
+                : ScreenBoundsFor(this);
         }
 
         /// <summary>
@@ -70,22 +84,35 @@ namespace RustPlusDesk
         /// a grid that divides both axes evenly needs a screen whose sides happen to agree, and
         /// a square cell matters more than a flush bottom.
         /// </summary>
-        private double CellPitch
+        private double CellPitch => PitchFor(DockZoom);
+
+        /// <summary>
+        /// The same, at a zoom other than the live one.
+        ///
+        /// The template preview needs it: it draws an arrangement at the zoom it was saved with,
+        /// and has to stretch that pitch the same way, or the outline sits a few pixels off the
+        /// grid the load will actually produce.
+        /// </summary>
+        internal double PitchFor(double zoom)
         {
-            get
-            {
-                double basePitch = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
-                double width = GridScreen.Width;
+            double basePitch = CommandDockLayout.CellSizeAt(zoom) + CommandDockLayout.CellGapAt(zoom);
+            double width = GridScreen.Width;
 
-                if (basePitch <= 1 || width <= basePitch) return Math.Max(1, basePitch);
+            if (basePitch <= 1 || width <= basePitch) return Math.Max(1, basePitch);
 
-                int columns = Math.Max(1, (int)Math.Round(width / basePitch));
-                return width / columns;
-            }
+            int columns = Math.Max(1, (int)Math.Round(width / basePitch));
+            return width / columns;
         }
 
         /// <summary>A cell's size, the pitch less the gap it carries with it.</summary>
-        private double CellSize => Math.Max(1, CellPitch - CommandDockLayout.CellGapAt(DockZoom));
+        private double CellSize => CellSizeFor(DockZoom);
+
+        internal double CellSizeFor(double zoom) =>
+            Math.Max(1, PitchFor(zoom) - CommandDockLayout.CellGapAt(zoom));
+
+        /// <summary>How many pixels a run of cells covers at a given zoom.</summary>
+        internal double CellsToPixelsFor(int cells, double zoom) =>
+            cells <= 0 ? 0 : cells * PitchFor(zoom) - CommandDockLayout.CellGapAt(zoom);
 
         /// <summary>Where a column's left edge sits on screen.</summary>
         private double CellScreenX(int col) => GridScreen.Left + col * CellPitch;
@@ -128,13 +155,96 @@ namespace RustPlusDesk
         /// <summary>A tile's rectangle on screen, in device-independent pixels.</summary>
         private Rect TileScreenRect(CommandDockTile tile)
         {
-            double x = CellScreenX(tile.Col);
-            double y = CellScreenY(tile.Row);
+            if (tile.Kind == CommandDockTileKinds.Map) return MapRect();
 
-            if (tile.Kind == CommandDockTileKinds.Map)
-                return new Rect(x, y, _mapWidth, _mapHeight);
+            return new Rect(
+                CellScreenX(tile.Col), CellScreenY(tile.Row),
+                CellsToPixels(tile.ColSpan), CellsToPixels(tile.RowSpan));
+        }
 
-            return new Rect(x, y, CellsToPixels(tile.ColSpan), CellsToPixels(tile.RowSpan));
+        // ── The map, which is not made of cells ─────────────────────────────────
+
+        /// <summary>
+        /// Where the map is, in screen pixels.
+        ///
+        /// Falls back to its old cell the first time, which is how an arrangement saved before
+        /// the map was freed keeps it roughly where it was.
+        /// </summary>
+        private Rect MapRect()
+        {
+            var map = MapTile;
+            if (map == null) return Rect.Empty;
+
+            double x = _dock.MapX ?? CellScreenX(map.Col);
+            double y = _dock.MapY ?? CellScreenY(map.Row);
+
+            return new Rect(x, y, _mapWidth, _mapHeight);
+        }
+
+        /// <summary>Whether a press landed inside the map rather than on the dock around it.</summary>
+        private bool PressedOnMap(object? originalSource)
+        {
+            if (MapContainer == null || originalSource is not DependencyObject node) return false;
+
+            for (var at = node; at != null; at = System.Windows.Media.VisualTreeHelper.GetParent(at))
+                if (ReferenceEquals(at, MapContainer)) return true;
+
+            return false;
+        }
+
+        /// <summary>Gives the map a position of its own the first time one is needed.</summary>
+        private void EnsureMapPlaced()
+        {
+            if (MapTile == null || (_dock.MapX.HasValue && _dock.MapY.HasValue)) return;
+
+            var rect = MapRect();
+            _dock.MapX = rect.X;
+            _dock.MapY = rect.Y;
+        }
+
+        /// <summary>
+        /// Moves the map by a pointer delta, in pixels and without touching a single cell.
+        ///
+        /// Kept on the monitor rather than snapped to it: the map is free, and the only thing
+        /// it may not do is leave the screen entirely.
+        /// </summary>
+        internal void MoveMapByPixels(double dx, double dy)
+        {
+            if (MapTile == null) return;
+            if (Math.Abs(dx) < 0.5 && Math.Abs(dy) < 0.5) return;
+
+            EnsureMapPlaced();
+
+            var screen = GridScreen;
+            _dock.MapX = Math.Max(screen.Left, Math.Min((_dock.MapX ?? 0) + dx, screen.Right - _mapWidth));
+            _dock.MapY = Math.Max(screen.Top, Math.Min((_dock.MapY ?? 0) + dy, screen.Bottom - _mapHeight));
+
+            SaveDock();
+            LayoutDock();
+        }
+
+        /// <summary>
+        /// The cells the map's rectangle covers, so a widget cannot be dropped underneath it.
+        ///
+        /// This is all the grid knows about the map now. It is asked when something is being
+        /// placed and never otherwise - which is the difference that stops a nudge of the size
+        /// slider from rearranging widgets several columns away.
+        /// </summary>
+        private IEnumerable<(int, int)> MapCoveredCells()
+        {
+            if (!MapOccupiesCells) yield break;
+
+            var rect = MapRect();
+            if (rect.IsEmpty || rect.Width <= 0 || rect.Height <= 0) yield break;
+
+            int fromCol = (int)Math.Floor((rect.X - GridScreen.Left) / CellPitch);
+            int toCol = (int)Math.Ceiling((rect.Right - GridScreen.Left) / CellPitch) - 1;
+            int fromRow = (int)Math.Floor((rect.Y - GridScreen.Top) / CellPitch);
+            int toRow = (int)Math.Ceiling((rect.Bottom - GridScreen.Top) / CellPitch) - 1;
+
+            for (int c = fromCol; c <= toCol; c++)
+                for (int r = fromRow; r <= toRow; r++)
+                    yield return (c, r);
         }
 
         /// <summary>

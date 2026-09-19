@@ -611,9 +611,13 @@ namespace RustPlusDesk
         {
             var placed = new HashSet<(int, int)>();
 
+            // The map is not in here. It has a position rather than a cell, and letting it take
+            // part meant a few pixels of size change could push widgets several columns away.
+            // It is still avoided when something is placed - see OccupiedCells - just never the
+            // thing doing the pushing.
             var ordered = VisibleTiles()
-                .OrderBy(t => t.Kind == CommandDockTileKinds.Map ? 0 : 1)
-                .ThenBy(t => t.Row)
+                .Where(t => t.Kind != CommandDockTileKinds.Map)
+                .OrderBy(t => t.Row)
                 .ThenBy(t => t.Col)
                 .ToList();
 
@@ -648,6 +652,14 @@ namespace RustPlusDesk
                 // red — most visibly on the map, which is large enough to always overlap.
                 if (except != null && other.Id == except.Id) continue;
                 if (!BelongsHere(other)) continue;
+
+                // The map contributes whatever cells its rectangle happens to cover, not a span
+                // it owns - it has no cells of its own any more.
+                if (other.Kind == CommandDockTileKinds.Map)
+                {
+                    foreach (var cell in MapCoveredCells()) taken.Add(cell);
+                    continue;
+                }
 
                 for (int c = other.Col; c < other.Col + other.ColSpan; c++)
                     for (int r = other.Row; r < other.Row + other.RowSpan; r++)
