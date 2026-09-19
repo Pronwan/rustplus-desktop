@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace RustPlusDesk.Models
@@ -345,34 +345,6 @@ namespace RustPlusDesk.Models
         /// a grid at a different pitch is not a grid.
         /// </summary>
         public double GridZoom { get; set; } = 1.0;
-
-        /// <summary>
-        /// Whether <see cref="CommandDockTile.Col"/> and <see cref="CommandDockTile.Row"/> are
-        /// counted from the top-left of the monitor rather than from the dock's own corner.
-        ///
-        /// False in everything saved before that change, and converted once on load using the
-        /// dock position stored beside it. The difference matters because relative cells have no
-        /// fixed zero: the origin was whichever tile happened to be furthest up and left, so it
-        /// moved whenever a tile appeared or disappeared, and every other tile moved with it.
-        /// </summary>
-        public bool CellsAreAbsolute { get; set; }
-
-        /// <summary>
-        /// Where the map sits, in screen pixels, or null before it has been placed freely.
-        ///
-        /// The map is the one thing on the dock that is not made of cells: its size comes from a
-        /// slider, continuously, so it never lines up with a cell boundary. Rounding it up to
-        /// whole cells and then letting it push its neighbours around meant every nudge of that
-        /// slider rearranged the dock - widgets several columns away moved because the map had
-        /// grown by a few pixels.
-        ///
-        /// It now has a position rather than a cell. The grid ignores it, and it ignores the
-        /// grid; the only thing they still share is that a widget cannot be dropped on top of
-        /// it.
-        /// </summary>
-        public double? MapX { get; set; }
-
-        public double? MapY { get; set; }
 
         public const double MinGridZoom = 0.75;
         public const double MaxGridZoom = 2.5;

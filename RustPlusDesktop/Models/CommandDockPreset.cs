@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace RustPlusDesk.Models
@@ -54,20 +54,6 @@ namespace RustPlusDesk.Models
         /// for neither. Null means leave the zoom alone.
         /// </summary>
         public double? GridZoom { get; set; }
-
-        /// <summary>
-        /// Whether this arrangement's cells are counted from the monitor's corner.
-        ///
-        /// False in everything saved before that change. Such an arrangement is placed at the
-        /// dock's current origin instead, which keeps it near where the dock already is rather
-        /// than jumping it to the top-left of the screen.
-        /// </summary>
-        public bool CellsAreAbsolute { get; set; }
-
-        /// <summary>Where the map sat, in screen pixels, or null for an arrangement without one.</summary>
-        public double? MapX { get; set; }
-
-        public double? MapY { get; set; }
     }
 
     public sealed class CommandDockPresetStore

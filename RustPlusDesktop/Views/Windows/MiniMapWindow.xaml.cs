@@ -73,29 +73,8 @@ namespace RustPlusDesk
                 if (PressedOnTileControl(e.OriginalSource)) return;
 
                 startDragPos = e.GetPosition(this);
-
-                double fromLeft = Left, fromTop = Top;
-
                 DragMove();
-
-                // Dragging the map moves the map, not the dock. It has a position of its own
-                // now, so the window Windows just moved has to be handed back and the distance
-                // applied to the thing the pointer was actually on. Everything else - a press
-                // on the dock's background - still moves the arrangement.
-                bool onMap = PressedOnMap(e.OriginalSource);
-
-                double dx = Left - fromLeft, dy = Top - fromTop;
-
-                if (onMap)
-                {
-                    Left = fromLeft;
-                    Top = fromTop;
-                    MoveMapByPixels(dx, dy);
-                }
-                else
-                {
-                    MoveDockByPixels(dx, dy);
-                }
+                ClampToScreen();
             };
             MouseLeftButtonUp += (s, e) =>
             {
@@ -120,15 +99,18 @@ namespace RustPlusDesk
             DockTitleBar.MouseLeftButtonDown += (_, e) =>
             {
                 e.Handled = true;
-
-                double fromLeft = Left, fromTop = Top;
                 DragMove();
-                MoveDockByPixels(Left - fromLeft, Top - fromTop);
+                ClampToScreen();
+                SaveDockPosition();
             };
 
-            // No clamping on LocationChanged any more. The window's position is derived from the
-            // cells, and a cell cannot leave the screen - so a clamp could only ever disagree
-            // with the next layout, which would put it straight back.
+            LocationChanged += (_, __) =>
+            {
+                if (_clamping) return;
+                _clamping = true;
+                try { ClampToScreen(); }
+                finally { _clamping = false; }
+            };
 
             // Runs after every Loaded handler, so the saved position is applied on top of
             // whatever the initial layout and the loaded settings worked out.
@@ -142,6 +124,7 @@ namespace RustPlusDesk
             InitCommandDock();
         }
 
+        private bool _clamping;
 
         /// <summary>
         /// Whether the mini-map is asking the main map to keep building the grid.
@@ -437,33 +420,6 @@ namespace RustPlusDesk
         /// open on the neighbouring screen: "does it fit before the right edge" was asking about
         /// the far edge of the last monitor, not the one the mini-map is on.
         /// </summary>
-        /// <summary>
-        /// The working area of the monitor containing one point, in device-independent pixels.
-        ///
-        /// Used where the window cannot be asked yet - the grid has to know its monitor before
-        /// the first layout, and the window's geometry at that moment is whatever the XAML said.
-        /// </summary>
-        private Rect ScreenBoundsForPoint(double x, double y)
-        {
-            try
-            {
-                double scale = 1.0;
-                var source = PresentationSource.FromVisual(this);
-                if (source?.CompositionTarget != null)
-                    scale = source.CompositionTarget.TransformToDevice.M11;
-                if (scale <= 0) scale = 1.0;
-
-                var at = new System.Drawing.Point((int)Math.Round(x * scale), (int)Math.Round(y * scale));
-                var area = System.Windows.Forms.Screen.FromPoint(at).WorkingArea;
-
-                return new Rect(area.Left / scale, area.Top / scale, area.Width / scale, area.Height / scale);
-            }
-            catch
-            {
-                return ScreenBoundsFor(this);
-            }
-        }
-
         private static Rect ScreenBoundsFor(Window window)
         {
             try
@@ -735,27 +691,60 @@ namespace RustPlusDesk
             // re-measured afterwards would pull the whole dock onto a screen it was never on,
             // following a move it had caused itself. An arrangement is a shape, not a place: it
             // belongs on whichever screen the dock was already sitting on.
-            // The map's cell span follows its free size, so a resize — or simply loading the
-            // saved size after the tiles were placed — can leave neighbours underneath it.
+            var homeScreen = ScreenBoundsFor(this);
+
+            // Cells are the only state; pixels are derived from them, always, everywhere.
+            //
+            // This used to shift the canvas children in pixels when a tile sat left of or above
+            // the origin, and leave their cell coordinates alone. From then on the two disagreed,
+            // and a drop — which reads a pixel position and converts it back through the cell
+            // formula — landed a cell or more away from where it was let go, further every time.
+            // Re-basing the cells instead keeps one grid, and the window takes the opposite move
+            // so the content does not appear to jump.
+            var before = CellBounds();
+
+            // Before normalising: the map's cell span follows its free size, so a resize — or
+            // simply loading the saved size after the tiles were placed — can leave neighbours
+            // underneath it.
             SyncMapCellSpan();
             ResolveOverlaps();
+            NormaliseCells();
 
-            // Cells are places on the monitor, so the window is drawn around whatever is
-            // visible rather than the other way round. Nothing here writes to a tile: the
-            // origin moves the window, never the arrangement.
             var bounds = CellBounds();
 
             ApplyTilePositions();
 
+            // The preview extra grows the window without moving anything, so an arrangement
+            // larger than the dock can be outlined in full.
             Width = Math.Max(1, bounds.Width);
             Height = Math.Max(1, bounds.Height);
 
-            Left = bounds.X;
-            Top = bounds.Y;
+            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            {
+                Left += before.X - bounds.X;
+                Top += before.Y - bounds.Y;
+            }
+
+            // Only meaningful while the map is on the dock; with it gone there is no centre to
+            // hold and the dock simply keeps its own top-left corner.
+            if (mapCentreAnchor is { } anchor && MapContainer.Visibility == Visibility.Visible)
+            {
+                double mx = Canvas.GetLeft(MapContainer);
+                double my = Canvas.GetTop(MapContainer);
+                if (!double.IsNaN(mx) && !double.IsNaN(my))
+                {
+                    Left = anchor.X - (mx + _mapWidth / 2.0);
+                    Top = anchor.Y - (my + _mapHeight / 2.0);
+                }
+            }
+
+            // Structural: the arrangement or the map's size just changed, and there is no
+            // drag in flight for this to fight with.
+            ClampToScreen(pullIntoView: true, screen: homeScreen);
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
-            FollowAiAnswer();
+                FollowAiAnswer();
 
             PositionChrome();
 

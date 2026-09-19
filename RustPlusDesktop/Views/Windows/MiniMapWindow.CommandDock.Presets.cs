@@ -105,9 +105,6 @@ namespace RustPlusDesk
                 MapSize = MapTile != null ? _mapWidth : null,
                 MapShapeIndex = MapTile != null ? _shapeIndex : null,
                 GridZoom = _dock.GridZoom,
-                CellsAreAbsolute = true,
-                MapX = _dock.MapX,
-                MapY = _dock.MapY,
             });
 
             SavePresets(presets);
@@ -151,30 +148,7 @@ namespace RustPlusDesk
             HidePresetPreview();
             CloseTileSettings();
 
-            // Read before the tiles are replaced: it is where the dock is now, which is what an
-            // arrangement without a place of its own should be dropped onto.
-            var (atCol, atRow) = VisibleOrigin();
-
             _dock.Tiles = CopyTiles(preset.Tiles);
-
-            // An arrangement saved before cells were absolute has only a shape, not a place.
-            // Read literally its cells would put it in the corner of the screen.
-            if (!preset.CellsAreAbsolute)
-            {
-                foreach (var tile in _dock.Tiles)
-                {
-                    tile.Col += atCol;
-                    tile.Row += atRow;
-                }
-            }
-
-            _dock.CellsAreAbsolute = true;
-
-            // The map's own position travels with the arrangement, like its size and shape.
-            // Null in one saved before the map was freed, which leaves it where it is.
-            if (preset.MapX.HasValue) _dock.MapX = preset.MapX;
-            if (preset.MapY.HasValue) _dock.MapY = preset.MapY;
-
             _dock.GrowRight = preset.GrowRight;
             _dock.MapRemoved = preset.Tiles.All(t => t.Kind != CommandDockTileKinds.Map);
 
@@ -224,19 +198,11 @@ namespace RustPlusDesk
         /// <summary>Top-right of the working area, where the Mini button first puts it.</summary>
         private void MoveToDefaultCorner()
         {
-            // Expressed in cells, because that is the only position there is now: setting the
-            // window's corner directly would last exactly until the next layout derived it
-            // back from the tiles.
-            var screen = GridScreen;
+            Left = SystemParameters.WorkArea.Right - DefaultMapSize - 20;
+            Top = SystemParameters.WorkArea.Top + 20;
 
-            int col = Math.Max(0, (int)Math.Floor((screen.Width - _mapWidth) / CellPitch));
-            int row = 0;
-
-            var (atCol, atRow) = VisibleOrigin();
-            ShiftAllTiles(col - atCol, row - atRow);
-
-            SaveDock();
-            LayoutDock();
+            ClampToScreen(pullIntoView: true);
+            SaveDockPosition();
             FollowAiAnswer();
         }
 
@@ -278,8 +244,8 @@ namespace RustPlusDesk
             // Uniform, exactly as the live grid is: the map sits over the cells rather than
             // displacing the ones past it. The outline has to agree with what loading the
             // preset will actually produce.
-            double X(int col) => col * PitchFor(previewZoom);
-            double Y(int row) => row * PitchFor(previewZoom);
+            double X(int col) => CommandDockLayout.CellOffset(col, previewZoom);
+            double Y(int row) => CommandDockLayout.CellOffset(row, previewZoom);
 
             var rects = new List<(Rect Rect, bool IsMap)>();
             foreach (var tile in preset.Tiles)
@@ -288,8 +254,8 @@ namespace RustPlusDesk
                 var rect = isMap
                     ? new Rect(X(tile.Col), Y(tile.Row), mapW, mapH)
                     : new Rect(X(tile.Col), Y(tile.Row),
-                        CellsToPixelsFor(tile.ColSpan, previewZoom),
-                        CellsToPixelsFor(tile.RowSpan, previewZoom));
+                        CommandDockLayout.CellsToPixels(tile.ColSpan, previewZoom),
+                        CommandDockLayout.CellsToPixels(tile.RowSpan, previewZoom));
 
                 if (rect.Width <= 0 || rect.Height <= 0) continue;
                 rects.Add((rect, isMap));
