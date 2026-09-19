@@ -654,9 +654,20 @@ namespace RustPlusDesk
         {
             var placed = new HashSet<(int, int)>();
 
+            // The map is not in here, and that is the point.
+            //
+            // It used to be placed first, so it claimed its cells before anything else and every
+            // widget that collided was relocated. Its cell span follows its free pixel size, so
+            // a nudge of the size slider evicted neighbours - and once they had been moved, the
+            // re-basing that follows shifted the whole arrangement, including widgets nowhere
+            // near it. Growing the map now changes nothing but the map: it reaches further right
+            // and further down over cells it does not own.
+            //
+            // It is still in OccupiedCells, so a widget cannot be *dropped* onto it. What it can
+            // no longer do is push one that is already there.
             var ordered = VisibleTiles()
-                .OrderBy(t => t.Kind == CommandDockTileKinds.Map ? 0 : 1)
-                .ThenBy(t => t.Row)
+                .Where(t => t.Kind != CommandDockTileKinds.Map)
+                .OrderBy(t => t.Row)
                 .ThenBy(t => t.Col)
                 .ToList();
 
