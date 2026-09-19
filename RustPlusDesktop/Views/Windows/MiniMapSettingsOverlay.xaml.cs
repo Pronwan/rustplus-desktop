@@ -53,8 +53,11 @@ namespace RustPlusDesk.Views
                 }
 
                 // The dock layout is the window's, not part of MiniMapSettings — it is saved
-                // and loaded with the tiles it describes.
+                // and loaded with the tiles it describes. The zoom belongs to it for the same
+                // reason: an arrangement is saved at a pitch, and carries it.
                 CmbGrowth.SelectedIndex = ParentWindow?.DockGrowsRight == true ? 1 : 0;
+                SliGridZoom.Value = ParentWindow?.DockZoom ?? 1.0;
+                UpdateGridZoomLabel(SliGridZoom.Value);
 
                 // Apply current labels
                 UpdateOpacityLabel(SliOpacity.Value);
@@ -219,6 +222,39 @@ namespace RustPlusDesk.Views
             }
 
             SaveSettings();
+        }
+
+        /// <summary>
+        /// The grid's zoom. Lives on the window, like the shape does - this control shows it and
+        /// writes through, so a second control elsewhere cannot disagree with it.
+        /// </summary>
+        private void SliGridZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UpdateGridZoomLabel(e.NewValue);
+
+            if (_isInitializing || ParentWindow == null) return;
+            ParentWindow.SetGridZoom(e.NewValue);
+        }
+
+        /// <summary>Shows a zoom the window was given from somewhere else, without writing back.</summary>
+        public void SyncGridZoom(double zoom)
+        {
+            if (SliGridZoom == null || Math.Abs(SliGridZoom.Value - zoom) < 0.001) return;
+
+            bool was = _isInitializing;
+            _isInitializing = true;
+            try { SliGridZoom.Value = zoom; }
+            finally { _isInitializing = was; }
+
+            UpdateGridZoomLabel(zoom);
+        }
+
+        private void UpdateGridZoomLabel(double zoom)
+        {
+            if (LblGridZoom == null) return;
+
+            string fmt = Helpers.Loc.Text("CommandDockGridZoomValue", "Widget zoom {0}%");
+            LblGridZoom.Text = string.Format(System.Globalization.CultureInfo.CurrentCulture, fmt, (int)Math.Round(zoom * 100));
         }
 
         private void SliSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

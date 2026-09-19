@@ -7984,4 +7984,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>Teamkollegen</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Widget-Zoom</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Widget-Zoom {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Auf dem Dock lassen, auch wenn es nichts zu löschen gibt</value>
+  </data>
 </root>

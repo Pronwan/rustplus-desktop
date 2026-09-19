@@ -6863,4 +6863,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>Takım arkadaşları</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Widget yakınlaştırma</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Widget yakınlaştırma %{0}</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Silinecek bir şey yokken bile dokta kalsın</value>
+  </data>
 </root>

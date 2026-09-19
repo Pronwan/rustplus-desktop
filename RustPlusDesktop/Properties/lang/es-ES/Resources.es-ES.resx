@@ -7890,4 +7890,13 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>Compañeros</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Zoom de widgets</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Zoom de widgets {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Mantener en el dock aunque no haya nada que borrar</value>
+  </data>
 </root>

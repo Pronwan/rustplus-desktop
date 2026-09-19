@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -293,7 +293,7 @@ namespace RustPlusDesk
 
         /// <summary>How many cells the map's free pixel size needs.</summary>
         private (int Cols, int Rows) MapCellSpan() => MapOccupiesCells
-            ? (CommandDockLayout.PixelsToCells(_mapWidth), CommandDockLayout.PixelsToCells(_mapHeight))
+            ? (CommandDockLayout.PixelsToCells(_mapWidth, DockZoom), CommandDockLayout.PixelsToCells(_mapHeight, DockZoom))
             : (0, 0);
 
         /// <summary>
@@ -307,26 +307,26 @@ namespace RustPlusDesk
         /// </summary>
         private double CellX(int col)
         {
-            double x = CommandDockLayout.CellOffset(col);
+            double x = CommandDockLayout.CellOffset(col, DockZoom);
             var map = MapOccupiesCells ? MapTile : null;
             if (map == null) return x;
 
             var (mapCols, _) = MapCellSpan();
             if (col >= map.Col + mapCols)
-                x += _mapWidth - CommandDockLayout.CellsToPixels(mapCols);
+                x += _mapWidth - CommandDockLayout.CellsToPixels(mapCols, DockZoom);
 
             return x;
         }
 
         private double CellY(int row)
         {
-            double y = CommandDockLayout.CellOffset(row);
+            double y = CommandDockLayout.CellOffset(row, DockZoom);
             var map = MapOccupiesCells ? MapTile : null;
             if (map == null) return y;
 
             var (_, mapRows) = MapCellSpan();
             if (row >= map.Row + mapRows)
-                y += _mapHeight - CommandDockLayout.CellsToPixels(mapRows);
+                y += _mapHeight - CommandDockLayout.CellsToPixels(mapRows, DockZoom);
 
             return y;
         }
@@ -341,8 +341,8 @@ namespace RustPlusDesk
                 return new Rect(x, y, _mapWidth, _mapHeight);
 
             return new Rect(x, y,
-                CommandDockLayout.CellsToPixels(tile.ColSpan),
-                CommandDockLayout.CellsToPixels(tile.RowSpan));
+                CommandDockLayout.CellsToPixels(tile.ColSpan, DockZoom),
+                CommandDockLayout.CellsToPixels(tile.RowSpan, DockZoom));
         }
 
         /// <summary>
@@ -392,6 +392,14 @@ namespace RustPlusDesk
             // is invisible exactly while it is being placed cannot be placed at all.
             if (tile.Kind == CommandDockTileKinds.DeathTrack &&
                 !tile.DeathTrackAlwaysVisible && !PlayerIsDead && _dock.Locked)
+            {
+                return false;
+            }
+
+            // Nothing on the map to clear, same rule: the cells go back until there is, and
+            // unlocking brings the tile out so it can be placed.
+            if (tile.Kind == CommandDockTileKinds.DeathWipe &&
+                !tile.DeathWipeAlwaysVisible && DeathMarkerCount == 0 && _dock.Locked)
             {
                 return false;
             }
@@ -499,7 +507,7 @@ namespace RustPlusDesk
         private CommandDockTile? _draggingTile;
         private (int Col, int Row)? _dropTarget;
 
-        private static double CellPitch => CommandDockLayout.CellSize + CommandDockLayout.CellGap;
+        private double CellPitch => CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
 
         private void BeginDragPreview(CommandDockTile tile)
         {
@@ -545,12 +553,12 @@ namespace RustPlusDesk
                 {
                     double y = CellY(row) + _dragPad;
                     if (y >= Height) break;
-                    if (x + CommandDockLayout.CellSize <= 0 || y + CommandDockLayout.CellSize <= 0) continue;
+                    if (x + CommandDockLayout.CellSizeAt(DockZoom) <= 0 || y + CommandDockLayout.CellSizeAt(DockZoom) <= 0) continue;
 
                     var cell = new System.Windows.Shapes.Rectangle
                     {
-                        Width = CommandDockLayout.CellSize,
-                        Height = CommandDockLayout.CellSize,
+                        Width = CommandDockLayout.CellSizeAt(DockZoom),
+                        Height = CommandDockLayout.CellSizeAt(DockZoom),
                         RadiusX = 8,
                         RadiusY = 8,
                         Stroke = line,
@@ -853,7 +861,41 @@ namespace RustPlusDesk
         };
 
         /// <summary>What the dock was last built for, so a change of state is noticed.</summary>
+        /// <summary>
+        /// How much bigger than its base size the grid is drawn right now.
+        ///
+        /// Read through a property rather than the field so every measurement goes through the
+        /// same clamp: a layout file edited by hand, or written by a build that allowed a wider
+        /// range, must not be able to produce a cell of zero pixels.
+        /// </summary>
+        internal double DockZoom => CommandDockLayout.ClampZoom(_dock.GridZoom);
+
+        /// <summary>
+        /// Changes the grid's pitch, and everything measured against it.
+        ///
+        /// A full rebuild rather than a re-layout: the tiles' contents are sized from the zoom
+        /// too - see StyleFor - so their elements have to be built again, not just moved. The
+        /// map keeps its own size, which is set in pixels by its slider and is not a number of
+        /// cells; only how many cells it covers changes, which is what the auto-arrange needs.
+        /// </summary>
+        internal void SetGridZoom(double zoom)
+        {
+            zoom = CommandDockLayout.ClampZoom(zoom);
+            if (Math.Abs(zoom - _dock.GridZoom) < 0.001) return;
+
+            _dock.GridZoom = zoom;
+            SaveDock();
+
+            SettingsOverlay?.SyncGridZoom(zoom);
+            RebuildTiles();
+        }
+
         private bool _lastPlayerDead;
+
+        /// <summary>Whether the map had any death markers last tick, so the crossing is noticed.</summary>
+        private bool _lastHadDeathMarkers;
+
+        private int DeathMarkerCount => DockHost?.DockDeathMarkerCount ?? 0;
 
         private void RefreshTiles()
         {
@@ -877,6 +919,21 @@ namespace RustPlusDesk
                 _lastPlayerDead = dead;
 
                 if (_dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.DeathTrack))
+                {
+                    RebuildTiles();
+                    return;
+                }
+            }
+
+            // Markers appearing or all of them going is the same kind of change for the wipe
+            // tile: it holds cells in one state and not the other. Only the crossing matters,
+            // not the count - that is the tile's own refresher.
+            bool hasMarkers = DeathMarkerCount > 0;
+            if (hasMarkers != _lastHadDeathMarkers)
+            {
+                _lastHadDeathMarkers = hasMarkers;
+
+                if (_dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.DeathWipe && !t.DeathWipeAlwaysVisible))
                 {
                     RebuildTiles();
                     return;
@@ -1884,7 +1941,7 @@ namespace RustPlusDesk
             {
                 if (!sizing) return;
                 var now = e.GetPosition(DockCanvas);
-                double step = CommandDockLayout.CellSize + CommandDockLayout.CellGap;
+                double step = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
 
                 int minCols = tile.Kind is CommandDockTileKinds.TeamChat
                                          or CommandDockTileKinds.ClanChat

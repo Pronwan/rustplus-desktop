@@ -8065,4 +8065,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>Teammates</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Widget zoom</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Widget zoom {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Keep on the dock when there is nothing to clear</value>
+  </data>
 </root>

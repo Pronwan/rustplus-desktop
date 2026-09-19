@@ -93,9 +93,9 @@ namespace RustPlusDesk
 
                 count.Text = n > 0 ? n.ToString() : "";
 
-                // Nothing to clear reads as nothing to press. The tile stays where it is rather
-                // than disappearing, because a button that comes and goes is a button you cannot
-                // build a layout around.
+                // Only reachable with no markers while the dock is unlocked or the tile was set
+                // to stay - otherwise it has given its cells back. Dimmed either way, so the
+                // state is readable while arranging.
                 icon.Opacity = n > 0 ? 0.9 : 0.35;
                 shell.Opacity = n > 0 ? 1.0 : 0.6;
 

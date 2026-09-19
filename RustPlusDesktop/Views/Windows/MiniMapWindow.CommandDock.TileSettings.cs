@@ -693,6 +693,11 @@ namespace RustPlusDesk
                     box.Children.Add(SettingsLabel(Loc.Text("CommandDockDeathWipeKeepHint",
                         "Keeping the last one keeps the newest marker for you and for each teammate.")));
 
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockDeathWipeAlwaysVisible", "Keep on the dock when there is nothing to clear"),
+                        tile.DeathWipeAlwaysVisible,
+                        on => { tile.DeathWipeAlwaysVisible = on; TileSettingChanged(immediate: true); }));
+
                     return box;
                 }
 

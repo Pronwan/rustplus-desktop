@@ -43,6 +43,17 @@ namespace RustPlusDesk.Models
         /// a setting the user made somewhere else entirely.
         /// </summary>
         public int? MapShapeIndex { get; set; }
+
+        /// <summary>
+        /// The grid zoom this arrangement was built at, or null for one saved before zoom
+        /// existed.
+        ///
+        /// Has to travel with the tiles for the same reason the map's size does: the cells are
+        /// a different number of pixels at a different zoom, so an arrangement restored at the
+        /// wrong one is the right shape at the wrong scale, and the window around it is sized
+        /// for neither. Null means leave the zoom alone.
+        /// </summary>
+        public double? GridZoom { get; set; }
     }
 
     public sealed class CommandDockPresetStore

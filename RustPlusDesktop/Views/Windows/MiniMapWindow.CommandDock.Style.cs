@@ -47,6 +47,16 @@ namespace RustPlusDesk
         {
             double opacity = Math.Clamp(tile.Opacity ?? _dock.DefaultOpacity, 0, 1);
             double scale = Math.Clamp(tile.FontScale ?? _dock.DefaultFontScale, 0.7, 2.0);
+
+            // The grid's zoom rides on the font scale rather than being a second knob the
+            // builders have to remember. Every tile already sizes its text and its icons through
+            // Size(), so folding it in here is what makes a bigger cell hold bigger contents
+            // instead of the same small ones in more empty space.
+            //
+            // Clamped after multiplying, not before: the two have different jobs - the tile's
+            // scale is a preference, the zoom is the pitch of the grid - and a tile set to 2.0
+            // on a grid at 2.0 would otherwise silently lose one of them.
+            scale = Math.Clamp(scale * DockZoom, 0.7, 4.0);
             string key = tile.TextColorKey ?? _dock.DefaultTextColorKey ?? CommandDockTextColors.Auto;
 
             var (main, sub) = TextBrushes(key);

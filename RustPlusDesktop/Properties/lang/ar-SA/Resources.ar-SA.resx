@@ -7781,4 +7781,13 @@
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>الزملاء</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>تكبير الودجات</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>تكبير الودجات {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>الإبقاء عليه في الشريط حتى دون وجود ما يُمسح</value>
+  </data>
 </root>

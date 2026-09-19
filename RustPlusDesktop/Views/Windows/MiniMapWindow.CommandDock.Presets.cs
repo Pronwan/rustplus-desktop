@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -53,6 +53,9 @@ namespace RustPlusDesk
             // The one preset that does state a shape. It is the way back to the beginning, and a
             // dock still showing a 16:9 strip is not back at the beginning.
             MapShapeIndex = 0,
+
+            // Same reasoning: back to the beginning means back to the original pitch.
+            GridZoom = 1.0,
         };
 
         /// <summary>A saved arrangement, or the built-in one. Null for an id that is neither.</summary>
@@ -101,6 +104,7 @@ namespace RustPlusDesk
                 GrowRight = _dock.GrowRight,
                 MapSize = MapTile != null ? _mapWidth : null,
                 MapShapeIndex = MapTile != null ? _shapeIndex : null,
+                GridZoom = _dock.GridZoom,
             });
 
             SavePresets(presets);
@@ -154,6 +158,10 @@ namespace RustPlusDesk
             // to the tiles that were just replaced, and UpdateSize only repositions what is
             // already there.
             RebuildTiles();
+
+            // Zoom first: it changes how many pixels a cell is, which both the shape and the
+            // size calculations below are measured against.
+            if (preset.GridZoom is { } zoom) SetGridZoom(zoom);
 
             // Shape before size: UpdateSize derives the height and the corner radius from it, so
             // setting it afterwards would lay the dock out once against the wrong footprint.
@@ -209,6 +217,10 @@ namespace RustPlusDesk
             EnsurePreviewCanvas();
             _presetPreview!.Children.Clear();
 
+            // The preset's own zoom, not the dock's: the outline is of the arrangement as saved,
+            // and drawing it at the live pitch would show the right shape at the wrong scale.
+            double previewZoom = CommandDockLayout.ClampZoom(preset.GridZoom ?? DockZoom);
+
             double mapW = preset.MapSize ?? 0;
 
             // The preset carries its shape, so the outline can be the footprint the arrangement
@@ -218,13 +230,13 @@ namespace RustPlusDesk
             double mapH = previewShape == 2 ? mapW * 9.0 / 16.0 : mapW;
 
             var map = preset.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.Map);
-            int mapCols = mapW > 0 ? CommandDockLayout.PixelsToCells(mapW) : 0;
-            int mapRows = mapH > 0 ? CommandDockLayout.PixelsToCells(mapH) : 0;
+            int mapCols = mapW > 0 ? CommandDockLayout.PixelsToCells(mapW, previewZoom) : 0;
+            int mapRows = mapH > 0 ? CommandDockLayout.PixelsToCells(mapH, previewZoom) : 0;
 
-            double X(int col) => CommandDockLayout.CellOffset(col)
-                + (map != null && col >= map.Col + mapCols ? mapW - CommandDockLayout.CellsToPixels(mapCols) : 0);
-            double Y(int row) => CommandDockLayout.CellOffset(row)
-                + (map != null && row >= map.Row + mapRows ? mapH - CommandDockLayout.CellsToPixels(mapRows) : 0);
+            double X(int col) => CommandDockLayout.CellOffset(col, previewZoom)
+                + (map != null && col >= map.Col + mapCols ? mapW - CommandDockLayout.CellsToPixels(mapCols, previewZoom) : 0);
+            double Y(int row) => CommandDockLayout.CellOffset(row, previewZoom)
+                + (map != null && row >= map.Row + mapRows ? mapH - CommandDockLayout.CellsToPixels(mapRows, previewZoom) : 0);
 
             var rects = new List<(Rect Rect, bool IsMap)>();
             foreach (var tile in preset.Tiles)
@@ -233,8 +245,8 @@ namespace RustPlusDesk
                 var rect = isMap
                     ? new Rect(X(tile.Col), Y(tile.Row), mapW, mapH)
                     : new Rect(X(tile.Col), Y(tile.Row),
-                        CommandDockLayout.CellsToPixels(tile.ColSpan),
-                        CommandDockLayout.CellsToPixels(tile.RowSpan));
+                        CommandDockLayout.CellsToPixels(tile.ColSpan, previewZoom),
+                        CommandDockLayout.CellsToPixels(tile.RowSpan, previewZoom));
 
                 if (rect.Width <= 0 || rect.Height <= 0) continue;
                 rects.Add((rect, isMap));

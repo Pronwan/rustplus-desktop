@@ -7890,4 +7890,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>Союзники</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Масштаб виджетов</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Масштаб виджетов {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Оставлять на доке, даже когда нечего очищать</value>
+  </data>
 </root>

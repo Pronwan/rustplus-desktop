@@ -7811,4 +7811,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="DeathMarkerKeepTeam" xml:space="preserve">
     <value>팀원</value>
   </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>위젯 확대</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>위젯 확대 {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>지울 것이 없어도 독에 유지</value>
+  </data>
 </root>
