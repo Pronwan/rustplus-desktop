@@ -83,7 +83,11 @@ namespace RustPlusDesk
 
             // The dock can be dragged to another monitor, and the overlay has to follow it -
             // a grid painted on the screen the dock used to be on describes nothing.
+            //
+            // Size as well as position: which monitor the dock is mostly on can change by it
+            // growing, without its corner moving at all.
             LocationChanged += (_, __) => PositionOverlay();
+            SizeChanged += (_, __) => PositionOverlay();
 
             InitArming();
 
@@ -292,6 +296,10 @@ namespace RustPlusDesk
             // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
             // because it is the only way back to locking it.
             if (!locked) _overlay?.ShowBar(true);
+
+            // ...and while arranging, both windows take focus like ordinary ones. Never taking
+            // it is right for using the dock over a running game and wrong for building it.
+            SetEditModeFocus(!locked);
 
             if (LockGlyph == null || BtnLockDock == null) return;
 

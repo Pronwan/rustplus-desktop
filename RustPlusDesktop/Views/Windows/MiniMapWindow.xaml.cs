@@ -424,18 +424,32 @@ namespace RustPlusDesk
         {
             try
             {
-                var origin = new System.Drawing.Point(
-                    (int)(double.IsNaN(window.Left) ? 0 : window.Left),
-                    (int)(double.IsNaN(window.Top) ? 0 : window.Top));
-
-                var area = System.Windows.Forms.Screen.FromPoint(origin).WorkingArea;
-
-                // Screen reports physical pixels; Window.Left is device-independent.
+                // Screen speaks physical pixels; Window.Left is device-independent. The scale
+                // has to be applied on the way in as well as on the way out - passing raw DIPs
+                // to Screen picked the wrong monitor on any display that is not at 100%.
                 double scale = 1.0;
                 var source = PresentationSource.FromVisual(window);
                 if (source?.CompositionTarget != null)
                     scale = source.CompositionTarget.TransformToDevice.M11;
                 if (scale <= 0) scale = 1.0;
+
+                double left = double.IsNaN(window.Left) ? 0 : window.Left;
+                double top = double.IsNaN(window.Top) ? 0 : window.Top;
+                double width = double.IsNaN(window.Width) || window.Width <= 0 ? 1 : window.Width;
+                double height = double.IsNaN(window.Height) || window.Height <= 0 ? 1 : window.Height;
+
+                // By the whole window rather than its top-left corner. FromRectangle picks the
+                // monitor the window mostly covers, which is the one somebody would point at.
+                //
+                // The corner was actively wrong: growing the map holds its centre still, so the
+                // dock's left edge travels outwards as it gets bigger. Cross a monitor boundary
+                // with that one pixel and the overlay - the grid and the bar with it - moved to
+                // the other screen, while the dock stayed where it was.
+                var rect = new System.Drawing.Rectangle(
+                    (int)Math.Round(left * scale), (int)Math.Round(top * scale),
+                    (int)Math.Round(width * scale), (int)Math.Round(height * scale));
+
+                var area = System.Windows.Forms.Screen.FromRectangle(rect).WorkingArea;
 
                 return new Rect(area.Left / scale, area.Top / scale, area.Width / scale, area.Height / scale);
             }

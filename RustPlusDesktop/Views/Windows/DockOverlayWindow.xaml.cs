@@ -69,6 +69,35 @@ namespace RustPlusDesk.Views.Windows
             SetWindowLongPtr(hwnd, GWL_EXSTYLE, (IntPtr)(styles | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW));
         }
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        /// <summary>
+        /// Lets the overlay be activated while the dock is being arranged.
+        ///
+        /// NOACTIVATE is right for using the dock - a press on a widget should not take the game
+        /// out of focus. It is wrong for arranging it: a window that is never active gets its
+        /// input behind whatever is in front, and with the game running that reads as lag on
+        /// every drag and every drag of the zoom slider. Arranging is a deliberate, short mode
+        /// where the app is what the user is looking at, so for its duration the overlay becomes
+        /// an ordinary window.
+        /// </summary>
+        public void SetEditable(bool editing)
+        {
+            var hwnd = new WindowInteropHelper(this).Handle;
+            if (hwnd == IntPtr.Zero) return;
+
+            var styles = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
+            long next = editing
+                ? styles & ~(long)WS_EX_NOACTIVATE
+                : styles | WS_EX_NOACTIVATE;
+
+            if (next != styles) SetWindowLongPtr(hwnd, GWL_EXSTYLE, (IntPtr)next);
+
+            if (editing) SetForegroundWindow(hwnd);
+        }
+
         // ── Placement ───────────────────────────────────────────────────────────
 
         /// <summary>Lays the overlay over one screen, in device-independent pixels.</summary>

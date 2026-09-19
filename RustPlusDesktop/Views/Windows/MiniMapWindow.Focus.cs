@@ -96,6 +96,31 @@ namespace RustPlusDesk
             }
         }
 
+        /// <summary>Whether the edit mode is currently one of the things holding focus open.</summary>
+        private bool _editFocusHeld;
+
+        /// <summary>
+        /// Unlocking the dock puts both windows into the foreground; locking gives it back.
+        ///
+        /// Arranging is a mode the user entered on purpose, and while they are in it the app is
+        /// what they are looking at - so it behaves like an ordinary window and responds like
+        /// one. Locked, both go back to never taking focus, which is what makes a widget usable
+        /// mid-game without pulling the game out from under it.
+        ///
+        /// Idempotent, because it is called from ApplyLockState, which also runs on load: going
+        /// through the same counter as the text boxes means an unbalanced call would leave the
+        /// dock permanently activatable.
+        /// </summary>
+        internal void SetEditModeFocus(bool editing)
+        {
+            _overlay?.SetEditable(editing);
+
+            if (editing == _editFocusHeld) return;
+            _editFocusHeld = editing;
+
+            HoldKeyboardFocus(editing);
+        }
+
         /// <summary>
         /// Wires a text box so the dock can be typed into while it has focus.
         ///
