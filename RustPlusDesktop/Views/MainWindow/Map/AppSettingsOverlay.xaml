@@ -902,6 +902,7 @@
                 <ui:TextBlock x:Name="CloudSettingsAnchor" Text="{DynamicResource UiCloudAccountSync}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
+                <ui:Button Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCloud247_Click" />
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Info24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCompareCloud_Click" />
 
                 <!-- Cloud Account Buttons: Discord + Email side by side -->
