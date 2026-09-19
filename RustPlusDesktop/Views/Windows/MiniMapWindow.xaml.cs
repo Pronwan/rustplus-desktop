@@ -629,18 +629,6 @@ namespace RustPlusDesk
             {
                 newSize = Math.Max(160, Math.Min(newSize, 800));
 
-                // Where the map's middle sits on screen right now. Read before the new size is
-                // applied, because that is the point the resize has to leave alone.
-                Point? anchor = null;
-                if (!double.IsNaN(Left) && !double.IsNaN(Top))
-                {
-                    double mx = Canvas.GetLeft(MapContainer);
-                    double my = Canvas.GetTop(MapContainer);
-                    anchor = new Point(
-                        Left + (double.IsNaN(mx) ? 0 : mx) + _mapWidth / 2.0,
-                        Top + (double.IsNaN(my) ? 0 : my) + _mapHeight / 2.0);
-                }
-
                 _mapWidth = newSize;
                 _mapHeight = _shapeIndex == 2 ? newSize * 9.0 / 16.0 : newSize;
 
@@ -657,9 +645,9 @@ namespace RustPlusDesk
                 _mapCornerRadius = cornerRadius;
                 ApplyMapClip();
 
-                // LayoutDock re-derives every tile's position from its cell, which is all a
-                // resize needs: the map's cell span changed, so the seam moved with it.
-                LayoutDock(anchor);
+                // The map grows from its top-left corner, so nothing else has to move: that
+                // corner is what its cell names, and every other tile sits on its own.
+                LayoutDock();
 
                 if (updateSlider && SettingsOverlay != null)
                     SettingsOverlay.UpdateSliderValue(newSize);
@@ -676,11 +664,10 @@ namespace RustPlusDesk
         /// <summary>
         /// Sizes the window to the bounding box of the map tile and every command tile.
         ///
-        /// <paramref name="mapCentreAnchor"/> is the screen point the map's middle held before
-        /// the change; the window is placed so it still holds it. Anything that moves the window
-        /// runs through here, so the settings popup can be held still at the same time.
+        /// Anything that moves the window runs through here, so the settings popup can be held
+        /// still at the same time.
         /// </summary>
-        private void LayoutDock(Point? mapCentreAnchor = null)
+        private void LayoutDock()
         {
             double oldLeft = Left, oldTop = Top;
 
@@ -725,18 +712,11 @@ namespace RustPlusDesk
                 Top += before.Y - bounds.Y;
             }
 
-            // Only meaningful while the map is on the dock; with it gone there is no centre to
-            // hold and the dock simply keeps its own top-left corner.
-            if (mapCentreAnchor is { } anchor && MapContainer.Visibility == Visibility.Visible)
-            {
-                double mx = Canvas.GetLeft(MapContainer);
-                double my = Canvas.GetTop(MapContainer);
-                if (!double.IsNaN(mx) && !double.IsNaN(my))
-                {
-                    Left = anchor.X - (mx + _mapWidth / 2.0);
-                    Top = anchor.Y - (my + _mapHeight / 2.0);
-                }
-            }
+            // The map used to be re-anchored by its middle here, so that a resize left that
+            // point still. The cost was that growing the map moved the window up and left by
+            // half the growth - and every other widget with it, since they are drawn relative
+            // to the window. It grows from its top-left corner now, which is the corner its
+            // cell names, so a resize reaches right and down and disturbs nothing.
 
             // Structural: the arrangement or the map's size just changed, and there is no
             // drag in flight for this to fight with.
