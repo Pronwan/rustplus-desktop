@@ -329,39 +329,26 @@ namespace RustPlusDesk
             : (0, 0);
 
         /// <summary>
-        /// The left edge of a column.
+        /// The left edge of a column. The grid is uniform, everywhere, always.
         ///
-        /// The grid is uniform except for one seam. The map keeps a free pixel size but reserves
-        /// whole cells, and its cell allotment is always a little wider than it is — so every
-        /// column past the map shifts by that difference and closes the gap. The shift applies
-        /// at every row, not only beside the map, or a tile underneath would fall out of line
-        /// with the tile above it.
+        /// It used to have a seam. The map keeps a free pixel size but reserves whole cells, and
+        /// its allotment is a little bigger than it is, so every column past the map shifted by
+        /// that difference to close the gap - at every row, not just beside the map, or a tile
+        /// underneath would have fallen out of line with the one above it.
+        ///
+        /// That made the grid depend on a pixel value the size slider changes continuously: the
+        /// snap points moved as the map was resized, and the grid drawn during a drag could not
+        /// show where a tile would actually land. The map now sits over the grid instead of
+        /// displacing it - it still snaps its own corner to a cell and still reserves cells so
+        /// nothing lands underneath it, but it no longer moves anything else.
+        ///
+        /// The cost is the gap the seam used to close: up to one cell between the map's edge and
+        /// the next tile, since the reservation rounds up. That one is predictable and can be
+        /// closed by choosing the map's size; a grid that moved could not be.
         /// </summary>
-        private double CellX(int col)
-        {
-            double x = CommandDockLayout.CellOffset(col, DockZoom);
-            var map = MapOccupiesCells ? MapTile : null;
-            if (map == null) return x;
+        private double CellX(int col) => CommandDockLayout.CellOffset(col, DockZoom);
 
-            var (mapCols, _) = MapCellSpan();
-            if (col >= map.Col + mapCols)
-                x += _mapWidth - CommandDockLayout.CellsToPixels(mapCols, DockZoom);
-
-            return x;
-        }
-
-        private double CellY(int row)
-        {
-            double y = CommandDockLayout.CellOffset(row, DockZoom);
-            var map = MapOccupiesCells ? MapTile : null;
-            if (map == null) return y;
-
-            var (_, mapRows) = MapCellSpan();
-            if (row >= map.Row + mapRows)
-                y += _mapHeight - CommandDockLayout.CellsToPixels(mapRows, DockZoom);
-
-            return y;
-        }
+        private double CellY(int row) => CommandDockLayout.CellOffset(row, DockZoom);
 
         /// <summary>A tile's pixel rect. The map is the one tile whose size is not cell-derived.</summary>
         private Rect CellRect(CommandDockTile tile)

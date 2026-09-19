@@ -229,14 +229,11 @@ namespace RustPlusDesk
             int previewShape = preset.MapShapeIndex ?? _shapeIndex;
             double mapH = previewShape == 2 ? mapW * 9.0 / 16.0 : mapW;
 
-            var map = preset.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.Map);
-            int mapCols = mapW > 0 ? CommandDockLayout.PixelsToCells(mapW, previewZoom) : 0;
-            int mapRows = mapH > 0 ? CommandDockLayout.PixelsToCells(mapH, previewZoom) : 0;
-
-            double X(int col) => CommandDockLayout.CellOffset(col, previewZoom)
-                + (map != null && col >= map.Col + mapCols ? mapW - CommandDockLayout.CellsToPixels(mapCols, previewZoom) : 0);
-            double Y(int row) => CommandDockLayout.CellOffset(row, previewZoom)
-                + (map != null && row >= map.Row + mapRows ? mapH - CommandDockLayout.CellsToPixels(mapRows, previewZoom) : 0);
+            // Uniform, exactly as the live grid is: the map sits over the cells rather than
+            // displacing the ones past it. The outline has to agree with what loading the
+            // preset will actually produce.
+            double X(int col) => CommandDockLayout.CellOffset(col, previewZoom);
+            double Y(int row) => CommandDockLayout.CellOffset(row, previewZoom);
 
             var rects = new List<(Rect Rect, bool IsMap)>();
             foreach (var tile in preset.Tiles)
