@@ -487,11 +487,20 @@ namespace RustPlusDesk
         /// </summary>
         private void NormaliseCells()
         {
-            var visible = VisibleTiles().ToList();
-            if (visible.Count == 0) return;
+            // Measured over every tile, not just the visible ones, although only the visible
+            // ones are what the window is sized around.
+            //
+            // Which tiles are visible changes on its own: the death tracker is hidden while you
+            // are alive, the wipe tile while the map has no markers, a device tile while another
+            // server is in front. Taking the minimum over that set and subtracting it from all
+            // of them meant the whole arrangement slid left whenever the leftmost visible tile
+            // happened to be one of those - and since this writes to tile.Col, the slide stuck.
+            // Loading the same template again put it back, because by then the tile was visible
+            // and the minimum was zero, which is why it looked like the first load was wrong.
+            if (_dock.Tiles.Count == 0) return;
 
-            int minCol = visible.Min(t => t.Col);
-            int minRow = visible.Min(t => t.Row);
+            int minCol = _dock.Tiles.Min(t => t.Col);
+            int minRow = _dock.Tiles.Min(t => t.Row);
             if (minCol == 0 && minRow == 0) return;
 
             foreach (var tile in _dock.Tiles)
