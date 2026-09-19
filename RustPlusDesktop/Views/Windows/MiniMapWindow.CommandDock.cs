@@ -147,7 +147,9 @@ namespace RustPlusDesk
             double dLeft = left - Left, dTop = top - Top;
             Left = left;
             Top = top;
-            ClampToScreen();
+            // Coming back from a saved position: a monitor may have been unplugged or the
+            // resolution changed since, so the dock has to be pulled somewhere visible.
+            ClampToScreen(pullIntoView: true);
             HoldSettingsPopupInPlace(dLeft, dTop);
             FollowAiAnswer();
         }

@@ -672,6 +672,15 @@ namespace RustPlusDesk
         {
             double oldLeft = Left, oldTop = Top;
 
+            // The monitor the dock is on *now*, before its size changes.
+            //
+            // Applying a wide arrangement grows the window rightwards, and once it reaches far
+            // enough the monitor it mostly covers becomes the next one along - so a clamp that
+            // re-measured afterwards would pull the whole dock onto a screen it was never on,
+            // following a move it had caused itself. An arrangement is a shape, not a place: it
+            // belongs on whichever screen the dock was already sitting on.
+            var homeScreen = ScreenBoundsFor(this);
+
             // Cells are the only state; pixels are derived from them, always, everywhere.
             //
             // This used to shift the canvas children in pixels when a tile sat left of or above
@@ -717,7 +726,9 @@ namespace RustPlusDesk
                 }
             }
 
-            ClampToScreen();
+            // Structural: the arrangement or the map's size just changed, and there is no
+            // drag in flight for this to fight with.
+            ClampToScreen(pullIntoView: true, screen: homeScreen);
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
@@ -761,30 +772,52 @@ namespace RustPlusDesk
         /// A dock genuinely larger than the screen still hangs off, because it has to; the strip
         /// is what stays reachable then.
         /// </summary>
-        private void ClampToScreen()
+        /// <summary>
+        /// Keeps the dock somewhere it can be reached and, when asked, fully in view.
+        ///
+        /// <paramref name="pullIntoView"/> separates two jobs that were one and must not be.
+        ///
+        /// While the dock is being dragged, only reachability matters, and a strip of 120 pixels
+        /// is the whole rule. Pulling it fully onto a monitor mid-drag makes a monitor boundary
+        /// impossible to cross: the dock is still mostly on the screen it is leaving, so that is
+        /// the screen the clamp measures against, and it hauls it back on every mouse move. The
+        /// dock ends up stuck on one monitor with no way off it.
+        ///
+        /// After a structural change - a template applied, the map resized - there is no drag to
+        /// fight, and reachability is not enough. That is when a dock that fits gets pulled fully
+        /// into view, so a wide arrangement loaded while the dock sat near an edge cannot leave
+        /// its right-hand widgets off the screen.
+        /// </summary>
+        /// <param name="screen">
+        /// The monitor to clamp against, when the caller knows better than the current geometry
+        /// does - a layout change measures the screen before it resizes the window, because
+        /// growing the window can move it onto the next monitor and the clamp must not chase it
+        /// there. Null asks for whichever monitor the dock mostly covers right now.
+        /// </param>
+        private void ClampToScreen(bool pullIntoView = false, Rect? screen = null)
         {
             if (double.IsNaN(Left) || double.IsNaN(Top)) return;
 
             const double grabbable = 120;
-            var screen = ScreenBoundsFor(this);
+            var bounds = screen ?? ScreenBoundsFor(this);
 
-            double top = Math.Max(screen.Top, Top);
+            double top = Math.Max(bounds.Top, Top);
 
             // Nothing below the bottom edge either, unless the dock is taller than the screen —
             // then the top wins, because that is where the handle is.
-            if (top + Height > screen.Bottom)
-                top = Math.Max(screen.Top, screen.Bottom - Height);
+            if (top + Height > bounds.Bottom)
+                top = Math.Max(bounds.Top, bounds.Bottom - Height);
 
             double left;
-            if (Width <= screen.Width)
+            if (pullIntoView && Width <= bounds.Width)
             {
-                left = Math.Min(Left, screen.Right - Width);
-                left = Math.Max(left, screen.Left);
+                left = Math.Min(Left, bounds.Right - Width);
+                left = Math.Max(left, bounds.Left);
             }
             else
             {
-                left = Math.Min(Left, screen.Right - grabbable);
-                left = Math.Max(left, screen.Left - Math.Max(0, Width - grabbable));
+                left = Math.Min(Left, bounds.Right - grabbable);
+                left = Math.Max(left, bounds.Left - Math.Max(0, Width - grabbable));
             }
 
             if (Math.Abs(left - Left) > 0.01) Left = left;

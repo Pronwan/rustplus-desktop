@@ -184,7 +184,7 @@ namespace RustPlusDesk
             Left = SystemParameters.WorkArea.Right - DefaultMapSize - 20;
             Top = SystemParameters.WorkArea.Top + 20;
 
-            ClampToScreen();
+            ClampToScreen(pullIntoView: true);
             SaveDockPosition();
             FollowAiAnswer();
         }

@@ -7905,4 +7905,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockLock" xml:space="preserve">
     <value>Заблокировать оверлей</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>Общее</value>
+  </data>
 </root>

@@ -7999,4 +7999,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockLock" xml:space="preserve">
     <value>Overlay sperren</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
 </root>

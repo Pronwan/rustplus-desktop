@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- NEW v10.0.0 HERO PATCH NOTES -->
+                            <!-- v10.0.1 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_0_0"
+                            <Border x:Name="Card_v10_0_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -224,12 +224,119 @@
                                     Padding="16"
                                     Margin="0,0,0,16">
                                 <StackPanel>
-                                    <!-- Header Banner -->
                                     <Grid Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.0.1 | Widget Overlay Rework"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            The grid you arrange widgets on now covers the whole screen instead of being cut off at the edge of the dock, and the bar that arranges it sits at the top of your monitor. That fixes a handful of things at once: the overlay no longer walks down the screen a little further with every widget you place, widgets no longer take focus away from the game when you press them, and a saved arrangement lands where its preview said it would. Along the way the widgets learned to be bigger — there is a zoom for the whole grid now, which is the thing 4K screens were missing.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!--  The one change that needs saying out loud: the gesture for entering edit
+                                          mode is different, and nobody will find it by accident.  -->
+                                    <Border Background="#1A3FD7FF" BorderBrush="#663FD7FF" BorderThickness="1" CornerRadius="8"
+                                            Padding="12,10" Margin="0,0,0,14">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="ArrowUp24" Foreground="{DynamicResource Accent}" FontSize="17"
+                                                           VerticalAlignment="Top" Margin="0,1,10,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="How to edit the overlay now"
+                                                           FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Accent}" Margin="0,0,0,3"/>
+                                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="19" Foreground="{DynamicResource TextPrimary}">
+                                                    Move your mouse to the very top edge of the screen and hold it there for half a second — the overlay bar fades in, and its padlock unlocks the grid. Hovering a widget no longer brings the bar out. That was the whole problem with it: resting on a timer or holding over a switch while playing armed the delete buttons, which is the last thing you want mid-raid. The top edge is somewhere the mouse only goes on purpose.
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Overlay -->
+                                    <StackPanel Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                <ui:SymbolIcon Symbol="Grid24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Text="The Overlay" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Grid Across the Screen:</Run>
+                                            Dragging a widget now shows every cell it could land in, all the way to the edges of your monitor — including the ones left of and above the dock, which is how you build a bar along a screen edge. Widgets already placed are veiled in blue, so you can see what is taken at a glance, and the cell you are about to drop into stays blue when it fits and turns red when it does not.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Overlay Stays Put:</Run>
+                                            It used to drift down the screen by one cell every time you placed a widget, so the bar had to be dragged back up after each one. The grid needed room, the window grew to make it, and at the top of the screen the correction it made for that got clamped away. With the grid on its own window, none of that is needed.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Widget Zoom:</Run>
+                                            A slider in the overlay bar scales the whole grid from 75% to 250%. The cells grow and everything inside them grows with them — the text, the icons, the buttons. Font size alone only ever grew the writing inside a box that stayed the same, which is why one-cell widgets were so small on a 4K screen. Saved with each template.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No More Stolen Focus:</Run>
+                                            Pressing a widget used to pull Rust out of focus, because clicking a window activates it. It does not any more. The two text boxes that do need the keyboard — the Discord line and the translate box — still take it while you are typing in them, and unlocking the overlay to arrange it hands focus over properly so editing stays responsive with the game running.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Grid That Does Not Move:</Run>
+                                            The map used to push every column and row behind it sideways, by however many pixels its free size overshot a whole cell — so the snap points shifted as you dragged the map's size slider. The map now sits over the grid rather than displacing it. It still reserves its cells, so nothing lands underneath it.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Templates Land Where They Look:</Run>
+                                            The outline you see when hovering a template is now drawn where the arrangement will actually sit, on the screen, at the size it was saved at. Loading a wide arrangement also pulls the whole overlay back onto the screen instead of letting the right-hand widgets fall off it. And the map's shape — round, square or 16:9 — is saved with the template now, instead of snapping back to round every time you switched.
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- Widgets -->
+                                    <StackPanel Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                <ui:SymbolIcon Symbol="Add24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Text="Widgets &amp; Map" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; New: Wipe Death Markers:</Run>
+                                            One cell with the death marker on it and the number currently on your map in the corner. One press clears them — all of them, or all but the newest for you and each teammate, whichever you set. It keeps out of the way until there is something to clear. Clearing them meant a button under the team list until now, four levels away from the map it was about.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No-Build Zones on the Mini-Map:</Run>
+                                            The building blocked zones are a mini-map layer now, switchable on their own like the grid and the death markers — see them on the small map while the big one stays clean, or the other way round. Available once the map has been parsed.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Death Marker Limits in Map Settings:</Run>
+                                            How many markers each player keeps is now also under Settings &#x2192; Map, where you would look for it, and not only behind the small button next to the markers under the team list.
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Tidier Widget Picker:</Run>
+                                            Collapse and Wipe Death Markers have moved out of the AI Companion section, where neither of them belonged, into a General heading at the top.
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <views:ImageGallery Margin="0,4,0,4">
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/new-overlay.jpg" Description="The reworked Widget Overlay: the grid spans the screen, widgets already placed are veiled in blue, and the bar sits at the top of the monitor with the new zoom slider"/>
+                                    </views:ImageGallery>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.0.0 HERO PATCH NOTES -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_0_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.0.0 | Widget Overlay, AI Companion, Map Layers &amp; Global Chat"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>

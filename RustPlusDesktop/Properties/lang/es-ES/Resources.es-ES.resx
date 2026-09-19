@@ -7905,4 +7905,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockLock" xml:space="preserve">
     <value>Bloquear el overlay</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
 </root>

@@ -7653,4 +7653,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockLock" xml:space="preserve">
     <value>锁定覆盖层</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>通用</value>
+  </data>
 </root>

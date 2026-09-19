@@ -7826,4 +7826,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockLock" xml:space="preserve">
     <value>오버레이 잠금</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>일반</value>
+  </data>
 </root>

@@ -7796,4 +7796,7 @@
   <data name="CommandDockLock" xml:space="preserve">
     <value>قفل الواجهة</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>عام</value>
+  </data>
 </root>

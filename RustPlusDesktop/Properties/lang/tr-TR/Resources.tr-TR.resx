@@ -6878,4 +6878,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockLock" xml:space="preserve">
     <value>Yerleşimi kilitle</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>Genel</value>
+  </data>
 </root>

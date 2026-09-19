@@ -8080,4 +8080,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockLock" xml:space="preserve">
     <value>Lock the overlay</value>
   </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
 </root>

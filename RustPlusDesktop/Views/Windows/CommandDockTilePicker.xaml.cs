@@ -38,6 +38,24 @@ namespace RustPlusDesk
         {
             Catalogue.Children.Clear();
 
+            // Widgets that are about the overlay itself rather than about anything in the game.
+            // They sat under "AI companion" because that is where they happened to be added;
+            // neither of them has anything to do with the companion, and a category that is
+            // wrong is worse than one more heading.
+            Section(Loc.Text("CommandDockSectionGeneral", "General"), SymbolRegular.Grid24);
+
+            Entry(Loc.Text("CommandDockCollapseTitle", "Collapse"),
+                  Loc.Text("CommandDockCollapsePickerHint",
+                      "One cell that hides every other tile, and brings them back"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.Collapse },
+                  SymbolRegular.ArrowMinimize24);
+
+            Entry(Loc.Text("CommandDockDeathWipeTitle", "Wipe death markers"),
+                  Loc.Text("CommandDockDeathWipePickerHint",
+                      "One cell that clears the map's death markers, and counts them"),
+                  () => new CommandDockTile { Kind = CommandDockTileKinds.DeathWipe },
+                  SymbolRegular.Eraser24);
+
             // Offered only while no map is on the dock — either removed, or with every layer
             // switched off, which looks the same from the outside.
             if ((Owner as MiniMapWindow)?.CanAddMap == true)
@@ -91,18 +109,6 @@ namespace RustPlusDesk
                       "Paste a line, read it back in your language — Google Translate"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Translate, ColSpan = 3, RowSpan = 1 },
                   SymbolRegular.Translate24);
-
-            Entry(Loc.Text("CommandDockCollapseTitle", "Collapse"),
-                  Loc.Text("CommandDockCollapsePickerHint",
-                      "One cell that hides every other tile, and brings them back"),
-                  () => new CommandDockTile { Kind = CommandDockTileKinds.Collapse },
-                  SymbolRegular.ArrowMinimize24);
-
-            Entry(Loc.Text("CommandDockDeathWipeTitle", "Wipe death markers"),
-                  Loc.Text("CommandDockDeathWipePickerHint",
-                      "One cell that clears the map's death markers, and counts them"),
-                  () => new CommandDockTile { Kind = CommandDockTileKinds.DeathWipe },
-                  SymbolRegular.Eraser24);
 
             Entry(Loc.Text("CommandDockDeathTrackTitle", "Who killed you?"),
                   Loc.Text("CommandDockDeathTrackPickerHint",
