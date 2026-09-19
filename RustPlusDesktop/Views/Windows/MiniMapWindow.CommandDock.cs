@@ -375,6 +375,21 @@ namespace RustPlusDesk
         }
 
         /// <summary>
+        /// A tile's rectangle on the dock's canvas.
+        ///
+        /// The canvas starts at the top-left of what is visible, not at cell (0,0). The two
+        /// coincide only while the leftmost and topmost tiles are on screen - hide them, as
+        /// collapsing the dock does, and a cell-absolute position falls outside the window.
+        /// </summary>
+        private Rect TileCanvasRect(CommandDockTile tile)
+        {
+            var box = CellBounds();
+            var rect = CellRect(tile);
+
+            return new Rect(rect.X - box.X, rect.Y - box.Y, rect.Width, rect.Height);
+        }
+
+        /// <summary>
         /// The tiles that currently take up space: everything but a switched-off map and the
         /// device tiles belonging to a server other than the one in front of us.
         /// </summary>
@@ -457,12 +472,23 @@ namespace RustPlusDesk
         /// back off the canvas. Reading the canvas was how the layout and the cell grid drifted
         /// apart; now nothing writes a pixel position that is not computed here first.
         /// </summary>
-        private Rect CellBounds()
+        /// <summary>
+        /// The box the tiles occupy.
+        ///
+        /// <paramref name="visibleOnly"/> distinguishes two questions that look alike and are
+        /// not. How big the window has to be is about what is on screen. Cancelling the shift
+        /// NormaliseCells applied is about what that method measured, which is every tile -
+        /// and measuring the visible ones instead moved the window whenever a tile appeared or
+        /// disappeared, to undo a re-basing that had not happened. Collapsing the dock is the
+        /// clearest case: the visible set shrinks to one button, and the window jumped by the
+        /// distance from the arrangement's left edge to it.
+        /// </summary>
+        private Rect CellBounds(bool visibleOnly = true)
         {
             double minX = double.MaxValue, minY = double.MaxValue;
             double maxX = double.MinValue, maxY = double.MinValue;
 
-            foreach (var tile in VisibleTiles())
+            foreach (var tile in visibleOnly ? VisibleTiles() : _dock.Tiles)
             {
                 var r = CellRect(tile);
                 minX = Math.Min(minX, r.X);
@@ -510,10 +536,19 @@ namespace RustPlusDesk
             }
         }
 
-        /// <summary>Writes every tile's derived pixel position onto the canvas.</summary>
-        private void ApplyTilePositions()
+        /// <summary>
+        /// Writes every tile's derived pixel position onto the canvas.
+        /// </summary>
+        /// <param name="bounds">
+        /// The box the window is sized to. Positions are relative to its top-left corner, not to
+        /// cell (0,0): the two are the same only while the leftmost tile is visible, and a tile
+        /// drawn outside a window sized to the visible box is simply clipped away.
+        /// </param>
+        private void ApplyTilePositions(Rect? bounds = null)
         {
             SyncMapCellSpan();
+
+            var box = bounds ?? CellBounds();
 
             foreach (var tile in _dock.Tiles)
             {
@@ -529,8 +564,8 @@ namespace RustPlusDesk
                     el.Height = rect.Height;
                 }
 
-                Canvas.SetLeft(el, rect.X);
-                Canvas.SetTop(el, rect.Y);
+                Canvas.SetLeft(el, rect.X - box.X);
+                Canvas.SetTop(el, rect.Y - box.Y);
             }
         }
 
@@ -2139,8 +2174,8 @@ namespace RustPlusDesk
         /// </summary>
         private (int Col, int Row) CellUnderPoint(Point corner) =>
         (
-            NearestCell(corner.X),
-            NearestCell(corner.Y)
+            NearestCell(corner.X + CellBounds().X),
+            NearestCell(corner.Y + CellBounds().Y)
         );
 
         /// <summary>

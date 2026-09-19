@@ -204,13 +204,13 @@ namespace RustPlusDesk
                 if (_draggingTile != null && tile.Id == _draggingTile.Id) continue;
                 if (!BelongsHere(tile)) continue;
 
-                var rect = CellRect(tile);
+                var rect = TileCanvasRect(tile);
                 var at = ToOverlay(rect.X, rect.Y);
                 occupied.Add(new Rect(at.X, at.Y, rect.Width, rect.Height));
             }
 
             overlay.PaintGrid(
-                ToOverlay(CellX(0), CellY(0)),
+                ToOverlay(CellX(0) - CellBounds().X, CellY(0) - CellBounds().Y),
                 CommandDockLayout.CellSizeAt(DockZoom),
                 CommandDockLayout.CellGapAt(DockZoom),
                 occupied);
@@ -239,7 +239,7 @@ namespace RustPlusDesk
                 RowSpan = _draggingTile.RowSpan,
             };
 
-            var rect = CellRect(probe);
+            var rect = TileCanvasRect(probe);
             var at = ToOverlay(rect.X, rect.Y);
 
             _overlay.SetDropTarget(new Rect(at.X, at.Y, rect.Width, rect.Height), Overlaps(probe));

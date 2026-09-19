@@ -680,36 +680,49 @@ namespace RustPlusDesk
             // belongs on whichever screen the dock was already sitting on.
             var homeScreen = ScreenBoundsFor(this);
 
-            // Cells are the only state; pixels are derived from them, always, everywhere.
+            // Where cell (0,0) sits on screen, worked out from where the window is now.
             //
-            // This used to shift the canvas children in pixels when a tile sat left of or above
-            // the origin, and leave their cell coordinates alone. From then on the two disagreed,
-            // and a drop — which reads a pixel position and converts it back through the cell
-            // formula — landed a cell or more away from where it was let go, further every time.
-            // Re-basing the cells instead keeps one grid, and the window takes the opposite move
-            // so the content does not appear to jump.
-            var before = CellBounds();
+            // This is the one thing that has to survive a layout unchanged. Everything else -
+            // the window's size, its corner, where each tile lands on the canvas - is derived,
+            // and deriving them from anything that moves on its own is what produced a run of
+            // bugs where the dock walked off across the screen.
+            var visibleBefore = CellBounds();
+            double originX = Left - visibleBefore.X;
+            double originY = Top - visibleBefore.Y;
 
-            // Before normalising: the map's cell span follows its free size, so a resize — or
-            // simply loading the saved size after the tiles were placed — can leave neighbours
-            // underneath it.
+            // Measured over every tile, because its only job is to cancel the renumbering
+            // NormaliseCells performs - and every tile is what NormaliseCells measures.
+            var allBefore = CellBounds(visibleOnly: false);
+
+            // The map's cell span follows its free size, so a resize — or simply loading the
+            // saved size after the tiles were placed — can leave neighbours underneath it.
             SyncMapCellSpan();
             ResolveOverlaps();
             NormaliseCells();
 
+            var allAfter = CellBounds(visibleOnly: false);
+
+            // Renumbering moved every cell's pixel offset by the same amount; cell (0,0) moves
+            // the opposite way, so the tiles stay where they were on screen.
+            originX += allBefore.X - allAfter.X;
+            originY += allBefore.Y - allAfter.Y;
+
+            // This one is about what is on screen, because it is what the window is sized to.
             var bounds = CellBounds();
 
-            ApplyTilePositions();
+            // Tiles are drawn relative to the top-left of what is visible, not to cell (0,0).
+            // Drawn from the cell origin they fell outside a window sized to the visible box the
+            // moment the leftmost tiles were hidden - which is exactly what collapsing the dock
+            // does, and why the collapse button disappeared along with everything it hid.
+            ApplyTilePositions(bounds);
 
-            // The preview extra grows the window without moving anything, so an arrangement
-            // larger than the dock can be outlined in full.
             Width = Math.Max(1, bounds.Width);
             Height = Math.Max(1, bounds.Height);
 
-            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            if (!double.IsNaN(originX) && !double.IsNaN(originY))
             {
-                Left += before.X - bounds.X;
-                Top += before.Y - bounds.Y;
+                Left = originX + bounds.X;
+                Top = originY + bounds.Y;
             }
 
             // The map used to be re-anchored by its middle here, so that a resize left that

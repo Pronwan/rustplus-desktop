@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -37,7 +37,7 @@ namespace RustPlusDesk
             // moment the tile's element is brand new and has not been through a layout pass —
             // its ActualWidth is zero, so the panel opened on top of the tile instead of beside
             // it. The cell knows the width before anything is drawn.
-            var rect = CellRect(tile);
+            var rect = TileCanvasRect(tile);
             double x = rect.X;
             double y = rect.Y;
 
