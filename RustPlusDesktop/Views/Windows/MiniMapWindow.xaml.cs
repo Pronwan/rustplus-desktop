@@ -745,11 +745,21 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Keeps the dock reachable.
+        /// Keeps the dock on the screen.
         ///
-        /// The title bar is the only way to move the dock once the map is off, and it sits on the
-        /// window's top edge — so that edge may never leave the screen. Horizontally a strip is
-        /// enough: the dock can hang off either side as long as some of the bar can be grabbed.
+        /// A dock that fits is pulled fully into view, in both directions. It used to be lenient
+        /// horizontally — a strip of 120 pixels was enough, and the rest could hang off the edge
+        /// — because the title bar was the only way to move the dock and sat on the dock itself,
+        /// so what mattered was that some of it stayed grabbable.
+        ///
+        /// The bar is on the overlay now, pinned to the top of the screen and reachable wherever
+        /// the dock happens to be, so that reason is gone. What the leniency left behind was a
+        /// real problem: loading a wide arrangement while the dock was anchored near the right
+        /// edge — which is exactly where the built-in default parks it — pushed the right-hand
+        /// widgets off the screen, and nothing brought them back.
+        ///
+        /// A dock genuinely larger than the screen still hangs off, because it has to; the strip
+        /// is what stays reachable then.
         /// </summary>
         private void ClampToScreen()
         {
@@ -765,8 +775,17 @@ namespace RustPlusDesk
             if (top + Height > screen.Bottom)
                 top = Math.Max(screen.Top, screen.Bottom - Height);
 
-            double left = Math.Min(Left, screen.Right - grabbable);
-            left = Math.Max(left, screen.Left - Math.Max(0, Width - grabbable));
+            double left;
+            if (Width <= screen.Width)
+            {
+                left = Math.Min(Left, screen.Right - Width);
+                left = Math.Max(left, screen.Left);
+            }
+            else
+            {
+                left = Math.Min(Left, screen.Right - grabbable);
+                left = Math.Max(left, screen.Left - Math.Max(0, Width - grabbable));
+            }
 
             if (Math.Abs(left - Left) > 0.01) Left = left;
             if (Math.Abs(top - Top) > 0.01) Top = top;
