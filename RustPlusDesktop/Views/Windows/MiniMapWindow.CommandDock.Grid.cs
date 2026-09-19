@@ -202,6 +202,29 @@ namespace RustPlusDesk
             _dock.MapY = rect.Y;
         }
 
+        /// <summary>True while the map itself is being dragged, rather than a tile.</summary>
+        private bool _draggingMap;
+
+        /// <summary>
+        /// Puts the map's top-left corner at a screen position, kept on the monitor.
+        ///
+        /// No snapping: this is what "free" means. The only constraint is that it may not be
+        /// dragged off the screen entirely.
+        /// </summary>
+        internal void PlaceMapAt(double x, double y)
+        {
+            if (MapTile == null) return;
+
+            var screen = GridScreen;
+
+            _dock.MapX = Math.Max(screen.Left, Math.Min(x, screen.Right - _mapWidth));
+            _dock.MapY = Math.Max(screen.Top, Math.Min(y, screen.Bottom - _mapHeight));
+
+            // Positions only - a full layout would resize the window under the pointer on every
+            // mouse move, which is both expensive and visibly jumpy.
+            ApplyTilePositions();
+        }
+
         /// <summary>
         /// Moves the map by a pointer delta, in pixels and without touching a single cell.
         ///

@@ -467,8 +467,19 @@ namespace RustPlusDesk
         {
             SyncMapCellSpan();
 
-            var bounds = CellBounds();
-            var origin = new Point(bounds.X, bounds.Y);
+            // While the map is being dragged the window deliberately stays where it is, so the
+            // canvas origin has to stay with it. Taking it from CellBounds would follow the map
+            // instead, and every other tile would slide the opposite way as it moved.
+            Point origin;
+            if (_draggingMap && !double.IsNaN(Left) && !double.IsNaN(Top))
+            {
+                origin = new Point(Left, Top);
+            }
+            else
+            {
+                var bounds = CellBounds();
+                origin = new Point(bounds.X, bounds.Y);
+            }
 
             foreach (var tile in _dock.Tiles)
             {
@@ -2028,18 +2039,41 @@ namespace RustPlusDesk
                     dragging = true;
 
                     var dragged = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
-                    if (dragged != null) BeginDragPreview(dragged);
+
+                    // The map is dragged, not placed: it has a position in pixels and no cell to
+                    // snap to. Everything below - the ghost, the drop target, the cell the
+                    // release commits to - is about finding a cell, so none of it applies.
+                    if (dragged?.Kind == CommandDockTileKinds.Map)
+                    {
+                        _draggingMap = true;
+                        EnsureMapPlaced();
+                    }
+                    else if (dragged != null)
+                    {
+                        BeginDragPreview(dragged);
+                    }
 
                     // The tile itself stays on its cell and dims; what follows the pointer is a
                     // picture of it on the overlay. It has to be, because the overlay covers the
                     // screen and this window does not - a tile dragged past the dock's own edge
                     // would simply be clipped away.
-                    _overlay?.SetGhost(border, new Size(border.ActualWidth, border.ActualHeight));
-                    border.Opacity = 0.35;
+                    if (!_draggingMap)
+                    {
+                        _overlay?.SetGhost(border, new Size(border.ActualWidth, border.ActualHeight));
+                        border.Opacity = 0.35;
+                    }
                 }
 
                 var p = e.GetPosition(DockCanvas);
                 var corner = new Point(p.X - grabOffset.X, p.Y - grabOffset.Y);
+
+                // Free movement: the corner is where the map's own corner should be, in screen
+                // pixels, and it follows the pointer exactly rather than the nearest cell.
+                if (_draggingMap)
+                {
+                    PlaceMapAt(Left + corner.X, Top + corner.Y);
+                    return;
+                }
 
                 var ghostAt = ToOverlay(corner.X, corner.Y);
                 _overlay?.MoveGhost(ghostAt);
@@ -2077,6 +2111,17 @@ namespace RustPlusDesk
                 border.Opacity = 1.0;
 
                 e.Handled = true;        // a drag must not also toggle the switch it landed on
+
+                if (_draggingMap)
+                {
+                    // Nothing to commit: the map has been at its final position for the whole
+                    // drag. There is no cell to resolve it onto, which is the point.
+                    _draggingMap = false;
+                    SaveDock();
+                    LayoutDock();
+                    return;
+                }
+
                 DropTile(tileId);
             };
 
