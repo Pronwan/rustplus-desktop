@@ -19,7 +19,8 @@ namespace RustPlusDesk
         Visual? Drawings,
         Visual? Icons,
         Visual? Players,
-        Visual? Deaths);
+        Visual? Deaths,
+        Visual? NoBuild);
 
     public partial class MiniMapWindow : Window
     {
@@ -138,6 +139,12 @@ namespace RustPlusDesk
         public bool WantsDeathLayer { get; private set; } = true;
 
         /// <summary>
+        /// The same for the building-blocked zones. Starts false, because the layer starts off:
+        /// the zones do not exist until the map has been parsed.
+        /// </summary>
+        public bool WantsNoBuildLayer { get; private set; }
+
+        /// <summary>
         /// Whether a mouse event came from this window's own content rather than from one of its
         /// popups.
         ///
@@ -178,6 +185,7 @@ namespace RustPlusDesk
             BrushIcons.Visual = layers.Icons;
             BrushPlayers.Visual = layers.Players;
             BrushDeaths.Visual = layers.Deaths;
+            BrushNoBuild.Visual = layers.NoBuild;
             ApplyViewbox();
         }
 
@@ -344,7 +352,7 @@ namespace RustPlusDesk
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
 
-            foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths })
+            foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths, BrushNoBuild })
             {
                 if (brush == null) continue;
                 brush.ViewboxUnits = BrushMappingMode.Absolute;
@@ -395,6 +403,11 @@ namespace RustPlusDesk
             SettingsPopup.HorizontalOffset = offsetX;
             SettingsPopup.VerticalOffset = offsetY;
             SettingsPopup.IsOpen = true;
+
+            // Asked again on every open: the panel reads its settings once, but whether the
+            // no-build layer has anything to show changes whenever a parse finishes - which
+            // happens while this panel is closed.
+            SettingsOverlay?.RefreshNoBuildAvailability();
         }
 
         public void CloseSettings() => SettingsPopup.IsOpen = false;
@@ -483,17 +496,20 @@ namespace RustPlusDesk
             Vis(LayerIcons, settings.ShowIcons);
             Vis(LayerPlayers, settings.ShowPlayers);
             Vis(LayerDeaths, settings.ShowDeaths);
+            Vis(LayerNoBuild, settings.ShowNoBuild);
 
             // The main map only builds the grid and the death pins when something wants them,
             // so the mini-map has to say so — its switch is not a filter over something that is
             // always there.
             bool wantsGrid = settings.ShowGrid;
             bool wantsDeaths = settings.ShowDeaths;
+            bool wantsNoBuild = settings.ShowNoBuild;
 
-            if (wantsGrid != WantsGridLayer || wantsDeaths != WantsDeathLayer)
+            if (wantsGrid != WantsGridLayer || wantsDeaths != WantsDeathLayer || wantsNoBuild != WantsNoBuildLayer)
             {
                 WantsGridLayer = wantsGrid;
                 WantsDeathLayer = wantsDeaths;
+                WantsNoBuildLayer = wantsNoBuild;
                 (Application.Current?.MainWindow as Views.MainWindow)?.RefreshIndependentLayers();
             }
 
@@ -506,7 +522,8 @@ namespace RustPlusDesk
             // With nothing left to draw, the map stops holding cells and the dock closes up over
             // it. Turning a layer back on brings the space back.
             bool anyLayer = settings.ShowTexture || settings.ShowGrid || settings.ShowDrawings
-                         || settings.ShowIcons || settings.ShowPlayers || settings.ShowDeaths;
+                         || settings.ShowIcons || settings.ShowPlayers || settings.ShowDeaths
+                         || settings.ShowNoBuild;
 
             if (anyLayer != _mapLayersOn)
             {
@@ -542,6 +559,40 @@ namespace RustPlusDesk
             MapClipHost.Clip = new RectangleGeometry(new Rect(0, 0, w, h), radius, radius);
         }
 
+        /// <summary>
+        /// Sets the map's shape - 0 circle, 1 square, 2 16:9 - and makes it stick.
+        ///
+        /// <see cref="_shapeIndex"/> is the shape; the settings panel's ComboBox only shows it.
+        /// It used to be the other way round, with UpdateSize reading the control, which meant
+        /// anything that resized the map while the panel had never been opened - applying a
+        /// saved arrangement, most visibly - quietly took the control's default and put the map
+        /// back to a circle.
+        ///
+        /// The write goes to the settings file directly rather than through the panel, because
+        /// the panel's own save is a no-op until its popup has been opened once: its controls do
+        /// not exist before that, and CurrentSettings returns null when they are missing.
+        /// </summary>
+        public void SetMapShape(int shapeIndex, bool persist = true)
+        {
+            shapeIndex = Math.Max(0, Math.Min(2, shapeIndex));
+            if (_shapeIndex == shapeIndex) return;
+
+            _shapeIndex = shapeIndex;
+
+            if (persist)
+            {
+                var stored = RustPlusDesk.Services.StorageService.LoadCache<RustPlusDesk.Services.MiniMapSettings>("minimap_settings");
+                if (stored != null)
+                    RustPlusDesk.Services.StorageService.SaveCache("minimap_settings", stored with { ShapeIndex = shapeIndex });
+            }
+
+            SettingsOverlay?.SyncShapeSelection(shapeIndex);
+
+            // Re-applies the geometry at the current size: the corner radius and, at 16:9, the
+            // height both come out of the shape.
+            UpdateSize(_mapWidth, updateSlider: false);
+        }
+
         private bool _isUpdatingSize = false;
 
         public void UpdateSize(double newSize, bool updateSlider = true)
@@ -551,7 +602,6 @@ namespace RustPlusDesk
             try
             {
                 newSize = Math.Max(160, Math.Min(newSize, 800));
-                _shapeIndex = SettingsOverlay?.CmbShape?.SelectedIndex ?? _shapeIndex;
 
                 // Where the map's middle sits on screen right now. Read before the new size is
                 // applied, because that is the point the resize has to leave alone.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Primero empareje este servidor.</value>
     <value>Genere el mapa 3D antes de usar mapas de calor.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Genere el mapa 3D para habilitar zonas sin construcción.</value>
+    <value>Analiza primero el mapa para activar las zonas sin construccion.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Opciones genéricas de audio de alarma</value>
@@ -7853,5 +7853,11 @@ Cierra esta vista previa cuando el panel te guste.</value>
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NUEVO</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Zonas sin construccion</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Primero analiza el mapa</value>
   </data>
 </root>

@@ -96,6 +96,39 @@ namespace RustPlusDesk.Views
             ChkLayerPlayers.IsChecked = settings.ShowPlayers;
             ChkLayerDeaths.IsChecked = settings.ShowDeaths;
             ChkLayerHeatmap.IsChecked = settings.ShowHeatmap;
+            ChkLayerNoBuild.IsChecked = settings.ShowNoBuild;
+            RefreshNoBuildAvailability();
+        }
+
+        /// <summary>
+        /// Enables the no-build layer only when this server's map has actually been parsed, and
+        /// says why when it has not.
+        ///
+        /// Re-checked every time the panel is shown rather than once: a parse started from the
+        /// main map finishes while this panel is closed, and the switch has to be live when it
+        /// is opened again.
+        /// </summary>
+        public void RefreshNoBuildAvailability()
+        {
+            if (ChkLayerNoBuild == null) return;
+
+            bool available = (Application.Current?.MainWindow as Views.MainWindow)?.NoBuildZonesAvailable == true;
+
+            ChkLayerNoBuild.IsEnabled = available;
+            ChkLayerNoBuild.Opacity = available ? 1.0 : 0.45;
+            ChkLayerNoBuild.ToolTip = available
+                ? null
+                : Helpers.Loc.Text("MiniMapLayerNoBuildUnavailable", "Please parse the map first");
+
+            // A layer that cannot be drawn must not stay ticked, or the dock would keep asking
+            // the main map to build something that does not exist.
+            if (!available && ChkLayerNoBuild.IsChecked == true)
+            {
+                bool was = _isInitializing;
+                _isInitializing = true;
+                try { ChkLayerNoBuild.IsChecked = false; }
+                finally { _isInitializing = was; }
+            }
         }
 
         private void CmbGrowth_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -121,6 +154,10 @@ namespace RustPlusDesk.Views
                 ChkLayerPlayers.IsChecked = true;
                 ChkLayerDeaths.IsChecked = true;
                 ChkLayerHeatmap.IsChecked = true;
+
+                // No-build stays as it was, on purpose. It is the one layer that is not simply
+                // a view of something the map always has: without a parse there is nothing to
+                // switch on, and switching it on after one would be a choice nobody made.
             }
             finally
             {
@@ -149,10 +186,25 @@ namespace RustPlusDesk.Views
         {
             if (_isInitializing || ParentWindow == null) return;
 
-            // The slider is the map size; the window's own Width is the whole dock, which since
-            // the command dock arrived is a different number entirely.
-            ParentWindow.UpdateSize(SliSize.Value, updateSlider: false);
-            SaveSettings();
+            // The window holds the shape and writes it through; this control only offers it.
+            ParentWindow.SetMapShape(CmbShape.SelectedIndex);
+        }
+
+        /// <summary>
+        /// Shows a shape the window was given from somewhere else - applying a saved arrangement,
+        /// most of the time.
+        ///
+        /// Guarded, because assigning SelectedIndex raises SelectionChanged, which would hand the
+        /// same shape straight back to the window it just came from.
+        /// </summary>
+        public void SyncShapeSelection(int shapeIndex)
+        {
+            if (CmbShape == null || CmbShape.SelectedIndex == shapeIndex) return;
+
+            bool was = _isInitializing;
+            _isInitializing = true;
+            try { CmbShape.SelectedIndex = shapeIndex; }
+            finally { _isInitializing = was; }
         }
 
         private void SliOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -246,7 +298,11 @@ namespace RustPlusDesk.Views
                 ChkLayerIcons?.IsChecked != false,
                 ChkLayerPlayers?.IsChecked != false,
                 ChkLayerDeaths?.IsChecked != false,
-                ChkLayerHeatmap?.IsChecked != false
+                ChkLayerHeatmap?.IsChecked != false,
+
+                // Reads the opposite way round to the others: they default on when the control
+                // is missing, this one defaults off, matching the record's own default.
+                ChkLayerNoBuild?.IsChecked == true
             );
         }
     }

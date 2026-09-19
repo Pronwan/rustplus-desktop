@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>在使用热图之前生成 3D 地图。</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>生成 3D 地图以启用禁止构建区域。</value>
+    <value>请先解析地图以启用禁建区。</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>通用警报音频选项</value>
@@ -7601,5 +7601,11 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>新</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>禁建区</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>请先解析地图</value>
   </data>
 </root>

@@ -28,6 +28,21 @@ namespace RustPlusDesk.Models
 
         /// <summary>The map's free size when the preset was saved, or null if it had no map.</summary>
         public double? MapSize { get; set; }
+
+        /// <summary>
+        /// The map's shape when the preset was saved - 0 circle, 1 square, 2 16:9 - or null if
+        /// it had no map, or the preset predates this field.
+        ///
+        /// Belongs here for the same reason <see cref="MapSize"/> does: at 16:9 the map is a
+        /// different height than it is round, so every tile placed under it sits somewhere else.
+        /// Restoring the size without the shape puts them back against a footprint the
+        /// arrangement was never built around.
+        ///
+        /// Null is read as "leave the shape alone" rather than as circle. An arrangement saved
+        /// before this field existed has no opinion about the shape, and forcing one would undo
+        /// a setting the user made somewhere else entirely.
+        /// </summary>
+        public int? MapShapeIndex { get; set; }
     }
 
     public sealed class CommandDockPresetStore

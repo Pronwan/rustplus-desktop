@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Прежде чем использовать тепловые карты, создайте 3D-карту.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Создайте 3D-карту, чтобы включить зоны без застройки.</value>
+    <value>Сначала разберите карту, чтобы включить зоны запрета строительства.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Общие параметры звукового сигнала тревоги</value>
@@ -7853,5 +7853,11 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>НОВОЕ</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Зоны запрета строительства</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Сначала разберите карту</value>
   </data>
 </root>

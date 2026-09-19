@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Veuillez d'abord associer ce serveur.</value>
     <value>Générez la carte 3D avant d'utiliser les cartes thermiques.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Générez la carte 3D pour activer les zones sans construction.</value>
+    <value>Analysez d'abord la carte pour activer les zones de construction interdite.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Options sonores d'alarme génériques</value>
@@ -7853,5 +7853,11 @@ Ferme cet aperçu quand le panneau te convient.</value>
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NOUVEAU</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Zones de construction interdite</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Veuillez d'abord analyser la carte</value>
   </data>
 </root>

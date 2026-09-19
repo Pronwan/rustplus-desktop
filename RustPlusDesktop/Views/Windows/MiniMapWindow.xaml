@@ -60,6 +60,14 @@
                                 <VisualBrush x:Name="BrushGrid" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
                             </Rectangle.Fill>
                         </Rectangle>
+                        <!--  Above the grid and below the drawings, matching the main map's
+                              order: the zones are terrain information, and anything drawn by
+                              hand is meant to sit on top of it.  -->
+                        <Rectangle x:Name="LayerNoBuild">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushNoBuild" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <Rectangle x:Name="LayerDrawings">
                             <Rectangle.Fill>
                                 <VisualBrush x:Name="BrushDrawings" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>

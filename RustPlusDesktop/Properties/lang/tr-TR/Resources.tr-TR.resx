@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3324,7 +3324,7 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
     <value>Isı haritalarını kullanmadan önce 3B haritayı oluşturun.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>İnşaat yapılmayan bölgeleri etkinleştirmek için 3 boyutlu haritayı oluşturun.</value>
+    <value>Insa yasagi bolgelerini etkinlestirmek icin once haritayi ayristirin.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Genel alarm sesi seçenekleri</value>
@@ -6823,5 +6823,11 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   </data>
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>Ölçülmüş varsayılana dön</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Insa yasagi bolgeleri</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Lutfen once haritayi ayristirin</value>
   </data>
 </root>

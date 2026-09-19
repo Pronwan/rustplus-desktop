@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3471,7 +3471,7 @@ Please pair this server first.</value>
     <value>Generate the 3D map before using heatmaps.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Generate the 3D map to enable no-build zones.</value>
+    <value>Parse the map first to enable no-build zones.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Generic alarm audio options</value>
@@ -8028,5 +8028,11 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NEW</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>No-build zones</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Please parse the map first</value>
   </data>
 </root>

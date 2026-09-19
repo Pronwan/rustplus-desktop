@@ -49,6 +49,10 @@ namespace RustPlusDesk
             },
             GrowRight = false,
             MapSize = DefaultMapSize,
+
+            // The one preset that does state a shape. It is the way back to the beginning, and a
+            // dock still showing a 16:9 strip is not back at the beginning.
+            MapShapeIndex = 0,
         };
 
         /// <summary>A saved arrangement, or the built-in one. Null for an id that is neither.</summary>
@@ -96,6 +100,7 @@ namespace RustPlusDesk
                 Tiles = CopyTiles(_dock.Tiles),
                 GrowRight = _dock.GrowRight,
                 MapSize = MapTile != null ? _mapWidth : null,
+                MapShapeIndex = MapTile != null ? _shapeIndex : null,
             });
 
             SavePresets(presets);
@@ -150,6 +155,10 @@ namespace RustPlusDesk
             // already there.
             RebuildTiles();
 
+            // Shape before size: UpdateSize derives the height and the corner radius from it, so
+            // setting it afterwards would lay the dock out once against the wrong footprint.
+            if (preset.MapShapeIndex is { } shape) SetMapShape(shape);
+
             if (preset.MapSize is { } size) UpdateSize(size, updateSlider: true);
 
             // The one arrangement that moves the window as well.
@@ -201,7 +210,12 @@ namespace RustPlusDesk
             _presetPreview!.Children.Clear();
 
             double mapW = preset.MapSize ?? 0;
-            double mapH = mapW;   // the shape is an appearance setting; a square is close enough here
+
+            // The preset carries its shape, so the outline can be the footprint the arrangement
+            // was actually built around. At 16:9 that is a noticeably shorter map, and the tiles
+            // below it sit correspondingly higher.
+            int previewShape = preset.MapShapeIndex ?? _shapeIndex;
+            double mapH = previewShape == 2 ? mapW * 9.0 / 16.0 : mapW;
 
             var map = preset.Tiles.FirstOrDefault(t => t.Kind == CommandDockTileKinds.Map);
             int mapCols = mapW > 0 ? CommandDockLayout.PixelsToCells(mapW) : 0;

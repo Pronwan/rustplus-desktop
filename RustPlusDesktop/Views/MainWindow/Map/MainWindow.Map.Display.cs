@@ -105,7 +105,7 @@ public partial class MainWindow
         // fills the scene, so the brush sees the same coordinates as every other layer.
         _scene.Children.Add(Wrap(ref _heatmapWrapper, ImgHeatmap)); Panel.SetZIndex(_heatmapWrapper!, 1);
         _scene.Children.Add(Wrap(ref _gridWrapper, GridLayer)); Panel.SetZIndex(_gridWrapper!, 2);
-        _scene.Children.Add(NoBuildLayer); Panel.SetZIndex(NoBuildLayer, 3);
+        _scene.Children.Add(Wrap(ref _noBuildWrapper, NoBuildLayer)); Panel.SetZIndex(_noBuildWrapper!, 3);
         _scene.Children.Add(CargoPathLayer); Panel.SetZIndex(CargoPathLayer, 4);
         // Above the monument icons it annotates. Shares ZIndex 7 with the death
         // wrapper added below, and loses to it on insertion order, which is what we
@@ -137,9 +137,9 @@ public partial class MainWindow
 
     // ── Layers the mini-map can switch on its own ───────────────────────────────
     //
-    // The grid and the death markers are the two the user can want in one place and not the
-    // other. Both used to be hidden by emptying or collapsing the layer itself — which the
-    // mini-map mirrors, so its own switch could only ever turn them further off.
+    // The grid, the death markers and the no-build zones are the ones the user can want in one
+    // place and not the other. All used to be hidden by emptying or collapsing the layer itself
+    // — which the mini-map mirrors, so its own switch could only ever turn them further off.
     //
     // Each now sits in a wrapper that only the main map owns. Hiding means the wrapper goes to
     // zero opacity, and a VisualBrush of the layer inside renders its own subtree without an
@@ -149,6 +149,7 @@ public partial class MainWindow
     private Grid? _gridWrapper;
     private Grid? _heatmapWrapper;
     private Grid? _deathWrapper;
+    private Grid? _noBuildWrapper;
 
     private static Grid Wrap(ref Grid? wrapper, UIElement layer)
     {
@@ -162,6 +163,17 @@ public partial class MainWindow
     private bool MiniMapWantsGrid => _miniMap is { IsVisible: true } m && m.WantsGridLayer;
 
     private bool MiniMapWantsDeathMarkers => _miniMap is { IsVisible: true } m && m.WantsDeathLayer;
+
+    private bool MiniMapWantsNoBuildZones => _miniMap is { IsVisible: true } m && m.WantsNoBuildLayer;
+
+    /// <summary>
+    /// Whether this server's map has building-blocked zones to show at all.
+    ///
+    /// The checkbox on the main map is the thing that knows, because loading the file is what
+    /// enables it. The mini-map's own switch asks here rather than reading the file a second
+    /// time, so the two can never disagree about whether there is anything to draw.
+    /// </summary>
+    public bool NoBuildZonesAvailable => ChkNoBuildZones?.IsEnabled == true;
 
     /// <summary>
     /// Applies the main map's own choice to the wrappers. Opacity rather than visibility, and
@@ -182,6 +194,13 @@ public partial class MainWindow
             _deathWrapper.Opacity = on ? 1 : 0;
             _deathWrapper.IsHitTestVisible = on;
         }
+
+        if (_noBuildWrapper != null)
+        {
+            bool on = ChkNoBuildZones?.IsChecked == true;
+            _noBuildWrapper.Opacity = on ? 1 : 0;
+            _noBuildWrapper.IsHitTestVisible = false;   // the zones carry tooltips, not clicks
+        }
     }
 
     /// <summary>
@@ -192,6 +211,7 @@ public partial class MainWindow
     {
         try { RedrawGrid(); } catch { }
         try { RedrawDeathPins(); } catch { }
+        try { RedrawBuildingBlockedZones(); } catch { }
         ApplyIndependentLayerVisibility();
     }
 

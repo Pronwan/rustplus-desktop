@@ -20,6 +20,10 @@ public partial class MainWindow
     private void ChkNoBuildZones_Checked(object sender, RoutedEventArgs e)
     {
         RedrawGrid();
+
+        // The zones are hidden through the wrapper now, not by leaving them unbuilt, so
+        // unchecking has to take the wrapper down as well.
+        ApplyIndependentLayerVisibility();
     }
     private void ResetBuildingBlockedZonesForServerChange()
     {
@@ -122,7 +126,11 @@ public partial class MainWindow
 
         if (_isShowingDeepSeaMap) return;
 
-        if (ChkNoBuildZones?.IsChecked != true || _buildingBlockedData == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
+        // Built when either map asks for them. The main map's own switch hides them through the
+        // wrapper rather than by not building them, so the mini-map can show the zones while the
+        // big map stays clean - the same arrangement the grid and the death pins use.
+        if ((ChkNoBuildZones?.IsChecked != true && !MiniMapWantsNoBuildZones)
+            || _buildingBlockedData == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
             return;
 
         double worldToPx = _worldRectPx.Width / _worldSizeS;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3417,7 +3417,7 @@ Bitte koppeln Sie diesen Server zuerst.</value>
     <value>Generieren Sie die 3D-Karte, bevor Sie Heatmaps verwenden.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Generieren Sie die 3D-Karte, um baufreie Zonen zu ermöglichen.</value>
+    <value>Zuerst die Karte parsen, um Bauverbotszonen zu aktivieren.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Allgemeine Alarm-Audiooptionen</value>
@@ -7947,5 +7947,11 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NEU</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Bauverbotszonen</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Bitte zuerst die Karte parsen</value>
   </data>
 </root>

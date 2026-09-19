@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3339,7 +3339,7 @@
     <value>قم بإنشاء الخريطة ثلاثية الأبعاد قبل استخدام الخرائط الحرارية.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>قم بإنشاء خريطة ثلاثية الأبعاد لتمكين مناطق عدم البناء.</value>
+    <value>حلل الخريطة أولا لتفعيل مناطق منع البناء.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>خيارات صوت التنبيه العامة</value>
@@ -7744,5 +7744,11 @@
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>جديد</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>مناطق ممنوع البناء</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>يرجى تحليل الخريطة أولا</value>
   </data>
 </root>
