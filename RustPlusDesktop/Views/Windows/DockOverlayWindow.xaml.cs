@@ -288,8 +288,11 @@ namespace RustPlusDesk.Views.Windows
             if (_ghost != null) { PaintLayer.Children.Remove(_ghost); _ghost = null; }
             if (source == null || size.Width <= 0 || size.Height <= 0) return;
 
+            // Deliberately not frozen. The colour brushes above are, but this one points at a
+            // live element in another window's tree, and a Freezable holding an unfrozen
+            // reference cannot itself be frozen - Freeze() throws rather than returning false.
+            // It also has to stay live: the brush keeps tracking the tile while it is dragged.
             var brush = new VisualBrush(source) { Stretch = Stretch.Fill };
-            brush.Freeze();
 
             _ghost = new Rectangle
             {
