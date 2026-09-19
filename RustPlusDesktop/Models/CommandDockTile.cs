@@ -346,6 +346,17 @@ namespace RustPlusDesk.Models
         /// </summary>
         public double GridZoom { get; set; } = 1.0;
 
+        /// <summary>
+        /// Whether <see cref="CommandDockTile.Col"/> and <see cref="CommandDockTile.Row"/> are
+        /// counted from the top-left of the monitor rather than from the dock's own corner.
+        ///
+        /// False in everything saved before that change, and converted once on load using the
+        /// dock position stored beside it. The difference matters because relative cells have no
+        /// fixed zero: the origin was whichever tile happened to be furthest up and left, so it
+        /// moved whenever a tile appeared or disappeared, and every other tile moved with it.
+        /// </summary>
+        public bool CellsAreAbsolute { get; set; }
+
         public const double MinGridZoom = 0.75;
         public const double MaxGridZoom = 2.5;
 

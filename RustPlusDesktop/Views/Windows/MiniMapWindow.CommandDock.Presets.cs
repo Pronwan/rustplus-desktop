@@ -105,6 +105,7 @@ namespace RustPlusDesk
                 MapSize = MapTile != null ? _mapWidth : null,
                 MapShapeIndex = MapTile != null ? _shapeIndex : null,
                 GridZoom = _dock.GridZoom,
+                CellsAreAbsolute = true,
             });
 
             SavePresets(presets);
@@ -148,7 +149,24 @@ namespace RustPlusDesk
             HidePresetPreview();
             CloseTileSettings();
 
+            // Read before the tiles are replaced: it is where the dock is now, which is what an
+            // arrangement without a place of its own should be dropped onto.
+            var (atCol, atRow) = VisibleOrigin();
+
             _dock.Tiles = CopyTiles(preset.Tiles);
+
+            // An arrangement saved before cells were absolute has only a shape, not a place.
+            // Read literally its cells would put it in the corner of the screen.
+            if (!preset.CellsAreAbsolute)
+            {
+                foreach (var tile in _dock.Tiles)
+                {
+                    tile.Col += atCol;
+                    tile.Row += atRow;
+                }
+            }
+
+            _dock.CellsAreAbsolute = true;
             _dock.GrowRight = preset.GrowRight;
             _dock.MapRemoved = preset.Tiles.All(t => t.Kind != CommandDockTileKinds.Map);
 
@@ -198,11 +216,19 @@ namespace RustPlusDesk
         /// <summary>Top-right of the working area, where the Mini button first puts it.</summary>
         private void MoveToDefaultCorner()
         {
-            Left = SystemParameters.WorkArea.Right - DefaultMapSize - 20;
-            Top = SystemParameters.WorkArea.Top + 20;
+            // Expressed in cells, because that is the only position there is now: setting the
+            // window's corner directly would last exactly until the next layout derived it
+            // back from the tiles.
+            var screen = GridScreen;
 
-            ClampToScreen(pullIntoView: true);
-            SaveDockPosition();
+            int col = Math.Max(0, (int)Math.Floor((screen.Width - _mapWidth) / CellPitch));
+            int row = 0;
+
+            var (atCol, atRow) = VisibleOrigin();
+            ShiftAllTiles(col - atCol, row - atRow);
+
+            SaveDock();
+            LayoutDock();
             FollowAiAnswer();
         }
 

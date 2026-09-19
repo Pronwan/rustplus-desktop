@@ -66,26 +66,14 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Moves the dock by a pointer delta from the bar, then lets it clamp itself.
+        /// Moves the dock by a pointer delta from the bar.
         ///
-        /// The bar is on another window now, so it cannot move the dock by moving itself. It
-        /// reports how far it was dragged and the dock stays the one that decides where it is
-        /// allowed to end up.
+        /// The bar is on another window, so it cannot move the dock by moving itself. It reports
+        /// how far it was dragged, and that distance is turned into cells - the window's own
+        /// position is derived from them, so setting it directly would last until the next
+        /// layout and no longer.
         /// </summary>
-        private void MoveDockBy(Vector delta)
-        {
-            if (double.IsNaN(Left) || double.IsNaN(Top)) return;
-
-            double oldLeft = Left, oldTop = Top;
-
-            Left += delta.X;
-            Top += delta.Y;
-
-            ClampToScreen();
-            SaveDockPosition();
-            HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
-            FollowAiAnswer();
-        }
+        private void MoveDockBy(Vector delta) => MoveDockByPixels(delta.X, delta.Y);
 
         /// <summary>
         /// The bar's lock button, routed into the one that was already there.
@@ -179,14 +167,16 @@ namespace RustPlusDesk
         // ── The grid ────────────────────────────────────────────────────────────
 
         /// <summary>A point on the dock's canvas, in the overlay window's coordinates.</summary>
-        private Point ToOverlay(double canvasX, double canvasY)
+        private Point ToOverlay(double canvasX, double canvasY) =>
+            FromScreen(Left + canvasX, Top + canvasY);
+
+        /// <summary>A point already on screen, in the overlay window's coordinates.</summary>
+        private Point FromScreen(double x, double y)
         {
             var overlay = _overlay;
-            if (overlay == null) return new Point(canvasX, canvasY);
+            if (overlay == null) return new Point(x, y);
 
-            return new Point(
-                Left + canvasX - overlay.Left,
-                Top + canvasY - overlay.Top);
+            return new Point(x - overlay.Left, y - overlay.Top);
         }
 
         /// <summary>
@@ -204,15 +194,17 @@ namespace RustPlusDesk
                 if (_draggingTile != null && tile.Id == _draggingTile.Id) continue;
                 if (!BelongsHere(tile)) continue;
 
+                // Already a screen rectangle: cells are places on the monitor now, so it only
+                // has to be moved into the overlay's own coordinates.
                 var rect = CellRect(tile);
-                var at = ToOverlay(rect.X, rect.Y);
+                var at = FromScreen(rect.X, rect.Y);
                 occupied.Add(new Rect(at.X, at.Y, rect.Width, rect.Height));
             }
 
             overlay.PaintGrid(
-                ToOverlay(CellX(0), CellY(0)),
-                CommandDockLayout.CellSizeAt(DockZoom),
-                CommandDockLayout.CellGapAt(DockZoom),
+                FromScreen(CellScreenX(0), CellScreenY(0)),
+                CellSize,
+                CellPitch - CellSize,
                 occupied);
 
             overlay.ShowBar(true);
@@ -240,7 +232,7 @@ namespace RustPlusDesk
             };
 
             var rect = CellRect(probe);
-            var at = ToOverlay(rect.X, rect.Y);
+            var at = FromScreen(rect.X, rect.Y);
 
             _overlay.SetDropTarget(new Rect(at.X, at.Y, rect.Width, rect.Height), Overlaps(probe));
         }

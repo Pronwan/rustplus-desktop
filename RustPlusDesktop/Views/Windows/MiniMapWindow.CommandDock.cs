@@ -142,14 +142,27 @@ namespace RustPlusDesk
         /// </summary>
         private void RestoreDockPosition()
         {
-            if (_dock.WindowLeft is not { } left || _dock.WindowTop is not { } top) return;
+            if (_dock.WindowLeft is not { } left || _dock.WindowTop is not { } top)
+            {
+                // Nothing saved: a first run, whose tiles start at the origin and are therefore
+                // already absolute. Said so explicitly, or the migration would fire later and
+                // offset them by a corner that never meant anything.
+                _dock.CellsAreAbsolute = true;
+                return;
+            }
 
             double dLeft = left - Left, dTop = top - Top;
+
+            // Placed before the grid is anchored, and only for that: the saved corner is what
+            // says which monitor this arrangement belongs to. After the migration below, the
+            // cells carry that themselves and the window's position is derived from them.
             Left = left;
             Top = top;
-            // Coming back from a saved position: a monitor may have been unplugged or the
-            // resolution changed since, so the dock has to be pulled somewhere visible.
-            ClampToScreen(pullIntoView: true);
+
+            ReanchorGrid();
+            MigrateCellsToAbsolute();
+
+            LayoutDock();
             HoldSettingsPopupInPlace(dLeft, dTop);
             FollowAiAnswer();
         }
@@ -335,45 +348,16 @@ namespace RustPlusDesk
 
         /// <summary>How many cells the map's free pixel size needs.</summary>
         private (int Cols, int Rows) MapCellSpan() => MapOccupiesCells
-            ? (CommandDockLayout.PixelsToCells(_mapWidth, DockZoom), CommandDockLayout.PixelsToCells(_mapHeight, DockZoom))
+            ? (PixelsToCells(_mapWidth), PixelsToCells(_mapHeight))
             : (0, 0);
 
         /// <summary>
-        /// The left edge of a column. The grid is uniform, everywhere, always.
+        /// A tile's rectangle, in screen pixels.
         ///
-        /// It used to have a seam. The map keeps a free pixel size but reserves whole cells, and
-        /// its allotment is a little bigger than it is, so every column past the map shifted by
-        /// that difference to close the gap - at every row, not just beside the map, or a tile
-        /// underneath would have fallen out of line with the one above it.
-        ///
-        /// That made the grid depend on a pixel value the size slider changes continuously: the
-        /// snap points moved as the map was resized, and the grid drawn during a drag could not
-        /// show where a tile would actually land. The map now sits over the grid instead of
-        /// displacing it - it still snaps its own corner to a cell and still reserves cells so
-        /// nothing lands underneath it, but it no longer moves anything else.
-        ///
-        /// The cost is the gap the seam used to close: up to one cell between the map's edge and
-        /// the next tile, since the reservation rounds up. That one is predictable and can be
-        /// closed by choosing the map's size; a grid that moved could not be.
+        /// Screen rather than canvas: a cell is a place on the monitor now, so this is the one
+        /// answer, and the canvas offset is worked out once per layout from whatever is visible.
         /// </summary>
-        private double CellX(int col) => CommandDockLayout.CellOffset(col, DockZoom);
-
-        private double CellY(int row) => CommandDockLayout.CellOffset(row, DockZoom);
-
-        /// <summary>A tile's pixel rect. The map is the one tile whose size is not cell-derived.</summary>
-        private Rect CellRect(CommandDockTile tile)
-        {
-            double x = CellX(tile.Col);
-            double y = CellY(tile.Row);
-
-            if (tile.Kind == CommandDockTileKinds.Map)
-                return new Rect(x, y, _mapWidth, _mapHeight);
-
-            return new Rect(x, y,
-                CommandDockLayout.CellsToPixels(tile.ColSpan, DockZoom),
-                CommandDockLayout.CellsToPixels(tile.RowSpan, DockZoom));
-        }
-
+        private Rect CellRect(CommandDockTile tile) => TileScreenRect(tile);
         /// <summary>
         /// The tiles that currently take up space: everything but a switched-off map and the
         /// device tiles belonging to a server other than the one in front of us.
@@ -477,43 +461,14 @@ namespace RustPlusDesk
             return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 
-        /// <summary>
-        /// Slides every tile so the top-left occupied cell is (0,0).
-        ///
-        /// Without this the grid can grow into negative cells, and then a pixel position and a
-        /// cell coordinate stop being convertible into one another — which is exactly the drift
-        /// that made dropped tiles land somewhere other than where they were let go. Hidden tiles
-        /// move along so they stay consistent, but do not get a vote on where the corner is.
-        /// </summary>
-        private void NormaliseCells()
-        {
-            // Measured over every tile, not just the visible ones, although only the visible
-            // ones are what the window is sized around.
-            //
-            // Which tiles are visible changes on its own: the death tracker is hidden while you
-            // are alive, the wipe tile while the map has no markers, a device tile while another
-            // server is in front. Taking the minimum over that set and subtracting it from all
-            // of them meant the whole arrangement slid left whenever the leftmost visible tile
-            // happened to be one of those - and since this writes to tile.Col, the slide stuck.
-            // Loading the same template again put it back, because by then the tile was visible
-            // and the minimum was zero, which is why it looked like the first load was wrong.
-            if (_dock.Tiles.Count == 0) return;
-
-            int minCol = _dock.Tiles.Min(t => t.Col);
-            int minRow = _dock.Tiles.Min(t => t.Row);
-            if (minCol == 0 && minRow == 0) return;
-
-            foreach (var tile in _dock.Tiles)
-            {
-                tile.Col -= minCol;
-                tile.Row -= minRow;
-            }
-        }
 
         /// <summary>Writes every tile's derived pixel position onto the canvas.</summary>
         private void ApplyTilePositions()
         {
             SyncMapCellSpan();
+
+            var bounds = CellBounds();
+            var origin = new Point(bounds.X, bounds.Y);
 
             foreach (var tile in _dock.Tiles)
             {
@@ -529,8 +484,10 @@ namespace RustPlusDesk
                     el.Height = rect.Height;
                 }
 
-                Canvas.SetLeft(el, rect.X);
-                Canvas.SetTop(el, rect.Y);
+                // The rect is on screen; the canvas starts at whatever is furthest up and
+                // left, so that corner is taken back off.
+                Canvas.SetLeft(el, rect.X - origin.X);
+                Canvas.SetTop(el, rect.Y - origin.Y);
             }
         }
 
@@ -1876,7 +1833,7 @@ namespace RustPlusDesk
             {
                 if (!sizing) return;
                 var now = e.GetPosition(DockCanvas);
-                double step = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
+                double step = CellPitch;
 
                 int minCols = tile.Kind is CommandDockTileKinds.TeamChat
                                          or CommandDockTileKinds.ClanChat
@@ -2127,10 +2084,7 @@ namespace RustPlusDesk
         /// corner being asked about is where the tile *would* be, not where it is.
         /// </summary>
         private (int Col, int Row) CellUnderPoint(Point corner) =>
-        (
-            NearestCell(corner.X),
-            NearestCell(corner.Y)
-        );
+            CellAtScreen(new Point(Left + corner.X, Top + corner.Y));
 
         /// <summary>
         /// Commits a drag to the cell the highlight was showing. It is not recomputed here: the
@@ -2177,10 +2131,7 @@ namespace RustPlusDesk
         {
             if (double.IsNaN(pixels)) return 0;
 
-            double pitch = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
-            if (pitch <= 0) return 0;
-
-            return (int)Math.Round(pixels / pitch, MidpointRounding.AwayFromZero);
+            return (int)Math.Round(pixels / CellPitch, MidpointRounding.AwayFromZero);
         }
 
         private bool Overlaps(CommandDockTile tile)
