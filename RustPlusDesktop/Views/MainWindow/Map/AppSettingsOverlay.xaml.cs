@@ -1253,6 +1253,21 @@ namespace RustPlusDesk.Views
             }
         }
 
+        /// <summary>
+        /// Open Cloud 24/7: which servers stay watched while the app is closed.
+        ///
+        /// Sits next to the feature comparison deliberately - one explains what the
+        /// cloud does, the other is where it is actually turned on per server.
+        /// </summary>
+        private void BtnCloud247_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RustPlusDesk.Views.Windows.Cloud24x7Window
+            {
+                Owner = ParentWindow ?? Window.GetWindow(this),
+            };
+            window.ShowDialog();
+        }
+
         private void BtnCompareCloud_Click(object sender, RoutedEventArgs e)
         {
             var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();

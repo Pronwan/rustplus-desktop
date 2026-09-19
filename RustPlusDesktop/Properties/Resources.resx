@@ -8083,4 +8083,100 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockSectionGeneral" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="Cloud247Title" xml:space="preserve">
+    <value>Cloud 24/7</value>
+  </data>
+  <data name="Cloud247Header" xml:space="preserve">
+    <value>Cloud 24/7</value>
+  </data>
+  <data name="Cloud247SubHeader" xml:space="preserve">
+    <value>Keep your servers watched while this app is closed. Alarms, team chat and smart devices carry on without you.</value>
+  </data>
+  <data name="Cloud247Empty" xml:space="preserve">
+    <value>No paired servers yet. Pair a server in game and it will appear here.</value>
+  </data>
+  <data name="Cloud247Loading" xml:space="preserve">
+    <value>Checking what the cloud is watching...</value>
+  </data>
+  <data name="Cloud247Unavailable" xml:space="preserve">
+    <value>Could not reach the cloud. Cover is unchanged; this list may be out of date.</value>
+  </data>
+  <data name="Cloud247Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="Cloud247SaveFailed" xml:space="preserve">
+    <value>That did not save. Nothing has changed.</value>
+  </data>
+  <data name="Cloud247Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Cloud247Upgrade" xml:space="preserve">
+    <value>Get Cloud 24/7</value>
+  </data>
+  <data name="Cloud247NoAccess" xml:space="preserve">
+    <value>Cloud 24/7 is a supporter feature.</value>
+  </data>
+  <data name="Cloud247NoAccessHint" xml:space="preserve">
+    <value>Your paired servers are listed below. Supporting the project turns on cover for them.</value>
+  </data>
+  <data name="Cloud247PlanSummary" xml:space="preserve">
+    <value>{0} of {1} live connections in use.</value>
+  </data>
+  <data name="Cloud247PlanHint" xml:space="preserve">
+    <value>Covered servers always send alarms. A live connection adds the map, team chat and device control, and moves to whichever server you are playing on.</value>
+  </data>
+  <data name="Cloud247AtLimit" xml:space="preserve">
+    <value>Every live connection is in use. Other covered servers still send alarms, and one will take a live slot automatically when you play on it.</value>
+  </data>
+  <data name="Cloud247NotCovered" xml:space="preserve">
+    <value>Not covered</value>
+  </data>
+  <data name="Cloud247NeedsRepair" xml:space="preserve">
+    <value>Pairing needs renewing</value>
+  </data>
+  <data name="Cloud247OwnerDesktop" xml:space="preserve">
+    <value>This app is connected, the cloud is standing by</value>
+  </data>
+  <data name="Cloud247OwnerCloud" xml:space="preserve">
+    <value>The cloud is watching this server</value>
+  </data>
+  <data name="Cloud247Dormant" xml:space="preserve">
+    <value>Alarms only, until you play on it</value>
+  </data>
+  <data name="Cloud247LastConnected" xml:space="preserve">
+    <value>Last connected {0}</value>
+  </data>
+  <data name="Cloud247Overridden" xml:space="preserve">
+    <value>Some chat settings for this server are set on the website and no longer follow this app.</value>
+  </data>
+  <data name="Cloud247UnnamedServer" xml:space="preserve">
+    <value>Unnamed server</value>
+  </data>
+  <data name="Cloud247Repair" xml:space="preserve">
+    <value>Re-pair</value>
+  </data>
+  <data name="Cloud247RepairHint" xml:space="preserve">
+    <value>Re-pair this server in game so the cloud can connect again.</value>
+  </data>
+  <data name="Cloud247RepairBody" xml:space="preserve">
+    <value>Open Rust, go to the server, and pair it again from the in-game menu. The cloud will pick it up automatically once you have.</value>
+  </data>
+  <data name="Cloud247Priority" xml:space="preserve">
+    <value>Prefer</value>
+  </data>
+  <data name="Cloud247Prioritised" xml:space="preserve">
+    <value>{0} will keep its live connection when slots are short.</value>
+  </data>
+  <data name="Cloud247Imported" xml:space="preserve">
+    <value>Added {0} server(s) and {1} device(s) paired while this app was closed.</value>
+  </data>
+  <data name="Cloud247GiveConnection" xml:space="preserve">
+    <value>Give live connection</value>
+  </data>
+  <data name="Cloud247Release" xml:space="preserve">
+    <value>Release connection</value>
+  </data>
+  <data name="Cloud247AlarmsOnly" xml:space="preserve">
+    <value>Raid alarms only</value>
+  </data>
 </root>

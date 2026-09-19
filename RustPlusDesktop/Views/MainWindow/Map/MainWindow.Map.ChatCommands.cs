@@ -146,6 +146,7 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
             if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
             if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
+            standardCmds.Add(prefix + "who");
             // Only advertised once a code exists - listing it on a server with no codes set would
             // send people to a command that answers with nothing.
             if (!string.IsNullOrWhiteSpace(profile.CmdBaseCodes) && profile.HasBaseCodes && allowBaseCodes)
@@ -276,6 +277,14 @@ public partial class MainWindow
             _ = real.PromoteToLeaderAsync(m.SteamId);
             _ = Reply(string.Format(Properties.Resources.ChatCmdPromoteResponse, m.Author));
             AppendLog($"[ChatCommand] Promote executed by {m.Author}");
+            return;
+        }
+
+        // Command: Who is controlling
+        if (cmd == "who" || cmd == "controller" || cmd == "bot")
+        {
+            _ = Reply("Controlled by Rust+ Desktop (PC App Active)");
+            AppendLog($"[ChatCommand] Who executed by {m.Author}");
             return;
         }
 

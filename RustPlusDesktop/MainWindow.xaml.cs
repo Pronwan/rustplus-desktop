@@ -1,4 +1,4 @@
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -987,6 +987,11 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Let WPF present the first usable frame before initializing the embedded
         // browser and parsing catalogs that are not required to construct the shell.
         await Dispatcher.Yield(DispatcherPriority.ContextIdle);
+
+        // A returning user is already authenticated from the stored token, and
+        // CloudAuthManager.Initialize restores it without raising
+        // AuthenticationChanged - so this is the only hook that covers them.
+        TryImportCloudPairings();
         try
         {
             await EnsureWebView2Async();
@@ -1583,8 +1588,72 @@ public partial class MainWindow : WpfUi.FluentWindow
         Title = title;
     }
 
+    /// <summary>
+    /// Guards against the two entry points below both firing on one launch.
+    ///
+    /// A signed-in user hits ContentRendered and may hit AuthenticationChanged as
+    /// well; importing twice is harmless but the second pass is pure waste, and it
+    /// would log a second "imported nothing" line for every start.
+    /// </summary>
+    private int _cloudPairingImportRunning;
+
+    /// <summary>
+    /// Pull down servers and devices paired in game while this app was closed.
+    ///
+    /// Runs in the background and never blocks the UI: a slow or unreachable
+    /// platform must not delay the app being usable, and the worst case of skipping
+    /// it is that the user opens Cloud 24/7, which imports there anyway.
+    /// </summary>
+    private void TryImportCloudPairings()
+    {
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+
+        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
+        // can land on different threads.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var result = await Services.Cloud.CloudPairingImporter.ImportAsync();
+
+                if (result is { ChangedAnything: true })
+                {
+                    SafeLog($"[Cloud pairings] Imported {result.Added} server(s), "
+                        + $"{result.Updated} token update(s) and {result.DevicesAdded} device(s) paired while the app was closed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Never fatal: the server list is simply as stale as it was before.
+                SafeLog($"[Cloud pairings] Import failed: {ex.Message}");
+            }
+            finally
+            {
+                System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+            }
+        });
+    }
+
+    /// <summary>
+    /// Log from a background thread without the log itself becoming the failure.
+    ///
+    /// AppendLog marshals through Dispatcher.Invoke, which blocks and throws once
+    /// the window is shutting down. An import still in flight at that moment would
+    /// otherwise raise from inside its own catch block and escape the task.
+    /// </summary>
+    private void SafeLog(string line)
+    {
+        try { AppendLog(line); } catch { /* shutting down; nothing to report to */ }
+    }
+
     private void SupabaseAuthManager_AuthenticationChanged()
     {
+        // Signing in is the other moment new pairings can be waiting: the account
+        // may have been paired from elsewhere entirely since the last launch.
+        TryImportCloudPairings();
+
         void RefreshAccountUi()
         {
             UpdateRustMapsUi();
@@ -3601,6 +3670,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try
             {
                 await DisposePlayerWipeTrackerAsync();
+            }
+            catch { }
+            try
+            {
+                // Hand the server back before the process goes, so the cloud
+                // picks it up in seconds rather than waiting out the lease.
+                await ReleaseCloudHoldOnExitAsync();
             }
             catch { }
             finally

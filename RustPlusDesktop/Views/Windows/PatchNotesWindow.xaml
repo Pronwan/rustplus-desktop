@@ -242,7 +242,7 @@
 
                                     <!--  The one change that needs saying out loud: the gesture for entering edit
                                           mode is different, and nobody will find it by accident.  -->
-                                    <Border Background="#1A3FD7FF" BorderBrush="#663FD7FF" BorderThickness="1" CornerRadius="8"
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource Accent}" BorderThickness="1" CornerRadius="8"
                                             Padding="12,10" Margin="0,0,0,14">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <ui:SymbolIcon Symbol="ArrowUp24" Foreground="{DynamicResource Accent}" FontSize="17"

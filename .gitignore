@@ -37,6 +37,9 @@ installer/Output/*
 
 # Lokale Server-/Helper-Skripte
 **/Scripts/
+!RustPlusDesktop/Scripts/
+RustPlusDesktop/Scripts/*.py
+RustPlusDesktop/Scripts/*.conf
 
 # Doku/Assets (rein informativ – wäre auch ohne diese Zeilen ok)
 !README.md
