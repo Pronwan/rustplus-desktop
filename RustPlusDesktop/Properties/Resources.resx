@@ -8092,6 +8092,9 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="Cloud247LastConnected" xml:space="preserve">
     <value>Last connected {0}</value>
   </data>
+  <data name="Cloud247Overridden" xml:space="preserve">
+    <value>Some chat settings for this server are set on the website and no longer follow this app.</value>
+  </data>
   <data name="Cloud247UnnamedServer" xml:space="preserve">
     <value>Unnamed server</value>
   </data>

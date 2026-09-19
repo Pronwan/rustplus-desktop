@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -142,6 +142,18 @@ namespace RustPlusDesk.Views.Windows
                     ? string.Format(CultureInfo.CurrentCulture,
                         Str("Cloud247LastConnected", "Last connected {0}"), at.ToLocalTime())
                     : server.LastError ?? string.Empty;
+
+            // Said here because there is nowhere else it could be found. A setting
+            // pinned on the website stops following this app, so somebody who
+            // changes it here and watches the cloud carry on regardless would
+            // otherwise have no way to learn why.
+            if (server.HasCloudOverrides)
+            {
+                var pinned = Str("Cloud247Overridden",
+                    "Some chat settings for this server are set on the website and no longer follow this app.");
+
+                detail = string.IsNullOrWhiteSpace(detail) ? pinned : detail + "  " + pinned;
+            }
 
             return new ServerRow
             {

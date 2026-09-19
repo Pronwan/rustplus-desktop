@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -42,7 +42,8 @@ namespace RustPlusDesk.Services.Cloud
             DateTime? LastConnectedAt,
             string? LastError,
             bool NeedsRepair,
-            bool IsPreferred);
+            bool IsPreferred,
+            bool HasCloudOverrides);
 
         /// <summary>The plan's ceiling, so the UI can be honest about it.</summary>
         public sealed record CloudPlan(
@@ -187,7 +188,8 @@ namespace RustPlusDesk.Services.Cloud
                 Date(item, "last_connected_at"),
                 Str(item, "last_error"),
                 Bool(item, "needs_repair"),
-                Bool(item, "is_preferred"));
+                Bool(item, "is_preferred"),
+                Bool(item, "has_cloud_overrides"));
         }
 
         private static CloudPlan ReadPlan(JsonElement meta)
