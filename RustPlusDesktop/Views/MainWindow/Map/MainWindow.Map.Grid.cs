@@ -1,4 +1,4 @@
-using RustPlusDesk.Services;
+﻿using RustPlusDesk.Services;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,15 +107,16 @@ public partial class MainWindow
             return;
         }
 
-        int cells = Math.Max(1, (int)Math.Ceiling(_worldSizeS / 150.0));
+        int cells = GridCellCount(_worldSizeS);
+        double cell = GridCellSize(_worldSizeS);
 
         var stroke = Brushes.Black;
         double thin = 1.0;
 
         for (int i = 0; i <= cells; i++)
         {
-            var pTop = WorldToImagePx(i * 150, cells * 150);
-            var pBottom = WorldToImagePx(i * 150, 0);
+            var pTop = WorldToImagePx(i * cell, _worldSizeS);
+            var pBottom = WorldToImagePx(i * cell, 0);
 
             var line = new System.Windows.Shapes.Line
             {
@@ -131,8 +132,8 @@ public partial class MainWindow
 
         for (int j = 0; j <= cells; j++)
         {
-            var pLeft = WorldToImagePx(0, (cells - j) * 150);
-            var pRight = WorldToImagePx(cells * 150, (cells - j) * 150);
+            var pLeft = WorldToImagePx(0, _worldSizeS - j * cell);
+            var pRight = WorldToImagePx(_worldSizeS, _worldSizeS - j * cell);
 
             var line = new System.Windows.Shapes.Line
             {
@@ -161,7 +162,7 @@ public partial class MainWindow
                     Padding = new Thickness(0)
                 };
 
-                var p = WorldToImagePx(i * 150, (cells - j) * 150);
+                var p = WorldToImagePx(i * cell, _worldSizeS - j * cell);
 
                 GridLayer.Children.Add(tb);
                 Canvas.SetLeft(tb, p.X);
@@ -199,6 +200,29 @@ public partial class MainWindow
         return s;
     }
 
+    /// <summary>
+    /// How many cells a map of this size is divided into.
+    ///
+    /// 150 is what Rust divides by to get the count — it is not the width of a
+    /// cell. A 4250 map gets 29 (A..AC), which is what the overlay has always
+    /// drawn correctly.
+    /// </summary>
+    internal static int GridCellCount(double worldSize)
+        => Math.Max(1, (int)Math.Ceiling(worldSize / 150.0));
+
+    /// <summary>
+    /// How wide one of those cells actually is.
+    ///
+    /// The cells are spread evenly across the map, so this is only 150 when the
+    /// world size divides by 150 exactly. It does on 3000 and 4500, which is why
+    /// treating every cell as 150 went unnoticed; a 4250 map has 29 cells of
+    /// 146.55, and drawing them 150 wide spread the grid over 4350 units of a
+    /// 4250 map. The boundaries drift outward as you go, so a death the game put
+    /// in E24 was reported as D23.
+    /// </summary>
+    internal static double GridCellSize(double worldSize)
+        => worldSize / GridCellCount(worldSize);
+
     private bool TryGetGridRef(double x, double y, out string label)
     {
         label = "";
@@ -213,9 +237,10 @@ public partial class MainWindow
             return true;
         }
 
-        int cells = Math.Max(1, (int)Math.Ceiling(_worldSizeS / 150.0));
-        int colNormal = Math.Clamp((int)Math.Floor(x / 150.0), 0, cells - 1);
-        int rowNormal = Math.Clamp((int)Math.Floor((_worldSizeS - y) / 150.0), 0, cells - 1);
+        int cells = GridCellCount(_worldSizeS);
+        double cellSize = GridCellSize(_worldSizeS);
+        int colNormal = Math.Clamp((int)Math.Floor(x / cellSize), 0, cells - 1);
+        int rowNormal = Math.Clamp((int)Math.Floor((_worldSizeS - y) / cellSize), 0, cells - 1);
 
         label = $"{ColumnLabel(colNormal)}{rowNormal}";
         return true;
