@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -130,6 +130,7 @@ namespace RustPlusDesk.Services.Cloud
                 }
 
                 devicesAdded += MergeDevices(existing, entry);
+                MergeChatCommands(existing, entry);
             }
 
             if (added > 0 || updated > 0 || devicesAdded > 0)
@@ -150,6 +151,11 @@ namespace RustPlusDesk.Services.Cloud
         /// Matched on entity id rather than name, because renaming is exactly what
         /// re-pairing a device does — matching on name would add a second row and
         /// leave chat commands with two things to answer to.
+        ///
+        /// The alias and the icon are taken only when the platform says they were
+        /// set on the website. That flag is the whole reason the sync is two-way
+        /// rather than the platform winning: without it, a name this app pushed
+        /// would come straight back and overwrite a rename made here since.
         /// </summary>
         private static int MergeDevices(ServerProfile profile, JsonElement entry)
         {
@@ -170,6 +176,8 @@ namespace RustPlusDesk.Services.Cloud
 
                     var name = Str(item, "Name");
                     var kind = Str(item, "Kind");
+                    var alias = Str(item, "Alias");
+                    var icon = Str(item, "CustomIconShortName");
 
                     var device = profile.Devices.FirstOrDefault(d => d.EntityId == entityId);
 
@@ -180,17 +188,102 @@ namespace RustPlusDesk.Services.Cloud
                             EntityId = entityId,
                             Name = name,
                             Kind = kind,
+                            Alias = alias,
+                            CustomIconShortName = icon,
                         });
                         added++;
+                        continue;
                     }
-                    else if (!string.IsNullOrWhiteSpace(name) && device.Name != name)
+
+                    if (!string.IsNullOrWhiteSpace(name) && device.Name != name)
                     {
                         device.Name = name;
+                    }
+
+                    if (Bool(item, "AliasFromWeb") && device.Alias != alias)
+                    {
+                        device.Alias = alias;
+                    }
+
+                    if (Bool(item, "IconFromWeb") && device.CustomIconShortName != icon)
+                    {
+                        device.CustomIconShortName = icon;
+                        // The id and the short name name the same picture, and a
+                        // stale id would win when the icon is resolved.
+                        device.CustomIconId = null;
                     }
                 }
             }
 
             return added;
+        }
+
+        /// <summary>
+        /// Take the command words and device bindings the platform is serving.
+        ///
+        /// The platform answers with the effective config — what the user last
+        /// chose, wherever they chose it — so a word set on the website reaches the
+        /// app here rather than only ever travelling app-to-cloud. A binding is
+        /// matched on entity id, because the word is the thing being changed and
+        /// matching on it would rename nothing and add a duplicate.
+        /// </summary>
+        private static void MergeChatCommands(ServerProfile profile, JsonElement entry)
+        {
+            if (!entry.TryGetProperty("chat_commands", out var chat) || chat.ValueKind != JsonValueKind.Object)
+                return;
+
+            var prefix = Str(chat, "prefix");
+            if (!string.IsNullOrWhiteSpace(prefix))
+                profile.ChatCommandPrefix = prefix!;
+
+            if (chat.TryGetProperty("words", out var words) && words.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var word in words.EnumerateObject())
+                {
+                    if (word.Value.ValueKind != JsonValueKind.String) continue;
+
+                    var value = word.Value.GetString();
+                    if (string.IsNullOrWhiteSpace(value)) continue;
+
+                    switch (word.Name)
+                    {
+                        case "pop": profile.CmdPop = value!; break;
+                        case "time": profile.CmdTime = value!; break;
+                        case "afk": profile.CmdAfk = value!; break;
+                        case "promote": profile.CmdPromote = value!; break;
+                        case "list": profile.CmdList = value!; break;
+                        case "upkeep": profile.CmdUpkeepDetail = value!; break;
+                        case "base_codes": profile.CmdBaseCodes = value!; break;
+                    }
+                }
+            }
+
+            if (!chat.TryGetProperty("device_mappings", out var mappings) || mappings.ValueKind != JsonValueKind.Array)
+                return;
+
+            foreach (var mapping in mappings.EnumerateArray())
+            {
+                var entityId = UInt(mapping, "entity_id");
+                var command = Str(mapping, "command");
+
+                if (entityId == 0 || string.IsNullOrWhiteSpace(command)) continue;
+
+                var existing = profile.SwitchCommandMappings.FirstOrDefault(m => m.EntityId == entityId);
+
+                if (existing == null)
+                {
+                    profile.SwitchCommandMappings.Add(new ChatCommandMapping
+                    {
+                        EntityId = entityId,
+                        Command = command!,
+                        Label = profile.Devices.FirstOrDefault(d => d.EntityId == entityId)?.PureName ?? "",
+                    });
+                }
+                else if (!string.Equals(existing.Command, command, StringComparison.Ordinal))
+                {
+                    existing.Command = command!;
+                }
+            }
         }
 
         /// <summary>Forget where we got to, so the next import re-reads everything.</summary>
@@ -201,6 +294,9 @@ namespace RustPlusDesk.Services.Cloud
 
         private static int Int(JsonElement e, string name)
             => e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetInt32() : 0;
+
+        private static bool Bool(JsonElement e, string name)
+            => e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.True;
 
         private static uint UInt(JsonElement e, string name)
             => e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number
