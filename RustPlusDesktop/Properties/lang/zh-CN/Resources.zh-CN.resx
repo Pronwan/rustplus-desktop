@@ -7647,4 +7647,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>没有可清除的内容时也保留在停靠栏</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>解锁覆盖层以进行布置</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>锁定覆盖层</value>
+  </data>
 </root>

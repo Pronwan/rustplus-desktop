@@ -38,8 +38,8 @@ namespace RustPlusDesk
             // its ActualWidth is zero, so the panel opened on top of the tile instead of beside
             // it. The cell knows the width before anything is drawn.
             var rect = CellRect(tile);
-            double x = rect.X + _dragPad;
-            double y = rect.Y + _dragPad;
+            double x = rect.X;
+            double y = rect.Y;
 
             const double panelWidth = 236;
             const double panelHeight = 330;

@@ -7993,4 +7993,10 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>Auf dem Dock lassen, auch wenn es nichts zu löschen gibt</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Overlay entsperren, um es anzuordnen</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Overlay sperren</value>
+  </data>
 </root>

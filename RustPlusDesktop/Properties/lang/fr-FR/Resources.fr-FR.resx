@@ -7899,4 +7899,10 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>Garder sur le dock même quand il n&apos;y a rien à effacer</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Déverrouiller l&apos;overlay pour le réorganiser</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Verrouiller l&apos;overlay</value>
+  </data>
 </root>

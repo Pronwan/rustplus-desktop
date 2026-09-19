@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -677,20 +677,17 @@ namespace RustPlusDesk
 
             var bounds = CellBounds();
 
-            double padDelta = _dragPad - _appliedDragPad;
-            _appliedDragPad = _dragPad;
-
             ApplyTilePositions();
 
             // The preview extra grows the window without moving anything, so an arrangement
             // larger than the dock can be outlined in full.
-            Width = Math.Max(1, bounds.Width + 2 * _dragPad + _previewExtra.Width);
-            Height = Math.Max(1, bounds.Height + 2 * _dragPad + _previewExtra.Height);
+            Width = Math.Max(1, bounds.Width + _previewExtra.Width);
+            Height = Math.Max(1, bounds.Height + _previewExtra.Height);
 
             if (!double.IsNaN(Left) && !double.IsNaN(Top))
             {
-                Left += before.X - bounds.X - padDelta;
-                Top += before.Y - bounds.Y - padDelta;
+                Left += before.X - bounds.X;
+                Top += before.Y - bounds.Y;
             }
 
             // Only meaningful while the map is on the dock; with it gone there is no centre to
@@ -713,7 +710,14 @@ namespace RustPlusDesk
                 FollowAiAnswer();
 
             PositionChrome();
-            DrawGridGhost();
+
+            // The dock moved or resized, so the grid the overlay painted is measured against
+            // the wrong origin. Only while a drag is in flight - otherwise there is none.
+            if (_draggingTile != null)
+            {
+                PaintOverlayGrid();
+                ShowOverlayDropTarget();
+            }
         }
 
         /// <summary>Stretches the title bar across the dock and parks it on the top edge.</summary>

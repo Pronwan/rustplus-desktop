@@ -7820,4 +7820,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>지울 것이 없어도 독에 유지</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>오버레이 잠금 해제 후 배치</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>오버레이 잠금</value>
+  </data>
 </root>

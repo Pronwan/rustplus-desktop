@@ -61,6 +61,30 @@ namespace RustPlusDesk
             };
             _dockTimer.Tick += (_, __) => RefreshTiles();
 
+            // The overlay is the dock's, and only exists while the dock does: it draws the grid
+            // the dock is measured against and carries the bar that arranges it.
+            IsVisibleChanged += (_, __) =>
+            {
+                if (IsVisible)
+                {
+                    Overlay();
+                    StartEdgeWatch();
+                }
+                else
+                {
+                    StopEdgeWatch();
+                    _overlay?.ShowBar(false);
+                    _overlay?.ClearGrid();
+                }
+            };
+
+            // A full-screen transparent window left behind would sit over the game forever.
+            Closed += (_, __) => CloseOverlay();
+
+            // The dock can be dragged to another monitor, and the overlay has to follow it -
+            // a grid painted on the screen the dock used to be on describes nothing.
+            LocationChanged += (_, __) => PositionOverlay();
+
             InitArming();
 
             Loaded += (_, __) => { ApplyLockState(); RebuildTiles(); _dockTimer.Start(); };
@@ -207,20 +231,20 @@ namespace RustPlusDesk
             UpdateTileHandles();
         }
 
+        /// <summary>
+        /// The dock's own title bar is gone - the overlay carries it, at the top of the screen.
+        ///
+        /// The element is still in the XAML and still holds nothing: kept so the drag handler
+        /// and the tutorial anchors that name it keep resolving, and permanently hidden here
+        /// rather than deleted in a dozen places. Hit testing goes off with it, because an
+        /// invisible bar would otherwise swallow every click on the dock's top 30 pixels.
+        /// </summary>
         private void FadeTitleBar(bool show)
         {
             if (DockTitleBar == null) return;
 
-            // Opacity 0 does not stop a WPF element from taking the mouse. Left hit-testable,
-            // the invisible bar would swallow every click on the top 30 pixels of whatever tile
-            // sits under it — so the two are switched together.
-            DockTitleBar.IsHitTestVisible = show;
-
-            var fade = new DoubleAnimation(show ? 1.0 : 0.0, TimeSpan.FromMilliseconds(show ? 120 : 450))
-            {
-                FillBehavior = FillBehavior.HoldEnd,
-            };
-            DockTitleBar.BeginAnimation(UIElement.OpacityProperty, fade);
+            DockTitleBar.IsHitTestVisible = false;
+            DockTitleBar.Opacity = 0;
         }
 
         /// <summary>
@@ -259,9 +283,17 @@ namespace RustPlusDesk
         /// <summary>Puts the lock button into the state it is actually in.</summary>
         private void ApplyLockState()
         {
-            if (LockGlyph == null || BtnLockDock == null) return;
-
             bool locked = _dock.Locked;
+
+            // The bar on the overlay carries the same lock, so it is repainted here rather than
+            // by whoever happened to flip it.
+            _overlay?.SetLocked(locked);
+
+            // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
+            // because it is the only way back to locking it.
+            if (!locked) _overlay?.ShowBar(true);
+
+            if (LockGlyph == null || BtnLockDock == null) return;
 
             LockGlyph.Text = locked ? "\uE72E" : "\uE785";   // closed / open padlock
             LockGlyph.Foreground = locked
@@ -491,140 +523,37 @@ namespace RustPlusDesk
                     el.Height = rect.Height;
                 }
 
-                Canvas.SetLeft(el, rect.X + _dragPad);
-                Canvas.SetTop(el, rect.Y + _dragPad);
+                Canvas.SetLeft(el, rect.X);
+                Canvas.SetTop(el, rect.Y);
             }
         }
 
         // ── Drag preview ────────────────────────────────────────────────────────
 
-        // While a tile is in flight the dock grows by one cell on every side, so the grid hint
-        // can show the row and column it could be extended into — and so a tile dragged to the
-        // edge is not clipped by the window it is still inside of.
-        private double _dragPad;
-        private double _appliedDragPad;
-
         private CommandDockTile? _draggingTile;
         private (int Col, int Row)? _dropTarget;
-
-        private double CellPitch => CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
 
         private void BeginDragPreview(CommandDockTile tile)
         {
             _draggingTile = tile;
             _dropTarget = (tile.Col, tile.Row);
-            _dragPad = CellPitch;
-            LayoutDock();
+
+            // _dragPad stays zero now. It used to grow the dock by a cell in every direction so
+            // the grid had somewhere to be drawn, with the window moving the opposite way to
+            // compensate - and ClampToScreen then undid the compensation at the top of the
+            // screen, which is why the dock crept downwards one cell per drag. The grid lives on
+            // a window that already covers the screen, so none of that is needed.
+            PaintOverlayGrid();
+            ShowOverlayDropTarget();
         }
 
         private void EndDragPreview()
         {
             _draggingTile = null;
             _dropTarget = null;
-            _dropHighlight = null;
-            _dragPad = 0;
-            GridGhostLayer.Children.Clear();
+            ClearOverlayGrid();
         }
 
-        /// <summary>
-        /// Paints the cell grid under a tile in flight, and fills the cell it would drop into.
-        ///
-        /// The whole point is that the snap stops being a surprise: the filled rectangle is the
-        /// tile's own footprint at the target cell, so what is highlighted is exactly what will
-        /// be occupied — including when the target is taken and the drop will bounce elsewhere,
-        /// which the colour says.
-        /// </summary>
-        private void DrawGridGhost()
-        {
-            if (GridGhostLayer == null) return;
-
-            GridGhostLayer.Children.Clear();
-            if (_draggingTile == null) return;
-
-            var line = new SolidColorBrush(Color.FromArgb(0x38, 0xFF, 0xFF, 0xFF));
-            line.Freeze();
-
-            for (int col = -1; col < 40; col++)
-            {
-                double x = CellX(col) + _dragPad;
-                if (x >= Width) break;
-
-                for (int row = -1; row < 40; row++)
-                {
-                    double y = CellY(row) + _dragPad;
-                    if (y >= Height) break;
-                    if (x + CommandDockLayout.CellSizeAt(DockZoom) <= 0 || y + CommandDockLayout.CellSizeAt(DockZoom) <= 0) continue;
-
-                    var cell = new System.Windows.Shapes.Rectangle
-                    {
-                        Width = CommandDockLayout.CellSizeAt(DockZoom),
-                        Height = CommandDockLayout.CellSizeAt(DockZoom),
-                        RadiusX = 8,
-                        RadiusY = 8,
-                        Stroke = line,
-                        StrokeThickness = 1,
-                        StrokeDashArray = new DoubleCollection { 3, 3 },
-                        Fill = System.Windows.Media.Brushes.Transparent,
-                    };
-                    Canvas.SetLeft(cell, x);
-                    Canvas.SetTop(cell, y);
-                    GridGhostLayer.Children.Add(cell);
-                }
-            }
-
-            // The cells never move during a drag — only the highlight does, so it is built once
-            // here and repositioned on the move rather than the whole grid being rebuilt at
-            // pointer rate.
-            _dropHighlight = new System.Windows.Shapes.Rectangle
-            {
-                RadiusX = 10,
-                RadiusY = 10,
-                StrokeThickness = 2,
-            };
-            GridGhostLayer.Children.Add(_dropHighlight);
-            UpdateDropHighlight();
-        }
-
-        private System.Windows.Shapes.Rectangle? _dropHighlight;
-
-        private void UpdateDropHighlight()
-        {
-            if (_dropHighlight == null || _draggingTile == null) return;
-
-            if (_dropTarget is not { } target)
-            {
-                _dropHighlight.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            var probe = new CommandDockTile
-            {
-                Id = _draggingTile.Id,
-                Kind = _draggingTile.Kind,
-                Col = target.Col,
-                Row = target.Row,
-                ColSpan = _draggingTile.ColSpan,
-                RowSpan = _draggingTile.RowSpan,
-            };
-
-            // Red says the drop will bounce to the next free spot instead of landing here, so
-            // that outcome is visible before the button comes up rather than after.
-            bool blocked = Overlaps(probe);
-            var rect = CellRect(probe);
-
-            _dropHighlight.Visibility = Visibility.Visible;
-            _dropHighlight.Width = Math.Max(1, rect.Width);
-            _dropHighlight.Height = Math.Max(1, rect.Height);
-            _dropHighlight.Fill = new SolidColorBrush(blocked
-                ? Color.FromArgb(0x33, 0xE5, 0x39, 0x35)
-                : Color.FromArgb(0x33, 0x3F, 0xD7, 0xFF));
-            _dropHighlight.Stroke = new SolidColorBrush(blocked
-                ? Color.FromArgb(0xAA, 0xE5, 0x39, 0x35)
-                : Color.FromArgb(0xAA, 0x3F, 0xD7, 0xFF));
-
-            Canvas.SetLeft(_dropHighlight, rect.X + _dragPad);
-            Canvas.SetTop(_dropHighlight, rect.Y + _dragPad);
-        }
 
         /// <summary>Keeps the map tile's cell span in step with the size the slider gave it.</summary>
         private void SyncMapCellSpan()
@@ -2122,23 +2051,31 @@ namespace RustPlusDesk
                     if (Math.Abs(moved.X) < DragThreshold && Math.Abs(moved.Y) < DragThreshold) return;
 
                     dragging = true;
-                    Panel.SetZIndex(border, 1000);   // over its neighbours while it travels
 
                     var dragged = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
                     if (dragged != null) BeginDragPreview(dragged);
+
+                    // The tile itself stays on its cell and dims; what follows the pointer is a
+                    // picture of it on the overlay. It has to be, because the overlay covers the
+                    // screen and this window does not - a tile dragged past the dock's own edge
+                    // would simply be clipped away.
+                    _overlay?.SetGhost(border, new Size(border.ActualWidth, border.ActualHeight));
+                    border.Opacity = 0.35;
                 }
 
                 var p = e.GetPosition(DockCanvas);
-                Canvas.SetLeft(border, p.X - grabOffset.X);
-                Canvas.SetTop(border, p.Y - grabOffset.Y);
+                var corner = new Point(p.X - grabOffset.X, p.Y - grabOffset.Y);
+
+                var ghostAt = ToOverlay(corner.X, corner.Y);
+                _overlay?.MoveGhost(ghostAt);
 
                 // Recomputed on every move so the highlight is always the cell a release would
                 // actually use — the drop reads this, it does not work it out again.
-                var next = CellUnder(border);
+                var next = CellUnderPoint(corner);
                 if (next != _dropTarget)
                 {
                     _dropTarget = next;
-                    UpdateDropHighlight();
+                    ShowOverlayDropTarget();
                 }
             };
 
@@ -2159,6 +2096,11 @@ namespace RustPlusDesk
 
                 dragging = false;
                 Panel.SetZIndex(border, 0);
+
+                // Put back what the drag dimmed. The drop only re-positions the existing
+                // elements, so nothing else would restore it and the tile would stay faded.
+                border.Opacity = 1.0;
+
                 e.Handled = true;        // a drag must not also toggle the switch it landed on
                 DropTile(tileId);
             };
@@ -2171,13 +2113,17 @@ namespace RustPlusDesk
 
         }
 
-        /// <summary>The cell a dragged element's top-left corner currently sits over.</summary>
-        private (int Col, int Row) CellUnder(FrameworkElement el) =>
+        /// <summary>
+        /// The cell a top-left corner sits over, in dock canvas coordinates.
+        ///
+        /// Takes the corner rather than the element, because the element no longer moves during
+        /// a drag: it stays on its cell while a ghost on the overlay follows the pointer, so the
+        /// corner being asked about is where the tile *would* be, not where it is.
+        /// </summary>
+        private (int Col, int Row) CellUnderPoint(Point corner) =>
         (
-            // The padding is a rendering offset, not part of the grid — take it back off before
-            // asking which cell this is, or every drop lands one cell too far.
-            NearestCell(Canvas.GetLeft(el) - _dragPad, CellX),
-            NearestCell(Canvas.GetTop(el) - _dragPad, CellY)
+            NearestCell(corner.X, CellX),
+            NearestCell(corner.Y, CellY)
         );
 
         /// <summary>

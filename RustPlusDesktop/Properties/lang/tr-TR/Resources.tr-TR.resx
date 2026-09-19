@@ -6872,4 +6872,10 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>Silinecek bir şey yokken bile dokta kalsın</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Düzenlemek için yerleşimi aç</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Yerleşimi kilitle</value>
+  </data>
 </root>

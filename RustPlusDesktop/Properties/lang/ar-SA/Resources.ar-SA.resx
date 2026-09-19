@@ -7790,4 +7790,10 @@
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>الإبقاء عليه في الشريط حتى دون وجود ما يُمسح</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>إلغاء قفل الواجهة لترتيبها</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>قفل الواجهة</value>
+  </data>
 </root>

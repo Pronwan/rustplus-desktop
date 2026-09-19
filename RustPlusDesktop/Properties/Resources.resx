@@ -8074,4 +8074,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>Keep on the dock when there is nothing to clear</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Unlock the overlay to arrange it</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Lock the overlay</value>
+  </data>
 </root>

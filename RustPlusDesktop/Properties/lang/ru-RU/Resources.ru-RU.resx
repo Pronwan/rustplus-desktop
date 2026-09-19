@@ -7899,4 +7899,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
     <value>Оставлять на доке, даже когда нечего очищать</value>
   </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Разблокировать оверлей для настройки</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Заблокировать оверлей</value>
+  </data>
 </root>
