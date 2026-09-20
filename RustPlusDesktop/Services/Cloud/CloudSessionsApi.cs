@@ -33,6 +33,7 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>One paired server and what the cloud is doing about it.</summary>
         public sealed record CloudServer(
             string UserServerId,
+            string ServerId,
             string? ServerKey,
             string? Name,
             bool Enrolled,
@@ -276,8 +277,11 @@ namespace RustPlusDesk.Services.Cloud
 
         private static CloudServer ReadServer(JsonElement item)
         {
+            var userServerId = Str(item, "user_server_id") ?? string.Empty;
+            var serverId = Str(item, "server_id") ?? userServerId;
             return new CloudServer(
-                Str(item, "user_server_id") ?? string.Empty,
+                userServerId,
+                serverId,
                 Str(item, "server_key"),
                 Str(item, "name") ?? Str(item, "server_name"),
                 Bool(item, "enrolled"),

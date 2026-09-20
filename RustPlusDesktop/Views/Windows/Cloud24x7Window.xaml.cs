@@ -99,7 +99,7 @@ namespace RustPlusDesk.Views.Windows
                     _rows.Add(BuildRow(server, overview.Plan));
                     _serverOptions.Add(new ServerOption
                     {
-                        ServerId = server.UserServerId,
+                        ServerId = server.ServerId,
                         UserServerId = server.UserServerId,
                         Name = string.IsNullOrWhiteSpace(server.Name) ? (server.ServerKey ?? "Server") : server.Name!
                     });
@@ -114,7 +114,7 @@ namespace RustPlusDesk.Views.Windows
                     var firstPreferred = overview.Servers.FirstOrDefault(s => s.IsPreferred);
                     if (firstPreferred != null)
                     {
-                        CmbActiveServer.SelectedValue = firstPreferred.UserServerId;
+                        CmbActiveServer.SelectedValue = firstPreferred.ServerId;
                     }
                 }
 
@@ -205,7 +205,7 @@ namespace RustPlusDesk.Views.Windows
             return new ServerRow
             {
                 UserServerId = server.UserServerId,
-                ServerId = server.UserServerId,
+                ServerId = server.ServerId,
                 ServerKey = server.ServerKey,
                 Name = string.IsNullOrWhiteSpace(server.Name)
                     ? server.ServerKey ?? Str("Cloud247UnnamedServer", "Unnamed server")
@@ -275,7 +275,11 @@ namespace RustPlusDesk.Views.Windows
             if (enabling && currentActive.Count == 0)
             {
                 var first = _rows.FirstOrDefault();
-                if (first != null) currentActive.Add(first.UserServerId);
+                if (first != null) currentActive.Add(first.ServerId);
+            }
+            else if (!enabling)
+            {
+                currentActive.Clear();
             }
 
             var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(enabling, currentActive);
@@ -343,23 +347,23 @@ namespace RustPlusDesk.Views.Windows
                 if (limit <= 1)
                 {
                     currentActive.Clear();
-                    currentActive.Add(row.UserServerId);
+                    currentActive.Add(row.ServerId);
                 }
                 else
                 {
-                    if (currentActive.Count >= limit)
+                    while (currentActive.Count >= limit && currentActive.Count > 0)
                     {
-                        // Remove oldest or replace
                         currentActive.RemoveAt(0);
                     }
-                    currentActive.Add(row.UserServerId);
+                    currentActive.Add(row.ServerId);
                 }
             }
             else
             {
-                // Remove from active list
-                currentActive.Remove(row.UserServerId);
-                currentActive.Remove(row.ServerId);
+                // Deactivate: Remove from active list
+                currentActive.RemoveAll(id => 
+                    string.Equals(id, row.ServerId, StringComparison.OrdinalIgnoreCase) || 
+                    string.Equals(id, row.UserServerId, StringComparison.OrdinalIgnoreCase));
             }
 
             SetStatus("Saving...");
@@ -370,9 +374,13 @@ namespace RustPlusDesk.Views.Windows
             {
                 SetStatus("That did not save. Nothing has changed.");
             }
-            else if (enableGlobal)
+            else
             {
-                _ = FcmSyncService.SyncFcmCredentialsAsync();
+                _ = CloudConsentService.RecordConsentAsync(CloudConsentService.TypeCloud247, enableGlobal);
+                if (enableGlobal)
+                {
+                    _ = FcmSyncService.SyncFcmCredentialsAsync();
+                }
             }
 
             await RefreshAsync();
