@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v10.0.2", Title = "Patch Notes Fixes", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_0_2" },
+                new PatchVersionNavModel { Version = "v10.0.3", Title = "Cloud 24/7 & Lease Dominance", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_0_3" },
+                new PatchVersionNavModel { Version = "v10.0.2", Title = "Patch Notes Fixes", Category = "Hotfix", TargetCardName = "Card_v10_0_2" },
                 new PatchVersionNavModel { Version = "v10.0.1", Title = "Widget Overlay Rework", Category = "Hotfix", TargetCardName = "Card_v10_0_1" },
                 new PatchVersionNavModel { Version = "v10.0.0", Title = "Widget Overlay, AI Companion, Map Layers & Global Chat", Category = "Major", TargetCardName = "Card_v10_0_0" },
                 new PatchVersionNavModel { Version = "v9.2.2",  Title = "Honest Alarm Times & Alexa Link Warning", Category = "Update", TargetCardName = "Card_v9_2_2" },

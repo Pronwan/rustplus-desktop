@@ -30,10 +30,43 @@ public partial class MainWindow
     /// into a couple of seconds.
     /// </summary>
     private string? _cloudHeldServerKey;
+    private DispatcherTimer? _cloudLeaseHeartbeatTimer;
+
+    private void StartCloudLeaseHeartbeatTimer()
+    {
+        _cloudLeaseHeartbeatTimer?.Stop();
+        _cloudLeaseHeartbeatTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(30)
+        };
+        _cloudLeaseHeartbeatTimer.Tick += (s, e) =>
+        {
+            var key = _cloudHeldServerKey;
+            if (!string.IsNullOrWhiteSpace(key) && _vm?.Selected?.IsConnected == true)
+            {
+                if (Services.Cloud.CloudSessionsApi.IsServerCovered(key))
+                {
+                    _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(key);
+                }
+            }
+            else
+            {
+                StopCloudLeaseHeartbeatTimer();
+            }
+        };
+        _cloudLeaseHeartbeatTimer.Start();
+    }
+
+    private void StopCloudLeaseHeartbeatTimer()
+    {
+        _cloudLeaseHeartbeatTimer?.Stop();
+        _cloudLeaseHeartbeatTimer = null;
+    }
 
     /// <summary>Hand the current server back to the cloud, if we claimed one and it is covered by Cloud 24/7.</summary>
     private void ReleaseCloudHold()
     {
+        StopCloudLeaseHeartbeatTimer();
         var key = _cloudHeldServerKey;
         if (string.IsNullOrWhiteSpace(key)) return;
 
@@ -59,6 +92,7 @@ public partial class MainWindow
     /// </summary>
     internal async Task ReleaseCloudHoldOnExitAsync()
     {
+        StopCloudLeaseHeartbeatTimer();
         var key = _cloudHeldServerKey;
         if (string.IsNullOrWhiteSpace(key)) return;
 
@@ -683,10 +717,12 @@ public partial class MainWindow
             {
                 _cloudHeldServerKey = connectedKey;
                 _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
+                StartCloudLeaseHeartbeatTimer();
             }
             else
             {
                 _cloudHeldServerKey = null;
+                StopCloudLeaseHeartbeatTimer();
             }
 
             // Send the command words up so the cloud answers to exactly what this
