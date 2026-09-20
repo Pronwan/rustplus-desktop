@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="{DynamicResource Cloud247Title}"
-        Width="900" Height="700"
+        Width="920" Height="740"
         Foreground="{DynamicResource TextPrimary}"
         WindowStartupLocation="CenterOwner"
         ExtendsContentIntoTitleBar="True"
@@ -12,6 +12,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -24,20 +25,76 @@
         <!-- Header -->
         <Border Grid.Row="1" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
                 BorderThickness="0,0,0,1" Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource Cloud247Header}" FontSize="20" FontWeight="Bold"
+                               Foreground="{DynamicResource Accent}"/>
+                    <TextBlock Text="{DynamicResource Cloud247SubHeader}" FontSize="13"
+                               Foreground="{DynamicResource TextSubtle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                </StackPanel>
+                <ui:Button Grid.Column="1" x:Name="BtnUpgrade" Content="{DynamicResource Cloud247Upgrade}"
+                           Appearance="Primary" Visibility="Collapsed" Click="BtnUpgrade_Click"
+                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Global Consent Switch Card -->
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceAlt}"
+                BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="20,14">
             <StackPanel>
-                <TextBlock Text="{DynamicResource Cloud247Header}" FontSize="20" FontWeight="Bold"
-                           Foreground="{DynamicResource Accent}"/>
-                <TextBlock Text="{DynamicResource Cloud247SubHeader}" FontSize="13"
-                           Foreground="{DynamicResource TextSubtle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Cloud24" FontSize="18" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Enable Cloud 24/7 (Global Consent)" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Text="When enabled, the cloud actively runs 24/7 background sessions for your chosen live server(s) when this desktop app is closed."
+                                   FontSize="12" Foreground="{DynamicResource TextSubtle}" Margin="26,3,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <ui:ToggleSwitch Grid.Column="1" x:Name="ToggleGlobalConsent"
+                                     VerticalAlignment="Center"
+                                     Click="ToggleGlobalConsent_Click"/>
+                </Grid>
+
+                <!-- Data & FCM Disclosure Card -->
+                <Border Margin="0,12,0,0" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1" CornerRadius="8" Padding="14,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="20" Foreground="{DynamicResource Accent}"
+                                       VerticalAlignment="Top" Margin="0,2,12,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Security &amp; Data Disclosure for rustplusdesktop.cloud:"
+                                       FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock Text="• FCM Push Notification settings (credentials &amp; tokens) are uploaded to receive live raid alarms and server notifications while your PC is off."
+                                       FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                            <TextBlock Text="• Server pairing details (IP, Port, Player ID, Player Token) and smart devices are synced for chosen active server(s) to run 24/7 automations."
+                                       FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            <TextBlock Text="• All credentials and tokens are encrypted at the database level, strictly bound exclusively to your user account, and never shared with anyone else."
+                                       FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            <TextBlock Text="• You can revoke consent at any time. Disabling stops all cloud workers and purges active background sessions."
+                                       FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </StackPanel>
         </Border>
 
-        <!--
-            The plan's ceiling, stated before the list rather than after a toggle
-            that quietly does nothing. A user who believes a server is covered when
-            it is not finds out at the worst possible moment.
-        -->
-        <Border Grid.Row="2" x:Name="PlanBanner" Background="{DynamicResource SurfaceAlt}"
+        <!-- Active Server Selection Card -->
+        <Border Grid.Row="3" x:Name="ActiveSelectionCard" Background="{DynamicResource Surface}"
                 BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="20,12">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -45,27 +102,31 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0">
-                    <TextBlock x:Name="PlanSummaryText" FontSize="13" Foreground="{DynamicResource TextPrimary}"
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock x:Name="PlanSummaryText" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
                                TextWrapping="Wrap"/>
                     <TextBlock x:Name="PlanHintText" FontSize="12" Foreground="{DynamicResource TextSubtle}"
                                Margin="0,3,0,0" TextWrapping="Wrap"/>
                 </StackPanel>
 
-                <ui:Button Grid.Column="1" x:Name="BtnUpgrade" Content="{DynamicResource Cloud247Upgrade}"
-                           Appearance="Primary" Visibility="Collapsed" Click="BtnUpgrade_Click"
-                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <!-- Single Server Dropdown (When LiveLimit == 1) -->
+                <StackPanel Grid.Column="1" x:Name="SingleServerDropdownPanel" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Active Server:" FontSize="13" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox x:Name="CmbActiveServer" MinWidth="220" Height="34"
+                              DisplayMemberPath="Name" SelectedValuePath="ServerId"
+                              SelectionChanged="CmbActiveServer_SelectionChanged"/>
+                </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Servers -->
-        <Grid Grid.Row="3">
+        <!-- Servers List -->
+        <Grid Grid.Row="4">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
                 <ItemsControl x:Name="ServerList">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}"
-                                    BorderThickness="1" CornerRadius="6" Padding="16,12" Margin="0,0,0,10">
+                                    BorderThickness="1" CornerRadius="8" Padding="16,12" Margin="0,0,0,10">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -73,14 +134,16 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"
-                                                   Foreground="{DynamicResource TextPrimary}" TextTrimming="CharacterEllipsis"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextPrimary}" TextTrimming="CharacterEllipsis"/>
+                                            <Border Background="{DynamicResource Accent}" CornerRadius="4"
+                                                    Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                    Visibility="{Binding ActiveBadgeVisibility}">
+                                                <TextBlock Text="ACTIVE 24/7" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                            </Border>
+                                        </StackPanel>
 
-                                        <!--
-                                            Who holds the connection, in words. The handoff is the
-                                            part users find most mysterious, so it is spelled out
-                                            rather than shown as a state code.
-                                        -->
                                         <TextBlock Text="{Binding OwnerText}" FontSize="12" Margin="0,4,0,0"
                                                    Foreground="{Binding OwnerBrush}" TextWrapping="Wrap"/>
 
@@ -90,20 +153,13 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <!-- Only the user can fix a stale pairing, so it gets its own action. -->
                                         <ui:Button Content="{DynamicResource Cloud247Repair}" Appearance="Caution"
                                                    Visibility="{Binding RepairVisibility}" Margin="0,0,8,0"
                                                    Click="BtnRepair_Click" Tag="{Binding}"/>
 
-                                        <!--
-                                            One action, because there is one decision.
-                                            Raid alarms reach every paired server
-                                            whatever this says, so a server switched
-                                            on but not chosen changed nothing the
-                                            user could see.
-                                        -->
                                         <ui:Button Content="{Binding ActionText}"
-                                                   MinWidth="160"
+                                                   MinWidth="150"
+                                                   Appearance="{Binding ActionAppearance}"
                                                    IsEnabled="{Binding CanToggle}"
                                                    Click="ToggleCover_Click" Tag="{Binding}"/>
                                     </StackPanel>
@@ -122,7 +178,7 @@
         </Grid>
 
         <!-- Footer -->
-        <Border Grid.Row="4" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
+        <Border Grid.Row="5" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
                 BorderThickness="0,1,0,0" Padding="16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
