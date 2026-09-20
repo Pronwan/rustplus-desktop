@@ -84,7 +84,7 @@ namespace RustPlusDesk.Services
                 // trade a stale registration for one that is not registered at all.
                 var issuedAt = DateTime.Now;
                 var expiresAt = issuedAt.AddDays(15);
-                NativeFcmRegistrationService.WriteNodeCompatibleConfig(configPath, credentials, authToken!);
+                NativeFcmRegistrationService.WriteConfig(configPath, credentials, authToken!);
                 NativeFcmRegistrationService.StampConfigMetadata(configPath, issuedAt, expiresAt, steamId, log);
 
                 TrackingService.FcmIssuedAt = issuedAt;

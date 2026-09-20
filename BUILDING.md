@@ -5,7 +5,7 @@ If you are a developer looking to compile and build **Rust+ Desktop** from the s
 ## Prerequisites
 - **IDE:** Visual Studio 2022 (recommended) or JetBrains Rider
 - **Framework:** .NET Desktop Development Workload (.NET 7 / .NET 8)
-- **Node.js:** Included automatically via the `runtime/` folder during the build process.
+- **Node.js:** Required to build the GeneticsLab frontend; it is not shipped with the app.
 
 ---
 

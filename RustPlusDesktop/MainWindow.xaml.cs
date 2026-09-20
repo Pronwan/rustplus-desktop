@@ -775,14 +775,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
-        // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
-
-        _pairing = TrackingService.UseNativeFcmListener
-            ? new NativeFcmListener(AppendLog)
-            : new PairingListenerRealProcess(AppendLog);
-        AppendLog(TrackingService.UseNativeFcmListener
-            ? "[pairing] Using native (in-process) FCM listener."
-            : "[pairing] Using Node FCM listener.");
+        _pairing = new NativeFcmListener(AppendLog);
+        AppendLog("[pairing] Using native (in-process) FCM listener.");
 
         _pairing.Paired += Pairing_Paired;
 
@@ -1518,29 +1512,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         Services.Auth.SupabaseAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
         Services.Cloud.CloudAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
 
-        // Holen Sie alle laufenden "node"-Prozesse
-        var nodes = System.Diagnostics.Process.GetProcessesByName("node");
-
-        foreach (var p in nodes)
-        {
-            try
-            {
-                // Überprüfe, ob der Prozess ein Hauptfenster hat.
-                // Hintergrundprozesse (wie der Listener) haben in der Regel keins.
-                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser öffnet,
-                // sollte eine Ausnahme sein und hat ein Fenster, daher wird er hier ignoriert.
-                if (p.MainWindowHandle == IntPtr.Zero)
-                {
-                    p.Kill(true); // Kill den Prozess und seine Unterprozesse
-                }
-            }
-            catch
-            {
-                // Dies fängt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
-                // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
-                // Du kannst hier auch loggen, wenn du möchtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
-            }
-        }
         try
         {
             // falls noch offen/hidden → hart schließen
