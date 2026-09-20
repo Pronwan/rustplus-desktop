@@ -157,6 +157,36 @@ namespace RustPlusDesk
             };
             stack.Children.Add(font);
 
+            // Only where there is an icon worth sizing on its own. A clock's hands and a chat
+            // line are text, and a second scale for them would be a knob with nothing behind it.
+            if (tile.Kind is CommandDockTileKinds.Device
+                          or CommandDockTileKinds.Event
+                          or CommandDockTileKinds.Rule)
+            {
+                var iconLabel = SettingsLabel("");
+                stack.Children.Add(iconLabel);
+
+                var iconScale = new Slider
+                {
+                    Minimum = 0.6,
+                    Maximum = 3.0,
+                    TickFrequency = 0.05,
+                    IsSnapToTickEnabled = true,
+                    Value = tile.IconScale ?? 1.0,
+                    Margin = new Thickness(0, 0, 0, 10),
+                };
+                void ShowIcon() => iconLabel.Text = string.Format(
+                    Loc.Text("CommandDockTileIconSize", "Icon size {0}%"), (int)Math.Round(iconScale.Value * 100));
+                ShowIcon();
+                iconScale.ValueChanged += (_, __) =>
+                {
+                    ShowIcon();
+                    tile.IconScale = iconScale.Value;
+                    TileSettingChanged();
+                };
+                stack.Children.Add(iconScale);
+            }
+
             stack.Children.Add(SettingsLabel(Loc.Text("CommandDockTileTextColor", "Text colour")));
             stack.Children.Add(BuildColorSwatches(tile));
 
@@ -173,7 +203,8 @@ namespace RustPlusDesk
             }
 
             // ── Back to global ──────────────────────────────────────────────
-            bool overridden = tile.Opacity != null || tile.FontScale != null || tile.TextColorKey != null;
+            bool overridden = tile.Opacity != null || tile.FontScale != null
+                           || tile.TextColorKey != null || tile.IconScale != null;
 
             var reset = new Button
             {
@@ -188,6 +219,7 @@ namespace RustPlusDesk
                 tile.Opacity = null;
                 tile.FontScale = null;
                 tile.TextColorKey = null;
+                tile.IconScale = null;
                 TileSettingChanged(immediate: true);
 
                 // Reopened so the sliders show the inherited values they just fell back to.
@@ -423,6 +455,21 @@ namespace RustPlusDesk
                         Margin = new Thickness(0, 6, 0, 0),
                         Foreground = Brush("TextSubtle", Colors.Gray),
                     });
+                    return box;
+                }
+
+                case CommandDockTileKinds.Event:
+                {
+                    var box = new StackPanel();
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockEventHideLabel", "Icon and countdown only, no name"),
+                        tile.EventHideLabel,
+                        on => { tile.EventHideLabel = on; TileSettingChanged(immediate: true); }));
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockEventHideLabelHint",
+                        "At one cell the name is trimmed to nothing whatever the text size; the icon already says which event it is.")));
+
                     return box;
                 }
 

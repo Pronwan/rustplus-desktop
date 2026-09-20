@@ -7799,4 +7799,13 @@
   <data name="CommandDockSectionGeneral" xml:space="preserve">
     <value>عام</value>
   </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>حجم الأيقونة {0}٪</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>الأيقونة والعد التنازلي فقط، بدون اسم</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>في خلية واحدة يُقتطع الاسم مهما كان حجم النص؛ الأيقونة تدل أصلاً على الحدث.</value>
+  </data>
 </root>

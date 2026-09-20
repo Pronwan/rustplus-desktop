@@ -1182,8 +1182,8 @@ namespace RustPlusDesk
             // "some switch" carries none of that.
             var picture = new Image
             {
-                Width = style.Size(24),
-                Height = style.Size(24),
+                Width = style.Icon(24),
+                Height = style.Icon(24),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Visibility = Visibility.Collapsed,
@@ -1194,7 +1194,7 @@ namespace RustPlusDesk
             var icon = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = style.Size(17),
+                FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Effect = style.TextShadow,
@@ -1420,8 +1420,8 @@ namespace RustPlusDesk
 
             var image = new Image
             {
-                Width = 26,
-                Height = 26,
+                Width = style.Icon(26),
+                Height = style.Icon(26),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
             };
@@ -1451,7 +1451,12 @@ namespace RustPlusDesk
             stack.Children.Add(image);
             stack.Children.Add(timer);
             stack.Children.Add(timer2);
-            stack.Children.Add(label);
+
+            // The name under the icon is optional, because at one cell it is mostly not there:
+            // "Deep Sea Event" arrives as "Deep Sea Ev…" and stays that way however the text is
+            // scaled, since the cell is what it does not fit. The icon already says which event
+            // this is, so the honest choice is to drop the word rather than to trim it.
+            if (!tile.EventHideLabel) stack.Children.Add(label);
 
             // A green glow behind the crate while a real countdown is running, so the two Oil Rig
             // states are told apart at a glance and not only by reading the tooltip.
@@ -1591,8 +1596,8 @@ namespace RustPlusDesk
 
             var image = new Image
             {
-                Width = 24,
-                Height = 24,
+                Width = style.Icon(24),
+                Height = style.Icon(24),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 3, 3),
                 Visibility = Visibility.Collapsed,
@@ -1601,7 +1606,7 @@ namespace RustPlusDesk
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
                 Text = "\uE945",              // lightning bolt: the rule launcher
-                FontSize = style.Size(17),
+                FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Effect = style.TextShadow,

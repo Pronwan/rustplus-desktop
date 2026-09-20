@@ -8179,4 +8179,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="Cloud247AlarmsOnly" xml:space="preserve">
     <value>Raid alarms only</value>
   </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>Icon size {0}%</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>Icon and countdown only, no name</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>At one cell the name is trimmed to nothing whatever the text size; the icon already says which event it is.</value>
+  </data>
 </root>

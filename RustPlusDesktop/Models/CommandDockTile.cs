@@ -43,6 +43,15 @@ namespace RustPlusDesk.Models
         /// <summary>Event tiles: cargo | deepsea | oilrig | heli | chinook | vendor.</summary>
         public string? EventKey { get; set; }
 
+        /// <summary>
+        /// Event tiles: leave off the name under the icon and show only the countdown.
+        ///
+        /// At one cell the name is mostly absent anyway - "Deep Sea Event" arrives as "Deep Sea
+        /// Ev…" and stays trimmed however the text is scaled, because the cell is what it does
+        /// not fit. The icon already says which event it is.
+        /// </summary>
+        public bool EventHideLabel { get; set; }
+
         /// <summary>Clock tiles: 0 digital, 1 analog, 2 Rust style.</summary>
         public int ClockStyle { get; set; }
 
@@ -173,6 +182,16 @@ namespace RustPlusDesk.Models
 
         /// <summary>Multiplier on every font size in the tile.</summary>
         public double? FontScale { get; set; }
+
+        /// <summary>
+        /// Device, event and rule tiles: how much bigger the icon is drawn than the text scale
+        /// alone would make it. Null follows the text.
+        ///
+        /// These three are recognised by their picture, not by the word under it - and the only
+        /// way to enlarge that picture was to enlarge the word with it, which then stopped
+        /// fitting the cell. Kept as its own value so the two can be set against each other.
+        /// </summary>
+        public double? IconScale { get; set; }
 
         /// <summary>A key from <see cref="CommandDockTextColors"/>, or null for the theme's own.</summary>
         public string? TextColorKey { get; set; }

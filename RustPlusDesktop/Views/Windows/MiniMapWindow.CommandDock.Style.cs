@@ -26,8 +26,23 @@ namespace RustPlusDesk
             public Brush TextSub { get; init; } = Brushes.Gray;
             public Effect? TextShadow { get; init; }
 
+            /// <summary>How much bigger the tile's icon is drawn than its text would suggest.</summary>
+            public double IconScale { get; init; } = 1.0;
+
             /// <summary>A font size with the tile's scale applied, rounded to a whole pixel.</summary>
             public double Size(double baseSize) => Math.Round(Math.Max(7, baseSize * FontScale));
+
+            /// <summary>
+            /// The same for an icon, with the tile's icon scale on top.
+            ///
+            /// A separate knob because the two were one: a device or an event is recognised by
+            /// its picture rather than by the word under it, and the only way to make that
+            /// picture bigger was to make the word bigger too - which then no longer fit. The
+            /// text scale still applies to both, so a tile scaled as a whole keeps its
+            /// proportions; this is what breaks the tie when only the icon should grow.
+            /// </summary>
+            public double Icon(double baseSize) =>
+                Math.Round(Math.Max(8, baseSize * FontScale * IconScale));
 
             /// <summary>Fades a colour by the tile's opacity — for backgrounds and borders only.</summary>
             public Brush Chrome(Color color)
@@ -71,6 +86,7 @@ namespace RustPlusDesk
             {
                 Opacity = opacity,
                 FontScale = scale,
+                IconScale = Math.Clamp(tile.IconScale ?? 1.0, 0.6, 3.0),
                 TextMain = main,
                 TextSub = sub,
                 TextShadow = shadow,
