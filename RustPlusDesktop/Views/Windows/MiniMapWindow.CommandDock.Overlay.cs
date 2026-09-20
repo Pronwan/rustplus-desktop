@@ -82,6 +82,7 @@ namespace RustPlusDesk
             Top += delta.Y;
 
             ClampToScreen();
+            AnchorOriginToWindow();
             SaveDockPosition();
             HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
             FollowAiAnswer();

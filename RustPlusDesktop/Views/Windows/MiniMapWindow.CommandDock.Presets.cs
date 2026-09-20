@@ -202,6 +202,7 @@ namespace RustPlusDesk
             Top = SystemParameters.WorkArea.Top + 20;
 
             ClampToScreen(pullIntoView: true);
+            AnchorOriginToWindow();
             SaveDockPosition();
             FollowAiAnswer();
         }

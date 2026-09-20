@@ -75,6 +75,9 @@ namespace RustPlusDesk
                 startDragPos = e.GetPosition(this);
                 DragMove();
                 ClampToScreen();
+
+                // Dragged on purpose, so this is where the grid now hangs from.
+                AnchorOriginToWindow();
             };
             MouseLeftButtonUp += (s, e) =>
             {
@@ -101,6 +104,7 @@ namespace RustPlusDesk
                 e.Handled = true;
                 DragMove();
                 ClampToScreen();
+                AnchorOriginToWindow();
                 SaveDockPosition();
             };
 
@@ -667,6 +671,36 @@ namespace RustPlusDesk
         /// Anything that moves the window runs through here, so the settings popup can be held
         /// still at the same time.
         /// </summary>
+        /// <summary>
+        /// Where cell (0,0) sits on screen, in device-independent pixels.
+        ///
+        /// The one piece of position the dock keeps. The window's corner, its size and every
+        /// tile's place on the canvas are worked out from it, so that showing or hiding a tile
+        /// changes what is drawn and never where the rest of it is.
+        /// </summary>
+        private double _originX, _originY;
+
+        private bool _originKnown;
+
+        /// <summary>Takes the origin from where the window currently is.</summary>
+        private void AnchorOriginToWindow(Rect? visibleBounds = null)
+        {
+            if (double.IsNaN(Left) || double.IsNaN(Top)) return;
+
+            var box = visibleBounds ?? CellBounds();
+
+            _originX = Left - box.X;
+            _originY = Top - box.Y;
+            _originKnown = true;
+        }
+
+        /// <summary>Establishes it once, the first time a layout needs it.</summary>
+        private void EnsureOriginKnown()
+        {
+            if (_originKnown) return;
+            AnchorOriginToWindow();
+        }
+
         private void LayoutDock()
         {
             double oldLeft = Left, oldTop = Top;
@@ -680,15 +714,14 @@ namespace RustPlusDesk
             // belongs on whichever screen the dock was already sitting on.
             var homeScreen = ScreenBoundsFor(this);
 
-            // Where cell (0,0) sits on screen, worked out from where the window is now.
+            // Cell (0,0)'s place on screen is held, not re-derived.
             //
-            // This is the one thing that has to survive a layout unchanged. Everything else -
-            // the window's size, its corner, where each tile lands on the canvas - is derived,
-            // and deriving them from anything that moves on its own is what produced a run of
-            // bugs where the dock walked off across the screen.
-            var visibleBefore = CellBounds();
-            double originX = Left - visibleBefore.X;
-            double originY = Top - visibleBefore.Y;
+            // Working it out from the window's corner needs the visible box that corner was
+            // produced with - and by the time a layout runs, visibility has usually already
+            // changed. Collapsing is the clearest case: _dock.Collapsed is set first, so the
+            // box measured is the collapsed one, and the button was placed as though the cell
+            // it sits on had been the arrangement's left edge all along.
+            EnsureOriginKnown();
 
             // Measured over every tile, because its only job is to cancel the renumbering
             // NormaliseCells performs - and every tile is what NormaliseCells measures.
@@ -704,8 +737,8 @@ namespace RustPlusDesk
 
             // Renumbering moved every cell's pixel offset by the same amount; cell (0,0) moves
             // the opposite way, so the tiles stay where they were on screen.
-            originX += allBefore.X - allAfter.X;
-            originY += allBefore.Y - allAfter.Y;
+            _originX += allBefore.X - allAfter.X;
+            _originY += allBefore.Y - allAfter.Y;
 
             // This one is about what is on screen, because it is what the window is sized to.
             var bounds = CellBounds();
@@ -719,10 +752,10 @@ namespace RustPlusDesk
             Width = Math.Max(1, bounds.Width);
             Height = Math.Max(1, bounds.Height);
 
-            if (!double.IsNaN(originX) && !double.IsNaN(originY))
+            if (!double.IsNaN(_originX) && !double.IsNaN(_originY))
             {
-                Left = originX + bounds.X;
-                Top = originY + bounds.Y;
+                Left = _originX + bounds.X;
+                Top = _originY + bounds.Y;
             }
 
             // The map used to be re-anchored by its middle here, so that a resize left that
@@ -734,6 +767,10 @@ namespace RustPlusDesk
             // Structural: the arrangement or the map's size just changed, and there is no
             // drag in flight for this to fight with.
             ClampToScreen(pullIntoView: true, screen: homeScreen);
+
+            // The clamp may have moved the window. The origin follows it, or the next layout
+            // would place the dock back where the clamp had just taken it from.
+            AnchorOriginToWindow(bounds);
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);

@@ -150,6 +150,7 @@ namespace RustPlusDesk
             // Coming back from a saved position: a monitor may have been unplugged or the
             // resolution changed since, so the dock has to be pulled somewhere visible.
             ClampToScreen(pullIntoView: true);
+            AnchorOriginToWindow();
             HoldSettingsPopupInPlace(dLeft, dTop);
             FollowAiAnswer();
         }
