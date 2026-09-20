@@ -272,12 +272,7 @@ namespace RustPlusDesk.Views.Windows
             SetStatus("Updating Cloud 24/7 settings...");
 
             var currentActive = _plan?.ActiveServerIds?.ToList() ?? new List<string>();
-            if (enabling && currentActive.Count == 0)
-            {
-                var first = _rows.FirstOrDefault();
-                if (first != null) currentActive.Add(first.ServerId);
-            }
-            else if (!enabling)
+            if (!enabling)
             {
                 currentActive.Clear();
             }
@@ -367,8 +362,8 @@ namespace RustPlusDesk.Views.Windows
             }
 
             SetStatus("Saving...");
-            bool enableGlobal = currentActive.Count > 0;
-            var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(enableGlobal, currentActive);
+            bool globalConsent = _plan?.GlobalConsent ?? true;
+            var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(globalConsent, currentActive);
 
             if (!ok)
             {
@@ -376,8 +371,7 @@ namespace RustPlusDesk.Views.Windows
             }
             else
             {
-                _ = CloudConsentService.RecordConsentAsync(CloudConsentService.TypeCloud247, enableGlobal);
-                if (enableGlobal)
+                if (currentActive.Count > 0)
                 {
                     _ = FcmSyncService.SyncFcmCredentialsAsync();
                 }
