@@ -923,12 +923,9 @@
                 <ui:TextBlock x:Name="CloudSettingsAnchor" Text="{DynamicResource UiCloudAccountSync}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
-                <Grid Margin="0,0,0,10">
-                    <ui:Button Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Click="BtnCloud247_Click" />
-                    <Border HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" Background="#33F59E0B" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="4" Padding="6,1" IsHitTestVisible="False">
-                        <TextBlock Text="EXPERIMENTAL • TIME LIMITED" FontSize="9" FontWeight="Bold" Foreground="#FDE047" VerticalAlignment="Center"/>
-                    </Border>
-                </Grid>
+                <ui:Button Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="BtnCloud247_Click" />
+                <TextBlock Text="⚠️ Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
+                           FontSize="10.5" FontWeight="Medium" Foreground="#F59E0B" TextWrapping="Wrap" Margin="2,0,0,10" />
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Info24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCompareCloud_Click" />
 
                 <!-- Cloud Account Buttons: Discord + Email side by side -->
