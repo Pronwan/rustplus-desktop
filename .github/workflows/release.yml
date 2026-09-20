@@ -65,14 +65,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.sln', '**/packages.lock.json', '**/nuget.config') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -183,12 +175,18 @@ jobs:
             --noPortable `
             --delta BestSize
 
+          # The downloaded previous full package is only needed while creating the delta.
+          Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -Filter "${{ env.VELOPACK_ID }}-*-full.nupkg" -File |
+            Where-Object Name -ne "${{ env.VELOPACK_ID }}-${{ env.VERSION }}-full.nupkg" |
+            Remove-Item
+
           # Rename the Velopack installer to match legacy naming (so old apps find it)
           if (Test-Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe") {
               Rename-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe" -NewName "RustPlusDesk-Setup.exe"
           }
 
       - name: Upload build artifacts
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.create_github_release }}
         uses: actions/upload-artifact@v4
         with:
           name: rustplusdesk-${{ env.VERSION }}-release-artifacts
