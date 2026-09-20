@@ -243,6 +243,10 @@
                                         The live dashboard web map now continuously pulls real-time snapshots (markers, player coordinates, game time) from the cloud worker even when the desktop client is active.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cloud 24/7 Experimental &amp; Time-Limited Preview:</Run>
+                                        Cloud 24/7 background session monitoring is now designated as an experimental, time-limited preview feature that may be modified or removed at any time. Clear status badges and disclaimers have been added across the app and web dashboard.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Offline Alerts &amp; Consent Dialog Hardening:</Run>
                                         Offline alert webhook setup now checks existing global consent properly and avoids redundant modal prompts.
                                     </TextBlock>
