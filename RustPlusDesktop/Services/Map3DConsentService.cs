@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RustPlusDesk.Services.Data;
 
 namespace RustPlusDesk.Services;
@@ -26,6 +26,7 @@ public static class Map3DConsentService
             Accepted = true,
             AcceptedAtUtc = DateTime.UtcNow
         });
+        _ = Cloud.CloudConsentService.RecordConsentAsync(Cloud.CloudConsentService.TypeMap3D, true);
     }
 }
 

@@ -249,24 +249,8 @@ namespace RustPlusDesk.Views.Windows
                 return true;
             }
 
-            var message = "Enabling Cloud 24/7 allows RustPlus Desktop Cloud to monitor your active Rust server(s) 24/7 when this desktop app is closed.\n\n"
-                + "By giving consent, you agree that:\n"
-                + "• Your FCM Push Notification settings (credentials & tokens) will be securely uploaded to rustplusdesktop.cloud to capture raid alarms and notifications.\n"
-                + "• Your server connection details (IP, Port, Player ID, Player Token) and paired smart devices will be synced to keep background sessions active.\n\n"
-                + "Security & Privacy Guarantee:\n"
-                + "• All credentials and pairing tokens are encrypted at the database level.\n"
-                + "• All credentials and data are strictly bound exclusively to your user account and never shared with anyone else.\n"
-                + "• You can revoke consent at any time to instantly stop all cloud workers.\n\n"
-                + "Do you want to enable Cloud 24/7 and sync your credentials?";
-
-            var result = MessageBox.Show(
-                this,
-                message,
-                "Enable Cloud 24/7 — Data & Privacy Consent",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Information);
-
-            return result == MessageBoxResult.Yes;
+            var dialog = new Dialogs.Cloud247ConsentWindow(this);
+            return dialog.ShowDialog() == true && dialog.Accepted;
         }
 
         private async void ToggleGlobalConsent_Click(object sender, RoutedEventArgs e)

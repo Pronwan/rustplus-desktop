@@ -16,6 +16,13 @@ namespace RustPlusDesk.Services.Cloud
         public const string TypeFcmSync = "fcm_sync";
         public const string TypeSmartDevices = "smart_devices";
         public const string TypeDataUpload = "data_upload";
+        public const string TypeSocialChat = "social_chat";
+        public const string TypeSocialDm = "social_dm";
+        public const string TypeSocialLfg = "social_lfg";
+        public const string TypeTranslation = "translation";
+        public const string TypeMap3D = "map_3d";
+        public const string TypeWipeTrackerBackup = "wipe_tracker_backup";
+        public const string TypeProfileSync = "profile_sync";
 
         /// <summary>
         /// Record a user consent action (granted or revoked) to the central platform audit log.
@@ -78,6 +85,22 @@ namespace RustPlusDesk.Services.Cloud
                 {
                     await RecordConsentAsync(TypeSmartDevices, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
                     await RecordConsentAsync(TypeDataUpload, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
+                    await RecordConsentAsync(TypeProfileSync, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
+                }
+
+                if (TrackingService.TranslationConsentGiven)
+                {
+                    await RecordConsentAsync(TypeTranslation, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
+                }
+
+                if (TrackingService.PlayerWipeTrackerCloudBackupEnabled)
+                {
+                    await RecordConsentAsync(TypeWipeTrackerBackup, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
+                }
+
+                if (Map3DConsentService.HasRememberedConsent())
+                {
+                    await RecordConsentAsync(TypeMap3D, true, new Dictionary<string, object> { ["source"] = "local_backfill" });
                 }
             }
             catch (Exception ex)

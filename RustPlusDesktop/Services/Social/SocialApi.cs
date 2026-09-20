@@ -280,7 +280,18 @@ public static class SocialApi
     public static async Task<bool> ConsentAsync(string scope)
     {
         InvalidateSettingsCache();
-        return await WriteAsync("social/consent", HttpMethod.Post, new { scope }).ConfigureAwait(false);
+        bool ok = await WriteAsync("social/consent", HttpMethod.Post, new { scope }).ConfigureAwait(false);
+        if (ok)
+        {
+            string consentType = scope switch
+            {
+                "lfg" => Cloud.CloudConsentService.TypeSocialLfg,
+                "dm" => Cloud.CloudConsentService.TypeSocialDm,
+                _ => Cloud.CloudConsentService.TypeSocialChat,
+            };
+            _ = Cloud.CloudConsentService.RecordConsentAsync(consentType, true, new System.Collections.Generic.Dictionary<string, object> { ["scope"] = scope });
+        }
+        return ok;
     }
 
     public sealed record MyLfgListing(LfgMode Mode, string? Blurb, string? Region, string? ServerName);

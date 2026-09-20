@@ -369,6 +369,7 @@ namespace RustPlusDesk.Views
         private void BtnAcceptConsent_Click(object sender, RoutedEventArgs e)
         {
             Services.TrackingService.TranslationConsentGiven = true;
+            _ = Services.Cloud.CloudConsentService.RecordConsentAsync(Services.Cloud.CloudConsentService.TypeTranslation, true);
             TranslationConsentOverlay.Visibility = Visibility.Collapsed;
             BtnTranslate_Click(sender, e);
         }

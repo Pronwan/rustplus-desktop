@@ -997,6 +997,7 @@ namespace RustPlusDesk.Views
 
             TrackingService.PlayerWipeTrackerEnabled = tracker;
             TrackingService.PlayerWipeTrackerCloudBackupEnabled = cloud;
+            _ = Services.Cloud.CloudConsentService.RecordConsentAsync(Services.Cloud.CloudConsentService.TypeWipeTrackerBackup, cloud);
 
             SyncPlayerWipeTrackerToggles();
             ParentWindow?.RefreshPlayerWipeTrackerSession();
