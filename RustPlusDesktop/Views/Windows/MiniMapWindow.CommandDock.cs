@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -61,6 +61,34 @@ namespace RustPlusDesk
             };
             _dockTimer.Tick += (_, __) => RefreshTiles();
 
+            // The overlay is the dock's, and only exists while the dock does: it draws the grid
+            // the dock is measured against and carries the bar that arranges it.
+            IsVisibleChanged += (_, __) =>
+            {
+                if (IsVisible)
+                {
+                    Overlay();
+                    StartEdgeWatch();
+                }
+                else
+                {
+                    StopEdgeWatch();
+                    _overlay?.ShowBar(false);
+                    _overlay?.ClearGrid();
+                }
+            };
+
+            // A full-screen transparent window left behind would sit over the game forever.
+            Closed += (_, __) => CloseOverlay();
+
+            // The dock can be dragged to another monitor, and the overlay has to follow it -
+            // a grid painted on the screen the dock used to be on describes nothing.
+            //
+            // Size as well as position: which monitor the dock is mostly on can change by it
+            // growing, without its corner moving at all.
+            LocationChanged += (_, __) => PositionOverlay();
+            SizeChanged += (_, __) => PositionOverlay();
+
             InitArming();
 
             Loaded += (_, __) => { ApplyLockState(); RebuildTiles(); _dockTimer.Start(); };
@@ -119,7 +147,10 @@ namespace RustPlusDesk
             double dLeft = left - Left, dTop = top - Top;
             Left = left;
             Top = top;
-            ClampToScreen();
+            // Coming back from a saved position: a monitor may have been unplugged or the
+            // resolution changed since, so the dock has to be pulled somewhere visible.
+            ClampToScreen(pullIntoView: true);
+            AnchorOriginToWindow();
             HoldSettingsPopupInPlace(dLeft, dTop);
             FollowAiAnswer();
         }
@@ -207,20 +238,20 @@ namespace RustPlusDesk
             UpdateTileHandles();
         }
 
+        /// <summary>
+        /// The dock's own title bar is gone - the overlay carries it, at the top of the screen.
+        ///
+        /// The element is still in the XAML and still holds nothing: kept so the drag handler
+        /// and the tutorial anchors that name it keep resolving, and permanently hidden here
+        /// rather than deleted in a dozen places. Hit testing goes off with it, because an
+        /// invisible bar would otherwise swallow every click on the dock's top 30 pixels.
+        /// </summary>
         private void FadeTitleBar(bool show)
         {
             if (DockTitleBar == null) return;
 
-            // Opacity 0 does not stop a WPF element from taking the mouse. Left hit-testable,
-            // the invisible bar would swallow every click on the top 30 pixels of whatever tile
-            // sits under it — so the two are switched together.
-            DockTitleBar.IsHitTestVisible = show;
-
-            var fade = new DoubleAnimation(show ? 1.0 : 0.0, TimeSpan.FromMilliseconds(show ? 120 : 450))
-            {
-                FillBehavior = FillBehavior.HoldEnd,
-            };
-            DockTitleBar.BeginAnimation(UIElement.OpacityProperty, fade);
+            DockTitleBar.IsHitTestVisible = false;
+            DockTitleBar.Opacity = 0;
         }
 
         /// <summary>
@@ -259,9 +290,21 @@ namespace RustPlusDesk
         /// <summary>Puts the lock button into the state it is actually in.</summary>
         private void ApplyLockState()
         {
-            if (LockGlyph == null || BtnLockDock == null) return;
-
             bool locked = _dock.Locked;
+
+            // The bar on the overlay carries the same lock, so it is repainted here rather than
+            // by whoever happened to flip it.
+            _overlay?.SetLocked(locked);
+
+            // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
+            // because it is the only way back to locking it.
+            if (!locked) _overlay?.ShowBar(true);
+
+            // ...and while arranging, both windows take focus like ordinary ones. Never taking
+            // it is right for using the dock over a running game and wrong for building it.
+            SetEditModeFocus(!locked);
+
+            if (LockGlyph == null || BtnLockDock == null) return;
 
             LockGlyph.Text = locked ? "\uE72E" : "\uE785";   // closed / open padlock
             LockGlyph.Foreground = locked
@@ -293,43 +336,30 @@ namespace RustPlusDesk
 
         /// <summary>How many cells the map's free pixel size needs.</summary>
         private (int Cols, int Rows) MapCellSpan() => MapOccupiesCells
-            ? (CommandDockLayout.PixelsToCells(_mapWidth), CommandDockLayout.PixelsToCells(_mapHeight))
+            ? (CommandDockLayout.PixelsToCells(_mapWidth, DockZoom), CommandDockLayout.PixelsToCells(_mapHeight, DockZoom))
             : (0, 0);
 
         /// <summary>
-        /// The left edge of a column.
+        /// The left edge of a column. The grid is uniform, everywhere, always.
         ///
-        /// The grid is uniform except for one seam. The map keeps a free pixel size but reserves
-        /// whole cells, and its cell allotment is always a little wider than it is — so every
-        /// column past the map shifts by that difference and closes the gap. The shift applies
-        /// at every row, not only beside the map, or a tile underneath would fall out of line
-        /// with the tile above it.
+        /// It used to have a seam. The map keeps a free pixel size but reserves whole cells, and
+        /// its allotment is a little bigger than it is, so every column past the map shifted by
+        /// that difference to close the gap - at every row, not just beside the map, or a tile
+        /// underneath would have fallen out of line with the one above it.
+        ///
+        /// That made the grid depend on a pixel value the size slider changes continuously: the
+        /// snap points moved as the map was resized, and the grid drawn during a drag could not
+        /// show where a tile would actually land. The map now sits over the grid instead of
+        /// displacing it - it still snaps its own corner to a cell and still reserves cells so
+        /// nothing lands underneath it, but it no longer moves anything else.
+        ///
+        /// The cost is the gap the seam used to close: up to one cell between the map's edge and
+        /// the next tile, since the reservation rounds up. That one is predictable and can be
+        /// closed by choosing the map's size; a grid that moved could not be.
         /// </summary>
-        private double CellX(int col)
-        {
-            double x = CommandDockLayout.CellOffset(col);
-            var map = MapOccupiesCells ? MapTile : null;
-            if (map == null) return x;
+        private double CellX(int col) => CommandDockLayout.CellOffset(col, DockZoom);
 
-            var (mapCols, _) = MapCellSpan();
-            if (col >= map.Col + mapCols)
-                x += _mapWidth - CommandDockLayout.CellsToPixels(mapCols);
-
-            return x;
-        }
-
-        private double CellY(int row)
-        {
-            double y = CommandDockLayout.CellOffset(row);
-            var map = MapOccupiesCells ? MapTile : null;
-            if (map == null) return y;
-
-            var (_, mapRows) = MapCellSpan();
-            if (row >= map.Row + mapRows)
-                y += _mapHeight - CommandDockLayout.CellsToPixels(mapRows);
-
-            return y;
-        }
+        private double CellY(int row) => CommandDockLayout.CellOffset(row, DockZoom);
 
         /// <summary>A tile's pixel rect. The map is the one tile whose size is not cell-derived.</summary>
         private Rect CellRect(CommandDockTile tile)
@@ -341,8 +371,23 @@ namespace RustPlusDesk
                 return new Rect(x, y, _mapWidth, _mapHeight);
 
             return new Rect(x, y,
-                CommandDockLayout.CellsToPixels(tile.ColSpan),
-                CommandDockLayout.CellsToPixels(tile.RowSpan));
+                CommandDockLayout.CellsToPixels(tile.ColSpan, DockZoom),
+                CommandDockLayout.CellsToPixels(tile.RowSpan, DockZoom));
+        }
+
+        /// <summary>
+        /// A tile's rectangle on the dock's canvas.
+        ///
+        /// The canvas starts at the top-left of what is visible, not at cell (0,0). The two
+        /// coincide only while the leftmost and topmost tiles are on screen - hide them, as
+        /// collapsing the dock does, and a cell-absolute position falls outside the window.
+        /// </summary>
+        private Rect TileCanvasRect(CommandDockTile tile)
+        {
+            var box = CellBounds();
+            var rect = CellRect(tile);
+
+            return new Rect(rect.X - box.X, rect.Y - box.Y, rect.Width, rect.Height);
         }
 
         /// <summary>
@@ -396,6 +441,14 @@ namespace RustPlusDesk
                 return false;
             }
 
+            // Nothing on the map to clear, same rule: the cells go back until there is, and
+            // unlocking brings the tile out so it can be placed.
+            if (tile.Kind == CommandDockTileKinds.DeathWipe &&
+                !tile.DeathWipeAlwaysVisible && DeathMarkerCount == 0 && _dock.Locked)
+            {
+                return false;
+            }
+
             if (tile.Kind == CommandDockTileKinds.Map) return MapOccupiesCells;
             if (tile.ServerKey == null) return true;
 
@@ -420,12 +473,23 @@ namespace RustPlusDesk
         /// back off the canvas. Reading the canvas was how the layout and the cell grid drifted
         /// apart; now nothing writes a pixel position that is not computed here first.
         /// </summary>
-        private Rect CellBounds()
+        /// <summary>
+        /// The box the tiles occupy.
+        ///
+        /// <paramref name="visibleOnly"/> distinguishes two questions that look alike and are
+        /// not. How big the window has to be is about what is on screen. Cancelling the shift
+        /// NormaliseCells applied is about what that method measured, which is every tile -
+        /// and measuring the visible ones instead moved the window whenever a tile appeared or
+        /// disappeared, to undo a re-basing that had not happened. Collapsing the dock is the
+        /// clearest case: the visible set shrinks to one button, and the window jumped by the
+        /// distance from the arrangement's left edge to it.
+        /// </summary>
+        private Rect CellBounds(bool visibleOnly = true)
         {
             double minX = double.MaxValue, minY = double.MaxValue;
             double maxX = double.MinValue, maxY = double.MinValue;
 
-            foreach (var tile in VisibleTiles())
+            foreach (var tile in visibleOnly ? VisibleTiles() : _dock.Tiles)
             {
                 var r = CellRect(tile);
                 minX = Math.Min(minX, r.X);
@@ -450,11 +514,20 @@ namespace RustPlusDesk
         /// </summary>
         private void NormaliseCells()
         {
-            var visible = VisibleTiles().ToList();
-            if (visible.Count == 0) return;
+            // Measured over every tile, not just the visible ones, although only the visible
+            // ones are what the window is sized around.
+            //
+            // Which tiles are visible changes on its own: the death tracker is hidden while you
+            // are alive, the wipe tile while the map has no markers, a device tile while another
+            // server is in front. Taking the minimum over that set and subtracting it from all
+            // of them meant the whole arrangement slid left whenever the leftmost visible tile
+            // happened to be one of those - and since this writes to tile.Col, the slide stuck.
+            // Loading the same template again put it back, because by then the tile was visible
+            // and the minimum was zero, which is why it looked like the first load was wrong.
+            if (_dock.Tiles.Count == 0) return;
 
-            int minCol = visible.Min(t => t.Col);
-            int minRow = visible.Min(t => t.Row);
+            int minCol = _dock.Tiles.Min(t => t.Col);
+            int minRow = _dock.Tiles.Min(t => t.Row);
             if (minCol == 0 && minRow == 0) return;
 
             foreach (var tile in _dock.Tiles)
@@ -464,10 +537,19 @@ namespace RustPlusDesk
             }
         }
 
-        /// <summary>Writes every tile's derived pixel position onto the canvas.</summary>
-        private void ApplyTilePositions()
+        /// <summary>
+        /// Writes every tile's derived pixel position onto the canvas.
+        /// </summary>
+        /// <param name="bounds">
+        /// The box the window is sized to. Positions are relative to its top-left corner, not to
+        /// cell (0,0): the two are the same only while the leftmost tile is visible, and a tile
+        /// drawn outside a window sized to the visible box is simply clipped away.
+        /// </param>
+        private void ApplyTilePositions(Rect? bounds = null)
         {
             SyncMapCellSpan();
+
+            var box = bounds ?? CellBounds();
 
             foreach (var tile in _dock.Tiles)
             {
@@ -483,140 +565,37 @@ namespace RustPlusDesk
                     el.Height = rect.Height;
                 }
 
-                Canvas.SetLeft(el, rect.X + _dragPad);
-                Canvas.SetTop(el, rect.Y + _dragPad);
+                Canvas.SetLeft(el, rect.X - box.X);
+                Canvas.SetTop(el, rect.Y - box.Y);
             }
         }
 
         // ── Drag preview ────────────────────────────────────────────────────────
 
-        // While a tile is in flight the dock grows by one cell on every side, so the grid hint
-        // can show the row and column it could be extended into — and so a tile dragged to the
-        // edge is not clipped by the window it is still inside of.
-        private double _dragPad;
-        private double _appliedDragPad;
-
         private CommandDockTile? _draggingTile;
         private (int Col, int Row)? _dropTarget;
-
-        private static double CellPitch => CommandDockLayout.CellSize + CommandDockLayout.CellGap;
 
         private void BeginDragPreview(CommandDockTile tile)
         {
             _draggingTile = tile;
             _dropTarget = (tile.Col, tile.Row);
-            _dragPad = CellPitch;
-            LayoutDock();
+
+            // _dragPad stays zero now. It used to grow the dock by a cell in every direction so
+            // the grid had somewhere to be drawn, with the window moving the opposite way to
+            // compensate - and ClampToScreen then undid the compensation at the top of the
+            // screen, which is why the dock crept downwards one cell per drag. The grid lives on
+            // a window that already covers the screen, so none of that is needed.
+            PaintOverlayGrid();
+            ShowOverlayDropTarget();
         }
 
         private void EndDragPreview()
         {
             _draggingTile = null;
             _dropTarget = null;
-            _dropHighlight = null;
-            _dragPad = 0;
-            GridGhostLayer.Children.Clear();
+            ClearOverlayGrid();
         }
 
-        /// <summary>
-        /// Paints the cell grid under a tile in flight, and fills the cell it would drop into.
-        ///
-        /// The whole point is that the snap stops being a surprise: the filled rectangle is the
-        /// tile's own footprint at the target cell, so what is highlighted is exactly what will
-        /// be occupied — including when the target is taken and the drop will bounce elsewhere,
-        /// which the colour says.
-        /// </summary>
-        private void DrawGridGhost()
-        {
-            if (GridGhostLayer == null) return;
-
-            GridGhostLayer.Children.Clear();
-            if (_draggingTile == null) return;
-
-            var line = new SolidColorBrush(Color.FromArgb(0x38, 0xFF, 0xFF, 0xFF));
-            line.Freeze();
-
-            for (int col = -1; col < 40; col++)
-            {
-                double x = CellX(col) + _dragPad;
-                if (x >= Width) break;
-
-                for (int row = -1; row < 40; row++)
-                {
-                    double y = CellY(row) + _dragPad;
-                    if (y >= Height) break;
-                    if (x + CommandDockLayout.CellSize <= 0 || y + CommandDockLayout.CellSize <= 0) continue;
-
-                    var cell = new System.Windows.Shapes.Rectangle
-                    {
-                        Width = CommandDockLayout.CellSize,
-                        Height = CommandDockLayout.CellSize,
-                        RadiusX = 8,
-                        RadiusY = 8,
-                        Stroke = line,
-                        StrokeThickness = 1,
-                        StrokeDashArray = new DoubleCollection { 3, 3 },
-                        Fill = System.Windows.Media.Brushes.Transparent,
-                    };
-                    Canvas.SetLeft(cell, x);
-                    Canvas.SetTop(cell, y);
-                    GridGhostLayer.Children.Add(cell);
-                }
-            }
-
-            // The cells never move during a drag — only the highlight does, so it is built once
-            // here and repositioned on the move rather than the whole grid being rebuilt at
-            // pointer rate.
-            _dropHighlight = new System.Windows.Shapes.Rectangle
-            {
-                RadiusX = 10,
-                RadiusY = 10,
-                StrokeThickness = 2,
-            };
-            GridGhostLayer.Children.Add(_dropHighlight);
-            UpdateDropHighlight();
-        }
-
-        private System.Windows.Shapes.Rectangle? _dropHighlight;
-
-        private void UpdateDropHighlight()
-        {
-            if (_dropHighlight == null || _draggingTile == null) return;
-
-            if (_dropTarget is not { } target)
-            {
-                _dropHighlight.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            var probe = new CommandDockTile
-            {
-                Id = _draggingTile.Id,
-                Kind = _draggingTile.Kind,
-                Col = target.Col,
-                Row = target.Row,
-                ColSpan = _draggingTile.ColSpan,
-                RowSpan = _draggingTile.RowSpan,
-            };
-
-            // Red says the drop will bounce to the next free spot instead of landing here, so
-            // that outcome is visible before the button comes up rather than after.
-            bool blocked = Overlaps(probe);
-            var rect = CellRect(probe);
-
-            _dropHighlight.Visibility = Visibility.Visible;
-            _dropHighlight.Width = Math.Max(1, rect.Width);
-            _dropHighlight.Height = Math.Max(1, rect.Height);
-            _dropHighlight.Fill = new SolidColorBrush(blocked
-                ? Color.FromArgb(0x33, 0xE5, 0x39, 0x35)
-                : Color.FromArgb(0x33, 0x3F, 0xD7, 0xFF));
-            _dropHighlight.Stroke = new SolidColorBrush(blocked
-                ? Color.FromArgb(0xAA, 0xE5, 0x39, 0x35)
-                : Color.FromArgb(0xAA, 0x3F, 0xD7, 0xFF));
-
-            Canvas.SetLeft(_dropHighlight, rect.X + _dragPad);
-            Canvas.SetTop(_dropHighlight, rect.Y + _dragPad);
-        }
 
         /// <summary>Keeps the map tile's cell span in step with the size the slider gave it.</summary>
         private void SyncMapCellSpan()
@@ -711,9 +690,20 @@ namespace RustPlusDesk
         {
             var placed = new HashSet<(int, int)>();
 
+            // The map is not in here, and that is the point.
+            //
+            // It used to be placed first, so it claimed its cells before anything else and every
+            // widget that collided was relocated. Its cell span follows its free pixel size, so
+            // a nudge of the size slider evicted neighbours - and once they had been moved, the
+            // re-basing that follows shifted the whole arrangement, including widgets nowhere
+            // near it. Growing the map now changes nothing but the map: it reaches further right
+            // and further down over cells it does not own.
+            //
+            // It is still in OccupiedCells, so a widget cannot be *dropped* onto it. What it can
+            // no longer do is push one that is already there.
             var ordered = VisibleTiles()
-                .OrderBy(t => t.Kind == CommandDockTileKinds.Map ? 0 : 1)
-                .ThenBy(t => t.Row)
+                .Where(t => t.Kind != CommandDockTileKinds.Map)
+                .OrderBy(t => t.Row)
                 .ThenBy(t => t.Col)
                 .ToList();
 
@@ -819,6 +809,7 @@ namespace RustPlusDesk
                     AttachTileInteraction(el, tile.Id,
                         onClick: isMap ? () => OnClicked?.Invoke()
                             : tile.Kind == CommandDockTileKinds.Collapse ? ToggleDockCollapsed
+                            : tile.Kind == CommandDockTileKinds.DeathWipe ? () => WipeDeathMarkers(tile)
                             : null);
                     if (isMap) _mapMouseWired = true;
                 }
@@ -847,11 +838,46 @@ namespace RustPlusDesk
             CommandDockTileKinds.Session => false,
             CommandDockTileKinds.Discord => false,
             CommandDockTileKinds.Collapse => false,
+            CommandDockTileKinds.DeathWipe => false,
             _ => true,
         };
 
         /// <summary>What the dock was last built for, so a change of state is noticed.</summary>
+        /// <summary>
+        /// How much bigger than its base size the grid is drawn right now.
+        ///
+        /// Read through a property rather than the field so every measurement goes through the
+        /// same clamp: a layout file edited by hand, or written by a build that allowed a wider
+        /// range, must not be able to produce a cell of zero pixels.
+        /// </summary>
+        internal double DockZoom => CommandDockLayout.ClampZoom(_dock.GridZoom);
+
+        /// <summary>
+        /// Changes the grid's pitch, and everything measured against it.
+        ///
+        /// A full rebuild rather than a re-layout: the tiles' contents are sized from the zoom
+        /// too - see StyleFor - so their elements have to be built again, not just moved. The
+        /// map keeps its own size, which is set in pixels by its slider and is not a number of
+        /// cells; only how many cells it covers changes, which is what the auto-arrange needs.
+        /// </summary>
+        internal void SetGridZoom(double zoom)
+        {
+            zoom = CommandDockLayout.ClampZoom(zoom);
+            if (Math.Abs(zoom - _dock.GridZoom) < 0.001) return;
+
+            _dock.GridZoom = zoom;
+            SaveDock();
+
+            SettingsOverlay?.SyncGridZoom(zoom);
+            RebuildTiles();
+        }
+
         private bool _lastPlayerDead;
+
+        /// <summary>Whether the map had any death markers last tick, so the crossing is noticed.</summary>
+        private bool _lastHadDeathMarkers;
+
+        private int DeathMarkerCount => DockHost?.DockDeathMarkerCount ?? 0;
 
         private void RefreshTiles()
         {
@@ -875,6 +901,21 @@ namespace RustPlusDesk
                 _lastPlayerDead = dead;
 
                 if (_dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.DeathTrack))
+                {
+                    RebuildTiles();
+                    return;
+                }
+            }
+
+            // Markers appearing or all of them going is the same kind of change for the wipe
+            // tile: it holds cells in one state and not the other. Only the crossing matters,
+            // not the count - that is the tile's own refresher.
+            bool hasMarkers = DeathMarkerCount > 0;
+            if (hasMarkers != _lastHadDeathMarkers)
+            {
+                _lastHadDeathMarkers = hasMarkers;
+
+                if (_dock.Tiles.Any(t => t.Kind == CommandDockTileKinds.DeathWipe && !t.DeathWipeAlwaysVisible))
                 {
                     RebuildTiles();
                     return;
@@ -924,6 +965,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.Collapse => BuildCollapseTile(tile),
+            CommandDockTileKinds.DeathWipe => BuildDeathWipeTile(tile),
             CommandDockTileKinds.DeathTrack => BuildDeathTrackTile(tile),
             CommandDockTileKinds.TeamChat => BuildChatTile(tile, clan: false),
             CommandDockTileKinds.ClanChat => BuildChatTile(tile, clan: true),
@@ -1140,8 +1182,8 @@ namespace RustPlusDesk
             // "some switch" carries none of that.
             var picture = new Image
             {
-                Width = style.Size(24),
-                Height = style.Size(24),
+                Width = style.Icon(24),
+                Height = style.Icon(24),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Visibility = Visibility.Collapsed,
@@ -1152,7 +1194,7 @@ namespace RustPlusDesk
             var icon = new TextBlock
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                FontSize = style.Size(17),
+                FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Effect = style.TextShadow,
@@ -1223,7 +1265,9 @@ namespace RustPlusDesk
                 picture.Visibility = showPicture ? Visibility.Visible : Visibility.Collapsed;
                 icon.Visibility = showPicture ? Visibility.Collapsed : Visibility.Visible;
 
-                name.Text = Abbreviate(device.DisplayName, 12);
+                // Trimmed by the layout, which knows the tile's width, rather than by the
+                // string, which does not - a wider tile now actually shows more of the name.
+                name.Text = device.DisplayName;
                 name.Visibility = tile.ShowDeviceIcon ? Visibility.Collapsed : Visibility.Visible;
 
                 if (IsSwitch(device))
@@ -1378,8 +1422,8 @@ namespace RustPlusDesk
 
             var image = new Image
             {
-                Width = 26,
-                Height = 26,
+                Width = style.Icon(26),
+                Height = style.Icon(26),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
             };
@@ -1409,7 +1453,12 @@ namespace RustPlusDesk
             stack.Children.Add(image);
             stack.Children.Add(timer);
             stack.Children.Add(timer2);
-            stack.Children.Add(label);
+
+            // The name under the icon is optional, because at one cell it is mostly not there:
+            // "Deep Sea Event" arrives as "Deep Sea Ev…" and stays that way however the text is
+            // scaled, since the cell is what it does not fit. The icon already says which event
+            // this is, so the honest choice is to drop the word rather than to trim it.
+            if (!tile.EventHideLabel) stack.Children.Add(label);
 
             // A green glow behind the crate while a real countdown is running, so the two Oil Rig
             // states are told apart at a glance and not only by reading the tooltip.
@@ -1512,7 +1561,13 @@ namespace RustPlusDesk
                 }
 
                 SetIcon(ev.Icon);
-                label.Text = Abbreviate(ev.Name, 12);
+                // The whole name, trimmed by the layout rather than by the string.
+                //
+                // Cutting it to twelve characters first meant "Deep Sea Event" was "Deep Sea Ev…"
+                // at every size - a three-cell tile with room to spare still showed the stub,
+                // because nothing about the truncation knew how wide the tile was. The TextBlock
+                // already has CharacterEllipsis, which does.
+                label.Text = ev.Name;
                 timer.Text = string.IsNullOrWhiteSpace(ev.TimerText) ? "—" : ev.TimerText;
                 timer.Foreground = ev.Active ? style.TextMain : style.TextSub;
                 shell.Opacity = ev.Active ? 1.0 : 0.55;
@@ -1549,8 +1604,8 @@ namespace RustPlusDesk
 
             var image = new Image
             {
-                Width = 24,
-                Height = 24,
+                Width = style.Icon(24),
+                Height = style.Icon(24),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 3, 3),
                 Visibility = Visibility.Collapsed,
@@ -1559,7 +1614,7 @@ namespace RustPlusDesk
             {
                 FontFamily = new FontFamily("Segoe MDL2 Assets"),
                 Text = "\uE945",              // lightning bolt: the rule launcher
-                FontSize = style.Size(17),
+                FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
                 Effect = style.TextShadow,
@@ -1581,7 +1636,7 @@ namespace RustPlusDesk
             _tileRefreshers.Add(() =>
             {
                 var rule = DockHost?.DockRules.FirstOrDefault(r => r.Id == tile.RuleId);
-                name.Text = Abbreviate(rule?.Name ?? tile.RuleId, 12);
+                name.Text = rule?.Name ?? tile.RuleId ?? "";
 
                 if (rule?.CustomIcon != null)
                 {
@@ -1881,7 +1936,7 @@ namespace RustPlusDesk
             {
                 if (!sizing) return;
                 var now = e.GetPosition(DockCanvas);
-                double step = CommandDockLayout.CellSize + CommandDockLayout.CellGap;
+                double step = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
 
                 int minCols = tile.Kind is CommandDockTileKinds.TeamChat
                                          or CommandDockTileKinds.ClanChat
@@ -2062,23 +2117,31 @@ namespace RustPlusDesk
                     if (Math.Abs(moved.X) < DragThreshold && Math.Abs(moved.Y) < DragThreshold) return;
 
                     dragging = true;
-                    Panel.SetZIndex(border, 1000);   // over its neighbours while it travels
 
                     var dragged = _dock.Tiles.FirstOrDefault(t => t.Id == tileId);
                     if (dragged != null) BeginDragPreview(dragged);
+
+                    // The tile itself stays on its cell and dims; what follows the pointer is a
+                    // picture of it on the overlay. It has to be, because the overlay covers the
+                    // screen and this window does not - a tile dragged past the dock's own edge
+                    // would simply be clipped away.
+                    _overlay?.SetGhost(border, new Size(border.ActualWidth, border.ActualHeight));
+                    border.Opacity = 0.35;
                 }
 
                 var p = e.GetPosition(DockCanvas);
-                Canvas.SetLeft(border, p.X - grabOffset.X);
-                Canvas.SetTop(border, p.Y - grabOffset.Y);
+                var corner = new Point(p.X - grabOffset.X, p.Y - grabOffset.Y);
+
+                var ghostAt = ToOverlay(corner.X, corner.Y);
+                _overlay?.MoveGhost(ghostAt);
 
                 // Recomputed on every move so the highlight is always the cell a release would
                 // actually use — the drop reads this, it does not work it out again.
-                var next = CellUnder(border);
+                var next = CellUnderPoint(corner);
                 if (next != _dropTarget)
                 {
                     _dropTarget = next;
-                    UpdateDropHighlight();
+                    ShowOverlayDropTarget();
                 }
             };
 
@@ -2099,6 +2162,11 @@ namespace RustPlusDesk
 
                 dragging = false;
                 Panel.SetZIndex(border, 0);
+
+                // Put back what the drag dimmed. The drop only re-positions the existing
+                // elements, so nothing else would restore it and the tile would stay faded.
+                border.Opacity = 1.0;
+
                 e.Handled = true;        // a drag must not also toggle the switch it landed on
                 DropTile(tileId);
             };
@@ -2111,13 +2179,17 @@ namespace RustPlusDesk
 
         }
 
-        /// <summary>The cell a dragged element's top-left corner currently sits over.</summary>
-        private (int Col, int Row) CellUnder(FrameworkElement el) =>
+        /// <summary>
+        /// The cell a top-left corner sits over, in dock canvas coordinates.
+        ///
+        /// Takes the corner rather than the element, because the element no longer moves during
+        /// a drag: it stays on its cell while a ghost on the overlay follows the pointer, so the
+        /// corner being asked about is where the tile *would* be, not where it is.
+        /// </summary>
+        private (int Col, int Row) CellUnderPoint(Point corner) =>
         (
-            // The padding is a rendering offset, not part of the grid — take it back off before
-            // asking which cell this is, or every drop lands one cell too far.
-            NearestCell(Canvas.GetLeft(el) - _dragPad, CellX),
-            NearestCell(Canvas.GetTop(el) - _dragPad, CellY)
+            NearestCell(corner.X + CellBounds().X),
+            NearestCell(corner.Y + CellBounds().Y)
         );
 
         /// <summary>
@@ -2151,26 +2223,24 @@ namespace RustPlusDesk
         /// <summary>
         /// The cell index whose edge sits closest to a dropped pixel position.
         ///
-        /// Searched rather than solved: the grid has a seam at the map, so the mapping is
-        /// piecewise and not worth inverting by hand for a range this small. Negative indices are
-        /// included on purpose — they are how a bar gets built along the top or the left edge.
+        /// Solved rather than searched. It used to walk a fixed range of indices, because the
+        /// grid had a seam at the map and the mapping was piecewise - but a fixed range of cells
+        /// is a shrinking range of pixels as the zoom comes down, so below 100% the last columns
+        /// before the screen's right edge could not be reached at all. Only tiles wide enough to
+        /// start further left and reach over could get there.
+        ///
+        /// With the grid uniform the mapping is linear and inverts in one line, which has no
+        /// range to run out of. Negative indices fall out of it for free, and they matter - they
+        /// are how a bar gets built along the top or the left edge.
         /// </summary>
-        private static int NearestCell(double pixels, Func<int, double> edgeAt)
+        private int NearestCell(double pixels)
         {
             if (double.IsNaN(pixels)) return 0;
 
-            int best = 0;
-            double bestDistance = double.MaxValue;
+            double pitch = CommandDockLayout.CellSizeAt(DockZoom) + CommandDockLayout.CellGapAt(DockZoom);
+            if (pitch <= 0) return 0;
 
-            for (int index = -16; index <= 32; index++)
-            {
-                double distance = Math.Abs(edgeAt(index) - pixels);
-                if (distance >= bestDistance) continue;
-                bestDistance = distance;
-                best = index;
-            }
-
-            return best;
+            return (int)Math.Round(pixels / pitch, MidpointRounding.AwayFromZero);
         }
 
         private bool Overlaps(CommandDockTile tile)

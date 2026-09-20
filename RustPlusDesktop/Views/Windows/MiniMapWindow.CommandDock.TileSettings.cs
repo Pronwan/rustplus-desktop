@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -37,9 +37,9 @@ namespace RustPlusDesk
             // moment the tile's element is brand new and has not been through a layout pass —
             // its ActualWidth is zero, so the panel opened on top of the tile instead of beside
             // it. The cell knows the width before anything is drawn.
-            var rect = CellRect(tile);
-            double x = rect.X + _dragPad;
-            double y = rect.Y + _dragPad;
+            var rect = TileCanvasRect(tile);
+            double x = rect.X;
+            double y = rect.Y;
 
             const double panelWidth = 236;
             const double panelHeight = 330;
@@ -157,6 +157,36 @@ namespace RustPlusDesk
             };
             stack.Children.Add(font);
 
+            // Only where there is an icon worth sizing on its own. A clock's hands and a chat
+            // line are text, and a second scale for them would be a knob with nothing behind it.
+            if (tile.Kind is CommandDockTileKinds.Device
+                          or CommandDockTileKinds.Event
+                          or CommandDockTileKinds.Rule)
+            {
+                var iconLabel = SettingsLabel("");
+                stack.Children.Add(iconLabel);
+
+                var iconScale = new Slider
+                {
+                    Minimum = 0.6,
+                    Maximum = 3.0,
+                    TickFrequency = 0.05,
+                    IsSnapToTickEnabled = true,
+                    Value = tile.IconScale ?? 1.0,
+                    Margin = new Thickness(0, 0, 0, 10),
+                };
+                void ShowIcon() => iconLabel.Text = string.Format(
+                    Loc.Text("CommandDockTileIconSize", "Icon size {0}%"), (int)Math.Round(iconScale.Value * 100));
+                ShowIcon();
+                iconScale.ValueChanged += (_, __) =>
+                {
+                    ShowIcon();
+                    tile.IconScale = iconScale.Value;
+                    TileSettingChanged();
+                };
+                stack.Children.Add(iconScale);
+            }
+
             stack.Children.Add(SettingsLabel(Loc.Text("CommandDockTileTextColor", "Text colour")));
             stack.Children.Add(BuildColorSwatches(tile));
 
@@ -173,7 +203,8 @@ namespace RustPlusDesk
             }
 
             // ── Back to global ──────────────────────────────────────────────
-            bool overridden = tile.Opacity != null || tile.FontScale != null || tile.TextColorKey != null;
+            bool overridden = tile.Opacity != null || tile.FontScale != null
+                           || tile.TextColorKey != null || tile.IconScale != null;
 
             var reset = new Button
             {
@@ -188,6 +219,7 @@ namespace RustPlusDesk
                 tile.Opacity = null;
                 tile.FontScale = null;
                 tile.TextColorKey = null;
+                tile.IconScale = null;
                 TileSettingChanged(immediate: true);
 
                 // Reopened so the sliders show the inherited values they just fell back to.
@@ -423,6 +455,21 @@ namespace RustPlusDesk
                         Margin = new Thickness(0, 6, 0, 0),
                         Foreground = Brush("TextSubtle", Colors.Gray),
                     });
+                    return box;
+                }
+
+                case CommandDockTileKinds.Event:
+                {
+                    var box = new StackPanel();
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockEventHideLabel", "Icon and countdown only, no name"),
+                        tile.EventHideLabel,
+                        on => { tile.EventHideLabel = on; TileSettingChanged(immediate: true); }));
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockEventHideLabelHint",
+                        "At one cell the name is trimmed to nothing whatever the text size; the icon already says which event it is.")));
+
                     return box;
                 }
 
@@ -667,6 +714,40 @@ namespace RustPlusDesk
                     return box;
                 }
 
+                case CommandDockTileKinds.DeathWipe:
+                {
+                    var box = new StackPanel();
+
+                    // Two named choices rather than one checkbox: "wipe all" and "wipe all but
+                    // the last one" are both things people mean by clearing the map, and a
+                    // checkbox would leave the press ambiguous until you read its label.
+                    string group = "deathwipe_" + tile.Id;
+
+                    // Only the checked side acts: a radio group raises Unchecked on the one
+                    // being left as well, and letting both write would save twice per press.
+                    box.Children.Add(SettingsRadio(
+                        Loc.Text("CommandDockDeathWipeAll", "Wipe all death markers"),
+                        group,
+                        !tile.DeathWipeKeepLatest,
+                        on => { if (on) { tile.DeathWipeKeepLatest = false; TileSettingChanged(immediate: true); } }));
+
+                    box.Children.Add(SettingsRadio(
+                        Loc.Text("CommandDockDeathWipeKeepLatest", "Wipe all but the last one"),
+                        group,
+                        tile.DeathWipeKeepLatest,
+                        on => { if (on) { tile.DeathWipeKeepLatest = true; TileSettingChanged(immediate: true); } }));
+
+                    box.Children.Add(SettingsLabel(Loc.Text("CommandDockDeathWipeKeepHint",
+                        "Keeping the last one keeps the newest marker for you and for each teammate.")));
+
+                    box.Children.Add(SettingsCheck(
+                        Loc.Text("CommandDockDeathWipeAlwaysVisible", "Keep on the dock when there is nothing to clear"),
+                        tile.DeathWipeAlwaysVisible,
+                        on => { tile.DeathWipeAlwaysVisible = on; TileSettingChanged(immediate: true); }));
+
+                    return box;
+                }
+
                 case CommandDockTileKinds.Collapse:
                 {
                     var box = new StackPanel();
@@ -789,6 +870,7 @@ namespace RustPlusDesk
             CommandDockTileKinds.ClanChat => Loc.Text("ClanChat", "Clan chat"),
             CommandDockTileKinds.Translate => Loc.Text("CommandDockTranslateTitle", "Translate"),
             CommandDockTileKinds.Collapse => Loc.Text("CommandDockCollapseTitle", "Collapse"),
+            CommandDockTileKinds.DeathWipe => Loc.Text("CommandDockDeathWipeTitle", "Wipe death markers"),
             _ => tile.Kind,
         };
 

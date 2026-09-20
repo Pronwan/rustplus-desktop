@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Veuillez d'abord associer ce serveur.</value>
     <value>Générez la carte 3D avant d'utiliser les cartes thermiques.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Générez la carte 3D pour activer les zones sans construction.</value>
+    <value>Analysez d'abord la carte pour activer les zones de construction interdite.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Options sonores d'alarme génériques</value>
@@ -7853,5 +7853,68 @@ Ferme cet aperçu quand le panneau te convient.</value>
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NOUVEAU</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Zones de construction interdite</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Veuillez d'abord analyser la carte</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Effacer les marqueurs de mort</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Une case qui efface les marqueurs de mort de la carte et les compte</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Effacer tous les marqueurs</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Effacer tout sauf le dernier</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Garder le dernier conserve le marqueur le plus récent pour vous et pour chaque coéquipier.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>Aucun marqueur de mort sur la carte</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Marqueurs conservés par joueur</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Combien de marqueurs de mort chaque joueur conserve. Réduire cette valeur ne supprime pas les marqueurs déjà sur la carte.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Vous</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Coéquipiers</value>
+  </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Zoom des widgets</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Zoom des widgets {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Garder sur le dock même quand il n&apos;y a rien à effacer</value>
+  </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Déverrouiller l&apos;overlay pour le réorganiser</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Verrouiller l&apos;overlay</value>
+  </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>Taille de l&apos;icône {0} %</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>Icône et compte à rebours uniquement, sans nom</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>Sur une case le nom est tronqué quelle que soit la taille du texte ; l&apos;icône indique déjà de quel événement il s&apos;agit.</value>
   </data>
 </root>

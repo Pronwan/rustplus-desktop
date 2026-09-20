@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using RustPlusDesk.Models;
@@ -29,7 +29,7 @@ namespace RustPlusDesk
             _aiAnswer ??= new Views.Windows.AiAnswerWindow { Owner = this };
             _aiAnswer.ApplyAppearance();
 
-            var cell = CellRect(tile);
+            var cell = TileCanvasRect(tile);
 
             // The canvas sits at the window's own origin — no chrome to account for, since the
             // dock has none — so a cell's position on screen is just the window's plus its own.

@@ -16,14 +16,10 @@
         Width="260" Height="260">
     <Grid x:Name="RootGrid">
 
-        <!--  Drawn only while a tile is being dragged, and behind everything: the cells it can
-              land in, plus the one it would land in right now. Without it a tile let go in an
-              empty area snapped somewhere with no visible reason.  -->
-        <Canvas x:Name="GridGhostLayer" IsHitTestVisible="False"/>
-
-        <!--  An outline of a saved arrangement, faded in while its name is hovered in the
-              templates window.  -->
-        <Canvas x:Name="PresetPreviewLayer" IsHitTestVisible="False"/>
+        <!--  The drag grid and the template outline both used to be canvases here, and both are
+              on the overlay window now. They describe places on the screen - which cell a tile
+              would land in, where an arrangement would sit - and this window is only ever as
+              big as its own tiles, so it could not draw either of them past its own edge.  -->
 
         <!--  The dock: the map is one tile among the command tiles, all placed by pixel
               position on this canvas. Tiles are built in code because their number, kind
@@ -58,6 +54,14 @@
                         <Rectangle x:Name="LayerGrid">
                             <Rectangle.Fill>
                                 <VisualBrush x:Name="BrushGrid" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <!--  Above the grid and below the drawings, matching the main map's
+                              order: the zones are terrain information, and anything drawn by
+                              hand is meant to sit on top of it.  -->
+                        <Rectangle x:Name="LayerNoBuild">
+                            <Rectangle.Fill>
+                                <VisualBrush x:Name="BrushNoBuild" Stretch="Uniform" AlignmentX="Center" AlignmentY="Center"/>
                             </Rectangle.Fill>
                         </Rectangle>
                         <Rectangle x:Name="LayerDrawings">

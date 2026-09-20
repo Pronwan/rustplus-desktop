@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3342,7 +3342,7 @@ Primero empareje este servidor.</value>
     <value>Genere el mapa 3D antes de usar mapas de calor.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Genere el mapa 3D para habilitar zonas sin construcción.</value>
+    <value>Analiza primero el mapa para activar las zonas sin construcción.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Opciones genéricas de audio de alarma</value>
@@ -7853,5 +7853,68 @@ Cierra esta vista previa cuando el panel te guste.</value>
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NUEVO</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Zonas sin construcción</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Primero analiza el mapa</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Borrar marcadores de muerte</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Una casilla que borra los marcadores de muerte del mapa y los cuenta</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Borrar todos los marcadores</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Borrar todos menos el último</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Conservar el último mantiene el marcador más reciente tuyo y de cada compañero.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>No hay marcadores de muerte en el mapa</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Marcadores por jugador</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Cuántos marcadores de muerte conserva cada jugador. Bajarlo no elimina los marcadores que ya están en el mapa.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Tú</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Compañeros</value>
+  </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Zoom de widgets</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Zoom de widgets {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Mantener en el dock aunque no haya nada que borrar</value>
+  </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Desbloquear el overlay para organizarlo</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Bloquear el overlay</value>
+  </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>Tamaño del icono {0} %</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>Solo icono y cuenta atrás, sin nombre</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>En una celda el nombre se recorta sea cual sea el tamaño del texto; el icono ya dice de qué evento se trata.</value>
   </data>
 </root>

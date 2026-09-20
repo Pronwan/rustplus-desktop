@@ -26,8 +26,31 @@ namespace RustPlusDesk
             public Brush TextSub { get; init; } = Brushes.Gray;
             public Effect? TextShadow { get; init; }
 
+            /// <summary>How much bigger the tile's icon is drawn. Independent of the text.</summary>
+            public double IconScale { get; init; } = 1.0;
+
+            /// <summary>
+            /// The grid's zoom, on its own.
+            ///
+            /// <see cref="FontScale"/> already has it folded in, which is right for text - but
+            /// an icon must not follow the text scale, and it must still follow the zoom. So the
+            /// zoom is kept separately rather than divided back out.
+            /// </summary>
+            public double Zoom { get; init; } = 1.0;
+
             /// <summary>A font size with the tile's scale applied, rounded to a whole pixel.</summary>
             public double Size(double baseSize) => Math.Round(Math.Max(7, baseSize * FontScale));
+
+            /// <summary>
+            /// An icon's size, which the text scale does not touch.
+            ///
+            /// Only the grid's zoom and the tile's own icon scale apply. A device or an event is
+            /// recognised by its picture rather than by the word under it, so the two are set
+            /// against each other: shrinking the text must leave the picture alone, and that is
+            /// not possible while the text scale is a factor in both.
+            /// </summary>
+            public double Icon(double baseSize) =>
+                Math.Round(Math.Max(8, baseSize * Zoom * IconScale));
 
             /// <summary>Fades a colour by the tile's opacity — for backgrounds and borders only.</summary>
             public Brush Chrome(Color color)
@@ -47,6 +70,16 @@ namespace RustPlusDesk
         {
             double opacity = Math.Clamp(tile.Opacity ?? _dock.DefaultOpacity, 0, 1);
             double scale = Math.Clamp(tile.FontScale ?? _dock.DefaultFontScale, 0.7, 2.0);
+
+            // The grid's zoom rides on the font scale rather than being a second knob the
+            // builders have to remember. Every tile already sizes its text and its icons through
+            // Size(), so folding it in here is what makes a bigger cell hold bigger contents
+            // instead of the same small ones in more empty space.
+            //
+            // Clamped after multiplying, not before: the two have different jobs - the tile's
+            // scale is a preference, the zoom is the pitch of the grid - and a tile set to 2.0
+            // on a grid at 2.0 would otherwise silently lose one of them.
+            scale = Math.Clamp(scale * DockZoom, 0.7, 4.0);
             string key = tile.TextColorKey ?? _dock.DefaultTextColorKey ?? CommandDockTextColors.Auto;
 
             var (main, sub) = TextBrushes(key);
@@ -61,6 +94,8 @@ namespace RustPlusDesk
             {
                 Opacity = opacity,
                 FontScale = scale,
+                IconScale = Math.Clamp(tile.IconScale ?? 1.0, 0.6, 3.0),
+                Zoom = DockZoom,
                 TextMain = main,
                 TextSub = sub,
                 TextShadow = shadow,

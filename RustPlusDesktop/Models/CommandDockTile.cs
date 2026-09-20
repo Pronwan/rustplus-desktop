@@ -43,6 +43,15 @@ namespace RustPlusDesk.Models
         /// <summary>Event tiles: cargo | deepsea | oilrig | heli | chinook | vendor.</summary>
         public string? EventKey { get; set; }
 
+        /// <summary>
+        /// Event tiles: leave off the name under the icon and show only the countdown.
+        ///
+        /// At one cell the name is mostly absent anyway - "Deep Sea Event" arrives as "Deep Sea
+        /// Ev…" and stays trimmed however the text is scaled, because the cell is what it does
+        /// not fit. The icon already says which event it is.
+        /// </summary>
+        public bool EventHideLabel { get; set; }
+
         /// <summary>Clock tiles: 0 digital, 1 analog, 2 Rust style.</summary>
         public int ClockStyle { get; set; }
 
@@ -132,6 +141,25 @@ namespace RustPlusDesk.Models
         public bool DeathTrackAlwaysVisible { get; set; }
 
         /// <summary>
+        /// Death wipe tiles: keep the newest marker per player instead of clearing every one.
+        ///
+        /// Off by default, so one press does the obvious thing. On, it is the setting for
+        /// somebody who wants the map clean but still wants to know where everyone last went
+        /// down - which is the more useful state mid-wipe and the less obvious one, so it is
+        /// the one you have to ask for.
+        /// </summary>
+        public bool DeathWipeKeepLatest { get; set; }
+
+        /// <summary>
+        /// Death wipe tiles: stay on the dock even when the map has no markers to clear.
+        ///
+        /// The same choice the death tracker offers, for the same reason: a button with nothing
+        /// to do is a button in the way, so by default the tile gives its cells back until
+        /// markers exist. Unlocking the dock always shows it, or it could never be placed.
+        /// </summary>
+        public bool DeathWipeAlwaysVisible { get; set; }
+
+        /// <summary>
         /// Death tracking tiles: read the death screen with the AI model rather than with
         /// Windows.
         ///
@@ -154,6 +182,16 @@ namespace RustPlusDesk.Models
 
         /// <summary>Multiplier on every font size in the tile.</summary>
         public double? FontScale { get; set; }
+
+        /// <summary>
+        /// Device, event and rule tiles: how much bigger the icon is drawn than the text scale
+        /// alone would make it. Null follows the text.
+        ///
+        /// These three are recognised by their picture, not by the word under it - and the only
+        /// way to enlarge that picture was to enlarge the word with it, which then stopped
+        /// fitting the cell. Kept as its own value so the two can be set against each other.
+        /// </summary>
+        public double? IconScale { get; set; }
 
         /// <summary>A key from <see cref="CommandDockTextColors"/>, or null for the theme's own.</summary>
         public string? TextColorKey { get; set; }
@@ -230,6 +268,16 @@ namespace RustPlusDesk.Models
         public const string Collapse = "Collapse";
 
         /// <summary>
+        /// One cell that clears the map's death markers.
+        ///
+        /// Separate from <see cref="DeathTrack"/>, which is about the death that just happened.
+        /// This one is about the ones that already did: a wipe's worth of pins builds up, and
+        /// the only way to clear them was a button under the team list, four levels away from
+        /// the map they cover.
+        /// </summary>
+        public const string DeathWipe = "DeathWipe";
+
+        /// <summary>
         /// After a death: one press to read the killer's name off the death screen.
         ///
         /// Only on the dock while the player is dead, because that is the only time the
@@ -302,17 +350,42 @@ namespace RustPlusDesk.Models
 
         public string DefaultTextColorKey { get; set; } = CommandDockTextColors.Auto;
 
-        /// <summary>Cell size and gap in device-independent pixels.</summary>
-        public const double CellSize = 74;
-        public const double CellGap = 8;
+        /// <summary>
+        /// How much bigger than its base size the grid is drawn, 1.0 being the original.
+        ///
+        /// One cell was a fixed 74 device-independent pixels, which on a 4K panel is a very
+        /// small button - and because most tiles are forced to one cell, there was no way to
+        /// make them bigger. Font scale only grew the text inside a box that stayed put. This
+        /// grows the box, and the tile builders fold it into their font scale so the contents
+        /// come with it.
+        ///
+        /// Kept out of the appearance defaults on purpose: those are per tile with a dock-wide
+        /// fallback, while this is a property of the grid itself and cannot be per tile - half
+        /// a grid at a different pitch is not a grid.
+        /// </summary>
+        public double GridZoom { get; set; } = 1.0;
 
-        public static double CellsToPixels(int cells) =>
-            cells <= 0 ? 0 : cells * CellSize + (cells - 1) * CellGap;
+        public const double MinGridZoom = 0.75;
+        public const double MaxGridZoom = 2.5;
 
-        public static double CellOffset(int index) => index * (CellSize + CellGap);
+        public static double ClampZoom(double zoom) =>
+            double.IsFinite(zoom) ? Math.Clamp(zoom, MinGridZoom, MaxGridZoom) : 1.0;
+
+        /// <summary>Cell size and gap in device-independent pixels, before zoom.</summary>
+        public const double BaseCellSize = 74;
+        public const double BaseCellGap = 8;
+
+        public static double CellSizeAt(double zoom) => BaseCellSize * ClampZoom(zoom);
+        public static double CellGapAt(double zoom) => BaseCellGap * ClampZoom(zoom);
+
+        public static double CellsToPixels(int cells, double zoom) =>
+            cells <= 0 ? 0 : cells * CellSizeAt(zoom) + (cells - 1) * CellGapAt(zoom);
+
+        public static double CellOffset(int index, double zoom) =>
+            index * (CellSizeAt(zoom) + CellGapAt(zoom));
 
         /// <summary>How many cells a free-size element such as the map tile covers.</summary>
-        public static int PixelsToCells(double pixels) =>
-            Math.Max(1, (int)Math.Ceiling((pixels + CellGap) / (CellSize + CellGap)));
+        public static int PixelsToCells(double pixels, double zoom) =>
+            Math.Max(1, (int)Math.Ceiling((pixels + CellGapAt(zoom)) / (CellSizeAt(zoom) + CellGapAt(zoom))));
     }
 }

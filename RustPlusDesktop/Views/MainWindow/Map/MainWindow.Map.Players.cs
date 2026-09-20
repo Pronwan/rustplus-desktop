@@ -507,6 +507,17 @@ public partial class MainWindow
         RedrawDeathPins();
     }
 
+    /// <summary>
+    /// The death markers the current map is actually showing.
+    ///
+    /// The Deep Sea map and the island hold theirs in the same list, told apart by an X far
+    /// outside the world - so "how many markers are there" only has an answer once you say
+    /// which map is on screen.
+    /// </summary>
+    private IEnumerable<Models.DeathMarkerData> VisibleDeathMarkers =>
+        _vm?.Selected?.DeathMarkers.Where(m => _isShowingDeepSeaMap ? (m.X < -1000) : (m.X >= -1000))
+        ?? Enumerable.Empty<Models.DeathMarkerData>();
+
     private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e)
     {
         if (_vm?.Selected != null)
@@ -528,39 +539,43 @@ public partial class MainWindow
             
             if (_vm?.Selected != null)
             {
-                var mySid = TrackingService.SteamId64;
-                var markers = _vm.Selected.DeathMarkers;
-                
-                if (dlg.WipeAll)
-                {
-                    markers.Clear();
-                }
-                else if (!string.IsNullOrEmpty(mySid) && ulong.TryParse(mySid, out var sidNum))
-                {
-                    var myMarkers = markers.Where(m => m.SteamId == sidNum).OrderByDescending(m => m.TimeOfDeath).ToList();
-                    while (myMarkers.Count > TrackingService.MaxSelfDeathMarkers)
-                    {
-                        var oldest = myMarkers.Last();
-                        markers.Remove(oldest);
-                        myMarkers.Remove(oldest);
-                    }
-                }
-                
-                var teamGroups = markers.Where(m => m.SteamId.ToString() != mySid).GroupBy(m => m.SteamId).ToList();
-                foreach (var group in teamGroups)
-                {
-                    var teamMarkers = group.OrderByDescending(m => m.TimeOfDeath).ToList();
-                    while (teamMarkers.Count > TrackingService.MaxTeamDeathMarkers)
-                    {
-                        var oldest = teamMarkers.Last();
-                        markers.Remove(oldest);
-                        teamMarkers.Remove(oldest);
-                    }
-                }
-                
+                if (dlg.WipeAll) _vm.Selected.DeathMarkers.Clear();
+                else TrimDeathMarkersPerPlayer(TrackingService.MaxSelfDeathMarkers, TrackingService.MaxTeamDeathMarkers);
+
                 _vm.Save();
                 RedrawDeathPins();
             }
+        }
+    }
+
+    /// <summary>
+    /// Drops the oldest markers until nobody is over their cap, counted per player: the user
+    /// against <paramref name="maxSelf"/> and every teammate separately against
+    /// <paramref name="maxTeam"/>.
+    ///
+    /// Per player rather than over the whole list, because the list is shared - one teammate
+    /// dying repeatedly would otherwise push everybody else's markers off the map.
+    /// </summary>
+    private void TrimDeathMarkersPerPlayer(int maxSelf, int maxTeam)
+    {
+        if (_vm?.Selected == null) return;
+
+        var markers = _vm.Selected.DeathMarkers;
+        var mySid = TrackingService.SteamId64;
+
+        if (!string.IsNullOrEmpty(mySid) && ulong.TryParse(mySid, out var sidNum))
+            TrimOne(markers.Where(m => m.SteamId == sidNum), maxSelf);
+
+        foreach (var group in markers.Where(m => m.SteamId.ToString() != mySid).GroupBy(m => m.SteamId).ToList())
+            TrimOne(group, maxTeam);
+
+        void TrimOne(IEnumerable<Models.DeathMarkerData> owned, int keep)
+        {
+            // Materialised before anything is removed: the source is a query over the very list
+            // being modified.
+            var ordered = owned.OrderByDescending(m => m.TimeOfDeath).ToList();
+            for (int i = ordered.Count - 1; i >= Math.Max(0, keep); i--)
+                markers.Remove(ordered[i]);
         }
     }
     private void RefreshAllOverlayScales()
@@ -684,9 +699,7 @@ public partial class MainWindow
             return;
         }
 
-        var filteredMarkers = _vm.Selected.DeathMarkers
-            .Where(m => _isShowingDeepSeaMap ? (m.X < -1000) : (m.X >= -1000))
-            .ToList();
+        var filteredMarkers = VisibleDeathMarkers.ToList();
 
         var hasMarkers = filteredMarkers.Count > 0;
         if (WipeDeathMarkersOverlay != null)

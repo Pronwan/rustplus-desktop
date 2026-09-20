@@ -53,6 +53,10 @@ namespace RustPlusDesk
                 Margin = new Thickness(0, 0, 4, 0),
                 MaxLength = 1800,
             };
+            // The dock cannot take the keyboard on its own - see MiniMapWindow.Focus.cs. This is
+            // one of the two places that needs to, so it asks for it while it has focus.
+            AllowTypingIn(input);
+
             Grid.SetColumn(input, 1);
             row.Children.Add(input);
 

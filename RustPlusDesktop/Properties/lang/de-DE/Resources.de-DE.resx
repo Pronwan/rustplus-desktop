@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -3417,7 +3417,7 @@ Bitte koppeln Sie diesen Server zuerst.</value>
     <value>Generieren Sie die 3D-Karte, bevor Sie Heatmaps verwenden.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>Generieren Sie die 3D-Karte, um baufreie Zonen zu ermöglichen.</value>
+    <value>Zuerst die Karte parsen, um Bauverbotszonen zu aktivieren.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>Allgemeine Alarm-Audiooptionen</value>
@@ -7947,5 +7947,68 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NEU</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>Bauverbotszonen</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>Bitte zuerst die Karte parsen</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>Todesmarker löschen</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>Eine Kachel, die die Todesmarker der Karte löscht und sie zählt</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>Alle Todesmarker löschen</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>Alle bis auf den letzten löschen</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>Den letzten zu behalten heißt: der neueste Marker von dir und von jedem Teamkollegen bleibt.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>Keine Todesmarker auf der Karte</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>Marker pro Spieler</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>Wie viele Todesmarker pro Spieler behalten werden. Ein niedrigerer Wert entfernt keine Marker, die schon auf der Karte sind.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>Du</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>Teamkollegen</value>
+  </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>Widget-Zoom</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>Widget-Zoom {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>Auf dem Dock lassen, auch wenn es nichts zu löschen gibt</value>
+  </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>Overlay entsperren, um es anzuordnen</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>Overlay sperren</value>
+  </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>Symbolgröße {0} %</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>Nur Symbol und Countdown, kein Name</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>Bei einer Zelle wird der Name unabhängig von der Schriftgröße abgeschnitten; das Symbol sagt ohnehin, um welches Event es geht.</value>
   </data>
 </root>

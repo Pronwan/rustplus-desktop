@@ -734,6 +734,8 @@ namespace RustPlusDesk.Views
             ChkShowDeathMarkers.IsChecked    = TrackingService.MapShowDeathTags;
             ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
             SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
+            NumMaxSelfDeathMarkers.Value      = TrackingService.MaxSelfDeathMarkers;
+            NumMaxTeamDeathMarkers.Value      = TrackingService.MaxTeamDeathMarkers;
 
             LoadCommandDockDefaults();
             LoadAiCompanionSettings();
@@ -1020,6 +1022,26 @@ namespace RustPlusDesk.Views
             ParentWindow?.ApplySettings();
         }
 
+        /// <summary>
+        /// The per-player marker caps, the same two numbers the dialog behind the map's
+        /// death-marker button sets.
+        ///
+        /// Only stored, never applied backwards: lowering the cap here does not delete markers
+        /// that are already on the map. Trimming is what the dialog's own button is for, and a
+        /// settings page that quietly threw away a wipe's worth of pins on a mis-click would be
+        /// a bad place to find that out.
+        /// </summary>
+        private void OnDeathMarkerCapChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            if (NumMaxSelfDeathMarkers.Value is { } self)
+                TrackingService.MaxSelfDeathMarkers = (int)Math.Clamp(self, 1, 50);
+
+            if (NumMaxTeamDeathMarkers.Value is { } team)
+                TrackingService.MaxTeamDeathMarkers = (int)Math.Clamp(team, 1, 50);
+        }
+
         private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)
         {
             if (!_isSettingsInitialized) return;
@@ -1229,6 +1251,21 @@ namespace RustPlusDesk.Views
                     MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        /// <summary>
+        /// Open Cloud 24/7: which servers stay watched while the app is closed.
+        ///
+        /// Sits next to the feature comparison deliberately - one explains what the
+        /// cloud does, the other is where it is actually turned on per server.
+        /// </summary>
+        private void BtnCloud247_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RustPlusDesk.Views.Windows.Cloud24x7Window
+            {
+                Owner = ParentWindow ?? Window.GetWindow(this),
+            };
+            window.ShowDialog();
         }
 
         private void BtnCompareCloud_Click(object sender, RoutedEventArgs e)

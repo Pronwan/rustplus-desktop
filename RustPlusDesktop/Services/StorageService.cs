@@ -48,5 +48,10 @@ public record MiniMapSettings(
     bool ShowIcons = true,
     bool ShowPlayers = true,
     bool ShowDeaths = true,
-    bool ShowHeatmap = true);
+    bool ShowHeatmap = true,
+
+    // Off by default, unlike the rest: the zones only exist once the map has been parsed, and a
+    // layer that switches itself on the moment a parse finishes would be a surprise rather than
+    // a setting. Every other layer is something the map always has.
+    bool ShowNoBuild = false);
 

@@ -806,6 +806,27 @@
                             <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowDeathMarkers" AutomationProperties.Name="{DynamicResource Death}" VerticalAlignment="Center" Checked="OnMarkerSettingChanged" Unchecked="OnMarkerSettingChanged" />
                         </Grid>
 
+                        <!--  How many markers each player keeps. The same two numbers as the
+                              dialog behind the map's own death-marker button; they were only
+                              reachable from there, which is a long way from the map settings
+                              somebody goes looking in.  -->
+                        <Grid MinHeight="36" Margin="28,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <ui:TextBlock Text="{DynamicResource DeathMarkerKeepPerPlayer}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource DeathMarkerKeepHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:TextBlock Text="{DynamicResource DeathMarkerKeepSelf}" FontSize="11" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <ui:NumberBox x:Name="NumMaxSelfDeathMarkers" Minimum="1" Maximum="50" SpinButtonPlacementMode="Compact" ClearButtonEnabled="False" Width="88" ValueChanged="OnDeathMarkerCapChanged" />
+                                <ui:TextBlock Text="{DynamicResource DeathMarkerKeepTeam}" FontSize="11" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" Margin="14,0,6,0" />
+                                <ui:NumberBox x:Name="NumMaxTeamDeathMarkers" Minimum="1" Maximum="50" SpinButtonPlacementMode="Compact" ClearButtonEnabled="False" Width="88" ValueChanged="OnDeathMarkerCapChanged" />
+                            </StackPanel>
+                        </Grid>
+
                         <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Streamer Mode -->
@@ -902,6 +923,7 @@
                 <ui:TextBlock x:Name="CloudSettingsAnchor" Text="{DynamicResource UiCloudAccountSync}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
+                <ui:Button Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCloud247_Click" />
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Info24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCompareCloud_Click" />
 
                 <!-- Cloud Account Buttons: Discord + Email side by side -->

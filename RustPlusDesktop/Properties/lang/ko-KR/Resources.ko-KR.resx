@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -3324,7 +3324,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>히트맵을 사용하기 전에 3D 지도를 생성하세요.</value>
   </data>
   <data name="UiGenerateThe3DMapToEnableNoBuildZones" xml:space="preserve">
-    <value>건설 금지 구역을 활성화하려면 3D 지도를 생성하세요.</value>
+    <value>건축 금지 구역을 사용하려면 먼저 맵을 파싱하세요.</value>
   </data>
   <data name="UiGenericAlarmAudioOptions" xml:space="preserve">
     <value>일반 알람 오디오 옵션</value>
@@ -7774,5 +7774,68 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>신규</value>
+  </data>
+  <data name="MiniMapLayerNoBuild" xml:space="preserve">
+    <value>건축 금지 구역</value>
+  </data>
+  <data name="MiniMapLayerNoBuildUnavailable" xml:space="preserve">
+    <value>먼저 맵을 파싱하세요</value>
+  </data>
+  <data name="CommandDockDeathWipeTitle" xml:space="preserve">
+    <value>사망 표식 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipePickerHint" xml:space="preserve">
+    <value>지도의 사망 표식을 지우고 개수를 세는 한 칸</value>
+  </data>
+  <data name="CommandDockDeathWipeAll" xml:space="preserve">
+    <value>모든 사망 표식 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepLatest" xml:space="preserve">
+    <value>마지막 하나만 남기고 지우기</value>
+  </data>
+  <data name="CommandDockDeathWipeKeepHint" xml:space="preserve">
+    <value>마지막 하나를 남기면 본인과 각 팀원의 가장 최근 표식이 유지됩니다.</value>
+  </data>
+  <data name="CommandDockDeathWipeEmpty" xml:space="preserve">
+    <value>지도에 사망 표식이 없습니다</value>
+  </data>
+  <data name="DeathMarkerKeepPerPlayer" xml:space="preserve">
+    <value>플레이어당 표식 수</value>
+  </data>
+  <data name="DeathMarkerKeepHint" xml:space="preserve">
+    <value>각 플레이어가 유지하는 사망 표식 수입니다. 값을 낮춰도 이미 지도에 있는 표식은 사라지지 않습니다.</value>
+  </data>
+  <data name="DeathMarkerKeepSelf" xml:space="preserve">
+    <value>본인</value>
+  </data>
+  <data name="DeathMarkerKeepTeam" xml:space="preserve">
+    <value>팀원</value>
+  </data>
+  <data name="CommandDockGridZoom" xml:space="preserve">
+    <value>위젯 확대</value>
+  </data>
+  <data name="CommandDockGridZoomValue" xml:space="preserve">
+    <value>위젯 확대 {0}%</value>
+  </data>
+  <data name="CommandDockDeathWipeAlwaysVisible" xml:space="preserve">
+    <value>지울 것이 없어도 독에 유지</value>
+  </data>
+  <data name="CommandDockUnlock" xml:space="preserve">
+    <value>오버레이 잠금 해제 후 배치</value>
+  </data>
+  <data name="CommandDockLock" xml:space="preserve">
+    <value>오버레이 잠금</value>
+  </data>
+  <data name="CommandDockSectionGeneral" xml:space="preserve">
+    <value>일반</value>
+  </data>
+  <data name="CommandDockTileIconSize" xml:space="preserve">
+    <value>아이콘 크기 {0}%</value>
+  </data>
+  <data name="CommandDockEventHideLabel" xml:space="preserve">
+    <value>아이콘과 카운트다운만, 이름 없음</value>
+  </data>
+  <data name="CommandDockEventHideLabelHint" xml:space="preserve">
+    <value>한 칸에서는 글자 크기와 상관없이 이름이 잘립니다. 아이콘이 이미 어떤 이벤트인지 알려줍니다.</value>
   </data>
 </root>

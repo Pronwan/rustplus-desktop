@@ -46,6 +46,13 @@
             <TextBlock x:Name="LblSize" Text="{DynamicResource UiSize100SHIFTMousewheel}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10"/>
 
+            <!--  Widget zoom. Not the map's size above: this is the pitch of the whole grid,
+                  so the tiles and everything in them grow together. The one setting that helps
+                  on a 4K panel, where a one-cell button is very small and font scale only grew
+                  the text inside a box that stayed put.  -->
+            <TextBlock x:Name="LblGridZoom" Text="{DynamicResource CommandDockGridZoom}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <Slider x:Name="SliGridZoom" Minimum="0.75" Maximum="2.5" Value="1.0" ValueChanged="SliGridZoom_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
+
             <!-- Show Server Time CheckBox -->
             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                 <CheckBox x:Name="ChkShowTime" Content="Server Time" Checked="ChkShowTime_Changed" Unchecked="ChkShowTime_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,16,0"/>
@@ -68,6 +75,9 @@
                 <!--  Independent of the main map's own death-marker setting: the point is to see
                       them here while the big map stays clean, or the other way round.  -->
                 <CheckBox x:Name="ChkLayerDeaths"   Content="{DynamicResource MiniMapLayerDeaths}"   Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="14,0,0,0"/>
+                <!--  Only has anything to show once the map file has been parsed, so it is
+                      disabled until then and says so.  -->
+                <CheckBox x:Name="ChkLayerNoBuild"  Content="{DynamicResource MiniMapLayerNoBuild}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,4,0,0"/>
             </StackPanel>
 
             <!--  Where a newly added tile lands. Dragging overrules this and reaches every side

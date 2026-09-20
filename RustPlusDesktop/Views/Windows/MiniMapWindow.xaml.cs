@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,7 +19,8 @@ namespace RustPlusDesk
         Visual? Drawings,
         Visual? Icons,
         Visual? Players,
-        Visual? Deaths);
+        Visual? Deaths,
+        Visual? NoBuild);
 
     public partial class MiniMapWindow : Window
     {
@@ -74,6 +75,9 @@ namespace RustPlusDesk
                 startDragPos = e.GetPosition(this);
                 DragMove();
                 ClampToScreen();
+
+                // Dragged on purpose, so this is where the grid now hangs from.
+                AnchorOriginToWindow();
             };
             MouseLeftButtonUp += (s, e) =>
             {
@@ -100,6 +104,7 @@ namespace RustPlusDesk
                 e.Handled = true;
                 DragMove();
                 ClampToScreen();
+                AnchorOriginToWindow();
                 SaveDockPosition();
             };
 
@@ -136,6 +141,12 @@ namespace RustPlusDesk
 
         /// <summary>The same for death markers, which the main map also builds only on demand.</summary>
         public bool WantsDeathLayer { get; private set; } = true;
+
+        /// <summary>
+        /// The same for the building-blocked zones. Starts false, because the layer starts off:
+        /// the zones do not exist until the map has been parsed.
+        /// </summary>
+        public bool WantsNoBuildLayer { get; private set; }
 
         /// <summary>
         /// Whether a mouse event came from this window's own content rather than from one of its
@@ -178,6 +189,7 @@ namespace RustPlusDesk
             BrushIcons.Visual = layers.Icons;
             BrushPlayers.Visual = layers.Players;
             BrushDeaths.Visual = layers.Deaths;
+            BrushNoBuild.Visual = layers.NoBuild;
             ApplyViewbox();
         }
 
@@ -344,7 +356,7 @@ namespace RustPlusDesk
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
 
-            foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths })
+            foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths, BrushNoBuild })
             {
                 if (brush == null) continue;
                 brush.ViewboxUnits = BrushMappingMode.Absolute;
@@ -395,6 +407,11 @@ namespace RustPlusDesk
             SettingsPopup.HorizontalOffset = offsetX;
             SettingsPopup.VerticalOffset = offsetY;
             SettingsPopup.IsOpen = true;
+
+            // Asked again on every open: the panel reads its settings once, but whether the
+            // no-build layer has anything to show changes whenever a parse finishes - which
+            // happens while this panel is closed.
+            SettingsOverlay?.RefreshNoBuildAvailability();
         }
 
         public void CloseSettings() => SettingsPopup.IsOpen = false;
@@ -411,18 +428,32 @@ namespace RustPlusDesk
         {
             try
             {
-                var origin = new System.Drawing.Point(
-                    (int)(double.IsNaN(window.Left) ? 0 : window.Left),
-                    (int)(double.IsNaN(window.Top) ? 0 : window.Top));
-
-                var area = System.Windows.Forms.Screen.FromPoint(origin).WorkingArea;
-
-                // Screen reports physical pixels; Window.Left is device-independent.
+                // Screen speaks physical pixels; Window.Left is device-independent. The scale
+                // has to be applied on the way in as well as on the way out - passing raw DIPs
+                // to Screen picked the wrong monitor on any display that is not at 100%.
                 double scale = 1.0;
                 var source = PresentationSource.FromVisual(window);
                 if (source?.CompositionTarget != null)
                     scale = source.CompositionTarget.TransformToDevice.M11;
                 if (scale <= 0) scale = 1.0;
+
+                double left = double.IsNaN(window.Left) ? 0 : window.Left;
+                double top = double.IsNaN(window.Top) ? 0 : window.Top;
+                double width = double.IsNaN(window.Width) || window.Width <= 0 ? 1 : window.Width;
+                double height = double.IsNaN(window.Height) || window.Height <= 0 ? 1 : window.Height;
+
+                // By the whole window rather than its top-left corner. FromRectangle picks the
+                // monitor the window mostly covers, which is the one somebody would point at.
+                //
+                // The corner was actively wrong: growing the map holds its centre still, so the
+                // dock's left edge travels outwards as it gets bigger. Cross a monitor boundary
+                // with that one pixel and the overlay - the grid and the bar with it - moved to
+                // the other screen, while the dock stayed where it was.
+                var rect = new System.Drawing.Rectangle(
+                    (int)Math.Round(left * scale), (int)Math.Round(top * scale),
+                    (int)Math.Round(width * scale), (int)Math.Round(height * scale));
+
+                var area = System.Windows.Forms.Screen.FromRectangle(rect).WorkingArea;
 
                 return new Rect(area.Left / scale, area.Top / scale, area.Width / scale, area.Height / scale);
             }
@@ -483,17 +514,20 @@ namespace RustPlusDesk
             Vis(LayerIcons, settings.ShowIcons);
             Vis(LayerPlayers, settings.ShowPlayers);
             Vis(LayerDeaths, settings.ShowDeaths);
+            Vis(LayerNoBuild, settings.ShowNoBuild);
 
             // The main map only builds the grid and the death pins when something wants them,
             // so the mini-map has to say so — its switch is not a filter over something that is
             // always there.
             bool wantsGrid = settings.ShowGrid;
             bool wantsDeaths = settings.ShowDeaths;
+            bool wantsNoBuild = settings.ShowNoBuild;
 
-            if (wantsGrid != WantsGridLayer || wantsDeaths != WantsDeathLayer)
+            if (wantsGrid != WantsGridLayer || wantsDeaths != WantsDeathLayer || wantsNoBuild != WantsNoBuildLayer)
             {
                 WantsGridLayer = wantsGrid;
                 WantsDeathLayer = wantsDeaths;
+                WantsNoBuildLayer = wantsNoBuild;
                 (Application.Current?.MainWindow as Views.MainWindow)?.RefreshIndependentLayers();
             }
 
@@ -506,7 +540,8 @@ namespace RustPlusDesk
             // With nothing left to draw, the map stops holding cells and the dock closes up over
             // it. Turning a layer back on brings the space back.
             bool anyLayer = settings.ShowTexture || settings.ShowGrid || settings.ShowDrawings
-                         || settings.ShowIcons || settings.ShowPlayers || settings.ShowDeaths;
+                         || settings.ShowIcons || settings.ShowPlayers || settings.ShowDeaths
+                         || settings.ShowNoBuild;
 
             if (anyLayer != _mapLayersOn)
             {
@@ -542,6 +577,52 @@ namespace RustPlusDesk
             MapClipHost.Clip = new RectangleGeometry(new Rect(0, 0, w, h), radius, radius);
         }
 
+        /// <summary>
+        /// Sets the map's shape - 0 circle, 1 square, 2 16:9 - and makes it stick.
+        ///
+        /// <see cref="_shapeIndex"/> is the shape; the settings panel's ComboBox only shows it.
+        /// It used to be the other way round, with UpdateSize reading the control, which meant
+        /// anything that resized the map while the panel had never been opened - applying a
+        /// saved arrangement, most visibly - quietly took the control's default and put the map
+        /// back to a circle.
+        ///
+        /// The write goes to the settings file directly rather than through the panel, because
+        /// the panel's own save is a no-op until its popup has been opened once: its controls do
+        /// not exist before that, and CurrentSettings returns null when they are missing.
+        /// </summary>
+        /// <summary>
+        /// Writes the shape to the settings file directly.
+        ///
+        /// Not through the settings panel: its own save is a no-op until its popup has been
+        /// opened once, because its controls do not exist before that.
+        /// </summary>
+        internal void PersistMapShape(int shapeIndex)
+        {
+            var stored = RustPlusDesk.Services.StorageService.LoadCache<RustPlusDesk.Services.MiniMapSettings>("minimap_settings");
+            if (stored != null)
+                RustPlusDesk.Services.StorageService.SaveCache("minimap_settings", stored with { ShapeIndex = shapeIndex });
+        }
+
+        /// <summary>The map's height for a given width, which only the 16:9 shape changes.</summary>
+        internal double MapHeightFor(double width, int shapeIndex) =>
+            shapeIndex == 2 ? width * 9.0 / 16.0 : width;
+
+        public void SetMapShape(int shapeIndex, bool persist = true)
+        {
+            shapeIndex = Math.Max(0, Math.Min(2, shapeIndex));
+            if (_shapeIndex == shapeIndex) return;
+
+            _shapeIndex = shapeIndex;
+
+            if (persist) PersistMapShape(shapeIndex);
+
+            SettingsOverlay?.SyncShapeSelection(shapeIndex);
+
+            // Re-applies the geometry at the current size: the corner radius and, at 16:9, the
+            // height both come out of the shape.
+            UpdateSize(_mapWidth, updateSlider: false);
+        }
+
         private bool _isUpdatingSize = false;
 
         public void UpdateSize(double newSize, bool updateSlider = true)
@@ -551,19 +632,6 @@ namespace RustPlusDesk
             try
             {
                 newSize = Math.Max(160, Math.Min(newSize, 800));
-                _shapeIndex = SettingsOverlay?.CmbShape?.SelectedIndex ?? _shapeIndex;
-
-                // Where the map's middle sits on screen right now. Read before the new size is
-                // applied, because that is the point the resize has to leave alone.
-                Point? anchor = null;
-                if (!double.IsNaN(Left) && !double.IsNaN(Top))
-                {
-                    double mx = Canvas.GetLeft(MapContainer);
-                    double my = Canvas.GetTop(MapContainer);
-                    anchor = new Point(
-                        Left + (double.IsNaN(mx) ? 0 : mx) + _mapWidth / 2.0,
-                        Top + (double.IsNaN(my) ? 0 : my) + _mapHeight / 2.0);
-                }
 
                 _mapWidth = newSize;
                 _mapHeight = _shapeIndex == 2 ? newSize * 9.0 / 16.0 : newSize;
@@ -581,9 +649,9 @@ namespace RustPlusDesk
                 _mapCornerRadius = cornerRadius;
                 ApplyMapClip();
 
-                // LayoutDock re-derives every tile's position from its cell, which is all a
-                // resize needs: the map's cell span changed, so the seam moved with it.
-                LayoutDock(anchor);
+                // The map grows from its top-left corner, so nothing else has to move: that
+                // corner is what its cell names, and every other tile sits on its own.
+                LayoutDock();
 
                 if (updateSlider && SettingsOverlay != null)
                     SettingsOverlay.UpdateSliderValue(newSize);
@@ -600,70 +668,123 @@ namespace RustPlusDesk
         /// <summary>
         /// Sizes the window to the bounding box of the map tile and every command tile.
         ///
-        /// <paramref name="mapCentreAnchor"/> is the screen point the map's middle held before
-        /// the change; the window is placed so it still holds it. Anything that moves the window
-        /// runs through here, so the settings popup can be held still at the same time.
+        /// Anything that moves the window runs through here, so the settings popup can be held
+        /// still at the same time.
         /// </summary>
-        private void LayoutDock(Point? mapCentreAnchor = null)
+        /// <summary>
+        /// Where cell (0,0) sits on screen, in device-independent pixels.
+        ///
+        /// The one piece of position the dock keeps. The window's corner, its size and every
+        /// tile's place on the canvas are worked out from it, so that showing or hiding a tile
+        /// changes what is drawn and never where the rest of it is.
+        /// </summary>
+        private double _originX, _originY;
+
+        private bool _originKnown;
+
+        /// <summary>Takes the origin from where the window currently is.</summary>
+        private void AnchorOriginToWindow(Rect? visibleBounds = null)
+        {
+            if (double.IsNaN(Left) || double.IsNaN(Top)) return;
+
+            var box = visibleBounds ?? CellBounds();
+
+            _originX = Left - box.X;
+            _originY = Top - box.Y;
+            _originKnown = true;
+        }
+
+        /// <summary>Establishes it once, the first time a layout needs it.</summary>
+        private void EnsureOriginKnown()
+        {
+            if (_originKnown) return;
+            AnchorOriginToWindow();
+        }
+
+        private void LayoutDock()
         {
             double oldLeft = Left, oldTop = Top;
 
-            // Cells are the only state; pixels are derived from them, always, everywhere.
+            // The monitor the dock is on *now*, before its size changes.
             //
-            // This used to shift the canvas children in pixels when a tile sat left of or above
-            // the origin, and leave their cell coordinates alone. From then on the two disagreed,
-            // and a drop — which reads a pixel position and converts it back through the cell
-            // formula — landed a cell or more away from where it was let go, further every time.
-            // Re-basing the cells instead keeps one grid, and the window takes the opposite move
-            // so the content does not appear to jump.
-            var before = CellBounds();
+            // Applying a wide arrangement grows the window rightwards, and once it reaches far
+            // enough the monitor it mostly covers becomes the next one along - so a clamp that
+            // re-measured afterwards would pull the whole dock onto a screen it was never on,
+            // following a move it had caused itself. An arrangement is a shape, not a place: it
+            // belongs on whichever screen the dock was already sitting on.
+            var homeScreen = ScreenBoundsFor(this);
 
-            // Before normalising: the map's cell span follows its free size, so a resize — or
-            // simply loading the saved size after the tiles were placed — can leave neighbours
-            // underneath it.
+            // Cell (0,0)'s place on screen is held, not re-derived.
+            //
+            // Working it out from the window's corner needs the visible box that corner was
+            // produced with - and by the time a layout runs, visibility has usually already
+            // changed. Collapsing is the clearest case: _dock.Collapsed is set first, so the
+            // box measured is the collapsed one, and the button was placed as though the cell
+            // it sits on had been the arrangement's left edge all along.
+            EnsureOriginKnown();
+
+            // Measured over every tile, because its only job is to cancel the renumbering
+            // NormaliseCells performs - and every tile is what NormaliseCells measures.
+            var allBefore = CellBounds(visibleOnly: false);
+
+            // The map's cell span follows its free size, so a resize — or simply loading the
+            // saved size after the tiles were placed — can leave neighbours underneath it.
             SyncMapCellSpan();
             ResolveOverlaps();
             NormaliseCells();
 
+            var allAfter = CellBounds(visibleOnly: false);
+
+            // Renumbering moved every cell's pixel offset by the same amount; cell (0,0) moves
+            // the opposite way, so the tiles stay where they were on screen.
+            _originX += allBefore.X - allAfter.X;
+            _originY += allBefore.Y - allAfter.Y;
+
+            // This one is about what is on screen, because it is what the window is sized to.
             var bounds = CellBounds();
 
-            double padDelta = _dragPad - _appliedDragPad;
-            _appliedDragPad = _dragPad;
+            // Tiles are drawn relative to the top-left of what is visible, not to cell (0,0).
+            // Drawn from the cell origin they fell outside a window sized to the visible box the
+            // moment the leftmost tiles were hidden - which is exactly what collapsing the dock
+            // does, and why the collapse button disappeared along with everything it hid.
+            ApplyTilePositions(bounds);
 
-            ApplyTilePositions();
+            Width = Math.Max(1, bounds.Width);
+            Height = Math.Max(1, bounds.Height);
 
-            // The preview extra grows the window without moving anything, so an arrangement
-            // larger than the dock can be outlined in full.
-            Width = Math.Max(1, bounds.Width + 2 * _dragPad + _previewExtra.Width);
-            Height = Math.Max(1, bounds.Height + 2 * _dragPad + _previewExtra.Height);
-
-            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            if (!double.IsNaN(_originX) && !double.IsNaN(_originY))
             {
-                Left += before.X - bounds.X - padDelta;
-                Top += before.Y - bounds.Y - padDelta;
+                Left = _originX + bounds.X;
+                Top = _originY + bounds.Y;
             }
 
-            // Only meaningful while the map is on the dock; with it gone there is no centre to
-            // hold and the dock simply keeps its own top-left corner.
-            if (mapCentreAnchor is { } anchor && MapContainer.Visibility == Visibility.Visible)
-            {
-                double mx = Canvas.GetLeft(MapContainer);
-                double my = Canvas.GetTop(MapContainer);
-                if (!double.IsNaN(mx) && !double.IsNaN(my))
-                {
-                    Left = anchor.X - (mx + _mapWidth / 2.0);
-                    Top = anchor.Y - (my + _mapHeight / 2.0);
-                }
-            }
+            // The map used to be re-anchored by its middle here, so that a resize left that
+            // point still. The cost was that growing the map moved the window up and left by
+            // half the growth - and every other widget with it, since they are drawn relative
+            // to the window. It grows from its top-left corner now, which is the corner its
+            // cell names, so a resize reaches right and down and disturbs nothing.
 
-            ClampToScreen();
+            // Structural: the arrangement or the map's size just changed, and there is no
+            // drag in flight for this to fight with.
+            ClampToScreen(pullIntoView: true, screen: homeScreen);
+
+            // The clamp may have moved the window. The origin follows it, or the next layout
+            // would place the dock back where the clamp had just taken it from.
+            AnchorOriginToWindow(bounds);
 
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
                 FollowAiAnswer();
 
             PositionChrome();
-            DrawGridGhost();
+
+            // The dock moved or resized, so the grid the overlay painted is measured against
+            // the wrong origin. Only while a drag is in flight - otherwise there is none.
+            if (_draggingTile != null)
+            {
+                PaintOverlayGrid();
+                ShowOverlayDropTarget();
+            }
         }
 
         /// <summary>Stretches the title bar across the dock and parks it on the top edge.</summary>
@@ -677,28 +798,79 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Keeps the dock reachable.
+        /// Keeps the dock on the screen.
         ///
-        /// The title bar is the only way to move the dock once the map is off, and it sits on the
-        /// window's top edge — so that edge may never leave the screen. Horizontally a strip is
-        /// enough: the dock can hang off either side as long as some of the bar can be grabbed.
+        /// A dock that fits is pulled fully into view, in both directions. It used to be lenient
+        /// horizontally — a strip of 120 pixels was enough, and the rest could hang off the edge
+        /// — because the title bar was the only way to move the dock and sat on the dock itself,
+        /// so what mattered was that some of it stayed grabbable.
+        ///
+        /// The bar is on the overlay now, pinned to the top of the screen and reachable wherever
+        /// the dock happens to be, so that reason is gone. What the leniency left behind was a
+        /// real problem: loading a wide arrangement while the dock was anchored near the right
+        /// edge — which is exactly where the built-in default parks it — pushed the right-hand
+        /// widgets off the screen, and nothing brought them back.
+        ///
+        /// A dock genuinely larger than the screen still hangs off, because it has to; the strip
+        /// is what stays reachable then.
         /// </summary>
-        private void ClampToScreen()
+        /// <summary>
+        /// Keeps the dock somewhere it can be reached and, when asked, fully in view.
+        ///
+        /// <paramref name="pullIntoView"/> separates two jobs that were one and must not be.
+        ///
+        /// While the dock is being dragged, only reachability matters, and a strip of 120 pixels
+        /// is the whole rule. Pulling it fully onto a monitor mid-drag makes a monitor boundary
+        /// impossible to cross: the dock is still mostly on the screen it is leaving, so that is
+        /// the screen the clamp measures against, and it hauls it back on every mouse move. The
+        /// dock ends up stuck on one monitor with no way off it.
+        ///
+        /// After a structural change - a template applied, the map resized - there is no drag to
+        /// fight, and reachability is not enough. That is when a dock that fits gets pulled fully
+        /// into view, so a wide arrangement loaded while the dock sat near an edge cannot leave
+        /// its right-hand widgets off the screen.
+        /// </summary>
+        /// <param name="screen">
+        /// The monitor to clamp against, when the caller knows better than the current geometry
+        /// does - a layout change measures the screen before it resizes the window, because
+        /// growing the window can move it onto the next monitor and the clamp must not chase it
+        /// there. Null asks for whichever monitor the dock mostly covers right now.
+        /// </param>
+        private void ClampToScreen(bool pullIntoView = false, Rect? screen = null)
         {
             if (double.IsNaN(Left) || double.IsNaN(Top)) return;
 
             const double grabbable = 120;
-            var screen = ScreenBoundsFor(this);
+            var bounds = screen ?? ScreenBoundsFor(this);
 
-            double top = Math.Max(screen.Top, Top);
+            double top = Math.Max(bounds.Top, Top);
 
             // Nothing below the bottom edge either, unless the dock is taller than the screen —
             // then the top wins, because that is where the handle is.
-            if (top + Height > screen.Bottom)
-                top = Math.Max(screen.Top, screen.Bottom - Height);
+            if (top + Height > bounds.Bottom)
+                top = Math.Max(bounds.Top, bounds.Bottom - Height);
 
-            double left = Math.Min(Left, screen.Right - grabbable);
-            left = Math.Max(left, screen.Left - Math.Max(0, Width - grabbable));
+            double left;
+            if (pullIntoView && Width > bounds.Width)
+            {
+                // Wider than the screen, so it cannot all be shown. Aligned to the left edge
+                // anyway, rather than left wherever it happened to be: the built-in default
+                // parks the dock against the right edge, and from there every arrangement too
+                // wide to fit was simply abandoned across the monitor boundary. Aligned left,
+                // the overflow hangs off the right of the correct screen, which is somewhere it
+                // can be dragged back from.
+                left = bounds.Left;
+            }
+            else if (pullIntoView)
+            {
+                left = Math.Min(Left, bounds.Right - Width);
+                left = Math.Max(left, bounds.Left);
+            }
+            else
+            {
+                left = Math.Min(Left, bounds.Right - grabbable);
+                left = Math.Max(left, bounds.Left - Math.Max(0, Width - grabbable));
+            }
 
             if (Math.Abs(left - Left) > 0.01) Left = left;
             if (Math.Abs(top - Top) > 0.01) Top = top;

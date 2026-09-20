@@ -128,6 +128,9 @@ namespace RustPlusDesk
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden,
             };
 
+            // The other place that needs the keyboard; the dock is NOACTIVATE otherwise.
+            AllowTypingIn(input);
+
             ToolTipService.SetToolTip(input, Loc.Text("CommandDockTranslateInputHint",
                 "Paste or type something, then press send"));
 

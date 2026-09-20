@@ -1,4 +1,4 @@
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -20,6 +20,58 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _isSoftConnecting = false;
+
+    /// <summary>
+    /// The server this app told the cloud it is driving, so it can hand it back.
+    ///
+    /// Releasing is an optimisation, not a requirement: the platform holds a short
+    /// lease that expires on its own, which is what covers the case this app cannot
+    /// report at all - being killed. Calling it turns a ninety-second gap in cover
+    /// into a couple of seconds.
+    /// </summary>
+    private string? _cloudHeldServerKey;
+
+    /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
+    private void ReleaseCloudHold()
+    {
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+        _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key!);
+    }
+
+    /// <summary>
+    /// The same hand-back, but awaited, for the one caller that cannot fire and
+    /// forget: shutdown.
+    ///
+    /// Everywhere else the process carries on and an unawaited call completes on
+    /// its own. On exit it does not — the process is gone before the request
+    /// leaves — so closing the app would cost the full ninety-second lease at
+    /// exactly the moment cover matters most, which is the moment the user walked
+    /// away.
+    ///
+    /// Bounded, because a hand-back is an optimisation and the lease already
+    /// covers us: an unreachable platform must not hold the window open.
+    /// </summary>
+    internal async Task ReleaseCloudHoldOnExitAsync()
+    {
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+
+        try
+        {
+            await Services.Cloud.CloudSessionsApi.ReleaseAsync(key!)
+                .WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        catch
+        {
+            // Timed out or refused. The lease expiring is the fallback this was
+            // only ever shortening.
+        }
+    }
 
     private void UpdateFullConnectButtonsEnabled()
     {
@@ -375,6 +427,7 @@ public partial class MainWindow
                 _shopTimer = null;
                 StopDynPolling();
                 StopTeamPolling();
+                ReleaseCloudHold();
                 TeamMembers.Clear();
                 ClanMembers.Clear();
                 _lastClanPoll = DateTime.MinValue;
@@ -401,6 +454,7 @@ public partial class MainWindow
                 _shopTimer = null;
                 StopDynPolling();
                 StopTeamPolling();
+                ReleaseCloudHold();
                 TeamMembers.Clear();
                 ClanMembers.Clear();
                 _lastClanPoll = DateTime.MinValue;
@@ -431,6 +485,7 @@ public partial class MainWindow
                 _shopTimer?.Stop();
                 StopDynPolling(clearKnown: false);
                 StopTeamPolling();
+                ReleaseCloudHold();
                 _alertsNeedRebaseline = true;
             }
         }
@@ -612,6 +667,18 @@ public partial class MainWindow
                 connectedProfile.Name,
                 connectedProfile.PlayerToken,
                 _mySteamId);
+
+            // Cloud 24/7: this app is driving the server now, so the cloud should
+            // stand down. Fire-and-forget on purpose - a failure costs at most one
+            // duplicate connection until the next heartbeat, which is not worth
+            // holding up a connect over, and the lease expires on its own anyway.
+            _cloudHeldServerKey = GetServerKey();
+            _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
+
+            // Send the command words up so the cloud answers to exactly what this
+            // user configured. Without it a teammate would get different replies
+            // depending on whether this app happened to be running.
+            _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, _cloudHeldServerKey);
 
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)
