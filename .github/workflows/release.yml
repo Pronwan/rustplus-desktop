@@ -39,7 +39,6 @@ env:
   CONFIGURATION: "Release"
   RUNTIME_IDENTIFIER: "win-x64"
   APP_PROJECT: "RustPlusDesktop/RustPlusDesk.csproj"
-  SOLUTION: "RustPlusDesk.sln"
   PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
   VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
   VELOPACK_ID: "RustPlusDesk"
@@ -116,9 +115,6 @@ jobs:
           "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
           "RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Restore
-        run: dotnet restore "${{ env.SOLUTION }}"
-
       - name: Create build .env
         shell: pwsh
         env:
@@ -148,9 +144,6 @@ jobs:
           SUPABASE_ANON_KEY=$env:SUPABASE_ANON_KEY
           CLOUD_API_BASEURL=$env:CLOUD_API_BASEURL
           "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
-
-      - name: Build
-        run: dotnet build "${{ env.SOLUTION }}" --configuration "${{ env.CONFIGURATION }}" --no-restore -p:Version="${{ env.VERSION }}"
 
       - name: Publish Windows app
         run: >
@@ -187,10 +180,8 @@ jobs:
             --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
             --packAuthors "Pronwan" `
             --packTitle "RustPlusDesk" `
+            --noPortable `
             --delta BestSize
-
-          # Keep only the .nupkg and RELEASES file by removing the portable zip
-          Remove-Item -Path "${{ env.VELOPACK_OUTPUT_DIR }}/*.zip" -ErrorAction Ignore
 
           # Rename the Velopack installer to match legacy naming (so old apps find it)
           if (Test-Path "${{ env.VELOPACK_OUTPUT_DIR }}/RustPlusDesk-win-Setup.exe") {
@@ -204,6 +195,7 @@ jobs:
           path: |
             ${{ env.VELOPACK_OUTPUT_DIR }}/**
           if-no-files-found: error
+          compression-level: 0
 
       - name: Create or update GitHub Release
         if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.create_github_release) }}
