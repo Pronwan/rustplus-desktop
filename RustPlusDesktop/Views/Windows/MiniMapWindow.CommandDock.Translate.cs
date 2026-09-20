@@ -516,6 +516,7 @@ namespace RustPlusDesk
             if (await box.ShowDialogAsync() != Wpf.Ui.Controls.MessageBoxResult.Primary) return false;
 
             TrackingService.TranslationConsentGiven = true;
+            _ = Services.Cloud.CloudConsentService.RecordConsentAsync(Services.Cloud.CloudConsentService.TypeTranslation, true);
             return true;
         }
 

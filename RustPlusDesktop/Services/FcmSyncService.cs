@@ -19,6 +19,14 @@ namespace RustPlusDesk.Services
 
         public static async Task<bool> SyncFcmCredentialsAsync()
         {
+            // FCM credentials must NOT upload under any circumstances unless user explicitly consents via Offline Integrations or Cloud 24/7
+            bool hasConsent = CloudSessionsApi.GlobalConsentEnabled || TrackingService.OfflineIntegrationsConsented;
+            if (!hasConsent)
+            {
+                SupabaseAuthManager.AppendLog("[FcmSync] FCM sync skipped: User has not consented via Cloud 24/7 or Offline Integrations.");
+                return false;
+            }
+
             if (!SupabaseAuthManager.IsPremium)
             {
                 SupabaseAuthManager.AppendLog("[FcmSync] User is not premium. Skipping FCM sync.");

@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -31,14 +31,17 @@ public partial class MainWindow
     /// </summary>
     private string? _cloudHeldServerKey;
 
-    /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
+    /// <summary>Hand the current server back to the cloud, if we claimed one and it is covered by Cloud 24/7.</summary>
     private void ReleaseCloudHold()
     {
         var key = _cloudHeldServerKey;
         if (string.IsNullOrWhiteSpace(key)) return;
 
         _cloudHeldServerKey = null;
-        _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key!);
+        if (Services.Cloud.CloudSessionsApi.IsServerCovered(key))
+        {
+            _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key);
+        }
     }
 
     /// <summary>
@@ -61,9 +64,11 @@ public partial class MainWindow
 
         _cloudHeldServerKey = null;
 
+        if (!Services.Cloud.CloudSessionsApi.IsServerCovered(key)) return;
+
         try
         {
-            await Services.Cloud.CloudSessionsApi.ReleaseAsync(key!)
+            await Services.Cloud.CloudSessionsApi.ReleaseAsync(key)
                 .WaitAsync(TimeSpan.FromSeconds(3));
         }
         catch
@@ -672,13 +677,25 @@ public partial class MainWindow
             // stand down. Fire-and-forget on purpose - a failure costs at most one
             // duplicate connection until the next heartbeat, which is not worth
             // holding up a connect over, and the lease expires on its own anyway.
-            _cloudHeldServerKey = GetServerKey();
-            _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
+            // ONLY hold lease / send takeover if this server is consented & enrolled in Cloud 24/7.
+            var connectedKey = GetServerKey();
+            if (!string.IsNullOrWhiteSpace(connectedKey) && Services.Cloud.CloudSessionsApi.IsServerCovered(connectedKey))
+            {
+                _cloudHeldServerKey = connectedKey;
+                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
+            }
+            else
+            {
+                _cloudHeldServerKey = null;
+            }
 
             // Send the command words up so the cloud answers to exactly what this
             // user configured. Without it a teammate would get different replies
             // depending on whether this app happened to be running.
-            _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, _cloudHeldServerKey);
+            if (!string.IsNullOrWhiteSpace(connectedKey))
+            {
+                _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, connectedKey);
+            }
 
             // Prime subscriptions for all devices to receive real-time updates.
             if (real != null && connectedProfile.Devices?.Any() == true)

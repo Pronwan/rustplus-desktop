@@ -1,55 +1,55 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using RustPlusDesk.Services;
 using RustPlusDesk.Services.Cloud;
 
 namespace RustPlusDesk.Views.Windows
 {
     /// <summary>
-    /// Cloud 24/7: which servers stay watched while this app is closed.
-    ///
-    /// Its job is honesty rather than density. Somebody who believes a server is
-    /// covered when it is not will discover the mistake during a raid, so the three
-    /// things that can differ — enrolled, live, and who holds the connection — are
-    /// shown separately instead of collapsed into a single hopeful "on".
-    ///
-    /// Reads and writes the same <c>me/cloud-sessions</c> contract as the web
-    /// dashboard, so the two surfaces cannot disagree about what is covered.
+    /// Cloud 24/7: Global consent and active live server configuration.
+    /// Reads and writes the same contract as the web dashboard.
+    /// Decoupled from smart home / Alexa settings.
     /// </summary>
     public partial class Cloud24x7Window : Wpf.Ui.Controls.FluentWindow
     {
         private readonly ObservableCollection<ServerRow> _rows = new();
+        private readonly ObservableCollection<ServerOption> _serverOptions = new();
         private CloudSessionsApi.CloudPlan? _plan;
+        private bool _isUpdatingUi;
 
         public Cloud24x7Window()
         {
             InitializeComponent();
             ServerList.ItemsSource = _rows;
+            CmbActiveServer.ItemsSource = _serverOptions;
             Loaded += async (_, _) => await RefreshAsync();
+        }
+
+        public sealed class ServerOption
+        {
+            public string ServerId { get; init; } = string.Empty;
+            public string UserServerId { get; init; } = string.Empty;
+            public string Name { get; init; } = string.Empty;
         }
 
         /// <summary>One server as the list shows it.</summary>
         public sealed class ServerRow
         {
             public string UserServerId { get; init; } = string.Empty;
-
+            public string ServerId { get; init; } = string.Empty;
             public string? ServerKey { get; init; }
-
             public string Name { get; init; } = string.Empty;
-
             public bool Enrolled { get; init; }
-
             public bool CanToggle { get; init; }
-
             public string OwnerText { get; init; } = string.Empty;
-
             public Brush OwnerBrush { get; init; } = Brushes.Gray;
-
             public string DetailText { get; init; } = string.Empty;
 
             public Visibility DetailVisibility
@@ -60,7 +60,13 @@ namespace RustPlusDesk.Views.Windows
             /// <summary>This server currently holds the live connection.</summary>
             public bool IsPreferred { get; init; }
 
-            /// <summary>Label on the single action: give it the connection, or release it.</summary>
+            public Visibility ActiveBadgeVisibility
+                => (IsPreferred && CloudSessionsApi.GlobalConsentEnabled) ? Visibility.Visible : Visibility.Collapsed;
+
+            public Wpf.Ui.Controls.ControlAppearance ActionAppearance
+                => IsPreferred ? Wpf.Ui.Controls.ControlAppearance.Primary : Wpf.Ui.Controls.ControlAppearance.Secondary;
+
+            /// <summary>Label on the single action: activate, or release.</summary>
             public string ActionText { get; init; } = string.Empty;
         }
 
@@ -68,68 +74,99 @@ namespace RustPlusDesk.Views.Windows
         {
             SetStatus(Str("Cloud247Loading", "Checking what the cloud is watching..."));
 
-            // Pull down anything paired in game while this app was closed, before
-            // listing. A server the cloud received but this app has never seen would
-            // otherwise show here as covered while being absent from the server list,
-            // which is a confusing way to learn the two are the same thing.
             var imported = await CloudPairingImporter.ImportAsync();
-
             var overview = await CloudSessionsApi.GetOverviewAsync();
 
             if (overview == null)
             {
-                // Not the same as "nothing is covered". Claiming a server is
-                // uncovered because a request failed would be worse than admitting
-                // we could not find out.
                 SetStatus(Str("Cloud247Unavailable", "Could not reach the cloud. Cover is unchanged; this list may be out of date."));
                 EmptyText.Visibility = _rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
                 return;
             }
 
             _plan = overview.Plan;
-            ApplyPlan(overview.Plan);
 
-            _rows.Clear();
+            _isUpdatingUi = true;
+            try
+            {
+                ApplyPlan(overview.Plan);
 
-            foreach (var server in overview.Servers)
-                _rows.Add(BuildRow(server, overview.Plan));
+                _rows.Clear();
+                _serverOptions.Clear();
 
-            EmptyText.Visibility = _rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+                foreach (var server in overview.Servers)
+                {
+                    _rows.Add(BuildRow(server, overview.Plan));
+                    _serverOptions.Add(new ServerOption
+                    {
+                        ServerId = server.ServerId,
+                        UserServerId = server.UserServerId,
+                        Name = string.IsNullOrWhiteSpace(server.Name) ? (server.ServerKey ?? "Server") : server.Name!
+                    });
+                }
 
-            SetStatus(imported is { ChangedAnything: true }
-                ? string.Format(CultureInfo.CurrentCulture,
-                    Str("Cloud247Imported", "Added {0} server(s) and {1} device(s) paired while this app was closed."),
-                    imported.Added, imported.DevicesAdded)
-                : string.Empty);
+                if (overview.Plan.LiveLimit <= 1 && !string.IsNullOrWhiteSpace(overview.Plan.PreferredServerId))
+                {
+                    CmbActiveServer.SelectedValue = overview.Plan.PreferredServerId;
+                }
+                else if (_serverOptions.Count > 0 && CmbActiveServer.SelectedIndex < 0)
+                {
+                    var firstPreferred = overview.Servers.FirstOrDefault(s => s.IsPreferred);
+                    if (firstPreferred != null)
+                    {
+                        CmbActiveServer.SelectedValue = firstPreferred.ServerId;
+                    }
+                }
+
+                EmptyText.Visibility = _rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+                SetStatus(imported is { ChangedAnything: true }
+                    ? string.Format(CultureInfo.CurrentCulture,
+                        Str("Cloud247Imported", "Added {0} server(s) and {1} device(s) paired while this app was closed."),
+                        imported.Added, imported.DevicesAdded)
+                    : string.Empty);
+            }
+            finally
+            {
+                _isUpdatingUi = false;
+            }
         }
 
         private void ApplyPlan(CloudSessionsApi.CloudPlan plan)
         {
+            ToggleGlobalConsent.IsChecked = plan.GlobalConsent;
+
             if (!plan.Access)
             {
                 PlanSummaryText.Text = Str("Cloud247NoAccess", "Cloud 24/7 is a supporter feature.");
                 PlanHintText.Text = Str("Cloud247NoAccessHint",
                     "Your paired servers are listed below. Supporting the project turns on cover for them.");
                 BtnUpgrade.Visibility = Visibility.Visible;
+                ToggleGlobalConsent.IsEnabled = false;
+                SingleServerDropdownPanel.Visibility = Visibility.Collapsed;
                 return;
             }
 
             BtnUpgrade.Visibility = Visibility.Collapsed;
+            ToggleGlobalConsent.IsEnabled = true;
+
+            int activeCount = plan.ActiveServerIds?.Count ?? (string.IsNullOrWhiteSpace(plan.PreferredServerId) ? 0 : 1);
 
             PlanSummaryText.Text = string.Format(
                 CultureInfo.CurrentCulture,
-                Str("Cloud247PlanSummary", "{0} of {1} live connections in use."),
-                plan.LiveUsed,
+                "{0} of {1} active server allowance selected.",
+                activeCount,
                 plan.LiveLimit);
 
-            // The distinction the whole design rests on: cover is unlimited because a
-            // watched server holds no connection until there is a reason to, and it
-            // sends alarms either way.
-            PlanHintText.Text = plan.LiveUsed >= plan.LiveLimit
-                ? Str("Cloud247AtLimit",
-                    "Every live connection is in use. Other covered servers still send alarms, and one will take a live slot automatically when you play on it.")
-                : Str("Cloud247PlanHint",
-                    "Covered servers always send alarms. A live connection adds the map, team chat and device control, and moves to whichever server you are playing on.");
+            PlanHintText.Text = plan.GlobalConsent
+                ? (plan.LiveLimit > 1
+                    ? $"Multi-server plan: You can choose up to {plan.LiveLimit} active servers simultaneously for 24/7 coverage."
+                    : "Single active server plan: Choose which 1 server holds the live 24/7 connection.")
+                : "Cloud 24/7 is currently disabled globally. No cloud background sessions are running.";
+
+            SingleServerDropdownPanel.Visibility = (plan.GlobalConsent && plan.LiveLimit <= 1)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private ServerRow BuildRow(CloudSessionsApi.CloudServer server, CloudSessionsApi.CloudPlan plan)
@@ -143,10 +180,6 @@ namespace RustPlusDesk.Views.Windows
                         Str("Cloud247LastConnected", "Last connected {0}"), at.ToLocalTime())
                     : server.LastError ?? string.Empty;
 
-            // Said here because there is nowhere else it could be found. A setting
-            // pinned on the website stops following this app, so somebody who
-            // changes it here and watches the cloud carry on regardless would
-            // otherwise have no way to learn why.
             if (server.HasCloudOverrides)
             {
                 var pinned = Str("Cloud247Overridden",
@@ -155,9 +188,24 @@ namespace RustPlusDesk.Views.Windows
                 detail = string.IsNullOrWhiteSpace(detail) ? pinned : detail + "  " + pinned;
             }
 
+            string actionText;
+            if (!plan.GlobalConsent)
+            {
+                actionText = "Turn on 24/7";
+            }
+            else if (server.IsPreferred)
+            {
+                actionText = "Deactivate";
+            }
+            else
+            {
+                actionText = "Set Active";
+            }
+
             return new ServerRow
             {
                 UserServerId = server.UserServerId,
+                ServerId = server.ServerId,
                 ServerKey = server.ServerKey,
                 Name = string.IsNullOrWhiteSpace(server.Name)
                     ? server.ServerKey ?? Str("Cloud247UnnamedServer", "Unnamed server")
@@ -169,24 +217,15 @@ namespace RustPlusDesk.Views.Windows
                 DetailText = detail,
                 RepairVisibility = server.NeedsRepair ? Visibility.Visible : Visibility.Collapsed,
                 IsPreferred = server.IsPreferred,
-                ActionText = server.IsPreferred
-                    ? Str("Cloud247Release", "Release connection")
-                    : Str("Cloud247GiveConnection", "Give live connection"),
+                ActionText = actionText,
             };
         }
 
-        /// <summary>
-        /// Who is holding the connection, said plainly.
-        ///
-        /// A dormant server reads as "alarms only" rather than "offline", because
-        /// push cover is real cover — calling it offline would send people to
-        /// support over behaviour that is working as designed.
-        /// </summary>
         private (string, Brush) DescribeOwner(CloudSessionsApi.CloudServer server)
         {
-            // Not "offline" and not "not covered": raid alarms already arrive for
-            // every paired server, because the push listener is one socket per
-            // account. What this server is missing is the live connection.
+            if (!CloudSessionsApi.GlobalConsentEnabled)
+                return ("Cloud 24/7 Disabled", Brush("TextSubtle"));
+
             if (!server.IsPreferred && !server.Enrolled)
                 return (Str("Cloud247AlarmsOnly", "Raid alarms only"), Brush("TextSubtle"));
 
@@ -203,37 +242,146 @@ namespace RustPlusDesk.Views.Windows
             return (Str("Cloud247Dormant", "Alarms only, until you play on it"), Brush("TextSubtle"));
         }
 
-        /// <summary>
-        /// The one action: give this server the live connection, or release it.
-        ///
-        /// There is only one decision to make. Alarms reach every paired server
-        /// regardless, so a server enrolled but not chosen had no effect the user
-        /// could observe — which made two controls for one intent.
-        /// </summary>
+        private bool PromptConsentConfirmationIfNeeded()
+        {
+            if (_plan?.GlobalConsent == true)
+            {
+                return true;
+            }
+
+            var dialog = new Dialogs.Cloud247ConsentWindow(this);
+            return dialog.ShowDialog() == true && dialog.Accepted;
+        }
+
+        private async void ToggleGlobalConsent_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isUpdatingUi) return;
+
+            bool enabling = ToggleGlobalConsent.IsChecked == true;
+            if (enabling)
+            {
+                if (!PromptConsentConfirmationIfNeeded())
+                {
+                    _isUpdatingUi = true;
+                    ToggleGlobalConsent.IsChecked = false;
+                    _isUpdatingUi = false;
+                    return;
+                }
+            }
+
+            SetStatus("Updating Cloud 24/7 settings...");
+
+            var currentActive = _plan?.ActiveServerIds?.ToList() ?? new List<string>();
+            if (!enabling)
+            {
+                currentActive.Clear();
+            }
+
+            var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(enabling, currentActive);
+            if (!ok)
+            {
+                SetStatus("Failed to update Cloud 24/7 settings.");
+            }
+            else
+            {
+                _ = CloudConsentService.RecordConsentAsync(CloudConsentService.TypeCloud247, enabling);
+                if (enabling)
+                {
+                    _ = FcmSyncService.SyncFcmCredentialsAsync();
+                }
+            }
+
+            await RefreshAsync();
+        }
+
+        private async void CmbActiveServer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isUpdatingUi) return;
+            if (CmbActiveServer.SelectedValue is not string selectedId || string.IsNullOrWhiteSpace(selectedId)) return;
+
+            if (_plan?.GlobalConsent != true)
+            {
+                if (!PromptConsentConfirmationIfNeeded())
+                {
+                    await RefreshAsync();
+                    return;
+                }
+            }
+
+            SetStatus("Switching active Cloud 24/7 server...");
+            var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(true, new[] { selectedId });
+            if (!ok)
+            {
+                SetStatus("Failed to switch active server.");
+            }
+            else
+            {
+                _ = FcmSyncService.SyncFcmCredentialsAsync();
+            }
+
+            await RefreshAsync();
+        }
+
         private async void ToggleCover_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not FrameworkElement { Tag: ServerRow row }) return;
 
-            SetStatus(Str("Cloud247Saving", "Saving..."));
+            var currentActive = _plan?.ActiveServerIds?.ToList() ?? new List<string>();
+            int limit = _plan?.LiveLimit ?? 1;
 
-            var ok = row.IsPreferred
-                ? await CloudSessionsApi.DisableAsync(row.UserServerId)
-                : await CloudSessionsApi.SetPreferredAsync(row.UserServerId);
+            if (!row.IsPreferred)
+            {
+                if (_plan?.GlobalConsent != true)
+                {
+                    if (!PromptConsentConfirmationIfNeeded())
+                    {
+                        return;
+                    }
+                }
+
+                if (limit <= 1)
+                {
+                    currentActive.Clear();
+                    currentActive.Add(row.ServerId);
+                }
+                else
+                {
+                    while (currentActive.Count >= limit && currentActive.Count > 0)
+                    {
+                        currentActive.RemoveAt(0);
+                    }
+                    currentActive.Add(row.ServerId);
+                }
+            }
+            else
+            {
+                // Deactivate: Remove from active list
+                currentActive.RemoveAll(id => 
+                    string.Equals(id, row.ServerId, StringComparison.OrdinalIgnoreCase) || 
+                    string.Equals(id, row.UserServerId, StringComparison.OrdinalIgnoreCase));
+            }
+
+            SetStatus("Saving...");
+            bool globalConsent = _plan?.GlobalConsent ?? true;
+            var ok = await CloudSessionsApi.UpdateGlobalSettingsAsync(globalConsent, currentActive);
 
             if (!ok)
             {
-                SetStatus(Str("Cloud247SaveFailed", "That did not save. Nothing has changed."));
+                SetStatus("That did not save. Nothing has changed.");
+            }
+            else
+            {
+                if (currentActive.Count > 0)
+                {
+                    _ = FcmSyncService.SyncFcmCredentialsAsync();
+                }
             }
 
-            // Re-read rather than assume: the platform may have refused for a reason
-            // this app cannot see, and showing the toggle flipped anyway would be a
-            // lie about what is covered.
             await RefreshAsync();
         }
 
         private void BtnRepair_Click(object sender, RoutedEventArgs e)
         {
-            // The one failure only the user can fix, and it needs the game, not us.
             MessageBox.Show(
                 Str("Cloud247RepairBody",
                     "Open Rust, go to the server, and pair it again from the in-game menu. The cloud will pick it up automatically once you have."),
@@ -255,15 +403,11 @@ namespace RustPlusDesk.Views.Windows
             {
                 Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
             }
-            catch
-            {
-                // Opening a browser is a convenience; failing at it is not worth an error.
-            }
+            catch { }
         }
 
         private void SetStatus(string text) => StatusText.Text = text;
 
-        /// <summary>A localized string, falling back to English rather than a blank label.</summary>
         private static string Str(string key, string fallback)
             => Application.Current?.TryFindResource(key) as string ?? fallback;
 

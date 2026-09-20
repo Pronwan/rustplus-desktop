@@ -997,6 +997,7 @@ namespace RustPlusDesk.Views
 
             TrackingService.PlayerWipeTrackerEnabled = tracker;
             TrackingService.PlayerWipeTrackerCloudBackupEnabled = cloud;
+            _ = Services.Cloud.CloudConsentService.RecordConsentAsync(Services.Cloud.CloudConsentService.TypeWipeTrackerBackup, cloud);
 
             SyncPlayerWipeTrackerToggles();
             ParentWindow?.RefreshPlayerWipeTrackerSession();
@@ -1451,6 +1452,10 @@ namespace RustPlusDesk.Views
                 var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
                 if (consentDialog.ShowDialog() != true) return;
 
+                TrackingService.OfflineIntegrationsConsented = true;
+                _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                    RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+
                 bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
                 if (success)
                 {
@@ -1479,6 +1484,10 @@ namespace RustPlusDesk.Views
 
             try
             {
+                TrackingService.OfflineIntegrationsConsented = false;
+                _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                    RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, false);
+
                 bool success = await RustPlusDesk.Services.FcmSyncService.RevokeFcmCredentialsAsync();
                 if (success)
                 {
@@ -1996,6 +2005,7 @@ namespace RustPlusDesk.Views
             var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
             if (consentDialog.ShowDialog() != true) return;
 
+            TrackingService.OfflineIntegrationsConsented = true;
             bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
             if (success)
             {

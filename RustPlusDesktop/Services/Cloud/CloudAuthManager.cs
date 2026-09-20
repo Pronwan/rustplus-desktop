@@ -58,6 +58,7 @@ namespace RustPlusDesk.Services.Cloud
                 CurrentToken = stored.Token;
                 CurrentUser = stored.User;
                 TokenExpiresAt = stored.ExpiresAt;
+                _ = CloudConsentService.BackfillLocalConsentsAsync();
             }
         }
 
@@ -248,6 +249,7 @@ namespace RustPlusDesk.Services.Cloud
                 SupabaseAuthManager.AppendLog($"[Cloud/Auth] Signed in as {CurrentUser?.Email ?? CurrentUser?.Id ?? "user"}.");
                 TeamSyncWebSocketService.Initialize();
                 AuthenticationChanged?.Invoke();
+                _ = CloudConsentService.BackfillLocalConsentsAsync();
                 return (true, null);
             }
             catch (Exception ex)

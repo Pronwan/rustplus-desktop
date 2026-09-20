@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -33,6 +33,7 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>One paired server and what the cloud is doing about it.</summary>
         public sealed record CloudServer(
             string UserServerId,
+            string ServerId,
             string? ServerKey,
             string? Name,
             bool Enrolled,
@@ -51,9 +52,72 @@ namespace RustPlusDesk.Services.Cloud
             int LiveUsed,
             int LiveLimit,
             int? EnrolledLimit,
-            bool AutoEnroll);
+            bool AutoEnroll,
+            bool GlobalConsent = false,
+            string? PreferredServerId = null,
+            IReadOnlyList<string>? ActiveServerIds = null,
+            DateTime? ConsentedAt = null);
 
         public sealed record CloudOverview(IReadOnlyList<CloudServer> Servers, CloudPlan Plan);
+
+        public static bool GlobalConsentEnabled { get; private set; }
+        public static string? PreferredServerId { get; private set; }
+
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> CoveredServerKeys = new(StringComparer.OrdinalIgnoreCase);
+        private static DateTime _lastOverviewUtc = DateTime.MinValue;
+        private static readonly TimeSpan OverviewTtl = TimeSpan.FromMinutes(5);
+
+        /// <summary>
+        /// Check whether a server key is currently consented and actively covered by Cloud 24/7.
+        /// </summary>
+        public static bool IsServerCovered(string? serverKey)
+        {
+            if (string.IsNullOrWhiteSpace(serverKey)) return false;
+            if (!GlobalConsentEnabled) return false;
+            return CoveredServerKeys.TryGetValue(serverKey, out var covered) && covered;
+        }
+
+        /// <summary>
+        /// Asynchronously check whether a server is covered, refreshing the overview if stale or not yet loaded.
+        /// </summary>
+        public static async Task<bool> IsServerCoveredAsync(string? serverKey)
+        {
+            if (string.IsNullOrWhiteSpace(serverKey)) return false;
+
+            if (DateTime.UtcNow - _lastOverviewUtc > OverviewTtl || CoveredServerKeys.IsEmpty)
+            {
+                await GetOverviewAsync().ConfigureAwait(false);
+            }
+
+            return IsServerCovered(serverKey);
+        }
+
+        /// <summary>
+        /// Update the global Cloud 24/7 switch and the list of active chosen servers (up to the plan live limit).
+        /// </summary>
+        public static async Task<bool> UpdateGlobalSettingsAsync(bool enabled, IEnumerable<string>? activeServerIds = null)
+        {
+            if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return false;
+
+            try
+            {
+                var payload = new
+                {
+                    enabled,
+                    active_server_ids = activeServerIds ?? Array.Empty<string>()
+                };
+
+                await CloudApiClient.CallApiAsync("me/cloud-sessions/settings", HttpMethod.Post, payload: payload);
+                GlobalConsentEnabled = enabled;
+                await GetOverviewAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Services.Auth.SupabaseAuthManager.AppendLog($"[Cloud 24/7] Failed to update global settings: {ex.Message}");
+                return false;
+            }
+        }
 
         /// <summary>
         /// Everything this account has paired, enrolled or not.
@@ -73,12 +137,23 @@ namespace RustPlusDesk.Services.Cloud
                 var root = doc.RootElement;
 
                 var servers = new List<CloudServer>();
+                CoveredServerKeys.Clear();
 
                 if (root.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var item in data.EnumerateArray())
-                        servers.Add(ReadServer(item));
+                    {
+                        var s = ReadServer(item);
+                        servers.Add(s);
+
+                        if (!string.IsNullOrWhiteSpace(s.ServerKey) && (s.Enrolled || s.IsPreferred))
+                        {
+                            CoveredServerKeys[s.ServerKey] = true;
+                        }
+                    }
                 }
+
+                _lastOverviewUtc = DateTime.UtcNow;
 
                 var plan = root.TryGetProperty("meta", out var meta)
                     ? ReadPlan(meta)
@@ -94,12 +169,26 @@ namespace RustPlusDesk.Services.Cloud
         }
 
         /// <summary>Start covering a server while the app is closed.</summary>
-        public static Task<bool> EnableAsync(string userServerId)
-            => PostAsync($"me/cloud-sessions/{userServerId}/enable");
+        public static async Task<bool> EnableAsync(string userServerId, string? serverKey = null)
+        {
+            var ok = await PostAsync($"me/cloud-sessions/{userServerId}/enable");
+            if (ok && !string.IsNullOrWhiteSpace(serverKey))
+            {
+                CoveredServerKeys[serverKey] = true;
+            }
+            return ok;
+        }
 
         /// <summary>Stop covering a server.</summary>
-        public static Task<bool> DisableAsync(string userServerId)
-            => PostAsync($"me/cloud-sessions/{userServerId}/disable");
+        public static async Task<bool> DisableAsync(string userServerId, string? serverKey = null)
+        {
+            var ok = await PostAsync($"me/cloud-sessions/{userServerId}/disable");
+            if (ok && !string.IsNullOrWhiteSpace(serverKey))
+            {
+                CoveredServerKeys.TryRemove(serverKey, out _);
+            }
+            return ok;
+        }
 
         /// <summary>
         /// Give this server the live cloud connection.
@@ -111,8 +200,15 @@ namespace RustPlusDesk.Services.Cloud
         /// control. It enrols as part of the same call, because asking the user to
         /// switch a server on and then choose it was two steps for one intent.
         /// </summary>
-        public static Task<bool> SetPreferredAsync(string userServerId)
-            => PostAsync($"me/cloud-sessions/{userServerId}/preferred");
+        public static async Task<bool> SetPreferredAsync(string userServerId, string? serverKey = null)
+        {
+            var ok = await PostAsync($"me/cloud-sessions/{userServerId}/preferred");
+            if (ok && !string.IsNullOrWhiteSpace(serverKey))
+            {
+                CoveredServerKeys[serverKey] = true;
+            }
+            return ok;
+        }
 
         /// <summary>
         /// Set which servers keep their live connection when the budget is full.
@@ -129,10 +225,12 @@ namespace RustPlusDesk.Services.Cloud
         ///
         /// Fire-and-forget: a failure here costs a duplicate connection for at most
         /// one heartbeat, which is not worth blocking a connect over.
+        /// Only sends takeover if the server has been consented and enrolled in Cloud 24/7.
         /// </summary>
         public static async Task TakeoverAsync(string serverKey)
         {
             if (string.IsNullOrWhiteSpace(serverKey)) return;
+            if (!IsServerCovered(serverKey)) return;
 
             await PostAsync("client/cloud/takeover", serverKey: serverKey);
         }
@@ -142,10 +240,12 @@ namespace RustPlusDesk.Services.Cloud
         ///
         /// Skipping this is survivable — the lease expires by itself — but calling it
         /// turns a ninety-second gap into a couple of seconds.
+        /// Only releases if the server has been consented and enrolled in Cloud 24/7.
         /// </summary>
         public static async Task ReleaseAsync(string serverKey)
         {
             if (string.IsNullOrWhiteSpace(serverKey)) return;
+            if (!IsServerCovered(serverKey)) return;
 
             await PostAsync("client/cloud/release", serverKey: serverKey);
         }
@@ -177,8 +277,11 @@ namespace RustPlusDesk.Services.Cloud
 
         private static CloudServer ReadServer(JsonElement item)
         {
+            var userServerId = Str(item, "user_server_id") ?? string.Empty;
+            var serverId = Str(item, "server_id") ?? userServerId;
             return new CloudServer(
-                Str(item, "user_server_id") ?? string.Empty,
+                userServerId,
+                serverId,
                 Str(item, "server_key"),
                 Str(item, "name") ?? Str(item, "server_name"),
                 Bool(item, "enrolled"),
@@ -199,14 +302,31 @@ namespace RustPlusDesk.Services.Cloud
             if (meta.TryGetProperty("enrolled_limit", out var limit) && limit.ValueKind == JsonValueKind.Number)
                 enrolledLimit = limit.GetInt32();
 
+            var activeIds = new List<string>();
+            if (meta.TryGetProperty("active_server_ids", out var idsElem) && idsElem.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var id in idsElem.EnumerateArray())
+                {
+                    if (id.GetString() is { Length: > 0 } s) activeIds.Add(s);
+                }
+            }
+
+            var globalConsent = Bool(meta, "global_consent");
+            GlobalConsentEnabled = globalConsent;
+
+            var preferredServerId = Str(meta, "preferred_server_id");
+            PreferredServerId = preferredServerId;
+
             return new CloudPlan(
                 Bool(meta, "access"),
                 Int(meta, "live_used"),
                 Int(meta, "live_limit"),
-                // Null means unlimited, which is the normal case: cover costs nothing
-                // because a dormant server holds no connection and still sends alarms.
                 enrolledLimit,
-                Bool(meta, "auto_enroll"));
+                Bool(meta, "auto_enroll"),
+                globalConsent,
+                preferredServerId,
+                activeIds,
+                Date(meta, "consented_at"));
         }
 
         private static string? Str(JsonElement e, string name)
