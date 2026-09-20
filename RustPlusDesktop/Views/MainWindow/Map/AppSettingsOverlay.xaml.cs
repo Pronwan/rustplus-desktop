@@ -1442,6 +1442,37 @@ namespace RustPlusDesk.Views
             e.Handled = true;
         }
 
+        private bool EnsureOfflineIntegrationsConsent()
+        {
+            if (TrackingService.OfflineIntegrationsConsented ||
+                Services.Cloud.CloudSessionsApi.GlobalConsentEnabled ||
+                !string.IsNullOrEmpty(TrackingService.DiscordWebhookUrl) ||
+                !string.IsNullOrEmpty(TrackingService.TelegramCallWebhookUrl) ||
+                !string.IsNullOrEmpty(TrackingService.SmartHomeWebhookUrl))
+            {
+                if (!TrackingService.OfflineIntegrationsConsented)
+                {
+                    TrackingService.OfflineIntegrationsConsented = true;
+                    _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                        RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+                    _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                        RustPlusDesk.Services.Cloud.CloudConsentService.TypeFcmSync, true);
+                }
+                return true;
+            }
+
+            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
+            if (consentDialog.ShowDialog() != true) return false;
+
+            TrackingService.OfflineIntegrationsConsented = true;
+            _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+            _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                RustPlusDesk.Services.Cloud.CloudConsentService.TypeFcmSync, true);
+
+            return true;
+        }
+
         private async void BtnSyncFcm_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as WpfUi.Button;
@@ -1449,12 +1480,7 @@ namespace RustPlusDesk.Views
 
             try
             {
-                var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
-                if (consentDialog.ShowDialog() != true) return;
-
-                TrackingService.OfflineIntegrationsConsented = true;
-                _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
-                    RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+                if (!EnsureOfflineIntegrationsConsent()) return;
 
                 bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
                 if (success)
@@ -2002,10 +2028,8 @@ namespace RustPlusDesk.Views
             BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
 
             // Trigger FCM Sync directly to save
-            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
-            if (consentDialog.ShowDialog() != true) return;
+            if (!EnsureOfflineIntegrationsConsent()) return;
 
-            TrackingService.OfflineIntegrationsConsented = true;
             bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
             if (success)
             {
@@ -2214,8 +2238,7 @@ namespace RustPlusDesk.Views
             var userId = client?.Auth?.CurrentUser?.Id;
             if (!Services.Cloud.CloudBackend.UsePlatform && string.IsNullOrEmpty(userId)) return;
 
-            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
-            if (consentDialog.ShowDialog() != true) return;
+            if (!EnsureOfflineIntegrationsConsent()) return;
 
             BtnLinkAlexa.IsEnabled = false;
             try
