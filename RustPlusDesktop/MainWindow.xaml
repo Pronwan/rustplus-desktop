@@ -418,7 +418,7 @@
                             Appearance="Transparent"
                             Click="BtnTopNotifications_Click"
                             Icon="{ui:SymbolIcon Symbol=Alert24}"
-                            ToolTip="Notifications" />
+                            ToolTip="Notifications" AutomationProperties.Name="Notifications" />
                         <Border x:Name="TopNotifBadge" Visibility="Collapsed"
                                 IsHitTestVisible="False"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -428,8 +428,8 @@
                                        FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <Popup x:Name="NotificationsPopup" PlacementTarget="{Binding ElementName=BtnTopNotifications}"
-                               Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                            <Border Width="360" Background="#FF0C1116" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,4,8,8">
+                               Placement="Bottom" HorizontalOffset="-420" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                            <Border Width="440" Background="#FF0C1116" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="12" Margin="8,6,8,8">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.5" Color="Black" />
                                 </Border.Effect>
@@ -437,48 +437,81 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0" Margin="12,10,8,8">
-                                        <TextBlock Text="Notifications" Foreground="#FFF4F6FA" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <ui:Button x:Name="BtnMarkAllRead" Content="Mark all read" Appearance="Transparent"
-                                                       FontSize="11" Padding="6,2" Click="BtnMarkAllRead_Click" />
-                                            <ui:Button x:Name="BtnClearNotifications" Content="Clear all" Appearance="Transparent"
-                                                       FontSize="11" Padding="6,2" Margin="4,0,0,0" Click="BtnClearNotifications_Click" />
+                                    <Grid Grid.Row="0" Margin="20,16,16,16">
+                                        <StackPanel Margin="0,0,40,0">
+                                            <TextBlock Text="Notifications" Foreground="#FFF4F6FA" FontSize="18" FontWeight="SemiBold" />
+                                            <TextBlock Text="Recent activity and updates" Foreground="#FFA8B2BF" FontSize="12" Margin="0,4,0,0" />
                                         </StackPanel>
+                                        <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent"
+                                                   Width="32" Height="32" Padding="0" Click="BtnTopNotifications_Click"
+                                                   ToolTip="Close notifications" AutomationProperties.Name="Close notifications"
+                                                   Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
                                     </Grid>
-                                    <ScrollViewer Grid.Row="1" MaxHeight="420" VerticalScrollBarVisibility="Auto">
+                                    <ScrollViewer Grid.Row="1" MaxHeight="440" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                         <Grid>
-                                            <ItemsControl x:Name="TopNotificationsList" Margin="8,0,8,8">
+                                            <ItemsControl x:Name="TopNotificationsList" Margin="12,0,12,4">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Background="{Binding Background}" BorderBrush="{DynamicResource WhiteA1A}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Cursor="Hand"
-                                                                MouseLeftButtonUp="TopNotificationRow_Click" Tag="{Binding Id}">
+                                                        <Border Background="#FF141C24" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,0,0,8">
                                                             <Grid>
-                                                                <StackPanel Margin="0,0,18,0">
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <Ellipse Width="8" Height="8" Fill="{Binding Dot}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                                                        <TextBlock Text="{Binding Title}" Foreground="#FFF4F6FA" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <ui:Button Appearance="Transparent" BorderThickness="0" Padding="16,14,60,14"
+                                                                           HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Tag="{Binding Id}" Click="TopNotificationRow_Click"
+                                                                           AutomationProperties.Name="{Binding Title}">
+                                                                    <StackPanel>
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="16" />
+                                                                                <ColumnDefinition Width="*" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Ellipse Width="7" Height="7" Fill="{Binding Dot}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,6,0,0" />
+                                                                            <TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="#FFF4F6FA" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                                        </Grid>
+                                                                        <TextBlock Text="{Binding Body}" Foreground="#FFBAC4D0" FontSize="13" LineHeight="19" TextWrapping="Wrap" Margin="16,8,0,0" />
+                                                                        <TextBlock Text="{Binding When}" Foreground="#FF98A5B5" FontSize="11" Margin="16,10,0,0" />
                                                                     </StackPanel>
-                                                                    <TextBlock Text="{Binding Body}" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="16,2,0,0" />
-                                                                    <ui:Button Visibility="{Binding CtaVisibility}" Content="{Binding CtaLabel}" Appearance="Primary"
-                                                                               FontSize="11" Padding="10,3" Margin="16,6,0,0" HorizontalAlignment="Left"
-                                                                               Tag="{Binding}" Click="NotificationCta_Click" />
-                                                                    <TextBlock Text="{Binding When}" Foreground="#FF6B7280" FontSize="10" Margin="16,4,0,0" />
-                                                                </StackPanel>
-                                                                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="2"
-                                                                           Tag="{Binding}" Click="NotificationDismiss_Click" ToolTip="Dismiss">
-                                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FF6B7280" FontSize="12" />
+                                                                </ui:Button>
+                                                                <ui:Button Grid.Row="1" Visibility="{Binding CtaVisibility}" Content="{Binding CtaLabel}" Appearance="Primary"
+                                                                           FontSize="12" MinHeight="32" Padding="12,6" Margin="32,0,16,14" HorizontalAlignment="Left"
+                                                                           Tag="{Binding}" Click="NotificationCta_Click" />
+                                                                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="32" Height="32" Margin="0,8,8,0"
+                                                                           Tag="{Binding}" Click="NotificationDismiss_Click" ToolTip="Dismiss notification" AutomationProperties.Name="Dismiss notification">
+                                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFA8B2BF" FontSize="16" />
                                                                 </ui:Button>
                                                             </Grid>
                                                         </Border>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
-                                            <TextBlock x:Name="TopNotificationsEmpty" Text="Nothing here yet." Foreground="{DynamicResource TextMutedBrush}"
-                                                       HorizontalAlignment="Center" Margin="0,24,0,24" Visibility="Collapsed" />
+                                            <StackPanel x:Name="TopNotificationsEmpty" HorizontalAlignment="Center" Margin="24,48" Visibility="Collapsed">
+                                                <ui:SymbolIcon Symbol="Alert24" FontSize="32" Foreground="#FF98A5B5" HorizontalAlignment="Center" />
+                                                <TextBlock Text="No notifications" Foreground="#FFF4F6FA" FontSize="15" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,6" />
+                                                <TextBlock Text="New activity will appear here." Foreground="#FFA8B2BF" FontSize="13" TextAlignment="Center" />
+                                            </StackPanel>
                                         </Grid>
                                     </ScrollViewer>
+                                    <Border Grid.Row="2" BorderBrush="#26FFFFFF" BorderThickness="0,1,0,0" Padding="12,10">
+                                        <Grid>
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ElementName=TopNotificationsList, Path=HasItems}" Value="False">
+                                                            <Setter Property="IsEnabled" Value="False" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            <ui:Button x:Name="BtnMarkAllRead" Content="Mark all read" Appearance="Transparent" HorizontalAlignment="Left"
+                                                       FontSize="12" MinHeight="32" Padding="10,6" Click="BtnMarkAllRead_Click" />
+                                            <ui:Button x:Name="BtnClearNotifications" Content="Clear all" Appearance="Transparent" HorizontalAlignment="Right"
+                                                       FontSize="12" MinHeight="32" Padding="10,6" Click="BtnClearNotifications_Click" />
+                                        </Grid>
+                                    </Border>
                                 </Grid>
                             </Border>
                         </Popup>

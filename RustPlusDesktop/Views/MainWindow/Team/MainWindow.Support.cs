@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using RustPlusDesk.Services.Social;
 using RustPlusDesk.Services.Support;
@@ -16,8 +15,6 @@ public partial class MainWindow
 {
     private bool _supportWired;
 
-    private static readonly Brush NotifUnreadBg = FrozenBrush("#1AE8683C");
-    private static readonly Brush NotifReadBg = FrozenBrush("#FF111820");
     private static readonly Brush NotifAccentDot = FrozenBrush("#FFE8683C");
     private static readonly Brush NotifMutedDot = FrozenBrush("#FF5C6572");
 
@@ -219,7 +216,7 @@ public partial class MainWindow
         }
     }
 
-    private async void TopNotificationRow_Click(object sender, MouseButtonEventArgs e)
+    private async void TopNotificationRow_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement fe || fe.Tag is not string id)
             return;
@@ -259,7 +256,6 @@ public partial class MainWindow
         public string? CtaLabel { get; }
         public Visibility CtaVisibility => !string.IsNullOrEmpty(Url) && !string.IsNullOrEmpty(CtaLabel) ? Visibility.Visible : Visibility.Collapsed;
         public Brush Dot { get; }
-        public Brush Background { get; }
 
         public NotificationRowVm(NotificationItem n)
         {
@@ -270,7 +266,6 @@ public partial class MainWindow
             Url = n.Url;
             CtaLabel = n.CtaLabel;
             Dot = n.Read ? NotifMutedDot : NotifAccentDot;
-            Background = n.Read ? NotifReadBg : NotifUnreadBg;
             // Ticket notifications carry the id in their url tail: /dashboard/tickets/{id}.
             TicketId = n.Url is { } url && url.Contains("/tickets/")
                 ? url.Substring(url.LastIndexOf('/') + 1)
