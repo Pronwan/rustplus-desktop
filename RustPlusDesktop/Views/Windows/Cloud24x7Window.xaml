@@ -31,10 +31,20 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="{DynamicResource Cloud247Header}" FontSize="20" FontWeight="Bold"
-                               Foreground="{DynamicResource Accent}"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Cloud247Header}" FontSize="20" FontWeight="Bold"
+                                   Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                        <Border Margin="10,0,0,0" Background="#26D97706" BorderBrush="#E5A93C" BorderThickness="1" CornerRadius="6" Padding="8,2" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Warning24" FontSize="12" Foreground="#F59E0B" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="EXPERIMENTAL • TIME LIMITED" FontSize="10.5" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                     <TextBlock Text="{DynamicResource Cloud247SubHeader}" FontSize="13"
                                Foreground="{DynamicResource TextSubtle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    <TextBlock Text="⚠️ Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
+                               FontSize="11.5" FontWeight="Medium" Foreground="#F59E0B" Margin="0,4,0,0" TextWrapping="Wrap"/>
                 </StackPanel>
                 <ui:Button Grid.Column="1" x:Name="BtnUpgrade" Content="{DynamicResource Cloud247Upgrade}"
                            Appearance="Primary" Visibility="Collapsed" Click="BtnUpgrade_Click"

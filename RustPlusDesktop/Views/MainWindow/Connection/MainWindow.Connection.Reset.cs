@@ -41,6 +41,7 @@ public partial class MainWindow
         catch { }
 
         // 2) Timer stoppen
+        try { StopCloudLeaseHeartbeatTimer(); } catch { }
         try { _statusTimer?.Stop(); } catch { }
         try { _shopTimer?.Stop(); _shopTimer = null; } catch { }
         try { _storageTimer?.Stop(); _storageTimer = null; } catch { }

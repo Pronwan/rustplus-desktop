@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.0.2 HOTFIX -->
+                            <!-- v10.0.3 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_0_2"
+                            <Border x:Name="Card_v10_0_3"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,43 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.0.3 | Cloud 24/7 &amp; Lease Dominance Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cloud 24/7 Desktop Lease Heartbeat:</Run>
+                                        Fixed an issue where the desktop lease would lapse after 90 seconds, causing the cloud worker to prematurely take over active sessions while the desktop app was still running. A recurring heartbeat now keeps the desktop client dominant while connected.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Live Web Map Data Stream:</Run>
+                                        The live dashboard web map now continuously pulls real-time snapshots (markers, player coordinates, game time) from the cloud worker even when the desktop client is active.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cloud 24/7 Experimental &amp; Time-Limited Preview:</Run>
+                                        Cloud 24/7 background session monitoring is now designated as an experimental, time-limited preview feature that may be modified or removed at any time. Clear status badges and disclaimers have been added across the app and web dashboard.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Offline Alerts &amp; Consent Dialog Hardening:</Run>
+                                        Offline alert webhook setup now checks existing global consent properly and avoids redundant modal prompts.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.0.2 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_0_2"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.0.2 | Patch Notes Fixes"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>

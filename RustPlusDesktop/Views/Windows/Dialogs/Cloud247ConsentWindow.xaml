@@ -44,9 +44,16 @@
                             <ui:SymbolIcon Symbol="CloudCheckmark24" FontSize="26" Foreground="#38BDF8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Enable Cloud 24/7 Monitoring" FontSize="17" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,4"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="Enable Cloud 24/7 Monitoring" FontSize="17" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <Border Margin="10,0,0,0" Background="#26D97706" BorderBrush="#E5A93C" BorderThickness="1" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
+                                    <TextBlock Text="EXPERIMENTAL • TIME LIMITED" FontSize="9.5" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
                             <TextBlock Text="Allows RustPlus Desktop Cloud daemons to monitor your active Rust server(s) 24/7 when this desktop app is closed."
                                        TextWrapping="Wrap" FontSize="12.5" LineHeight="18" Foreground="#94A3B8"/>
+                            <TextBlock Text="⚠️ Note: Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
+                                       TextWrapping="Wrap" FontSize="11.5" FontWeight="Medium" Foreground="#F59E0B" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
