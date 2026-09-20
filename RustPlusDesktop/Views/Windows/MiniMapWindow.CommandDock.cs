@@ -1265,7 +1265,9 @@ namespace RustPlusDesk
                 picture.Visibility = showPicture ? Visibility.Visible : Visibility.Collapsed;
                 icon.Visibility = showPicture ? Visibility.Collapsed : Visibility.Visible;
 
-                name.Text = Abbreviate(device.DisplayName, 12);
+                // Trimmed by the layout, which knows the tile's width, rather than by the
+                // string, which does not - a wider tile now actually shows more of the name.
+                name.Text = device.DisplayName;
                 name.Visibility = tile.ShowDeviceIcon ? Visibility.Collapsed : Visibility.Visible;
 
                 if (IsSwitch(device))
@@ -1559,7 +1561,13 @@ namespace RustPlusDesk
                 }
 
                 SetIcon(ev.Icon);
-                label.Text = Abbreviate(ev.Name, 12);
+                // The whole name, trimmed by the layout rather than by the string.
+                //
+                // Cutting it to twelve characters first meant "Deep Sea Event" was "Deep Sea Ev…"
+                // at every size - a three-cell tile with room to spare still showed the stub,
+                // because nothing about the truncation knew how wide the tile was. The TextBlock
+                // already has CharacterEllipsis, which does.
+                label.Text = ev.Name;
                 timer.Text = string.IsNullOrWhiteSpace(ev.TimerText) ? "—" : ev.TimerText;
                 timer.Foreground = ev.Active ? style.TextMain : style.TextSub;
                 shell.Opacity = ev.Active ? 1.0 : 0.55;
@@ -1628,7 +1636,7 @@ namespace RustPlusDesk
             _tileRefreshers.Add(() =>
             {
                 var rule = DockHost?.DockRules.FirstOrDefault(r => r.Id == tile.RuleId);
-                name.Text = Abbreviate(rule?.Name ?? tile.RuleId, 12);
+                name.Text = rule?.Name ?? tile.RuleId ?? "";
 
                 if (rule?.CustomIcon != null)
                 {
