@@ -60,6 +60,25 @@ public partial class MainWindow
         _cloudLeaseHeartbeatTimer = null;
     }
 
+    private void ClaimCloudHold(string? serverKey)
+    {
+        if (string.IsNullOrWhiteSpace(serverKey))
+        {
+            _cloudHeldServerKey = null;
+            StopCloudLeaseHeartbeatTimer();
+            return;
+        }
+
+        if (!string.Equals(_cloudHeldServerKey, serverKey, StringComparison.OrdinalIgnoreCase))
+        {
+            ReleaseCloudHold();
+        }
+
+        _cloudHeldServerKey = serverKey;
+        _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(serverKey);
+        StartCloudLeaseHeartbeatTimer();
+    }
+
     /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
     private void ReleaseCloudHold()
     {
@@ -332,6 +351,15 @@ public partial class MainWindow
             _ = TrackingService.FetchOnlinePlayersNowAsync();
 
             _ = SearchRustMapsAsync(false);
+
+            // A soft connection is still the desktop owner. Without this takeover
+            // the cloud worker keeps its lease and both clients answer the same chat.
+            var connectedKey = GetServerKey();
+            ClaimCloudHold(connectedKey);
+            if (!string.IsNullOrWhiteSpace(connectedKey))
+            {
+                _ = Services.Cloud.CloudChatCommandSync.SyncAsync(profile, connectedKey);
+            }
 
             AppendLog("Soft-connect complete.");
 
@@ -704,17 +732,7 @@ public partial class MainWindow
             // duplicate connection until the next heartbeat, which is not worth
             // holding up a connect over, and the lease expires on its own anyway.
             var connectedKey = GetServerKey();
-            if (!string.IsNullOrWhiteSpace(connectedKey))
-            {
-                _cloudHeldServerKey = connectedKey;
-                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
-                StartCloudLeaseHeartbeatTimer();
-            }
-            else
-            {
-                _cloudHeldServerKey = null;
-                StopCloudLeaseHeartbeatTimer();
-            }
+            ClaimCloudHold(connectedKey);
 
             // Send the command words up so the cloud answers to exactly what this
             // user configured. Without it a teammate would get different replies

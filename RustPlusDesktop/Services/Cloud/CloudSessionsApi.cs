@@ -146,7 +146,9 @@ namespace RustPlusDesk.Services.Cloud
                         var s = ReadServer(item);
                         servers.Add(s);
 
-                        if (!string.IsNullOrWhiteSpace(s.ServerKey) && (s.Enrolled || s.IsPreferred))
+                        if (!string.IsNullOrWhiteSpace(s.ServerKey)
+                            && s.IsPreferred
+                            && string.Equals(s.Mode, "live", StringComparison.OrdinalIgnoreCase))
                         {
                             CoveredServerKeys[s.ServerKey] = true;
                         }
