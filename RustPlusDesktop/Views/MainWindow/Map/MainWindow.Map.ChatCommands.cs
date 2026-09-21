@@ -892,6 +892,12 @@ public partial class MainWindow
         try
         {
             await _rust.ToggleSmartSwitchAsync(entityId, state);
+            var device = _vm?.Selected?.AllDevices.FirstOrDefault(d => d.EntityId == entityId);
+            if (device != null)
+            {
+                device.IsOn = state;
+                device.IsMissing = false;
+            }
             return true;
         }
         catch (Exception ex)
@@ -961,6 +967,49 @@ public partial class MainWindow
             lines.AppendLine($"• **{label}** `#{sw.EntityId}` — {state}");
         }
         return lines.ToString().TrimEnd();
+    }
+
+    public List<Dictionary<string, object?>> GetSmartSwitchControlsForDiscord(string? serverId = null)
+    {
+        var switches = _vm?.Selected?.AllDevices
+            .Where(d => (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase))
+            .Take(25)
+            .ToList() ?? new List<SmartDevice>();
+
+        var serverRef = (serverId ?? string.Empty).Replace(":", "-");
+        if (serverRef.Length > 45) serverRef = serverRef[..45];
+
+        var rows = new List<Dictionary<string, object?>>();
+        for (int i = 0; i < switches.Count; i += 5)
+        {
+            var buttons = new List<Dictionary<string, object?>>();
+            var row = new Dictionary<string, object?>
+            {
+                ["type"] = 1,
+                ["components"] = buttons,
+            };
+
+            foreach (var sw in switches.Skip(i).Take(5))
+            {
+                string label = sw.Alias ?? sw.Name ?? sw.EntityId.ToString();
+                bool isOn = sw.IsOn == true;
+                var buttonLabel = (isOn ? $"Turn off {label}" : $"Turn on {label}");
+                if (buttonLabel.Length > 80) buttonLabel = buttonLabel[..80];
+
+                buttons.Add(new Dictionary<string, object?>
+                {
+                    ["type"] = 2,
+                    ["style"] = isOn ? 4 : 3,
+                    ["label"] = buttonLabel,
+                    ["custom_id"] = $"toggle_switch:{serverRef}:{sw.EntityId}:{(isOn ? "off" : "on")}",
+                    ["disabled"] = sw.IsMissing || !sw.IsOn.HasValue,
+                });
+            }
+
+            rows.Add(row);
+        }
+
+        return rows;
     }
 
     public string GetDeepSeaStatusForDiscord()
