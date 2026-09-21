@@ -923,7 +923,8 @@
                 <ui:TextBlock x:Name="CloudSettingsAnchor" Text="{DynamicResource UiCloudAccountSync}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
-                <ui:Button Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="BtnCloud247_Click" />
+                <ui:Button x:Name="BtnCloud247" Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="BtnCloud247_Click" />
+                <TextBlock x:Name="TxtCloud247StatusNote" FontSize="10.5" Foreground="#EF4444" TextWrapping="Wrap" Margin="2,0,0,6" Visibility="Collapsed"/>
                 <TextBlock Text="⚠️ Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
                            FontSize="10.5" FontWeight="Medium" Foreground="#F59E0B" TextWrapping="Wrap" Margin="2,0,0,10" />
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Info24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCompareCloud_Click" />
