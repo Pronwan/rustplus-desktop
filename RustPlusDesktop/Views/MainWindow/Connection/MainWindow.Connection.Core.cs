@@ -44,10 +44,7 @@ public partial class MainWindow
             var key = _cloudHeldServerKey;
             if (!string.IsNullOrWhiteSpace(key) && _vm?.Selected?.IsConnected == true)
             {
-                if (Services.Cloud.CloudSessionsApi.IsServerCovered(key))
-                {
-                    _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(key);
-                }
+                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(key);
             }
             else
             {
@@ -63,7 +60,7 @@ public partial class MainWindow
         _cloudLeaseHeartbeatTimer = null;
     }
 
-    /// <summary>Hand the current server back to the cloud, if we claimed one and it is covered by Cloud 24/7.</summary>
+    /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
     private void ReleaseCloudHold()
     {
         StopCloudLeaseHeartbeatTimer();
@@ -71,10 +68,7 @@ public partial class MainWindow
         if (string.IsNullOrWhiteSpace(key)) return;
 
         _cloudHeldServerKey = null;
-        if (Services.Cloud.CloudSessionsApi.IsServerCovered(key))
-        {
-            _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key);
-        }
+        _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key);
     }
 
     /// <summary>
@@ -97,8 +91,6 @@ public partial class MainWindow
         if (string.IsNullOrWhiteSpace(key)) return;
 
         _cloudHeldServerKey = null;
-
-        if (!Services.Cloud.CloudSessionsApi.IsServerCovered(key)) return;
 
         try
         {
@@ -711,9 +703,8 @@ public partial class MainWindow
             // stand down. Fire-and-forget on purpose - a failure costs at most one
             // duplicate connection until the next heartbeat, which is not worth
             // holding up a connect over, and the lease expires on its own anyway.
-            // ONLY hold lease / send takeover if this server is consented & enrolled in Cloud 24/7.
             var connectedKey = GetServerKey();
-            if (!string.IsNullOrWhiteSpace(connectedKey) && Services.Cloud.CloudSessionsApi.IsServerCovered(connectedKey))
+            if (!string.IsNullOrWhiteSpace(connectedKey))
             {
                 _cloudHeldServerKey = connectedKey;
                 _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey);
