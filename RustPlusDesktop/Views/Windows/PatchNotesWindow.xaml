@@ -214,6 +214,54 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
+                            <!-- v10.0.4 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_0_4"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource Accent}"
+                                    BorderThickness="1.5"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
+                                                <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                            </Border>
+                                            <TextBlock Text="v10.0.4 | Cloud Reliability, Discord Controls &amp; Clan Status Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Native FCM Pairing:</Run>
+                                        Push notification registration and listening now run directly in the app, removing the legacy Node.js runtime from the installer.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; More Reliable Cloud 24/7 Handoffs:</Run>
+                                        Desktop connections now claim and release cloud sessions consistently, including soft connections, so both sides do not answer the same server at once.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cloud 24/7 Availability Controls:</Run>
+                                        Temporary administrator maintenance or feature disablement is now shown clearly, with controls disabled while Cloud 24/7 is unavailable.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Synced Cargo &amp; Deep Sea Alerts:</Run>
+                                        Cloud alert settings now include cargo and deep sea announcements alongside the existing event preferences.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Discord Smart-Switch Controls:</Run>
+                                        Discord device lists now include buttons for turning smart switches on or off, with the desktop state updated immediately.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Clan Status:</Run>
+                                        The clan tab now distinguishes between not being in a clan, unavailable clan data, and data that is still loading.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
                             <!-- v10.0.3 HOTFIX -->
                             <!-- ============================================== -->
                             <Border x:Name="Card_v10_0_3"
