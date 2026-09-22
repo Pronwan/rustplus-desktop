@@ -324,7 +324,10 @@ public class DiscordBotListenerService
         public bool Success { get; set; }
         public string Message { get; set; } = "";
         public List<Dictionary<string, object?>>? Components { get; set; }
+        public int? Flags { get; set; }
     }
+
+    private const int DiscordComponentsV2Flag = 1 << 15;
 
     /// <summary>
     /// Take exclusive ownership of a pending command. Every subscribed client sees
@@ -363,7 +366,7 @@ public class DiscordBotListenerService
             {
                 await CloudApiClient.CallApiAsync(
                     $"discord/commands/{id}/complete", System.Net.Http.HttpMethod.Post,
-                    payload: new { response = new { success = true, message = reply.Message, components = reply.Components } });
+                    payload: new { response = new { success = true, message = reply.Message, components = reply.Components, flags = reply.Flags } });
             }
             else
             {
@@ -445,7 +448,12 @@ public class DiscordBotListenerService
                                 result.Message = result.Success
                                     ? mainWindow.GetSmartSwitchListForDiscord()
                                     : "❌ The smart switch could not be updated.";
-                                result.Components = mainWindow.GetSmartSwitchControlsForDiscord(record.Payload?["server_id"]?.ToString());
+                                int page = record.Payload?["page"]?.Type == Newtonsoft.Json.Linq.JTokenType.Integer
+                                    ? record.Payload["page"]!.ToObject<int>()
+                                    : 0;
+                                result.Components = mainWindow.GetSmartSwitchControlsForDiscord(
+                                    record.Payload?["server_id"]?.ToString(), page);
+                                result.Flags = DiscordComponentsV2Flag;
                             }
                             else
                             {
@@ -492,9 +500,16 @@ public class DiscordBotListenerService
                         break;
 
                     case "devicelist":
+                    case "devices":
+                    case "switches":
                         result.Success = true;
                         result.Message = mainWindow.GetSmartSwitchListForDiscord();
-                        result.Components = mainWindow.GetSmartSwitchControlsForDiscord(record.Payload?["server_id"]?.ToString());
+                        int devicePage = record.Payload?["page"]?.Type == Newtonsoft.Json.Linq.JTokenType.Integer
+                            ? record.Payload["page"]!.ToObject<int>()
+                            : 0;
+                        result.Components = mainWindow.GetSmartSwitchControlsForDiscord(
+                            record.Payload?["server_id"]?.ToString(), devicePage);
+                        result.Flags = DiscordComponentsV2Flag;
                         break;
 
                     // The platform posts a map into a named channel and has no interaction
