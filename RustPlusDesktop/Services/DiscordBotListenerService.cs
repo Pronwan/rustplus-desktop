@@ -512,36 +512,44 @@ public class DiscordBotListenerService
                         result.Flags = DiscordComponentsV2Flag;
                         break;
 
-                    // The platform posts a map into a named channel and has no interaction
-                    // path, unlike the old backend which replied through interaction_token
-                    // alone. The channel the command was typed in therefore has to travel
-                    // with the command; passing null gave "The channel id field is required".
+                    // The channel the command was typed in travels with it, because the
+                    // platform needs somewhere to put the picture when no interaction is
+                    // available; passing null gave "The channel id field is required".
+                    // When an interaction token is there it wins, and the map is patched
+                    // into the message the command was typed under.
                     case "map":
-                        result.Success = true;
-                        result.Message = Properties.Resources.GetString("DiscordRenderingMap");
-                        // Start upload asynchronously so it doesn't block
-                        _ = Task.Run(async () =>
-                        {
-                            var base64 = await mainWindow.GetCurrentMapScreenshotBase64Async();
-                            await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
-                                record.Payload?["interaction_token"]?.ToString(),
-                                record.Payload?["application_id"]?.ToString(),
-                                record.Payload?["channel_id"]?.ToString());
-                        });
-                        break;
-
                     case "mapfull":
-                        result.Success = true;
-                        result.Message = Properties.Resources.GetString("DiscordRenderingFullMap");
-                        _ = Task.Run(async () =>
                         {
-                            var base64 = await mainWindow.GetFullMapScreenshotBase64Async();
-                            await mainWindow.UploadMapScreenshotToDiscordAsync(base64, 
+                            // Awaited, not fired and forgotten. The completion travels
+                            // through a queued job, so a detached upload raced it — and
+                            // lost the wrong way round: the picture landed in the message
+                            // and the "please wait" was written back over it afterwards,
+                            // which is why that line sat above a map that had plainly
+                            // arrived. Nothing races once the reply *is* the outcome.
+                            //
+                            // No three-second deadline stands in the way either. Both map
+                            // commands are deferred, so Discord is already showing its own
+                            // wait state and allows fifteen minutes to replace it.
+                            var base64 = commandType == "mapfull"
+                                ? await mainWindow.GetFullMapScreenshotBase64Async()
+                                : await mainWindow.GetCurrentMapScreenshotBase64Async();
+
+                            result.Success = await mainWindow.UploadMapScreenshotToDiscordAsync(
+                                base64,
                                 record.Payload?["interaction_token"]?.ToString(),
                                 record.Payload?["application_id"]?.ToString(),
                                 record.Payload?["channel_id"]?.ToString());
-                        });
-                        break;
+
+                            // Nothing to say on success: the map is the answer, and a
+                            // caption announcing that it was rendered is a line of text
+                            // laid over a picture of the thing it describes. An empty
+                            // reply patches nothing, which leaves the upload's own edit —
+                            // the image — standing as the final state of the message.
+                            result.Message = result.Success
+                                ? string.Empty
+                                : Properties.Resources.GetString("DiscordMapUploadFailed");
+                            break;
+                        }
 
                     default:
                         result.Message = string.Format(Properties.Resources.GetString("FormatUnknownCommand"), commandType);
