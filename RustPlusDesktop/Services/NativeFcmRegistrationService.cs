@@ -12,24 +12,12 @@ using RustPlusApi.Fcm.Registration;
 namespace RustPlusDesk.Services
 {
     /// <summary>
-    /// Native (Node-free) FCM + Rust+ registration using RustPlusApi.Fcm.Registration.
-    ///
-    /// Runs the full credential chain in-process (GCM check-in → Firebase → FCM → Expo →
-    /// Steam login → Rust Companion) and writes the result into the same
-    /// <c>rustplusjs-config.json</c> the Node <c>fcm-listen</c> reads, so listening is
-    /// unchanged. This is the primary registration path; the Node <c>fcm-register</c> CLI
-    /// remains as an automatic fallback when the native flow fails.
-    ///
-    /// The Node listener only consumes <c>fcm_credentials.gcm.androidId</c> and
-    /// <c>securityToken</c> (see @liamcottle/rustplus.js cli), which the native
-    /// <see cref="Credentials"/> supplies via <see cref="Gcm"/> — so the converted config
-    /// is sufficient to drive it.
+    /// Native FCM and Rust+ registration using RustPlusApi.Fcm.Registration.
     /// </summary>
     public static class NativeFcmRegistrationService
     {
         /// <summary>
-        /// Attempts a native registration, writing the Node-compatible config to
-        /// <paramref name="configPath"/> on success.
+        /// Attempts a native registration and writes the config on success.
         /// </summary>
         /// <param name="configPath">Where to write the resulting rustplusjs-config.json.</param>
         /// <param name="log">Log sink.</param>
@@ -48,15 +36,11 @@ namespace RustPlusDesk.Services
             string? browserName = null,
             CancellationToken ct = default)
         {
-            // Steam login drives Chrome/Chromium via the DevTools protocol, exactly like the
-            // Node path drives it via Puppeteer. Point the library at whatever browser we can
-            // find (CHROME_PATH overrides its own discovery), reusing the shared locator unless
-            // the caller forced a specific browser.
+            // CHROME_PATH overrides the library's browser discovery.
             var browser = browserPath ?? ChromiumBrowserLocator.Find(out browserName);
             if (browser == null)
             {
-                log("[fcm-native] No Chromium-based browser found for the Steam login step. "
-                  + "Falling back to the Node registration path.");
+                log("[fcm-native] No Chromium-based browser found for the Steam login step.");
                 return false;
             }
 
@@ -88,7 +72,7 @@ namespace RustPlusDesk.Services
                 string rustPlusAuthToken = login.Token;
                 log($"[fcm-native] Signed in as {login.SteamId}.");
 
-                WriteNodeCompatibleConfig(configPath, credentials, rustPlusAuthToken);
+                WriteConfig(configPath, credentials, rustPlusAuthToken);
                 log("[fcm-native] Native registration completed and config written.");
                 return true;
             }
@@ -98,7 +82,7 @@ namespace RustPlusDesk.Services
             }
             catch (Exception ex)
             {
-                log($"[fcm-native] Native registration failed ({ex.Message}). Falling back to the Node registration path.");
+                log($"[fcm-native] Native registration failed ({ex.Message}).");
                 return false;
             }
             finally
@@ -108,12 +92,9 @@ namespace RustPlusDesk.Services
         }
 
         /// <summary>
-        /// Serializes the native <see cref="Credentials"/> into the @liamcottle/rustplus.js
-        /// config shape. androidId/securityToken are written as strings to match what the Node
-        /// <c>PushReceiverClient</c> is given by the original <c>fcm-register</c>. steam_id and
-        /// issue/expiry dates are added afterwards by the caller (EnrichFcmConfig).
+        /// Serializes the native credentials. Metadata is added afterwards by the listener.
         /// </summary>
-        internal static void WriteNodeCompatibleConfig(string configPath, Credentials credentials, string rustPlusAuthToken)
+        internal static void WriteConfig(string configPath, Credentials credentials, string rustPlusAuthToken)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(configPath)!);
 

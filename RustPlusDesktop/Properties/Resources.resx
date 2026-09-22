@@ -8188,4 +8188,25 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>At one cell the name is trimmed to nothing whatever the text size; the icon already says which event it is.</value>
   </data>
+  <data name="ClanNotInClanTitle" xml:space="preserve">
+    <value>You are not in a clan</value>
+  </data>
+  <data name="ClanNotInClanSubtitle" xml:space="preserve">
+    <value>Join or create a clan in game, then press the refresh button to see its members, roles and chat here.</value>
+  </data>
+  <data name="ClanUnavailableTitle" xml:space="preserve">
+    <value>Clan info unavailable</value>
+  </data>
+  <data name="ClanUnavailableSubtitle" xml:space="preserve">
+    <value>The last clan request did not come through. Press the refresh button to try again.</value>
+  </data>
+  <data name="ClanWaitingTitle" xml:space="preserve">
+    <value>Waiting for clan data</value>
+  </data>
+  <data name="ClanWaitingSubtitle" xml:space="preserve">
+    <value>This fills in as soon as the server answers.</value>
+  </data>
+  <data name="UiListeningFcm" xml:space="preserve">
+    <value>Listening · FCM</value>
+  </data>
 </root>

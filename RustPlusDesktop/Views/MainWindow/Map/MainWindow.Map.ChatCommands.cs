@@ -11,6 +11,12 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private const int DiscordDevicePageSize = 6;
+    private const int DiscordDeviceOnColor = 0x57F287;
+    private const int DiscordDeviceOffColor = 0xED4245;
+    private const int DiscordDeviceUnknownColor = 0x4F545C;
+    private const string DiscordItemIconBase = "https://cdn.rusthelp.com/cdn-cgi/image/width=64,format=png/images/public/";
+
     private void BtnOpenChatCommands_Click(object? sender, System.Windows.RoutedEventArgs? e)
     {
         _vm.Selected?.SyncChatCommands();
@@ -892,6 +898,12 @@ public partial class MainWindow
         try
         {
             await _rust.ToggleSmartSwitchAsync(entityId, state);
+            var device = _vm?.Selected?.AllDevices.FirstOrDefault(d => d.EntityId == entityId);
+            if (device != null)
+            {
+                device.IsOn = state;
+                device.IsMissing = false;
+            }
             return true;
         }
         catch (Exception ex)
@@ -947,7 +959,7 @@ public partial class MainWindow
         if (_vm?.Selected == null) return "❌ Not connected to server.";
 
         var switches = _vm.Selected.AllDevices
-            .Where(d => (d.Kind ?? "").Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase))
+            .Where(d => (d.Kind ?? "").Contains("switch", StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         if (switches.Count == 0) return "📋 No smart switches paired.";
@@ -961,6 +973,123 @@ public partial class MainWindow
             lines.AppendLine($"• **{label}** `#{sw.EntityId}` — {state}");
         }
         return lines.ToString().TrimEnd();
+    }
+
+    public List<Dictionary<string, object?>> GetSmartSwitchControlsForDiscord(string? serverId = null, int page = 0)
+    {
+        var switches = _vm?.Selected?.AllDevices
+            .Where(d => (d.Kind ?? "").Contains("switch", StringComparison.OrdinalIgnoreCase))
+            .ToList() ?? new List<SmartDevice>();
+
+        var serverRef = (serverId ?? string.Empty).Replace(":", "-");
+        if (serverRef.Length > 45) serverRef = serverRef[..45];
+
+        int pageCount = Math.Max(1, (int)Math.Ceiling(switches.Count / (double)DiscordDevicePageSize));
+        int currentPage = Math.Clamp(page, 0, pageCount - 1);
+        var rows = new List<Dictionary<string, object?>>
+        {
+            new()
+            {
+                ["type"] = 17,
+                ["components"] = new List<Dictionary<string, object?>>
+                {
+                    new()
+                    {
+                        ["type"] = 10,
+                        ["content"] = $"## 📋 Paired Smart Switches\nPage {currentPage + 1}/{pageCount}",
+                    },
+                },
+            },
+        };
+
+        foreach (var sw in switches.Skip(currentPage * DiscordDevicePageSize).Take(DiscordDevicePageSize))
+        {
+            var state = sw.IsOn;
+            bool isOffline = sw.IsMissing;
+            string label = GetDiscordDeviceLabel(sw);
+            string status = isOffline
+                ? "❌ Offline"
+                : state is null ? "⚪ Unknown" : (state == true ? "🟢 On" : "🔴 Off");
+            var text = new Dictionary<string, object?>
+            {
+                ["type"] = 10,
+                ["content"] = $"**{label}**  `#{sw.EntityId}`\n{status}",
+            };
+            var tileRows = new List<Dictionary<string, object?>>();
+            var iconUrl = GetDiscordDeviceIconUrl(sw.CustomIconShortName);
+            if (iconUrl != null)
+            {
+                tileRows.Add(new Dictionary<string, object?>
+                {
+                    ["type"] = 9,
+                    ["components"] = new List<Dictionary<string, object?>> { text },
+                    ["accessory"] = new Dictionary<string, object?>
+                    {
+                        ["type"] = 11,
+                        ["media"] = new Dictionary<string, object?> { ["url"] = iconUrl },
+                    },
+                });
+            }
+            else
+            {
+                tileRows.Add(text);
+            }
+
+            tileRows.Add(new Dictionary<string, object?>
+            {
+                ["type"] = 1,
+                ["components"] = new List<Dictionary<string, object?>>
+                {
+                    new Dictionary<string, object?>
+                    {
+                        ["type"] = 2,
+                        ["style"] = state == true ? 4 : 3,
+                        ["label"] = state == true ? "OFF" : "ON",
+                        ["custom_id"] = $"toggle_switch:{serverRef}:{sw.EntityId}:{(state == true ? "off" : "on")}:{currentPage}",
+                        ["disabled"] = isOffline || state is null,
+                    },
+                },
+            });
+
+            rows.Add(new Dictionary<string, object?>
+            {
+                ["type"] = 17,
+                ["accent_color"] = isOffline || state is null
+                    ? DiscordDeviceUnknownColor
+                    : state == true ? DiscordDeviceOnColor : DiscordDeviceOffColor,
+                ["components"] = tileRows,
+            });
+        }
+
+        rows.Add(new Dictionary<string, object?>
+        {
+            ["type"] = 1,
+            ["components"] = new List<Dictionary<string, object?>>
+            {
+                new Dictionary<string, object?>
+                {
+                    ["type"] = 2,
+                    ["style"] = 2,
+                    ["label"] = "Refresh",
+                    ["emoji"] = new Dictionary<string, object?> { ["name"] = "🔄" },
+                    ["custom_id"] = $"devrefresh:{serverRef}:{currentPage}",
+                },
+            },
+        });
+
+        return rows;
+    }
+
+    private static string GetDiscordDeviceLabel(SmartDevice device)
+        => string.IsNullOrWhiteSpace(device.Alias)
+            ? (string.IsNullOrWhiteSpace(device.Name) ? device.EntityId.ToString() : device.Name!)
+            : device.Alias!;
+
+    private static string? GetDiscordDeviceIconUrl(string? iconShortName)
+    {
+        if (string.IsNullOrWhiteSpace(iconShortName) || iconShortName.All(char.IsDigit)) return null;
+        if (!iconShortName.All(c => char.IsLetterOrDigit(c) || c is '.' or '_' or '-')) return null;
+        return $"{DiscordItemIconBase}{iconShortName}.png";
     }
 
     public string GetDeepSeaStatusForDiscord()

@@ -24,6 +24,6 @@ public interface IPairingListener
     bool IsConfigured { get; }
     Task StartAsync(CancellationToken ct = default);
     Task StopAsync();
-    // Optional – defaults to the normal start
+    // Allows the recovery action to force Edge for registration.
     Task StartAsyncUsingEdge(CancellationToken ct = default) => StartAsync(ct);
 }

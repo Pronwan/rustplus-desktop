@@ -5,20 +5,14 @@ using System.Linq;
 namespace RustPlusDesk.Services
 {
     /// <summary>
-    /// Locates a Chromium-family browser Puppeteer (Node path) or the native DevTools
-    /// registration (RustPlusApi.Fcm.Registration) can drive for the Steam login step.
-    ///
-    /// Both registration paths need the same thing: a Chrome/Chromium/Edge/Brave/… binary.
-    /// Puppeteer only looks for Chrome in its default location and the native library only
-    /// auto-detects a handful of well-known installs, so users without Chrome saw a console
-    /// window flash and nothing else. Registry first (App Paths is where installers record
-    /// themselves), then the usual on-disk locations.
+    /// Locates a Chromium-family browser that native registration can drive for Steam login.
+    /// Registry is checked before the usual installation paths.
     /// </summary>
     public static class ChromiumBrowserLocator
     {
         /// <summary>
         /// Any Chromium-family browser the registration flow can drive, with the name of the one found.
-        /// Order is preference, not availability: Chrome is what the flows were written against,
+        /// Order is preference, not availability: Chrome is the primary target,
         /// Edge is on every Windows machine, the rest are courtesy.
         /// </summary>
         /// <param name="browserName">Human-readable name of the browser found, or "" when none.</param>

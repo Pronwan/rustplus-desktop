@@ -1391,6 +1391,20 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
+                                <!--  Pairing recovery actions, shared by the Listen and the Stop button so the
+                                      "Right-click for options" hint is true in every state — recovery is most
+                                      likely to be needed while the listener is stuck running, which is exactly
+                                      when the Listen button hides.  -->
+                                <Grid.Resources>
+                                    <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}">
+                                        <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
+                                        <Separator />
+                                        <MenuItem Click="BtnResetPairing_Click" Header="{DynamicResource ResetPairingConfig}" />
+                                        <MenuItem Click="BtnResetAndListen_Click" Header="{DynamicResource ResetListenPairing}" />
+                                        <MenuItem Click="BtnResetAndListenEdge_Click" Header="{DynamicResource ResetListenEdge}" />
+                                    </ContextMenu>
+                                </Grid.Resources>
+
                                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                                     <ui:Button
                                         x:Name="BtnListenPairing"
@@ -1400,19 +1414,10 @@
                                         AutomationProperties.HelpText="{DynamicResource UiListenForRustPairingRequestsRightClickForRecoveryOptions}"
                                         Click="BtnListenPairing_Click"
                                         Content="{DynamicResource Listen}"
+                                        ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
                                         IsEnabled="{Binding CanStartPairing}"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}">
-                                        <ui:Button.ContextMenu>
-                                            <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
-                                                <Separator />
-                                                <MenuItem Click="BtnResetPairing_Click" Header="{DynamicResource ResetPairingConfig}" />
-                                                <MenuItem Click="BtnResetAndListen_Click" Header="{DynamicResource ResetListenPairing}" />
-                                                <MenuItem Click="BtnResetAndListenEdge_Click" Header="{DynamicResource ResetListenEdge}" />
-                                            </ContextMenu>
-                                        </ui:Button.ContextMenu>
-                                    </ui:Button>
+                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}" />
 
                                     <ui:Button
                                         x:Name="BtnStopPairing"
@@ -1420,6 +1425,7 @@
                                         Appearance="Caution"
                                         Click="BtnStopPairing_Click"
                                         Content="{DynamicResource Stop}"
+                                        ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
                                         Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
 
@@ -1435,61 +1441,85 @@
                                         ToolTip="{DynamicResource FcmInfoToolTip}" />
                                 </StackPanel>
 
-                                <StackPanel
+                                <!--  Service state as a chip: one dot and one label. Green only once the
+                                      listener actually runs, amber while a start (or the automatic retry) is
+                                      still under way, red after a failure, grey when simply off.  -->
+                                <Border
                                     Grid.Column="1"
-                                    Margin="12,0"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        x:Name="TxtPairingState"
-                                        FontSize="11"
-                                        FontWeight="SemiBold"
-                                        Foreground="{StaticResource TextSubtle}"
-                                        Text="{DynamicResource PairingIdle}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}">
-                                        <Ellipse
-                                            Width="8"
-                                            Height="8"
-                                            VerticalAlignment="Center"
-                                            Fill="{DynamicResource SuccessBrush}">
-                                            <Ellipse.Effect>
-                                                <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#4CAF50" Opacity="0.6" />
-                                            </Ellipse.Effect>
+                                    Margin="10,0"
+                                    Padding="8,3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Background="{DynamicResource WhiteA14}"
+                                    CornerRadius="10">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="8" Height="8" VerticalAlignment="Center">
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" />
                                                     <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True">
+                                                            <Setter Property="Fill" Value="{DynamicResource DangerBrush}" />
+                                                        </DataTrigger>
+                                                        <!--  The listener is busy before it is listening, so amber also
+                                                              covers the automatic retry after a failure.  -->
                                                         <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
+                                                            <Setter Property="Fill" Value="{DynamicResource WarnOrangeBrush}" />
                                                             <DataTrigger.EnterActions>
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
-                                                                        <DoubleAnimation
-                                                                            AutoReverse="True"
-                                                                            RepeatBehavior="Forever"
-                                                                            Storyboard.TargetProperty="Opacity"
-                                                                            From="1"
-                                                                            To="0.3"
-                                                                            Duration="0:0:1" />
+                                                                        <DoubleAnimation AutoReverse="True" RepeatBehavior="Forever"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         From="1" To="0.3" Duration="0:0:1" />
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
                                                             </DataTrigger.EnterActions>
+                                                        </DataTrigger>
+                                                        <!--  Last matching trigger wins, so listening beats starting.  -->
+                                                        <DataTrigger Binding="{Binding IsPairingRunning}" Value="True">
+                                                            <Setter Property="Fill" Value="{DynamicResource SuccessBrush}" />
+                                                            <Setter Property="Effect">
+                                                                <Setter.Value>
+                                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#4CAF50" Opacity="0.6" />
+                                                                </Setter.Value>
+                                                            </Setter>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Ellipse.Style>
                                         </Ellipse>
-                                        <TextBlock Text="{DynamicResource UiListening}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                        <TextBlock Text="FCM" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <TextBlock
+                                            Margin="6,0,0,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="SemiBold"
+                                            Foreground="{DynamicResource SuccessTextBrush}"
+                                            Text="{DynamicResource UiListeningFcm}"
+                                            Visibility="{Binding IsPairingRunning, Converter={StaticResource BoolToVisibility}}" />
+                                        <TextBlock
+                                            x:Name="TxtPairingState"
+                                            Margin="6,0,0,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="SemiBold"
+                                            Text="{DynamicResource PairingIdle}"
+                                            Visibility="{Binding IsPairingRunning, Converter={StaticResource BoolToVisibilityInv}}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </StackPanel>
-                                </StackPanel>
+                                </Border>
 
                                 <TextBlock
                                     Grid.Column="2"
@@ -3272,6 +3302,7 @@
 
                                     <StackPanel
                                         Grid.Row="1"
+                                        MaxWidth="300"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         IsHitTestVisible="False">
@@ -3286,37 +3317,37 @@
                                             </Style>
                                         </StackPanel.Style>
 
+                                        <!--  Empty state, styled like the clan tab: a circle badge over title and hint  -->
                                         <Border
-                                            Padding="32,24"
+                                            Width="72"
+                                            Height="72"
                                             HorizontalAlignment="Center"
-                                            Background="{DynamicResource Surface}"
-                                             BorderBrush="{DynamicResource CardBorder}"
-                                             BorderThickness="1"
-                                             CornerRadius="12">
-                                            <StackPanel>
-                                                <ui:SymbolIcon
-                                                     Symbol="Connector24"
-                                                     FontSize="44"
-                                                     Foreground="{DynamicResource TextSubtle}"
-                                                     HorizontalAlignment="Center"
-                                                     Margin="0,0,0,12" />
-                                                <TextBlock
-                                                    Margin="0,0,0,6"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="16"
-                                                    FontWeight="SemiBold"
-                                                    Foreground="#EAECEE"
-                                                    Text="{DynamicResource NoDevicesFound}" />
-                                                <TextBlock
-                                                    MaxWidth="200"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="12"
-                                                    Foreground="#7F8A96"
-                                                    Text="{DynamicResource PairDeviceToSee}"
-                                                    TextAlignment="Center"
-                                                    TextWrapping="Wrap" />
-                                            </StackPanel>
+                                            Background="{DynamicResource WhiteA14}"
+                                            CornerRadius="36">
+                                            <ui:SymbolIcon
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontSize="32"
+                                                Foreground="{DynamicResource TextMutedBrush}"
+                                                Symbol="Connector24" />
                                         </Border>
+                                        <TextBlock
+                                            Margin="0,14,0,0"
+                                            HorizontalAlignment="Center"
+                                            FontSize="15"
+                                            FontWeight="SemiBold"
+                                            Foreground="White"
+                                            Text="{DynamicResource NoDevicesFound}"
+                                            TextAlignment="Center"
+                                            TextWrapping="Wrap" />
+                                        <TextBlock
+                                            Margin="0,6,0,0"
+                                            HorizontalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource TextMutedBrush}"
+                                            Text="{DynamicResource PairDeviceToSee}"
+                                            TextAlignment="Center"
+                                            TextWrapping="Wrap" />
                                     </StackPanel>
 
 
@@ -3795,7 +3826,8 @@
                                     </Grid.Resources>
 
                                     <!-- Header Hover Details -->
-                                    <Grid Grid.Row="0" Margin="10,10,10,6">
+                                    <Grid Grid.Row="0" Margin="10,10,10,6"
+                                          Visibility="{Binding HasClanInfo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}">
                                         <Border x:Name="ClanHeaderBorder" 
                                                 Background="#FF162231" 
                                                 BorderBrush="#FF283D59"
@@ -3938,7 +3970,8 @@
                                         Grid.Row="1"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding ClanMembers, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        Visibility="{Binding HasClanInfo, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource Vis}}">
                                         <!--  Context Menu  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="ClanContextMenu" Style="{StaticResource DarkContextMenu}">
@@ -4135,6 +4168,95 @@
                                         </ListBox.Style>
                                     </ListBox>
 
+                                    <!--  Empty states: shown whenever there is no clan to render  -->
+                                    <Grid Grid.Row="1" Margin="16">
+                                        <!--  Not in a clan: the server answered no_clan  -->
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="300">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding HasClanInfo, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                                <Condition Binding="{Binding IsClanNoClanState, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            <Border Width="72" Height="72" HorizontalAlignment="Center" Background="{DynamicResource WhiteA14}" CornerRadius="36">
+                                                <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"
+                                                      Fill="{DynamicResource TextMutedBrush}" Width="32" Height="32" Stretch="Uniform"
+                                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock Text="{DynamicResource ClanNotInClanTitle}" HorizontalAlignment="Center" Foreground="White"
+                                                       FontSize="15" FontWeight="SemiBold" Margin="0,14,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ClanNotInClanSubtitle}" HorizontalAlignment="Center"
+                                                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                        </StackPanel>
+                                        <!--  The pull itself failed: same layout, honest wording  -->
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="300">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding HasClanInfo, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                                <Condition Binding="{Binding IsClanLoadErrorState, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            <Border Width="72" Height="72" HorizontalAlignment="Center" Background="{DynamicResource WhiteA14}" CornerRadius="36">
+                                                <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                                                      Fill="{DynamicResource TextMutedBrush}" Width="32" Height="32" Stretch="Uniform"
+                                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock Text="{DynamicResource ClanUnavailableTitle}" HorizontalAlignment="Center" Foreground="White"
+                                                       FontSize="15" FontWeight="SemiBold" Margin="0,14,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ClanUnavailableSubtitle}" HorizontalAlignment="Center"
+                                                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                        </StackPanel>
+                                        <!--  Nothing pulled yet: the first answer is still on its way  -->
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="300">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding HasClanInfo, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                                <Condition Binding="{Binding IsClanNoClanState, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                                <Condition Binding="{Binding IsClanLoadErrorState, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            <Border Width="72" Height="72" HorizontalAlignment="Center" Background="{DynamicResource WhiteA14}" CornerRadius="36">
+                                                <Path Data="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"
+                                                      Fill="{DynamicResource TextMutedBrush}" Width="32" Height="32" Stretch="Uniform"
+                                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock Text="{DynamicResource ClanWaitingTitle}" HorizontalAlignment="Center" Foreground="White"
+                                                       FontSize="15" FontWeight="SemiBold" Margin="0,14,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ClanWaitingSubtitle}" HorizontalAlignment="Center"
+                                                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"
+                                                       TextWrapping="Wrap" TextAlignment="Center" />
+                                        </StackPanel>
+                                    </Grid>
+
                                     <!-- Footer (Refresh & Mode Toggle) -->
                                     <Grid Grid.Row="2" Margin="10,6,10,10">
                                         <Grid.ColumnDefinitions>
@@ -4318,6 +4440,7 @@
                                         </ItemsControl>
 
                                         <StackPanel
+                                            MaxWidth="300"
                                             Margin="0,50"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
@@ -4332,17 +4455,37 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </StackPanel.Style>
-                                            <TextBlock
+                                            <!--  Empty state, styled like the clan tab: a circle badge over title and hint  -->
+                                            <Border
+                                                Width="72"
+                                                Height="72"
                                                 HorizontalAlignment="Center"
-                                                FontStyle="Italic"
-                                                Foreground="{StaticResource TextSubtle}"
-                                                Text="{DynamicResource NoCamerasFound}" />
+                                                Background="{DynamicResource WhiteA14}"
+                                                CornerRadius="36">
+                                                <ui:SymbolIcon
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="32"
+                                                    Foreground="{DynamicResource TextMutedBrush}"
+                                                    Symbol="Video24" />
+                                            </Border>
                                             <TextBlock
+                                                Margin="0,14,0,0"
                                                 HorizontalAlignment="Center"
-                                                FontSize="10"
-                                                Foreground="{StaticResource TextSubtle}"
-                                                Opacity="0.6"
-                                                Text="{DynamicResource PairCameraToSee}" />
+                                                FontSize="15"
+                                                FontWeight="SemiBold"
+                                                Foreground="White"
+                                                Text="{DynamicResource NoCamerasFound}"
+                                                TextAlignment="Center"
+                                                TextWrapping="Wrap" />
+                                            <TextBlock
+                                                Margin="0,6,0,0"
+                                                HorizontalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource TextMutedBrush}"
+                                                Text="{DynamicResource PairCameraToSee}"
+                                                TextAlignment="Center"
+                                                TextWrapping="Wrap" />
                                         </StackPanel>
                                     </Grid>
                                 </ScrollViewer>

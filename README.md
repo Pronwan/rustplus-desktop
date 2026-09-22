@@ -28,7 +28,7 @@ Via Cloud access you can share devices, map overlays, wipe statistics and more w
 Alexa and Google Home allows you to control your devices hands-free and receive raid alerts more reliably. Additionally we offer 
 REST and Discord integrations as well as Telegram Calls via [CallMeBot](https://www.callmebot.com/) to make sure you'll never get offlined again :)
 
-The app ships as a single installer (bundling .NET, Node.js (will soon be removed), WebView2 runtime, RustPlusAPI, etc.), 
+The app ships as a single installer (bundling .NET, WebView2 runtime, RustPlusAPI, etc.), 
 so you don’t have to install dependencies manually.
 
 ---
@@ -979,68 +979,25 @@ Enjoy! :)
    - Rightclick the Pairing button and select "Delete Config + Pair".
    - That's it.
 
-8. **Alternative manuall pairing**
-   - You can do the pairing manually through PowerShell. 
-
-   - Open PowerShell, 
-   - Go to your installation folder (e.g. -> a: -> cd programs -> cd RustPlusDesk)
-   - Then copy paste this Power Shell code to the console. (Press enter twice) This should pair manually and open a popup in browser:
-
-```powershell
-$node = ".\runtime\node-win-x64\node.exe"
-$cli  = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli\node_modules\@liamcottle\rustplus.js\cli\index.js"
-$cfg  = "$env:APPDATA\RustPlusDesk\rustplusjs-config.json"
-
-if (!(Test-Path $cli)) {
-    $zip = ".\runtime\rustplus-cli.zip"
-    $dst = "$env:LOCALAPPDATA\RustPlusDesk\runtime\rustplus-cli"
-    New-Item -ItemType Directory -Force -Path $dst | Out-Null
-    Expand-Archive -Path $zip -DestinationPath $dst -Force
-}
-```
-
-& $node $cli fcm-register --config-file "$cfg"
-
-## 🛠️ Why initial NCM registration is required:
+## 🛠️ Why initial FCM registration is required:
 <details> 
-   <summary> NCM Registration Explanation </summary>
+   <summary>FCM Registration Explanation</summary>
 On first launch, the app needs to establish a connection to the Rust+ Companion API.
-For this, a bundled Node.js process (rustplus-cli) is started, which takes care of two things:
-
-**Registration with Facepunch/Steam**
-
-   - Opens a browser window to the official Rust+ Companion login page.
-
-   - After logging in with Steam, an auth token is generated and passed back to the app.
-
-   - This token is saved in the app’s config file so the process only needs to be done once per installation.
-
-**Local listener for callbacks and notifications**
-
-   - The Node process starts a small HTTP server on localhost:<random port> to receive the auth token.
-
-   - Afterwards, it continues running as a background listener to receive notifications (chat, alarms, events) via Google FCM and forward them to the app.
+The native registration flow opens a Chromium-based browser for Steam login, stores the resulting credentials, and then receives Rust+ notifications directly through FCM.
 
 **Requirements for successful registration**
 
-   - Node.js runtime and rustplus-cli are shipped with the app – no manual installation required.
-
-   - Firewall/Antivirus must not block the Node process:
-
-   - Local loopback (127.0.0.1) must be accessible for the callback port.
+- A Chromium-based browser must be installed.
+- Local loopback (`127.0.0.1`) must be accessible for the login callback.
+- A valid Steam login is required.
 
 **Outbound connections must be allowed on:**
 
-   - TCP 5228–5230 (Google FCM, mtalk.google.com)
-
-   - TCP 443 (HTTPS to Steam, Facepunch, Google)
-
-   - Browser redirect must be allowed (some security tools or proxies may block it).
-
-   - A valid Steam login is required to complete the auth flow.
+- TCP 5228–5230 (Google FCM, mtalk.google.com)
+- TCP 443 (HTTPS to Steam, Facepunch, Google)
 
 **👉 After successful registration, the token is stored at**
-%APPDATA%\RustPlusDesk\rustplusjs-config.json.
+`%APPDATA%\RustPlusDesk\rustplusjs-config.json`.
 You only need to re-register if this file is missing or corrupted.
   </details>
   
@@ -1049,31 +1006,20 @@ You only need to re-register if this file is missing or corrupted.
 
 If the initial pairing does not work (no browser window opens, or it keeps restarting):
 
-- **Check if Node is running**  
-  - Open *Task Manager* → *Details* → look for `node.exe`.  
-  - Or run:  
-    ```powershell
-    tasklist | findstr node.exe
-    ```
-
-- **Check if a local port is listening**  
-  - Run:  
-    ```powershell
-    netstat -ano | findstr LISTENING | findstr 127.0.0.1
-    ```
-  - You should see a `127.0.0.1:<port>` entry with the same PID as `node.exe`.  
-  - If not: Firewall or antivirus may be blocking the local callback server.  
-
 - **Check outbound connections**  
   Test if the required ports are open:  
   ```powershell
   Test-NetConnection mtalk.google.com -Port 5228
   Test-NetConnection companion-rust.facepunch.com -Port 443
   Test-NetConnection steamcommunity.com -Port 443
+  ```
+
   All should return TcpTestSucceeded : True
+
 - **Config reset**
+
 If all else fails, close the app and delete:
-%APPDATA%\RustPlusDesk\rustplusjs-config.json
+`%APPDATA%\RustPlusDesk\rustplusjs-config.json`
 On next launch the registration will run again.
   </details>
 ---

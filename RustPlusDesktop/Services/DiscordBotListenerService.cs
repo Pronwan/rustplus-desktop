@@ -323,7 +323,11 @@ public class DiscordBotListenerService
     {
         public bool Success { get; set; }
         public string Message { get; set; } = "";
+        public List<Dictionary<string, object?>>? Components { get; set; }
+        public int? Flags { get; set; }
     }
+
+    private const int DiscordComponentsV2Flag = 1 << 15;
 
     /// <summary>
     /// Take exclusive ownership of a pending command. Every subscribed client sees
@@ -362,7 +366,7 @@ public class DiscordBotListenerService
             {
                 await CloudApiClient.CallApiAsync(
                     $"discord/commands/{id}/complete", System.Net.Http.HttpMethod.Post,
-                    payload: new { response = new { success = true, message = reply.Message } });
+                    payload: new { response = new { success = true, message = reply.Message, components = reply.Components, flags = reply.Flags } });
             }
             else
             {
@@ -429,9 +433,27 @@ public class DiscordBotListenerService
                             else if (entityIdToken != null)
                                 deviceNameOrId = entityIdToken.ToString();
 
+                            bool isComponent = record.Payload?["is_component"]?.Type == Newtonsoft.Json.Linq.JTokenType.Boolean
+                                && record.Payload["is_component"]!.ToObject<bool>();
+                            bool hasDesiredState = record.Payload?["turn_on"]?.Type == Newtonsoft.Json.Linq.JTokenType.Boolean;
+
                             if (string.IsNullOrEmpty(deviceNameOrId))
                             {
                                 result.Message = Properties.Resources.GetString("DiscordInvalidCommandPayload");
+                            }
+                            else if (isComponent && hasDesiredState && uint.TryParse(deviceNameOrId, out var componentEntityId))
+                            {
+                                bool desiredState = record.Payload!["turn_on"]!.ToObject<bool>();
+                                result.Success = await mainWindow.ToggleSmartSwitchFromDiscordAsync(componentEntityId, desiredState);
+                                result.Message = result.Success
+                                    ? mainWindow.GetSmartSwitchListForDiscord()
+                                    : "❌ The smart switch could not be updated.";
+                                int page = record.Payload?["page"]?.Type == Newtonsoft.Json.Linq.JTokenType.Integer
+                                    ? record.Payload["page"]!.ToObject<int>()
+                                    : 0;
+                                result.Components = mainWindow.GetSmartSwitchControlsForDiscord(
+                                    record.Payload?["server_id"]?.ToString(), page);
+                                result.Flags = DiscordComponentsV2Flag;
                             }
                             else
                             {
@@ -478,8 +500,16 @@ public class DiscordBotListenerService
                         break;
 
                     case "devicelist":
+                    case "devices":
+                    case "switches":
                         result.Success = true;
                         result.Message = mainWindow.GetSmartSwitchListForDiscord();
+                        int devicePage = record.Payload?["page"]?.Type == Newtonsoft.Json.Linq.JTokenType.Integer
+                            ? record.Payload["page"]!.ToObject<int>()
+                            : 0;
+                        result.Components = mainWindow.GetSmartSwitchControlsForDiscord(
+                            record.Payload?["server_id"]?.ToString(), devicePage);
+                        result.Flags = DiscordComponentsV2Flag;
                         break;
 
                     // The platform posts a map into a named channel and has no interaction

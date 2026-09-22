@@ -13,18 +13,14 @@ using RustPlusDesk.Models;
 namespace RustPlusDesk.Services
 {
     /// <summary>
-    /// Node-free FCM pairing listener built on RustPlusApi.Fcm's MCS socket.
-    ///
-    /// Replaces the bundled Node <c>fcm-listen</c> process (and its ~900 lines of stdout
-    /// regex parsing) with an in-process socket that yields fully-typed <see cref="FcmMessage"/>
-    /// objects. We parse the raw <see cref="FcmMessage"/> ourselves rather than using the
+    /// FCM pairing listener built on RustPlusApi.Fcm's MCS socket.
+    /// We parse the raw <see cref="FcmMessage"/> ourselves rather than using the
     /// library's high-level typed events, because those are lossy for our needs: the typed
     /// AlarmNotification carries no ip/port, and its pairing PlayerToken is an <c>int</c> that
     /// cannot hold a Rust+ token. The raw <see cref="Body"/> has everything (Ip, Port,
     /// PlayerToken as string, EntityId, Desc, …).
     ///
-    /// Drop-in for <see cref="IPairingListener"/>, so it maps to the same app events the Node
-    /// listener raises (<see cref="Paired"/>, <see cref="AlarmReceived"/>,
+    /// Maps messages to the app events (<see cref="Paired"/>, <see cref="AlarmReceived"/>,
     /// <see cref="ChatReceived"/>, <see cref="OfflineDeathReceived"/>,
     /// <see cref="ServerInfoReceived"/>). Registration is unchanged — it reuses the credentials
     /// in <c>rustplusjs-config.json</c>, and runs native registration if none exist yet.
@@ -39,7 +35,6 @@ namespace RustPlusDesk.Services
         public event EventHandler<AlarmNotification>? AlarmReceived;
         public event EventHandler<TeamChatMessage>? ChatReceived;
         public event EventHandler<OfflineDeathNotification>? OfflineDeathReceived;
-        // Concrete-only, mirrors PairingListenerRealProcess (not on IPairingListener yet).
         public event EventHandler<PairingPayload>? ServerInfoReceived;
 
         private static readonly Regex DeathTitleRegex = new(
@@ -54,8 +49,7 @@ namespace RustPlusDesk.Services
         private List<string>? _persistentIds;
         private volatile bool _running;
 
-        // De-duplicates the same pairing bounced twice in quick succession, matching the
-        // Node listener's 20-second window.
+        // De-duplicates the same pairing bounced twice in quick succession.
         private string? _lastPairKey;
         private DateTime _lastPairAt;
 
@@ -77,7 +71,22 @@ namespace RustPlusDesk.Services
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RustPlusDesk", "fcm-persistent-ids.json");
 
-        public async Task StartAsync(CancellationToken ct = default)
+        public Task StartAsync(CancellationToken ct = default) =>
+            StartAsync(null, null, ct);
+
+        public Task StartAsyncUsingEdge(CancellationToken ct = default)
+        {
+            var edge = ChromiumBrowserLocator.FindEdge();
+            if (edge is not null)
+                return StartAsync(edge, "Microsoft Edge", ct);
+
+            _log("[fcm-native] Microsoft Edge was not found.");
+            Failed?.Invoke(this, "edge-not-found");
+            Stopped?.Invoke(this, EventArgs.Empty);
+            return Task.CompletedTask;
+        }
+
+        private async Task StartAsync(string? browserPath, string? browserName, CancellationToken ct)
         {
             if (_running)
             {
@@ -88,16 +97,15 @@ namespace RustPlusDesk.Services
             _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
-            // Register if we have no credentials yet (native path; the Node listener remains
-            // available for the full browser-fallback registration flow).
             if (!IsConfigured)
             {
                 _log("[fcm-native] No FCM config found — running native registration first …");
-                bool ok = await NativeFcmRegistrationService.TryRegisterAsync(ConfigPath, _log, ct: _cts.Token)
+                bool ok = await NativeFcmRegistrationService.TryRegisterAsync(
+                        ConfigPath, _log, browserPath, browserName, _cts.Token)
                     .ConfigureAwait(false);
                 if (!ok)
                 {
-                    _log("[fcm-native] ❌ Registration failed. Use the Node listener to register, then retry.");
+                    _log("[fcm-native] ❌ Registration failed. Check the browser login and retry.");
                     Failed?.Invoke(this, "native-registration-failed");
                     Stopped?.Invoke(this, EventArgs.Empty);
                     return;
@@ -186,7 +194,7 @@ namespace RustPlusDesk.Services
             }
         }
 
-        // Bounded auto-reconnect, mirroring the Node listener's restart-on-exit behaviour.
+        // Bounded auto-reconnect.
         /// <summary>
         /// Socket-level failures worth reconnecting for. Parse and config errors are not:
         /// dropping the connection over those would turn one bad message into a reconnect loop.
@@ -553,7 +561,7 @@ namespace RustPlusDesk.Services
 
         /// <summary>
         /// Reads rustplusjs-config.json, injects issue_date / expiry_date / steam_id, and writes
-        /// it back — same shape the Node path persists, so the rest of the app is unaffected.
+        /// it back.
         /// </summary>
         private void EnrichFcmConfig(DateTime issuedAt, DateTime expiresAt, string? steamId) =>
             NativeFcmRegistrationService.StampConfigMetadata(ConfigPath, issuedAt, expiresAt, steamId, _log);
@@ -568,8 +576,7 @@ namespace RustPlusDesk.Services
             /// The library defaults to a five-minute heartbeat, which leaves the socket silent
             /// long enough for a home router to drop its NAT mapping - every observed drop was
             /// noticed exactly a multiple of five minutes after connecting. A minute of traffic
-            /// keeps the mapping alive and costs a few bytes. The Node listener avoided this a
-            /// different way, by turning on TCP keep-alive, which this library does not expose.
+            /// keeps the mapping alive and costs a few bytes.
             /// </summary>
             private static readonly RustPlusFcmSocketOptions SocketOptions = new()
             {

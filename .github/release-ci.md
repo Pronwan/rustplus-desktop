@@ -1,6 +1,6 @@
 # Release CI
 
-The `Release` GitHub Actions workflow builds the RustPlusDesk Windows app, bundles MapParser into the app output, then creates an Inno Setup installer and Velopack update packages.
+The `Release` GitHub Actions workflow builds the RustPlusDesk Windows app, bundles MapParser into the app output, then creates a Velopack installer and update packages.
 
 ## Manual Release
 
@@ -23,14 +23,15 @@ The workflow trims the leading `v` and uses `7.1.2` as the package version.
 
 ## Outputs
 
-- `artifacts/inno`: `RustPlusDesk-Setup-<version>.exe` from `Setup.iss`.
-- `artifacts/velopack`: Velopack `.nupkg` and release metadata.
+- `artifacts/velopack`: the Velopack installer, `.nupkg`, and release metadata.
+
+Tag releases and manual runs with `create_github_release` enabled upload these files directly to the GitHub Release. Manual runs with release creation disabled retain them as a workflow artifact instead.
 
 MapParser is checked out during CI and included in the RustPlusDesk publish output. It is not published as a separate NuGet package.
 
 ## Caching
 
-The workflow caches NuGet packages from `~/.nuget/packages` with a key derived from solution, project, lock, and NuGet config files. It also uses `actions/setup-node` npm caching for `MapParser/package-lock.json`.
+The workflow uses `actions/setup-node` npm caching for the MapParser and GeneticsLab lock files. NuGet packages are restored directly because saving the release cache takes longer than restoring the packages.
 
 Do not add `.env`, generated secret files, tokens, or release outputs to cache paths.
 

@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>10.0.3</Version>
+		<Version>10.0.4</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -35,33 +35,6 @@
 		<AssemblyTitle>RustPlusDesk</AssemblyTitle>
 		<Product>RustPlusDesk</Product>
 	</PropertyGroup>
-	
-	<!-- Den dicken Ordner NICHT mehr kopieren -->
-	<ItemGroup>
-		<None Remove="runtime\rustplus-cli\**\*" />
-		<Content Remove="runtime\rustplus-cli\**\*" />
-	</ItemGroup>
-
-	<!-- Debug: (optional) Ordner als None lassen, damit du lokal damit arbeiten kannst -->
-	<ItemGroup Condition="'$(Configuration)'=='Debug'">
-		<None Include="runtime\rustplus-cli\**\*" />
-		<None Include="runtime\node-win-x64\**\*" />
-	</ItemGroup>
-
-	<!-- Release/Publish: nur die schlanken Assets -->
-	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<!-- portable Node -->
-		<Content Include="runtime\node-win-x64\**\*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
-		<!-- CLI-Archiv -->
-		<Content Include="runtime\rustplus-cli.zip">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
-	</ItemGroup>
-	
 	
 	<!-- Ticket notification chime. Copied to output (played by MediaPlayer, which needs a file
 	     path, not an embedded resource). Conditioned so the build stays green until the wav/mp3

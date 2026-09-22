@@ -146,7 +146,9 @@ namespace RustPlusDesk.Services.Cloud
                         var s = ReadServer(item);
                         servers.Add(s);
 
-                        if (!string.IsNullOrWhiteSpace(s.ServerKey) && (s.Enrolled || s.IsPreferred))
+                        if (!string.IsNullOrWhiteSpace(s.ServerKey)
+                            && s.IsPreferred
+                            && string.Equals(s.Mode, "live", StringComparison.OrdinalIgnoreCase))
                         {
                             CoveredServerKeys[s.ServerKey] = true;
                         }
@@ -230,7 +232,6 @@ namespace RustPlusDesk.Services.Cloud
         public static async Task TakeoverAsync(string serverKey)
         {
             if (string.IsNullOrWhiteSpace(serverKey)) return;
-            if (!IsServerCovered(serverKey)) return;
 
             await PostAsync("client/cloud/takeover", serverKey: serverKey);
         }
@@ -240,12 +241,10 @@ namespace RustPlusDesk.Services.Cloud
         ///
         /// Skipping this is survivable — the lease expires by itself — but calling it
         /// turns a ninety-second gap into a couple of seconds.
-        /// Only releases if the server has been consented and enrolled in Cloud 24/7.
         /// </summary>
         public static async Task ReleaseAsync(string serverKey)
         {
             if (string.IsNullOrWhiteSpace(serverKey)) return;
-            if (!IsServerCovered(serverKey)) return;
 
             await PostAsync("client/cloud/release", serverKey: serverKey);
         }

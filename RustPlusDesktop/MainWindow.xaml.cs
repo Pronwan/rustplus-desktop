@@ -775,14 +775,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
-        // Einmal erzeugen (falls du den Stub behalten willst: try/fallback – aber nur EINMAL zuweisen)
-
-        _pairing = TrackingService.UseNativeFcmListener
-            ? new NativeFcmListener(AppendLog)
-            : new PairingListenerRealProcess(AppendLog);
-        AppendLog(TrackingService.UseNativeFcmListener
-            ? "[pairing] Using native (in-process) FCM listener."
-            : "[pairing] Using Node FCM listener.");
+        _pairing = new NativeFcmListener(AppendLog);
+        AppendLog("[pairing] Using native (in-process) FCM listener.");
 
         _pairing.Paired += Pairing_Paired;
 
@@ -800,6 +794,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
+            _vm.IsPairingFaulted = false; // a running listener is by definition not faulted
             TxtPairingState.Text = "";
             UpdatePairingGuideSnackbar();
             ScheduleFcmHealthCheck();
@@ -808,6 +803,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Update UI button state
+            _vm.IsPairingFaulted = false; // a deliberate stop is no fault
             TxtPairingState.Text = Properties.Resources.PairingStopped;
         }));
         _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -819,6 +815,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Error occurred, not busy anymore
+            _vm.IsPairingFaulted = true; // state row shows the failure as a fault, not as idle
             TxtPairingState.Text = Properties.Resources.PairingFailed; // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
@@ -1518,29 +1515,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         Services.Auth.SupabaseAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
         Services.Cloud.CloudAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
 
-        // Holen Sie alle laufenden "node"-Prozesse
-        var nodes = System.Diagnostics.Process.GetProcessesByName("node");
-
-        foreach (var p in nodes)
-        {
-            try
-            {
-                // Überprüfe, ob der Prozess ein Hauptfenster hat.
-                // Hintergrundprozesse (wie der Listener) haben in der Regel keins.
-                // Der von der "fcm-register"-Methode gestartete Prozess, der den Browser öffnet,
-                // sollte eine Ausnahme sein und hat ein Fenster, daher wird er hier ignoriert.
-                if (p.MainWindowHandle == IntPtr.Zero)
-                {
-                    p.Kill(true); // Kill den Prozess und seine Unterprozesse
-                }
-            }
-            catch
-            {
-                // Dies fängt Berechtigungsfehler oder Prozesse ab, die bereits beendet sind.
-                // Ignoriere die Ausnahme, da das erwartete Verhalten ist.
-                // Du kannst hier auch loggen, wenn du möchtest: Debug.WriteLine($"Konnte Prozess {p.Id} nicht beenden: {ex.Message}");
-            }
-        }
         try
         {
             // falls noch offen/hidden → hart schließen
@@ -4399,7 +4373,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             catch (Exception ex) 
             { 
                 AppendLog("[pairing] silent start error: " + ex.Message); 
-                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = Properties.Resources.PairingError; });
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; _vm.IsPairingFaulted = true; TxtPairingState.Text = Properties.Resources.PairingError; });
             }
             finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
         });
@@ -4476,7 +4450,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
+            // The timeout path used to say nothing at all; read as the failure it is.
+            _vm.IsPairingFaulted = !ok;
             if (ok) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else TxtPairingState.Text = Properties.Resources.PairingFailed;
         }
         finally { _listenerStarting = false; }
     }

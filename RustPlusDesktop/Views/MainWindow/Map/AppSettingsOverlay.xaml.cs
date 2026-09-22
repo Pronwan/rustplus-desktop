@@ -2523,6 +2523,7 @@ namespace RustPlusDesk.Views
             // existing token/snippet is harmless even when the feature is off.
             ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
                 BtnGenerateHaToken, BtnRevokeHa);
+            ApplyFeatureFlag("cloud_247", TxtCloud247StatusNote, BtnCloud247);
         }
 
         private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)

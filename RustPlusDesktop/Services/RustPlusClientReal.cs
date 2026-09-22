@@ -1655,22 +1655,68 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         }
     }
 
+    /// <summary>
+    /// What the last <see cref="GetClanInfoAsync"/> call actually got back. "No data" is not one
+    /// state: the server separates "you are not in a clan" (<c>no_clan</c>) from a failed pull, and
+    /// the clan tab words its empty state after this.
+    /// </summary>
+    public enum ClanLoadStatus
+    {
+        /// <summary>Clan data was returned.</summary>
+        Ok,
+
+        /// <summary>The server answered <c>no_clan</c> — the player is not in a clan.</summary>
+        NoClan,
+
+        /// <summary>The pull failed for another reason (offline, timed out, server error).</summary>
+        Failed,
+    }
+
+    public ClanLoadStatus LastClanLoadStatus { get; private set; } = ClanLoadStatus.Ok;
+
+    /// <summary>Raw identifier of the last failed clan pull (<c>no_clan</c>, <c>server_error</c>, …), if any.</summary>
+    public string? LastClanLoadError { get; private set; }
+
     public async Task<ClanInfoModel?> GetClanInfoAsync(CancellationToken ct = default)
     {
-        if (_api is null) return null;
+        if (_api is null)
+        {
+            LastClanLoadStatus = ClanLoadStatus.Failed;
+            LastClanLoadError = null;
+            return null;
+        }
 
         try
         {
             var apiType = _api.GetType();
             var mInfo = apiType.GetMethod("GetClanInfoAsync");
-            if (mInfo == null) return null;
+            if (mInfo == null)
+            {
+                LastClanLoadStatus = ClanLoadStatus.Failed;
+                LastClanLoadError = "GetClanInfoAsync is missing on the API instance";
+                return null;
+            }
 
             var ps = mInfo.GetParameters();
             object?[] args = (ps.Length == 1 && ps[0].ParameterType == typeof(CancellationToken))
                              ? new object?[] { ct } : Array.Empty<object?>();
 
             var resObj = await UnwrapTaskAsync(mInfo.Invoke(_api, args), ct);
-            if (resObj == null) return null;
+
+            // A failed response carries no clan at all. Without this check the fallback below maps
+            // the Response object itself, which yields a clan with no id and no name — exactly the
+            // "empty clan" the tab used to render as nothing.
+            var (errorCode, errorMessage) = ReadResponseError(resObj);
+            if (IsFailedResponse(resObj) || resObj is null)
+            {
+                LastClanLoadError = errorMessage ?? errorCode;
+                LastClanLoadStatus = IsNoClanError(errorCode, errorMessage) ? ClanLoadStatus.NoClan : ClanLoadStatus.Failed;
+                _log($"[get-clan-info] failed: {LastClanLoadError ?? "unknown error"}");
+                return null;
+            }
+
+            LastClanLoadError = null;
+            LastClanLoadStatus = ClanLoadStatus.Ok;
 
             // Extract Data from Response<T>
             var dataProp = resObj.GetType().GetProperty("Data");
@@ -1763,13 +1809,77 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 }
             }
 
+            // A successful response without a clan id and without a name is an empty snapshot:
+            // there is no clan to render either, so it takes the same route as no_clan.
+            if (model.ClanId == 0 && string.IsNullOrWhiteSpace(model.Name))
+            {
+                LastClanLoadStatus = ClanLoadStatus.NoClan;
+                LastClanLoadError = null;
+                return null;
+            }
+
             return model;
         }
         catch (Exception ex)
         {
+            LastClanLoadStatus = ClanLoadStatus.Failed;
+            LastClanLoadError = ex.Message;
             _log?.Invoke("[get-clan-info:error] " + ex.Message);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Reads the error payload of a <c>Response&lt;T&gt;</c> reflectively: <c>Error.Code</c> is the parsed
+    /// <c>RustPlusErrorCode</c> and <c>Error.Message</c> the raw server identifier. Both are read so
+    /// an API build that carries only the string still classifies correctly.
+    /// </summary>
+    internal static (string? Code, string? Message) ReadResponseError(object? response)
+    {
+        if (response is null) return (null, null);
+        try
+        {
+            var error = response.GetType().GetProperty("Error")?.GetValue(response);
+            if (error is null) return (null, null);
+
+            var errorType = error.GetType();
+            var code = errorType.GetProperty("Code")?.GetValue(error)?.ToString();
+            var message = errorType.GetProperty("Message")?.GetValue(error) as string;
+            return (code, message);
+        }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    private static bool IsFailedResponse(object? response)
+    {
+        if (response is null) return false;
+        try
+        {
+            return response.GetType().GetProperty("IsSuccess")?.GetValue(response) is bool success && !success;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// True when a failed clan pull means "the player is not in a clan". The server answers with the
+    /// identifier <c>no_clan</c>, which the API parses into <c>RustPlusErrorCode.NoClan</c>; both
+    /// spellings are accepted, compared without separators and case-insensitively, so the state
+    /// survives either shape and any surrounding wording.
+    /// </summary>
+    public static bool IsNoClanError(string? errorCode, string? errorMessage)
+        => IsNoClanToken(errorCode) || IsNoClanToken(errorMessage);
+
+    private static bool IsNoClanToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return false;
+        var normalized = new string(value.Where(char.IsLetterOrDigit).ToArray());
+        return normalized.Contains("NoClan", StringComparison.OrdinalIgnoreCase);
     }
 
     public async Task SendClanMessageAsync(string text, CancellationToken ct = default)

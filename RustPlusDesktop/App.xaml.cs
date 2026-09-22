@@ -202,6 +202,7 @@ public partial class App : Application
                 _main?.HandleRustPlusLink(args[0]);
 
             _ = Task.Run(async () => { await Task.Delay(5000); CleanupLegacyInnoSetupInstallation(); });
+            _ = Task.Run(CleanupLegacyNodeRuntime);
             _ = Task.Run(async () => { await Task.Delay(1000); EnsureUrlProtocolRegistered(); });
         }
         catch (Exception ex)
@@ -554,6 +555,21 @@ public partial class App : Application
                 }
             }
             catch { }
+        }
+    }
+
+    private static void CleanupLegacyNodeRuntime()
+    {
+        try
+        {
+            var path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk", "runtime", "rustplus-cli");
+            if (Directory.Exists(path)) Directory.Delete(path, recursive: true);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to remove legacy Node runtime: {ex.Message}");
         }
     }
 

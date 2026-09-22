@@ -266,6 +266,15 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
     }
 
+    // Stays true while the listener is down because the last start/listen failed; the status row
+    // uses it to mark the state as a fault (red) rather than just "not running" (grey).
+    private bool _isPairingFaulted;
+    public bool IsPairingFaulted
+    {
+        get => _isPairingFaulted;
+        set { _isPairingFaulted = value; OnPropertyChanged(); }
+    }
+
     private bool _isUpdateAvailable;
     public bool IsUpdateAvailable
     {

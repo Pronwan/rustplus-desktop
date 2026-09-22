@@ -94,6 +94,12 @@ namespace RustPlusDesk.Services.Cloud
                     // hacked rather than somebody being in their base.
                     ["smart_alerts"] = TrackingService.AnnounceSmartAlerts,
                     ["event_oil_rig"] = TrackingService.AnnounceOilRig,
+                    // The other two the cloud can now relay. All three reach it
+                    // as audio detections rather than markers — Facepunch stopped
+                    // sending those — so without these keys the cloud read the
+                    // user's preference as "off" and said nothing at all.
+                    ["event_cargo"] = TrackingService.AnnounceCargo,
+                    ["event_deep_sea"] = TrackingService.AnnounceDeepSea,
                     // The master switch, sent as its own value rather than folded
                     // into the others. Folding it in would read on the web as the
                     // user having turned every alert off one by one, and turning

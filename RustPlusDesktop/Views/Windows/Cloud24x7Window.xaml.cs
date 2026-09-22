@@ -23,6 +23,8 @@ namespace RustPlusDesk.Views.Windows
         private readonly ObservableCollection<ServerOption> _serverOptions = new();
         private CloudSessionsApi.CloudPlan? _plan;
         private bool _isUpdatingUi;
+        private bool _globalFeatureEnabled = true;
+        private string? _globalFeatureNote;
 
         public Cloud24x7Window()
         {
@@ -59,9 +61,12 @@ namespace RustPlusDesk.Views.Windows
 
             /// <summary>This server currently holds the live connection.</summary>
             public bool IsPreferred { get; init; }
+            public bool GlobalFeatureEnabled { get; init; } = true;
 
             public Visibility ActiveBadgeVisibility
-                => (IsPreferred && CloudSessionsApi.GlobalConsentEnabled) ? Visibility.Visible : Visibility.Collapsed;
+                => (IsPreferred && GlobalFeatureEnabled && CloudSessionsApi.GlobalConsentEnabled)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
 
             public Wpf.Ui.Controls.ControlAppearance ActionAppearance
                 => IsPreferred ? Wpf.Ui.Controls.ControlAppearance.Primary : Wpf.Ui.Controls.ControlAppearance.Secondary;
@@ -73,6 +78,10 @@ namespace RustPlusDesk.Views.Windows
         private async System.Threading.Tasks.Task RefreshAsync()
         {
             SetStatus(Str("Cloud247Loading", "Checking what the cloud is watching..."));
+
+            await CloudFeatureFlags.RefreshAsync();
+            _globalFeatureEnabled = CloudFeatureFlags.IsEnabled("cloud_247");
+            _globalFeatureNote = CloudFeatureFlags.Note("cloud_247");
 
             var imported = await CloudPairingImporter.ImportAsync();
             var overview = await CloudSessionsApi.GetOverviewAsync();
@@ -136,6 +145,11 @@ namespace RustPlusDesk.Views.Windows
         {
             ToggleGlobalConsent.IsChecked = plan.GlobalConsent;
 
+            GlobalFeatureFlagNote.Visibility = _globalFeatureEnabled ? Visibility.Collapsed : Visibility.Visible;
+            GlobalFeatureFlagNote.Text = string.IsNullOrWhiteSpace(_globalFeatureNote)
+                ? "Cloud 24/7 is temporarily disabled by the administrator."
+                : _globalFeatureNote;
+
             if (!plan.Access)
             {
                 PlanSummaryText.Text = Str("Cloud247NoAccess", "Cloud 24/7 is a supporter feature.");
@@ -158,13 +172,16 @@ namespace RustPlusDesk.Views.Windows
                 activeCount,
                 plan.LiveLimit);
 
-            PlanHintText.Text = plan.GlobalConsent
+            PlanHintText.Text = !_globalFeatureEnabled
+                ? "Cloud 24/7 is temporarily unavailable while the administrator performs maintenance."
+                : plan.GlobalConsent
                 ? (plan.LiveLimit > 1
                     ? $"Multi-server plan: You can choose up to {plan.LiveLimit} active servers simultaneously for 24/7 coverage."
                     : "Single active server plan: Choose which 1 server holds the live 24/7 connection.")
                 : "Cloud 24/7 is currently disabled globally. No cloud background sessions are running.";
 
-            SingleServerDropdownPanel.Visibility = (plan.GlobalConsent && plan.LiveLimit <= 1)
+            ToggleGlobalConsent.IsEnabled = plan.Access && _globalFeatureEnabled;
+            SingleServerDropdownPanel.Visibility = (_globalFeatureEnabled && plan.GlobalConsent && plan.LiveLimit <= 1)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -211,7 +228,8 @@ namespace RustPlusDesk.Views.Windows
                     ? server.ServerKey ?? Str("Cloud247UnnamedServer", "Unnamed server")
                     : server.Name!,
                 Enrolled = server.Enrolled,
-                CanToggle = plan.Access,
+                CanToggle = plan.Access && _globalFeatureEnabled,
+                GlobalFeatureEnabled = _globalFeatureEnabled,
                 OwnerText = ownerText,
                 OwnerBrush = ownerBrush,
                 DetailText = detail,
@@ -223,7 +241,7 @@ namespace RustPlusDesk.Views.Windows
 
         private (string, Brush) DescribeOwner(CloudSessionsApi.CloudServer server)
         {
-            if (!CloudSessionsApi.GlobalConsentEnabled)
+            if (!_globalFeatureEnabled || !CloudSessionsApi.GlobalConsentEnabled)
                 return ("Cloud 24/7 Disabled", Brush("TextSubtle"));
 
             if (!server.IsPreferred && !server.Enrolled)
@@ -255,7 +273,7 @@ namespace RustPlusDesk.Views.Windows
 
         private async void ToggleGlobalConsent_Click(object sender, RoutedEventArgs e)
         {
-            if (_isUpdatingUi) return;
+            if (_isUpdatingUi || !_globalFeatureEnabled) return;
 
             bool enabling = ToggleGlobalConsent.IsChecked == true;
             if (enabling)
@@ -296,7 +314,7 @@ namespace RustPlusDesk.Views.Windows
 
         private async void CmbActiveServer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_isUpdatingUi) return;
+            if (_isUpdatingUi || !_globalFeatureEnabled) return;
             if (CmbActiveServer.SelectedValue is not string selectedId || string.IsNullOrWhiteSpace(selectedId)) return;
 
             if (_plan?.GlobalConsent != true)
@@ -324,6 +342,8 @@ namespace RustPlusDesk.Views.Windows
 
         private async void ToggleCover_Click(object sender, RoutedEventArgs e)
         {
+            if (!_globalFeatureEnabled) return;
+
             if (sender is not FrameworkElement { Tag: ServerRow row }) return;
 
             var currentActive = _plan?.ActiveServerIds?.ToList() ?? new List<string>();
