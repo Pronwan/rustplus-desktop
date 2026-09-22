@@ -172,6 +172,22 @@ namespace RustPlusDesk.Views
             set { if (_hasClanInfo == value) return; _hasClanInfo = value; OnPropertyChanged(nameof(HasClanInfo)); }
         }
 
+        /// <summary>The server answered no_clan: there is no clan to render, so the tab asks for one.</summary>
+        private bool _isClanNoClanState;
+        public bool IsClanNoClanState
+        {
+            get => _isClanNoClanState;
+            set { if (_isClanNoClanState == value) return; _isClanNoClanState = value; OnPropertyChanged(nameof(IsClanNoClanState)); }
+        }
+
+        /// <summary>The last clan pull failed (offline, server error): say so instead of blaming the clan.</summary>
+        private bool _isClanLoadErrorState;
+        public bool IsClanLoadErrorState
+        {
+            get => _isClanLoadErrorState;
+            set { if (_isClanLoadErrorState == value) return; _isClanLoadErrorState = value; OnPropertyChanged(nameof(IsClanLoadErrorState)); }
+        }
+
         private bool _isClanListView;
         public bool IsClanListView
         {
@@ -216,7 +232,18 @@ namespace RustPlusDesk.Views
             try
             {
                 var clan = await _real.GetClanInfoAsync();
-                if (clan is null) return;
+
+                // Nothing to render. The server answers "no_clan" when the player has not joined a
+                // clan, and that gets told to the player instead of leaving an empty header over an
+                // empty member list. A failed pull only takes the tab over while there is no clan on
+                // screen to keep, so a hiccup does not wipe the clan someone is looking at.
+                if (clan is null)
+                {
+                    var status = _real.LastClanLoadStatus;
+                    if (status == RustPlusClientReal.ClanLoadStatus.NoClan || !HasClanInfo)
+                        ApplyClanEmptyState(status == RustPlusClientReal.ClanLoadStatus.Failed);
+                    return;
+                }
 
                 ClanId = clan.ClanId;
                 ClanName = clan.Name;
@@ -230,6 +257,8 @@ namespace RustPlusDesk.Views
                 ClanScoreText = clan.Score?.ToString() ?? "-";
                 LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
                 HasClanInfo = true;
+                IsClanNoClanState = false;
+                IsClanLoadErrorState = false;
 
                 // Logo
                 if (clan.Logo != null && clan.Logo.Length > 0)
@@ -514,6 +543,43 @@ namespace RustPlusDesk.Views
         private async void BtnRefreshClan_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             await LoadClanAsync();
+        }
+
+        /// <summary>
+        /// Switches the clan tab over to its empty state. Everything a previous pull left behind is
+        /// dropped first, otherwise the header of a clan the player is no longer in would stay on
+        /// screen next to the message saying there is none.
+        /// </summary>
+        private void ApplyClanEmptyState(bool loadFailed)
+        {
+            ClanId = 0;
+            ClanName = "";
+            ClanMotd = "";
+            ClanCreatedText = "";
+            ClanCreatorText = "";
+            ClanMotdAuthorText = "";
+            ClanLogoImage = null;
+            ClanColorBrush = new SolidColorBrush(Color.FromRgb(30, 90, 180));
+            ClanMaxMemberCount = 0;
+            ClanMemberCount = 0;
+            ClanOnlineCount = 0;
+            ClanMembersRatio = "";
+            ClanScoreText = "";
+            ClanRolesSummary = "";
+            ClanInvitesCount = 0;
+
+            ClanMembers.Clear();
+            ClanRoles.Clear();
+            ClanInvites.Clear();
+
+            HasClanInfo = false;
+            IsClanNoClanState = !loadFailed;
+            IsClanLoadErrorState = loadFailed;
+            LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
+
+            AppendLog(loadFailed
+                ? $"[clan-load] failed: {_real?.LastClanLoadError ?? "unknown error"}"
+                : "[clan-load] no clan: the player is not in a clan (no_clan)");
         }
 
         private void BtnToggleClanView_Click(object sender, System.Windows.RoutedEventArgs e)
