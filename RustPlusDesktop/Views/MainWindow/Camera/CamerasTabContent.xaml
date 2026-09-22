@@ -1,7 +1,8 @@
 <UserControl
     x:Class="RustPlusDesk.Views.CamerasTabContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <DockPanel LastChildFill="True">
         <StackPanel
             Margin="0,10,0,0"
@@ -25,6 +26,7 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
                 <StackPanel
+                    MaxWidth="300"
                     Margin="0,50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -39,17 +41,37 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock
+                    <!--  Empty state, styled like the clan tab: a circle badge over title and hint  -->
+                    <Border
+                        Width="72"
+                        Height="72"
                         HorizontalAlignment="Center"
-                        FontStyle="Italic"
-                        Foreground="{StaticResource TextSubtle}"
-                        Text="{DynamicResource NoCamerasFound}" />
+                        Background="{DynamicResource WhiteA14}"
+                        CornerRadius="36">
+                        <ui:SymbolIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="32"
+                            Foreground="{DynamicResource TextMutedBrush}"
+                            Symbol="Video24" />
+                    </Border>
                     <TextBlock
+                        Margin="0,14,0,0"
                         HorizontalAlignment="Center"
-                        FontSize="10"
-                        Foreground="{StaticResource TextSubtle}"
-                        Opacity="0.6"
-                        Text="{DynamicResource PairCameraToSee}" />
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Text="{DynamicResource NoCamerasFound}"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,6,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextMutedBrush}"
+                        Text="{DynamicResource PairCameraToSee}"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

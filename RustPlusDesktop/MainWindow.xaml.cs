@@ -794,6 +794,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = true;
             _vm.IsPairingBusy = true; // Update UI button state
+            _vm.IsPairingFaulted = false; // a running listener is by definition not faulted
             TxtPairingState.Text = "";
             UpdatePairingGuideSnackbar();
             ScheduleFcmHealthCheck();
@@ -802,6 +803,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Update UI button state
+            _vm.IsPairingFaulted = false; // a deliberate stop is no fault
             TxtPairingState.Text = Properties.Resources.PairingStopped;
         }));
         _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
@@ -813,6 +815,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         {
             _vm.IsPairingRunning = false;
             _vm.IsPairingBusy = false; // Error occurred, not busy anymore
+            _vm.IsPairingFaulted = true; // state row shows the failure as a fault, not as idle
             TxtPairingState.Text = Properties.Resources.PairingFailed; // show failure text
             AppendLog("[listener] " + msg);
             // Auto-retry after a short delay
@@ -4370,7 +4373,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             catch (Exception ex) 
             { 
                 AppendLog("[pairing] silent start error: " + ex.Message); 
-                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; TxtPairingState.Text = Properties.Resources.PairingError; });
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; _vm.IsPairingFaulted = true; TxtPairingState.Text = Properties.Resources.PairingError; });
             }
             finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
         });
@@ -4447,7 +4450,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             _pairing.Failed -= onFail;
 
             _vm.IsPairingBusy = false; _vm.BusyText = "";
+            // The timeout path used to say nothing at all; read as the failure it is.
+            _vm.IsPairingFaulted = !ok;
             if (ok) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else TxtPairingState.Text = Properties.Resources.PairingFailed;
         }
         finally { _listenerStarting = false; }
     }
