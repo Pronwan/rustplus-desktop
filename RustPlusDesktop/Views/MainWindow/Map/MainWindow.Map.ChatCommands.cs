@@ -15,7 +15,17 @@ public partial class MainWindow
     private const int DiscordDeviceOnColor = 0x57F287;
     private const int DiscordDeviceOffColor = 0xED4245;
     private const int DiscordDeviceUnknownColor = 0x4F545C;
-    private const string DiscordItemIconBase = "https://cdn.rusthelp.com/cdn-cgi/image/width=64,format=png/images/public/";
+    /// <summary>
+    /// Where a device tile's picture comes from, at the size Discord wants.
+    ///
+    /// 128 rather than 64, because Discord normalises a thumbnail to its own
+    /// height whatever arrives — a smaller source does not make the tile shorter,
+    /// it only arrives upscaled and soft. The cloud worker asks for the same
+    /// width for the same reason, and the two must agree: the panel looks
+    /// identical whether the app or the cloud answered, and a difference in
+    /// sharpness is exactly the kind that gets noticed without being understood.
+    /// </summary>
+    private const string DiscordItemIconBase = "https://cdn.rusthelp.com/cdn-cgi/image/width=128,format=png/images/public/";
 
     private void BtnOpenChatCommands_Click(object? sender, System.Windows.RoutedEventArgs? e)
     {
