@@ -191,6 +191,9 @@ public sealed class ChatLine
 
     public bool IsSupporter { get; init; }
 
+    /// <summary>The sender has Cloud Package Plus, which comes with a badge beside the name.</summary>
+    public bool IsPlus { get; init; }
+
     public IReadOnlyList<string> Roles { get; init; } = Array.Empty<string>();
 
     public DateTime? SentAt { get; init; }
@@ -294,6 +297,7 @@ public sealed class ChatLine
         Mentions = Mentions,
         MentionsMe = MentionsMe,
         IsSupporter = IsSupporter,
+        IsPlus = IsPlus,
         NameColor = NameColor,
         IsMine = IsMine,
         ReplyTo = ReplyTo,

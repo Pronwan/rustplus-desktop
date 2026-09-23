@@ -9247,6 +9247,11 @@
                                                                             <TextBlock Text="{Binding RoleBadge.DisplayText}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding RoleBadge.ForegroundBrush}" />
                                                                         </Border>
 
+                                                                        <!--  Cloud Package Plus badge.  -->
+                                                                        <Border x:Name="PlusBadge" Visibility="{Binding IsPlus, Converter={StaticResource BoolToVisibility}}" Background="#26F59E0B" BorderBrush="#66F59E0B" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="Cloud Package Plus">
+                                                                            <TextBlock Text="PLUS" FontSize="8.5" FontWeight="Bold" Foreground="#FFFBBF24" />
+                                                                        </Border>
+
                                                                         <!-- Bot / Command badge -->
                                                                         <Border x:Name="BotBadge" Visibility="{Binding IsBotOrCommand, Converter={StaticResource BoolToVisibility}}" Background="#254660" BorderBrush="#3B6B91" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
                                                                             <TextBlock Text="BOT" FontSize="8.5" FontWeight="Bold" Foreground="#FF3FD7FF" />

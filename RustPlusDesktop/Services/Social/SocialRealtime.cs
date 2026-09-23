@@ -368,6 +368,7 @@ public static class SocialRealtime
                 Mentions = mentions,
                 MentionsMe = SocialApi.MentionsOwnAccount(mentions),
                 IsSupporter = isSupporter,
+                IsPlus = sender?["is_plus"]?.Value<bool>() == true,
                 NameColor = sender?["name_color"]?.ToString(),
                 IsMine = SocialApi.IsOwnSender(senderId ?? sender?["id"]?.ToString()),
                 ReplyTo = ParseReply(data),

@@ -189,6 +189,7 @@ public partial class MainWindow
                     OnChanged(nameof(AuthorBrush));
                     OnChanged(nameof(RoleBadge));
                     OnChanged(nameof(HasRoleBadge));
+                    OnChanged(nameof(IsPlus));
                     OnChanged(nameof(HasReply));
                     OnChanged(nameof(ReplyAuthor));
                     OnChanged(nameof(ReplyExcerpt));
@@ -218,6 +219,9 @@ public partial class MainWindow
         public RoleBadgeInfo? RoleBadge => _sourceLine?.RoleBadge;
 
         public bool HasRoleBadge => _sourceLine?.HasRoleBadge == true;
+
+        /// <summary>Cloud Package Plus badge. Room lines only: in-game chat carries no plan.</summary>
+        public bool IsPlus => _sourceLine?.IsPlus == true;
 
         /// <summary>Whether the row answers another message.</summary>
         public bool HasReply => _sourceLine?.HasReply == true;

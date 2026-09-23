@@ -800,6 +800,9 @@ public static class SocialApi
                         Mentions = mentions,
                         MentionsMe = MentionsOwnAccount(mentions),
                         IsSupporter = isSupporter,
+                        IsPlus = sender.ValueKind == JsonValueKind.Object
+                                 && sender.TryGetProperty("is_plus", out var plus)
+                                 && plus.ValueKind == JsonValueKind.True,
                         NameColor = Str(sender, "name_color"),
                         IsMine = IsOwnSender(Str(row, "sender_id") ?? Str(sender, "id")),
                         ReplyTo = ParseReply(row),
