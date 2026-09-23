@@ -30,7 +30,30 @@ public partial class MainWindow
     /// into a couple of seconds.
     /// </summary>
     private string? _cloudHeldServerKey;
+
+    /// <summary>
+    /// The profile the Rust+ socket actually connected to when the hold was taken.
+    ///
+    /// The lease is renewed only while this very server is still connected. Asking
+    /// whether the *selected* server is connected is not the same question: the app
+    /// can be online and connected to another server, and renewing then kept the
+    /// cloud silent on a server this app had already left.
+    /// </summary>
+    private ServerProfile? _cloudHeldProfile;
     private DispatcherTimer? _cloudLeaseHeartbeatTimer;
+
+    private static string CloudServerKeyOf(ServerProfile profile) => $"{profile.Host}-{profile.Port}";
+
+    private bool IsStillConnectedToHeldServer()
+    {
+        var profile = _cloudHeldProfile;
+        var key = _cloudHeldServerKey;
+
+        return profile != null
+            && profile.IsConnected
+            && !string.IsNullOrWhiteSpace(key)
+            && string.Equals(CloudServerKeyOf(profile), key, StringComparison.OrdinalIgnoreCase);
+    }
 
     private void StartCloudLeaseHeartbeatTimer()
     {
@@ -41,14 +64,15 @@ public partial class MainWindow
         };
         _cloudLeaseHeartbeatTimer.Tick += (s, e) =>
         {
-            var key = _cloudHeldServerKey;
-            if (!string.IsNullOrWhiteSpace(key) && _vm?.Selected?.IsConnected == true)
+            if (IsStillConnectedToHeldServer())
             {
-                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(key);
+                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey!);
             }
             else
             {
-                StopCloudLeaseHeartbeatTimer();
+                // Not connected to it any more: hand it back now rather than let the
+                // cloud wait out the lease on a server nobody here is driving.
+                ReleaseCloudHold();
             }
         };
         _cloudLeaseHeartbeatTimer.Start();
@@ -60,12 +84,14 @@ public partial class MainWindow
         _cloudLeaseHeartbeatTimer = null;
     }
 
-    private void ClaimCloudHold(string? serverKey)
+    /// <summary>Tell the cloud this app is now driving the server it just connected to.</summary>
+    private void ClaimCloudHold(ServerProfile? connected)
     {
-        if (string.IsNullOrWhiteSpace(serverKey))
+        var serverKey = connected == null ? null : CloudServerKeyOf(connected);
+
+        if (connected == null || string.IsNullOrWhiteSpace(connected.Host) || connected.Port <= 0)
         {
-            _cloudHeldServerKey = null;
-            StopCloudLeaseHeartbeatTimer();
+            ReleaseCloudHold();
             return;
         }
 
@@ -75,7 +101,8 @@ public partial class MainWindow
         }
 
         _cloudHeldServerKey = serverKey;
-        _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(serverKey);
+        _cloudHeldProfile = connected;
+        _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(serverKey!);
         StartCloudLeaseHeartbeatTimer();
     }
 
@@ -84,6 +111,7 @@ public partial class MainWindow
     {
         StopCloudLeaseHeartbeatTimer();
         var key = _cloudHeldServerKey;
+        _cloudHeldProfile = null;
         if (string.IsNullOrWhiteSpace(key)) return;
 
         _cloudHeldServerKey = null;
@@ -355,7 +383,7 @@ public partial class MainWindow
             // A soft connection is still the desktop owner. Without this takeover
             // the cloud worker keeps its lease and both clients answer the same chat.
             var connectedKey = GetServerKey();
-            ClaimCloudHold(connectedKey);
+            ClaimCloudHold(profile);
             if (!string.IsNullOrWhiteSpace(connectedKey))
             {
                 _ = Services.Cloud.CloudChatCommandSync.SyncAsync(profile, connectedKey);
@@ -732,7 +760,7 @@ public partial class MainWindow
             // duplicate connection until the next heartbeat, which is not worth
             // holding up a connect over, and the lease expires on its own anyway.
             var connectedKey = GetServerKey();
-            ClaimCloudHold(connectedKey);
+            ClaimCloudHold(connectedProfile);
 
             // Send the command words up so the cloud answers to exactly what this
             // user configured. Without it a teammate would get different replies

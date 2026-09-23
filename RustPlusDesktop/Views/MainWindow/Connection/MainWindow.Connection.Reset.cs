@@ -27,6 +27,13 @@ public partial class MainWindow
     private async Task HardResetAsync(bool reconnect = false)
     {
         _connectedProfile = null;
+
+        // Leaving the server for good (e.g. picking another one in the list) means
+        // this app no longer drives it, so the cloud gets it back now. A reconnect
+        // keeps the hold: the lease timer releases it if the reconnect never lands.
+        if (!reconnect)
+            ReleaseCloudHold();
+
         // 1) Laufende Polls/Tokens abbrechen
         CancelConnectionPolling();
         try { StopDynPolling(clearKnown: !reconnect); } catch { }

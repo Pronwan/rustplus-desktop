@@ -15,7 +15,17 @@ public partial class MainWindow
     private const int DiscordDeviceOnColor = 0x57F287;
     private const int DiscordDeviceOffColor = 0xED4245;
     private const int DiscordDeviceUnknownColor = 0x4F545C;
-    private const string DiscordItemIconBase = "https://cdn.rusthelp.com/cdn-cgi/image/width=64,format=png/images/public/";
+    /// <summary>
+    /// Where a device tile's picture comes from, at the size Discord wants.
+    ///
+    /// 128 rather than 64, because Discord normalises a thumbnail to its own
+    /// height whatever arrives — a smaller source does not make the tile shorter,
+    /// it only arrives upscaled and soft. The cloud worker asks for the same
+    /// width for the same reason, and the two must agree: the panel looks
+    /// identical whether the app or the cloud answered, and a difference in
+    /// sharpness is exactly the kind that gets noticed without being understood.
+    /// </summary>
+    private const string DiscordItemIconBase = "https://cdn.rusthelp.com/cdn-cgi/image/width=128,format=png/images/public/";
 
     private void BtnOpenChatCommands_Click(object? sender, System.Windows.RoutedEventArgs? e)
     {
@@ -975,6 +985,30 @@ public partial class MainWindow
         return lines.ToString().TrimEnd();
     }
 
+    /// <summary>
+    /// The panel's heading, worded exactly as the cloud words it.
+    ///
+    /// The same panel is answered by whichever of the two is awake, so a
+    /// difference here reads as two different features rather than one. The page
+    /// line is left out when there is only one page — saying "Page 1 of 1" is
+    /// answering a question nobody asked — and the server is named because a
+    /// panel sitting in a Discord channel carries no other clue which of
+    /// somebody's servers it belongs to.
+    /// </summary>
+    private string BuildDiscordPanelHeading(int currentPage, int pageCount, int deviceCount)
+    {
+        var subtitle = new List<string>();
+
+        var serverName = _vm?.Selected?.Name;
+        if (!string.IsNullOrWhiteSpace(serverName)) subtitle.Add($"-# {serverName}");
+
+        if (pageCount > 1) subtitle.Add($"-# Page {currentPage + 1} of {pageCount} · {deviceCount} devices");
+
+        return subtitle.Count == 0
+            ? "## 📋 Paired Smart Switches"
+            : $"## 📋 Paired Smart Switches\n{string.Join("\n", subtitle)}";
+    }
+
     public List<Dictionary<string, object?>> GetSmartSwitchControlsForDiscord(string? serverId = null, int page = 0)
     {
         var switches = _vm?.Selected?.AllDevices
@@ -996,7 +1030,7 @@ public partial class MainWindow
                     new()
                     {
                         ["type"] = 10,
-                        ["content"] = $"## 📋 Paired Smart Switches\nPage {currentPage + 1}/{pageCount}",
+                        ["content"] = BuildDiscordPanelHeading(currentPage, pageCount, switches.Count),
                     },
                 },
             },

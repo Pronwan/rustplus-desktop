@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.0.4 HOTFIX -->
+                            <!-- v10.0.5 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_0_4"
+                            <Border x:Name="Card_v10_0_5"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,39 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.0.5 | Cloud Hold Lifecycle &amp; Discord Map Rendering Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Accurate Cloud 24/7 Hold Lifecycle:</Run>
+                                        The lease heartbeat now strictly tracks the connected server profile rather than whichever server is highlighted in the list. Switching servers or disconnecting releases the hold immediately, preventing cloud silence or deadlocks.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Discord Map Rendering Race Fix:</Run>
+                                        Map commands now cleanly await image rendering and upload before closing the Discord response, preventing placeholder captions from overwriting map embeds.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Discord Device Icons &amp; Headers:</Run>
+                                        Discord bot device listings and panel headers now match cloud formatting and request full-size icons.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.0.4 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_0_4"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.0.4 | Cloud Reliability, Discord Controls &amp; Clan Status Hotfix"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
@@ -266,17 +299,17 @@
                             <!-- ============================================== -->
                             <Border x:Name="Card_v10_0_3"
                                     Background="{DynamicResource SurfaceAlt}"
-                                    BorderBrush="{DynamicResource Accent}"
-                                    BorderThickness="1.5"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
                                     CornerRadius="12"
                                     Padding="16"
                                     Margin="0,0,0,16">
                                 <StackPanel>
                                     <Grid Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
-                                                <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
-                                            </Border>
+
+
+
                                             <TextBlock Text="v10.0.3 | Cloud 24/7 &amp; Lease Dominance Hotfix"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
