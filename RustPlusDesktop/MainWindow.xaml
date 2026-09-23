@@ -9247,9 +9247,9 @@
                                                                             <TextBlock Text="{Binding RoleBadge.DisplayText}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding RoleBadge.ForegroundBrush}" />
                                                                         </Border>
 
-                                                                        <!--  Cloud Package Plus badge.  -->
-                                                                        <Border x:Name="PlusBadge" Visibility="{Binding IsPlus, Converter={StaticResource BoolToVisibility}}" Background="#26F59E0B" BorderBrush="#66F59E0B" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="Cloud Package Plus">
-                                                                            <TextBlock Text="PLUS" FontSize="8.5" FontWeight="Bold" Foreground="#FFFBBF24" />
+                                                                        <!--  Plan badge: label and colour come from the plan, as configured on the plans admin page.  -->
+                                                                        <Border x:Name="PlanBadge" Visibility="{Binding HasPlanBadge, Converter={StaticResource BoolToVisibility}}" Background="{Binding SourceLine.BadgeBackgroundBrush}" BorderBrush="{Binding SourceLine.BadgeBorderBrush}" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="{Binding SourceLine.BadgeLabel}">
+                                                                            <TextBlock Text="{Binding SourceLine.BadgeLabel}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding SourceLine.BadgeForegroundBrush}" Typography.Capitals="AllSmallCaps" />
                                                                         </Border>
 
                                                                         <!-- Bot / Command badge -->

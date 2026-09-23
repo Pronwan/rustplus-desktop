@@ -191,8 +191,40 @@ public sealed class ChatLine
 
     public bool IsSupporter { get; init; }
 
-    /// <summary>The sender has Cloud Package Plus, which comes with a badge beside the name.</summary>
-    public bool IsPlus { get; init; }
+    /// <summary>
+    /// The badge the sender's plan puts beside their name, exactly as an admin configured it on
+    /// the plans page: a label and a #RRGGBB colour. Null when the plan carries no badge.
+    /// </summary>
+    public string? BadgeLabel { get; init; }
+
+    public string? BadgeColor { get; init; }
+
+    public bool HasBadge => !string.IsNullOrWhiteSpace(BadgeLabel) && ParseBadgeColor(BadgeColor) is not null;
+
+    public Brush? BadgeForegroundBrush => BadgeBrush(0xFF);
+
+    public Brush? BadgeBackgroundBrush => BadgeBrush(0x26);
+
+    public Brush? BadgeBorderBrush => BadgeBrush(0x66);
+
+    private Brush? BadgeBrush(byte alpha)
+    {
+        if (ParseBadgeColor(BadgeColor) is not Color color) return null;
+
+        var brush = new SolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
+        brush.Freeze();
+        return brush;
+    }
+
+    /// <summary>A #RRGGBB colour, or null for anything else - a bad value hides the badge rather than failing.</summary>
+    private static Color? ParseBadgeColor(string? hex)
+    {
+        if (string.IsNullOrWhiteSpace(hex) || hex.Length != 7 || hex[0] != '#') return null;
+
+        return int.TryParse(hex.AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var rgb)
+            ? Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb)
+            : null;
+    }
 
     public IReadOnlyList<string> Roles { get; init; } = Array.Empty<string>();
 
@@ -297,7 +329,8 @@ public sealed class ChatLine
         Mentions = Mentions,
         MentionsMe = MentionsMe,
         IsSupporter = IsSupporter,
-        IsPlus = IsPlus,
+        BadgeLabel = BadgeLabel,
+        BadgeColor = BadgeColor,
         NameColor = NameColor,
         IsMine = IsMine,
         ReplyTo = ReplyTo,
