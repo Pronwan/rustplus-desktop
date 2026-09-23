@@ -496,23 +496,6 @@
                                         </TextBlock>
                                     </Border>
 
-                                    <!-- Backers: quiet, but visible enough to read as a thank-you -->
-                                    <Border Background="#14FFC14D" BorderBrush="#4DFFC14D" BorderThickness="1" CornerRadius="8"
-                                            Padding="12,9" Margin="0,0,0,14" HorizontalAlignment="Left">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="Heart24" Foreground="#FFC14D" FontSize="15"
-                                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="Big shoutout to our September backers"
-                                                           FontSize="11" FontWeight="SemiBold" Foreground="#FFC14D"
-                                                           Opacity="0.9"/>
-                                                <TextBlock Text="Søster Frank Den Koselige Sauen  ·  Donald Farrar"
-                                                           FontSize="13" FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource TextPrimary}" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-
                                     <!-- Widget Overlay -->
                                     <StackPanel Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
