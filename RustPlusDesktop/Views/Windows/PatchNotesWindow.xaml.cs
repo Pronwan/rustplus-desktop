@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v10.0.4", Title = "Cloud Reliability, Discord Controls & Clan Status", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_0_4" },
+                new PatchVersionNavModel { Version = "v10.0.5", Title = "Cloud Hold Lifecycle & Discord Map Rendering", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_0_5" },
+                new PatchVersionNavModel { Version = "v10.0.4", Title = "Cloud Reliability, Discord Controls & Clan Status", Category = "Hotfix", TargetCardName = "Card_v10_0_4" },
                 new PatchVersionNavModel { Version = "v10.0.3", Title = "Cloud 24/7 & Lease Dominance", Category = "Hotfix", TargetCardName = "Card_v10_0_3" },
                 new PatchVersionNavModel { Version = "v10.0.2", Title = "Patch Notes Fixes", Category = "Hotfix", TargetCardName = "Card_v10_0_2" },
                 new PatchVersionNavModel { Version = "v10.0.1", Title = "Widget Overlay Rework", Category = "Hotfix", TargetCardName = "Card_v10_0_1" },
