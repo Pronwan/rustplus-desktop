@@ -202,8 +202,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "${{ steps.version.outputs.tag }}"
-          $title = "RustPlusDesk ${{ steps.version.outputs.version }}"
-          $notes = "Automated RustPlusDesk release for $tag."
+          $title = "Rust+ Desktop ${{ steps.version.outputs.version }}"
+          $notes = "Automated Rust+ Desktop release for $tag."
           $assets = @(
             Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -File -Recurse
           ) | Select-Object -ExpandProperty FullName -Unique
