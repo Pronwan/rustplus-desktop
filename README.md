@@ -2,8 +2,6 @@
 [![Discord](https://img.shields.io/badge/Discord-Rust²%20|%20Rust%2B%20Desktop-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/v4X584wye4)
 [![Cloud](https://github.com/Pronwan/rustplus-desktop/blob/master/cloud.png?raw=true)](https://rustplusdesktop.cloud)
 
-[![Donate](./RustPlusDesktop/Assets/Images/donate.png)](https://www.patreon.com/c/Pronwan)
-
 
 # Rust+ Desktop App (Unofficial)
 
@@ -43,6 +41,7 @@ so you don’t have to install dependencies manually.
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
+[![YouTube V10](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/RustPlusv10.jpg)](https://www.youtube.com/watch?v=TOKSoXduyCg)
 [![YouTube V9](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
 [![YouTube V8](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
 [![YouTube V7](https://github.com/Pronwan/rustplus-desktop/blob/master/Thumbnail.png?raw=true)](https://www.youtube.com/watch?v=dajHSihKwQs)
@@ -111,20 +110,20 @@ Alarms now tell you when they actually happened, and stop repeating themselves.
 • **A warning when the Alexa link dies** — Amazon invalidates the connection whenever the skill is disabled or linked again elsewhere. Voice control keeps working, so the only sign was that raid alerts silently stopped arriving. The app now says so on startup and tells you how to relink.
 
 ##💬 Community**
-• **Chat and unread fixes** — supporter and public messages no longer leak into each other's feed, slow mode shows the remaining wait instead of a generic failure, and the unread badge settles on the right number after a burst of messages or a pending friend request.
+• **Chat and unread fixes** — Subscriber and public messages no longer leak into each other's feed, slow mode shows the remaining wait instead of a generic failure, and the unread badge settles on the right number after a burst of messages or a pending friend request.
 
 
 # 🚀 RustPlus Desktop 9.1
 The Community Hub is here — and the Wipe Tracker no longer floods your connection.
 
 ## 🌐 Community Hub
-· Global chat, plus a separate supporter room
+· Global chat, plus a separate Subscriber room
 · Group finding with a Steam profile preview before you answer
 · Friend list by Steam ID — the message request and the friend request are two separate decisions, so nobody can be spammed into a conversation
 · Inbox with unread counts, blocking and reporting
 · Replies to individual messages, with a quote and a jump back to the original
 · Translate any message into your app language from the right-click menu
-· Supporter name colours — eight of them, readable on both the dark and light theme
+· SUbscriber name colours — eight of them, readable on both the dark and light theme
 
 ## 🗺️ Farm Routes on the Map
 · Draw routes, name them, colour them, show or hide them
@@ -641,15 +640,15 @@ By simply creating a free account via Email or Discord, you unlock our new cloud
 ✔️ Basic Discord: Get basic webhook alerts sent straight to your Discord server.
 ✔️ Web Portal Access: Manage your account via our new dashboard at rustplusdesktop.onrender.com/dashboard.
 
-**⭐ 3. Supporter Cloud**
-For clans, large groups, and power users, the Supporter Tier unlocks the ultimate Rust+ experience!
+**⭐ 3. Subscriber Cloud**
+For clans, large groups, and power users, the Cloud Package Supporter Tier unlocks the ultimate Rust+ experience!
 
 🌟 Pro Map Sharing: Up to 3 MB of overlay data, 10 Bases, limitless devices and 5 Screenshots per base.
 🌟 Chat Master System: One person's client acts as the "Master" to prevent duplicate chat commands and raid alerts for the whole team. It intelligently hands off master status to another team member when the app is closed!
 🌟 Advanced Discord Bot: A bidirectional Discord Bot with custom command permissions, raid alerts, and event queries directly from your Discord server.
 🌟 Early Beta Access: Get early access to test versions via our Discord.
 
-Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Supporter Roles (you can also create an account or link discord through the app)
+Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Subscriber Roles (you can also create an account or link discord through the app)
 
 
 # Rust+ Desktop v5.5.0: Custom Timers & Shop Overhaul 🚀
@@ -1094,11 +1093,11 @@ Open an [Issue](../../issues) or create a Pull Request.
 
 
 
-## Support?
+## Subscribe?
 
 
 
 Sure, why not :) 
 
-**https://streamelements.com/pronwan/tip**
+**https://rustplusdesktop.cloud/pricing**
 
