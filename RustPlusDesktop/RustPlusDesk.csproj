@@ -396,7 +396,7 @@
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
     <ItemGroup>
-      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" Exclude="$(MapParserPublishDir)modules\glbWorker.js" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)app.js" Condition="Exists('$(MapParserPublishDir)app.js')" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)build-client.mjs" Condition="Exists('$(MapParserPublishDir)build-client.mjs')" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)package.json" Condition="Exists('$(MapParserPublishDir)package.json')" />
