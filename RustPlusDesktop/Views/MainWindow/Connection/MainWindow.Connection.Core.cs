@@ -207,7 +207,7 @@ public partial class MainWindow
                     _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                     
                     if (!string.IsNullOrWhiteSpace(st.TimeString))
-                        _vm.ServerTime = st.TimeString;
+                        _vm.UpdateServerTime(st.TimeString, st.GameHours, st.Sunrise, st.Sunset);
                 }
             }
         }
@@ -434,7 +434,7 @@ public partial class MainWindow
                         vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
                         
                         if (!string.IsNullOrWhiteSpace(st.TimeString))
-                            vm.ServerTime = st.TimeString;
+                            vm.UpdateServerTime(st.TimeString, st.GameHours, st.Sunrise, st.Sunset);
                     }
                 }
             }
