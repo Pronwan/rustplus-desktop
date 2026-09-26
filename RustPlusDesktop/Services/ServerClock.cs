@@ -8,12 +8,15 @@ internal sealed class ServerClock
     public double NightSpeed { get; private set; } = 12.0 / 10.0;
     public double Sunrise { get; private set; } = 8;
     public double Sunset { get; private set; } = 20;
+    public bool IsPaused { get; private set; }
     private DateTime? _sampleTime;
     private double _sampleHours;
+    private double? _reportedSpeed;
 
     public bool IsDay(double hours) => hours >= Sunrise && hours < Sunset;
 
-    public void Observe(double hours, DateTime now, double? sunrise = null, double? sunset = null)
+    public void Observe(double hours, DateTime now, double? sunrise = null, double? sunset = null,
+        double? dayLengthMinutes = null, double? timeScale = null)
     {
         if (!double.IsFinite(hours)) return;
         if (sunrise.HasValue && sunset.HasValue && double.IsFinite(sunrise.Value)
@@ -24,6 +27,31 @@ internal sealed class ServerClock
             Sunset = sunset.Value;
         }
         hours = ((hours % 24) + 24) % 24;
+        double reportedSpeed = 24 * (timeScale ?? double.NaN) / (dayLengthMinutes ?? double.NaN);
+        bool wasPaused = IsPaused;
+        IsPaused = false;
+        if (dayLengthMinutes.HasValue && double.IsFinite(dayLengthMinutes.Value) && dayLengthMinutes > 0
+            && timeScale.HasValue && double.IsFinite(timeScale.Value) && timeScale >= 0 && double.IsFinite(reportedSpeed))
+        {
+            IsPaused = reportedSpeed == 0;
+            if (IsPaused)
+            {
+                _sampleTime = null;
+                return;
+            }
+            if (_reportedSpeed != reportedSpeed)
+            {
+                // Retain the observed curve correction when the server changes scale or cycle length.
+                DaySpeed = _reportedSpeed.HasValue ? DaySpeed * (reportedSpeed / _reportedSpeed.Value) : reportedSpeed;
+                NightSpeed = _reportedSpeed.HasValue ? NightSpeed * (reportedSpeed / _reportedSpeed.Value) : reportedSpeed;
+                _reportedSpeed = reportedSpeed;
+                _sampleTime = null;
+            }
+        }
+        if (wasPaused) _sampleTime = null;
+        if (DaySpeed <= 0) DaySpeed = 12.0 / 50.0;
+        if (NightSpeed <= 0) NightSpeed = 12.0 / 10.0;
+        // ponytail: phase-average curve estimate; use the exact curve if the protocol ever exposes it.
         if (_sampleTime.HasValue)
         {
             double minutes = (now - _sampleTime.Value).TotalMinutes;
@@ -45,6 +73,7 @@ internal sealed class ServerClock
 
     public double Advance(double hours, double minutes)
     {
+        if (IsPaused) return hours;
         // Split at the boundary so extrapolation uses the new phase's speed.
         double speed = IsDay(hours) ? DaySpeed : NightSpeed;
         double boundary = IsDay(hours) ? Sunset : hours >= Sunset ? 24 + Sunrise : Sunrise;

@@ -93,6 +93,12 @@ public class MainViewModel : INotifyPropertyChanged
         }
 
         // Update countdown
+        if (_serverClock.IsPaused)
+        {
+            IsDay = _serverClock.IsDay(hours);
+            TimeUntilNextPhase = "";
+            return;
+        }
         if (_serverClock.IsDay(hours))
         {
             IsDay = true;
@@ -580,13 +586,15 @@ public class MainViewModel : INotifyPropertyChanged
 
     private ServerClock _serverClock = new();
 
-    public void UpdateServerTime(string timeStr, double? gameHours, double? sunrise = null, double? sunset = null)
+    public void UpdateServerTime(string timeStr, double? gameHours, double? sunrise = null, double? sunset = null,
+        double? dayLengthMinutes = null, double? timeScale = null)
     {
-        UpdateInGameTimeProperties(timeStr, gameHours, sunrise, sunset);
+        UpdateInGameTimeProperties(timeStr, gameHours, sunrise, sunset, dayLengthMinutes, timeScale);
         OnPropertyChanged(nameof(ServerTime));
     }
 
-    private void UpdateInGameTimeProperties(string timeStr, double? gameHours = null, double? sunrise = null, double? sunset = null)
+    private void UpdateInGameTimeProperties(string timeStr, double? gameHours = null, double? sunrise = null, double? sunset = null,
+        double? dayLengthMinutes = null, double? timeScale = null)
     {
         if (string.IsNullOrWhiteSpace(timeStr) || timeStr == "-" || timeStr == "–")
         {
@@ -616,7 +624,7 @@ public class MainViewModel : INotifyPropertyChanged
                 if (!double.IsFinite(currentHours)) return;
                 currentHours = ((currentHours % 24) + 24) % 24;
                 DateTime now = DateTime.UtcNow;
-                _serverClock.Observe(currentHours, now, sunrise, sunset);
+                _serverClock.Observe(currentHours, now, sunrise, sunset, dayLengthMinutes, timeScale);
 
                 _lastStatusRealTime = now;
                 _lastStatusGameTime = currentHours;

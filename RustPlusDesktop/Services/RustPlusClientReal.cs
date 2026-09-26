@@ -3716,7 +3716,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
 
     public sealed record ServerStatus(int Players, int MaxPlayers, int Queue, string? TimeString,
-        double? GameHours = null, double? Sunrise = null, double? Sunset = null);
+        double? GameHours = null, double? Sunrise = null, double? Sunset = null,
+        double? DayLengthMinutes = null, double? TimeScale = null);
 
     public async Task<ServerStatus?> GetServerStatusAsync(CancellationToken ct = default)
     {
@@ -3899,6 +3900,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         string timeStr = "";
         double? gameHours = null;
         double? sunrise = null, sunset = null;
+        double? dayLengthMinutes = null, timeScale = null;
 
         // ---------- PATH A: Bibliothek (GetInfoAsync / GetTimeAsync) ----------
         try
@@ -3947,6 +3949,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                     var rawTime = Prop(data, "Time");
                     sunrise = ReadDouble(data, "Sunrise");
                     sunset = ReadDouble(data, "Sunset");
+                    dayLengthMinutes = ReadDouble(data, "DayLengthMinutes");
+                    if (Prop(data, "TimeScale") != null) timeScale = ReadDouble(data, "TimeScale");
                     if (rawTime is float or double)
                         gameHours = Convert.ToDouble(rawTime);
                     if (TryReadTimeHHMM(data, out var tA, out var usedA)) { timeStr = tA; }// L($"time(A): {tA} via {usedA}"); }
@@ -4031,6 +4035,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                                 var rawTime = Prop(time, "Time");
                                 sunrise = ReadDouble(time, "Sunrise");
                                 sunset = ReadDouble(time, "Sunset");
+                                dayLengthMinutes = ReadDouble(time, "DayLengthMinutes");
+                                if (Prop(time, "TimeScale") != null) timeScale = ReadDouble(time, "TimeScale");
                                 if (rawTime is float or double)
                                     gameHours = Convert.ToDouble(rawTime);
                                 if (TryReadTimeHHMM(time, out var tB, out var usedB)) { timeStr = tB; }// L($"time(B): {tB} via {usedB}"); }
@@ -4049,7 +4055,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
         // Fallbacks glätten (lieber null als 0/0, damit UI-Poll es ignoriert)
         var tStr = string.IsNullOrWhiteSpace(timeStr) ? null : timeStr;
-        return new ServerStatus(players, maxPlayers, queue, tStr, gameHours, sunrise, sunset);
+        return new ServerStatus(players, maxPlayers, queue, tStr, gameHours, sunrise, sunset, dayLengthMinutes, timeScale);
     }
 
     public async Task SendTeamMessageAsync(string text, CancellationToken ct = default)
