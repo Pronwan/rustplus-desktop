@@ -147,6 +147,7 @@ export const AppHeader: React.FC = () => {
             sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? '#00E5FF' : '#0284C7', height: 2.5 } }}
           >
             <Tab value="workspace" label={isCompact ? 'Breed' : 'Breeding Workspace'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
+            <Tab value="livestock" label={<span>{isCompact ? 'Animals' : 'Livestock'}<Box component="span" sx={{ ml: 0.5, px: 0.5, fontSize: '0.58rem', lineHeight: 1.6, borderRadius: '3px', backgroundColor: '#F59E0B', color: '#111827', fontWeight: 900, verticalAlign: 'middle' }}>BETA</Box></span>} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
             <Tab value="planner" label={isCompact ? 'Planner' : 'Farm Planner'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
             <Tab value="recipes" label={isCompact ? 'Recipes' : 'Tea Recipes'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
             <Tab value="guide" label={isCompact ? 'Guide' : 'Genetics Guide'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />

@@ -73,6 +73,10 @@ export const ITEM_IMAGE_MAP: Record<string, string> = {
   'Advanced Crafting Quality Tea': 'advanced-crafting-quality-tea',
   'Pure Crafting Quality Tea': 'pure-crafting-quality-tea',
 
+  'Milk': 'milk',
+  'Cream': 'cream',
+  'Skimmed Milk': 'skimmed-milk',
+
   'Red Berry': 'red-berry',
   'Green Berry': 'green-berry',
   'Blue Berry': 'blue-berry',
@@ -130,7 +134,7 @@ export const getItemImageSlug = (itemName: string): string => {
   return slug;
 };
 
-export const RUST_RECIPES: Recipe[] = [
+const BASE_RECIPES: Recipe[] = [
   // --- FOOD & BREAD ---
   {
     id: 'bread-loaf',
@@ -297,7 +301,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-max-health-tea',
     ingredients: [{ item: 'Advanced Max Health Tea', quantity: 4 }],
     output: { item: 'Pure Max Health Tea', quantity: 1 },
-    description: 'Increases max health by +20% for 30 minutes.'
+    description: '+20% max health for 20 minutes. +30 hydration.'
   },
 
   // --- TEAS: HEALING ---
@@ -326,7 +330,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-healing-tea',
     ingredients: [{ item: 'Advanced Healing Tea', quantity: 4 }],
     output: { item: 'Pure Healing Tea', quantity: 1 },
-    description: 'Instantly restores 75 HP.'
+    description: 'Restores 10 HP, then heals a large amount over time. +30 hydration.'
   },
 
   // --- TEAS: ORE ---
@@ -355,7 +359,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-ore-tea',
     ingredients: [{ item: 'Advanced Ore Tea', quantity: 4 }],
     output: { item: 'Pure Ore Tea', quantity: 1 },
-    description: 'Increases ore node yield by +50% for 30 minutes.'
+    description: '+50% ore yield for 30 minutes. +30 hydration.'
   },
 
   // --- TEAS: WOOD ---
@@ -384,7 +388,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-wood-tea',
     ingredients: [{ item: 'Advanced Wood Tea', quantity: 4 }],
     output: { item: 'Pure Wood Tea', quantity: 1 },
-    description: 'Increases tree wood yield by +200% for 30 minutes.'
+    description: '+200% wood yield for 30 minutes. +30 hydration.'
   },
 
   // --- TEAS: SCRAP ---
@@ -416,7 +420,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-scrap-tea',
     ingredients: [{ item: 'Advanced Scrap Tea', quantity: 4 }],
     output: { item: 'Pure Scrap Tea', quantity: 1 },
-    description: 'Increases barrel scrap yield by +3 for 30 minutes.'
+    description: '+350% scrap yield for 1 hour. +30 hydration.'
   },
 
   // --- TEAS: HARVESTING / CLOTH ---
@@ -448,7 +452,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-harvesting-tea',
     ingredients: [{ item: 'Advanced Harvesting Tea', quantity: 4 }],
     output: { item: 'Pure Harvesting Tea', quantity: 1 },
-    description: 'Increases plant gather yield by 250% for 30 minutes.'
+    description: '+65% harvesting yield from corpses for 20 minutes. +30 hydration.'
   },
 
   // --- TEAS: ANTI-RAD ---
@@ -480,7 +484,7 @@ export const RUST_RECIPES: Recipe[] = [
     imageSlug: 'pure-anti-rad-tea',
     ingredients: [{ item: 'Advanced Anti-Rad Tea', quantity: 4 }],
     output: { item: 'Pure Anti-Rad Tea', quantity: 1 },
-    description: 'Decreases radiation poisoning by 50 points.'
+    description: '+45% radiation resistance for 30 minutes. +30 hydration.'
   },
 
   // --- RESOURCE & REFINING ---
@@ -587,3 +591,77 @@ export const RUST_RECIPES: Recipe[] = [
     description: 'Rifle ammunition that produces fire on contact.'
   }
 ];
+
+/* ------------------------------------------------------------------ *
+ * Dairy and enriched teas (October 2026 livestock update)
+ *
+ * Every Pure tea except Crafting Quality has a Milky and a Creamy version: one Pure tea plus
+ * three Milk or three Cream. Milk makes the effect last 50% longer; Cream makes it stronger
+ * and shorter. Values verified against the game on 2026-10-01.
+ * ------------------------------------------------------------------ */
+
+const DAIRY_RECIPES: Recipe[] = [
+  {
+    id: 'cream',
+    name: 'Cream',
+    category: 'resource',
+    imageSlug: 'cream',
+    ingredients: [{ item: 'Milk', quantity: 1 }],
+    output: { item: 'Cream', quantity: 1 },
+    description: 'Skim milk: 4 hours in a powered fridge turns each Milk into 1 Cream and 1 Skimmed Milk. Milk comes from tame cows, 1 every 5 minutes at an Ok Yield gene.'
+  }
+];
+
+interface EnrichedTea {
+  /** Tea type as it appears in the item name, e.g. "Ore". */
+  type: string;
+  slug: string;
+  milky: string;
+  creamy: string;
+}
+
+const ENRICHED_TEAS: EnrichedTea[] = [
+  { type: 'Healing', slug: 'healing', milky: 'Restores 10 HP and heals a large amount over time', creamy: 'Restores 18 HP and heals a large amount over time' },
+  { type: 'Max Health', slug: 'max-health', milky: '+20% max health for 30 minutes', creamy: '+26% max health for 16 minutes' },
+  { type: 'Ore', slug: 'ore', milky: '+50% ore yield for 45 minutes', creamy: '+65% ore yield for 24 minutes' },
+  { type: 'Wood', slug: 'wood', milky: '+200% wood yield for 45 minutes', creamy: '+260% wood yield for 24 minutes' },
+  { type: 'Scrap', slug: 'scrap', milky: '+350% scrap yield for 1h 30m', creamy: '+450% scrap yield for 48 minutes' },
+  { type: 'Harvesting', slug: 'harvesting', milky: '+65% harvesting yield for 30 minutes', creamy: '+85% harvesting yield for 16 minutes' },
+  { type: 'Anti-Rad', slug: 'anti-rad', milky: '+45% radiation resistance for 45 minutes', creamy: '+60% radiation resistance for 24 minutes' },
+  { type: 'Cooling', slug: 'cooling', milky: '+20\u00b0 cooling, max core temperature +40\u00b0, for 1h 30m', creamy: '+26\u00b0 cooling, max core temperature +40\u00b0, for 48 minutes' },
+  { type: 'Warming', slug: 'warming', milky: '+15\u00b0 warming, min core temperature 0\u00b0, for 1h 30m', creamy: '+19.5\u00b0 warming, min core temperature 0\u00b0, for 48 minutes' }
+];
+
+function enrichedTeaRecipes(): Recipe[] {
+  return ENRICHED_TEAS.flatMap((tea) => {
+    const pure = `Pure ${tea.type} Tea`;
+    return [
+      {
+        id: `milky-pure-${tea.slug}-tea`,
+        name: `Milky ${pure}`,
+        category: 'tea' as const,
+        imageSlug: `milky-pure-${tea.slug}-tea`,
+        ingredients: [
+          { item: pure, quantity: 1 },
+          { item: 'Milk', quantity: 3 }
+        ],
+        output: { item: `Milky ${pure}`, quantity: 1 },
+        description: `${tea.milky}. +45 hydration, +90 calories. Milk makes the effect last longer.`
+      },
+      {
+        id: `creamy-pure-${tea.slug}-tea`,
+        name: `Creamy ${pure}`,
+        category: 'tea' as const,
+        imageSlug: `creamy-pure-${tea.slug}-tea`,
+        ingredients: [
+          { item: pure, quantity: 1 },
+          { item: 'Cream', quantity: 3 }
+        ],
+        output: { item: `Creamy ${pure}`, quantity: 1 },
+        description: `${tea.creamy}. +30 hydration, +45 calories, +5 HP. Cream makes the effect stronger and shorter.`
+      }
+    ];
+  });
+}
+
+export const RUST_RECIPES: Recipe[] = [...BASE_RECIPES, ...DAIRY_RECIPES, ...enrichedTeaRecipes()];

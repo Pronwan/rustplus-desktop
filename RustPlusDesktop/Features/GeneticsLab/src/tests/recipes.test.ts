@@ -38,3 +38,34 @@ describe('Recipe Engine', () => {
     expect(cloth?.quantity).toBe(1);
   });
 });
+
+describe('Milky and Creamy teas (livestock update)', () => {
+  const engine = new RecipeEngine(RUST_RECIPES);
+  const types = ['Healing', 'Max Health', 'Ore', 'Wood', 'Scrap', 'Harvesting', 'Anti-Rad', 'Cooling', 'Warming'];
+
+  it('adds a Milky and a Creamy version of nine Pure teas', () => {
+    for (const type of types) {
+      expect(RUST_RECIPES.some((r) => r.name === `Milky Pure ${type} Tea`), `Milky ${type}`).toBe(true);
+      expect(RUST_RECIPES.some((r) => r.name === `Creamy Pure ${type} Tea`), `Creamy ${type}`).toBe(true);
+    }
+    expect(RUST_RECIPES.some((r) => r.name.includes('Crafting Quality') && r.name.startsWith('Milky'))).toBe(false);
+  });
+
+  it('expands Milky Pure Healing Tea to the Pure tea\'s berries plus 3 Milk', () => {
+    const base = engine.expandItem('Milky Pure Healing Tea', 1);
+    expect(base).toContainEqual({ item: 'Red Berry', quantity: 64 });
+    expect(base).toContainEqual({ item: 'Milk', quantity: 3 });
+  });
+
+  it('traces Creamy tea cream back to milk', () => {
+    const base = engine.expandItem('Creamy Pure Ore Tea', 2);
+    expect(base).toContainEqual({ item: 'Milk', quantity: 6 });
+    expect(base.some((i) => i.item === 'Cream')).toBe(false);
+  });
+
+  it('has an icon for every new tea', () => {
+    for (const r of RUST_RECIPES.filter((r) => /^(Milky|Creamy) /.test(r.name))) {
+      expect(r.imageSlug).toBe(r.id);
+    }
+  });
+});
