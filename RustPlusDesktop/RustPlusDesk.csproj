@@ -355,6 +355,12 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
+  <!-- Proprietary Private Submodule Reference (when present) -->
+  <ItemGroup Condition="Exists('..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj')">
+    <ProjectReference Include="..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj" />
+    <Compile Remove="Services\Auth\IRustCompanionAuthProvider.cs" />
+  </ItemGroup>
+
     <ItemGroup>
       <!--
         No ProjectReference to MapParser on purpose.

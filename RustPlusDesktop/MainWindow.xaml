@@ -1399,6 +1399,22 @@
                                     <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}">
                                         <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
                                         <Separator />
+                                        <MenuItem Click="BtnCheckTokenStatus_Click" Header="Check Token Status &amp; Validity">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="ShieldCheckmark24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Click="BtnLogoutThisDevice_Click" Header="Logout (This Device)">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="SignOut24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Click="BtnLogoutAllDevices_Click" Header="Logout All Devices (Invalidate)">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="DismissCircle24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator />
                                         <MenuItem Click="BtnResetPairing_Click" Header="{DynamicResource ResetPairingConfig}" />
                                         <MenuItem Click="BtnResetAndListen_Click" Header="{DynamicResource ResetListenPairing}" />
                                         <MenuItem Click="BtnResetAndListenEdge_Click" Header="{DynamicResource ResetListenEdge}" />
@@ -1417,7 +1433,7 @@
                                         ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
                                         IsEnabled="{Binding CanStartPairing}"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}" />
+                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}" />
 
                                     <ui:Button
                                         x:Name="BtnStopPairing"
@@ -1427,7 +1443,7 @@
                                         Content="{DynamicResource Stop}"
                                         ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}" />
 
                                     <ui:Button
                                         x:Name="BtnFcmInfo"

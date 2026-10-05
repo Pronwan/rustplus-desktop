@@ -52,6 +52,14 @@ jobs:
       - name: Checkout rustplus-desktop
         uses: actions/checkout@v4
 
+      - name: Checkout RustPlus.Auth (Private Submodule)
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: 'JawadYzbk/rustplus-auth-private'
+          token: ${{ secrets.AUTH_SUBMODULE_TOKEN || secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
+          path: Submodules/RustPlus.Auth
+
       - name: Checkout MapParser
         uses: actions/checkout@v4
         with:

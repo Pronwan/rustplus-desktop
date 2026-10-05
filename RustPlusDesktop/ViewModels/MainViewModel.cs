@@ -144,10 +144,11 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsPairingRunning
     {
         get => _isPairingRunning;
-        set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(CanStopPairing)); }
     }
 
     public bool CanStartPairing => !_isPairingRunning && !IsBusy && !IsPairingBusy;
+    public bool CanStopPairing => _isPairingRunning || _isPairingBusy;
 
     private bool _isTrackingActive;
     public bool IsTrackingActive
@@ -269,7 +270,7 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsPairingBusy
     {
         get => _isPairingBusy;
-        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(CanStopPairing)); }
     }
 
     // Stays true while the listener is down because the last start/listen failed; the status row

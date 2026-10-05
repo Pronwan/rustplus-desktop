@@ -46,6 +46,19 @@ public partial class MainWindow
     {
         void Log(string m) => Dispatcher.BeginInvoke(new Action(() => AppendLog(m)));
 
+        // Verify companion token validity against Facepunch API
+        var tokenCheck = await RustCompanionAuthService.CheckTokenStatusAsync(ct: ct).ConfigureAwait(false);
+        if (tokenCheck.Status == RustPlusTokenStatus.LoggedOutOrInvalid || tokenCheck.Status == RustPlusTokenStatus.Expired)
+        {
+            Log($"[fcm-health] Companion token is invalid or logged out ({tokenCheck.Message}). Prompting for re-pair.");
+            await Dispatcher.InvokeAsync(() =>
+            {
+                _vm.NotifyFcmChanged();
+                PromptForRePair();
+            });
+            return false;
+        }
+
         var report = await FcmSelfTestService.RunAsync(Log, ct: ct).ConfigureAwait(false);
 
         if (report.Outcome == FcmSelfTestOutcome.Healthy)
