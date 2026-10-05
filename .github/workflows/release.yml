@@ -57,6 +57,7 @@ jobs:
         continue-on-error: true
         with:
           repository: 'JawadYzbk/rustplus-auth-private'
+          ref: 'main'
           token: ${{ secrets.AUTH_SUBMODULE_TOKEN || secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
           path: Submodules/RustPlus.Auth
 
