@@ -355,9 +355,13 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AuthSubmoduleProjectPath>$(MSBuildThisFileDirectory)..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj</AuthSubmoduleProjectPath>
+  </PropertyGroup>
+
   <!-- Proprietary Private Submodule Reference (when present) -->
-  <ItemGroup Condition="Exists('..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj')">
-    <ProjectReference Include="..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj" />
+  <ItemGroup Condition="Exists('$(AuthSubmoduleProjectPath)')">
+    <ProjectReference Include="$(AuthSubmoduleProjectPath)" />
     <Compile Remove="Services\Auth\IRustCompanionAuthProvider.cs" />
   </ItemGroup>
 
