@@ -258,6 +258,10 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Atmospheric Rust-Style Sky Dome:</Run>
                                         Replaced flat backgrounds with a time-of-day atmospheric Rayleigh gradient, Mie solar halo, drifting wind clouds, and realistic horizon fog/ocean blending.
                                     </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Genetics Lab — Livestock Breeding:</Run>
+                                        Genetics Lab now features full Livestock Breeding support, allowing you to simulate, calculate, and optimize gene combinations, breeding trees, and traits for livestock alongside plant genetics.
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
 
