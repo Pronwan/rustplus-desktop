@@ -258,10 +258,17 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Atmospheric Rust-Style Sky Dome:</Run>
                                         Replaced flat backgrounds with a time-of-day atmospheric Rayleigh gradient, Mie solar halo, drifting wind clouds, and realistic horizon fog/ocean blending.
                                     </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Genetics Lab — Livestock Breeding:</Run>
                                         Genetics Lab now features full Livestock Breeding support, allowing you to simulate, calculate, and optimize gene combinations, breeding trees, and traits for livestock alongside plant genetics.
                                     </TextBlock>
+
+                                    <!-- Gallery for v10.1.0 -->
+                                    <views:ImageGallery Margin="0,4,0,4">
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/3d_map_bases.jpg" Description="3D Map Base Preview with Fortify imports, elevation validation, and coastal terrain rendering"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/livestock_genetics.png" Description="Livestock Breeding workspace in Genetics Lab with gene tree optimization and traits"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/3d_door_interaction.jpg" Description="Interactive doors, gates, and hatches in 3D Map mode with ground-level walk-through controls"/>
+                                    </views:ImageGallery>
                                 </StackPanel>
                             </Border>
 
