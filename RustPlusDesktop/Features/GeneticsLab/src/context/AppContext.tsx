@@ -4,10 +4,11 @@ import { NotificationProvider } from './NotificationContext.tsx';
 import { WorkspaceProvider, useWorkspace } from './WorkspaceContext.tsx';
 import { CalculationProvider, useCalculation } from './CalculationContext.tsx';
 import { ScannerProvider, useScanner } from './ScannerContext.tsx';
+import { LivestockProvider } from './LivestockContext.tsx';
 import { Sapling } from '../domain/genetics/Sapling.ts';
 import { GeneticsMapGroup } from '../domain/genetics/GeneticsMapGroup.ts';
 
-export type ActiveTab = 'workspace' | 'planner' | 'guide' | 'recipes';
+export type ActiveTab = 'workspace' | 'planner' | 'guide' | 'recipes' | 'livestock';
 
 export const PLANT_TYPES = [
   'hemp',
@@ -317,9 +318,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       <WorkspaceProvider>
         <CalculationProvider>
           <ScannerProvider>
-            <AppInternalBridge>
-              {children}
-            </AppInternalBridge>
+            <LivestockProvider>
+              <AppInternalBridge>
+                {children}
+              </AppInternalBridge>
+            </LivestockProvider>
           </ScannerProvider>
         </CalculationProvider>
       </WorkspaceProvider>

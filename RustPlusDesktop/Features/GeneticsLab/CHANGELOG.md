@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.6.0) (2026-10-02)
+
+### 🚀 Features
+
+* feat(livestock): update genetics rules and add a Rules tab ([41ba649](https://github.com/JawadYzbk/rust-genetics-lab/commit/41ba649ff2a28a95418db646d64b732936b8ad15))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.5.0...v1.6.0
+All notable changes to this project will be documented in this file.
+
+## [1.5.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.5.0) (2026-10-02)
+
+### 🚀 Features
+
+* feat(livestock): show each pair's expected newborn gene by gene ([fe4a417](https://github.com/JawadYzbk/rust-genetics-lab/commit/fe4a417269bead7d249a826ce59a0d2dd9f3dcd0))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.4.0...v1.5.0
+All notable changes to this project will be documented in this file.
+
+## [1.4.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.4.0) (2026-10-02)
+
+### 🚀 Features
+
+* feat(livestock): show sex with icons and set it in one click ([02d5a0a](https://github.com/JawadYzbk/rust-genetics-lab/commit/02d5a0ad85258acf45b54502471496658c07edc8))
+* feat(livestock): mark livestock genetics as beta ([c0c6cf1](https://github.com/JawadYzbk/rust-genetics-lab/commit/c0c6cf1aac083dc7c317cec7b7bb64f044ade93c))
+* feat(livestock): read animal names and never add one animal twice ([c215566](https://github.com/JawadYzbk/rust-genetics-lab/commit/c215566a6494d80e040a5a875f27d355812161f9))
+* feat(recipes): add the Milky and Creamy teas from the livestock update ([4761e33](https://github.com/JawadYzbk/rust-genetics-lab/commit/4761e3311302bb15ce067cf7578e167087834b89))
+* feat(livestock): detect the animal's kind from the panel portrait ([5bc1fee](https://github.com/JawadYzbk/rust-genetics-lab/commit/5bc1fee7b72a39677cc7ac0dbb552c1696dd9f6e))
+* feat(livestock): model hidden gene copies and real inheritance ([ef3c31a](https://github.com/JawadYzbk/rust-genetics-lab/commit/ef3c31ae0b60fc4783cb920beea93f2082a8a56c))
+* feat(livestock): scan livestock genes and suggest breeding pairs ([63263ba](https://github.com/JawadYzbk/rust-genetics-lab/commit/63263bafa105d3585ab499a0609e53d6800ab09b))
+
+### 🐛 Bug Fixes
+
+* fix(livestock): tell lamb from sheep and stay unsure between cow and calf ([360b125](https://github.com/JawadYzbk/rust-genetics-lab/commit/360b12501cc428b05c16de2c1b7cf9b2d97e1255))
+* fix(livestock): read marker numbers, age and condition from the live panel ([7cfd819](https://github.com/JawadYzbk/rust-genetics-lab/commit/7cfd819f16f241b24f28770beed6d59625389294))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.3.1...v1.4.0
+All notable changes to this project will be documented in this file.
+
 ## [1.3.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.3.1) (2026-09-11)
 
 ### 🐛 Bug Fixes

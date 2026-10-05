@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
@@ -793,9 +793,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.IsPairingRunning = true;
-            _vm.IsPairingBusy = true; // Update UI button state
+            _vm.IsPairingBusy = false; // Listener is active and running
             _vm.IsPairingFaulted = false; // a running listener is by definition not faulted
             TxtPairingState.Text = "";
+            _vm.NotifyFcmChanged();
             UpdatePairingGuideSnackbar();
             ScheduleFcmHealthCheck();
         }));
@@ -809,6 +810,10 @@ public partial class MainWindow : WpfUi.FluentWindow
         _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.NotifyFcmChanged();
+            if (!string.IsNullOrEmpty(TrackingService.SteamId64))
+            {
+                ShowInfoSnackbar("Rust+ Companion Connected", $"Linked Steam ID: {TrackingService.SteamId64}", WpfUi.ControlAppearance.Success);
+            }
             _ = StartTutorialOnboardingIfReadyAsync();
         }));
         _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
@@ -4676,17 +4681,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         try
         {
-            if (_pairing.IsRunning)
-            {
-                AppendLog("Stopping pairing listener...");
-                await Task.Run(async () => await _pairing.StopAsync());
-                _vm.IsPairingBusy = false;
-            }
+            AppendLog("Stopping pairing listener...");
+            _listenerStarting = false;
+            await Task.Run(async () => await _pairing.StopAsync());
+            _vm.IsPairingBusy = false;
+            _vm.IsPairingRunning = false;
         }
         catch (Exception ex)
         {
             AppendLog("Error on stop: " + ex.Message);
             _vm.IsPairingBusy = false;
+            _vm.IsPairingRunning = false;
         }
     }
     private const int MaxLogLines = 2000;
@@ -7136,6 +7141,108 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         if (await ResetPairingConfigAsync(stopListenerFirst: true))
             await StartPairingListenerUiWithEdgeAsync(); // der Edge-Flow aus voriger Antwort
+    }
+
+    private async void BtnCheckTokenStatus_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("🔍 Checking Rust+ companion token status with Facepunch...");
+        try
+        {
+            var result = await RustCompanionAuthService.CheckTokenStatusAsync();
+            var icon = result.Status switch
+            {
+                RustPlusTokenStatus.Valid => MessageBoxImage.Information,
+                RustPlusTokenStatus.Expired => MessageBoxImage.Warning,
+                RustPlusTokenStatus.LoggedOutOrInvalid => MessageBoxImage.Error,
+                RustPlusTokenStatus.Missing => MessageBoxImage.Warning,
+                _ => MessageBoxImage.Error
+            };
+
+            var statusTitle = result.Status switch
+            {
+                RustPlusTokenStatus.Valid => "Token Status: Active & Valid",
+                RustPlusTokenStatus.LoggedOutOrInvalid => "Token Status: Invalid / Logged Out",
+                RustPlusTokenStatus.Expired => "Token Status: Expired",
+                RustPlusTokenStatus.Missing => "Token Status: Missing",
+                _ => "Token Status: Error"
+            };
+
+            var details = new System.Text.StringBuilder();
+            details.AppendLine($"Status: {result.Status}");
+            details.AppendLine($"Message: {result.Message}");
+            if (result.SteamId > 0) details.AppendLine($"Steam ID: {result.SteamId}");
+            if (result.Version > 0) details.AppendLine($"Token Version: {result.Version}");
+            if (result.IssuedAtUtc.HasValue) details.AppendLine($"Issued: {result.IssuedAtUtc.Value.ToLocalTime():g}");
+            if (result.ExpiresAtUtc.HasValue) details.AppendLine($"Expires: {result.ExpiresAtUtc.Value.ToLocalTime():g}");
+
+            AppendLog($"[auth-check] {statusTitle} - {result.Message}");
+
+            MessageBox.Show(details.ToString(), statusTitle, MessageBoxButton.OK, icon);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Failed to check token status: {ex.Message}");
+            MessageBox.Show($"Failed to check token: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async void BtnLogoutThisDevice_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Unregister this desktop app from Facepunch push notifications and delete local credentials?\n\nYou will need to pair again to receive notifications.",
+            "Logout (This Device)", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        AppendLog("🔌 Logging out this device from Facepunch push notifications...");
+        try
+        {
+            var (success, msg) = await RustCompanionAuthService.LogoutCurrentDeviceAsync();
+            AppendLog($"[logout] {msg}");
+
+            await ResetPairingConfigAsync(stopListenerFirst: true);
+            _vm.NotifyFcmChanged();
+
+            MessageBox.Show("Successfully logged out this device.\nLocal pairing configuration has been cleared.", "Logged Out", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Logout failed: {ex.Message}");
+            MessageBox.Show($"Logout failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async void BtnLogoutAllDevices_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "⚠️ GLOBAL LOGOUT / INVALIDATE:\n\nThis will invalidate your Rust+ token on Facepunch servers across ALL devices (including mobile phones and other PCs).\n\nAre you sure you want to proceed?",
+            "Logout from All Devices (Invalidate)", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        AppendLog("⚡ Requesting global token invalidation on Facepunch servers...");
+        try
+        {
+            var (success, msg) = await RustCompanionAuthService.LogoutAllDevicesAsync();
+            if (success)
+            {
+                AppendLog($"[auth-invalidate] ✔ {msg}");
+                await ResetPairingConfigAsync(stopListenerFirst: true);
+                _vm.NotifyFcmChanged();
+
+                MessageBox.Show("Your Rust+ token has been invalidated across all devices on Facepunch.\nAll sessions have been revoked.", "All Devices Logged Out", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                AppendLog($"[auth-invalidate] ❌ {msg}");
+                MessageBox.Show($"Failed to invalidate token on Facepunch:\n{msg}", "Invalidation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Failed to invalidate: {ex.Message}");
+            MessageBox.Show($"Failed to invalidate: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private CancellationTokenSource? _statusCts;

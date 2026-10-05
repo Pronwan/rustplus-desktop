@@ -114,7 +114,7 @@
                             <TextBlock Text="Release History" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <Border HorizontalAlignment="Right" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2">
-                            <TextBlock x:Name="TxtVersionCountBadge" Text="47 Releases" FontSize="10" Foreground="{DynamicResource TextSubtle}"/>
+                            <TextBlock x:Name="TxtVersionCountBadge" Text="48 Releases" FontSize="10" Foreground="{DynamicResource TextSubtle}"/>
                         </Border>
                     </Grid>
 
@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.0.5 HOTFIX -->
+                            <!-- v10.1.0 MAJOR UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_0_5"
+                            <Border x:Name="Card_v10_1_0"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,8 +229,64 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v10.0.5 | Cloud Hold Lifecycle &amp; Discord Map Rendering Hotfix"
+                                            <TextBlock Text="v10.1.0 | 3D Map Rework, Fortify Base Imports &amp; High-Precision Terrain"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fortify Base Imports &amp; Placement Workflow:</Run>
+                                        Directly import custom base designs from Fortify (.json) with multi-layer building support. Features instanced GLB models, real-time foundation elevation validation, terrain-fit analysis, placement blockers detection, and full support checks.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Foundation Tiers &amp; Visual Controls:</Run>
+                                        Toggle between Twig, Wood, Stone, Sheet Metal, and Armored (Top Tier) materials with accurate transparency controls, ramp foot burial handling, and an option to force-place bases despite terrain warnings.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; In-Scene Door &amp; Gate Interactions:</Run>
+                                        Interact with hinged doors, double doors, garage doors, cell gates, and floor hatches directly in the 3D map, accompanied by a first-person player-height walk-through inspection mode.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; 1-Meter High-Precision Terrain Raycasting:</Run>
+                                        Ground raycasting now tests against exact 1-meter elevation height layers rather than coarse ~8-meter polygons, ensuring pixel-perfect orbit centering, look-at coordinate lookups, and building placement.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Dynamic Camera-Following Terrain Detail Patch:</Run>
+                                        Refined the 1-meter detail patch around the camera with aligned map texture projection that preserves fidelity across steep hills, cliffs, and roads.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Atmospheric Rust-Style Sky Dome:</Run>
+                                        Replaced flat backgrounds with a time-of-day atmospheric Rayleigh gradient, Mie solar halo, drifting wind clouds, and realistic horizon fog/ocean blending.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Genetics Lab — Livestock Breeding:</Run>
+                                        Genetics Lab now features full Livestock Breeding support, allowing you to simulate, calculate, and optimize gene combinations, breeding trees, and traits for livestock alongside plant genetics.
+                                    </TextBlock>
+
+                                    <!-- Gallery for v10.1.0 -->
+                                    <views:ImageGallery Margin="0,4,0,4">
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/3d_map_bases.jpg" Description="3D Map Base Preview with Fortify imports, elevation validation, and coastal terrain rendering"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/livestock_genetics.png" Description="Livestock Breeding workspace in Genetics Lab with gene tree optimization and traits"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.1/3d_door_interaction.jpg" Description="Interactive doors, gates, and hatches in 3D Map mode with ground-level walk-through controls"/>
+                                    </views:ImageGallery>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.0.5 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_0_5"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v10.0.5 | Cloud Hold Lifecycle &amp; Discord Map Rendering Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
 
@@ -494,23 +550,6 @@
                                         <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
                                             The mini-map has grown into a command centre you can build yourself: the map is now one widget among many, and clocks, smart switches, chat, translation, session stats, server population and Discord can sit around it in any arrangement you like. Alongside it comes the AI Companion — hold a key, ask a question out loud, and get an answer without leaving the game. The map learned to read the server's own files, so heatmaps and keycard layers no longer need the 3D world built first. Global chat now comes to you instead of waiting four levels down. The death screen can be read for the name of whoever killed you. And there are 31 achievements to find along the way.
                                         </TextBlock>
-                                    </Border>
-
-                                    <!-- Backers: quiet, but visible enough to read as a thank-you -->
-                                    <Border Background="#14FFC14D" BorderBrush="#4DFFC14D" BorderThickness="1" CornerRadius="8"
-                                            Padding="12,9" Margin="0,0,0,14" HorizontalAlignment="Left">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="Heart24" Foreground="#FFC14D" FontSize="15"
-                                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="Big shoutout to our September backers"
-                                                           FontSize="11" FontWeight="SemiBold" Foreground="#FFC14D"
-                                                           Opacity="0.9"/>
-                                                <TextBlock Text="Søster Frank Den Koselige Sauen  ·  Donald Farrar"
-                                                           FontSize="13" FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource TextPrimary}" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                        </StackPanel>
                                     </Border>
 
                                     <!-- Widget Overlay -->

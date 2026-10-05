@@ -1399,6 +1399,22 @@
                                     <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}">
                                         <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
                                         <Separator />
+                                        <MenuItem Click="BtnCheckTokenStatus_Click" Header="Check Token Status &amp; Validity">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="ShieldCheckmark24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Click="BtnLogoutThisDevice_Click" Header="Logout (This Device)">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="SignOut24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Click="BtnLogoutAllDevices_Click" Header="Logout All Devices (Invalidate)">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="DismissCircle24" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator />
                                         <MenuItem Click="BtnResetPairing_Click" Header="{DynamicResource ResetPairingConfig}" />
                                         <MenuItem Click="BtnResetAndListen_Click" Header="{DynamicResource ResetListenPairing}" />
                                         <MenuItem Click="BtnResetAndListenEdge_Click" Header="{DynamicResource ResetListenEdge}" />
@@ -1417,7 +1433,7 @@
                                         ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
                                         IsEnabled="{Binding CanStartPairing}"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibilityInv}}" />
+                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}" />
 
                                     <ui:Button
                                         x:Name="BtnStopPairing"
@@ -1427,7 +1443,7 @@
                                         Content="{DynamicResource Stop}"
                                         ContextMenu="{StaticResource PairingRecoveryMenu}"
                                         Icon="{ui:SymbolIcon Symbol=Stop24}"
-                                        Visibility="{Binding IsPairingBusy, Converter={StaticResource BoolToVisibility}}" />
+                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}" />
 
                                     <ui:Button
                                         x:Name="BtnFcmInfo"
@@ -9245,6 +9261,11 @@
                                                                                 BorderBrush="{Binding RoleBadge.BorderBrush}"
                                                                                 BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center">
                                                                             <TextBlock Text="{Binding RoleBadge.DisplayText}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding RoleBadge.ForegroundBrush}" />
+                                                                        </Border>
+
+                                                                        <!--  Plan badge: label and colour come from the plan, as configured on the plans admin page.  -->
+                                                                        <Border x:Name="PlanBadge" Visibility="{Binding HasPlanBadge, Converter={StaticResource BoolToVisibility}}" Background="{Binding SourceLine.BadgeBackgroundBrush}" BorderBrush="{Binding SourceLine.BadgeBorderBrush}" BorderThickness="1" CornerRadius="3" Padding="4,0" Margin="5,0,0,0" VerticalAlignment="Center" ToolTip="{Binding SourceLine.BadgeLabel}">
+                                                                            <TextBlock Text="{Binding SourceLine.BadgeLabel}" FontSize="8.5" FontWeight="Bold" Foreground="{Binding SourceLine.BadgeForegroundBrush}" Typography.Capitals="AllSmallCaps" />
                                                                         </Border>
 
                                                                         <!-- Bot / Command badge -->

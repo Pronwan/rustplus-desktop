@@ -800,6 +800,16 @@ public static class SocialApi
                         Mentions = mentions,
                         MentionsMe = MentionsOwnAccount(mentions),
                         IsSupporter = isSupporter,
+                        BadgeLabel = sender.ValueKind == JsonValueKind.Object
+                                     && sender.TryGetProperty("badge", out var badge)
+                                     && badge.ValueKind == JsonValueKind.Object
+                                         ? Str(badge, "label")
+                                         : null,
+                        BadgeColor = sender.ValueKind == JsonValueKind.Object
+                                     && sender.TryGetProperty("badge", out var badgeForColor)
+                                     && badgeForColor.ValueKind == JsonValueKind.Object
+                                         ? Str(badgeForColor, "color")
+                                         : null,
                         NameColor = Str(sender, "name_color"),
                         IsMine = IsOwnSender(Str(row, "sender_id") ?? Str(sender, "id")),
                         ReplyTo = ParseReply(row),

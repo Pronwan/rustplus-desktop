@@ -1,0 +1,3 @@
+[submodule "Submodules/RustPlus.Auth"]
+	path = Submodules/RustPlus.Auth
+	url = https://github.com/JawadYzbk/rustplus-auth-private.git

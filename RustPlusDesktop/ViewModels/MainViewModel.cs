@@ -71,8 +71,7 @@ public class MainViewModel : INotifyPropertyChanged
             double currentHours = _lastStatusGameTime.Value;
             
             // Use observed speed to extrapolate
-            double speed = (currentHours >= 8 && currentHours < 20) ? _observedDaySpeed : _observedNightSpeed;
-            double extrapolatedHours = (currentHours + (elapsedRealMins * speed)) % 24;
+            double extrapolatedHours = _serverClock.Advance(currentHours, elapsedRealMins);
 
             // Update display properties without triggering re-learning
             UpdateDisplayProperties(extrapolatedHours);
@@ -81,8 +80,9 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void UpdateDisplayProperties(double hours)
     {
-        int h = (int)Math.Floor(hours);
-        int m = (int)Math.Floor((hours - h) * 60);
+        int totalMinutes = (int)Math.Round(hours * 60, MidpointRounding.AwayFromZero) % 1440;
+        int h = totalMinutes / 60;
+        int m = totalMinutes % 60;
         string newTime = $"{h:00}:{m:00}";
 
         // Update ServerTime string directly if it changed
@@ -93,21 +93,27 @@ public class MainViewModel : INotifyPropertyChanged
         }
 
         // Update countdown
-        if (hours >= 8 && hours < 20)
+        if (_serverClock.IsPaused)
+        {
+            IsDay = _serverClock.IsDay(hours);
+            TimeUntilNextPhase = "";
+            return;
+        }
+        if (_serverClock.IsDay(hours))
         {
             IsDay = true;
-            double remainingGameHours = 20 - hours;
-            double remainingRealMins = remainingGameHours / _observedDaySpeed;
+            double remainingGameHours = _serverClock.Sunset - hours;
+            double remainingRealMins = remainingGameHours / _serverClock.DaySpeed;
             TimeUntilNextPhase = string.Format(Properties.Resources.UntilNight, FormatDuration(remainingRealMins / 60.0));
         }
         else
         {
             IsDay = false;
             double remainingGameHours;
-            if (hours >= 20) remainingGameHours = (24 - hours) + 8;
-            else remainingGameHours = 8 - hours;
+            if (hours >= _serverClock.Sunset) remainingGameHours = (24 - hours) + _serverClock.Sunrise;
+            else remainingGameHours = _serverClock.Sunrise - hours;
             
-            double remainingRealMins = remainingGameHours / _observedNightSpeed;
+            double remainingRealMins = remainingGameHours / _serverClock.NightSpeed;
             TimeUntilNextPhase = string.Format(Properties.Resources.UntilDay, FormatDuration(remainingRealMins / 60.0));
         }
     }
@@ -138,10 +144,11 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsPairingRunning
     {
         get => _isPairingRunning;
-        set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isPairingRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(CanStopPairing)); }
     }
 
     public bool CanStartPairing => !_isPairingRunning && !IsBusy && !IsPairingBusy;
+    public bool CanStopPairing => _isPairingRunning || _isPairingBusy;
 
     private bool _isTrackingActive;
     public bool IsTrackingActive
@@ -263,7 +270,7 @@ public class MainViewModel : INotifyPropertyChanged
     public bool IsPairingBusy
     {
         get => _isPairingBusy;
-        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); }
+        set { _isPairingBusy = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanStartPairing)); OnPropertyChanged(nameof(CanStopPairing)); }
     }
 
     // Stays true while the listener is down because the last start/listen failed; the status row
@@ -578,12 +585,17 @@ public class MainViewModel : INotifyPropertyChanged
     private double? _lastStatusGameTime;
     private string? _lastConnectedServer;
 
-    // Speeds in game-hours per real-minute. 
-    // Defaults for Rust (Day ~50m real, Night ~10m real)
-    private double _observedDaySpeed = 12.0 / 50.0;   
-    private double _observedNightSpeed = 12.0 / 10.0; 
+    private ServerClock _serverClock = new();
 
-    private void UpdateInGameTimeProperties(string timeStr)
+    public void UpdateServerTime(string timeStr, double? gameHours, double? sunrise = null, double? sunset = null,
+        double? dayLengthMinutes = null, double? timeScale = null)
+    {
+        UpdateInGameTimeProperties(timeStr, gameHours, sunrise, sunset, dayLengthMinutes, timeScale);
+        OnPropertyChanged(nameof(ServerTime));
+    }
+
+    private void UpdateInGameTimeProperties(string timeStr, double? gameHours = null, double? sunrise = null, double? sunset = null,
+        double? dayLengthMinutes = null, double? timeScale = null)
     {
         if (string.IsNullOrWhiteSpace(timeStr) || timeStr == "-" || timeStr == "–")
         {
@@ -594,59 +606,26 @@ public class MainViewModel : INotifyPropertyChanged
         }
 
         // Reset learning if server changed
-        string currentServer = Selected?.Host ?? "";
+        string currentServer = Selected == null ? "" : $"{Selected.Host}:{Selected.Port}";
         if (currentServer != _lastConnectedServer)
         {
             _lastConnectedServer = currentServer;
             _lastStatusRealTime = null;
             _lastStatusGameTime = null;
 
-            if (Selected != null)
-            {
-                _observedDaySpeed = Selected.LearnedDaySpeed > 0 ? Selected.LearnedDaySpeed : (12.0 / 50.0);
-                _observedNightSpeed = Selected.LearnedNightSpeed > 0 ? Selected.LearnedNightSpeed : (12.0 / 10.0);
-            }
-            else
-            {
-                _observedDaySpeed = 12.0 / 50.0;
-                _observedNightSpeed = 12.0 / 10.0;
-            }
+            // Relearn from live readings rather than restoring stale rounded estimates.
+            _serverClock = new ServerClock();
         }
 
         try
         {
             if (TimeSpan.TryParse(timeStr, out var ts))
             {
-                double currentHours = ts.TotalHours;
+                double currentHours = gameHours ?? ts.TotalHours;
+                if (!double.IsFinite(currentHours)) return;
+                currentHours = ((currentHours % 24) + 24) % 24;
                 DateTime now = DateTime.UtcNow;
-
-                if (_lastStatusRealTime.HasValue && _lastStatusGameTime.HasValue)
-                {
-                    double deltaRealMins = (now - _lastStatusRealTime.Value).TotalMinutes;
-                    if (deltaRealMins > 0.05) // update every ~3 seconds is normal
-                    {
-                        double deltaGameHours = currentHours - _lastStatusGameTime.Value;
-                        if (deltaGameHours < -12) deltaGameHours += 24; // midnight wrap
-
-                        // Only learn if the change is positive and reasonable (avoid manual time sets)
-                        if (deltaGameHours > 0 && deltaGameHours < 2) 
-                        {
-                            double speed = deltaGameHours / deltaRealMins;
-                            
-                            // Smooth the observation (exponential moving average)
-                            if (currentHours >= 8 && currentHours < 20)
-                            {
-                                _observedDaySpeed = (_observedDaySpeed * 0.95) + (speed * 0.05);
-                                if (Selected != null) Selected.LearnedDaySpeed = _observedDaySpeed;
-                            }
-                            else
-                            {
-                                _observedNightSpeed = (_observedNightSpeed * 0.95) + (speed * 0.05);
-                                if (Selected != null) Selected.LearnedNightSpeed = _observedNightSpeed;
-                            }
-                        }
-                    }
-                }
+                _serverClock.Observe(currentHours, now, sunrise, sunset, dayLengthMinutes, timeScale);
 
                 _lastStatusRealTime = now;
                 _lastStatusGameTime = currentHours;

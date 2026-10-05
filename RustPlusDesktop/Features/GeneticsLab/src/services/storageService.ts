@@ -143,6 +143,8 @@ export interface ExtendedApplicationOptions extends ApplicationOptions {
   targetStopThresholdPercent: number;
   /** The phone-camera banner has been dismissed and should not be shown again. */
   hidePhoneCameraBanner: boolean;
+  /** The "new: livestock genetics" banner has been dismissed. */
+  hideLivestockBanner: boolean;
 }
 
 export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
@@ -165,7 +167,8 @@ export const DEFAULT_OPTIONS: ExtendedApplicationOptions = {
   inventoryMode: 'prefer',
   targetStopMode: 'continue',
   targetStopThresholdPercent: 100,
-  hidePhoneCameraBanner: false
+  hidePhoneCameraBanner: false,
+  hideLivestockBanner: false
 };
 
 const CONSENT_PREFIX = 'rb-cookie-pref-v1';
@@ -186,6 +189,7 @@ const PREVIOUS_GENE_SETS_KEY = 'PREVIOUS_GENE_SETS';
 const SCANNER_REGIONS_KEY = 'SCANNER_REGIONS';
 const SELECTED_PLANT_KEY = 'SELECTED_PLANT_TYPE';
 const FARM_PLANNER_DRAFT_KEY = 'GL_FARM_PLANNER_DRAFT_V1';
+const LIVESTOCK_HERD_KEY = 'GL_LIVESTOCK_HERD_V1';
 
 export class StorageService {
   public static getConsent(): CookieConsentState {
@@ -236,8 +240,27 @@ export class StorageService {
       localStorage.removeItem(SCANNER_REGIONS_KEY);
       localStorage.removeItem(SELECTED_PLANT_KEY);
       localStorage.removeItem(FARM_PLANNER_DRAFT_KEY);
+      localStorage.removeItem(LIVESTOCK_HERD_KEY);
     } catch {
       // ignore
+    }
+  }
+
+  /** Saved livestock, unvalidated; `livestockStore.ts` owns the shape. */
+  public static getLivestockHerdRaw(): unknown {
+    try {
+      const raw = localStorage.getItem(LIVESTOCK_HERD_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  public static saveLivestockHerdRaw(herd: unknown): void {
+    try {
+      localStorage.setItem(LIVESTOCK_HERD_KEY, JSON.stringify(herd));
+    } catch {
+      // storage unavailable
     }
   }
 

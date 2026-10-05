@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>10.0.5</Version>
+		<Version>10.1.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -355,6 +355,16 @@
     <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AuthSubmoduleProjectPath>$(MSBuildThisFileDirectory)..\Submodules\RustPlus.Auth\RustPlus.Auth.csproj</AuthSubmoduleProjectPath>
+  </PropertyGroup>
+
+  <!-- Proprietary Private Submodule Reference (when present) -->
+  <ItemGroup Condition="Exists('$(AuthSubmoduleProjectPath)')">
+    <ProjectReference Include="$(AuthSubmoduleProjectPath)" />
+    <Compile Remove="Services\Auth\IRustCompanionAuthProvider.cs" />
+  </ItemGroup>
+
     <ItemGroup>
       <!--
         No ProjectReference to MapParser on purpose.
@@ -396,7 +406,7 @@
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
     <ItemGroup>
-      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" />
+      <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" Exclude="$(MapParserPublishDir)modules\glbWorker.js" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)app.js" Condition="Exists('$(MapParserPublishDir)app.js')" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)build-client.mjs" Condition="Exists('$(MapParserPublishDir)build-client.mjs')" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)package.json" Condition="Exists('$(MapParserPublishDir)package.json')" />

@@ -189,6 +189,7 @@ public partial class MainWindow
                     OnChanged(nameof(AuthorBrush));
                     OnChanged(nameof(RoleBadge));
                     OnChanged(nameof(HasRoleBadge));
+                    OnChanged(nameof(HasPlanBadge));
                     OnChanged(nameof(HasReply));
                     OnChanged(nameof(ReplyAuthor));
                     OnChanged(nameof(ReplyExcerpt));
@@ -218,6 +219,9 @@ public partial class MainWindow
         public RoleBadgeInfo? RoleBadge => _sourceLine?.RoleBadge;
 
         public bool HasRoleBadge => _sourceLine?.HasRoleBadge == true;
+
+        /// <summary>The sender's plan badge, as configured by an admin. Room lines only: in-game chat carries no plan.</summary>
+        public bool HasPlanBadge => _sourceLine?.HasBadge == true;
 
         /// <summary>Whether the row answers another message.</summary>
         public bool HasReply => _sourceLine?.HasReply == true;
