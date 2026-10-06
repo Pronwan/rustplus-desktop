@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.1.0 MAJOR UPDATE -->
+                            <!-- v10.1.1 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_1_0"
+                            <Border x:Name="Card_v10_1_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,35 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.1.1 | Easier-to-Find Dock Bar Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Dock Bar You Can Find:</Run>
+                                        The bar at the top of the screen now slides in and out so you can see where it goes, and a small pull tab appears near the top edge to bring it back. The first time, the bar introduces itself.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Clear Editing Mode:</Run>
+                                        Unlocking the layout now shows an editing banner and a Done button (or press Esc) to lock it again. Dragging a widget while locked points you to the padlock.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.1.0 MAJOR UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_1_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.1.0 | 3D Map Rework, Fortify Base Imports &amp; High-Precision Terrain"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
