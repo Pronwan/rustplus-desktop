@@ -772,6 +772,10 @@ namespace RustPlusDesk
             // would place the dock back where the clamp had just taken it from.
             AnchorOriginToWindow(bounds);
 
+            // And once the window has really taken that size, check it against the screen in
+            // the screen's own pixels - the clamp above only knows WPF's view of it.
+            QueueOnScreenCheck();
+
             if (!double.IsNaN(oldLeft) && !double.IsNaN(oldTop))
                 HoldSettingsPopupInPlace(Left - oldLeft, Top - oldTop);
                 FollowAiAnswer();

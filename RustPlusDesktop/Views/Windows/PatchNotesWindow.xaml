@@ -242,6 +242,10 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Clear Editing Mode:</Run>
                                         Unlocking the layout now shows an editing banner and a Done button (or press Esc) to lock it again. Dragging a widget while locked points you to the padlock.
                                     </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; New Widgets Stay on Screen:</Run>
+                                        Adding a widget to a dock parked against the edge of the screen no longer leaves part of it off-screen.
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
 

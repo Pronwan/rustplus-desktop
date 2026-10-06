@@ -270,6 +270,18 @@ namespace RustPlusDesk.Views.Windows
 
             // A screen narrower than the bubble's usual width still has to fit all of it.
             HintBubble.MaxWidth = Math.Max(160, Math.Min(360, screenW - 2 * HintMargin));
+
+            // Measure short-circuits on an element that is not itself dirty, and a new text only
+            // dirties the TextBlock - its parents are marked later, by the layout pass. Without
+            // this the bubble answered with the size of the previous hint (or of no text at all,
+            // the first time), was placed for that size, and drew off the edge of the screen.
+            for (DependencyObject? d = HintText; d != null; d = VisualTreeHelper.GetParent(d))
+            {
+                if (d is UIElement el) el.InvalidateMeasure();
+                if (ReferenceEquals(d, HintBubble)) break;
+            }
+            HintGlyph.InvalidateMeasure();
+
             HintBubble.Measure(new Size(HintBubble.MaxWidth, double.PositiveInfinity));
             var size = HintBubble.DesiredSize;
 
@@ -324,6 +336,23 @@ namespace RustPlusDesk.Views.Windows
             var spot = at ?? underBar;
             Canvas.SetLeft(HintBubble, spot.X);
             Canvas.SetTop(HintBubble, spot.Y);
+
+            // Last word goes to the size it was actually drawn at. Should the measurement above
+            // still disagree with the render - a font fallback, a late layout - the bubble is
+            // pulled back on screen rather than left hanging off it.
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+            {
+                double w = HintBubble.ActualWidth, h = HintBubble.ActualHeight;
+                if (w <= 0 || h <= 0) return;
+
+                double maxX = Math.Max(HintMargin, screenW - HintMargin - w);
+                double maxY = Math.Max(top, screenH - HintMargin - h);
+                double x = Math.Max(HintMargin, Math.Min(Canvas.GetLeft(HintBubble), maxX));
+                double y = Math.Max(top, Math.Min(Canvas.GetTop(HintBubble), maxY));
+
+                Canvas.SetLeft(HintBubble, x);
+                Canvas.SetTop(HintBubble, y);
+            }));
 
             HintBubble.BeginAnimation(UIElement.OpacityProperty,
                 new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(160)) { FillBehavior = FillBehavior.HoldEnd });
