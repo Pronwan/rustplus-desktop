@@ -1,0 +1,16 @@
+{
+  "name": "Rust Genetics Lab",
+  "short_name": "Genetics Lab",
+  "description": "Plant crossbreeding and livestock genetics calculator for Rust",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "icons": [
+    {
+      "src": "/img/items/mixed-berry.webp",
+      "sizes": "192x192 512x512",
+      "type": "image/webp"
+    }
+  ]
+}
