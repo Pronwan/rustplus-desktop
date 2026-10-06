@@ -69,6 +69,7 @@ namespace RustPlusDesk
                 {
                     Overlay();
                     StartEdgeWatch();
+                    MaybeIntroduceBar();
                 }
                 else
                 {
@@ -91,7 +92,18 @@ namespace RustPlusDesk
 
             InitArming();
 
-            Loaded += (_, __) => { ApplyLockState(); RebuildTiles(); _dockTimer.Start(); };
+            // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
+            // where Esc already means something to whoever is typing.
+            PreviewKeyDown += (_, e) =>
+            {
+                if (e.Key != Key.Escape || _dock.Locked) return;
+                if (e.OriginalSource is System.Windows.Controls.Primitives.TextBoxBase) return;
+
+                e.Handled = true;
+                FinishArranging();
+            };
+
+            Loaded +=(_, __) => { ApplyLockState(); RebuildTiles(); _dockTimer.Start(); };
             Closed += (_, __) =>
             {
                 _dockTimer?.Stop();
@@ -255,15 +267,20 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Handles belong to the hovered tile, while the dock is armed, and only when it is
-        /// unlocked. Three conditions that change independently, so one place decides and
-        /// everything else just calls it.
+        /// Handles belong to the hovered tile, and only when the dock is unlocked. Two
+        /// conditions that change independently, so one place decides and everything else just
+        /// calls it.
+        ///
+        /// No arming delay on top of that any more. It dates from before the lock, when hovering
+        /// was the only gate on the delete button; unlocking is now the deliberate step, and
+        /// making someone who has just unlocked also wait out a hover before anything happens
+        /// read as the dock not responding.
         /// </summary>
         private void UpdateTileHandles()
         {
             foreach (var (tileId, handles) in _tileHandles)
             {
-                var show = _armed && !_dock.Locked && tileId == _hoveredTileId;
+                var show = !_dock.Locked && tileId == _hoveredTileId;
                 foreach (var handle in handles)
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -297,8 +314,13 @@ namespace RustPlusDesk
             _overlay?.SetLocked(locked);
 
             // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
-            // because it is the only way back to locking it.
-            if (!locked) _overlay?.ShowBar(true);
+            // because it is the only way back to locking it. A hint telling them to unlock has
+            // done its job by now.
+            if (!locked)
+            {
+                _overlay?.ShowBar(true);
+                _overlay?.HideHint();
+            }
 
             // ...and while arranging, both windows take focus like ordinary ones. Never taking
             // it is right for using the dock over a running game and wrong for building it.
@@ -1962,6 +1984,35 @@ namespace RustPlusDesk
                 RebuildTiles();
             };
 
+            // While arranging, every tile wears a dashed outline: the whole dock reads as
+            // movable at a glance, without hovering each tile to find out. Only built unlocked -
+            // toggling the lock rebuilds the tiles, so it never needs switching off.
+            if (!_dock.Locked)
+            {
+                bool isMapShell = tile.Kind == CommandDockTileKinds.Map;
+                double radius = isMapShell
+                    ? MapShapeBorder.CornerRadius.TopLeft
+                    : (shell as Border)?.CornerRadius.TopLeft ?? 10;
+
+                // A tile's handle host sits inside its padding and border; the outline is pushed
+                // back out over the border, where the edge of the tile actually is.
+                var inset = shell is Border b
+                    ? b.Padding.Left + b.BorderThickness.Left
+                    : 0;
+
+                host.Children.Add(new System.Windows.Shapes.Rectangle
+                {
+                    RadiusX = radius,
+                    RadiusY = radius,
+                    Margin = new Thickness(-inset),
+                    Stroke = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
+                    StrokeThickness = 1.5,
+                    StrokeDashArray = new DoubleCollection { 4, 3 },
+                    Opacity = 0.8,
+                    IsHitTestVisible = false,
+                });
+            }
+
             // Veil under the handles, so the grip and the × stay at full strength on a pressed
             // tile; both above the content, so they are never hidden behind a chat line.
             if (veil != null) host.Children.Add(veil);
@@ -2084,6 +2135,7 @@ namespace RustPlusDesk
             Point grabOffset = default;
             bool pressed = false;
             bool dragging = false;
+            bool lockExplained = false;
 
             border.PreviewMouseLeftButtonDown += (_, e) =>
             {
@@ -2098,6 +2150,7 @@ namespace RustPlusDesk
 
                 pressed = true;
                 dragging = false;
+                lockExplained = false;
                 grabOffset = e.GetPosition(border);
                 border.CaptureMouse();
                 e.Handled = true;   // never let the press reach the window's DragMove
@@ -2109,7 +2162,20 @@ namespace RustPlusDesk
 
                 // A locked dock is used, not rearranged. The press is still swallowed above, so
                 // a switch tile toggles as usual — it simply cannot be dragged off its cell.
-                if (_dock.Locked) return;
+                //
+                // A drag that does nothing at all looks broken, though, so the first one that
+                // travels far enough to be meant explains why and points at the lock.
+                if (_dock.Locked)
+                {
+                    if (lockExplained) return;
+
+                    var tried = e.GetPosition(border) - grabOffset;
+                    if (Math.Abs(tried.X) < DragThreshold * 3 && Math.Abs(tried.Y) < DragThreshold * 3) return;
+
+                    lockExplained = true;
+                    ExplainLockedDrag(e.GetPosition(DockCanvas));
+                    return;
+                }
 
                 if (!dragging)
                 {

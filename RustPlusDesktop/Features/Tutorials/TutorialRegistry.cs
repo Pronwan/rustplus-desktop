@@ -167,6 +167,21 @@ public sealed class TutorialRegistry : ITutorialRegistry
                              .GetMethod("EnsureMiniMapOpen")?.Invoke(Application.Current.MainWindow, null));
                      await Task.Delay(150, ct);
                  }),
+            // The bar hides at the top of the screen, which no amount of describing makes
+            // findable - so this step has the bar show itself and slide away again, leaving the
+            // pull tab where it went.
+            Step("commanddock.bar", placement: TutorialPlacement.Center, condition: c => c.IsFullConnected,
+                 BeforeShowAsync: async (c, ct) =>
+                 {
+                     Application.Current.Dispatcher.Invoke(() =>
+                     {
+                         Application.Current.MainWindow?.GetType()
+                             .GetMethod("EnsureMiniMapOpen")?.Invoke(Application.Current.MainWindow, null);
+                         var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "MiniMapWindow");
+                         mmw?.GetType().GetMethod("DemonstrateBar")?.Invoke(mmw, null);
+                     });
+                     await Task.Delay(150, ct);
+                 }),
             Step("commanddock.arrange", placement: TutorialPlacement.Center),
             Step("commanddock.style", "Settings.CommandDock", "settings", TutorialPlacement.Right),
             Step("commanddock.pertile", placement: TutorialPlacement.Center)),

@@ -5755,7 +5755,7 @@ You can find more information on the server&apos;s official website:
     <value>Map Settings</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>Hover over the mini map and click the settings gear to customize its shape, size, and opacity.</value>
+    <value>Bring out the bar at the top of the screen (rest the mouse on the top edge, or use the small tab) and press ⚙ to customize the map&apos;s shape, size, and opacity. While the layout is unlocked, hovering the map shows its own gear too.</value>
   </data>
   <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
     <value>Server Time &amp; Population</value>
@@ -7065,6 +7065,21 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Unlock to move, resize and remove tiles</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>Lock the layout again (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>Editing layout · drag a widget to move it · hover it to resize, configure or remove it</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>This bar arranges your widgets: unlock to move them, + to add more, ⚙ for settings. It hides while you play — rest the mouse on the top edge of the screen, or use the small tab there, to bring it back.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>The layout is locked. Press the padlock in the bar at the top of the screen to move, resize or remove widgets.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>ON</value>
   </data>
@@ -7674,13 +7689,19 @@ Close this preview when the panel looks right.</value>
     <value>Add Widgets with +</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>The map is one widget among many. Press + in the dock&apos;s title bar to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+    <value>The map is one widget among many. Press + in the bar at the top of the screen to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>The Bar at the Top</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>The dock&apos;s controls live in a bar at the top of the screen that hides while you play — watch it slide in and out now. To bring it back, rest the mouse on the top edge of the screen, or move toward the top and use the small tab that appears there. The padlock unlocks arranging, + adds widgets, the save icon keeps named arrangements, ⚙ opens settings, and the slider zooms the grid.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>Drag, Resize, Lock</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>Hover a widget to move it, drag its corner to resize, or use × to remove it. The lock in the title bar puts the whole layout beyond accidental dragging, and the Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
+    <value>Press the padlock in the bar to start arranging: every widget gets a dashed outline — drag one to move it, and hover it for the resize corner, its ⚙ and × to remove it. Press Done or Esc when you&apos;re finished; the layout locks again so nothing moves by accident. Drag a widget while it&apos;s locked and the app reminds you where the lock is. The Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>Style the Whole Dock</value>

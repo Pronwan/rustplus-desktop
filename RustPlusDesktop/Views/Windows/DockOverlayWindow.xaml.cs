@@ -49,12 +49,30 @@ namespace RustPlusDesk.Views.Windows
         /// <summary>Dragging the bar moves the dock, as dragging its old title bar did.</summary>
         public Action<Vector>? BarDragged { get; set; }
 
+        /// <summary>The pull tab was hovered or pressed: the bar should come out.</summary>
+        public Action? PullTabActivated { get; set; }
+
+        /// <summary>Esc while the overlay has focus, which it only can while arranging.</summary>
+        public Action? EscapePressed { get; set; }
+
         private bool _suppressZoomWrite;
 
         public DockOverlayWindow()
         {
             InitializeComponent();
             WireBarDrag();
+
+            // Hover as well as click: the tab is small and only there when the pointer is
+            // already heading for the top of the screen, so reaching it is the intent.
+            PullTab.MouseEnter += (_, __) => PullTabActivated?.Invoke();
+            PullTab.MouseLeftButtonDown += (_, e) => { e.Handled = true; PullTabActivated?.Invoke(); };
+
+            PreviewKeyDown += (_, e) =>
+            {
+                if (e.Key != Key.Escape) return;
+                e.Handled = true;
+                EscapePressed?.Invoke();
+            };
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -127,14 +145,41 @@ namespace RustPlusDesk.Views.Windows
             BarVisible = show;
             TitleBar.IsHitTestVisible = show;
 
+            var duration = TimeSpan.FromMilliseconds(show ? 160 : 320);
+
             TitleBar.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(show ? 1.0 : 0.0, TimeSpan.FromMilliseconds(show ? 140 : 320))
+                new DoubleAnimation(show ? 1.0 : 0.0, duration) { FillBehavior = FillBehavior.HoldEnd });
+
+            BarSlide.BeginAnimation(TranslateTransform.YProperty,
+                new DoubleAnimation(show ? 0.0 : -TitleBar.Height, duration)
+                {
+                    EasingFunction = new CubicEase { EasingMode = show ? EasingMode.EaseOut : EasingMode.EaseIn },
+                    FillBehavior = FillBehavior.HoldEnd,
+                });
+
+            // The tab stands in for the bar while it is away, never alongside it.
+            if (show) SetPullTab(false);
+        }
+
+        public bool BarVisible { get; private set; }
+
+        private bool _pullTabVisible;
+
+        /// <summary>Shows or hides the tab that brings the bar back, hit testing with it.</summary>
+        public void SetPullTab(bool show)
+        {
+            if (PullTab == null) return;
+            if (BarVisible) show = false;
+            if (_pullTabVisible == show) return;
+
+            _pullTabVisible = show;
+            PullTab.IsHitTestVisible = show;
+            PullTab.BeginAnimation(UIElement.OpacityProperty,
+                new DoubleAnimation(show ? 1.0 : 0.0, TimeSpan.FromMilliseconds(show ? 180 : 260))
                 {
                     FillBehavior = FillBehavior.HoldEnd,
                 });
         }
-
-        public bool BarVisible { get; private set; }
 
         public void SetLocked(bool locked)
         {
@@ -142,9 +187,160 @@ namespace RustPlusDesk.Views.Windows
                 LockGlyph.Text = locked ? "" : "";   // closed padlock / open padlock
 
             if (BtnLock != null)
+            {
                 BtnLock.ToolTip = locked
                     ? Helpers.Loc.Text("CommandDockUnlock", "Unlock the overlay to arrange it")
                     : Helpers.Loc.Text("CommandDockLock", "Lock the overlay");
+
+                // While arranging, Done says the same thing in words.
+                BtnLock.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            if (BtnDone != null)
+            {
+                BtnDone.Content = Helpers.Loc.Text("CommandDockDone", "Done");
+                BtnDone.ToolTip = Helpers.Loc.Text("CommandDockDoneHint", "Lock the layout again (Esc)");
+                BtnDone.Visibility = locked ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            if (EditText != null && TitleText != null)
+            {
+                EditText.Text = Helpers.Loc.Text("CommandDockEditingBanner",
+                    "Editing layout · drag a widget to move it · hover it to resize, configure or remove it");
+                EditText.Visibility = locked ? Visibility.Collapsed : Visibility.Visible;
+                TitleText.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            if (TitleBar != null)
+            {
+                TitleBar.BorderBrush = new SolidColorBrush(locked
+                    ? Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)
+                    : Color.FromArgb(0xCC, 0x3F, 0xD7, 0xFF));
+                TitleBar.BorderThickness = new Thickness(0, 0, 0, locked ? 1 : 2);
+            }
+        }
+
+        /// <summary>
+        /// Flashes the padlock, for when a hint is pointing at it. The bar is wide and the lock
+        /// is a 14-pixel glyph at its far end; told to "press the lock", people look for it.
+        /// </summary>
+        public void PulseLock()
+        {
+            if (LockGlyph == null) return;
+
+            var brush = new SolidColorBrush(Colors.White);
+            LockGlyph.Foreground = brush;
+            brush.BeginAnimation(SolidColorBrush.ColorProperty,
+                new ColorAnimation(Color.FromRgb(0x3F, 0xD7, 0xFF), TimeSpan.FromMilliseconds(280))
+                {
+                    AutoReverse = true,
+                    RepeatBehavior = new RepeatBehavior(4),
+                });
+        }
+
+        // ── Hints ───────────────────────────────────────────────────────────────
+
+        private System.Windows.Threading.DispatcherTimer? _hintTimer;
+
+        private const double HintMargin = 8;
+        private const double HintGap = 10;
+
+        /// <summary>
+        /// Shows a short explanation for a while, then fades it.
+        ///
+        /// Never on top of <paramref name="dock"/>: the dock is its own window and sits above
+        /// this one, so a hint placed over it is hidden behind the very tiles it is talking
+        /// about. Without <paramref name="near"/> the hint is about the bar and goes centred
+        /// under it, if that spot is clear of the dock. Otherwise it goes beside the dock - on
+        /// whichever side has the most room and still fits it whole - lined up with
+        /// <paramref name="near"/>, so it reads as being about the widget that was grabbed.
+        /// </summary>
+        public void ShowHint(string text, string glyph, TimeSpan duration, Rect? dock = null, Point? near = null)
+        {
+            if (HintBubble == null) return;
+
+            HintText.Text = text;
+            HintGlyph.Text = glyph;
+
+            // The window's own size rather than ActualWidth/Height: CoverScreen sets it, and the
+            // measured size lags a layout pass behind right after the overlay has moved - which
+            // is how a hint got clamped to the size of a screen it was no longer covering.
+            double screenW = double.IsNaN(Width) || Width <= 0 ? ActualWidth : Width;
+            double screenH = double.IsNaN(Height) || Height <= 0 ? ActualHeight : Height;
+
+            // A screen narrower than the bubble's usual width still has to fit all of it.
+            HintBubble.MaxWidth = Math.Max(160, Math.Min(360, screenW - 2 * HintMargin));
+            HintBubble.Measure(new Size(HintBubble.MaxWidth, double.PositiveInfinity));
+            var size = HintBubble.DesiredSize;
+
+            // The bar is out with most hints, and a hint under it would be covered as well.
+            double top = (BarVisible ? TitleBar.Height : 0) + HintMargin;
+            double left = HintMargin;
+            double right = Math.Max(left, screenW - HintMargin - size.Width);
+            double bottom = Math.Max(top, screenH - HintMargin - size.Height);
+
+            double ClampX(double x) => Math.Max(left, Math.Min(x, right));
+            double ClampY(double y) => Math.Max(top, Math.Min(y, bottom));
+
+            bool Fits(Point p) =>
+                p.X >= left - 0.5 && p.X <= right + 0.5 &&
+                p.Y >= top - 0.5 && p.Y <= bottom + 0.5;
+
+            bool Clear(Point p) =>
+                dock is not { } d || d.IsEmpty || !new Rect(p, size).IntersectsWith(d);
+
+            var underBar = new Point(ClampX((screenW - size.Width) / 2), top + HintGap - HintMargin);
+            Point? at = null;
+
+            if (near == null && Clear(underBar)) at = underBar;
+
+            if (at == null && dock is { } r && !r.IsEmpty)
+            {
+                var focus = near ?? new Point(r.X + r.Width / 2, r.Y + r.Height / 2);
+                double alongX = ClampX(focus.X - size.Width / 2);
+                double alongY = ClampY(focus.Y - size.Height / 2);
+
+                var sides = new (double Room, Point Spot)[]
+                {
+                    (screenH - r.Bottom, new Point(alongX, r.Bottom + HintGap)),
+                    (r.Top - top,        new Point(alongX, r.Top - HintGap - size.Height)),
+                    (r.Left,             new Point(r.Left - HintGap - size.Width, alongY)),
+                    (screenW - r.Right,  new Point(r.Right + HintGap, alongY)),
+                };
+
+                // Most room first, so a dock parked in a corner gets its hint towards the middle
+                // of the screen rather than squeezed against the edge.
+                Array.Sort(sides, (a, b) => b.Room.CompareTo(a.Room));
+                foreach (var side in sides)
+                {
+                    if (!Fits(side.Spot)) continue;
+                    at = side.Spot;
+                    break;
+                }
+            }
+
+            // A dock that leaves no side free - one filling the screen - still gets its hint in
+            // the one place it can always be read.
+            var spot = at ?? underBar;
+            Canvas.SetLeft(HintBubble, spot.X);
+            Canvas.SetTop(HintBubble, spot.Y);
+
+            HintBubble.BeginAnimation(UIElement.OpacityProperty,
+                new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(160)) { FillBehavior = FillBehavior.HoldEnd });
+
+            _hintTimer?.Stop();
+            _hintTimer = new System.Windows.Threading.DispatcherTimer { Interval = duration };
+            _hintTimer.Tick += (_, __) => HideHint();
+            _hintTimer.Start();
+        }
+
+        public void HideHint()
+        {
+            _hintTimer?.Stop();
+            _hintTimer = null;
+
+            HintBubble?.BeginAnimation(UIElement.OpacityProperty,
+                new DoubleAnimation(0.0, TimeSpan.FromMilliseconds(320)) { FillBehavior = FillBehavior.HoldEnd });
         }
 
         public void SetZoom(double zoom)

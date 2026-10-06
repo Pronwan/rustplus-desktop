@@ -5601,7 +5601,7 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Configuración del mapa</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>Pasa el cursor sobre el mini mapa y haz clic en el engranaje para personalizar su forma, tamaño y opacidad.</value>
+    <value>Saca la barra de la parte superior de la pantalla (deja el ratón en el borde superior o usa la pequeña pestaña) y pulsa ⚙ para personalizar la forma, el tamaño y la opacidad del mapa. Con la disposición desbloqueada, al pasar el ratón por el mapa también aparece su propio engranaje.</value>
   </data>
   <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
     <value>Hora y población</value>
@@ -6912,6 +6912,21 @@ Puedes encontrar más información en el sitio web oficial del servidor:
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Desbloquea para mover, redimensionar y quitar widgets</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>Volver a bloquear la disposición (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>Editando la disposición · arrastra un widget para moverlo · pasa el ratón por encima para redimensionarlo, configurarlo o quitarlo</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>Esta barra organiza tus widgets: desbloquéala para moverlos, + para añadir más, ⚙ para los ajustes. Se oculta mientras juegas — deja el ratón en el borde superior de la pantalla, o usa la pequeña pestaña que hay allí, para recuperarla.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>La disposición está bloqueada. Pulsa el candado de la barra de la parte superior de la pantalla para mover, redimensionar o quitar widgets.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>ON</value>
   </data>
@@ -7512,13 +7527,19 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>Añadir widgets con +</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>El mapa es solo un widget entre muchos. Con el + de la barra de título del dock añades un reloj, un interruptor o una alarma emparejados, el chat de equipo o de clan, un temporizador de event, una regla del Logic Engine, estadísticas de sesión, los jugadores del servidor, una línea de Discord — o el compañero IA. Cada uno aparece en el primer hueco libre junto al mapa.</value>
+    <value>El mapa es solo un widget entre muchos. Con el + de la barra de la parte superior de la pantalla añades un reloj, un interruptor o una alarma emparejados, el chat de equipo o de clan, un temporizador de event, una regla del Logic Engine, estadísticas de sesión, los jugadores del servidor, una línea de Discord — o el compañero IA. Cada uno aparece en el primer hueco libre junto al mapa.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>La barra superior</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>Los controles del dock están en una barra en la parte superior de la pantalla que se oculta mientras juegas — mira cómo entra y sale ahora. Para recuperarla, deja el ratón en el borde superior de la pantalla, o acércate arriba y usa la pequeña pestaña que aparece. El candado activa la organización, + añade widgets, el icono de guardar conserva disposiciones con nombre, ⚙ abre los ajustes y el control deslizante hace zoom en la cuadrícula.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>Mover, redimensionar, bloquear</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>Pasa el ratón sobre un widget para moverlo, arrastra su esquina para cambiar el tamaño, o usa × para quitarlo. El candado de la barra de título protege toda la disposición de movimientos accidentales, y el botón Disposiciones guarda el dock con un nombre — pasa el ratón sobre un nombre guardado para ver su contorno en el sitio antes de cargarlo.</value>
+    <value>Pulsa el candado de la barra para empezar a organizar: cada widget recibe un contorno discontinuo — arrastra uno para moverlo y pasa el ratón por encima para ver la esquina de tamaño, su ⚙ y la × para quitarlo. Pulsa Listo o Esc al terminar; la disposición se vuelve a bloquear para que nada se mueva por accidente. Si arrastras un widget bloqueado, la app te recuerda dónde está el candado. El botón Disposiciones guarda el dock con un nombre — pasa el ratón sobre un nombre guardado para ver su contorno en el sitio antes de cargarlo.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>Dar estilo a todo el dock</value>

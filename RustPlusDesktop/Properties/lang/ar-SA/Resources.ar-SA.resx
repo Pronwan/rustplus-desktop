@@ -5598,7 +5598,7 @@
     <value>إعدادات الخريطة</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>قم بتمرير الماوس فوق الخريطة المصغرة وانقر على رمز الترس لتخصيص شكلها وحجمها وشفافيتها.</value>
+    <value>أظهر الشريط أعلى الشاشة (أبقِ الماوس على الحافة العلوية أو استخدم اللسان الصغير) واضغط ⚙ لتخصيص شكل الخريطة وحجمها وشفافيتها. وأثناء فتح قفل التخطيط، يظهر للخريطة ترسها الخاص عند المرور فوقها.</value>
   </data>
   <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
     <value>وقت الخادم وعدد اللاعبين</value>
@@ -6803,6 +6803,21 @@
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>ألغِ القفل لتحريك البطاقات وتغيير حجمها وإزالتها</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>تم</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>اقفل التخطيط مجددًا (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>تحرير التخطيط · اسحب بطاقة لتحريكها · مرّر فوقها لتغيير حجمها أو ضبطها أو إزالتها</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>هذا الشريط يرتّب بطاقاتك: افتح القفل لتحريكها، و+ لإضافة المزيد، و⚙ للإعدادات. يختفي أثناء اللعب — أبقِ الماوس على الحافة العلوية للشاشة، أو استخدم اللسان الصغير هناك، لإعادته.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>التخطيط مقفل. اضغط القفل في الشريط أعلى الشاشة لتحريك البطاقات أو تغيير حجمها أو إزالتها.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>تشغيل</value>
   </data>
@@ -7403,13 +7418,19 @@
     <value>أضف بطاقات بالزر +</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>الخريطة واحدة من بطاقات كثيرة. زر + في شريط عنوان الـ dock يضيف ساعة، أو مفتاحًا أو إنذارًا مقترنًا، أو دردشة الفريق أو الـ clan، أو مؤقّت event، أو قاعدة Logic Engine، أو إحصاءات الجلسة، أو عدد اللاعبين، أو سطر Discord — أو مساعد الذكاء الاصطناعي. كل واحدة تحلّ في أول موضع فارغ بجوار الخريطة.</value>
+    <value>الخريطة واحدة من بطاقات كثيرة. زر + في الشريط أعلى الشاشة يضيف ساعة، أو مفتاحًا أو إنذارًا مقترنًا، أو دردشة الفريق أو الـ clan، أو مؤقّت event، أو قاعدة Logic Engine، أو إحصاءات الجلسة، أو عدد اللاعبين، أو سطر Discord — أو مساعد الذكاء الاصطناعي. كل واحدة تحلّ في أول موضع فارغ بجوار الخريطة.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>الشريط العلوي</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>عناصر التحكم في الـ dock موجودة في شريط أعلى الشاشة يختفي أثناء اللعب — شاهده الآن وهو ينزلق للداخل ثم للخارج. لإعادته، أبقِ الماوس على الحافة العلوية للشاشة، أو اقترب من الأعلى واستخدم اللسان الصغير الذي يظهر. القفل يفعّل الترتيب، و+ يضيف بطاقات، وأيقونة الحفظ تحفظ التخطيطات بأسماء، و⚙ يفتح الإعدادات، والمنزلق يكبّر الشبكة أو يصغّرها.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>اسحب، غيّر الحجم، اقفل</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>مرّر فوق بطاقة لتحريكها، واسحب زاويتها لتغيير حجمها، أو أزلها بعلامة ×. القفل في شريط العنوان يحمي التخطيط كله من السحب غير المقصود، وزر التخطيطات يحفظ الـ dock باسم — مرّر فوق اسم محفوظ لترى مخططه في مكانه قبل تحميله.</value>
+    <value>اضغط القفل في الشريط لبدء الترتيب: تحصل كل بطاقة على إطار متقطّع — اسحب بطاقة لتحريكها، ومرّر فوقها لتظهر زاوية تغيير الحجم و⚙ وعلامة × للإزالة. اضغط تم أو Esc عند الانتهاء؛ يُقفل التخطيط مجددًا كي لا يتحرك شيء بالخطأ. وإن سحبت بطاقة مقفلة، يذكّرك التطبيق بمكان القفل. زر التخطيطات يحفظ الـ dock باسم — مرّر فوق اسم محفوظ لترى مخططه في مكانه قبل تحميله.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>نسّق الـ dock كله</value>
