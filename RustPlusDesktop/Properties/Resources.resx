@@ -8272,4 +8272,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recycling Calculator</value>
   </data>
+  <data name="RailShowLabels" xml:space="preserve">
+    <value>Show labels</value>
+  </data>
+  <data name="RailHideLabels" xml:space="preserve">
+    <value>Hide labels</value>
+  </data>
 </root>

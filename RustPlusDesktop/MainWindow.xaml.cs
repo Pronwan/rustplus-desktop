@@ -241,9 +241,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
-    private const double CompactSidebarWidth = 64;
-    private const double MinExpandedSidebarWidth = 360;
-    private const double MaxExpandedSidebarWidth = 480;
+    // The rail is icons only (64) or icons with names (200); everything sized off the rail
+    // (collapsed column, panel content, overlay insets) follows RailWidth.
+    private const double CompactRailWidth = 64;
+    private const double LabelledRailWidth = 200;
+    private double RailWidth => TrackingService.RailShowLabels ? LabelledRailWidth : CompactRailWidth;
+    private double CompactSidebarWidth => RailWidth;
+    private double MinExpandedSidebarWidth => 360 + RailWidth - CompactRailWidth;
+    private double MaxExpandedSidebarWidth => 480 + RailWidth - CompactRailWidth;
     private const int SidebarAnimationDurationMs = 180;
     private const int SidebarHoverExpandDelayMs = 200;
     private double _expandedSidebarWidth = 420;
@@ -478,6 +483,8 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         this.PreviewKeyDown += MainWindow_PreviewKeyDown;
         _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+        ApplyRailLayout();
+        LabelStaticRailButtons();
         _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
         TrackLeftPanelOverlayVisibility();
         SetSidebarExpanded(_isSidebarPinnedExpanded);

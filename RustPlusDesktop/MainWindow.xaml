@@ -37,6 +37,9 @@
                 <ResourceDictionary Source="Views/MainWindow/SharedResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <!--  Left edge of overlays that start beside the rail; MainWindow.RailLabels.cs keeps it equal to the rail width.  -->
+            <Thickness x:Key="RailInset">64,0,0,0</Thickness>
+
             <!--  Card visual for one stacked toast (bound to controls:ToastItem). Slides in from the right on load.  -->
             <DataTemplate x:Key="ToastCardTemplate" DataType="{x:Type controls:ToastItem}">
                 <Border x:Name="Card"
@@ -4978,6 +4981,15 @@
                                 </Border>
                             </Grid>
                             <Border Height="1" Width="22" Background="#33FFFFFF" Margin="0,8,0,8" />
+                            <!--  Shows each tab's name beside its icon (wider rail); remembered.  -->
+                            <ui:Button
+                                x:Name="BtnToggleRailLabels"
+                                Style="{StaticResource SidebarRailButton}"
+                                Click="BtnToggleRailLabels_Click">
+                                <Viewbox Width="24" Height="24">
+                                    <ui:SymbolIcon x:Name="RailLabelsIcon" Symbol="PanelLeftExpand20" />
+                                </Viewbox>
+                            </ui:Button>
                             <ui:Button
                                 x:Name="BtnCompactPinSidebar"
                                 tutorials:Tutorial.TargetId="Navigation.Collapse"
@@ -4990,6 +5002,7 @@
                                 </Viewbox>
                             </ui:Button>
                             <ui:Button
+                                x:Name="BtnRailSettings"
                                 Style="{StaticResource SidebarRailButton}"
                                 Margin="0"
                                 AutomationProperties.Name="{DynamicResource Settings}"
@@ -5009,7 +5022,7 @@
                     <!--  Profit Trades Overlay. This and the left-panel overlays below start at the rail's 64px, so the rail stays visible and usable.  -->
                     <Border
                         x:Name="ProfitTradesPanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
@@ -5104,7 +5117,7 @@
                     <!--  Buy X For Y Overlay  -->
                     <Border
                         x:Name="BuyXForYPanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
@@ -5295,25 +5308,25 @@
                     <!--  App Settings Overlay  -->
                     <views:AppSettingsOverlay
                         x:Name="AppSettingsPanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Visibility="Collapsed" />
 
                     <!--  Logic Engine Overlay  -->
                     <views:LogicEngineOverlay
                         x:Name="LogicEnginePanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Visibility="Collapsed" />
 
                     <!--  Device Automation Overlay  -->
                     <views:DeviceAutomationOverlay
                         x:Name="DeviceAutomationPanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Visibility="Collapsed" />
 
                     <!--  Looking for Group Overlay  -->
                     <views:LfgOverlay
                         x:Name="LfgPanel"
-                        Margin="64,0,0,0"
+                        Margin="{DynamicResource RailInset}"
                         Visibility="Collapsed" />
 
                 </Grid>
@@ -10748,7 +10761,7 @@
             <Border
                 x:Name="PlayerWipeTrackerPanel"
                 Grid.ColumnSpan="3"
-                Margin="64,0,0,0"
+                Margin="{DynamicResource RailInset}"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
@@ -10760,7 +10773,7 @@
             <Border
                 x:Name="DeathStatsPanel"
                 Grid.ColumnSpan="3"
-                Margin="64,0,0,0"
+                Margin="{DynamicResource RailInset}"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
                 Visibility="Collapsed">
@@ -10771,7 +10784,7 @@
             <Border
                 x:Name="RaidCalculatorPanel"
                 Grid.ColumnSpan="3"
-                Margin="64,0,0,0"
+                Margin="{DynamicResource RailInset}"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
@@ -10783,7 +10796,7 @@
             <Border
                 x:Name="GeneticsLabPanel"
                 Grid.ColumnSpan="3"
-                Margin="64,0,0,0"
+                Margin="{DynamicResource RailInset}"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"

@@ -94,6 +94,8 @@ public class TrackingSettings
     public bool TrafficMonitorEnabled { get; set; } = true;
     public double SidebarWidth { get; set; } = 420;
     public bool SidebarPinned { get; set; } = true;
+    /// <summary>Sidebar rail shows a name beside each icon (wider rail). Off: icons only.</summary>
+    public bool RailShowLabels { get; set; }
     public double WindowWidth { get; set; } = 1280;
     public double WindowHeight { get; set; } = 720;
     public double WindowLeft { get; set; } = double.NaN;
@@ -707,6 +709,12 @@ public static class TrackingService
     {
         get => _settings.SidebarPinned;
         set { _settings.SidebarPinned = value; SaveDB(); }
+    }
+
+    public static bool RailShowLabels
+    {
+        get => _settings.RailShowLabels;
+        set { _settings.RailShowLabels = value; SaveDB(); }
     }
 
     public static double WindowWidth => _settings.WindowWidth;
