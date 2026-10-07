@@ -247,6 +247,10 @@
                                         The inbox in the title bar is now App Notifications, for updates from the Rust+ Desk service. The bell in the sidebar is Rust+ Notifications, for alarms, deaths and server events.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Sidebar Labels:</Run>
+                                        Prefer names to icons? The new Show labels button at the bottom of the sidebar widens it to show each tab's name beside its icon. The app remembers your choice.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; One Look for Every Panel:</Run>
                                         Settings, the Community Hub, Tickets, Console Helper, the calculators, Death Stats, Player Wipe Tracker and App Notifications now share the same header, with the close button always in the same place.
                                     </TextBlock>
