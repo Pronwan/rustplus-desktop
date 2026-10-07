@@ -473,10 +473,8 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        if (savedMaximized)
-        {
-            this.WindowState = WindowState.Maximized;
-        }
+        // Applied after the window is shown (ApplyStartupWindowState), never here: see there.
+        _startMaximized = savedMaximized;
 
         this.PreviewKeyDown += MainWindow_PreviewKeyDown;
         _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
@@ -3589,7 +3587,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (this.WindowState == WindowState.Normal)
             {
-                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, false);
+                // Closed before the saved maximize was applied: keep it for next time.
+                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, _startMaximized);
             }
             else if (this.WindowState == WindowState.Maximized)
             {
