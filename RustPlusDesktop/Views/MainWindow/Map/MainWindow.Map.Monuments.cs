@@ -149,20 +149,41 @@ public partial class MainWindow
         if (MonumentListContainer == null) return;
 
         string query = TxtMonumentSearch?.Text?.Trim()?.ToLower() ?? "";
+        bool searching = query.Length > 0;
+
+        bool RowMatches(ValueTuple<double, double, string> m) =>
+            !searching
+            || Beautify(m.Item3).ToLower().Contains(query)
+            || GetGridLabel(m.Item1, m.Item2).ToLower().Contains(query);
+
         foreach (UIElement child in MonumentListContainer.Children)
         {
             if (child is Border itemBorder && itemBorder.Tag is ValueTuple<double, double, string> mon)
             {
-                string niceName = Beautify(mon.Item3).ToLower();
-                string gridName = GetGridLabel(mon.Item1, mon.Item2).ToLower();
-                if (string.IsNullOrEmpty(query) || niceName.Contains(query) || gridName.Contains(query))
+                itemBorder.Visibility = RowMatches(mon) ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else if (child is Border header && header.Tag is MonumentGroup group)
+            {
+                // A matching group name shows all its rows; otherwise only rows whose grid matches.
+                bool nameMatch = !searching || group.Name.ToLower().Contains(query);
+                int shown = 0;
+                foreach (UIElement r in group.Rows.Children)
                 {
-                    itemBorder.Visibility = Visibility.Visible;
+                    if (r is Border row && row.Tag is ValueTuple<double, double, string> m)
+                    {
+                        bool visible = nameMatch || RowMatches(m);
+                        row.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                        if (visible) shown++;
+                    }
                 }
-                else
-                {
-                    itemBorder.Visibility = Visibility.Collapsed;
-                }
+
+                // Searching opens every group with a hit; otherwise groups keep the user's choice.
+                bool expanded = shown > 0 && (searching || _expandedMonumentGroups.Contains(group.Name));
+                header.Visibility = shown > 0 ? Visibility.Visible : Visibility.Collapsed;
+                group.Rows.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+                group.Chevron.Symbol = expanded
+                    ? Wpf.Ui.Controls.SymbolRegular.ChevronDown12
+                    : Wpf.Ui.Controls.SymbolRegular.ChevronRight12;
             }
         }
     }
@@ -179,8 +200,19 @@ public partial class MainWindow
             .OrderBy(m => Beautify(m.Name))
             .ToList();
 
-        foreach (var mon in sortedMons)
+        // Monuments that share a name (nine Anvil Rocks) fold under one header; a name that
+        // appears once stays a plain row. Single monuments come first, then the groups, each
+        // part still alphabetical (OrderBy is stable).
+        foreach (var group in sortedMons.GroupBy(m => Beautify(m.Name)).OrderBy(g => g.Count() > 1))
         {
+            Panel target = MonumentListContainer;
+            if (group.Count() > 1)
+            {
+                target = AddMonumentGroup(group.Key, group.Count());
+            }
+
+            foreach (var mon in group)
+            {
             string niceName = Beautify(mon.Name);
             string key = NormalizeMonName(mon.Name, out var variant);
             
@@ -317,9 +349,76 @@ public partial class MainWindow
                 CenterMapOnWorldAnimated(mon.X, mon.Y, allowDip: true, fast: false, keepTracking: false, targetZoom: 6.0);
             };
 
-            MonumentListContainer.Children.Add(rowBorder);
+            target.Children.Add(rowBorder);
+            }
         }
 
         FilterMonumentList();
+    }
+
+    // Monument names whose group the user opened; kept across list rebuilds.
+    private readonly HashSet<string> _expandedMonumentGroups = new(StringComparer.OrdinalIgnoreCase);
+
+    private sealed record MonumentGroup(string Name, StackPanel Rows, Wpf.Ui.Controls.SymbolIcon Chevron);
+
+    /// <summary>Adds a collapsible header for a repeated monument name; returns the panel for its rows.</summary>
+    private StackPanel AddMonumentGroup(string name, int count)
+    {
+        var rows = new StackPanel { Margin = new Thickness(14, 0, 0, 0) };
+        var chevron = new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronRight12,
+            FontSize = 12,
+            Foreground = new SolidColorBrush(Color.FromRgb(140, 150, 168)),
+            Margin = new Thickness(4, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var label = new TextBlock
+        {
+            Text = name,
+            Foreground = new SolidColorBrush(Color.FromRgb(240, 243, 247)),
+            FontSize = 12,
+            FontWeight = FontWeights.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+        var countText = new TextBlock
+        {
+            Text = count.ToString(),
+            Foreground = new SolidColorBrush(Color.FromRgb(140, 150, 168)),
+            FontSize = 11,
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var line = new DockPanel();
+        DockPanel.SetDock(chevron, Dock.Left);
+        DockPanel.SetDock(countText, Dock.Right);
+        line.Children.Add(chevron);
+        line.Children.Add(countText);
+        line.Children.Add(label);
+
+        var group = new MonumentGroup(name, rows, chevron);
+        var header = new Border
+        {
+            Background = Brushes.Transparent,
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(4, 6, 8, 6),
+            Margin = new Thickness(0, 2, 0, 2),
+            Cursor = Cursors.Hand,
+            Child = line,
+            Tag = group,
+        };
+        header.MouseEnter += (_, _) => header.Background = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+        header.MouseLeave += (_, _) => header.Background = Brushes.Transparent;
+        header.MouseLeftButtonUp += (_, _) =>
+        {
+            if (!_expandedMonumentGroups.Remove(name)) _expandedMonumentGroups.Add(name);
+            FilterMonumentList();
+        };
+
+        MonumentListContainer.Children.Add(header);
+        MonumentListContainer.Children.Add(rows);
+        return rows;
     }
 }
