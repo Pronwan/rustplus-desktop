@@ -236,51 +236,19 @@
 
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Opens Full Screen Properly:</Run>
-                                        If you closed the app maximized, it now reopens maximized and fitted to your screen, instead of slightly larger with its edges cut off.
+                                        If you closed the app maximized, it now reopens fitted to your screen instead of slightly larger.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Sidebar Stays With You:</Run>
-                                        Genetics Lab, Player Wipe Tracker, Death Stats, Raid Calculator, the Community Hub and Settings no longer cover the sidebar, so you can jump straight to another tool.
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Easier Navigation:</Run>
+                                        The sidebar stays visible beside every tool and panel, can show names next to its icons (Show labels), and every panel shares one header with the close button in the same place.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Two Kinds of Notifications, Two Names:</Run>
-                                        The inbox in the title bar is now App Notifications, for updates from the Rust+ Desk service. The bell in the sidebar is Rust+ Notifications, for alarms, deaths and server events.
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Screens:</Run>
+                                        Larger text across the app, separate App and Rust+ notifications, and Devices and Team now point you to a next step when they are empty.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Sidebar Labels:</Run>
-                                        Prefer names to icons? The new Show labels button at the bottom of the sidebar widens it to show each tab's name beside its icon. The app remembers your choice.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; One Look for Every Panel:</Run>
-                                        Settings, the Community Hub, Tickets, Console Helper, the calculators, Death Stats, Player Wipe Tracker and App Notifications now share the same header, with the close button always in the same place.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Folders Show When They Are Open:</Run>
-                                        An open sidebar folder, like Tools, now shows a small arrow, so it is clear a click folds it away.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Teammate Names:</Run>
-                                        Teammates that Rust+ reports without a name now show their Steam name instead of "(player)".
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Ticket References:</Run>
-                                        Each ticket in the list shows a short reference, so tickets with the same subject are easy to tell apart.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Player Wipe Tracker:</Run>
-                                        Premium tabs show a small lock only while they are locked, and hovering the server or player picker shows the full name.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Death Stats:</Run>
-                                        A server with no deaths logged yet now says so, instead of saying nothing matches your filters.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Small Touches:</Run>
-                                        Sidebar names follow your app language and match their page titles, the Recycling Calculator shows "All Categories" in full, and storage upkeep shows a dash while it is unknown.
-                                    </TextBlock>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Easier to Read:</Run>
-                                        Small labels, hints, timestamps and setting descriptions across the app are a size larger.
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Small Fixes:</Run>
+                                        Teammates show their Steam name instead of "(player)", tickets show a reference, and Death Stats, Player Wipe Tracker and the Recycling Calculator are tidier.
                                     </TextBlock>
                                 </StackPanel>
                             </Border>
