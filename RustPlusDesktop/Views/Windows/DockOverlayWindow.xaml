@@ -48,7 +48,7 @@
                 Cursor="Hand">
             <TextBlock Text="&#xE70D;"
                        FontFamily="Segoe MDL2 Assets"
-                       FontSize="9"
+                       FontSize="10"
                        Foreground="#DD3FD7FF"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>

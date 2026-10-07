@@ -62,7 +62,7 @@
                         <TextBlock Text="{Binding Title}" Foreground="{StaticResource ConText}"
                                    FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" />
                         <TextBlock Grid.Column="1" Text="{Binding Group}" Foreground="{StaticResource ConMuted}"
-                                   FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                   FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
                     </Grid>
 
                     <TextBlock Text="{Binding Description}" Foreground="{StaticResource ConMuted}"

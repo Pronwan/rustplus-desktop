@@ -37,7 +37,7 @@
                         <Border Margin="10,0,0,0" Background="#26D97706" BorderBrush="#E5A93C" BorderThickness="1" CornerRadius="6" Padding="8,2" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Warning24" FontSize="12" Foreground="#F59E0B" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="EXPERIMENTAL • TIME LIMITED" FontSize="10.5" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                                <TextBlock Text="EXPERIMENTAL • TIME LIMITED" FontSize="11" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -152,7 +152,7 @@
                                             <Border Background="{DynamicResource Accent}" CornerRadius="4"
                                                     Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center"
                                                     Visibility="{Binding ActiveBadgeVisibility}">
-                                                <TextBlock Text="ACTIVE 24/7" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                                <TextBlock Text="ACTIVE 24/7" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
                                         </StackPanel>
 

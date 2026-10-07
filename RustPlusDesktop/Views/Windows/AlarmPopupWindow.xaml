@@ -73,7 +73,7 @@
 
                                 <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}" FontSize="11" Foreground="{StaticResource TextSubtle}" HorizontalAlignment="Right"/>
-                                    <TextBlock Text="{Binding Server}" FontSize="10" Foreground="{StaticResource Accent}" HorizontalAlignment="Right" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding Server}" FontSize="11" Foreground="{StaticResource Accent}" HorizontalAlignment="Right" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Grid>
                         </Border>

@@ -317,7 +317,7 @@
                         <StackPanel>
                             <StackPanel x:Name="SparklineHost" Orientation="Horizontal" Height="50"
                                         Margin="4,6,4,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
-                            <TextBlock Text="Oldest → Today" FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="4,6,0,0" />
+                            <TextBlock Text="Oldest → Today" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="4,6,0,0" />
                         </StackPanel>
                     </ui:Card>
 

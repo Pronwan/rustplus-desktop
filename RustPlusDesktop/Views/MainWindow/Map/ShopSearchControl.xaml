@@ -163,7 +163,7 @@
             <Setter Property="BorderBrush" Value="#16FFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Foreground" Value="#CCECEFF1" />
-            <Setter Property="FontSize" Value="10.5" />
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="Height" Value="20" />
             <Setter Property="Padding" Value="5,1" />
             <Setter Property="Cursor" Value="Hand" />
@@ -325,7 +325,7 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiShowShopsThatSellItem}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="💰 " FontSize="10.5" VerticalAlignment="Center" />
+                    <TextBlock Text="💰 " FontSize="11" VerticalAlignment="Center" />
                     <TextBlock Text="{DynamicResource AlertShopSells}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -337,7 +337,7 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiShowShopsThatBuyItem}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🛒 " FontSize="10.5" VerticalAlignment="Center" />
+                    <TextBlock Text="🛒 " FontSize="11" VerticalAlignment="Center" />
                     <TextBlock Text="{DynamicResource AlertShopBuys}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -349,7 +349,7 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiDonTShowOffersWithoutStock}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="👁 " FontSize="10.5" VerticalAlignment="Center" />
+                    <TextBlock Text="👁 " FontSize="11" VerticalAlignment="Center" />
                     <TextBlock Text="{DynamicResource UiHide0Stock}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -361,7 +361,7 @@
                 Margin="0,0,0,6"
                 ToolTip="Hide shops inside Outpost, Bandit Town, Fishing Villages &amp; Monuments">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🏛 " FontSize="10.5" VerticalAlignment="Center" />
+                    <TextBlock Text="🏛 " FontSize="11" VerticalAlignment="Center" />
                     <TextBlock Text="Hide Monuments" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -375,7 +375,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbSort" SelectionChanged="CmbSort_SelectionChanged" Height="34">
                     <ComboBoxItem Content="{DynamicResource UiDefault}" Tag="default" IsSelected="True"/>
                     <ComboBoxItem Content="{DynamicResource UiPriceLowToHigh}" Tag="price_asc"/>
@@ -386,7 +386,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                <TextBlock Text="Category" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="Category" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbCategory" SelectionChanged="CmbCategory_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -403,7 +403,7 @@
         <!-- Row 3: Payment Resource Filter -->
         <Grid Grid.Row="3" Margin="10,0,10,10">
             <StackPanel>
-                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="#80ECEFF1" FontSize="10" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbResource" SelectionChanged="CmbResource_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -453,7 +453,7 @@
                             x:Name="TxtAlertArrow"
                             Text="▼"
                             Foreground="#CCECEFF1"
-                            FontSize="10"
+                            FontSize="11"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center" />
                     </Grid>

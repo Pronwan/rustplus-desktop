@@ -39,7 +39,7 @@
                             <TextBlock x:Name="PART_Eyebrow"
                                        Text="{TemplateBinding Eyebrow}"
                                        Foreground="{TemplateBinding AccentBrush}"
-                                       FontSize="10.5" FontWeight="Bold" Margin="0,0,0,1" />
+                                       FontSize="11" FontWeight="Bold" Margin="0,0,0,1" />
                             <TextBlock x:Name="PART_Title"
                                        Text="{TemplateBinding Title}"
                                        Foreground="{DynamicResource TextPrimary}"

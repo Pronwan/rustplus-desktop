@@ -409,7 +409,7 @@
                             </Grid>
                             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#DD10151C" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="12">
                                 <StackPanel>
-                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="Bold" />
+                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="11" FontWeight="Bold" />
                                     <TextBlock x:Name="ReplayStateText" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,3,0,0" />
                                 </StackPanel>
                             </Border>
@@ -700,11 +700,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="SERVER" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="SERVER" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock x:Name="ArchiveServerNameText" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                             </StackPanel>
                                             <Border Grid.Column="1" Background="#1A60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" CornerRadius="12" Padding="8,3" VerticalAlignment="Top">
-                                                <TextBlock Text="Cloud Backup" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                <TextBlock Text="Cloud Backup" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                             </Border>
                                         </Grid>
 

@@ -56,7 +56,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Ellipse Width="6" Height="6" Margin="0,0,5,0" VerticalAlignment="Center" Fill="#4CC38A" />
                     <TextBlock x:Name="OnlineText"
-                               FontSize="10"
+                               FontSize="11"
                                FontWeight="SemiBold"
                                VerticalAlignment="Center"
                                Foreground="#7FDCB0" />
@@ -86,7 +86,7 @@
                     CornerRadius="7"
                     Visibility="Collapsed">
                 <TextBlock x:Name="UnseenText"
-                           FontSize="9.5"
+                           FontSize="10"
                            FontWeight="Bold"
                            Foreground="#FF0A0D14" />
             </Border>

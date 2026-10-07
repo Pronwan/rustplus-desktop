@@ -79,7 +79,7 @@
                                                TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding EarnedText}"
                                                Margin="0,2,0,0"
-                                               FontSize="10"
+                                               FontSize="11"
                                                Foreground="{DynamicResource TextSubtle}"
                                                Visibility="{Binding EarnedTextVisibility}" />
                                 </StackPanel>
@@ -92,7 +92,7 @@
                                         Background="#FFD27A1E"
                                         Visibility="{Binding NewBadgeVisibility}">
                                     <TextBlock Text="{DynamicResource AchievementsNew}"
-                                               FontSize="9"
+                                               FontSize="10"
                                                FontWeight="Bold"
                                                Foreground="White" />
                                 </Border>

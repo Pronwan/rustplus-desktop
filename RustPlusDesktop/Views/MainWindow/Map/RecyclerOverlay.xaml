@@ -121,12 +121,12 @@
 
                         <DockPanel Grid.Row="0" Margin="0,0,0,6">
                             <TextBlock Text="{DynamicResource UiITEMBAY}"
-                                       FontSize="10"
+                                       FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource DeckMuted}" />
                             <TextBlock Text="{DynamicResource UiScrollOrShiftClickChangesBy10}"
                                        DockPanel.Dock="Right"
-                                       FontSize="10"
+                                       FontSize="11"
                                        Foreground="#6F7A8D"
                                        HorizontalAlignment="Right" />
                         </DockPanel>
@@ -217,11 +217,11 @@
                                 <ColumnDefinition Width="96" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{DynamicResource UiYIELDBOARD}"
-                                       FontSize="10"
+                                       FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource DeckMuted}" />
-                            <TextBlock Grid.Column="1" Text="{DynamicResource UiWILD}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiText100YieldMonuments}" />
-                            <TextBlock Grid.Column="2" Text="{DynamicResource UiOUTPOST}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiOutpostSafezoneRecycler}" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource UiWILD}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource DeckWild}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiText100YieldMonuments}" />
+                            <TextBlock Grid.Column="2" Text="{DynamicResource UiOUTPOST}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" HorizontalAlignment="Center" ToolTip="{DynamicResource UiOutpostSafezoneRecycler}" />
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -313,7 +313,7 @@
                             BorderThickness="1"
                             CornerRadius="8">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource Time}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource DeckMuted}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource Time}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource DeckMuted}" Margin="0,0,8,0" VerticalAlignment="Center" />
                             <TextBlock x:Name="TxtWildTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckWild}" Margin="0,0,9,0" VerticalAlignment="Center" ToolTip="{DynamicResource UiWildRecyclerTime}" />
                             <TextBlock x:Name="TxtSafeTime" Text="00:00:00" FontSize="11.5" FontWeight="Bold" Foreground="{StaticResource DeckSafe}" VerticalAlignment="Center" ToolTip="{DynamicResource UiOutpostRecyclerTime}" />
                         </StackPanel>
