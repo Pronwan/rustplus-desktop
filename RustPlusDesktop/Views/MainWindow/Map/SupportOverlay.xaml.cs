@@ -622,10 +622,19 @@ public partial class SupportOverlay : UserControl
         public string When { get; }
         public Visibility UnreadVisibility { get; }
 
+        /// <summary>
+        /// Short, stable tag from the ticket id ("#3F9A1C"). Subjects are free text and often
+        /// repeat ("Help me"), so the list needs something that tells two tickets apart. Taken
+        /// from the end of the id: ids are time-ordered, so tickets opened together share a prefix.
+        /// </summary>
+        public string Reference { get; }
+
         public TicketVm(TicketSummary t)
         {
             Id = t.Id;
             Subject = t.Subject;
+            var idChars = new string((t.Id ?? "").Where(char.IsLetterOrDigit).TakeLast(6).ToArray());
+            Reference = idChars.Length == 0 ? "" : "#" + idChars.ToUpperInvariant();
             CategoryLabel = CategoryLabelFor(t.Category);
             StatusLabel = StatusLabelFor(t.Status);
             (StatusBackground, StatusForeground) = t.Status switch

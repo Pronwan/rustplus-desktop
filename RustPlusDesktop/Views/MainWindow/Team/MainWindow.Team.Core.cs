@@ -597,7 +597,15 @@ public partial class MainWindow
 
                 var hadPrev = _lastPresence.TryGetValue(sid, out var prev);
 
-                vm.Name = string.IsNullOrWhiteSpace(m.Name) ? "(player)" : m.Name!;
+                // Rust+ sometimes sends a member without a name. Fall back to a name already
+                // resolved for that SteamID, and otherwise keep whatever the card shows rather
+                // than resetting a resolved name to the placeholder on every refresh.
+                if (!string.IsNullOrWhiteSpace(m.Name))
+                    vm.Name = m.Name!;
+                else if (_steamNames.TryGetValue(sid, out var knownName) && !string.IsNullOrWhiteSpace(knownName))
+                    vm.Name = knownName;
+                if (vm.Name == "(player)")
+                    _ = LoadTeamMemberSteamNameAsync(vm);
                 vm.IsLeader = leaderId != 0 && sid == leaderId;
                 vm.IsOnline = m.Online;
                 vm.IsDead = m.Dead;
@@ -1046,6 +1054,38 @@ public partial class MainWindow
             _ = RefreshTeamNamesAsync();
 
         return "(player)";
+    }
+
+    // SteamIDs whose public profile name was already requested this session.
+    private readonly HashSet<ulong> _teamNameLookups = new();
+
+    /// <summary>
+    /// Fills in a team member's name from their public Steam profile when Rust+ sent none, so
+    /// the card shows a name instead of "(player)" over a raw SteamID. Once per player per
+    /// session: team refreshes are frequent and a private profile will not start answering.
+    /// </summary>
+    private async Task LoadTeamMemberSteamNameAsync(TeamMemberVM vm)
+    {
+        if (vm.SteamId == 0 || !_teamNameLookups.Add(vm.SteamId)) return;
+
+        try
+        {
+            using var http = new HttpClient(new TrafficTrackingHttpMessageHandler("Clan & Steam"));
+            var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{vm.SteamId}?xml=1");
+            var match = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]></steamID>", RegexOptions.IgnoreCase);
+            if (!match.Success || string.IsNullOrWhiteSpace(match.Groups[1].Value)) return;
+
+            var name = match.Groups[1].Value;
+            _steamNames[vm.SteamId] = name;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                if (vm.Name == "(player)") vm.Name = name;
+            });
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[team] name lookup {vm.SteamId}: {ex.Message}");
+        }
     }
 
     private async Task RefreshTeamNamesAsync()

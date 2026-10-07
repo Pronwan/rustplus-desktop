@@ -8032,4 +8032,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>Bei einer Zelle wird der Name unabhängig von der Schriftgröße abgeschnitten; das Symbol sagt ohnehin, um welches Event es geht.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recycling-Rechner</value>
+  </data>
 </root>

@@ -270,15 +270,16 @@ public partial class MainWindow
         collapsedGrid.Children.Add(BuildFolderPopover(collapsedButton));
         headerGrid.Children.Add(collapsedGrid);
 
-        // Expanded header: folder glyph button that collapses the folder back down.
+        // Expanded header: folder glyph button that collapses the folder back down. The chevron
+        // under the glyph says so; without it an open folder looked like any other tab.
         var expandedGrid = new Grid();
         var expandedButton = new WpfUi.Button
         {
             Style = (Style)RailItemsHost.FindResource("SidebarRailButton"),
             Margin = new Thickness(0),
             Padding = new Thickness(0),
-            Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Folder24, FontSize = 20 },
             Foreground = FolderHeaderIconBrush,
+            Content = BuildExpandedFolderGlyph(),
         };
 
         if (isDefaultTools)
@@ -568,6 +569,28 @@ public partial class MainWindow
             c.ContainerBackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, bgAnim);
             c.ContainerBorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, borderAnim);
         }
+    }
+
+    /// <summary>Folder glyph with a small up-chevron, marking an open folder as collapsible.</summary>
+    private static StackPanel BuildExpandedFolderGlyph()
+    {
+        var panel = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        panel.Children.Add(new WpfUi.SymbolIcon
+        {
+            Symbol = WpfUi.SymbolRegular.Folder20,
+            FontSize = 18,
+            Foreground = FolderHeaderIconBrush,
+            HorizontalAlignment = HorizontalAlignment.Center,
+        });
+        panel.Children.Add(new WpfUi.SymbolIcon
+        {
+            Symbol = WpfUi.SymbolRegular.ChevronUp12,
+            FontSize = 10,
+            Foreground = FolderHeaderIconBrush,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(0, -2, 0, 0),
+        });
+        return panel;
     }
 
     private FrameworkElement BuildMiniIcon(RailTabInfo info)

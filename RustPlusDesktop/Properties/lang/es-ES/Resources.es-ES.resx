@@ -7938,4 +7938,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>En una celda el nombre se recorta sea cual sea el tamaño del texto; el icono ya dice de qué evento se trata.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Calculadora de reciclaje</value>
+  </data>
 </root>

@@ -103,7 +103,8 @@
                 <Grid Grid.Row="1" Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="124" />
+                        <!-- Wide enough for "All Categories" at 12px; 124 cut it to "All Categorie". -->
+                        <ColumnDefinition Width="146" />
                     </Grid.ColumnDefinitions>
 
                     <ui:TextBox x:Name="SearchTextBox" tutorials:Tutorial.TargetId="Recycler.Search"

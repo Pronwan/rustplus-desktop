@@ -23,6 +23,7 @@ public partial class MainWindow
 
         EnsureLfgWired();
 
+        CloseLeftPanelOverlays();
         LfgPanel.Refresh();
         LfgPanel.Visibility = Visibility.Visible;
     }

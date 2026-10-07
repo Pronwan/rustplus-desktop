@@ -7938,4 +7938,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>В одной ячейке название обрезается при любом размере текста; значок и так говорит, что это за событие.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Калькулятор переработки</value>
+  </data>
 </root>

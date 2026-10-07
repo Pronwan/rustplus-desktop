@@ -6914,4 +6914,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>Tek hücrede ad, yazı boyutundan bağımsız olarak kırpılır; simge zaten hangi olay olduğunu söylüyor.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Geri Dönüşüm Hesaplayıcı</value>
+  </data>
 </root>

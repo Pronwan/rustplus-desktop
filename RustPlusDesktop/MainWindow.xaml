@@ -417,8 +417,8 @@
                             Padding="0"
                             Appearance="Transparent"
                             Click="BtnTopNotifications_Click"
-                            Icon="{ui:SymbolIcon Symbol=Alert24}"
-                            ToolTip="Notifications" AutomationProperties.Name="Notifications" />
+                            Icon="{ui:SymbolIcon Symbol=MailInbox24}"
+                            ToolTip="{DynamicResource AppNotificationsTitle}" AutomationProperties.Name="{DynamicResource AppNotificationsTitle}" />
                         <Border x:Name="TopNotifBadge" Visibility="Collapsed"
                                 IsHitTestVisible="False"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -441,8 +441,8 @@
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0" Margin="20,16,16,16">
                                         <StackPanel Margin="0,0,40,0">
-                                            <TextBlock Text="Notifications" Foreground="#FFF4F6FA" FontSize="18" FontWeight="SemiBold" />
-                                            <TextBlock Text="Recent activity and updates" Foreground="#FFA8B2BF" FontSize="12" Margin="0,4,0,0" />
+                                            <TextBlock Text="{DynamicResource AppNotificationsTitle}" Foreground="#FFF4F6FA" FontSize="18" FontWeight="SemiBold" />
+                                            <TextBlock Text="{DynamicResource AppNotificationsSubtitle}" Foreground="#FFA8B2BF" FontSize="12" Margin="0,4,0,0" />
                                         </StackPanel>
                                         <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent"
                                                    Width="32" Height="32" Padding="0" Click="BtnTopNotifications_Click"
@@ -489,9 +489,9 @@
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
                                             <StackPanel x:Name="TopNotificationsEmpty" HorizontalAlignment="Center" Margin="24,48" Visibility="Collapsed">
-                                                <ui:SymbolIcon Symbol="Alert24" FontSize="32" Foreground="#FF98A5B5" HorizontalAlignment="Center" />
-                                                <TextBlock Text="No notifications" Foreground="#FFF4F6FA" FontSize="15" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,6" />
-                                                <TextBlock Text="New activity will appear here." Foreground="#FFA8B2BF" FontSize="13" TextAlignment="Center" />
+                                                <ui:SymbolIcon Symbol="MailInbox24" FontSize="32" Foreground="#FF98A5B5" HorizontalAlignment="Center" />
+                                                <TextBlock Text="{DynamicResource AppNotificationsEmpty}" Foreground="#FFF4F6FA" FontSize="15" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,6" />
+                                                <TextBlock Text="{DynamicResource AppNotificationsEmptyHint}" Foreground="#FFA8B2BF" FontSize="13" TextAlignment="Center" />
                                             </StackPanel>
                                         </Grid>
                                     </ScrollViewer>
@@ -1540,11 +1540,12 @@
                                 <TextBlock
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
-                                    FontSize="9"
+                                    FontSize="11"
                                     FontStyle="Italic"
                                     Foreground="White"
-                                    Opacity="0.5"
-                                    Text="{DynamicResource RightClickOptions}" />
+                                    Opacity="0.65"
+                                    Text="{DynamicResource RightClickOptions}"
+                                    TextTrimming="CharacterEllipsis" />
                             </Grid>
                         </StackPanel>
                         <Border
@@ -1733,7 +1734,7 @@
                         </Grid>
                     </Grid>
 
-                    <!--  CENTER: TabControl fÃ¼llt den Rest, mit MindesthÃ¶he  -->
+                    <!--  CENTER: TabControl füllt den Rest, mit Mindesthöhe  -->
             <TabControl
                 x:Name="MainTabs"
                 VerticalAlignment="Stretch"
@@ -2476,13 +2477,13 @@
                                                                             <Setter Property="Background" Value="#1AFFFFFF" />
                                                                             <Setter Property="BorderBrush" Value="#1EFFFFFF" />
                                                                             <Style.Triggers>
-                                                                                <!--  ON / ACTIVE / ONLINE Status (GrÃ¼n)  -->
+                                                                                <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
                                                                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
                                                                                 </DataTrigger>
 
-                                                                                <!--  Storage Monitor & Others: Immer grÃ¼n wenn da  -->
+                                                                                <!--  Storage Monitor & Others: Immer grün wenn da  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
                                                                                     <Setter Property="Background" Value="#1A4EB887" />
                                                                                     <Setter Property="BorderBrush" Value="#334EB887" />
@@ -2511,7 +2512,7 @@
                                                                                 <Setter Property="Text" Value="{DynamicResource Online}" />
                                                                                 <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                                                 <Style.Triggers>
-                                                                                    <!--  ON Status colors (GrÃ¼n)  -->
+                                                                                    <!--  ON Status colors (Grün)  -->
                                                                                     <DataTrigger Binding="{Binding IsOn}" Value="True">
                                                                                         <Setter Property="Foreground" Value="#4EB887" />
                                                                                     </DataTrigger>
@@ -3039,7 +3040,7 @@
                                                                 </WrapPanel>
                                                             </Grid>
 
-                                                            <!--  Spalte 3: Toggle NUR fÃ¼r SmartSwitch  -->
+                                                            <!--  Spalte 3: Toggle NUR für SmartSwitch  -->
                                                             <ui:ToggleSwitch
                                                                  Grid.Column="2"
                                                                  Margin="8,0,0,0"
@@ -3067,7 +3068,7 @@
                                                                  </ui:ToggleSwitch.Style>
                                                              </ui:ToggleSwitch>
 
-                                                            <!--  Spalte 3: Toggle NUR fÃ¼r Gruppen  -->
+                                                            <!--  Spalte 3: Toggle NUR für Gruppen  -->
                                                             <ui:Button
                                                                  Grid.Column="2"
                                                                  Width="60"
@@ -3170,7 +3171,7 @@
                                                                 </ToggleButton.Style>
                                                             </ToggleButton>
 
-                                                            <!--  Spalte 3: Toggles NUR fÃ¼r SmartAlarm  -->
+                                                            <!--  Spalte 3: Toggles NUR für SmartAlarm  -->
                                                             <StackPanel
                                                                 Grid.Column="2"
                                                                 Margin="8,0,0,0"
@@ -3262,7 +3263,7 @@
                                                     </Border>
                                                     <!--  ===== Ende Zeile =====  -->
 
-                                                    <!-- ===== Klappbereich (hÃƒÂ¤ngt direkt an
+                                                    <!-- ===== Klappbereich (hängt direkt an
                                              ) =====
                                              <Grid Margin="0,4,0,8" Visibility="Collapsed">
                                                  <Grid.Style>
@@ -3283,7 +3284,7 @@
                     <Run Text="{DynamicResource Snapshot}"/>
                     <Run Text="{Binding Storage.ItemsCount, Mode=OneWay, FallbackValue=0}" />
                     <Run Text="{DynamicResource ItemsUpkeep}"/>
-                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=â€”}"/>
+                    <Run Text="{Binding UpkeepSeconds, Mode=OneWay, TargetNullValue=—}"/>
                                                         </TextBlock>
 
                                                         <ItemsControl ItemsSource="{Binding Storage.Items, Mode=OneWay}">
@@ -3298,7 +3299,7 @@
                                                                         <Image Width="24" Height="24" Source="{Binding Icon}" Stretch="Uniform"/>
                                                                         <TextBlock Margin="8,0,0,0" Foreground="White">
                             <Run Text="{Binding Display}"/>
-                            <Run Text="{DynamicResource UiÃƒâ}"/>
+                            <Run Text="×"/>
                             <Run Text="{Binding Amount}"/>
                             <Run Text="{Binding MaxStack, StringFormat={} (Stack {0})}"/>
                                                                         </TextBlock>
@@ -3412,7 +3413,7 @@
                                                 <UniformGrid Columns="2" VerticalAlignment="Top" />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
-                                        <!--  KontextmenÃ¼  -->
+                                        <!--  Kontextmenü  -->
                                         <ListBox.Resources>
                                             <ContextMenu x:Key="TeamContextMenu" Style="{StaticResource DarkContextMenu}">
                                                 <MenuItem Click="Team_Center_Click" Header="{DynamicResource CenterOnMap}">
@@ -3486,7 +3487,7 @@
                                                                     Stretch="UniformToFill" />
                                                             </Border>
 
-                                                            <!--  Online (grÃ¼n)  -->
+                                                            <!--  Online (grün)  -->
                                                             <Ellipse
                                                                 Width="10"
                                                                 Height="10"
@@ -3536,7 +3537,7 @@
 
                                                         <!--  Textseite  -->
                                                         <StackPanel Grid.Column="2" Margin="4,0,0,0" VerticalAlignment="Center">
-                                                            <!--  Name: Standard weiÃŸ, offline leicht ausgrauen, tot = rot  -->
+                                                            <!--  Name: Standard weiß, offline leicht ausgrauen, tot = rot  -->
                                                             <TextBlock FontSize="11" FontWeight="SemiBold" TextTrimming="CharacterEllipsis">
                                                                 <TextBlock.Text>
                                                                     <Binding Path="DisplayName" />
@@ -4563,7 +4564,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="LeafTwo24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="Genetics Lab" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource RailGeneticsLab}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid />
@@ -4573,7 +4574,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="History24" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="Player Wipe Tracker" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource RailPlayerWipeTracker}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid />
@@ -4586,7 +4587,7 @@
                                         <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
                                               Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
                                     </Viewbox>
-                                    <TextBlock VerticalAlignment="Center" Text="Death Stats" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource RailDeathStats}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid />
@@ -4606,7 +4607,7 @@
                             <TabItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Recycle20" Margin="0,0,6,0" VerticalAlignment="Center" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}" />
-                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource Update700Title3}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource RecyclingCalculatorName}" />
                                 </StackPanel>
                             </TabItem.Header>
                             <views:RecyclerOverlay
@@ -4909,93 +4910,14 @@
                         <!--
                             Row 1 tabs are populated at runtime by the data-driven rail builder
                             (MainWindow.Rail.cs): drag-to-reorder, Discord-style folders, group/ungroup.
-                            The static children below are a design-time fallback and are cleared and
-                            rebuilt from the persisted RailLayout on startup.
+                            The host is empty in markup: every entry is built from RailCatalog and the
+                            persisted RailLayout, so the catalog is the only list of rail tabs.
                         -->
                         <ScrollViewer Grid.Row="1"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled"
                                       Padding="0,0,0,4">
-                        <StackPanel x:Name="RailItemsHost" HorizontalAlignment="Center">
-                            <Grid>
-                                <ui:Button x:Name="RailDevicesButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource DevicesTab}" AutomationProperties.HelpText="{DynamicResource UiMonitorAndControlPairedSmartDevices}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Connector24}" Tag="{Binding ElementName=DevicesTabItem}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDevicesButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDevicesButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailDevicesButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailTeamButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource TeamTab}" AutomationProperties.HelpText="{DynamicResource UiTrackTeammatesAndSharedActivity}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=People24}" Tag="{Binding ElementName=TabTeam}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailTeamButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailTeamButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailTeamButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailClanButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ClanTab}" AutomationProperties.HelpText="{DynamicResource UiTrackClanMembers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Shield24}" Tag="{Binding ElementName=TabClan}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailClanButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailClanButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailClanButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailCamerasButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource CamerasTab}" AutomationProperties.HelpText="{DynamicResource UiViewAndControlPairedCCTVCameras}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Video24}" Tag="{Binding ElementName=CamerasTabItem}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailCamerasButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailCamerasButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailCamerasButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <!-- Players: opt-in from Settings (Show Players tab). Hidden by default. -->
-                            <Grid x:Name="PlayersRailEntry" Visibility="Collapsed">
-                                <ui:Button x:Name="RailPlayersButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Players}" AutomationProperties.HelpText="{DynamicResource UiBrowseOnlinePlayersAndTrackedTargets}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Globe24}" Tag="{Binding ElementName=PlayersTabItem}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayersButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayersButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailPlayersButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailNotificationsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource NotificationsTab}" AutomationProperties.HelpText="{DynamicResource UiReviewAlertsAndRecentServerEvents}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Alert24}" Tag="{Binding ElementName=NotificationsTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailNotificationsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailNotificationsButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailNotificationsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailGeneticsLabButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Genetics Lab" AutomationProperties.HelpText="Calculate plant genetics, crossbreeding, and recipes" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=LeafTwo24}" Tag="{Binding ElementName=GeneticsLabTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailGeneticsLabButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailGeneticsLabButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailGeneticsLabButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailPlayerWipeTrackerButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Player Wipe Tracker" AutomationProperties.HelpText="Track teammate routes, activity, and history for the current wipe" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=History24}" Tag="{Binding ElementName=PlayerWipeTrackerTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailPlayerWipeTrackerButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailPlayerWipeTrackerButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailPlayerWipeTrackerButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailDeathStatsButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="Death stats" AutomationProperties.HelpText="View death statistics for the current server" Click="CompactSidebarTab_Click" Tag="{Binding ElementName=DeathStatsTab}">
-                                    <Viewbox Width="16" Height="16">
-                                        <Path Data="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z"
-                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ui:Button}}}" />
-                                    </Viewbox>
-                                </ui:Button>
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailDeathStatsButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailDeathStatsButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailDeathStatsButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailRaidCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource UiRaidCalculator}" AutomationProperties.HelpText="{DynamicResource UiCalculateRaidCostsAndRequiredMaterials}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Rocket24}" Tag="{Binding ElementName=RaidCalculatorTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRaidCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRaidCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailRaidCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailRecyclerCalculatorButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource Update700Title3}" AutomationProperties.HelpText="{DynamicResource UiCalculateComponentYieldsForWildAndSafeZoneRecyclers}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=Recycle32}" Tag="{Binding ElementName=RecyclerCalculatorTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailRecyclerCalculatorButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailRecyclerCalculatorButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailRecyclerCalculatorButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                            <Grid>
-                                <ui:Button x:Name="RailConsoleHelperButton" Style="{StaticResource SidebarRailButton}" AutomationProperties.Name="{DynamicResource ConsoleHelperTitle}" AutomationProperties.HelpText="{DynamicResource ConsoleHelperSubtitle}" Click="CompactSidebarTab_Click" Icon="{ui:SymbolIcon Symbol=WindowConsole20}" Tag="{Binding ElementName=ConsoleHelperTab}" />
-                                <Popup AllowsTransparency="True" HorizontalOffset="8" IsHitTestVisible="False" IsOpen="{Binding IsMouseOver, ElementName=RailConsoleHelperButton, Mode=OneWay}" Opened="SidebarTabPopover_Opened" Placement="Right" PlacementTarget="{Binding ElementName=RailConsoleHelperButton}" PopupAnimation="Fade" StaysOpen="True">
-                                    <ContentControl Content="{Binding ElementName=RailConsoleHelperButton}" ContentTemplate="{StaticResource SidebarTabPopoverTemplate}" />
-                                </Popup>
-                            </Grid>
-                        </StackPanel>
+                        <StackPanel x:Name="RailItemsHost" HorizontalAlignment="Center" />
                         </ScrollViewer>
 
                         <StackPanel Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Center">
@@ -5088,9 +5010,10 @@
                         <Canvas x:Name="RailDragOverlay" Grid.RowSpan="3" IsHitTestVisible="False" Panel.ZIndex="100" />
                     </Grid>
 
-                    <!--  Profit Trades Overlay  -->
+                    <!--  Profit Trades Overlay. This and the left-panel overlays below start at the rail's 64px, so the rail stays visible and usable.  -->
                     <Border
                         x:Name="ProfitTradesPanel"
+                        Margin="64,0,0,0"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
@@ -5185,6 +5108,7 @@
                     <!--  Buy X For Y Overlay  -->
                     <Border
                         x:Name="BuyXForYPanel"
+                        Margin="64,0,0,0"
                         Background="{DynamicResource Surface}"
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
@@ -5375,21 +5299,25 @@
                     <!--  App Settings Overlay  -->
                     <views:AppSettingsOverlay
                         x:Name="AppSettingsPanel"
+                        Margin="64,0,0,0"
                         Visibility="Collapsed" />
 
                     <!--  Logic Engine Overlay  -->
                     <views:LogicEngineOverlay
                         x:Name="LogicEnginePanel"
+                        Margin="64,0,0,0"
                         Visibility="Collapsed" />
 
                     <!--  Device Automation Overlay  -->
                     <views:DeviceAutomationOverlay
                         x:Name="DeviceAutomationPanel"
+                        Margin="64,0,0,0"
                         Visibility="Collapsed" />
 
                     <!--  Looking for Group Overlay  -->
                     <views:LfgOverlay
                         x:Name="LfgPanel"
+                        Margin="64,0,0,0"
                         Visibility="Collapsed" />
 
                 </Grid>
@@ -6772,7 +6700,7 @@
                                         x:Name="CrosshairContextMenu"
                                         Opened="CrosshairContextMenu_Opened"
                                         Style="{StaticResource DarkContextMenu}">
-                                        <!--  sorge dafÃ¼r, dass ALLE Items (auch SubmenÃ¼s) dunkel sind  -->
+                                        <!--  sorge dafür, dass ALLE Items (auch Submenüs) dunkel sind  -->
                                         <ContextMenu.Resources>
                                             <Style BasedOn="{StaticResource DarkMenuItem}" TargetType="MenuItem" />
                                             <Style BasedOn="{StaticResource DarkSeparator}" TargetType="Separator" />
@@ -7204,7 +7132,7 @@
                             </Border>
                         </Border>
 
-                        <!--  2) Titelbild als â€žcontainâ€œ, zentriert, unverzerrt  -->
+                        <!--  2) Titelbild als „contain“, zentriert, unverzerrt  -->
                         <Image
                             x:Name="SplashBg"
                             HorizontalAlignment="Center"
@@ -9972,7 +9900,7 @@
                                               Data="M6,18 C6,12 16,14 16,8 M6,18 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 M16,8 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
                                     </Button>
 
-                                    <!--  LÃƒÂ¶schen  -->
+                                    <!--  Löschen  -->
                                     <Button
                                         x:Name="ToolTrashButton"
                                         Width="32"
@@ -10605,7 +10533,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Orientation="Horizontal">
-                                <!--  Buttons fÃƒÂ¼r Team-Mitglieder werden dynamisch in CodeBehind eingefÃƒÂ¼gt  -->
+                                <!--  Buttons für Team-Mitglieder werden dynamisch in CodeBehind eingefügt  -->
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -10820,10 +10748,11 @@
                 </Border>
             </Grid>
 
-            <!--  Player Wipe Tracker Overlay  -->
+            <!--  Player Wipe Tracker Overlay. This and the full-screen tools below start at the rail's 64px, so the rail stays visible and usable.  -->
             <Border
                 x:Name="PlayerWipeTrackerPanel"
                 Grid.ColumnSpan="3"
+                Margin="64,0,0,0"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
@@ -10835,6 +10764,7 @@
             <Border
                 x:Name="DeathStatsPanel"
                 Grid.ColumnSpan="3"
+                Margin="64,0,0,0"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
                 Visibility="Collapsed">
@@ -10845,6 +10775,7 @@
             <Border
                 x:Name="RaidCalculatorPanel"
                 Grid.ColumnSpan="3"
+                Margin="64,0,0,0"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"
@@ -10856,6 +10787,7 @@
             <Border
                 x:Name="GeneticsLabPanel"
                 Grid.ColumnSpan="3"
+                Margin="64,0,0,0"
                 Padding="12"
                 Background="{DynamicResource AppBg}"
                 Panel.ZIndex="9000"

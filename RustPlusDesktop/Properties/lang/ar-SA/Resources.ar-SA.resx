@@ -7829,4 +7829,7 @@
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>في خلية واحدة يُقتطع الاسم مهما كان حجم النص؛ الأيقونة تدل أصلاً على الحدث.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>حاسبة إعادة التدوير</value>
+  </data>
 </root>

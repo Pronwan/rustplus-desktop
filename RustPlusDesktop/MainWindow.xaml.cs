@@ -7952,9 +7952,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is FrameworkElement { Tag: TabItem tab })
         {
+            CloseLeftPanelOverlays();
             MainTabs.SelectedItem = tab;
             SetSidebarExpanded(true);
         }
+    }
+
+    /// <summary>
+    /// Closes every overlay that covers the left panel. They sit beside the rail, so a rail
+    /// destination has to clear them or the panel it opens stays hidden underneath.
+    /// Closes the same way their own buttons do: settings re-apply, automations save.
+    /// </summary>
+    private void CloseLeftPanelOverlays()
+    {
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+        }
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
     }
 
     private void SidebarTabPopover_Opened(object? sender, EventArgs e)
@@ -8128,6 +8152,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (AppSettingsPanel != null) AppSettingsPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
         if (ProfitTradesPanel != null) ProfitTradesPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
         if (BuyXForYPanel != null) BuyXForYPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        // These sit beside the rail now, so they need the unfolded sidebar's width too.
+        if (LogicEnginePanel != null) LogicEnginePanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (DeviceAutomationPanel != null) DeviceAutomationPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (LfgPanel != null) LfgPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
     }
 
     private void LeftPanelOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -8150,7 +8178,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    // True while a left-side overlay (settings / profit trades / buy-x-for-y) is open.
+    // True while a left-side overlay (settings, trades, automation, community hub) is open.
     // While one is open the sidebar must stay unfolded, even when the mouse leaves the
     // sidebar border to interact with the overlay (clicking an option briefly captures
     // the mouse and fires MouseLeave on the underlying border).
@@ -8158,7 +8186,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         return AppSettingsPanel?.Visibility == Visibility.Visible ||
                ProfitTradesPanel?.Visibility == Visibility.Visible ||
-               BuyXForYPanel?.Visibility == Visibility.Visible;
+               BuyXForYPanel?.Visibility == Visibility.Visible ||
+               LogicEnginePanel?.Visibility == Visibility.Visible ||
+               DeviceAutomationPanel?.Visibility == Visibility.Visible ||
+               LfgPanel?.Visibility == Visibility.Visible;
     }
 
     private void UpdateSidebarForOverlayVisibility()
@@ -8295,6 +8326,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
             AppSettingsPanel.Visibility = Visibility.Visible;
         }
@@ -8306,6 +8338,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeviceAutomationPanel.Visibility = Visibility.Collapsed;
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
         BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
         AppSettingsPanel.LoadSettings();
         AppSettingsPanel.Visibility = Visibility.Visible;
         AppSettingsPanel.OpenCategory(category);
@@ -8334,6 +8367,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
             LogicEnginePanel.RefreshListBindings();
             LogicEnginePanel.Visibility = Visibility.Visible;
         }
@@ -8352,6 +8386,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
         BuyXForYPanel.Visibility = Visibility.Collapsed;
         LogicEnginePanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
         DeviceAutomationPanel.RefreshListBindings();
         DeviceAutomationPanel.Visibility = Visibility.Visible;
         _ = OfferNewFeatureTutorialOnceAsync("device-automation");

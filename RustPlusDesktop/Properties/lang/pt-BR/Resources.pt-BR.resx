@@ -5780,4 +5780,7 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Remove todos os widgets e devolve o mapa ao seu canto</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Calculadora de reciclagem</value>
+  </data>
 </root>

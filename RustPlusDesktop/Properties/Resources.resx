@@ -2481,7 +2481,7 @@ Are you sure you want to continue?</value>
     <value>Open Offline Deaths Log</value>
   </data>
   <data name="NotificationsTab" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Rust+ Notifications</value>
   </data>
   <data name="NotificationCenterSettings" xml:space="preserve">
     <value>Notification Center</value>
@@ -3879,7 +3879,7 @@ Please pair this server first.</value>
     <value>Raid Alerts Channel ID</value>
   </data>
   <data name="UiRaidCalculator" xml:space="preserve">
-    <value>Raid calculator</value>
+    <value>Raid Calculator</value>
   </data>
   <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
     <value>Raid items and raw crafting ingredients</value>
@@ -3921,7 +3921,7 @@ Please pair this server first.</value>
     <value>Restore local backup</value>
   </data>
   <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
-    <value>Review alerts and recent server events.</value>
+    <value>Alarms, deaths and server events pushed by Rust+.</value>
   </data>
   <data name="UiRevoke" xml:space="preserve">
     <value>Revoke</value>
@@ -8232,5 +8232,44 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="UiListeningFcm" xml:space="preserve">
     <value>Listening · FCM</value>
+  </data>
+  <data name="RailGeneticsLab" xml:space="preserve">
+    <value>Genetics Lab</value>
+  </data>
+  <data name="RailGeneticsLabHelp" xml:space="preserve">
+    <value>Calculate plant genetics, crossbreeding, and recipes.</value>
+  </data>
+  <data name="RailPlayerWipeTracker" xml:space="preserve">
+    <value>Player Wipe Tracker</value>
+  </data>
+  <data name="RailPlayerWipeTrackerHelp" xml:space="preserve">
+    <value>Track teammate routes, activity, and history for the current wipe.</value>
+  </data>
+  <data name="RailDeathStats" xml:space="preserve">
+    <value>Death Stats</value>
+  </data>
+  <data name="RailDeathStatsHelp" xml:space="preserve">
+    <value>View death statistics for the current server.</value>
+  </data>
+  <data name="AppNotificationsTitle" xml:space="preserve">
+    <value>App Notifications</value>
+  </data>
+  <data name="AppNotificationsSubtitle" xml:space="preserve">
+    <value>Updates from the Rust+ Desk service, shared with your dashboard</value>
+  </data>
+  <data name="AppNotificationsEmpty" xml:space="preserve">
+    <value>No app notifications</value>
+  </data>
+  <data name="AppNotificationsEmptyHint" xml:space="preserve">
+    <value>Updates from the Rust+ Desk service will appear here.</value>
+  </data>
+  <data name="DeathStatsNoDeathsYet" xml:space="preserve">
+    <value>No deaths logged on this server yet. They appear here as they happen.</value>
+  </data>
+  <data name="DeathStatsNoMatches" xml:space="preserve">
+    <value>No deaths match the current filters.</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recycling Calculator</value>
   </data>
 </root>

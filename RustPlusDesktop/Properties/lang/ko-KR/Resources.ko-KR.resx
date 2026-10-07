@@ -7859,4 +7859,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>한 칸에서는 글자 크기와 상관없이 이름이 잘립니다. 아이콘이 이미 어떤 이벤트인지 알려줍니다.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>재활용 계산기</value>
+  </data>
 </root>

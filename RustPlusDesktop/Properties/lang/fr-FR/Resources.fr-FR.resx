@@ -7938,4 +7938,7 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>Sur une case le nom est tronqué quelle que soit la taille du texte ; l&apos;icône indique déjà de quel événement il s&apos;agit.</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Calculateur de recyclage</value>
+  </data>
 </root>

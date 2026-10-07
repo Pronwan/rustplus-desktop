@@ -5774,4 +5774,7 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Fjerner alle moduler og setter kartet tilbake i hjørnet</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Gjenvinningskalkulator</value>
+  </data>
 </root>

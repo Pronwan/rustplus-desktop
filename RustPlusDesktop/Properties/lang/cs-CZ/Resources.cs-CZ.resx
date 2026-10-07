@@ -5774,4 +5774,7 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Odebere všechny widgety a vrátí mapu do jejího rohu</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recyklační kalkulačka</value>
+  </data>
 </root>

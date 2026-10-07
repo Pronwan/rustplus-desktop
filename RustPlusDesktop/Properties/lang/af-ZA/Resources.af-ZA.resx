@@ -5774,4 +5774,7 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Verwyder elke widget en sit die kaart terug in sy hoek</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Herwinning sakrekenaar</value>
+  </data>
 </root>

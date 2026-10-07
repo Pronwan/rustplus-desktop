@@ -5774,4 +5774,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Uklanja sve vidžete i vraća mapu u njen ugao</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Калкулатор рециклаже</value>
+  </data>
 </root>

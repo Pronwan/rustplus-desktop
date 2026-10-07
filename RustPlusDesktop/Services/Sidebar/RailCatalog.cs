@@ -42,11 +42,11 @@ public static class RailCatalog
         new("cameras",       "CamerasTabItem",        "CamerasTab",        "Cameras",             "UiViewAndControlPairedCCTVCameras",                       "", SymbolRegular.Video24),
         new("players",       "PlayersTabItem",        "Players",           "Players",             "UiBrowseOnlinePlayersAndTrackedTargets",                  "", SymbolRegular.Globe24, IsPlayersOptIn: true),
         new("notifications", "NotificationsTab",      "NotificationsTab",  "Notifications",       "UiReviewAlertsAndRecentServerEvents",                     "", SymbolRegular.Alert24),
-        new("genetics",      "GeneticsLabTab",        null,                "Genetics Lab",        null, "Calculate plant genetics, crossbreeding, and recipes",     SymbolRegular.LeafTwo24),
-        new("pwt",           "PlayerWipeTrackerTab",  null,                "Player Wipe Tracker", null, "Track teammate routes, activity, and history for the current wipe", SymbolRegular.History24),
-        new("deathstats",    "DeathStatsTab",         null,                "Death stats",         null, "View death statistics for the current server",             SymbolRegular.Empty, GeometryPath: DeathStatsGeometry),
+        new("genetics",      "GeneticsLabTab",        "RailGeneticsLab",   "Genetics Lab",        "RailGeneticsLabHelp",       "Calculate plant genetics, crossbreeding, and recipes",     SymbolRegular.LeafTwo24),
+        new("pwt",           "PlayerWipeTrackerTab",  "RailPlayerWipeTracker", "Player Wipe Tracker", "RailPlayerWipeTrackerHelp", "Track teammate routes, activity, and history for the current wipe", SymbolRegular.History24),
+        new("deathstats",    "DeathStatsTab",         "RailDeathStats",    "Death Stats",         "RailDeathStatsHelp",        "View death statistics for the current server",             SymbolRegular.Empty, GeometryPath: DeathStatsGeometry),
         new("raid",          "RaidCalculatorTab",     "UiRaidCalculator",  "Raid Calculator",     "UiCalculateRaidCostsAndRequiredMaterials",                "", SymbolRegular.Rocket24),
-        new("recycler",      "RecyclerCalculatorTab", "Update700Title3",   "Recycler Calculator", "UiCalculateComponentYieldsForWildAndSafeZoneRecyclers",   "", SymbolRegular.Recycle32),
+        new("recycler",      "RecyclerCalculatorTab", "RecyclingCalculatorName", "Recycling Calculator", "UiCalculateComponentYieldsForWildAndSafeZoneRecyclers", "", SymbolRegular.Recycle32),
         new("console",       "ConsoleHelperTab",      "ConsoleHelperTitle","Console Helper",      "ConsoleHelperSubtitle",                                   "", SymbolRegular.WindowConsole20),
     };
 

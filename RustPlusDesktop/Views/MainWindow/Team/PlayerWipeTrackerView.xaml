@@ -75,6 +75,23 @@
             </Setter>
         </Style>
 
+        <!-- Lock beside a premium tab's name. Shown only while that tab is locked (disabled), so a
+             supporter reads plain tab names instead of five "· Premium" suffixes. -->
+        <Style x:Key="PremiumLockIcon" TargetType="ui:SymbolIcon">
+            <Setter Property="Symbol" Value="LockClosed16" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="ToolTip" Value="Premium feature" />
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="TrackerColumnHeader" TargetType="GridViewColumnHeader">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -167,12 +184,15 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <TextBlock Text="SERVER / WIPE" Style="{StaticResource MetricLabel}" />
-                        <ComboBox x:Name="WipeSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="WipeSelector_Changed" />
+                        <!-- Long server names truncate here; the tooltip shows the whole selection. -->
+                        <ComboBox x:Name="WipeSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="WipeSelector_Changed"
+                                  ToolTip="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="4,0,10,0">
                         <TextBlock Text="PLAYER" Style="{StaticResource MetricLabel}" />
-                        <ComboBox x:Name="PlayerSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="PlayerSelector_Changed" />
+                        <ComboBox x:Name="PlayerSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="PlayerSelector_Changed"
+                                  ToolTip="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Margin="6,0,0,0">
@@ -346,7 +366,13 @@
             </TabItem>
 
             <!-- Route Replay Tab -->
-            <TabItem x:Name="ReplayTab" Header="Route replay · Premium">
+            <TabItem x:Name="ReplayTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Route replay" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -404,7 +430,13 @@
             </TabItem>
 
             <!-- Heatmap Tab -->
-            <TabItem x:Name="HeatmapTab" Header="Heatmap · Premium">
+            <TabItem x:Name="HeatmapTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Heatmap" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" MinWidth="360" />
@@ -459,7 +491,13 @@
             </TabItem>
 
             <!-- Compare Tab -->
-            <TabItem x:Name="CompareTab" Header="Compare · Premium">
+            <TabItem x:Name="CompareTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Compare" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -512,7 +550,13 @@
             </TabItem>
 
             <!-- Export Tab -->
-            <TabItem x:Name="ExportTab" Header="Export · Premium">
+            <TabItem x:Name="ExportTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Export" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,0,0">
                     <ui:Card Padding="20" MaxWidth="720" HorizontalAlignment="Left"
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -535,7 +579,13 @@
             </TabItem>
 
             <!-- Cloud Restore Tab -->
-            <TabItem x:Name="CloudTab" Header="Cloud restore · Premium">
+            <TabItem x:Name="CloudTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Cloud restore" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>

@@ -153,6 +153,9 @@
                                                     <Border Background="{Binding StatusBackground}" BorderBrush="{Binding StatusBackground}" BorderThickness="1" CornerRadius="4" Padding="7,2">
                                                         <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="10.5" FontWeight="SemiBold" />
                                                     </Border>
+                                                    <!-- Ticket reference: tells apart tickets that share a subject. -->
+                                                    <TextBlock Text="{Binding Reference}" Foreground="{DynamicResource TextCaption}" FontSize="11" FontFamily="Consolas"
+                                                               VerticalAlignment="Center" Margin="8,0,0,0" ToolTip="{Binding Id}" />
                                                 </StackPanel>
                                                 <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="#44FFFFFF" FontSize="11" VerticalAlignment="Center" />
                                             </Grid>

@@ -5774,4 +5774,7 @@ Du kan finde mere information på serverens officielle hjemmeside:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Fjerner alle widgets og sætter kortet tilbage i hjørnet</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Genbrugsberegner</value>
+  </data>
 </root>

@@ -5774,4 +5774,7 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Eltávolít minden widgetet, és visszateszi a térképet a sarkába</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Újrahasznosítási kalkulátor</value>
+  </data>
 </root>
