@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v10.1.1", Title = "Easier-to-Find Dock Bar", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_1_1" },
+                new PatchVersionNavModel { Version = "v10.1.2", Title = "Clearer Navigation & Full-Screen Fix", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v10_1_2" },
+                new PatchVersionNavModel { Version = "v10.1.1", Title = "Easier-to-Find Dock Bar", Category = "Hotfix", TargetCardName = "Card_v10_1_1" },
                 new PatchVersionNavModel { Version = "v10.1.0", Title = "3D Map Rework, Fortify Base Imports & 1m Terrain Precision", Category = "Major", TargetCardName = "Card_v10_1_0" },
                 new PatchVersionNavModel { Version = "v10.0.5", Title = "Cloud Hold Lifecycle & Discord Map Rendering", Category = "Hotfix", TargetCardName = "Card_v10_0_5" },
                 new PatchVersionNavModel { Version = "v10.0.4", Title = "Cloud Reliability, Discord Controls & Clan Status", Category = "Hotfix", TargetCardName = "Card_v10_0_4" },

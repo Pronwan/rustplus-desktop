@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.1.1 HOTFIX -->
+                            <!-- v10.1.2 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_1_1"
+                            <Border x:Name="Card_v10_1_2"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,63 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.1.2 | Clearer Navigation &amp; Full-Screen Fix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Opens Full Screen Properly:</Run>
+                                        If you closed the app maximized, it now reopens maximized and fitted to your screen, instead of slightly larger with its edges cut off.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Sidebar Stays With You:</Run>
+                                        Genetics Lab, Player Wipe Tracker, Death Stats, Raid Calculator, the Community Hub and Settings no longer cover the sidebar, so you can jump straight to another tool.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Two Kinds of Notifications, Two Names:</Run>
+                                        The inbox in the title bar is now App Notifications, for updates from the Rust+ Desk service. The bell in the sidebar is Rust+ Notifications, for alarms, deaths and server events.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Folders Show When They Are Open:</Run>
+                                        An open sidebar folder, like Tools, now shows a small arrow, so it is clear a click folds it away.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Teammate Names:</Run>
+                                        Teammates that Rust+ reports without a name now show their Steam name instead of "(player)".
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Ticket References:</Run>
+                                        Each ticket in the list shows a short reference, so tickets with the same subject are easy to tell apart.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Player Wipe Tracker:</Run>
+                                        Premium tabs show a small lock only while they are locked, and hovering the server or player picker shows the full name.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Death Stats:</Run>
+                                        A server with no deaths logged yet now says so, instead of saying nothing matches your filters.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Small Touches:</Run>
+                                        Sidebar names follow your app language and match their page titles, the Recycling Calculator shows "All Categories" in full, storage upkeep shows a dash while it is unknown, and the "Right-click for options" hint is easier to read.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.1.1 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_1_1"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.1.1 | Easier-to-Find Dock Bar Hotfix"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
