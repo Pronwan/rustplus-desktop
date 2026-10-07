@@ -240,7 +240,7 @@
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Easier Navigation:</Run>
-                                        The sidebar stays visible beside every tool and panel, can show names next to its icons (Show labels), and every panel shares one header with the close button in the same place.
+                                        The sidebar stays visible beside every tool and panel, can show names next to its icons (Show labels), and every panel shares one header with the close button in the same place. The Monuments list groups repeated monuments, like nine Anvil Rocks, under one entry that opens as you search.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Screens:</Run>
