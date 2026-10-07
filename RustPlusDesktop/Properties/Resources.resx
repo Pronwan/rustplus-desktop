@@ -8278,4 +8278,16 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="RailHideLabels" xml:space="preserve">
     <value>Hide labels</value>
   </data>
+  <data name="DevicesShowHow" xml:space="preserve">
+    <value>Show me how</value>
+  </data>
+  <data name="TeamSoloTitle" xml:space="preserve">
+    <value>Playing solo</value>
+  </data>
+  <data name="TeamSoloHint" xml:space="preserve">
+    <value>Teammates appear here once they join your team in game.</value>
+  </data>
+  <data name="TeamFindTeammates" xml:space="preserve">
+    <value>Find teammates</value>
+  </data>
 </root>

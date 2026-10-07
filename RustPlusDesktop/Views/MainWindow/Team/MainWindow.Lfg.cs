@@ -35,6 +35,16 @@ public partial class MainWindow
     /// </summary>
     private void BtnSocial_Click(object sender, RoutedEventArgs e) => BtnLfg_Click(sender, e);
 
+    /// <summary>The Team tab's "playing solo" state: straight to the Looking for Group board.</summary>
+    private void BtnTeamFindTeammates_Click(object sender, RoutedEventArgs e)
+    {
+        EnsureLfgWired();
+        CloseLeftPanelOverlays();
+        LfgPanel.Refresh();
+        LfgPanel.Visibility = Visibility.Visible;
+        LfgPanel.ShowLookingForGroup();
+    }
+
     /// <summary>
     /// Hooks the panel up, once.
     ///

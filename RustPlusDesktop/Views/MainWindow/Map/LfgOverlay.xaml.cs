@@ -179,6 +179,18 @@ public partial class LfgOverlay : UserControl
         SecChat.IsChecked = true;
     }
 
+    /// <summary>Selects the Looking for Group board, for callers that mean "find people".</summary>
+    public void ShowLookingForGroup()
+    {
+        if (SecLfg.IsChecked == true)
+        {
+            Section_Checked(SecLfg, new RoutedEventArgs());
+            return;
+        }
+
+        SecLfg.IsChecked = true;
+    }
+
     /// <summary>Loads the stored state. Safe to call whenever the panel is opened.</summary>
     public async Task RefreshAsync()
     {

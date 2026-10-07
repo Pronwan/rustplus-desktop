@@ -3321,7 +3321,7 @@
                                         MaxWidth="300"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        IsHitTestVisible="False">
+                                        IsHitTestVisible="True">
                                         <StackPanel.Style>
                                             <Style TargetType="StackPanel">
                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -3364,6 +3364,15 @@
                                             Text="{DynamicResource PairDeviceToSee}"
                                             TextAlignment="Center"
                                             TextWrapping="Wrap" />
+                                        <!--  Pairing happens in game; the tour shows where and how.  -->
+                                        <ui:Button
+                                            Margin="0,14,0,0"
+                                            HorizontalAlignment="Center"
+                                            Appearance="Secondary"
+                                            Click="BtnDevicesShowHow_Click"
+                                            AutomationProperties.Name="{DynamicResource DevicesShowHow}"
+                                            Content="{DynamicResource DevicesShowHow}"
+                                            Icon="{ui:SymbolIcon Symbol=Lightbulb24}" />
                                     </StackPanel>
 
 
@@ -3398,6 +3407,40 @@
                                             <Setter Property="Margin" Value="4" />
                                         </Style>
                                     </Grid.Resources>
+
+                                    <!--  Playing solo: only your own card. Points at where teammates come from.  -->
+                                    <StackPanel
+                                        Grid.Row="0"
+                                        Panel.ZIndex="1"
+                                        Margin="16,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Items.Count, ElementName=TeamList}" Value="0">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Items.Count, ElementName=TeamList}" Value="1">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <Border Width="72" Height="72" HorizontalAlignment="Center" Background="{DynamicResource WhiteA14}" CornerRadius="36">
+                                            <ui:SymbolIcon HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Foreground="{DynamicResource TextMutedBrush}" Symbol="People24" />
+                                        </Border>
+                                        <TextBlock Margin="0,14,0,0" HorizontalAlignment="Center" FontSize="15" FontWeight="SemiBold" Foreground="White"
+                                                   Text="{DynamicResource TeamSoloTitle}" TextAlignment="Center" TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"
+                                                   Text="{DynamicResource TeamSoloHint}" TextAlignment="Center" TextWrapping="Wrap" />
+                                        <ui:Button Margin="0,14,0,0" HorizontalAlignment="Center" Appearance="Secondary"
+                                                   Click="BtnTeamFindTeammates_Click"
+                                                   AutomationProperties.Name="{DynamicResource TeamFindTeammates}"
+                                                   Content="{DynamicResource TeamFindTeammates}"
+                                                   Icon="{ui:SymbolIcon Symbol=PeopleSearch24}" />
+                                    </StackPanel>
 
                                     <!--  Liste oben  -->
                                     <ListBox
