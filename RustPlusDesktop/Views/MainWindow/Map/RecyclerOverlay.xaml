@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials"
              mc:Ignorable="d"
              d:DesignHeight="540" d:DesignWidth="450"
@@ -68,37 +68,12 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Width="48"
-                               Height="48"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               Source="pack://application:,,,/Assets/icons/recycler.png" />
-
-                        <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{DynamicResource Update700Title3}"
-                                       FontSize="17"
-                                       FontWeight="Bold"
-                                       Foreground="{StaticResource DeckText}" />
-                            <TextBlock Text="{DynamicResource UiInventoryInRecyclerYieldOut}"
-                                       FontSize="11"
-                                       Foreground="{StaticResource DeckMuted}" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <ui:Button Grid.Column="1"
-                               Width="32"
-                               Height="32"
-                               Padding="0"
-                               Appearance="Transparent"
-                               Click="BtnClose_Click"
-                               Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
-                </Grid>
+                <controls:PanelHeader Grid.Row="0" Margin="0,0,0,12"
+                                      IsCompact="True"
+                                      ImageSource="pack://application:,,,/Assets/icons/recycler.png"
+                                      Title="{DynamicResource RecyclingCalculatorName}"
+                                      Subtitle="{DynamicResource UiInventoryInRecyclerYieldOut}"
+                                      CloseClick="BtnClose_Click" />
 
                 <Grid Grid.Row="1" Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>

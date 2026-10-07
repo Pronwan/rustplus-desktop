@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="900"
@@ -187,37 +187,25 @@
 
             <!-- Header -->
             <Border DockPanel.Dock="Top" Padding="14,10" BorderBrush="{StaticResource ConLine}" BorderThickness="0,0,0,1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <ui:SymbolIcon Symbol="WindowConsole20" FontSize="18" Foreground="{StaticResource ConAccent}"
-                                   VerticalAlignment="Center" Margin="0,0,10,0" />
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{DynamicResource ConsoleHelperTitle}" Foreground="{StaticResource ConText}"
-                                   FontWeight="SemiBold" FontSize="15" />
-                        <TextBlock Text="{DynamicResource ConsoleHelperSubtitle}" Foreground="{StaticResource ConMuted}"
-                                   FontSize="11" TextWrapping="Wrap" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <ui:Button x:Name="BtnCopyAllBinds" Margin="0,0,6,0" Padding="8,6"
-                                   Click="BtnCopyAllBinds_Click"
-                                   ToolTip="{DynamicResource ConsoleHelperCopyAllBinds}"
-                                   Icon="{ui:SymbolIcon Symbol=ClipboardTextLtr24}" />
-                        <ui:Button x:Name="BtnPopout" Margin="0,0,6,0" Padding="8,6"
-                                   Click="BtnPopout_Click"
-                                   ToolTip="{DynamicResource ConsoleHelperPopout}"
-                                   Icon="{ui:SymbolIcon Symbol=WindowNew24}" />
-                        <ui:Button x:Name="BtnClose" Padding="8,6"
-                                   Click="BtnClose_Click"
-                                   ToolTip="{DynamicResource Close}"
-                                   Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
-                    </StackPanel>
-                </Grid>
+                <controls:PanelHeader IsCompact="True"
+                                      Symbol="WindowConsole20"
+                                      AccentBrush="{StaticResource ConAccent}"
+                                      Title="{DynamicResource ConsoleHelperTitle}"
+                                      Subtitle="{DynamicResource ConsoleHelperSubtitle}"
+                                      CloseClick="BtnClose_Click">
+                    <controls:PanelHeader.Actions>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button x:Name="BtnCopyAllBinds" Margin="0,0,6,0" Padding="8,6"
+                                       Click="BtnCopyAllBinds_Click"
+                                       ToolTip="{DynamicResource ConsoleHelperCopyAllBinds}"
+                                       Icon="{ui:SymbolIcon Symbol=ClipboardTextLtr24}" />
+                            <ui:Button x:Name="BtnPopout" Padding="8,6"
+                                       Click="BtnPopout_Click"
+                                       ToolTip="{DynamicResource ConsoleHelperPopout}"
+                                       Icon="{ui:SymbolIcon Symbol=WindowNew24}" />
+                        </StackPanel>
+                    </controls:PanelHeader.Actions>
+                </controls:PanelHeader>
             </Border>
 
             <!-- Search -->

@@ -1,4 +1,4 @@
-<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}" tutorials:Tutorial.TargetId="Settings.Panel">
+<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}" tutorials:Tutorial.TargetId="Settings.Panel">
 
     <Grid ClipToBounds="True">
         <Grid.Resources>
@@ -31,19 +31,16 @@
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="36" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-            <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="14" />
-                    <ui:TextBlock Text="{DynamicResource Settings}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                </StackPanel>
-                <ui:Button x:Name="BtnCloseSettings" Appearance="Transparent" Icon="{ui:SymbolIcon Dismiss24}" Width="26" Height="26" Padding="0" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnCloseSettings_Click" />
-            </Grid>
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" Padding="12,12,8,4">
+            <controls:PanelHeader IsCompact="True"
+                                  Symbol="Settings24"
+                                  Title="{DynamicResource Settings}"
+                                  CloseClick="BtnCloseSettings_Click" />
         </Border>
 
         <Border Grid.Row="1" Padding="12,10,12,8" Background="{DynamicResource SurfaceAlt}">

@@ -11,6 +11,7 @@
                 <ui:ControlsDictionary />
                 <!-- Last, so the app's menu styles win over the WPF-UI implicit ones. -->
                 <ResourceDictionary Source="Views/Themes/MenuFlyout.xaml" />
+                <ResourceDictionary Source="Views/Themes/PanelHeader.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Converters -->

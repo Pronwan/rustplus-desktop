@@ -439,16 +439,12 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0" Margin="20,16,16,16">
-                                        <StackPanel Margin="0,0,40,0">
-                                            <TextBlock Text="{DynamicResource AppNotificationsTitle}" Foreground="#FFF4F6FA" FontSize="18" FontWeight="SemiBold" />
-                                            <TextBlock Text="{DynamicResource AppNotificationsSubtitle}" Foreground="#FFA8B2BF" FontSize="12" Margin="0,4,0,0" />
-                                        </StackPanel>
-                                        <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent"
-                                                   Width="32" Height="32" Padding="0" Click="BtnTopNotifications_Click"
-                                                   ToolTip="Close notifications" AutomationProperties.Name="Close notifications"
-                                                   Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
-                                    </Grid>
+                                    <controls:PanelHeader Grid.Row="0" Margin="16,14,10,14"
+                                                          IsCompact="True"
+                                                          Symbol="MailInbox24"
+                                                          Title="{DynamicResource AppNotificationsTitle}"
+                                                          Subtitle="{DynamicResource AppNotificationsSubtitle}"
+                                                          CloseClick="BtnTopNotifications_Click" />
                                     <ScrollViewer Grid.Row="1" MaxHeight="440" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                         <Grid>
                                             <ItemsControl x:Name="TopNotificationsList" Margin="12,0,12,4">

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="440"
              Background="Transparent">
@@ -77,25 +77,11 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="32" Height="32" CornerRadius="8" Background="#1E60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" Margin="0,0,10,0">
-                        <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{DynamicResource Accent}" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="{DynamicResource SupportTitle}" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold" />
-                    </StackPanel>
-                </StackPanel>
-
-                <ui:Button Grid.Column="1" x:Name="BtnClose" Appearance="Transparent" Padding="7" Click="Close_Click" ToolTip="Close" Width="32" Height="32">
-                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextSubtle}" FontSize="14" />
-                </ui:Button>
-            </Grid>
+            <controls:PanelHeader Grid.Row="0" Margin="0,0,0,16"
+                                  IsCompact="True"
+                                  Symbol="ChatHelp24"
+                                  Title="{DynamicResource SupportTitle}"
+                                  CloseClick="Close_Click" />
 
             <!-- Content Area -->
             <Grid Grid.Row="1">

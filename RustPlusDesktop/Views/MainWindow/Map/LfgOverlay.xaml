@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:chat="clr-namespace:RustPlusDesk.Controls.Chat"
              mc:Ignorable="d"
@@ -230,37 +230,35 @@
             </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <Grid Grid.Row="0" Margin="0,0,0,14">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <!--  The panel holds a room and a board, so it is named after neither.  -->
-                    <TextBlock Text="{DynamicResource SocialHubTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
-                    <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
-                    <Grid Margin="0,0,6,0">
-                        <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
-                                   ToolTip="{DynamicResource FriendsTitle}"
-                                   Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
-                        <!--  Requests waiting on an answer, over the icon.  -->
-                        <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
-                                HorizontalAlignment="Right" VerticalAlignment="Top"
-                                Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                Background="{DynamicResource DangerBrush}" Padding="3,0">
-                            <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
-                                       FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </Grid>
-                    <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
-                               ToolTip="{DynamicResource BlocksTitle}"
-                               Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" Margin="0,0,6,0" />
-                    <ui:Button x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
-                               Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" />
-                </StackPanel>
-            </Grid>
+            <!--  The panel holds a room and a board, so it is named after neither.  -->
+            <controls:PanelHeader Grid.Row="0" Margin="0,0,0,14"
+                                  IsCompact="True"
+                                  Symbol="ChatMultiple24"
+                                  AccentBrush="#FF8B7BE8"
+                                  Title="{DynamicResource SocialHubTitle}"
+                                  Subtitle="{DynamicResource SocialHubSubtitle}"
+                                  CloseClick="BtnClose_Click">
+                <controls:PanelHeader.Actions>
+                    <StackPanel Orientation="Horizontal">
+                        <Grid Margin="0,0,6,0">
+                            <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
+                                       ToolTip="{DynamicResource FriendsTitle}"
+                                       Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
+                            <!--  Requests waiting on an answer, over the icon.  -->
+                            <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                    Background="{DynamicResource DangerBrush}" Padding="3,0">
+                                <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
+                                           FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                        <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
+                                   ToolTip="{DynamicResource BlocksTitle}"
+                                   Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" />
+                    </StackPanel>
+                </controls:PanelHeader.Actions>
+            </controls:PanelHeader>
 
             <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
             <Border x:Name="CloudGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
