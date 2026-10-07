@@ -49,8 +49,8 @@ public sealed class TutorialTests
             .All(x => x.TargetId == "Servers.ConnectionActions"));
         Assert.IsTrue(registry.Find("bases-screenshots")!.Steps.All(x => x.TargetId == "Map.Canvas"));
         Assert.IsTrue(registry.Find("updates-diagnostics")!.Steps.All(x => x.Placement == TutorialPlacement.Center));
-        CollectionAssert.AreEqual(
-            new[] { "sidebar-folders", "raid-calculator", "oilrig-crate-alerts", "device-automation", "offline-alerts-smarthome" },
+        CollectionAssert.AreEquivalent(
+            new[] { "sidebar-folders", "command-dock", "raid-calculator", "ai-companion", "oilrig-crate-alerts", "device-automation", "offline-alerts-smarthome" },
             registry.Tutorials.Where(x => x.IsNewFeature).Select(x => x.Id).ToArray());
         Assert.AreEqual("Shops.Panel", registry.Find("shops-vending")!.Steps.Single(x => x.Id == "shops.panel").TargetId);
     }

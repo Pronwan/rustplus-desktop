@@ -29,6 +29,7 @@ namespace RustPlusDesk.Views.Windows
     /// </summary>
     public partial class DockOverlayWindow
     {
+        public bool IsDeviceOverlay { get; set; } = true;
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
         private const int WS_EX_TOOLWINDOW = 0x00000080;
@@ -78,6 +79,12 @@ namespace RustPlusDesk.Views.Windows
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+            if (!IsDeviceOverlay)
+            {
+                TitleText.Text = "Minimap";
+                BtnTemplates.Visibility = Visibility.Collapsed;
+                return;
+            }
 
             var hwnd = new WindowInteropHelper(this).Handle;
             var styles = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
@@ -103,6 +110,7 @@ namespace RustPlusDesk.Views.Windows
         /// </summary>
         public void SetEditable(bool editing)
         {
+            if (!IsDeviceOverlay) return;
             var hwnd = new WindowInteropHelper(this).Handle;
             if (hwnd == IntPtr.Zero) return;
 

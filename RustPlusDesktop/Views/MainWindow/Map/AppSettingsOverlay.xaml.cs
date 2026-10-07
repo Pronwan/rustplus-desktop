@@ -162,7 +162,6 @@ namespace RustPlusDesk.Views
             {
                 Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
                 Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
-                Section("server-events", "alerts", T("ServerEventsSection", "Server Events"), "server events audio detection listen oil rig cargo deep sea trust own detections confirm", SectionServerEvents),
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
                 Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
@@ -646,8 +645,6 @@ namespace RustPlusDesk.Views
             ChkAutoUpdate.IsChecked = TrackingService.AutoUpdateEnabled;
             ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
             ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
-            ChkShowPlayersTab.IsChecked = TrackingService.ShowPlayersTab;
-            ChkBackgroundTracking.IsChecked = TrackingService.ShowPlayersTab && TrackingService.IsBackgroundTrackingEnabled;
             ChkHideConsole.IsChecked = TrackingService.HideConsole;
             ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
             ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
@@ -741,8 +738,6 @@ namespace RustPlusDesk.Views
             LoadAiCompanionSettings();
 
             // Server events (audio fallback)
-            ChkListenForServerEvents.IsChecked = TrackingService.ListenForServerEvents;
-            ChkTrustOwnDetections.IsChecked = TrackingService.TrustOwnDetections;
 
             // Offline Death
             ChkOfflineDeathAlerts.IsChecked = TrackingService.OfflineDeathAlertsEnabled;
@@ -864,17 +859,6 @@ namespace RustPlusDesk.Views
             TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
             TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
 
-            // Players tab and background tracking are coupled: tracking can only run while the tab
-            // is shown, so hiding the tab forces tracking off (and its toggle back off in the UI).
-            bool showPlayers = ChkShowPlayersTab.IsChecked == true;
-            if (!showPlayers && ChkBackgroundTracking.IsChecked == true)
-            {
-                ChkBackgroundTracking.IsChecked = false; // re-enters OnSettingChanged once; idempotent
-            }
-            TrackingService.ShowPlayersTab = showPlayers;
-            TrackingService.IsBackgroundTrackingEnabled = showPlayers && ChkBackgroundTracking.IsChecked == true;
-            ParentWindow?.ApplyPlayersTabVisibility();
-
             TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
             TrackingService.ReduceUiEffects = ChkReduceUiEffects.IsChecked == true;
             TrackingService.TrafficMonitorEnabled = ChkTrafficMonitor.IsChecked == true;
@@ -950,8 +934,6 @@ namespace RustPlusDesk.Views
             // change when the user clicks those toggles — never as a side effect of another
             // setting changing or a panel reload firing this bulk rewrite from stale state.
 
-            TrackingService.ListenForServerEvents = ChkListenForServerEvents.IsChecked == true;
-            TrackingService.TrustOwnDetections = ChkTrustOwnDetections.IsChecked == true;
             TrackingService.OfflineDeathAlertsEnabled = ChkOfflineDeathAlerts.IsChecked == true;
             TrackingService.OfflineDeathSoundLoopEnabled = ChkOfflineDeathSoundLoop.IsChecked == true;
             TrackingService.OfflineDeathDiscordEnabled = ChkOfflineDeathDiscord.IsChecked == true;

@@ -308,6 +308,16 @@ namespace RustPlusDesk.Models
     {
         public List<CommandDockTile> Tiles { get; set; } = new();
 
+        /// <summary>Separates map layouts from control widgets, including legacy saved arrangements.</summary>
+        internal void RemoveUnsupportedTiles(bool deviceOverlay)
+        {
+            Tiles.RemoveAll(tile => deviceOverlay
+                ? tile.Kind == CommandDockTileKinds.Map ||
+                  (tile.Kind == CommandDockTileKinds.Event && tile.EventKey != "oilrig")
+                : tile.Kind != CommandDockTileKinds.Map);
+            if (deviceOverlay) MapRemoved = true;
+        }
+
         /// <summary>
         /// Where a newly added tile goes: below the map by default, beside it when set.
         ///

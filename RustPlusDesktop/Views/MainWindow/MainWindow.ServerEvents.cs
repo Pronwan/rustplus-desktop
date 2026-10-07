@@ -1,19 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using RustPlusDesk.Services;
-using RustPlusDesk.Services.Audio;
 
 namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    /// <summary>
-    /// Ties the audio listener and the cloud event state to the connected server.
-    ///
-    /// Called once a connection is fully initialised. Everything in here is a no-op on a
-    /// server that still delivers events over Rust+ — the API is more precise than audio in
-    /// every respect, so there is nothing to gain from listening.
-    /// </summary>
+    /// <summary>Initializes API event availability and Smart Alarm rules.</summary>
     private async Task StartServerEventTrackingAsync()
     {
         try
@@ -26,7 +19,6 @@ public partial class MainWindow
             // is usually a no-op instead of a visible switch on every single connect.
             ApplyRememberedEventSource();
             RefreshOilRigTimerCapability();
-            HookCloudEventAlerts();
 
             // Force the next presence upload to go through with this server's key.
             //
@@ -40,18 +32,6 @@ public partial class MainWindow
             _lastCloudPresenceSignature = null;
             _hasCriticalPresenceChange = true;
 
-            // And let the watcher force one on demand, for the AFK case where no poll would
-            // otherwise refresh it.
-            CloudEventWatcher.Instance.PresenceRefresh = async () =>
-            {
-                _hasCriticalPresenceChange = true;
-                _lastCloudPresenceSignature = null;
-                await Dispatcher.InvokeAsync(async () => await LoadTeamAsync()).Task.Unwrap();
-            };
-
-            await CloudEventWatcher.Instance.AttachAsync(serverKey);
-            UpdateAudioListenerState();
-
             // Settle the verdict for this session. Runs regardless of the remembered mode, so
             // a server that starts delivering again is picked up — and it is the only
             // detection there is, since the ongoing shop timer stays off in fallback mode.
@@ -63,46 +43,15 @@ public partial class MainWindow
         }
     }
 
-    private void StopServerEventTracking()
-    {
-        try
-        {
-            UnhookCloudEventAlerts();
-            CloudEventWatcher.Instance.Detach();
-            GameAudioListener.Instance.Stop();
-        }
-        catch { }
-    }
-
-    /// <summary>
-    /// The listener runs only when it can contribute something: the setting is on, and this
-    /// server does not deliver events itself. Note it still gates on Rust actually running —
-    /// that check lives in the listener.
-    /// </summary>
-    internal void UpdateAudioListenerState()
-    {
-        bool wanted = TrackingService.ListenForServerEvents && EventCapabilities.IsCloudSourced;
-
-        if (wanted && !GameAudioListener.Instance.IsRunning) GameAudioListener.Instance.Start();
-        else if (!wanted && GameAudioListener.Instance.IsRunning) GameAudioListener.Instance.Stop();
-    }
-
-    /// <summary>
-    /// Alert entries that cannot mean anything on a server without event markers.
-    ///
-    /// Patrol Heli, Chinook and Travelling Vendor have no server-wide audio cue, so they are
-    /// gone rather than degraded. Cargo's docking, egress and arrival warnings all need the
-    /// ship's position, which only the API carries — audio can say a cargo spawned and nothing
-    /// more, so only the spawn entry survives.
-    /// </summary>
+    /// <summary>Alerts unavailable without Rust+ event markers.</summary>
     private static readonly System.Collections.Generic.HashSet<string> CloudHiddenAlertTags =
-        new(StringComparer.Ordinal) { "Heli", "Chinook", "Vendor", "CargoDock", "CargoEgress", "CargoArrival" };
+        new(StringComparer.Ordinal) { "Heli", "Chinook", "Vendor", "Cargo", "DeepSea", "CargoDock", "CargoEgress", "CargoArrival" };
 
     /// <summary>
     /// Command entries with no answer to give. Keyed by the command field they configure.
     /// </summary>
     private static readonly System.Collections.Generic.HashSet<string> CloudHiddenCommandTags =
-        new(StringComparer.Ordinal) { "CmdHeli", "CmdVendor" };
+        new(StringComparer.Ordinal) { "CmdHeli", "CmdVendor", "CmdCargo", "CmdDeepSea" };
 
     /// <summary>
     /// Hides everything the current server cannot deliver. Driven by tags that already exist

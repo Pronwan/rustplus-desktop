@@ -30,6 +30,10 @@
                            Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
             </Grid>
 
+            <TextBlock Text="Display" FontSize="11" Margin="0,0,0,4"/>
+            <ComboBox x:Name="CmbMonitor" AutomationProperties.Name="Display for this window"
+                      SelectionChanged="CmbMonitor_SelectionChanged" Margin="0,0,0,12"/>
+
             <!-- Shape ComboBox -->
             <TextBlock Text="{DynamicResource Shape}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <ComboBox x:Name="CmbShape" SelectionChanged="CmbShape_SelectionChanged" Margin="0,0,0,12">
@@ -83,7 +87,7 @@
             <!--  Where a newly added tile lands. Dragging overrules this and reaches every side
                   of the map, including left of it and above it.  -->
             <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
-            <TextBlock Text="{DynamicResource CommandDockGrowth}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblGrowth" Text="{DynamicResource CommandDockGrowth}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <ComboBox x:Name="CmbGrowth" SelectionChanged="CmbGrowth_SelectionChanged">
                 <ComboBoxItem Content="{DynamicResource CommandDockGrowDown}"/>
                 <ComboBoxItem Content="{DynamicResource CommandDockGrowRight}"/>

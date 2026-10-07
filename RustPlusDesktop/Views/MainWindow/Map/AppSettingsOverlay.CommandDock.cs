@@ -167,7 +167,7 @@ namespace RustPlusDesk.Views
 
         private static void NotifyDockChanged()
         {
-            var dock = Application.Current?.Windows.OfType<MiniMapWindow>().FirstOrDefault();
+            var dock = Application.Current?.Windows.OfType<DeviceOverlayWindow>().FirstOrDefault();
             dock?.ReloadDockLayout();
         }
     }

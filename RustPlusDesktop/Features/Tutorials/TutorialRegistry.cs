@@ -177,7 +177,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
                      {
                          Application.Current.MainWindow?.GetType()
                              .GetMethod("EnsureMiniMapOpen")?.Invoke(Application.Current.MainWindow, null);
-                         var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "MiniMapWindow");
+                         var mmw = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window.GetType().Name == "DeviceOverlayWindow");
                          mmw?.GetType().GetMethod("DemonstrateBar")?.Invoke(mmw, null);
                      });
                      await Task.Delay(150, ct);
@@ -291,7 +291,7 @@ public sealed class TutorialRegistry : ITutorialRegistry
             Step("oilrigcrate.intro", placement: TutorialPlacement.Center),
             Step("oilrigcrate.wiring", placement: TutorialPlacement.Center,
                  image: "pack://application:,,,/Assets/Screenshots/8.0/SmartAlarmOilrig.png"),
-            Step("oilrigcrate.rule", "Automation.CreateOilRigRule", "logic", TutorialPlacement.Bottom),
+            Step("oilrigcrate.rule", "Map.EventDock", "map", TutorialPlacement.Bottom),
             Step("oilrigcrate.silence", placement: TutorialPlacement.Center)),
 
         Def("bases-screenshots", 210, "Maps", false,

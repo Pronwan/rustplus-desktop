@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -5749,7 +5749,7 @@ You can find more information on the server&apos;s official website:
     <value>Open Mini Map</value>
   </data>
   <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
-    <value>Click here to open the mini map window.</value>
+    <value>Open the minimap as a regular window. It falls behind fullscreen Rust. Choose a display in its settings to keep it in a corner of your second monitor. Device controls open in a separate overlay that stays in front of Rust.</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
     <value>Map Settings</value>
@@ -5953,25 +5953,25 @@ You can find more information on the server&apos;s official website:
     <value>Why this exists</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
-    <value>Crate countdowns used to be worked out from Chinook markers, which the Rust+ API no longer sends. Rust broadcasts the hack on a radio frequency instead, and that is something you can receive yourself. Three things are needed: a receiver in-game, a Smart Alarm paired to the app, and one Logic Engine rule.</value>
+    <value>Oil Rig information comes from your own paired Smart Alarm notification. RustPlus Desktop records the notification timestamp. It does not detect game audio, infer a crate spawn, or draw an Oil Rig timer on the minimap.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
     <value>Wire it up in-game</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>Place an RF Receiver and set its frequency to the rig you want: 4768 for Large Oil Rig, 4765 for Small Oil Rig. Give it power, and wire its output into a Smart Alarm that is paired with this app. When the hack starts, Rust broadcasts on that frequency, the receiver switches on, and the alarm fires.</value>
+    <value>Power an RF Receiver, set its frequency to the rig you want, and wire its output into a Smart Alarm paired with RustPlus Desktop. Name the upper notification line Oil Rig, Small Oil Rig, or Large Oil Rig. When the alarm fires, the app records the timestamp sent by Rust.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
-    <value>Add the Logic Engine rule</value>
+    <value>Read your alarm timestamp</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Open the Logic Engine and click the Oil Rig Template button to instantly add a pre-configured rule (or click + Add Rule). Select your paired Smart Alarm as the trigger, and choose either Large Oilrig Trigger or Small Oilrig Trigger as the timer target. Leave Show Crate on map ticked to draw the crate with its live countdown; chat and Discord warnings arrive automatically. Optionally fill in Alarm text with the UPPER line from the alarm in-game so push notifications match when offline.</value>
+    <value>The Oil Rig Smart Alarm entry on the map page shows when your last notification was sent. You can add an Oil Rig Smart Alarm widget to the separate control overlay. The minimap has no crate marker or crate countdown.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>No raid alert from that alarm</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
-    <value>An alarm set up this way is not a raid, so its popup, sound and raid alerts to Discord are suppressed. It reports as an oil rig event instead. The device list shows a small (Large Oil) or (Small Oil) badge so the silence is visible rather than mysterious. Remove the device from the rule and it behaves like an ordinary alarm again, at once. The Oil Rig switch under Chat Alerts still turns all of it off whenever you want quiet.</value>
+    <value>An alarm explicitly named Oil Rig is recorded as an Oil Rig Smart Alarm notification, without a raid popup or raid sound. Rename it to an ordinary alarm title to use it for raid alerts again. Optional Logic Engine rules remain player-configured timers, rather than crate detection.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
     <value>Alarm text (upper line)</value>
@@ -7683,7 +7683,7 @@ Close this preview when the panel looks right.</value>
     <value>Open the Mini Map</value>
   </data>
   <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
-    <value>The Mini button opens the mini-map in its own window, floating above the game. Everything in this tutorial happens in that window.</value>
+    <value>Open the minimap to open the separate widget overlay too. The map is a regular second-screen window; device and command widgets remain above Rust.</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
     <value>Add Widgets with +</value>

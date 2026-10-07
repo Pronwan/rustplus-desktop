@@ -229,7 +229,7 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v10.1.2 | Clearer Navigation &amp; Full-Screen Fix"
+                                            <TextBlock Text="v10.1.2 | Navigation, Mini-Map &amp; Full-Screen Improvements"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
@@ -245,6 +245,14 @@
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Screens:</Run>
                                         Larger text across the app, separate App and Rust+ notifications, and Devices and Team now point you to a next step when they are empty.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Changes Requested by Facepunch:</Run>
+                                        Game-audio event detection, shared event reports, activity tracking for players outside your team, and inferred oil-rig crate markers have been removed. Oil-rig timers still work with your paired Smart Alarms, and team history remains available in Wipe Tracker.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Mini-Map Improvements:</Run>
+                                        The mini-map moves independently of widgets and no longer stays on top of the game. Move it freely, choose its display, and adjust opacity, size and layers from the visible settings button. It remembers its position and opens directly on the saved display, using a second monitor by default.
                                     </TextBlock>
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Small Fixes:</Run>

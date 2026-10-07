@@ -282,6 +282,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
 
     private MiniMapWindow? _miniMap;
+    private DeviceOverlayWindow? _deviceOverlay;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
     public void EnsureMiniMapOpen()
     {
@@ -289,6 +290,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         {
             BtnToggleMiniMap_Click(null, null);
         }
+        else EnsureDeviceOverlayOpen();
     }
 
     private async void BtnToggleMiniMap_Click(object? sender, RoutedEventArgs? e)
@@ -318,8 +320,6 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             
             _miniMap = new MiniMapWindow(CurrentMiniMapLayers())
             {
-                Left = SystemParameters.WorkArea.Right - 280,
-                Top = SystemParameters.WorkArea.Top + 20,
                 DataContext = _vm,
                 DockHost = this
             };
@@ -351,6 +351,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             };
 
             _miniMap.Show();
+            EnsureDeviceOverlayOpen();
 
             // It may want the grid or the death markers that this map has switched off.
             RefreshIndependentLayers();
@@ -366,7 +367,23 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         else
         {
             _miniMap.Close();
+            _deviceOverlay?.Close();
         }
+    }
+
+    private void EnsureDeviceOverlayOpen()
+    {
+        if (_deviceOverlay != null) return;
+        _deviceOverlay = new DeviceOverlayWindow
+        {
+            Left = SystemParameters.WorkArea.Left + 20,
+            Top = SystemParameters.WorkArea.Top + 20,
+            DataContext = _vm,
+            DockHost = this
+        };
+        _deviceOverlay.Closed += (_, __) => _deviceOverlay = null;
+        Closed += (_, __) => _deviceOverlay?.Close();
+        _deviceOverlay.Show();
     }
 
     private async System.Threading.Tasks.Task AutoStartMiniMapTutorialAsync()

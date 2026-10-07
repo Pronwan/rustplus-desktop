@@ -56,9 +56,13 @@ namespace RustPlusDesk
 
             var overlay = new DockOverlayWindow
             {
+                IsDeviceOverlay = IsDeviceOverlay,
+                Topmost = IsDeviceOverlay,
                 LockToggled = ToggleDockLock,
                 TemplatesRequested = () => BtnTemplates_Click(this, new RoutedEventArgs()),
-                AddTileRequested = () => BtnAddTile_Click(this, new RoutedEventArgs()),
+                AddTileRequested = IsDeviceOverlay
+                    ? () => BtnAddTile_Click(this, new RoutedEventArgs())
+                    : AddMapTile,
                 SettingsRequested = OpenSettings,
                 ZoomChanged = SetGridZoom,
                 BarDragged = MoveDockBy,

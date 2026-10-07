@@ -306,36 +306,6 @@
 
                         <Border Style="{StaticResource SettingsRowDivider}" />
 
-                        <!-- Show Players Tab (opt-in) -->
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource ShowPlayersTab}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource ShowPlayersTabDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowPlayersTab" AutomationProperties.Name="{DynamicResource ShowPlayersTab}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource ShowPlayersTabDesc}" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
-                        <!-- Background Player Tracking: only meaningful while the Players tab is shown -->
-                        <Grid MinHeight="36" Margin="16,0,0,0" IsEnabled="{Binding IsChecked, ElementName=ChkShowPlayersTab}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource BackgroundTracking}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource BackgroundTrackingToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkBackgroundTracking" AutomationProperties.Name="{DynamicResource BackgroundTracking}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource BackgroundTrackingToolTip}" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
                         <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -457,40 +427,6 @@
                                        VerticalAlignment="Center"
                                        Height="32"
                                        ToolTip="Opens the directory where crash reports, freeze logs, and diagnostics are saved." />
-                        </Grid>
-                    </StackPanel>
-                </ui:Card>
-                </StackPanel>
-
-                <!-- Server Events Section -->
-                <StackPanel x:Name="SectionServerEvents">
-                <ui:TextBlock Text="{DynamicResource ServerEventsSection}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
-                <ui:Card Style="{StaticResource SettingsNativeCard}">
-                    <StackPanel>
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource ListenForServerEvents}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkListenForServerEvents" AutomationProperties.Name="{DynamicResource ListenForServerEvents}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource TrustOwnDetections}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource TrustOwnDetectionsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkTrustOwnDetections" AutomationProperties.Name="{DynamicResource TrustOwnDetections}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
                         </Grid>
                     </StackPanel>
                 </ui:Card>

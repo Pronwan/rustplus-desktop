@@ -11,6 +11,34 @@ namespace RustPlusDesk
     /// </summary>
     public partial class MiniMapWindow
     {
+        /// <summary>Moves this window to a display using physical pixels, including mixed DPI setups.</summary>
+        public void MoveToMonitor(string deviceName)
+        {
+            var screen = Array.Find(System.Windows.Forms.Screen.AllScreens, s => s.DeviceName == deviceName);
+            var hwnd = new WindowInteropHelper(this).Handle;
+            if (screen == null || hwnd == IntPtr.Zero) return;
+            SetWindowPos(hwnd, IntPtr.Zero, screen.WorkingArea.Left + 20, screen.WorkingArea.Top + 20,
+                0, 0, 0x0001 | 0x0004 | 0x0010); // keep size, z-order and activation
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+            {
+                if (!IsDeviceOverlay)
+                {
+                    KeepFullyOnScreen();
+                    SaveMapPosition();
+                    return;
+                }
+                ClampToScreen(pullIntoView: true);
+                AnchorOriginToWindow();
+                SaveDockPosition();
+                PositionOverlay();
+            }));
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetWindowPos(IntPtr hwnd, IntPtr insertAfter, int x, int y,
+            int width, int height, uint flags);
+
         private bool _onScreenCheckQueued;
 
         /// <summary>

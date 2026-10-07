@@ -138,9 +138,7 @@ namespace RustPlusDesk
             Section(Loc.Text("CommandDockSectionEvents", "Events"), SymbolRegular.AlertUrgent24);
             foreach (var (key, label, sym) in new[]
                      {
-                         ("cargo", Loc.Text("CargoShip", "Cargo ship"), SymbolRegular.VehicleShip24),
-                         ("deepsea", Loc.Text("DeepSea", "Deep Sea"), SymbolRegular.Water24),
-                         ("oilrig", Loc.Text("OilRigCrateStatus", "Oil Rig crate"), SymbolRegular.Box24),
+                         ("oilrig", "Oil Rig Smart Alarm", SymbolRegular.Box24),
                      })
             {
                 var eventKey = key;

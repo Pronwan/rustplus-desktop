@@ -775,8 +775,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
-        TrackingService.OnTrackingNotification -= OnTrackingNotification;
-        TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
@@ -972,7 +970,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             });
         };
         
-        _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
         App.CultureChanged += () =>
         {
@@ -2707,6 +2704,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // filter existed for a long while without ever being able to fire: a queued
         // push from two hours ago arrived stamped "now".
         var eventTime = n.EventTime ?? n.Timestamp;
+        if (source == "FCM" && OilRigTriggerRegistry.Lookup(n.EntityId, n.Title) is string oilRigLabel)
+            RecordOilRigAlarm(n, oilRigLabel);
         if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
 
         // Learn the alarm's in-game text before anything can drop this notification.

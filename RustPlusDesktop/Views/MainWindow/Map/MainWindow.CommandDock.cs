@@ -300,30 +300,5 @@ public partial class MainWindow : ICommandDockHost
     /// <summary>The formatted "until sunrise / sunset" text the HUD shows, or empty.</summary>
     public string DockTimeUntilNextPhase => _vm?.TimeUntilNextPhase ?? "";
 
-    /// <summary>
-    /// Oil rig crate countdowns, one line per rig currently being hacked. Empty when no rule
-    /// can start such a timer — a countdown nothing can ever start is worse than no tile.
-    /// </summary>
-    public IReadOnlyList<(string Rig, string Short, TimeSpan Left)> DockOilRigTimers
-    {
-        get
-        {
-            if (!HasOilRigTimerRule()) return Array.Empty<(string, string, TimeSpan)>();
 
-            var result = new List<(string, string, TimeSpan)>();
-            foreach (var (key, label, shortLabel) in new[]
-                     {
-                         ("Small Oil Rig", Properties.Resources.SmallOilRig, "S"),
-                         ("Large Oil Rig", Properties.Resources.LargeOilRig, "L"),
-                     })
-            {
-                var left = _monumentWatcher?.GetActiveEventTimeLeft(key);
-                if (left is { } span && span > TimeSpan.Zero) result.Add((label, shortLabel, span));
-            }
-
-            // Soonest first: with one line to spare that is the one worth showing.
-            result.Sort((a, b) => a.Item3.CompareTo(b.Item3));
-            return result;
-        }
-    }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -35,11 +35,17 @@ namespace RustPlusDesk
         private DispatcherTimer? _dockTimer;
         private CommandDockTilePicker? _picker;
 
-        private const string DockCacheKey = "minimap_dock";
+        private string DockCacheKey => IsDeviceOverlay ? "minimap_dock" : "minimap_view_dock";
+
+        private void RemoveUnsupportedTiles()
+        {
+            _dock.RemoveUnsupportedTiles(IsDeviceOverlay);
+        }
 
         private void InitCommandDock()
         {
             _dock = StorageService.LoadCache<CommandDockLayout>(DockCacheKey) ?? new CommandDockLayout();
+            RemoveUnsupportedTiles();
 
             // Layouts written before the map became a tile have none, and their tiles were
             // positioned relative to a map pinned at the origin — so putting it at (0,0) leaves
@@ -124,10 +130,12 @@ namespace RustPlusDesk
         /// </summary>
         public void ReloadDockLayout()
         {
+            if (!IsDeviceOverlay) return;
             var reloaded = StorageService.LoadCache<CommandDockLayout>(DockCacheKey);
             if (reloaded == null) return;
 
             _dock = reloaded;
+            RemoveUnsupportedTiles();
 
             if (MapTile == null && !_dock.MapRemoved)
                 _dock.Tiles.Insert(0, new CommandDockTile { Id = CommandDockTileKinds.MapTileId, Kind = CommandDockTileKinds.Map });
@@ -141,6 +149,7 @@ namespace RustPlusDesk
 
         private void SaveDockPosition()
         {
+            if (!IsDeviceOverlay) { SaveMapPosition(); return; }
             if (double.IsNaN(Left) || double.IsNaN(Top)) return;
 
             _dock.WindowLeft = Left;
@@ -443,6 +452,9 @@ namespace RustPlusDesk
 
         private bool BelongsHere(CommandDockTile tile)
         {
+            if (IsDeviceOverlay && tile.Kind == CommandDockTileKinds.Map) return false;
+            if (!IsDeviceOverlay && tile.Kind != CommandDockTileKinds.Map) return false;
+            if (tile.Kind == CommandDockTileKinds.Event && tile.EventKey != "oilrig") return false;
             // Collapsed: the button that did it stays, and the map stays unless that button
             // was set to take it too. Everything else is hidden where it stands — no cell is
             // touched, so expanding puts the arrangement back rather than re-flowing it.
@@ -773,6 +785,9 @@ namespace RustPlusDesk
 
         private void RebuildTiles()
         {
+            // The map is a free window, never a locked tile or a cell in the widget layout.
+            if (!IsDeviceOverlay) return;
+            RemoveUnsupportedTiles();
             foreach (var el in _tileElements.Values)
             {
                 // Never the map: its element is declared in XAML and stays a child of the canvas
@@ -792,6 +807,7 @@ namespace RustPlusDesk
 
             StampLegacyDeviceTiles();
             SyncMapCellSpan();
+            MapContainer.Visibility = Visibility.Collapsed;
 
             foreach (var tile in _dock.Tiles.ToList())
             {
@@ -1438,177 +1454,37 @@ namespace RustPlusDesk
             var style = StyleFor(tile);
             var shell = TileShell(style);
             shell.Tag = tile;
-
             var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
             shell.Child = stack;
-
-            var image = new Image
+            stack.Children.Add(new Image
             {
-                Width = style.Icon(26),
-                Height = style.Icon(26),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(0, 0, 0, 3),
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/smartalarm.png")),
+                Width = style.Icon(26), Height = style.Icon(26),
+                HorizontalAlignment = HorizontalAlignment.Center
+            });
+            var timestamp = new TextBlock
+            {
+                FontSize = style.Size(12), FontWeight = FontWeights.SemiBold,
+                Foreground = style.TextMain, Effect = style.TextShadow,
+                HorizontalAlignment = HorizontalAlignment.Center
             };
-            var timer = new TextBlock
+            stack.Children.Add(timestamp);
+            if (!tile.EventHideLabel)
             {
-                FontSize = style.Size(12),
-                FontWeight = FontWeights.SemiBold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = style.TextMain,
-                Effect = style.TextShadow,
-            };
-            // A second countdown, for when both rigs are being hacked at once. Only ever shown
-            // on a tile at least two cells tall — at one cell the first timer already fills the
-            // space under the icon, and a line that does not fit is a line nobody can read.
-            var timer2 = new TextBlock
-            {
-                FontSize = style.Size(12),
-                FontWeight = FontWeights.SemiBold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = style.TextMain,
-                Effect = style.TextShadow,
-                Visibility = Visibility.Collapsed,
-            };
-
-            var label = SubtleText(style);
-
-            stack.Children.Add(image);
-            stack.Children.Add(timer);
-            stack.Children.Add(timer2);
-
-            // The name under the icon is optional, because at one cell it is mostly not there:
-            // "Deep Sea Event" arrives as "Deep Sea Ev…" and stays that way however the text is
-            // scaled, since the cell is what it does not fit. The icon already says which event
-            // this is, so the honest choice is to drop the word rather than to trim it.
-            if (!tile.EventHideLabel) stack.Children.Add(label);
-
-            // A green glow behind the crate while a real countdown is running, so the two Oil Rig
-            // states are told apart at a glance and not only by reading the tooltip.
-            //
-            // A shadow with no depth rather than a shape behind the icon: it follows the crate's
-            // own alpha, so it reads as the icon glowing rather than as a blob it sits on.
-            var glow = new System.Windows.Media.Effects.DropShadowEffect
-            {
-                Color = Color.FromRgb(0x4C, 0xC9, 0x6A),
-                ShadowDepth = 0,
-                BlurRadius = 14,
-                Opacity = 0,
-                RenderingBias = System.Windows.Media.Effects.RenderingBias.Performance,
-            };
-
-            var breathe = new DoubleAnimation(0.25, 0.85, TimeSpan.FromMilliseconds(1400))
-            {
-                AutoReverse = true,
-                RepeatBehavior = RepeatBehavior.Forever,
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
-            };
-
-            bool glowing = false;
-
-            void SetGlow(bool on)
-            {
-                if (on == glowing) return;
-                glowing = on;
-
-                if (on)
-                {
-                    image.Effect = glow;
-                    glow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, breathe);
-                }
-                else
-                {
-                    glow.BeginAnimation(System.Windows.Media.Effects.DropShadowEffect.OpacityProperty, null);
-                    glow.Opacity = 0;
-                    image.Effect = null;   // the sound-detected view looks exactly as it did
-                }
+                var label = SubtleText(style);
+                label.Text = "Oil Rig Smart Alarm";
+                stack.Children.Add(label);
             }
-
-            string? loadedIcon = null;
-
             _tileRefreshers.Add(() =>
             {
-                // The Oil Rig crate countdown is not an event dock entry: it comes from the
-                // Logic Engine's hack timers, and only exists when a rule can start one.
-                timer2.Visibility = Visibility.Collapsed;
-
-                // A rig wired to an RF receiver gives a real countdown from the moment the hack
-                // starts. The crowd-sourced cue below only says "a crate went up somewhere" and
-                // cannot tell the two rigs apart, so a real trigger always wins the display.
-                if (tile.EventKey == "oilrig")
-                {
-                    var host = Application.Current?.MainWindow as Views.MainWindow;
-                    var running = host?.DockOilRigTimers ?? Array.Empty<(string Rig, string Short, TimeSpan Left)>();
-                    SetIcon("pack://application:,,,/Assets/icons/crate.png");
-                    label.Text = Loc.Text("OilRigCrateStatus", "Oil Rig crate");
-
-                    if (running.Count > 0)
-                    {
-                        shell.Opacity = 1.0;
-                        SetGlow(true);
-
-                        // Both rigs at once needs two lines, and two lines need the height. On a
-                        // single cell the soonest one is shown with a count of what is hidden,
-                        // so the tile never pretends the other rig is not running.
-                        bool roomForTwo = tile.RowSpan >= 2 && running.Count > 1;
-
-                        timer.Text = $"{running[0].Short} {Countdown(running[0].Left)}";
-
-                        if (roomForTwo)
-                        {
-                            timer2.Text = $"{running[1].Short} {Countdown(running[1].Left)}";
-                            timer2.Visibility = Visibility.Visible;
-                        }
-                        else if (running.Count > 1)
-                        {
-                            timer.Text += $"  +{running.Count - 1}";
-                        }
-
-                        ToolTipService.SetToolTip(shell,
-                            Loc.Text("CommandDockOilRigTrigger", "From your Oil Rig trigger") + "\n" +
-                            string.Join("\n", running.Select(r => $"{r.Rig}: {Countdown(r.Left)}")));
-                        return;
-                    }
-
-                    // No live trigger: the crowd-sourced reading below, and no glow with it.
-                    SetGlow(false);
-                }
-
-                var ev = DockHost?.DockEvents.FirstOrDefault(e => e.Key == tile.EventKey);
-                if (ev == null)
-                {
-                    timer.Text = "—";
-                    shell.Opacity = 0.5;
-                    if (tile.EventKey != "oilrig") label.Text = tile.EventKey ?? "";
-                    return;
-                }
-
-                SetIcon(ev.Icon);
-                // The whole name, trimmed by the layout rather than by the string.
-                //
-                // Cutting it to twelve characters first meant "Deep Sea Event" was "Deep Sea Ev…"
-                // at every size - a three-cell tile with room to spare still showed the stub,
-                // because nothing about the truncation knew how wide the tile was. The TextBlock
-                // already has CharacterEllipsis, which does.
-                label.Text = ev.Name;
-                timer.Text = string.IsNullOrWhiteSpace(ev.TimerText) ? "—" : ev.TimerText;
-                timer.Foreground = ev.Active ? style.TextMain : style.TextSub;
-                shell.Opacity = ev.Active ? 1.0 : 0.55;
-                // Named as heard rather than measured, so an Oil Rig reading from the crowd cue
-                // is not mistaken for the real countdown a trigger gives.
-                var source = tile.EventKey == "oilrig"
-                    ? Loc.Text("CommandDockOilRigHeard", "Heard by other players") + "\n"
-                    : "";
-
-                ToolTipService.SetToolTip(shell, source + (ev.ToolTip ?? ev.Name));
-
-                void SetIcon(string uri)
-                {
-                    if (loadedIcon == uri || string.IsNullOrEmpty(uri)) return;
-                    try { image.Source = new BitmapImage(new Uri(uri)); loadedIcon = uri; }
-                    catch { /* a missing pack icon must not kill the tick */ }
-                }
+                var host = Application.Current?.MainWindow as Views.MainWindow;
+                var latest = host?.DockOilRigAlarms.FirstOrDefault();
+                timestamp.Text = latest?.Timestamp.ToLocalTime().ToString("HH:mm:ss") ?? "—";
+                shell.Opacity = latest == null ? 0.5 : 1.0;
+                ToolTipService.SetToolTip(shell, latest == null
+                    ? "Pair a Smart Alarm with an RF receiver and name its notification Oil Rig."
+                    : $"Smart Alarm received: {latest.Timestamp.ToLocalTime():g}\n{latest.Title}");
             });
-
             return shell;
         }
 
@@ -2335,7 +2211,7 @@ namespace RustPlusDesk
         /// one of its layers was switched off. Both look the same to the user, so the picker
         /// offers to bring it back in both cases.
         /// </summary>
-        public bool CanAddMap => !MapOccupiesCells;
+        public bool CanAddMap => !IsDeviceOverlay && !MapOccupiesCells;
 
         /// <summary>
         /// Puts the map back on the dock, with every layer on.
@@ -2345,6 +2221,7 @@ namespace RustPlusDesk
         /// </summary>
         public void AddMapTile()
         {
+            if (IsDeviceOverlay) return;
             if (MapTile == null)
             {
                 _dock.MapRemoved = false;

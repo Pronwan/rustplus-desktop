@@ -110,24 +110,6 @@ public class TrackingSettings
     public bool AnnounceOilRig { get; set; } = false;
     public bool AnnounceDeepSea { get; set; } = false;
 
-    /// <summary>
-    /// Listen to the game's audio for server-wide monument cues on servers that no longer
-    /// send event markers over Rust+. On by default: without it those servers show nothing at
-    /// all, and the listener only runs while Rust itself is running.
-    /// </summary>
-    public bool ListenForServerEvents { get; set; } = true;
-
-    /// <summary>
-    /// Treat a cue this client heard itself as true, without waiting for another player to
-    /// corroborate it.
-    ///
-    /// On by default, because the alternative is refusing to show someone an event they
-    /// personally just heard. Corroboration exists to stop one client speaking for a whole
-    /// server; it was never meant to stop a client speaking for itself. Reporting is
-    /// unaffected — the backend still applies its own rules to what everyone else sees.
-    /// </summary>
-    public bool TrustOwnDetections { get; set; } = true;
-
     public bool AnnouncePlayerOnline { get; set; } = false;
     public bool AnnouncePlayerOffline { get; set; } = false;
     public bool AnnouncePlayerAfk { get; set; } = false;
@@ -349,17 +331,15 @@ public static class TrackingService
     private static Dictionary<string, TrackedPlayer> _trackedPlayers = new();
     private static TrackingSettings _settings = new();
     public static TrackingSettings Settings => _settings;
-    private static Timer? _trackingTimer;
     private static string? _lastServerHost;
     private static int _lastServerPort;
     private static string? _lastServerName;
 
     public static event Action? OnOnlinePlayersUpdated;
-    public static event Action<string, string>? OnTrackingNotification;
     public static string StatusMessage { get; private set; } = "";
     public static List<OnlinePlayerBM> LastOnlinePlayers { get; private set; } = new();
     public static DateTime? LastPullTime { get; private set; }
-    public static bool IsTracking => _trackingTimer != null;
+    public static bool IsTracking => false;
 
     static TrackingService()
     {
@@ -444,6 +424,9 @@ public static class TrackingService
 
     public static void TrackPlayer(string bmId, string name, string serverName, PlayerSession? initialSession = null, bool isBMOnly = false)
     {
+        // Only static profile bookmarks remain; activity sessions cannot be collected.
+        if (!isBMOnly) return;
+        initialSession = null;
         lock (_dbLock)
         {
             if (!_trackedPlayers.TryGetValue(bmId, out var p))
@@ -473,11 +456,6 @@ public static class TrackingService
 
         SaveDB();
 
-        // Auto-start tracking if we have a server but no timer yet
-        if (_trackingTimer == null && !string.IsNullOrEmpty(_settings.LastHost))
-        {
-            StartPolling(_settings.LastHost, _settings.LastPort, _settings.LastServerName);
-        }
         OnOnlinePlayersUpdated?.Invoke();
     }
     
@@ -589,8 +567,8 @@ public static class TrackingService
 
     public static bool IsBackgroundTrackingEnabled
     {
-        get => _settings.BackgroundTrackingEnabled;
-        set { _settings.BackgroundTrackingEnabled = value; SaveDB(); }
+        get => false;
+        set { _settings.BackgroundTrackingEnabled = false; SaveDB(); }
     }
 
     /// <summary>
@@ -599,8 +577,8 @@ public static class TrackingService
     /// </summary>
     public static bool ShowPlayersTab
     {
-        get => _settings.ShowPlayersTab;
-        set { _settings.ShowPlayersTab = value; SaveDB(); }
+        get => false;
+        set { _settings.ShowPlayersTab = false; SaveDB(); }
     }
 
     /// <summary>
@@ -763,16 +741,6 @@ public static class TrackingService
     {
         get => _settings.AnnounceCargo;
         set { _settings.AnnounceCargo = value; SaveDB(); }
-    }
-    public static bool ListenForServerEvents
-    {
-        get => _settings.ListenForServerEvents;
-        set { _settings.ListenForServerEvents = value; SaveDB(); }
-    }
-    public static bool TrustOwnDetections
-    {
-        get => _settings.TrustOwnDetections;
-        set { _settings.TrustOwnDetections = value; SaveDB(); }
     }
     public static bool AnnounceHeli
     {
@@ -1576,412 +1544,19 @@ public static class TrackingService
 
     private static string? _foundServerId;
 
+    /// <summary>Records server context without querying other players.</summary>
     public static void StartPolling(string host, int port, string name, string? bmId = null)
     {
-        if (_lastServerHost != host || _lastServerPort != port)
-        {
-            LastOnlinePlayers = new List<OnlinePlayerBM>();
-            OnOnlinePlayersUpdated?.Invoke();
-        }
-
         _lastServerHost = host;
         _lastServerPort = port;
         _lastServerName = name;
-        _foundServerId = bmId; // Use provided ID if available, otherwise it stays null for auto-lookup
-
-        _settings.LastHost = host;
-        _settings.LastPort = port;
-        _settings.LastServerName = name;
-        _settings.LastBMId = bmId;
-        SaveDB();
-
-        // Poll every 2 minutes only if we have *real* (non-BM-only) tracked players.
-        // BM-only shortcuts don't need any UDP queries.
-        _trackingTimer?.Dispose();
-        if (GetTrackedPlayers().Any(p => !p.IsBMOnly))
-        {
-            _trackingTimer = new Timer(async _ => await PollOnceAsync(), null, 0, 120_000);
-        }
-        else
-        {
-            _trackingTimer = null;
-        }
+        _foundServerId = bmId;
+        LastOnlinePlayers.Clear();
+        StatusMessage = "Player activity tracking has been removed. Team history is available in Wipe Tracker.";
     }
 
-    public static void StopPolling()
-    {
-        _trackingTimer?.Dispose();
-        _trackingTimer = null;
-    }
-
-    public static async Task FetchOnlinePlayersNowAsync()
-    {
-        await PollOnceAsync();
-    }
-
-    private static async Task<int?> AutoDiscoverQueryPortAsync(string host, int appPort)
-    {
-        // Ask Steam which query ports exist for this IP.
-        // The API is authoritative — no need to probe with A2S first.
-        try
-        {
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var json = await _http.GetStringAsync(
-                $"https://api.steampowered.com/ISteamApps/GetServersAtAddress/v1?addr={host}",
-                cts.Token);
-            using var doc = JsonDocument.Parse(json);
-            if (doc.RootElement.TryGetProperty("response", out var resp) && 
-                resp.TryGetProperty("servers", out var servers) && 
-                servers.ValueKind == JsonValueKind.Array)
-            {
-                // Find all Rust (appid 252490) ports for this IP
-                var rustPorts = new List<int>();
-                foreach (var s in servers.EnumerateArray())
-                {
-                    if (s.TryGetProperty("appid", out var appid) && appid.GetInt32() == 252490)
-                    {
-                        if (s.TryGetProperty("addr", out var addrStr))
-                        {
-                            var parts = addrStr.GetString()?.Split(':');
-                            if (parts?.Length == 2 && int.TryParse(parts[1], out int sp))
-                                rustPorts.Add(sp);
-                        }
-                    }
-                }
-
-                if (rustPorts.Count == 1)
-                {
-                    // Exactly one Rust server on this IP — trust it immediately, no probe needed
-                    Log($"[AutoDiscover] Steam API: single Rust port {rustPorts[0]} for {host}");
-                    return rustPorts[0];
-                }
-
-                if (rustPorts.Count > 1)
-                {
-                    // Multiple servers on same IP: pick the one closest to appPort
-                    var best = rustPorts.OrderBy(p => Math.Abs(p - appPort)).First();
-                    Log($"[AutoDiscover] Steam API: multiple ports, chose {best} for {host}");
-                    return best;
-                }
-            }
-        }
-        catch { }
-
-        // Steam API gave nothing — caller will try common port offsets in the main query
-        return null;
-    }
-
-    private static async Task PollOnceAsync()
-    {
-        var serversToPoll = new HashSet<(string Host, int Port, string Name)>();
-        
-        if (!string.IsNullOrEmpty(_lastServerHost))
-        {
-            serversToPoll.Add((_lastServerHost, _lastServerPort, _lastServerName ?? ""));
-        }
-
-        var trackedPlayers = GetTrackedPlayers().Where(p => !p.IsBMOnly).ToList();
-        if (trackedPlayers.Count > 0)
-        {
-            var profiles = StorageService.LoadProfiles();
-            foreach (var p in trackedPlayers)
-            {
-                var match = profiles.FirstOrDefault(prof => prof.Name == p.LastServerName);
-                if (match != null && !string.IsNullOrEmpty(match.Host))
-                {
-                    serversToPoll.Add((match.Host, match.Port, match.Name ?? ""));
-                }
-            }
-        }
-
-        foreach (var server in serversToPoll)
-        {
-            try
-            {
-                await PollSingleServerAsync(server.Host, server.Port, server.Name);
-            }
-            catch (Exception)
-            {
-                if (server.Host == _lastServerHost && server.Port == _lastServerPort)
-                {
-                    StatusMessage = Properties.Resources.GetString("ServerOfflineA2S");
-                    OnOnlinePlayersUpdated?.Invoke();
-                }
-                Log($"[A2S] Failed to background poll {server.Name} ({server.Host}:{server.Port}) - Timeout/Offline");
-            }
-        }
-        
-        LastPullTime = DateTime.Now;
-        OnOnlinePlayersUpdated?.Invoke();
-    }
-
-    private static async Task PollSingleServerAsync(string host, int port, string serverName)
-    {
-        if (string.IsNullOrEmpty(host)) return;
-
-        string hostKey = $"{host}:{port}";
-        int queryPort = port; // default to AppPort if not learned
-        bool isCurrentServer = host == _lastServerHost && port == _lastServerPort;
-
-        try
-        {
-            if (_settings.LearnedQueryPorts.TryGetValue(hostKey, out int learned))
-            {
-                queryPort = learned;
-            }
-            else
-            {
-                if (isCurrentServer)
-                {
-                    StatusMessage = Properties.Resources.GetString("AutoDiscoveringQueryPort");
-                    OnOnlinePlayersUpdated?.Invoke();
-                }
-                
-                var discovered = await AutoDiscoverQueryPortAsync(host, port);
-                if (discovered.HasValue)
-                {
-                    queryPort = discovered.Value;
-                    // Save immediately so subsequent calls skip discovery
-                    _settings.LearnedQueryPorts[hostKey] = queryPort;
-                    SaveDB();
-                }
-                // If discovery failed, queryPort stays at appPort.
-                // We'll try common offsets below in the multi-port fallback.
-            }
-
-            if (isCurrentServer)
-            {
-                StatusMessage = Properties.Resources.GetString("FetchingSteamPlayers");
-                OnOnlinePlayersUpdated?.Invoke();
-            }
-            var onlineList = new List<OnlinePlayerBM>();
-            var currentlyOnlineInfo = new Dictionary<string, (DateTime start, string name)>();
-
-            // Try the discovered/learned port first, then fall back to common offsets
-            // if the port was not learned from the API (only probing with a 8s timeout each).
-            var portCandidates = new List<int> { queryPort };
-            bool portWasLearned = _settings.LearnedQueryPorts.ContainsKey(hostKey);
-            if (!portWasLearned)
-            {
-                // API gave nothing; try the most common Rust query ports
-                foreach (var fb in new[] { port - 67, 28015, port - 1, port })
-                    if (fb > 0 && fb != queryPort) portCandidates.Add(fb);
-            }
-
-            List<A2SPlayer>? playersResult = null;
-            int successPort = queryPort;
-            foreach (var tryPort in portCandidates)
-            {
-                try
-                {
-                    playersResult = await A2SClient.QueryPlayersAsync(host, tryPort, 8000);
-                    if (playersResult != null)
-                    {
-                        successPort = tryPort;
-                        if (tryPort != queryPort)
-                        {
-                            // Learned a new port mid-fallback — save it
-                            _settings.LearnedQueryPorts[hostKey] = tryPort;
-                            SaveDB();
-                            Log($"[A2S] Fallback port {tryPort} succeeded for {host}");
-                        }
-                        break;
-                    }
-                }
-                catch { }
-            }
-                    
-                    int totalFetched = playersResult?.Count ?? 0;
-                    int validNames = 0;
-                    
-                    Log($"[A2S] Fetched {totalFetched} players from query port {queryPort}");
-
-                    if (playersResult != null)
-                    {
-                        foreach (var player in playersResult)
-                        {
-                            if (!string.IsNullOrWhiteSpace(player.Name))
-                            {
-                                validNames++;
-                                string bmId = player.Name;
-                                int seconds = (int)player.Duration;
-                                DateTime actualStart = DateTime.UtcNow.AddSeconds(-seconds);
-
-                                bool isTr = false;
-                                lock (_dbLock) isTr = _trackedPlayers.ContainsKey(bmId);
-
-                                onlineList.Add(new OnlinePlayerBM
-                                {
-                                    BMId = bmId,
-                                    Name = player.Name,
-                                    SessionStartTimeUtc = actualStart,
-                                    Duration = TimeSpan.FromSeconds(Math.Max(0, seconds)),
-                                    IsTracked = isTr
-                                });
-                                currentlyOnlineInfo[bmId] = (actualStart, player.Name);
-                            }
-                        }
-                    }
-
-            if (isCurrentServer)
-            {
-                if (onlineList.Count == 0)
-                {
-                    StatusMessage = Properties.Resources.GetString("NoOnlinePlayersFound");
-                }
-                else
-                {
-                    StatusMessage = "";
-                }
-
-                LastOnlinePlayers = onlineList.OrderByDescending(x => x.Duration).ToList();
-            }
-
-            // 3. Update Tracking stats
-            await UpdateTrackingStatsAsync(currentlyOnlineInfo, serverName);
-        }
-        catch
-        {
-            throw;
-        }
-    }
-
-    private static async Task UpdateTrackingStatsAsync(Dictionary<string, (DateTime start, string name)> currentlyOnlineInfo, string serverName)
-    {
-        bool changed = false;
-        var now = DateTime.UtcNow;
-
-        var players = GetTrackedPlayers();
-        foreach (var cloneTp in players)
-        {
-            if (cloneTp.LastServerName != serverName) continue;
-            TrackedPlayer tp;
-            lock (_dbLock)
-            {
-                if (!_trackedPlayers.TryGetValue(cloneTp.BMId, out var trackedPlayer)) continue;
-                tp = trackedPlayer;
-            }
-            bool isOnline = currentlyOnlineInfo.TryGetValue(tp.BMId, out var info);
-            if (!isOnline && tp.BMId != tp.Name)
-            {
-                isOnline = currentlyOnlineInfo.TryGetValue(tp.Name, out info);
-            }
-            
-            var lastSession = tp.Sessions.LastOrDefault();
-
-            if (isOnline)
-            {
-                // Update name if it was previously unknown or empty
-                if (tp.Name == "Unknown Player" || string.IsNullOrEmpty(tp.Name))
-                {
-                    tp.Name = info.name;
-                    changed = true;
-                }
-
-                var actualConnectTime = info.start;
-                if (lastSession == null || lastSession.DisconnectTime.HasValue)
-                {
-                    // Newly connected or we just started tracking/opened the app
-                    tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
-                    Log($"[SESSION] {tp.Name} ({tp.BMId}) connected at {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC (detected at {now:HH:mm})");
-                    changed = true;
-                    if (AnnounceTracking)
-                    {
-                        var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke(AlertTemplateService.GetFormattedAlert("AlertTrackingOnline", tp.Name, groupStr), serverName);
-                    }
-                }
-                else
-                {
-                    // If we have an open session, but the connect time is different (e.g. app was closed and they rejoined)
-                    // BattleMetrics session ID would change, but here we track by server session.
-                    // If the actualConnectTime is NEWER than our last recorded ConnectTime, they must have reconnected 
-                    // while we were closed.
-                    if (actualConnectTime > lastSession.ConnectTime.AddMinutes(5))
-                    {
-                        // They reconnected. Close old session at their last seen or roughly before this connect?
-                        // For simplicity, we close the old one at actualConnectTime - 1 second and start new one.
-                        lastSession.DisconnectTime = actualConnectTime.AddSeconds(-1);
-                        tp.Sessions.Add(new PlayerSession { ConnectTime = actualConnectTime, DisconnectTime = null });
-                        Log($"[SESSION] {tp.Name} reconnected (missed disconnect). New session start: {actualConnectTime:yyyy-MM-dd HH:mm:ss} UTC");
-                        changed = true;
-                    }
-                    else if (Math.Abs((lastSession.ConnectTime - actualConnectTime).TotalMinutes) > 1)
-                    {
-                        // Small correction of start time
-                        lastSession.ConnectTime = actualConnectTime;
-                        changed = true;
-                    }
-                }
-            }
-            else
-            {
-                if (lastSession != null && !lastSession.DisconnectTime.HasValue)
-                {
-                    // Newly disconnected. Or did they change their name?
-                    var possibleNameChange = currentlyOnlineInfo.FirstOrDefault(kvp => 
-                        !players.Any(p => p.BMId == kvp.Key || p.Name == kvp.Key) &&
-                        Math.Abs((kvp.Value.start - lastSession.ConnectTime).TotalSeconds) <= 1 &&
-                        (now - lastSession.ConnectTime).TotalSeconds > 60);
-
-                    if (possibleNameChange.Key != null)
-                    {
-                        string oldName = tp.Name;
-                        string newName = possibleNameChange.Value.name;
-                        Log($"[NAME_CHANGE] {oldName} -> {newName} (Session start matched: {lastSession.ConnectTime:HH:mm:ss} vs {possibleNameChange.Value.start:HH:mm:ss})");
-                        
-                        if (tp.BMId.Length == 17 && tp.BMId.StartsWith("7656"))
-                        {
-                            // If it's a SteamID tracked player, just update the Name, keep BMId
-                            RenameTrackedPlayer(tp.BMId, newName);
-                        }
-                        else
-                        {
-                            MigrateTrackedPlayer(tp.BMId, possibleNameChange.Key, newName);
-                        }
-                        
-                        if (AnnounceTracking)
-                        {
-                            var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                            OnTrackingNotification?.Invoke(AlertTemplateService.GetFormattedAlert("AlertTrackingRenamed", oldName, groupStr, newName), serverName);
-                        }
-                        
-                        continue; // Skip the disconnect logic
-                    }
-
-                    // Newly disconnected. Fetch actual last seen/stop time.
-                    var actualDisconnectTime = await FetchLastSeenTimeAsync(tp.BMId);
-                    if (actualDisconnectTime == DateTime.MinValue)
-                    {
-                        actualDisconnectTime = now;
-                        Log($"[SESSION] {tp.Name} disconnected. API stop time fetch failed, using fallback: {now:yyyy-MM-dd HH:mm:ss} UTC");
-                    }
-                    else
-                    {
-                        Log($"[SESSION] {tp.Name} disconnected at {actualDisconnectTime:yyyy-MM-dd HH:mm:ss} UTC");
-                    }
-                    
-                    lastSession.DisconnectTime = actualDisconnectTime;
-                    changed = true;
-                    if (AnnounceTracking)
-                    {
-                        var groupStr = string.IsNullOrWhiteSpace(tp.GroupName) ? "" : $" [{tp.GroupName}]";
-                        OnTrackingNotification?.Invoke(AlertTemplateService.GetFormattedAlert("AlertTrackingOffline", tp.Name, groupStr), serverName);
-                    }
-                }
-            }
-        }
-
-        if (changed)
-        {
-            SaveDB();
-        }
-    }
-
-    private static async Task<DateTime> FetchLastSeenTimeAsync(string bmId)
-    {
-        return await Task.FromResult(DateTime.UtcNow);
-    }
+    public static void StopPolling() { }
+    public static Task FetchOnlinePlayersNowAsync() => Task.CompletedTask;
 
     public static bool OfflineDeathAlertsEnabled
     {

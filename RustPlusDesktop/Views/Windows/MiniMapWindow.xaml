@@ -11,8 +11,7 @@
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Background="Transparent"
-        Topmost="True"
-        ShowInTaskbar="False"
+        ShowInTaskbar="True"
         Width="260" Height="260">
     <Grid x:Name="RootGrid">
 
@@ -27,7 +26,7 @@
         <Canvas x:Name="DockCanvas" Background="Transparent">
 
             <!-- Container that has the exact size of the Map shape -->
-            <Grid x:Name="MapContainer" Width="260" Height="260">
+            <Grid x:Name="MapContainer" Width="260" Height="260" Cursor="SizeAll">
                 <!-- Runde / Eckige Mini-Map -->
                 <Border x:Name="MapShapeBorder" CornerRadius="130" BorderBrush="#66000000" BorderThickness="1" SnapsToDevicePixels="True">
                     <!--  One mirror per map layer instead of a single brush over the whole map
@@ -120,6 +119,15 @@
                     </Border>
                 </StackPanel>
 
+                <ui:Button x:Name="BtnMapSettings"
+                           HorizontalAlignment="Right" VerticalAlignment="Top"
+                           Width="34" Height="34" Margin="0,10,10,0" Padding="6"
+                           Appearance="Secondary" Background="#E6101518"
+                           BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
+                           Foreground="White" Click="BtnSettings_Click"
+                           ToolTip="{DynamicResource MiniMapSettings}"
+                           AutomationProperties.Name="{DynamicResource MiniMapSettings}"
+                           Icon="{ui:SymbolIcon Symbol=Settings24}"/>
             </Grid>
         </Canvas>
 

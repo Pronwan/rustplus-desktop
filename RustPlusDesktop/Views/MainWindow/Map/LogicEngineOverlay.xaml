@@ -452,19 +452,6 @@
                                                                         </ui:TextBox.Style>
                                                                     </ui:TextBox>
 
-                                                                    <CheckBox Content="{DynamicResource UiShowCrateOnMap}" IsChecked="{Binding ShowCrateOnMap, Mode=TwoWay}"
-                                                                              VerticalAlignment="Center" FontSize="11">
-                                                                        <CheckBox.Style>
-                                                                            <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
-                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </CheckBox.Style>
-                                                                    </CheckBox>
                                                                     </StackPanel>
 
                                                                     <!--  Own row: optional, and closes the gap for pushes carrying no entity ID.  -->

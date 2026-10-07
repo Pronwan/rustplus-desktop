@@ -25,8 +25,8 @@ public enum ServerEventSource
     RustApi,
 
     /// <summary>
-    /// The server sends neither, so events come from audio detection shared through our
-    /// backend. Fewer events, less precision, no positions.
+    /// The server sends neither. Only the player's Smart Alarm notifications are available.
+    /// Cloud is retained as the legacy source name for saved profiles.
     /// </summary>
     Cloud,
 }
@@ -42,8 +42,7 @@ public enum ServerEventSource
 /// </summary>
 public static class EventCapabilities
 {
-    // Everything the Rust+ API used to carry. Oil Rig is absent on purpose: it was never
-    // delivered directly, only inferred from Chinook movement.
+    // Events still available from marker-capable servers, plus the player's Smart Alarm.
     private static readonly RustEventKind[] ApiEvents =
     {
         RustEventKind.Cargo,
@@ -51,18 +50,11 @@ public static class EventCapabilities
         RustEventKind.Chinook,
         RustEventKind.TravellingVendor,
         RustEventKind.DeepSea,
-    };
-
-    // What audio detection can carry. Patrol Heli, Chinook and Travelling Vendor have no
-    // server-wide cue, so they are genuinely gone rather than merely degraded — showing them
-    // would promise something that can never arrive. Oil Rig is new: audio gives it directly
-    // for the first time.
-    private static readonly RustEventKind[] CloudEvents =
-    {
-        RustEventKind.Cargo,
-        RustEventKind.DeepSea,
         RustEventKind.OilRig,
     };
+
+    // Smart Alarm timestamps are the only fallback; no shared audio reports.
+    private static readonly RustEventKind[] CloudEvents = { RustEventKind.OilRig };
 
     private static ServerEventSource _source = ServerEventSource.Unknown;
 
@@ -83,11 +75,11 @@ public static class EventCapabilities
 
     /// <summary>
     /// Docking warnings, harbour names and departure countdowns all need the ship's position,
-    /// which only the API provides. Audio can say a cargo spawned and nothing more.
+    /// which only the API provides.
     /// </summary>
     public static bool SupportsCargoRouting => _source == ServerEventSource.RustApi;
 
-    /// <summary>True while events come from other players' clients rather than the server.</summary>
+    /// <summary>True while dynamic event markers are unavailable.</summary>
     public static bool IsCloudSourced => _source != ServerEventSource.RustApi;
 
     public static void SetSource(ServerEventSource source)
@@ -104,18 +96,6 @@ public static class EventCapabilities
         5 => RustEventKind.Cargo,
         6 => RustEventKind.TravellingVendor,
         8 => RustEventKind.PatrolHeli,
-        _ => null,
-    };
-
-    /// <summary>
-    /// Event key as used by the backend and the audio listener. Only the three that audio can
-    /// detect have one — the rest never cross that boundary.
-    /// </summary>
-    public static string? ToBackendKey(RustEventKind kind) => kind switch
-    {
-        RustEventKind.Cargo => "cargo",
-        RustEventKind.DeepSea => "deep-sea",
-        RustEventKind.OilRig => "oil-rig",
         _ => null,
     };
 
@@ -147,7 +127,8 @@ public static class EventCapabilities
         "AlertNewShop", "AlertSuspiciousShop", "AlertShopMatch",
         "AlertCargoDocked", "AlertCargoExpectedDock", "AlertCargoDeparting",
         "AlertEventSpawned", "AlertHeliCrashFalseAlarm", "AlertHeliShotDown",
-        "AlertCrateUnlocksIn10Min", "AlertCrateUnlocksIn5Min",
+        "AlertCargoSpawnedAudio", "AlertDeepSeaUp", "AlertOilRigCrateUp",
+        "AlertCrateUnlocksIn15Min", "AlertCrateUnlocksIn10Min", "AlertCrateUnlocksIn5Min",
     };
 
     /// <summary>
@@ -179,28 +160,5 @@ public static class EventCapabilities
         return !CloudUnavailableAlerts.Contains(alertKey);
     }
 
-    /// <summary>
-    /// How long an event stays interesting once its cue has been heard.
-    ///
-    /// Mirrors the durations in report_server_event, and is only used when the backend has
-    /// said nothing — a report it refused, or one that never left the machine. Normally the
-    /// stored expiry wins, so the two agreeing matters less than it looks; keep them in step
-    /// anyway, because a client that outlives the server's own row would show a stale event
-    /// after everyone else has dropped it.
-    /// </summary>
-    public static TimeSpan NominalDuration(RustEventKind kind) => kind switch
-    {
-        RustEventKind.DeepSea => TimeSpan.FromHours(3),
-        RustEventKind.Cargo => TimeSpan.FromMinutes(75),
-        RustEventKind.OilRig => TimeSpan.FromMinutes(80),
-        _ => TimeSpan.FromMinutes(30),
-    };
 
-    public static RustEventKind? FromBackendKey(string? key) => key switch
-    {
-        "cargo" => RustEventKind.Cargo,
-        "deep-sea" => RustEventKind.DeepSea,
-        "oil-rig" => RustEventKind.OilRig,
-        _ => null,
-    };
 }
