@@ -98,12 +98,19 @@ public static class OilRigTriggerRegistry
             foreach (var name in names)
             {
                 if (string.IsNullOrWhiteSpace(name)) continue;
+                if (IsOilRigAlarmTitle(name)) return name.Trim();
                 if (_byName.TryGetValue(name.Trim(), out var byName)) return byName;
             }
         }
 
         return null;
     }
+
+    /// <summary>Explicit names for a player's RF receiver Smart Alarm notification.</summary>
+    public static bool IsOilRigAlarmTitle(string? title) => title?.Trim() is string text &&
+        (text.Equals("Oil Rig", StringComparison.OrdinalIgnoreCase) ||
+         text.Equals("Small Oil Rig", StringComparison.OrdinalIgnoreCase) ||
+         text.Equals("Large Oil Rig", StringComparison.OrdinalIgnoreCase));
 
     /// <summary>All trigger devices on one profile, for the device-list badges.</summary>
     public static Dictionary<uint, string> ForProfile(ServerProfile? profile) =>

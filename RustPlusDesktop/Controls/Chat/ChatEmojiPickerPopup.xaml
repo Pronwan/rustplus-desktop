@@ -78,7 +78,7 @@
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
                                             <TextBlock Text="{Binding Tag}" Foreground="#E4E9F2" FontSize="11"
                                                        FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding DisplayName}" Foreground="#7E8B9F" FontSize="10"
+                                            <TextBlock Text="{Binding DisplayName}" Foreground="#7E8B9F" FontSize="11"
                                                        TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </Grid>

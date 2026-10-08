@@ -53,10 +53,10 @@
                                     <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
                                     <StackPanel Grid.Column="2">
                                         <Border Padding="7,3" Background="#2638A3DB" CornerRadius="8" Visibility="{Binding IsNewFeature, Converter={StaticResource BoolToVisibility}}">
-                                            <TextBlock Text="{DynamicResource Tutorials.Status.NewFeature}" Foreground="#FF60CDFF" FontSize="10" FontWeight="Bold" />
+                                            <TextBlock Text="{DynamicResource Tutorials.Status.NewFeature}" Foreground="#FF60CDFF" FontSize="11" FontWeight="Bold" />
                                         </Border>
                                         <Border Margin="0,4,0,0" Padding="7,3" Background="#26FFB900" CornerRadius="8" Visibility="{Binding IsUpdated, Converter={StaticResource BoolToVisibility}}">
-                                            <TextBlock Text="{DynamicResource Tutorials.Status.Updated}" Foreground="#FFFFD45C" FontSize="10" FontWeight="Bold" />
+                                            <TextBlock Text="{DynamicResource Tutorials.Status.Updated}" Foreground="#FFFFD45C" FontSize="11" FontWeight="Bold" />
                                         </Border>
                                     </StackPanel>
                                 </Grid>

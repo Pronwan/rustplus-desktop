@@ -1522,7 +1522,7 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                         TimerMinutes = 15,
                         TimerTarget = rigTarget,
                         TimerName = "",
-                        ShowCrateOnMap = true,
+                        ShowCrateOnMap = false,
                         AlarmTextHint = "",
                         WaitSeconds = 10,
                         TargetEntityId = 0,

@@ -139,7 +139,7 @@ public partial class DeathStatsView : UserControl
         // The names are read from their own file and joined here, so the Killers table
         // follows the same filters as everything else on the page.
         var summary = DeathLogStore.Summarize(
-            query.ToList(), KillerLogStore.LoadByDeath(_serverKey));
+            query.ToList(), KillerLogStore.LoadByDeath(_serverKey), logIsEmpty: _allEntries.Count == 0);
         DataContext = summary;
         BuildSparkline(summary.DeathsPerDay);
     }

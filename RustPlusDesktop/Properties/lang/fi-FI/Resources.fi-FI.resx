@@ -5774,4 +5774,7 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Poistaa kaikki vimpaimet ja palauttaa kartan nurkkaansa</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Kierrätyslaskin</value>
+  </data>
 </root>

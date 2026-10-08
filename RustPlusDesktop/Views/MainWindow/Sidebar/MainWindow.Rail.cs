@@ -96,11 +96,11 @@ public partial class MainWindow
     private FrameworkElement BuildTabEntry(RailTabInfo info, string? parentFolderId = null)
     {
         var dragRef = new RailDragRef { TabId = info.Id, ParentFolderId = parentFolderId };
-        var grid = new Grid { Tag = dragRef, Width = 48 };
+        var grid = new Grid { Tag = dragRef, Width = RailEntryWidth };
         var button = BuildRailButton(info);
         dragRef.GhostSource = button;
         grid.Children.Add(button);
-        grid.Children.Add(BuildRailPopover(button));
+        AttachRailHint(grid, button, BuildRailPopover);
         return grid;
     }
 
@@ -126,10 +126,11 @@ public partial class MainWindow
 
         // Render as Content (not the Icon slot): the WPF-UI Button.Icon presenter
         // caps the glyph size, so a Viewbox gives every icon the same larger size.
-        if (info.GeometryPath is { } geo)
-            button.Content = BuildGeometryIcon(geo, button);
-        else
-            button.Content = BuildSymbolIcon(info.Symbol, button);
+        FrameworkElement icon = info.GeometryPath is { } geo
+            ? BuildGeometryIcon(geo, button)
+            : BuildSymbolIcon(info.Symbol, button);
+        button.Content = WithRailLabel(button, icon, info.NameKey, info.NameFallback);
+        SizeRailButton(button);
 
         return button;
     }
@@ -215,7 +216,7 @@ public partial class MainWindow
 
         var container = new Border
         {
-            Width = 48,
+            Width = RailEntryWidth,
             CornerRadius = new CornerRadius(16),
             Background = bgBrush,
             BorderBrush = borderBrush,
@@ -230,7 +231,9 @@ public partial class MainWindow
         container.Child = inner;
 
         // Header slot (48x44): hosts both the collapsed 2x2 preview button and the expanded folder glyph.
-        var headerGrid = new Grid { Width = 48, Height = 44 };
+        var headerGrid = new Grid { Width = RailEntryWidth, Height = 44 };
+        string? folderNameKey = node.FolderId == RailCatalog.DefaultFolderId ? "SidebarToolsFolder" : null;
+        string folderName = node.Name ?? (TryFindResource("SidebarNewFolder") as string ?? "New folder");
         inner.Children.Add(headerGrid);
 
         // Collapsed header: neutral rounded tile with a 2x2 preview of the first four child icons.
@@ -265,21 +268,24 @@ public partial class MainWindow
             Padding = new Thickness(5),
             Child = preview,
         };
-        collapsedButton.Content = tile;
+        collapsedButton.Content = WithRailLabel(collapsedButton, tile, folderNameKey, folderName);
+        SizeRailButton(collapsedButton);
         collapsedGrid.Children.Add(collapsedButton);
-        collapsedGrid.Children.Add(BuildFolderPopover(collapsedButton));
+        AttachRailHint(collapsedGrid, collapsedButton, BuildFolderPopover);
         headerGrid.Children.Add(collapsedGrid);
 
-        // Expanded header: folder glyph button that collapses the folder back down.
+        // Expanded header: folder glyph button that collapses the folder back down. The chevron
+        // under the glyph says so; without it an open folder looked like any other tab.
         var expandedGrid = new Grid();
         var expandedButton = new WpfUi.Button
         {
             Style = (Style)RailItemsHost.FindResource("SidebarRailButton"),
             Margin = new Thickness(0),
             Padding = new Thickness(0),
-            Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Folder24, FontSize = 20 },
             Foreground = FolderHeaderIconBrush,
         };
+        expandedButton.Content = WithRailLabel(expandedButton, BuildExpandedFolderGlyph(), folderNameKey, folderName);
+        SizeRailButton(expandedButton);
 
         if (isDefaultTools)
             expandedButton.SetResourceReference(System.Windows.Automation.AutomationProperties.NameProperty, "SidebarToolsFolder");
@@ -299,7 +305,7 @@ public partial class MainWindow
             VerticalAlignment = VerticalAlignment.Bottom,
             IsHitTestVisible = false,
         });
-        expandedGrid.Children.Add(BuildFolderPopover(expandedButton));
+        AttachRailHint(expandedGrid, expandedButton, BuildFolderPopover);
         headerGrid.Children.Add(expandedGrid);
 
         // Child tray (accordion drawer): clips items cleanly while expanding/collapsing.
@@ -568,6 +574,28 @@ public partial class MainWindow
             c.ContainerBackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, bgAnim);
             c.ContainerBorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, borderAnim);
         }
+    }
+
+    /// <summary>Folder glyph with a small up-chevron, marking an open folder as collapsible.</summary>
+    private static StackPanel BuildExpandedFolderGlyph()
+    {
+        var panel = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        panel.Children.Add(new WpfUi.SymbolIcon
+        {
+            Symbol = WpfUi.SymbolRegular.Folder20,
+            FontSize = 18,
+            Foreground = FolderHeaderIconBrush,
+            HorizontalAlignment = HorizontalAlignment.Center,
+        });
+        panel.Children.Add(new WpfUi.SymbolIcon
+        {
+            Symbol = WpfUi.SymbolRegular.ChevronUp12,
+            FontSize = 10,
+            Foreground = FolderHeaderIconBrush,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(0, -2, 0, 0),
+        });
+        return panel;
     }
 
     private FrameworkElement BuildMiniIcon(RailTabInfo info)

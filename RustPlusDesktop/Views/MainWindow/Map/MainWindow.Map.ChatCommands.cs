@@ -307,14 +307,7 @@ public partial class MainWindow
         // Command: Deep Sea
         if (cmd == profile.CmdDeepSea.ToLowerInvariant())
         {
-            // On a server without event markers the local Deep Sea state is never populated —
-            // it was fed by the shop poll. Answer from the shared audio detections instead.
-            if (Services.EventCapabilities.IsCloudSourced)
-            {
-                _ = Reply(BuildCloudDeepSeaAnswer());
-                AppendLog($"[ChatCommand] DeepSea (audio) executed by {m.Author}");
-                return;
-            }
+            if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.DeepSea)) return;
 
             string msg;
             if (_deepSeaActive)
@@ -346,14 +339,7 @@ public partial class MainWindow
         // Command: Cargo
         if (cmd == profile.CmdCargo.ToLowerInvariant())
         {
-            // Docking, harbour and departure all need the ship's position. Audio only ever
-            // tells us that a cargo spawned, so the fallback answer says exactly that.
-            if (Services.EventCapabilities.IsCloudSourced)
-            {
-                _ = Reply(BuildCloudCargoAnswer());
-                AppendLog($"[ChatCommand] Cargo (audio) executed by {m.Author}");
-                return;
-            }
+            if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.Cargo)) return;
 
             string msg = Properties.Resources.ChatCmdCargoNotActive;
             var activeCargo = _cargoDockStates.Values.FirstOrDefault();
@@ -412,39 +398,7 @@ public partial class MainWindow
         // Command: Oil Rig
         if (cmd == profile.CmdOilRig.ToLowerInvariant())
         {
-            // The audio cue cannot say which rig it was, and there is no unlock countdown
-            // without the API. Report when crates were last heard and nothing more.
-            if (Services.EventCapabilities.IsCloudSourced)
-            {
-                _ = Reply(BuildCloudOilRigAnswer());
-                AppendLog($"[ChatCommand] OilRig (audio) executed by {m.Author}");
-                return;
-            }
-
-            var parts = new List<string>();
-            foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
-            {
-                var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
-                if (timeLeft.HasValue)
-                {
-                    parts.Add(string.Format(Properties.Resources.ChatCmdOilRigCrateIn, rigName, (int)timeLeft.Value.TotalMinutes, timeLeft.Value.Seconds));
-                }
-                else
-                {
-                    var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
-                    if (lastTrig.HasValue)
-                    {
-                        var ago = DateTime.UtcNow - lastTrig.Value;
-                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigLastCalledAgo, rigName, (int)ago.TotalMinutes));
-                    }
-                    else
-                    {
-                        parts.Add(string.Format(Properties.Resources.ChatCmdOilRigNotCalled, rigName));
-                    }
-                }
-            }
-            _ = Reply(string.Join(" | ", parts));
-            AppendLog($"[ChatCommand] OilRig executed by {m.Author}");
+            _ = Reply(BuildOilRigAlarmAnswer());
             return;
         }
 
@@ -1130,7 +1084,7 @@ public partial class MainWindow
     {
         // Same answer the in-game command gives — the Discord bot must not report a different
         // state than team chat for the same server.
-        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudDeepSeaAnswer();
+        if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.DeepSea)) return "Deep Sea event data is unavailable.";
 
         if (_deepSeaActive)
         {
@@ -1151,7 +1105,7 @@ public partial class MainWindow
 
     public string GetCargoStatusForDiscord()
     {
-        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudCargoAnswer();
+        if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.Cargo)) return "Cargo event data is unavailable.";
 
         var activeCargo = _cargoDockStates.Values.FirstOrDefault();
         if (activeCargo != null)
@@ -1193,32 +1147,7 @@ public partial class MainWindow
 
     public string GetOilRigStatusForDiscord()
     {
-        if (Services.EventCapabilities.IsCloudSourced) return BuildCloudOilRigAnswer();
-
-        var parts = new List<string>();
-        foreach (var rigName in new[] { "Small Oil Rig", "Large Oil Rig" })
-        {
-            string emoji = rigName.Contains("Small") ? "🛢️" : "🏭";
-            var timeLeft = _monumentWatcher.GetActiveEventTimeLeft(rigName);
-            if (timeLeft.HasValue)
-            {
-                parts.Add($"{emoji} **{rigName}**: Locked crate in {(int)timeLeft.Value.TotalMinutes}m {timeLeft.Value.Seconds}s");
-            }
-            else
-            {
-                var lastTrig = _monumentWatcher.GetLastTriggered(rigName);
-                if (lastTrig.HasValue)
-                {
-                    var ago = DateTime.UtcNow - lastTrig.Value;
-                    parts.Add($"{emoji} **{rigName}**: Last called {(int)ago.TotalMinutes}m ago");
-                }
-                else
-                {
-                    parts.Add($"{emoji} **{rigName}**: Not called this session");
-                }
-            }
-        }
-        return string.Join("\n", parts);
+        return BuildOilRigAlarmAnswer();
     }
 
     public string GetHeliStatusForDiscord()

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -2481,7 +2481,7 @@ Are you sure you want to continue?</value>
     <value>Open Offline Deaths Log</value>
   </data>
   <data name="NotificationsTab" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Rust+ Notifications</value>
   </data>
   <data name="NotificationCenterSettings" xml:space="preserve">
     <value>Notification Center</value>
@@ -3879,7 +3879,7 @@ Please pair this server first.</value>
     <value>Raid Alerts Channel ID</value>
   </data>
   <data name="UiRaidCalculator" xml:space="preserve">
-    <value>Raid calculator</value>
+    <value>Raid Calculator</value>
   </data>
   <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
     <value>Raid items and raw crafting ingredients</value>
@@ -3921,7 +3921,7 @@ Please pair this server first.</value>
     <value>Restore local backup</value>
   </data>
   <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
-    <value>Review alerts and recent server events.</value>
+    <value>Alarms, deaths and server events pushed by Rust+.</value>
   </data>
   <data name="UiRevoke" xml:space="preserve">
     <value>Revoke</value>
@@ -5749,13 +5749,13 @@ You can find more information on the server&apos;s official website:
     <value>Open Mini Map</value>
   </data>
   <data name="Tutorials.Step.minimap.open.Description" xml:space="preserve">
-    <value>Click here to open the mini map window.</value>
+    <value>Open the minimap as a regular window. It falls behind fullscreen Rust. Choose a display in its settings to keep it in a corner of your second monitor. Device controls open in a separate overlay that stays in front of Rust.</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
     <value>Map Settings</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>Hover over the mini map and click the settings gear to customize its shape, size, and opacity.</value>
+    <value>Bring out the bar at the top of the screen (rest the mouse on the top edge, or use the small tab) and press ⚙ to customize the map&apos;s shape, size, and opacity. While the layout is unlocked, hovering the map shows its own gear too.</value>
   </data>
   <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
     <value>Server Time &amp; Population</value>
@@ -5953,25 +5953,25 @@ You can find more information on the server&apos;s official website:
     <value>Why this exists</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.intro.Description" xml:space="preserve">
-    <value>Crate countdowns used to be worked out from Chinook markers, which the Rust+ API no longer sends. Rust broadcasts the hack on a radio frequency instead, and that is something you can receive yourself. Three things are needed: a receiver in-game, a Smart Alarm paired to the app, and one Logic Engine rule.</value>
+    <value>Oil Rig information comes from your own paired Smart Alarm notification. RustPlus Desktop records the notification timestamp. It does not detect game audio, infer a crate spawn, or draw an Oil Rig timer on the minimap.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Title" xml:space="preserve">
     <value>Wire it up in-game</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.wiring.Description" xml:space="preserve">
-    <value>Place an RF Receiver and set its frequency to the rig you want: 4768 for Large Oil Rig, 4765 for Small Oil Rig. Give it power, and wire its output into a Smart Alarm that is paired with this app. When the hack starts, Rust broadcasts on that frequency, the receiver switches on, and the alarm fires.</value>
+    <value>Power an RF Receiver, set its frequency to the rig you want, and wire its output into a Smart Alarm paired with RustPlus Desktop. Name the upper notification line Oil Rig, Small Oil Rig, or Large Oil Rig. When the alarm fires, the app records the timestamp sent by Rust.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Title" xml:space="preserve">
-    <value>Add the Logic Engine rule</value>
+    <value>Read your alarm timestamp</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.rule.Description" xml:space="preserve">
-    <value>Open the Logic Engine and click the Oil Rig Template button to instantly add a pre-configured rule (or click + Add Rule). Select your paired Smart Alarm as the trigger, and choose either Large Oilrig Trigger or Small Oilrig Trigger as the timer target. Leave Show Crate on map ticked to draw the crate with its live countdown; chat and Discord warnings arrive automatically. Optionally fill in Alarm text with the UPPER line from the alarm in-game so push notifications match when offline.</value>
+    <value>The Oil Rig Smart Alarm entry on the map page shows when your last notification was sent. You can add an Oil Rig Smart Alarm widget to the separate control overlay. The minimap has no crate marker or crate countdown.</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Title" xml:space="preserve">
     <value>No raid alert from that alarm</value>
   </data>
   <data name="Tutorials.Step.oilrigcrate.silence.Description" xml:space="preserve">
-    <value>An alarm set up this way is not a raid, so its popup, sound and raid alerts to Discord are suppressed. It reports as an oil rig event instead. The device list shows a small (Large Oil) or (Small Oil) badge so the silence is visible rather than mysterious. Remove the device from the rule and it behaves like an ordinary alarm again, at once. The Oil Rig switch under Chat Alerts still turns all of it off whenever you want quiet.</value>
+    <value>An alarm explicitly named Oil Rig is recorded as an Oil Rig Smart Alarm notification, without a raid popup or raid sound. Rename it to an ordinary alarm title to use it for raid alerts again. Optional Logic Engine rules remain player-configured timers, rather than crate detection.</value>
   </data>
   <data name="UiAlarmTextHint" xml:space="preserve">
     <value>Alarm text (upper line)</value>
@@ -7065,6 +7065,21 @@ You can find more information on the server&apos;s official website:
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Unlock to move, resize and remove tiles</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>Lock the layout again (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>Editing layout · drag a widget to move it · hover it to resize, configure or remove it</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>This bar arranges your widgets: unlock to move them, + to add more, ⚙ for settings. It hides while you play — rest the mouse on the top edge of the screen, or use the small tab there, to bring it back.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>The layout is locked. Press the padlock in the bar at the top of the screen to move, resize or remove widgets.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>ON</value>
   </data>
@@ -7668,19 +7683,25 @@ Close this preview when the panel looks right.</value>
     <value>Open the Mini Map</value>
   </data>
   <data name="Tutorials.Step.commanddock.open.Description" xml:space="preserve">
-    <value>The Mini button opens the mini-map in its own window, floating above the game. Everything in this tutorial happens in that window.</value>
+    <value>Open the minimap to open the separate widget overlay too. The map is a regular second-screen window; device and command widgets remain above Rust.</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Title" xml:space="preserve">
     <value>Add Widgets with +</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>The map is one widget among many. Press + in the dock&apos;s title bar to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+    <value>The map is one widget among many. Press + in the bar at the top of the screen to add a clock, a paired smart switch or alarm, team or clan chat, an event timer, a Logic Engine rule, session stats, server population, a Discord line — or the AI companion. Each one lands in the first free cell next to the map.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>The Bar at the Top</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>The dock&apos;s controls live in a bar at the top of the screen that hides while you play — watch it slide in and out now. To bring it back, rest the mouse on the top edge of the screen, or move toward the top and use the small tab that appears there. The padlock unlocks arranging, + adds widgets, the save icon keeps named arrangements, ⚙ opens settings, and the slider zooms the grid.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>Drag, Resize, Lock</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>Hover a widget to move it, drag its corner to resize, or use × to remove it. The lock in the title bar puts the whole layout beyond accidental dragging, and the Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
+    <value>Press the padlock in the bar to start arranging: every widget gets a dashed outline — drag one to move it, and hover it for the resize corner, its ⚙ and × to remove it. Press Done or Esc when you&apos;re finished; the layout locks again so nothing moves by accident. Drag a widget while it&apos;s locked and the app reminds you where the lock is. The Arrangements button saves the dock under a name — hover a saved name to see it outlined in place before you load it.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>Style the Whole Dock</value>
@@ -8211,5 +8232,62 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="UiListeningFcm" xml:space="preserve">
     <value>Listening · FCM</value>
+  </data>
+  <data name="RailGeneticsLab" xml:space="preserve">
+    <value>Genetics Lab</value>
+  </data>
+  <data name="RailGeneticsLabHelp" xml:space="preserve">
+    <value>Calculate plant genetics, crossbreeding, and recipes.</value>
+  </data>
+  <data name="RailPlayerWipeTracker" xml:space="preserve">
+    <value>Player Wipe Tracker</value>
+  </data>
+  <data name="RailPlayerWipeTrackerHelp" xml:space="preserve">
+    <value>Track teammate routes, activity, and history for the current wipe.</value>
+  </data>
+  <data name="RailDeathStats" xml:space="preserve">
+    <value>Death Stats</value>
+  </data>
+  <data name="RailDeathStatsHelp" xml:space="preserve">
+    <value>View death statistics for the current server.</value>
+  </data>
+  <data name="AppNotificationsTitle" xml:space="preserve">
+    <value>App Notifications</value>
+  </data>
+  <data name="AppNotificationsSubtitle" xml:space="preserve">
+    <value>Updates from the Rust+ Desk service, shared with your dashboard</value>
+  </data>
+  <data name="AppNotificationsEmpty" xml:space="preserve">
+    <value>No app notifications</value>
+  </data>
+  <data name="AppNotificationsEmptyHint" xml:space="preserve">
+    <value>Updates from the Rust+ Desk service will appear here.</value>
+  </data>
+  <data name="DeathStatsNoDeathsYet" xml:space="preserve">
+    <value>No deaths logged on this server yet. They appear here as they happen.</value>
+  </data>
+  <data name="DeathStatsNoMatches" xml:space="preserve">
+    <value>No deaths match the current filters.</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recycling Calculator</value>
+  </data>
+  <data name="RailShowLabels" xml:space="preserve">
+    <value>Show labels</value>
+  </data>
+  <data name="RailHideLabels" xml:space="preserve">
+    <value>Hide labels</value>
+  </data>
+  <data name="DevicesShowHow" xml:space="preserve">
+    <value>Show me how</value>
+  </data>
+  <data name="TeamSoloTitle" xml:space="preserve">
+    <value>Playing solo</value>
+  </data>
+  <data name="TeamSoloHint" xml:space="preserve">
+    <value>Teammates appear here once they join your team in game.</value>
+  </data>
+  <data name="TeamFindTeammates" xml:space="preserve">
+    <value>Find teammates</value>
   </data>
 </root>

@@ -309,10 +309,10 @@ namespace RustPlusDesk.Views
 
             if (rigName != null)
             {
-                bool started = _monumentWatcher.TriggerExternal(rigName, minutes * 60, step.ShowCrateOnMap);
+                bool started = _monumentWatcher.TriggerExternal(rigName, minutes * 60, false);
                 AppendLog(started
                     ? $"[LogicEngine] Started {minutes} min hack timer for {rigName}" +
-                      (step.ShowCrateOnMap ? " (crate shown on map)." : " (no map marker).")
+                      " (no map marker)."
                     : $"[LogicEngine] {rigName} already has a running timer — left it alone.");
                 return;
             }

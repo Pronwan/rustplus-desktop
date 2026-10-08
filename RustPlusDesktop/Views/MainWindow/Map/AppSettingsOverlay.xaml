@@ -1,4 +1,4 @@
-<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}" tutorials:Tutorial.TargetId="Settings.Panel">
+<UserControl x:Class="RustPlusDesk.Views.AppSettingsOverlay" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls" xmlns:conv="clr-namespace:RustPlusDesk.Converters" xmlns:p="clr-namespace:RustPlusDesk.Properties" xmlns:views="clr-namespace:RustPlusDesk.Views" xmlns:windows="clr-namespace:RustPlusDesk.Views.Windows" xmlns:tutorials="clr-namespace:RustPlusDesk.Features.Tutorials" mc:Ignorable="d" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextPrimary}" tutorials:Tutorial.TargetId="Settings.Panel">
 
     <Grid ClipToBounds="True">
         <Grid.Resources>
@@ -31,19 +31,16 @@
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="36" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,0">
-            <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Settings24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="14" />
-                    <ui:TextBlock Text="{DynamicResource Settings}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                </StackPanel>
-                <ui:Button x:Name="BtnCloseSettings" Appearance="Transparent" Icon="{ui:SymbolIcon Dismiss24}" Width="26" Height="26" Padding="0" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnCloseSettings_Click" />
-            </Grid>
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceAlt}" Padding="12,12,8,4">
+            <controls:PanelHeader IsCompact="True"
+                                  Symbol="Settings24"
+                                  Title="{DynamicResource Settings}"
+                                  CloseClick="BtnCloseSettings_Click" />
         </Border>
 
         <Border Grid.Row="1" Padding="12,10,12,8" Background="{DynamicResource SurfaceAlt}">
@@ -67,7 +64,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Settings24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource General}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiLanguageStartupAndAppBehavior}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource General}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiLanguageStartupAndAppBehavior}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -76,7 +73,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Alert24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource Alerts}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiNotificationsSoundsAndOfflineDeath}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource Alerts}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiNotificationsSoundsAndOfflineDeath}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -85,7 +82,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Chat24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource ChatCommandsSettings}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="Configure team chat commands and device bindings" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource ChatCommandsSettings}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="Configure team chat commands and device bindings" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -94,7 +91,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Edit24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource CustomAlertsHeader}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource CustomAlertsDesc}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource CustomAlertsHeader}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource CustomAlertsDesc}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -103,7 +100,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Bot24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource AiCompanionTitle}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource AiCompanionCategoryDesc}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource AiCompanionTitle}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource AiCompanionCategoryDesc}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -112,7 +109,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Globe24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiMap}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiPerformanceMarkersAnd3DData}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiMap}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiPerformanceMarkersAnd3DData}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -121,7 +118,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="Cloud24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiConnectedServices}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiCloudDiscordAlexaChatAndSteam}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiConnectedServices}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiCloudDiscordAlexaChatAndSteam}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -130,7 +127,7 @@
                         <ui:Card MinHeight="58" Padding="12,9" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
                             <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <ui:SymbolIcon Symbol="ArrowReset24" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiSystem}" /><ui:TextBlock Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiMaintenanceBackupResetAndCredits}" TextWrapping="Wrap" /></StackPanel>
+                                <StackPanel Grid.Column="1"><ui:TextBlock FontWeight="SemiBold" Text="{DynamicResource UiSystem}" /><ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiMaintenanceBackupResetAndCredits}" TextWrapping="Wrap" /></StackPanel>
                                 <ui:SymbolIcon Grid.Column="2" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                             </Grid>
                         </ui:Card>
@@ -145,7 +142,7 @@
                         <ui:Button Width="30" Height="30" Margin="0,0,10,0" Padding="0" Appearance="Transparent" ToolTip="{DynamicResource UiBackToSettingsCategories}" Click="SettingsBack_Click"><ui:SymbolIcon Symbol="ArrowLeft24" /></ui:Button>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <ui:TextBlock x:Name="SettingsDetailTitle" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
-                            <ui:TextBlock x:Name="SettingsDetailSubtitle" Margin="0,2,0,0" FontSize="10.5" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                            <ui:TextBlock x:Name="SettingsDetailSubtitle" Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -162,7 +159,7 @@
                                         <ui:TextBlock FontWeight="SemiBold">
                                             <Run Text="{Binding BeforeMatch}" /><Run Background="#FF60CDFF" Foreground="#FF071218" FontWeight="Bold" Text="{Binding Match}" /><Run Text="{Binding AfterMatch}" />
                                         </ui:TextBlock>
-                                        <ui:TextBlock Margin="0,2,0,0" FontSize="10" Foreground="{DynamicResource TextSubtle}"><Run Text="{Binding CategoryTitle}" /><Run Text="  ›  " /><Run Text="{Binding SectionTitle}" /></ui:TextBlock>
+                                        <ui:TextBlock Margin="0,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}"><Run Text="{Binding CategoryTitle}" /><Run Text="  ›  " /><Run Text="{Binding SectionTitle}" /></ui:TextBlock>
                                     </StackPanel>
                                     <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" />
                                 </Grid>
@@ -309,36 +306,6 @@
 
                         <Border Style="{StaticResource SettingsRowDivider}" />
 
-                        <!-- Show Players Tab (opt-in) -->
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource ShowPlayersTab}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource ShowPlayersTabDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkShowPlayersTab" AutomationProperties.Name="{DynamicResource ShowPlayersTab}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource ShowPlayersTabDesc}" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
-                        <!-- Background Player Tracking: only meaningful while the Players tab is shown -->
-                        <Grid MinHeight="36" Margin="16,0,0,0" IsEnabled="{Binding IsChecked, ElementName=ChkShowPlayersTab}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource BackgroundTracking}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource BackgroundTrackingToolTip}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkBackgroundTracking" AutomationProperties.Name="{DynamicResource BackgroundTracking}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" ToolTip="{DynamicResource BackgroundTrackingToolTip}" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
                         <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -460,40 +427,6 @@
                                        VerticalAlignment="Center"
                                        Height="32"
                                        ToolTip="Opens the directory where crash reports, freeze logs, and diagnostics are saved." />
-                        </Grid>
-                    </StackPanel>
-                </ui:Card>
-                </StackPanel>
-
-                <!-- Server Events Section -->
-                <StackPanel x:Name="SectionServerEvents">
-                <ui:TextBlock Text="{DynamicResource ServerEventsSection}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
-                <ui:Card Style="{StaticResource SettingsNativeCard}">
-                    <StackPanel>
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource ListenForServerEvents}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource ListenForServerEventsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkListenForServerEvents" AutomationProperties.Name="{DynamicResource ListenForServerEvents}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                        </Grid>
-
-                        <Border Style="{StaticResource SettingsRowDivider}" />
-
-                        <Grid MinHeight="36">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                                <ui:TextBlock Text="{DynamicResource TrustOwnDetections}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                <ui:TextBlock Text="{DynamicResource TrustOwnDetectionsDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkTrustOwnDetections" AutomationProperties.Name="{DynamicResource TrustOwnDetections}" VerticalAlignment="Center" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
                         </Grid>
                     </StackPanel>
                 </ui:Card>
@@ -924,9 +857,9 @@
                 <ui:TextBlock Margin="0,-4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiSyncBackupsTeamFeaturesAndSupporterAccessThisAccountIsSepa3DCE58FDD1}" TextWrapping="Wrap" />
                 
                 <ui:Button x:Name="BtnCloud247" Content="{DynamicResource Cloud247Title}" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Cloud24}" HorizontalAlignment="Stretch" Margin="0,0,0,4" Click="BtnCloud247_Click" />
-                <TextBlock x:Name="TxtCloud247StatusNote" FontSize="10.5" Foreground="#EF4444" TextWrapping="Wrap" Margin="2,0,0,6" Visibility="Collapsed"/>
+                <TextBlock x:Name="TxtCloud247StatusNote" FontSize="11" Foreground="#EF4444" TextWrapping="Wrap" Margin="2,0,0,6" Visibility="Collapsed"/>
                 <TextBlock Text="⚠️ Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
-                           FontSize="10.5" FontWeight="Medium" Foreground="#F59E0B" TextWrapping="Wrap" Margin="2,0,0,10" />
+                           FontSize="11" FontWeight="Medium" Foreground="#F59E0B" TextWrapping="Wrap" Margin="2,0,0,10" />
                 <ui:Button Content="{DynamicResource CompareCloudFeatures}" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Info24}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Click="BtnCompareCloud_Click" />
 
                 <!-- Cloud Account Buttons: Discord + Email side by side -->
@@ -1004,7 +937,7 @@
                                 <ui:TextBlock Text="{DynamicResource UiDiscordWebhookURLOfflineAlerts}" Foreground="{DynamicResource TextSubtle}" FontSize="12" Margin="0,0,0,2" />
                                 <ui:TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Padding="6,4" Margin="0,0,0,4" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged" />
                                 
-                                <ui:TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,0,2" />
+                                <ui:TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,0,2" />
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                     <CheckBox x:Name="ChkFcmMentionEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
                                     <CheckBox x:Name="ChkFcmMentionHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
@@ -1095,8 +1028,8 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:TextBox x:Name="TxtChannelRaid" Height="26" Padding="6,3" Margin="0,0,4,0" ToolTip="{DynamicResource UiChannelID}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <CheckBox x:Name="ChkChannelRaidEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
-                                        <CheckBox x:Name="ChkChannelRaidHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelRaidEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelRaidHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
                                     </StackPanel>
                                     <CheckBox x:Name="ChkRaidTTS" Grid.Column="2" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>
@@ -1111,8 +1044,8 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:TextBox x:Name="TxtChannelEvents" Height="26" Padding="6,3" Margin="0,0,4,0" ToolTip="{DynamicResource UiChannelID}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <CheckBox x:Name="ChkChannelEventsEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
-                                        <CheckBox x:Name="ChkChannelEventsHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelEventsEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelEventsHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
                                     </StackPanel>
                                     <CheckBox x:Name="ChkEventsTTS" Grid.Column="2" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>
@@ -1127,8 +1060,8 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:TextBox x:Name="TxtChannelChat" Height="26" Padding="6,3" Margin="0,0,4,0" ToolTip="{DynamicResource UiChannelID}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <CheckBox x:Name="ChkChannelChatEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
-                                        <CheckBox x:Name="ChkChannelChatHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelChatEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelChatHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
                                     </StackPanel>
                                     <CheckBox x:Name="ChkChatTTS" Grid.Column="2" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>
@@ -1144,8 +1077,8 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:TextBox x:Name="TxtChannelShop" Height="26" Padding="6,3" Margin="0,0,4,0" ToolTip="{DynamicResource UiChannelID}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <CheckBox x:Name="ChkChannelShopEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
-                                        <CheckBox x:Name="ChkChannelShopHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="10" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelShopEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
+                                        <CheckBox x:Name="ChkChannelShopHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,8,0" />
                                     </StackPanel>
                                     <CheckBox x:Name="ChkShopTTS" Grid.Column="2" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
                                 </Grid>

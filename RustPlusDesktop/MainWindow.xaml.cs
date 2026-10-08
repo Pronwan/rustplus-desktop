@@ -241,9 +241,14 @@ public partial class MainWindow : WpfUi.FluentWindow
     private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
     private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
     private bool _isShuttingDown = false;
-    private const double CompactSidebarWidth = 64;
-    private const double MinExpandedSidebarWidth = 360;
-    private const double MaxExpandedSidebarWidth = 480;
+    // The rail is icons only (64) or icons with names (200); everything sized off the rail
+    // (collapsed column, panel content, overlay insets) follows RailWidth.
+    private const double CompactRailWidth = 64;
+    private const double LabelledRailWidth = 200;
+    private double RailWidth => TrackingService.RailShowLabels ? LabelledRailWidth : CompactRailWidth;
+    private double CompactSidebarWidth => RailWidth;
+    private double MinExpandedSidebarWidth => 360 + RailWidth - CompactRailWidth;
+    private double MaxExpandedSidebarWidth => 480 + RailWidth - CompactRailWidth;
     private const int SidebarAnimationDurationMs = 180;
     private const int SidebarHoverExpandDelayMs = 200;
     private double _expandedSidebarWidth = 420;
@@ -473,13 +478,13 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        if (savedMaximized)
-        {
-            this.WindowState = WindowState.Maximized;
-        }
+        // Applied after the window is shown (ApplyStartupWindowState), never here: see there.
+        _startMaximized = savedMaximized;
 
         this.PreviewKeyDown += MainWindow_PreviewKeyDown;
         _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+        ApplyRailLayout();
+        LabelStaticRailButtons();
         _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
         TrackLeftPanelOverlayVisibility();
         SetSidebarExpanded(_isSidebarPinnedExpanded);
@@ -770,8 +775,6 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Initial tracking status update and hook global events
         TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
         TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
-        TrackingService.OnTrackingNotification -= OnTrackingNotification;
-        TrackingService.OnTrackingNotification += OnTrackingNotification;
         OnOnlinePlayersUpdated();
         _vm.IsInitializing = false;
         
@@ -967,7 +970,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             });
         };
         
-        _monumentWatcher.OnDebug += (s, msg) => Dispatcher.BeginInvoke(new Action(() => AppendLog(msg)));
 
         App.CultureChanged += () =>
         {
@@ -2702,6 +2704,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // filter existed for a long while without ever being able to fire: a queued
         // push from two hours ago arrived stamped "now".
         var eventTime = n.EventTime ?? n.Timestamp;
+        if (source == "FCM" && OilRigTriggerRegistry.Lookup(n.EntityId, n.Title) is string oilRigLabel)
+            RecordOilRigAlarm(n, oilRigLabel);
         if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
 
         // Learn the alarm's in-game text before anything can drop this notification.
@@ -3589,7 +3593,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (this.WindowState == WindowState.Normal)
             {
-                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, false);
+                // Closed before the saved maximize was applied: keep it for next time.
+                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, _startMaximized);
             }
             else if (this.WindowState == WindowState.Maximized)
             {
@@ -7953,9 +7958,33 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is FrameworkElement { Tag: TabItem tab })
         {
+            CloseLeftPanelOverlays();
             MainTabs.SelectedItem = tab;
             SetSidebarExpanded(true);
         }
+    }
+
+    /// <summary>
+    /// Closes every overlay that covers the left panel. They sit beside the rail, so a rail
+    /// destination has to clear them or the panel it opens stays hidden underneath.
+    /// Closes the same way their own buttons do: settings re-apply, automations save.
+    /// </summary>
+    private void CloseLeftPanelOverlays()
+    {
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+        }
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
     }
 
     private void SidebarTabPopover_Opened(object? sender, EventArgs e)
@@ -8129,6 +8158,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (AppSettingsPanel != null) AppSettingsPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
         if (ProfitTradesPanel != null) ProfitTradesPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
         if (BuyXForYPanel != null) BuyXForYPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        // These sit beside the rail now, so they need the unfolded sidebar's width too.
+        if (LogicEnginePanel != null) LogicEnginePanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (DeviceAutomationPanel != null) DeviceAutomationPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (LfgPanel != null) LfgPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
     }
 
     private void LeftPanelOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -8151,7 +8184,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    // True while a left-side overlay (settings / profit trades / buy-x-for-y) is open.
+    // True while a left-side overlay (settings, trades, automation, community hub) is open.
     // While one is open the sidebar must stay unfolded, even when the mouse leaves the
     // sidebar border to interact with the overlay (clicking an option briefly captures
     // the mouse and fires MouseLeave on the underlying border).
@@ -8159,7 +8192,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         return AppSettingsPanel?.Visibility == Visibility.Visible ||
                ProfitTradesPanel?.Visibility == Visibility.Visible ||
-               BuyXForYPanel?.Visibility == Visibility.Visible;
+               BuyXForYPanel?.Visibility == Visibility.Visible ||
+               LogicEnginePanel?.Visibility == Visibility.Visible ||
+               DeviceAutomationPanel?.Visibility == Visibility.Visible ||
+               LfgPanel?.Visibility == Visibility.Visible;
     }
 
     private void UpdateSidebarForOverlayVisibility()
@@ -8296,6 +8332,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
             AppSettingsPanel.LoadSettings();
             AppSettingsPanel.Visibility = Visibility.Visible;
         }
@@ -8307,6 +8344,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         DeviceAutomationPanel.Visibility = Visibility.Collapsed;
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
         BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
         AppSettingsPanel.LoadSettings();
         AppSettingsPanel.Visibility = Visibility.Visible;
         AppSettingsPanel.OpenCategory(category);
@@ -8335,6 +8373,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ProfitTradesPanel.Visibility = Visibility.Collapsed;
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
             LogicEnginePanel.RefreshListBindings();
             LogicEnginePanel.Visibility = Visibility.Visible;
         }
@@ -8353,6 +8392,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         ProfitTradesPanel.Visibility = Visibility.Collapsed;
         BuyXForYPanel.Visibility = Visibility.Collapsed;
         LogicEnginePanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
         DeviceAutomationPanel.RefreshListBindings();
         DeviceAutomationPanel.Visibility = Visibility.Visible;
         _ = OfferNewFeatureTutorialOnceAsync("device-automation");

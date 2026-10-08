@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="440"
              Background="Transparent">
@@ -77,25 +77,11 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="32" Height="32" CornerRadius="8" Background="#1E60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" Margin="0,0,10,0">
-                        <ui:SymbolIcon Symbol="ChatHelp24" Foreground="{DynamicResource Accent}" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="{DynamicResource SupportTitle}" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold" />
-                    </StackPanel>
-                </StackPanel>
-
-                <ui:Button Grid.Column="1" x:Name="BtnClose" Appearance="Transparent" Padding="7" Click="Close_Click" ToolTip="Close" Width="32" Height="32">
-                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextSubtle}" FontSize="14" />
-                </ui:Button>
-            </Grid>
+            <controls:PanelHeader Grid.Row="0" Margin="0,0,0,16"
+                                  IsCompact="True"
+                                  Symbol="ChatHelp24"
+                                  Title="{DynamicResource SupportTitle}"
+                                  CloseClick="Close_Click" />
 
             <!-- Content Area -->
             <Grid Grid.Row="1">
@@ -135,7 +121,7 @@
                                                     </Ellipse>
                                                     <TextBlock Text="{Binding Subject}" Foreground="{DynamicResource TextPrimary}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                                 </StackPanel>
-                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="10.5" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
                                             </Grid>
 
                                             <!-- Row 1: Badges + Chevron -->
@@ -147,12 +133,15 @@
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <!-- Category Pill -->
                                                     <Border Background="#12FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="0,0,6,0">
-                                                        <TextBlock Text="{Binding CategoryLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" FontWeight="Medium" />
+                                                        <TextBlock Text="{Binding CategoryLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="Medium" />
                                                     </Border>
                                                     <!-- Status Pill -->
                                                     <Border Background="{Binding StatusBackground}" BorderBrush="{Binding StatusBackground}" BorderThickness="1" CornerRadius="4" Padding="7,2">
-                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="10.5" FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="11" FontWeight="SemiBold" />
                                                     </Border>
+                                                    <!-- Ticket reference: tells apart tickets that share a subject. -->
+                                                    <TextBlock Text="{Binding Reference}" Foreground="{DynamicResource TextCaption}" FontSize="11" FontFamily="Consolas"
+                                                               VerticalAlignment="Center" Margin="8,0,0,0" ToolTip="{Binding Id}" />
                                                 </StackPanel>
                                                 <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="#44FFFFFF" FontSize="11" VerticalAlignment="Center" />
                                             </Grid>
@@ -289,11 +278,11 @@
                                                     </Border>
                                                     <TextBlock Text="{Binding Author}" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
                                                     <Border Visibility="{Binding StaffTagVisibility}" Background="#2260CDFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
-                                                        <TextBlock Text="STAFF" Foreground="{DynamicResource Accent}" FontSize="9" FontWeight="Bold" />
+                                                        <TextBlock Text="STAFF" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="Bold" />
                                                     </Border>
                                                 </StackPanel>
                                                 
-                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="10.5" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="11" VerticalAlignment="Center" />
                                             </Grid>
 
                                             <!-- Message Text Body -->
@@ -318,7 +307,7 @@
                                                                         <Border Background="#88000000" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Padding="4,2">
                                                                             <StackPanel Orientation="Horizontal">
                                                                                 <ui:SymbolIcon Symbol="Eye24" FontSize="11" Foreground="#EEFFFFFF" VerticalAlignment="Center" Margin="0,0,3,0" />
-                                                                                <TextBlock Text="View" FontSize="9.5" FontWeight="SemiBold" Foreground="#EEFFFFFF" VerticalAlignment="Center" />
+                                                                                <TextBlock Text="View" FontSize="10" FontWeight="SemiBold" Foreground="#EEFFFFFF" VerticalAlignment="Center" />
                                                                             </StackPanel>
                                                                         </Border>
                                                                     </Grid>
@@ -328,7 +317,7 @@
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
                                                                         <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11.5" VerticalAlignment="Center" MaxWidth="170" TextTrimming="CharacterEllipsis" />
-                                                                        <TextBlock Text="{Binding SizeLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="10.5" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                                        <TextBlock Text="{Binding SizeLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0" />
                                                                     </StackPanel>
                                                                 </Border>
                                                             </Grid>

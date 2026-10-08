@@ -5774,4 +5774,7 @@ Open Releases page?</value>
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Αφαιρεί όλα τα widget και επαναφέρει τον χάρτη στη γωνία του</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Υπολογιστής ανακύκλωσης</value>
+  </data>
 </root>

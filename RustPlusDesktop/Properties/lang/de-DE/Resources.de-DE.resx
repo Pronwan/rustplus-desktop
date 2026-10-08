@@ -5691,7 +5691,7 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Karteneinstellungen</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>Fahre mit der Maus über die Mini-Map und klicke auf das Zahnrad, um Form, Größe und Transparenz anzupassen.</value>
+    <value>Hol die Leiste oben am Bildschirm hervor (Maus am oberen Rand ruhen lassen oder den kleinen Reiter nutzen) und drück ⚙, um Form, Größe und Transparenz der Karte anzupassen. Bei entsperrtem Layout zeigt auch die Karte beim Darüberfahren ihr eigenes Zahnrad.</value>
   </data>
   <data name="Tutorials.Step.minimap.timepop.Title" xml:space="preserve">
     <value>Uhrzeit &amp; Pop</value>
@@ -7008,6 +7008,21 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Entsperren, um Kacheln zu verschieben, zu skalieren und zu entfernen</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>Layout wieder sperren (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>Layout bearbeiten · Widget ziehen, um es zu verschieben · darüberfahren, um Größe, Einstellungen oder Entfernen zu nutzen</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>Diese Leiste ordnet deine Widgets: entsperren zum Verschieben, + zum Hinzufügen, ⚙ für Einstellungen. Während du spielst, versteckt sie sich — lass die Maus am oberen Bildschirmrand ruhen oder nutze den kleinen Reiter dort, um sie zurückzuholen.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>Das Layout ist gesperrt. Drück das Schloss in der Leiste oben am Bildschirm, um Widgets zu verschieben, zu skalieren oder zu entfernen.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>AN</value>
   </data>
@@ -7605,13 +7620,19 @@ Schließe die Vorschau, wenn das Fenster passt.</value>
     <value>Widgets mit + hinzufügen</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>Die Karte ist nur eines von vielen Widgets. Mit + in der Titelleiste des Docks fügst du eine Uhr hinzu, einen gekoppelten Smart Switch oder Alarm, Team- oder Clan-Chat, einen Event-Timer, eine Logic-Engine-Regel, Session-Statistiken, die Serverauslastung, eine Discord-Zeile — oder den KI-Begleiter. Jedes landet im ersten freien Feld neben der Karte.</value>
+    <value>Die Karte ist nur eines von vielen Widgets. Mit + in der Leiste oben am Bildschirm fügst du eine Uhr hinzu, einen gekoppelten Smart Switch oder Alarm, Team- oder Clan-Chat, einen Event-Timer, eine Logic-Engine-Regel, Session-Statistiken, die Serverauslastung, eine Discord-Zeile — oder den KI-Begleiter. Jedes landet im ersten freien Feld neben der Karte.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>Die Leiste oben</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>Die Steuerung des Docks sitzt in einer Leiste oben am Bildschirm, die sich beim Spielen versteckt — sieh zu, wie sie gerade ein- und ausfährt. Um sie zurückzuholen, lass die Maus am oberen Bildschirmrand ruhen oder fahr nach oben und nutze den kleinen Reiter, der dort erscheint. Das Schloss entsperrt das Anordnen, + fügt Widgets hinzu, das Speichersymbol verwaltet benannte Anordnungen, ⚙ öffnet die Einstellungen und der Regler zoomt das Raster.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>Ziehen, skalieren, sperren</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>Fahre über ein Widget, um es zu verschieben, zieh an der Ecke, um die Größe zu ändern, oder entferne es mit ×. Das Schloss in der Titelleiste schützt das ganze Layout vor versehentlichem Ziehen, und über Anordnungen speicherst du das Dock unter einem Namen — fahr über einen gespeicherten Namen, um ihn vor dem Laden als Umriss zu sehen.</value>
+    <value>Drück das Schloss in der Leiste, um mit dem Anordnen zu beginnen: Jedes Widget bekommt einen gestrichelten Rahmen — zieh eines, um es zu verschieben, und fahr darüber für die Größenecke, sein ⚙ und × zum Entfernen. Drück Fertig oder Esc, wenn du fertig bist; das Layout wird wieder gesperrt, damit nichts versehentlich verrutscht. Ziehst du ein gesperrtes Widget, erinnert dich die App, wo das Schloss ist. Über Anordnungen speicherst du das Dock unter einem Namen — fahr über einen gespeicherten Namen, um ihn vor dem Laden als Umriss zu sehen.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>Das ganze Dock gestalten</value>
@@ -8010,5 +8031,8 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>Bei einer Zelle wird der Name unabhängig von der Schriftgröße abgeschnitten; das Symbol sagt ohnehin, um welches Event es geht.</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recycling-Rechner</value>
   </data>
 </root>

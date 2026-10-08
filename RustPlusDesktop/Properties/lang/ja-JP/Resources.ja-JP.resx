@@ -5867,4 +5867,7 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>すべてのウィジェットを外し、マップを元の隅に戻します</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>リサイクル計算機</value>
+  </data>
 </root>

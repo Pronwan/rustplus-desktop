@@ -42,7 +42,7 @@
                                Foreground="{DynamicResource Accent}"
                                VerticalAlignment="Center" />
                     <TextBlock x:Name="TxtProvider"
-                               FontSize="10"
+                               FontSize="11"
                                Margin="6,0,0,0"
                                Foreground="{DynamicResource TextSubtle}"
                                VerticalAlignment="Center" />

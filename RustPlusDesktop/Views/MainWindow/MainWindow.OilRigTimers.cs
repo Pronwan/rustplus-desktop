@@ -8,6 +8,52 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private void RecordOilRigAlarm(AlarmNotification alarm, string rigLabel)
+    {
+        NotificationCenterService.AddNotification(new RustPlusNotification(
+            "OilRigAlarm", alarm.Title ?? rigLabel, alarm.Message,
+            alarm.Ip, alarm.Port, alarm.Server)
+        {
+            Timestamp = alarm.EventTime ?? alarm.Timestamp,
+            EntityId = alarm.EntityId,
+            FcmNotificationId = alarm.FcmNotificationId
+        });
+        RefreshEventDock();
+    }
+
+    public IReadOnlyList<RustPlusNotification> DockOilRigAlarms => NotificationCenterService.Notifications
+        .Where(n => n.Type == "OilRigAlarm" && _vm?.Selected is { } profile &&
+            (!string.IsNullOrWhiteSpace(n.ServerIp)
+                ? n.ServerIp == profile.Host && n.ServerPort == profile.Port
+                : !string.IsNullOrWhiteSpace(n.ServerName) && n.ServerName == profile.Name))
+        .OrderByDescending(n => n.Timestamp)
+        .Take(2)
+        .ToList();
+
+    private string BuildOilRigAlarmAnswer()
+    {
+        var latest = DockOilRigAlarms.FirstOrDefault();
+        return latest == null
+            ? "No Oil Rig Smart Alarm notification received."
+            : $"Oil Rig Smart Alarm: {latest.Timestamp.ToLocalTime():g}";
+    }
+
+    private List<EventDockItem> BuildOilRigAlarmDockItems()
+    {
+        var latest = DockOilRigAlarms.FirstOrDefault();
+        return new List<EventDockItem>
+        {
+            new()
+            {
+                Key = "oilrig", Name = "Oil Rig Smart Alarm",
+                Icon = "pack://application:,,,/Assets/icons/smartalarm.png",
+                Active = latest != null, Trackable = false,
+                TimerText = latest?.Timestamp.ToLocalTime().ToString("HH:mm:ss") ?? "—",
+                ToolTip = BuildOilRigAlarmAnswer()
+            }
+        };
+    }
+
     /// <summary>
     /// Bridges the Logic Engine's oil rig timers back into the parts of the app that used to
     /// be fed by Chinook tracking.
@@ -104,29 +150,5 @@ public partial class MainWindow
         if (changed) _ = UploadDevicesSnapshotForCurrentServerAsync();
     }
 
-    /// <summary>
-    /// The countdown answer for the chat command, or null when no rig has one running.
-    /// Reports every rig that is being hacked, since both can run at once.
-    /// </summary>
-    private string? BuildOilRigTimerAnswer()
-    {
-        if (!HasOilRigTimerRule()) return null;
 
-        var parts = new List<string>();
-        foreach (var (key, label) in new[]
-                 {
-                     ("Small Oil Rig", Properties.Resources.SmallOilRig),
-                     ("Large Oil Rig", Properties.Resources.LargeOilRig),
-                 })
-        {
-            var left = _monumentWatcher.GetActiveEventTimeLeft(key);
-            if (left == null || left.Value <= TimeSpan.Zero) continue;
-
-            parts.Add(string.Format(
-                Properties.Resources.ChatCmdOilRigHackRunning,
-                label, (int)left.Value.TotalMinutes, left.Value.Seconds));
-        }
-
-        return parts.Count == 0 ? null : string.Join(" | ", parts);
-    }
 }

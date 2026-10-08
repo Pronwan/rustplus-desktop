@@ -287,6 +287,19 @@ namespace RustPlusDesk.Models
     }
 
     /// <summary>
+    /// Which of the dock's one-time explanations have already been given.
+    ///
+    /// Kept apart from <see cref="CommandDockLayout"/> on purpose: resetting the dock or
+    /// loading an arrangement replaces the layout wholesale, and neither should make the app
+    /// explain its own bar again to somebody who already knows it.
+    /// </summary>
+    public sealed class CommandDockHints
+    {
+        /// <summary>The bar has shown itself once on first run and said how to bring it back.</summary>
+        public bool BarIntroSeen { get; set; }
+    }
+
+    /// <summary>
     /// The dock's saved arrangement. Positions are grid cells whose origin is the map tile's
     /// top-left corner, so the dock keeps its shape when the map is resized: only the number of
     /// cells the map covers changes, and the auto-arrange pushes tiles out of the way.
@@ -294,6 +307,16 @@ namespace RustPlusDesk.Models
     public sealed class CommandDockLayout
     {
         public List<CommandDockTile> Tiles { get; set; } = new();
+
+        /// <summary>Separates map layouts from control widgets, including legacy saved arrangements.</summary>
+        internal void RemoveUnsupportedTiles(bool deviceOverlay)
+        {
+            Tiles.RemoveAll(tile => deviceOverlay
+                ? tile.Kind == CommandDockTileKinds.Map ||
+                  (tile.Kind == CommandDockTileKinds.Event && tile.EventKey != "oilrig")
+                : tile.Kind != CommandDockTileKinds.Map);
+            if (deviceOverlay) MapRemoved = true;
+        }
 
         /// <summary>
         /// Where a newly added tile goes: below the map by default, beside it when set.

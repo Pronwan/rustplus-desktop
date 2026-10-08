@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
              xmlns:conv="clr-namespace:RustPlusDesk.Converters"
              xmlns:chat="clr-namespace:RustPlusDesk.Controls.Chat"
              mc:Ignorable="d"
@@ -21,7 +21,7 @@
 
         <Style x:Key="LfgSectionHeading" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource LfgMuted}" />
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
@@ -230,37 +230,35 @@
             </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <Grid Grid.Row="0" Margin="0,0,0,14">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <!--  The panel holds a room and a board, so it is named after neither.  -->
-                    <TextBlock Text="{DynamicResource SocialHubTitle}" Foreground="{StaticResource LfgText}" FontSize="16" FontWeight="SemiBold" />
-                    <TextBlock Text="{DynamicResource SocialHubSubtitle}" Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
-                    <Grid Margin="0,0,6,0">
-                        <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
-                                   ToolTip="{DynamicResource FriendsTitle}"
-                                   Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
-                        <!--  Requests waiting on an answer, over the icon.  -->
-                        <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
-                                HorizontalAlignment="Right" VerticalAlignment="Top"
-                                Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                Background="{DynamicResource DangerBrush}" Padding="3,0">
-                            <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
-                                       FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </Grid>
-                    <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
-                               ToolTip="{DynamicResource BlocksTitle}"
-                               Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" Margin="0,0,6,0" />
-                    <ui:Button x:Name="BtnClose" Click="BtnClose_Click" Appearance="Secondary"
-                               Icon="{ui:SymbolIcon Symbol=Dismiss24}" Height="30" Width="34" />
-                </StackPanel>
-            </Grid>
+            <!--  The panel holds a room and a board, so it is named after neither.  -->
+            <controls:PanelHeader Grid.Row="0" Margin="0,0,0,14"
+                                  IsCompact="True"
+                                  Symbol="ChatMultiple24"
+                                  AccentBrush="#FF8B7BE8"
+                                  Title="{DynamicResource SocialHubTitle}"
+                                  Subtitle="{DynamicResource SocialHubSubtitle}"
+                                  CloseClick="BtnClose_Click">
+                <controls:PanelHeader.Actions>
+                    <StackPanel Orientation="Horizontal">
+                        <Grid Margin="0,0,6,0">
+                            <ui:Button x:Name="BtnFriends" Click="BtnFriends_Click" Appearance="Secondary"
+                                       ToolTip="{DynamicResource FriendsTitle}"
+                                       Icon="{ui:SymbolIcon Symbol=People24}" Height="30" Width="34" />
+                            <!--  Requests waiting on an answer, over the icon.  -->
+                            <Border x:Name="FriendsBadge" Visibility="Collapsed" IsHitTestVisible="False"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="0,-3,-3,0" MinWidth="15" Height="15" CornerRadius="7.5"
+                                    Background="{DynamicResource DangerBrush}" Padding="3,0">
+                                <TextBlock x:Name="FriendsBadgeText" Foreground="White" FontSize="9"
+                                           FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                        <ui:Button x:Name="BtnBlocks" Click="BtnBlocks_Click" Appearance="Secondary"
+                                   ToolTip="{DynamicResource BlocksTitle}"
+                                   Icon="{ui:SymbolIcon Symbol=Shield24}" Height="30" Width="34" />
+                    </StackPanel>
+                </controls:PanelHeader.Actions>
+            </controls:PanelHeader>
 
             <!--  Cloud gate: shown instead of everything else when there is no cloud account.  -->
             <Border x:Name="CloudGate" Grid.Row="1" Visibility="Collapsed" VerticalAlignment="Top"
@@ -334,7 +332,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Text="{DynamicResource ChatRules}" TextWrapping="Wrap" Margin="0,0,0,8"
-                               Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                               Foreground="{StaticResource LfgMuted}" FontSize="11" />
 
                     <!-- Scrollable Chat Messages & Floating Scroll To Bottom Button -->
                     <Grid Grid.Row="1" Margin="0,0,0,8">
@@ -473,7 +471,7 @@
                                                             </Border>
 
                                                             <TextBlock Text="{Binding TimeLabel}" Foreground="{StaticResource LfgMuted}"
-                                                                       FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center" />
+                                                                       FontSize="10" Margin="6,1,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
 
                                                         <!--
@@ -502,7 +500,7 @@
                                                                                 <TextBlock Text="{Binding ReplyTo.DisplayName}" FontSize="11"
                                                                                            Foreground="#38BDF8" FontWeight="SemiBold" Margin="0,0,0,2"
                                                                                            TextTrimming="CharacterEllipsis" />
-                                                                                <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="10.5"
+                                                                                <TextBlock Text="{Binding ReplyTo.DisplayText}" FontSize="11"
                                                                                            Foreground="{StaticResource LfgMuted}"
                                                                                            TextTrimming="CharacterEllipsis" />
                                                                             </StackPanel>
@@ -553,28 +551,28 @@
                                                                         BorderThickness="1" CornerRadius="3" Padding="5,2" Margin="0,0,6,0">
                                                                     <TextBlock Text="{Binding SanctionEvent.HeaderTitle}"
                                                                                Foreground="{Binding SanctionEvent.HeaderForegroundBrush}"
-                                                                               FontSize="9.5" FontWeight="Bold" />
+                                                                               FontSize="10" FontWeight="Bold" />
                                                                 </Border>
 
                                                                 <Border Visibility="{Binding SanctionEvent.DurationBadgeVisibility}"
                                                                         Background="#33F59E0B" BorderBrush="#F59E0B"
                                                                         BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
                                                                     <TextBlock Text="{Binding SanctionEvent.DurationBadgeText}"
-                                                                               Foreground="#FFFBBF24" FontSize="9" FontWeight="SemiBold" />
+                                                                               Foreground="#FFFBBF24" FontSize="10" FontWeight="SemiBold" />
                                                                 </Border>
                                                             </StackPanel>
 
                                                             <TextBlock Grid.Column="1" Text="{Binding SanctionEvent.TimeLabel}"
-                                                                       Foreground="{StaticResource LfgMuted}" FontSize="9.5" VerticalAlignment="Center" />
+                                                                       Foreground="{StaticResource LfgMuted}" FontSize="10" VerticalAlignment="Center" />
                                                         </Grid>
 
                                                         <!-- Details: Target -->
                                                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4">
-                                                            <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="10.5" />
+                                                            <TextBlock Text="Target: " Foreground="{StaticResource LfgMuted}" FontSize="11" />
                                                             <TextBlock Text="{Binding SanctionEvent.TargetDisplayName}" Foreground="{StaticResource LfgText}"
-                                                                       FontSize="10.5" FontWeight="SemiBold" />
+                                                                       FontSize="11" FontWeight="SemiBold" />
                                                             <TextBlock Text="{Binding SanctionEvent.TargetSteamIdFormatted}" Foreground="{StaticResource LfgMuted}"
-                                                                       FontSize="9.5" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                                                       FontSize="10" FontFamily="Consolas" Margin="4,0,0,0" VerticalAlignment="Center" />
                                                         </StackPanel>
 
                                                         <!-- Reason -->
@@ -617,7 +615,7 @@
                                         </Border.Effect>
                                         <StackPanel Orientation="Horizontal" Margin="8,3">
                                             <ui:SymbolIcon Symbol="ArrowDown24" FontSize="12" Foreground="{StaticResource LfgAccent}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                            <TextBlock Text="{DynamicResource ChatScrollToBottom}" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource LfgText}" VerticalAlignment="Center" />
+                                            <TextBlock Text="{DynamicResource ChatScrollToBottom}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource LfgText}" VerticalAlignment="Center" />
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -910,7 +908,7 @@
                                     <!-- Character Counter -->
                                     <TextBlock x:Name="TxtChatCharCount"
                                                Text="0/128"
-                                               FontSize="9.5"
+                                               FontSize="10"
                                                Foreground="{DynamicResource TextSubtle}"
                                                VerticalAlignment="Center"
                                                Margin="0,0,8,0" />
@@ -1024,7 +1022,7 @@
                                       SelectionChanged="AcceptMode_Changed" />
                             <TextBlock x:Name="AcceptOffBlockedNote" Visibility="Collapsed" Margin="1,5,0,0"
                                        Text="{DynamicResource LfgAcceptOffBlocked}" MaxWidth="178"
-                                       Foreground="{StaticResource LfgMuted}" FontSize="10" TextWrapping="Wrap" />
+                                       Foreground="{StaticResource LfgMuted}" FontSize="11" TextWrapping="Wrap" />
                         </StackPanel>
                     </Grid>
 
@@ -1103,7 +1101,7 @@
                                              <TextBlock x:Name="PreviewModeBadge" FontSize="9.5" FontWeight="SemiBold" Foreground="#FF4CC38A" />
                                          </Border>
                                          <Border x:Name="PreviewServerBadge" Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" Visibility="Collapsed">
-                                             <TextBlock x:Name="PreviewServerName" FontSize="9.5" Foreground="{StaticResource LfgMuted}" TextTrimming="CharacterEllipsis" MaxWidth="160" />
+                                             <TextBlock x:Name="PreviewServerName" FontSize="10" Foreground="{StaticResource LfgMuted}" TextTrimming="CharacterEllipsis" MaxWidth="160" />
                                          </Border>
                                      </StackPanel>
                                      <TextBlock x:Name="PreviewBlurb" Foreground="{StaticResource LfgMuted}"
@@ -1112,14 +1110,14 @@
 
                                  <StackPanel x:Name="PreviewTeamSizePanel" Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0" Visibility="Collapsed">
                                      <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
-                                                FontSize="9" HorizontalAlignment="Center" />
+                                                FontSize="10" HorizontalAlignment="Center" />
                                      <TextBlock x:Name="PreviewTeamSize" Text="—" Foreground="{StaticResource LfgText}"
                                                 FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                  </StackPanel>
 
                                  <Border Grid.Column="3" VerticalAlignment="Center" Margin="4,0,0,0"
                                          Background="{DynamicResource WhiteA14}" CornerRadius="4" Padding="6,2">
-                                     <TextBlock Text="{DynamicResource LfgPreviewActiveBadge}" FontSize="10" Foreground="{StaticResource LfgMuted}" />
+                                     <TextBlock Text="{DynamicResource LfgPreviewActiveBadge}" FontSize="11" Foreground="{StaticResource LfgMuted}" />
                                  </Border>
                              </Grid>
                          </Border>
@@ -1207,11 +1205,11 @@
                                                          VerticalAlignment="Center">
                                                      <TextBlock Text="{Binding RoleBadge.DisplayText}"
                                                                 Foreground="{Binding RoleBadge.ForegroundBrush}"
-                                                                FontSize="9" FontWeight="Bold" />
+                                                                FontSize="10" FontWeight="Bold" />
                                                  </Border>
                                                  <Border Background="#18FFFFFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
                                                          Visibility="{Binding HasServer, Converter={StaticResource BoolToVis}}">
-                                                     <TextBlock Text="{Binding ServerName}" FontSize="9.5" Foreground="{StaticResource LfgMuted}"
+                                                     <TextBlock Text="{Binding ServerName}" FontSize="10" Foreground="{StaticResource LfgMuted}"
                                                                 TextTrimming="CharacterEllipsis" MaxWidth="160" />
                                                  </Border>
                                              </StackPanel>
@@ -1221,7 +1219,7 @@
 
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="8,0,8,0">
                                             <TextBlock Text="{DynamicResource LfgTeamSize}" Foreground="{StaticResource LfgMuted}"
-                                                       FontSize="9" HorizontalAlignment="Center" />
+                                                       FontSize="10" HorizontalAlignment="Center" />
                                             <TextBlock Text="{Binding TeamSizeLabel}" Foreground="{StaticResource LfgText}"
                                                        FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                         </StackPanel>
@@ -1306,12 +1304,12 @@
                                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                                         <Border Background="#332A6CA6" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
                                                                 Visibility="{Binding PendingBadge}">
-                                                            <TextBlock Text="{DynamicResource LfgPendingBadge}" FontSize="9"
+                                                            <TextBlock Text="{DynamicResource LfgPendingBadge}" FontSize="10"
                                                                        Foreground="#FF7FB6E8" />
                                                         </Border>
                                                         <Border Background="#33A93C36" CornerRadius="3" Padding="4,1" Margin="6,0,0,0"
                                                                 Visibility="{Binding DeclinedBadge}">
-                                                            <TextBlock Text="{DynamicResource LfgDeclinedBadge}" FontSize="9"
+                                                            <TextBlock Text="{DynamicResource LfgDeclinedBadge}" FontSize="10"
                                                                        Foreground="#FFE08880" />
                                                         </Border>
                                                     </StackPanel>
@@ -1320,9 +1318,9 @@
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Border Background="#FF2A6CA6" CornerRadius="8" Padding="5,1" Margin="0,0,6,0"
                                                             Visibility="{Binding UnreadBadge}">
-                                                        <TextBlock Text="{Binding UnreadLabel}" FontSize="9.5" Foreground="White" />
+                                                        <TextBlock Text="{Binding UnreadLabel}" FontSize="10" Foreground="White" />
                                                     </Border>
-                                                    <TextBlock Text="{Binding WhenLabel}" Foreground="{StaticResource LfgMuted}" FontSize="10" />
+                                                    <TextBlock Text="{Binding WhenLabel}" Foreground="{StaticResource LfgMuted}" FontSize="11" />
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
@@ -1395,7 +1393,7 @@
                                                 <TextBlock Text="{Binding Body}" TextWrapping="Wrap"
                                                            Foreground="{StaticResource LfgText}" FontSize="12" />
                                                 <TextBlock Text="{Binding TimeLabel}" HorizontalAlignment="Right" Margin="0,3,0,0"
-                                                           Foreground="{StaticResource LfgMuted}" FontSize="9" />
+                                                           Foreground="{StaticResource LfgMuted}" FontSize="10" />
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
@@ -1585,7 +1583,7 @@
                                                                    FontSize="12.5" FontWeight="SemiBold"
                                                                    TextTrimming="CharacterEllipsis" />
                                                         <TextBlock Text="{Binding WhereLabel}" Visibility="{Binding WhereVisibility}"
-                                                                   Foreground="{StaticResource LfgMuted}" FontSize="10.5"
+                                                                   Foreground="{StaticResource LfgMuted}" FontSize="11"
                                                                    TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
                                                     </StackPanel>
                                                 </Grid>
@@ -1678,7 +1676,7 @@
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock Text="{DynamicResource FriendsAddTarget}"
-                                               Foreground="{StaticResource LfgMuted}" FontSize="10" />
+                                               Foreground="{StaticResource LfgMuted}" FontSize="11" />
                                     <TextBlock x:Name="FriendTargetName" Margin="0,1,0,0"
                                                Foreground="{StaticResource LfgText}" FontSize="13"
                                                FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
@@ -1751,9 +1749,9 @@
                                                                TextTrimming="CharacterEllipsis" />
                                                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                                                         <TextBlock Text="{DynamicResource BlocksSince}" Foreground="{StaticResource LfgMuted}"
-                                                                   FontSize="10.5" Margin="0,0,4,0" />
+                                                                   FontSize="11" Margin="0,0,4,0" />
                                                         <TextBlock Text="{Binding BlockedAtLabel}" Foreground="{StaticResource LfgMuted}"
-                                                                   FontSize="10.5" />
+                                                                   FontSize="11" />
                                                     </StackPanel>
                                                 </StackPanel>
 

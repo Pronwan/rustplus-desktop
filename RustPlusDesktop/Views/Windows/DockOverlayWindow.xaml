@@ -27,6 +27,33 @@
               whatever the dock currently happens to be.  -->
         <Canvas x:Name="PreviewLayer" IsHitTestVisible="False" Opacity="0"/>
 
+        <!--  The bar's handle while it is away: a small tab at the top of the screen, shown only
+              while the pointer is near the top edge or over the dock. Resting on the very edge
+              is the quick way in, but nobody guesses it - and with a monitor stacked above this
+              one the pointer never stops on that edge at all. A tab is something to aim at.
+
+              Hit-testable only while shown, so it takes no clicks from the game the rest of
+              the time.  -->
+        <Border x:Name="PullTab"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                Width="64"
+                Height="14"
+                Opacity="0"
+                IsHitTestVisible="False"
+                CornerRadius="0,0,8,8"
+                Background="#E0101518"
+                BorderBrush="#663FD7FF"
+                BorderThickness="1,0,1,1"
+                Cursor="Hand">
+            <TextBlock Text="&#xE70D;"
+                       FontFamily="Segoe MDL2 Assets"
+                       FontSize="10"
+                       Foreground="#DD3FD7FF"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
         <!--  The bar lives here rather than in the dock window because it has to reach the top
               of the screen and span it. Inside the dock it was clipped to the dock's own
               rectangle, which is what made it travel whenever the dock resized.  -->
@@ -39,6 +66,11 @@
                 BorderBrush="#33FFFFFF"
                 BorderThickness="0,0,0,1"
                 Cursor="SizeAll">
+            <!--  Slides in from above the screen as well as fading, so every reveal shows where
+                  the bar comes from - and every exit where it went.  -->
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="BarSlide" Y="-34"/>
+            </Border.RenderTransform>
             <Grid Margin="10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -59,6 +91,15 @@
                                FontWeight="SemiBold"
                                Foreground="#CCFFFFFF"
                                VerticalAlignment="Center"/>
+                    <!--  Replaces the title while unlocked. Arranging is a mode, and a mode
+                          nobody can see is one people get stuck in.  -->
+                    <TextBlock x:Name="EditText"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#FF3FD7FF"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Visibility="Collapsed"/>
                 </StackPanel>
 
                 <!--  Zoom sits in the middle, where there is room for it at any screen width.
@@ -94,6 +135,15 @@
                       controls override that: over a button or the zoom slider the pointer says
                       what that thing does instead.  -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Cursor="Hand">
+                    <!--  The way out of arranging, in words. It stands in for the open padlock,
+                          which says "unlocked" but not "press here when you are finished".  -->
+                    <ui:Button x:Name="BtnDone"
+                               Padding="12,3"
+                               Margin="0,0,6,0"
+                               FontSize="11"
+                               Appearance="Primary"
+                               Visibility="Collapsed"
+                               Click="BtnLock_Click"/>
                     <ui:Button x:Name="BtnLock"
                                Padding="4"
                                Margin="0,0,2,0"
@@ -130,5 +180,38 @@
                 </StackPanel>
             </Grid>
         </Border>
+
+        <!--  One-off explanations: the first-run tour of the bar, and the nudge shown when a
+              locked widget is dragged. Never hit-testable - a hint that took the click it was
+              explaining would be its own problem.  -->
+        <Canvas x:Name="HintLayer" IsHitTestVisible="False">
+            <Border x:Name="HintBubble"
+                    Opacity="0"
+                    MaxWidth="360"
+                    Padding="12,9"
+                    CornerRadius="8"
+                    Background="#F2101518"
+                    BorderBrush="#993FD7FF"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="HintGlyph"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="14"
+                               Foreground="#FF3FD7FF"
+                               VerticalAlignment="Top"
+                               Margin="0,1,10,0"/>
+                    <TextBlock x:Name="HintText"
+                               Grid.Column="1"
+                               FontSize="12"
+                               Foreground="#E6FFFFFF"
+                               TextWrapping="Wrap"
+                               LineHeight="17"/>
+                </Grid>
+            </Border>
+        </Canvas>
     </Grid>
 </Window>

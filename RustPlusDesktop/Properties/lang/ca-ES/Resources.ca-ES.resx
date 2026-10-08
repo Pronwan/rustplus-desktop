@@ -5774,4 +5774,7 @@ Podeu trobar més informació al lloc web oficial del servidor:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Elimina tots els ginys i torna el mapa al seu racó</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Calculadora de reciclatge</value>
+  </data>
 </root>

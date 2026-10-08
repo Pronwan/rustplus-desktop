@@ -2738,7 +2738,7 @@ Are you sure you want to continue?</value>
     <value>Cloud-Sync active</value>
   </data>
   <data name="NotificationsTab" xml:space="preserve">
-    <value>Notifications</value>
+    <value>Rust+ Notifications</value>
   </data>
   <data name="NotificationCenterSettings" xml:space="preserve">
     <value>Notification Center</value>
@@ -3792,7 +3792,7 @@ Please pair this server first.</value>
     <value>Raid Alerts Channel ID</value>
   </data>
   <data name="UiRaidCalculator" xml:space="preserve">
-    <value>Raid calculator</value>
+    <value>Raid Calculator</value>
   </data>
   <data name="UiRaidItemsAndRawCraftingIngredients" xml:space="preserve">
     <value>Raid items and raw crafting ingredients</value>
@@ -3834,7 +3834,7 @@ Please pair this server first.</value>
     <value>Restore local backup</value>
   </data>
   <data name="UiReviewAlertsAndRecentServerEvents" xml:space="preserve">
-    <value>Review alerts and recent server events.</value>
+    <value>Alarms, deaths and server events pushed by Rust+.</value>
   </data>
   <data name="UiRevoke" xml:space="preserve">
     <value>Revoke</value>
@@ -6483,5 +6483,8 @@ You can find more information on the server's official website:
   </data>
   <data name="AchievementsNew" xml:space="preserve">
     <value>NEW</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recycling Calculator</value>
   </data>
 </root>

@@ -5774,4 +5774,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>מסיר את כל הווידג'טים ומחזיר את המפה לפינה שלה</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>מחשבון מיחזור</value>
+  </data>
 </root>

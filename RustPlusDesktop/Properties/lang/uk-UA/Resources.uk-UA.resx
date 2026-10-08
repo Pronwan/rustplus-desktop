@@ -5774,4 +5774,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Прибирає всі віджети та повертає карту в її кут</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Калькулятор переробки</value>
+  </data>
 </root>

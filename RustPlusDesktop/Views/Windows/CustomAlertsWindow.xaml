@@ -40,7 +40,7 @@
                                                         AcceptsReturn="False"
                                                         AutomationProperties.Name="{Binding Name}"/>
 
-                                            <TextBlock Text="{Binding Variables}" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="2,6,0,0" />
+                                            <TextBlock Text="{Binding Variables}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="2,6,0,0" />
                                         </StackPanel>
 
                                         <!-- Actions Row -->

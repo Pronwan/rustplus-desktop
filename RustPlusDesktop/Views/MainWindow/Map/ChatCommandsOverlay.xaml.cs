@@ -36,6 +36,8 @@ public partial class ChatCommandsOverlay : UserControl
                  {
                      CmdRowHeliLabel, CmdRowHeliPrefix, CmdRowHeliBox,
                      CmdRowVendorLabel, CmdRowVendorPrefix, CmdRowVendorBox,
+                     CmdRowCargoLabel, CmdRowCargoPrefix, CmdRowCargoBox,
+                     CmdRowDeepSeaLabel, CmdRowDeepSeaPrefix, CmdRowDeepSeaBox,
                  })
         {
             if (element != null) element.Visibility = vis;

@@ -5700,7 +5700,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>미니맵 열기</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
-    <value>미니맵 위에 마우스를 올리고 설정 톱니바퀴를 클릭하면 모양, 크기 및 투명도를 사용자 지정할 수 있습니다.</value>
+    <value>화면 상단 바를 불러온 뒤(마우스를 맨 위 가장자리에 두거나 작은 탭 사용) ⚙를 눌러 지도의 모양, 크기, 투명도를 바꾸세요. 레이아웃이 잠금 해제된 동안에는 지도에 마우스를 올려도 자체 톱니바퀴가 나타납니다.</value>
   </data>
   <data name="Tutorials.Step.minimap.settings.Title" xml:space="preserve">
     <value>지도 설정</value>
@@ -6833,6 +6833,21 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>타일을 옮기고 크기를 바꾸고 제거하려면 잠금 해제</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>완료</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>레이아웃 다시 잠그기 (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>레이아웃 편집 중 · 타일을 끌어 이동 · 마우스를 올려 크기 조절, 설정 또는 제거</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>이 바에서 타일을 정리합니다: 잠금을 풀면 이동, +로 추가, ⚙로 설정. 게임 중에는 숨겨집니다 — 마우스를 화면 맨 위 가장자리에 잠시 두거나 그곳의 작은 탭을 사용하면 다시 나타납니다.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>레이아웃이 잠겨 있습니다. 화면 상단 바의 자물쇠를 눌러 타일을 이동, 크기 조절 또는 제거하세요.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>켜짐</value>
   </data>
@@ -7433,13 +7448,19 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>+로 타일 추가</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>지도는 여러 타일 중 하나일 뿐입니다. 독 제목 표시줄의 +로 시계, 페어링된 스위치나 알람, 팀·클랜 채팅, event 타이머, Logic Engine 규칙, 세션 통계, 서버 접속자 수, Discord 한 줄 — 또는 AI 컴패니언을 추가합니다. 각각 지도 옆 첫 번째 빈 자리에 놓입니다.</value>
+    <value>지도는 여러 타일 중 하나일 뿐입니다. 화면 상단 바의 +로 시계, 페어링된 스위치나 알람, 팀·클랜 채팅, event 타이머, Logic Engine 규칙, 세션 통계, 서버 접속자 수, Discord 한 줄 — 또는 AI 컴패니언을 추가합니다. 각각 지도 옆 첫 번째 빈 자리에 놓입니다.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>상단 바</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>독의 조작 버튼은 게임 중에 숨겨지는 화면 상단 바에 있습니다 — 지금 바가 내려왔다 올라가는 것을 보세요. 다시 불러오려면 마우스를 화면 맨 위 가장자리에 잠시 두거나, 위쪽으로 이동해 나타나는 작은 탭을 사용하세요. 자물쇠는 배치를 시작하고, +는 타일을 추가하며, 저장 아이콘은 이름 붙인 배치를 보관하고, ⚙는 설정을 열고, 슬라이더는 격자를 확대·축소합니다.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>끌기, 크기 조절, 잠금</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>타일 위에 마우스를 올리면 옮길 수 있고, 모서리를 끌면 크기가 바뀌며, ×로 제거합니다. 제목 표시줄의 자물쇠는 배치 전체를 실수로 끌리지 않게 보호하고, 배치 버튼은 독을 이름으로 저장합니다 — 저장된 이름에 마우스를 올리면 불러오기 전에 윤곽을 그 자리에서 볼 수 있습니다.</value>
+    <value>바의 자물쇠를 눌러 배치를 시작하세요: 모든 타일에 점선 테두리가 생기며, 끌어서 이동하고 마우스를 올리면 크기 조절 모서리, ⚙, 제거용 ×가 나타납니다. 끝나면 완료 또는 Esc를 누르세요 — 실수로 움직이지 않도록 레이아웃이 다시 잠깁니다. 잠긴 타일을 끌면 앱이 자물쇠 위치를 알려 줍니다. 배치 버튼은 독을 이름으로 저장합니다 — 저장된 이름에 마우스를 올리면 불러오기 전에 윤곽을 그 자리에서 볼 수 있습니다.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>독 전체 꾸미기</value>
@@ -7837,5 +7858,8 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>한 칸에서는 글자 크기와 상관없이 이름이 잘립니다. 아이콘이 이미 어떤 이벤트인지 알려줍니다.</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>재활용 계산기</value>
   </data>
 </root>

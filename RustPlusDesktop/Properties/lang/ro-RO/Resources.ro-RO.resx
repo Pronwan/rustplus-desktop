@@ -5774,4 +5774,7 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Elimină toate widgeturile și readuce harta în colțul ei</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Calculator de reciclare</value>
+  </data>
 </root>

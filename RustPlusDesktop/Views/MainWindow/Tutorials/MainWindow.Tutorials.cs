@@ -104,6 +104,9 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
         await OfferNewFeatureTutorialOnceAsync("sidebar-folders");
     }
 
+    /// <summary>The Devices tab's empty state: walk through pairing a smart device.</summary>
+    private void BtnDevicesShowHow_Click(object sender, RoutedEventArgs e) => _ = _tutorialService.StartAsync("smart-devices");
+
     private async Task OfferNewFeatureTutorialOnceAsync(string tutorialId)
     {
         if (_tutorialRegistry?.Find(tutorialId) is not { IsNewFeature: true } definition ||

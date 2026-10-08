@@ -41,7 +41,7 @@
                         <TextBlock Text="{DynamicResource PatchNotesHeader}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="4" Padding="6,1" Margin="0,0,6,0">
-                                <TextBlock Text="{Binding CurrentVersionFormatted, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                <TextBlock Text="{Binding CurrentVersionFormatted, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="11" FontWeight="Bold" Foreground="White"/>
                             </Border>
                             <TextBlock Text="Changelog &amp; Release Archive" FontSize="11" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center"/>
                         </StackPanel>
@@ -183,13 +183,13 @@
                                                     <!-- LATEST Pill if true -->
                                                     <Border Visibility="{Binding IsLatest, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                             Background="{DynamicResource BrandOrangeBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0">
-                                                        <TextBlock Text="LATEST" FontSize="9" FontWeight="Bold" Foreground="White"/>
+                                                        <TextBlock Text="LATEST" FontSize="10" FontWeight="Bold" Foreground="White"/>
                                                     </Border>
                                                 </StackPanel>
 
                                                 <!-- Category Badge -->
                                                 <Border HorizontalAlignment="Right" Background="{DynamicResource AppBg}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="4" Padding="5,1">
-                                                    <TextBlock Text="{Binding Category}" FontSize="9" Foreground="{DynamicResource TextSubtle}"/>
+                                                    <TextBlock Text="{Binding Category}" FontSize="10" Foreground="{DynamicResource TextSubtle}"/>
                                                 </Border>
                                             </Grid>
 
@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.1.0 MAJOR UPDATE -->
+                            <!-- v10.1.2 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_1_0"
+                            <Border x:Name="Card_v10_1_2"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,84 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.1.2 | Navigation, Mini-Map &amp; Full-Screen Improvements"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Opens Full Screen Properly:</Run>
+                                        If you closed the app maximized, it now reopens fitted to your screen instead of slightly larger.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Easier Navigation:</Run>
+                                        The sidebar stays visible beside every tool and panel, can show names next to its icons (Show labels), and every panel shares one header with the close button in the same place. The Monuments list groups repeated monuments, like nine Anvil Rocks, under one entry that opens as you search.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Screens:</Run>
+                                        Larger text across the app, separate App and Rust+ notifications, and Devices and Team now point you to a next step when they are empty.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Changes Requested by Facepunch:</Run>
+                                        Game-audio event detection, shared event reports, activity tracking for players outside your team, and inferred oil-rig crate markers have been removed. Oil-rig timers still work with your paired Smart Alarms, and team history remains available in Wipe Tracker.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Mini-Map Improvements:</Run>
+                                        The mini-map moves independently of widgets and no longer stays on top of the game. Move it freely, choose its display, and adjust opacity, size and layers from the visible settings button. It remembers its position and opens directly on the saved display, using a second monitor by default.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Small Fixes:</Run>
+                                        Teammates show their Steam name instead of "(player)", tickets show a reference, and Death Stats, Player Wipe Tracker and the Recycling Calculator are tidier.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.1.1 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_1_1"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v10.1.1 | Easier-to-Find Dock Bar Hotfix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Dock Bar You Can Find:</Run>
+                                        The bar at the top of the screen now slides in and out so you can see where it goes, and a small pull tab appears near the top edge to bring it back. The first time, the bar introduces itself.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Clear Editing Mode:</Run>
+                                        Unlocking the layout now shows an editing banner and a Done button (or press Esc) to lock it again. Dragging a widget while locked points you to the padlock.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; New Widgets Stay on Screen:</Run>
+                                        Adding a widget to a dock parked against the edge of the screen no longer leaves part of it off-screen.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.1.0 MAJOR UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_1_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.1.0 | 3D Map Rework, Fortify Base Imports &amp; High-Precision Terrain"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>

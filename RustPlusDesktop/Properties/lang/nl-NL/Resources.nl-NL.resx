@@ -5780,4 +5780,7 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Verwijdert alle widgets en zet de kaart terug in de hoek</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Recyclingcalculator</value>
+  </data>
 </root>

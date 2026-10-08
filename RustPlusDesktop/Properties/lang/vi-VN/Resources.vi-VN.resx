@@ -5774,4 +5774,7 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Gỡ mọi tiện ích và đưa bản đồ về góc của nó</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Máy tính tái chế</value>
+  </data>
 </root>

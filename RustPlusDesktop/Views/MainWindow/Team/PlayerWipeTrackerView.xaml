@@ -1,7 +1,7 @@
 <UserControl x:Class="RustPlusDesk.Views.PlayerWipeTrackerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:controls="clr-namespace:RustPlusDesk.Controls"
         Background="{DynamicResource AppBg}"
         Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True"
@@ -75,6 +75,23 @@
             </Setter>
         </Style>
 
+        <!-- Lock beside a premium tab's name. Shown only while that tab is locked (disabled), so a
+             supporter reads plain tab names instead of five "· Premium" suffixes. -->
+        <Style x:Key="PremiumLockIcon" TargetType="ui:SymbolIcon">
+            <Setter Property="Symbol" Value="LockClosed16" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="ToolTip" Value="Premium feature" />
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=TabItem}}" Value="False">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="TrackerColumnHeader" TargetType="GridViewColumnHeader">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -108,29 +125,18 @@
                  Background="{DynamicResource ControlFillColorDefaultBrush}"
                  BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                  BorderThickness="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="42" Height="42" CornerRadius="8"
-                            Background="#2260CDFF" BorderBrush="#4460CDFF" BorderThickness="1"
-                            Margin="0,0,12,0" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="CompassNorthwest24" FontSize="22" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="WIPE / FIELD NOTES" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource Accent}" Margin="0,0,0,1" />
-                        <TextBlock Text="Player Wipe Tracker" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock Text="A local-first route console for the hours that matter." FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,1,0,0" />
+            <controls:PanelHeader Symbol="CompassNorthwest24"
+                                  Eyebrow="WIPE / FIELD NOTES"
+                                  Title="{DynamicResource RailPlayerWipeTracker}"
+                                  Subtitle="A local-first route console for the hours that matter."
+                                  CloseClick="Close_Click">
+                <controls:PanelHeader.Actions>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:Button Content="Refresh" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" Appearance="Secondary" Click="Refresh_Click" Margin="0,0,8,0" />
+                        <ui:Button Content="Cloud restore" Icon="{ui:SymbolIcon Symbol=CloudArrowDown24}" Appearance="Secondary" Click="CloudRestoreTab_Click" />
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:Button Content="Refresh" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" Appearance="Secondary" Click="Refresh_Click" Margin="0,0,8,0" />
-                    <ui:Button Content="Cloud restore" Icon="{ui:SymbolIcon Symbol=CloudArrowDown24}" Appearance="Secondary" Click="CloudRestoreTab_Click" Margin="0,0,8,0" />
-                    <ui:Button Content="Close" Icon="{ui:SymbolIcon Symbol=Dismiss24}" Appearance="Secondary" Click="Close_Click" />
-                </StackPanel>
-            </Grid>
+                </controls:PanelHeader.Actions>
+            </controls:PanelHeader>
         </ui:Card>
 
         <!-- Summary & Player Selector Card -->
@@ -167,12 +173,15 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <TextBlock Text="SERVER / WIPE" Style="{StaticResource MetricLabel}" />
-                        <ComboBox x:Name="WipeSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="WipeSelector_Changed" />
+                        <!-- Long server names truncate here; the tooltip shows the whole selection. -->
+                        <ComboBox x:Name="WipeSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="WipeSelector_Changed"
+                                  ToolTip="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="4,0,10,0">
                         <TextBlock Text="PLAYER" Style="{StaticResource MetricLabel}" />
-                        <ComboBox x:Name="PlayerSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="PlayerSelector_Changed" />
+                        <ComboBox x:Name="PlayerSelector" Margin="0,4,0,0" Height="34" VerticalContentAlignment="Center" SelectionChanged="PlayerSelector_Changed"
+                                  ToolTip="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Margin="6,0,0,0">
@@ -346,7 +355,13 @@
             </TabItem>
 
             <!-- Route Replay Tab -->
-            <TabItem x:Name="ReplayTab" Header="Route replay · Premium">
+            <TabItem x:Name="ReplayTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Route replay" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -394,7 +409,7 @@
                             </Grid>
                             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#DD10151C" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="12">
                                 <StackPanel>
-                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="Bold" />
+                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="11" FontWeight="Bold" />
                                     <TextBlock x:Name="ReplayStateText" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,3,0,0" />
                                 </StackPanel>
                             </Border>
@@ -404,7 +419,13 @@
             </TabItem>
 
             <!-- Heatmap Tab -->
-            <TabItem x:Name="HeatmapTab" Header="Heatmap · Premium">
+            <TabItem x:Name="HeatmapTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Heatmap" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" MinWidth="360" />
@@ -459,7 +480,13 @@
             </TabItem>
 
             <!-- Compare Tab -->
-            <TabItem x:Name="CompareTab" Header="Compare · Premium">
+            <TabItem x:Name="CompareTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Compare" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -512,7 +539,13 @@
             </TabItem>
 
             <!-- Export Tab -->
-            <TabItem x:Name="ExportTab" Header="Export · Premium">
+            <TabItem x:Name="ExportTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Export" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,0,0">
                     <ui:Card Padding="20" MaxWidth="720" HorizontalAlignment="Left"
                              Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -535,7 +568,13 @@
             </TabItem>
 
             <!-- Cloud Restore Tab -->
-            <TabItem x:Name="CloudTab" Header="Cloud restore · Premium">
+            <TabItem x:Name="CloudTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Cloud restore" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Style="{StaticResource PremiumLockIcon}" />
+                    </StackPanel>
+                </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,10,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -661,11 +700,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="SERVER" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="SERVER" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock x:Name="ArchiveServerNameText" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                             </StackPanel>
                                             <Border Grid.Column="1" Background="#1A60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" CornerRadius="12" Padding="8,3" VerticalAlignment="Top">
-                                                <TextBlock Text="Cloud Backup" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                <TextBlock Text="Cloud Backup" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                             </Border>
                                         </Grid>
 

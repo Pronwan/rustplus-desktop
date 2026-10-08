@@ -1216,7 +1216,9 @@ public partial class MainWindow
         // longer arrives. Replace it wholesale rather than patching each entry: the two
         // sources have nothing in common but the item shape.
         if (Services.EventCapabilities.IsCloudSourced)
-            activeEvents = BuildCloudEventDockItems();
+            activeEvents = BuildOilRigAlarmDockItems();
+        else
+            activeEvents.AddRange(BuildOilRigAlarmDockItems());
 
         // The mini-map's command dock reads this rather than rebuilding the list, so an event
         // tile can never disagree with the dock on the map about what is running.

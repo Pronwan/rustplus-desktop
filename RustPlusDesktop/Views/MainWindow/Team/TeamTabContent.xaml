@@ -236,7 +236,7 @@
                                         Opacity="0.8"
                                         Text="{Binding DisplaySteamId}" />
                                     <TextBlock
-                                        FontSize="10"
+                                        FontSize="11"
                                         Foreground="{DynamicResource SystemFillColorCautionBrush}"
                                         FontWeight="SemiBold"
                                         Text="{Binding AfkText}"
@@ -420,7 +420,7 @@
                         </Style>
                     </ToggleButton.Style>
                     <TextBlock
-                        FontSize="10"
+                        FontSize="11"
                         FontWeight="Bold"
                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
                         Text="{DynamicResource UiA}" />

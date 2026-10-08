@@ -5945,6 +5945,21 @@ Sunucunun resmi web sitesinde daha fazla bilgi bulabilirsiniz:
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>Kartları taşımak, boyutlandırmak ve kaldırmak için kilidi aç</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>Bitti</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>Yerleşimi yeniden kilitle (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>Yerleşim düzenleniyor · taşımak için bir kartı sürükle · boyutlandırmak, ayarlamak veya kaldırmak için üzerine gel</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>Bu çubuk kartlarını düzenler: taşımak için kilidi aç, eklemek için +, ayarlar için ⚙. Oynarken gizlenir — geri getirmek için fareyi ekranın üst kenarında beklet ya da oradaki küçük sekmeyi kullan.</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>Yerleşim kilitli. Kartları taşımak, boyutlandırmak veya kaldırmak için ekranın üstündeki çubuktaki kilide bas.</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>AÇIK</value>
   </data>
@@ -6545,13 +6560,22 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
     <value>+ ile kart ekle</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>Harita yalnızca kartlardan biridir. Dock&apos;un başlık çubuğundaki + ile bir saat, eşleşmiş bir anahtar ya da alarm, takım veya klan sohbeti, bir event sayacı, bir Logic Engine kuralı, oturum istatistikleri, sunucu doluluğu, bir Discord satırı — ya da yapay zekâ yardımcısı eklersin. Her biri haritanın yanındaki ilk boş yere yerleşir.</value>
+    <value>Harita yalnızca kartlardan biridir. Ekranın üstündeki çubuktaki + ile bir saat, eşleşmiş bir anahtar ya da alarm, takım veya klan sohbeti, bir event sayacı, bir Logic Engine kuralı, oturum istatistikleri, sunucu doluluğu, bir Discord satırı — ya da yapay zekâ yardımcısı eklersin. Her biri haritanın yanındaki ilk boş yere yerleşir.</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>Ekranın üstündeki çubuğu getir (fareyi üst kenarda beklet ya da küçük sekmeyi kullan) ve haritanın şeklini, boyutunu ve opaklığını ayarlamak için ⚙ simgesine bas. Yerleşim kilitli değilken haritanın üzerine gelince kendi dişlisi de görünür.</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>Üstteki çubuk</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>Dock&apos;un kontrolleri, oynarken gizlenen ve ekranın üstünde duran bir çubuktadır — şimdi içeri girip çıkışını izle. Geri getirmek için fareyi ekranın üst kenarında beklet ya da yukarı doğru gidip beliren küçük sekmeyi kullan. Kilit düzenlemeyi açar, + kart ekler, kaydet simgesi adlandırılmış yerleşimleri saklar, ⚙ ayarları açar ve kaydırıcı ızgarayı yakınlaştırır.</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>Sürükle, boyutlandır, kilitle</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>Taşımak için kartın üzerine gel, boyutunu değiştirmek için köşesinden çek ya da × ile kaldır. Başlık çubuğundaki kilit tüm yerleşimi kazara sürüklemelerden korur, Yerleşimler düğmesi ise dock&apos;u bir adla kaydeder — kayıtlı bir adın üzerine gelerek yüklemeden önce yerindeki taslağını gör.</value>
+    <value>Düzenlemeye başlamak için çubuktaki kilide bas: her kart kesikli bir çerçeve alır — taşımak için birini sürükle, üzerine gelince boyutlandırma köşesi, ⚙ ve kaldırmak için × görünür. Bitince Bitti&apos;ye ya da Esc&apos;ye bas; hiçbir şey kazara kaymasın diye yerleşim yeniden kilitlenir. Kilitli bir kartı sürüklersen uygulama kilidin yerini hatırlatır. Yerleşimler düğmesi dock&apos;u bir adla kaydeder — kayıtlı bir adın üzerine gelerek yüklemeden önce yerindeki taslağını gör.</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>Tüm dock&apos;u biçimlendir</value>
@@ -6889,5 +6913,8 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   </data>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>Tek hücrede ad, yazı boyutundan bağımsız olarak kırpılır; simge zaten hangi olay olduğunu söylüyor.</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Geri Dönüşüm Hesaplayıcı</value>
   </data>
 </root>

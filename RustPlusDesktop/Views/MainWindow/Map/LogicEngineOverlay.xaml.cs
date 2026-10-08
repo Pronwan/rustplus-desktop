@@ -198,7 +198,7 @@ namespace RustPlusDesk.Views
                         TimerMinutes = 15,
                         TimerTarget = "LargeOilRig",
                         TimerName = "",
-                        ShowCrateOnMap = true,
+                        ShowCrateOnMap = false,
                         AlarmTextHint = "",
                         WaitSeconds = 10,
                         TargetEntityId = 0,

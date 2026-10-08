@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
+using RustPlusDesk.Services;
 using RustPlusDesk.Views.Windows;
 
 namespace RustPlusDesk
@@ -29,8 +31,24 @@ namespace RustPlusDesk
         /// <summary>How close to the top edge counts, in device-independent pixels.</summary>
         private const double BarRevealBand = 3.0;
 
+        /// <summary>
+        /// How close to the top of the screen the pointer has to come for the pull tab to show.
+        /// Far wider than the reveal band: the tab is there to be aimed at, so it has to be on
+        /// screen before the pointer arrives rather than once it already has.
+        /// </summary>
+        private const double PullTabBand = 80.0;
+
         private DispatcherTimer? _edgeWatch;
         private DateTime? _atEdgeSince;
+
+        /// <summary>
+        /// Until when the bar stays out regardless of where the pointer is - set while a hint is
+        /// pointing at something on it, so it does not slide away mid-sentence.
+        /// </summary>
+        private DateTime _barHeldUntil;
+
+        /// <summary>Until when the pull tab shows on its own, after the bar has demonstrated itself.</summary>
+        private DateTime _pullTabHeldUntil;
 
         private DockOverlayWindow Overlay()
         {
@@ -38,12 +56,18 @@ namespace RustPlusDesk
 
             var overlay = new DockOverlayWindow
             {
+                IsDeviceOverlay = IsDeviceOverlay,
+                Topmost = IsDeviceOverlay,
                 LockToggled = ToggleDockLock,
                 TemplatesRequested = () => BtnTemplates_Click(this, new RoutedEventArgs()),
-                AddTileRequested = () => BtnAddTile_Click(this, new RoutedEventArgs()),
+                AddTileRequested = IsDeviceOverlay
+                    ? () => BtnAddTile_Click(this, new RoutedEventArgs())
+                    : AddMapTile,
                 SettingsRequested = OpenSettings,
                 ZoomChanged = SetGridZoom,
                 BarDragged = MoveDockBy,
+                PullTabActivated = () => _overlay?.ShowBar(true),
+                EscapePressed = FinishArranging,
             };
 
             _overlay = overlay;
@@ -146,21 +170,135 @@ namespace RustPlusDesk
                         && onThisScreen
                         && cursor.Y <= screen.Top + barHeight;
 
+            var now = DateTime.UtcNow;
+
             if (atEdge)
             {
-                _atEdgeSince ??= DateTime.UtcNow;
-                if (DateTime.UtcNow - _atEdgeSince >= BarRevealDelay)
+                _atEdgeSince ??= now;
+                if (now - _atEdgeSince >= BarRevealDelay)
                     _overlay.ShowBar(true);
-                return;
+            }
+            else
+            {
+                _atEdgeSince = null;
+
+                // An unlocked dock keeps the bar: it is the only way back to locking it, and it
+                // holds the zoom somebody is in the middle of adjusting.
+                bool keep = overBar || !_dock.Locked || _draggingTile != null || now < _barHeldUntil;
+                if (!keep) _overlay.ShowBar(false);
             }
 
-            _atEdgeSince = null;
+            // The tab is the visible half of the gesture: near the top of the screen, or over
+            // the dock it belongs to, it shows where the bar went.
+            bool nearTop = onThisScreen && cursor.Y <= screen.Top + PullTabBand;
+            bool overDock = !double.IsNaN(Left) && !double.IsNaN(Top)
+                         && new Rect(Left, Top, ActualWidth, ActualHeight).Contains(cursor);
 
-            // An unlocked dock keeps the bar: it is the only way back to locking it, and it
-            // holds the zoom somebody is in the middle of adjusting.
-            if (overBar || !_dock.Locked || _draggingTile != null) return;
+            _overlay.SetPullTab(nearTop || overDock || now < _pullTabHeldUntil);
+        }
 
-            _overlay.ShowBar(false);
+        // ── Teaching the bar ────────────────────────────────────────────────────
+
+        private const string HintsCacheKey = "minimap_dock_hints";
+
+        private static readonly TimeSpan BarIntroHold = TimeSpan.FromSeconds(6);
+        private static readonly TimeSpan PullTabAfterIntro = TimeSpan.FromSeconds(4);
+
+        /// <summary>
+        /// Plays the bar's introduction the first time the dock is ever shown. A gesture that
+        /// leaves nothing on screen cannot be discovered, only told about - so it is told about
+        /// once, by the bar itself, while it is out.
+        /// </summary>
+        private void MaybeIntroduceBar()
+        {
+            var hints = StorageService.LoadCache<CommandDockHints>(HintsCacheKey) ?? new CommandDockHints();
+            if (hints.BarIntroSeen) return;
+
+            hints.BarIntroSeen = true;
+            StorageService.SaveCache(HintsCacheKey, hints);
+
+            // After the dock has had a moment on screen: a bar that arrives with the window is
+            // one more thing appearing at once, and is the part that gets missed.
+            var delay = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.5) };
+            delay.Tick += (_, __) =>
+            {
+                delay.Stop();
+                if (IsVisible) DemonstrateBar();
+            };
+            delay.Start();
+        }
+
+        /// <summary>
+        /// Brings the bar out, says what it is and how to get it back, then lets it slide away
+        /// and leaves the pull tab showing where it went.
+        ///
+        /// Public because the dock tutorial plays it too: being shown the bar leave is what
+        /// makes "it is at the top of the screen" mean something.
+        /// </summary>
+        public void DemonstrateBar()
+        {
+            var overlay = Overlay();
+            PositionOverlay();
+
+            var now = DateTime.UtcNow;
+            _barHeldUntil = now + BarIntroHold;
+            _pullTabHeldUntil = now + BarIntroHold + PullTabAfterIntro;
+
+            overlay.ShowBar(true);
+            overlay.ShowHint(
+                Loc.Text("CommandDockBarIntro",
+                    "This bar arranges your widgets: unlock to move them, + to add more, ⚙ for settings. " +
+                    "It hides while you play - rest the mouse on the top edge of the screen, or use the small tab there, to bring it back."),
+                "",   // up arrow
+                BarIntroHold,
+                DockRectOnOverlay());
+        }
+
+        private DateTime _lastLockedHint;
+
+        /// <summary>
+        /// Someone tried to drag a widget on a locked dock - the moment they need to know about
+        /// the lock, so that is when they are told. The bar comes out with the lock flashing,
+        /// and the hint sits beside the dock, level with the widget they were pulling at.
+        /// </summary>
+        private void ExplainLockedDrag(Point canvasPoint)
+        {
+            var now = DateTime.UtcNow;
+            if (now - _lastLockedHint < TimeSpan.FromSeconds(8)) return;
+            _lastLockedHint = now;
+
+            var overlay = Overlay();
+            PositionOverlay();
+
+            var hold = TimeSpan.FromSeconds(4.5);
+            _barHeldUntil = now + hold;
+
+            overlay.ShowBar(true);
+            overlay.PulseLock();
+            overlay.ShowHint(
+                Loc.Text("CommandDockLockedDragHint",
+                    "The layout is locked. Press the padlock in the bar at the top of the screen to move, resize or remove widgets."),
+                "",   // padlock
+                hold,
+                DockRectOnOverlay(),
+                ToOverlay(canvasPoint.X, canvasPoint.Y));
+        }
+
+        /// <summary>
+        /// The dock window's rectangle in the overlay's coordinates - the area a hint must stay
+        /// out of, because the dock is drawn above the overlay and would cover it.
+        /// </summary>
+        private Rect DockRectOnOverlay()
+        {
+            if (double.IsNaN(Left) || double.IsNaN(Top)) return Rect.Empty;
+            return new Rect(ToOverlay(0, 0), new Size(ActualWidth, ActualHeight));
+        }
+
+        /// <summary>Esc while arranging: the same as pressing Done.</summary>
+        private void FinishArranging()
+        {
+            if (_dock.Locked || _draggingTile != null) return;
+            ToggleDockLock();
         }
 
         /// <summary>The pointer, in the same device-independent pixels as Window.Left.</summary>

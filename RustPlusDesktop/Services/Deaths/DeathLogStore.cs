@@ -58,9 +58,17 @@ namespace RustPlusDesk.Services.Deaths
 
         public bool HasData => Total > 0;
 
-        public string Headline => Total == 0
-            ? "No deaths match the current filters."
-            : $"{Total} death(s) across {Victims} player(s).";
+        /// <summary>
+        /// True when the server's log itself has no deaths, as opposed to filters hiding them.
+        /// The two need different words: "nothing matches" next to default filters reads as a bug.
+        /// </summary>
+        public bool LogIsEmpty { get; init; }
+
+        public string Headline => Total > 0
+            ? $"{Total} death(s) across {Victims} player(s)."
+            : LogIsEmpty
+                ? Helpers.Loc.Text("DeathStatsNoDeathsYet", "No deaths logged on this server yet. They appear here as they happen.")
+                : Helpers.Loc.Text("DeathStatsNoMatches", "No deaths match the current filters.");
     }
 
     /// <summary>
@@ -124,7 +132,10 @@ namespace RustPlusDesk.Services.Deaths
         }
 
         public static DeathStatsSummary LoadForServer(string? serverKey)
-            => Summarize(LoadEntries(serverKey), KillerLogStore.LoadByDeath(serverKey));
+        {
+            var entries = LoadEntries(serverKey);
+            return Summarize(entries, KillerLogStore.LoadByDeath(serverKey), logIsEmpty: entries.Count == 0);
+        }
 
         /// <summary>Aggregate a (possibly filtered) set of entries into the view model.</summary>
         /// <param name="killers">
@@ -133,11 +144,14 @@ namespace RustPlusDesk.Services.Deaths
         /// filtered set of entries, which has no server to look anything up for — and it is
         /// joined against the entries given, so a filtered page's tables all agree.
         /// </param>
+        /// <param name="logIsEmpty">Whether the unfiltered log has no deaths at all; only read when
+        /// <paramref name="entries"/> is empty, to pick the right empty message.</param>
         public static DeathStatsSummary Summarize(
             IReadOnlyList<DeathEntry> entries,
-            IReadOnlyDictionary<long, (string Killer, string? Weapon)>? killers = null)
+            IReadOnlyDictionary<long, (string Killer, string? Weapon)>? killers = null,
+            bool logIsEmpty = false)
         {
-            if (entries.Count == 0) return new DeathStatsSummary();
+            if (entries.Count == 0) return new DeathStatsSummary { LogIsEmpty = logIsEmpty };
 
             int total = entries.Count;
 

@@ -6660,6 +6660,21 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockUnlockHint" xml:space="preserve">
     <value>解锁后可移动、调整大小和移除磁贴</value>
   </data>
+  <data name="CommandDockDone" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="CommandDockDoneHint" xml:space="preserve">
+    <value>重新锁定布局 (Esc)</value>
+  </data>
+  <data name="CommandDockEditingBanner" xml:space="preserve">
+    <value>正在编辑布局 · 拖动磁贴即可移动 · 悬停可调整大小、设置或移除</value>
+  </data>
+  <data name="CommandDockBarIntro" xml:space="preserve">
+    <value>这条栏用于整理你的磁贴：解锁后可移动，+ 添加更多，⚙ 打开设置。游戏时它会自动隐藏——把鼠标停在屏幕顶部边缘，或使用那里的小标签，即可让它重新出现。</value>
+  </data>
+  <data name="CommandDockLockedDragHint" xml:space="preserve">
+    <value>布局已锁定。按屏幕顶部栏上的锁图标，即可移动、缩放或移除磁贴。</value>
+  </data>
   <data name="CommandDockSwitchOn" xml:space="preserve">
     <value>开</value>
   </data>
@@ -7260,13 +7275,22 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>用 + 添加磁贴</value>
   </data>
   <data name="Tutorials.Step.commanddock.widgets.Description" xml:space="preserve">
-    <value>地图只是众多磁贴之一。dock 标题栏上的 + 可以添加时钟、已配对的开关或警报、队伍或战队聊天、event 计时、Logic Engine 规则、会话统计、服务器人数、一行 Discord —— 或者 AI 助手。每一个都会落在地图旁第一个空位。</value>
+    <value>地图只是众多磁贴之一。屏幕顶部栏上的 + 可以添加时钟、已配对的开关或警报、队伍或战队聊天、event 计时、Logic Engine 规则、会话统计、服务器人数、一行 Discord —— 或者 AI 助手。每一个都会落在地图旁第一个空位。</value>
+  </data>
+  <data name="Tutorials.Step.minimap.settings.Description" xml:space="preserve">
+    <value>调出屏幕顶部栏（把鼠标停在顶部边缘或使用小标签），然后按 ⚙ 自定义地图的形状、大小和透明度。布局解锁时，悬停在地图上也会显示它自己的齿轮。</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Title" xml:space="preserve">
+    <value>顶部栏</value>
+  </data>
+  <data name="Tutorials.Step.commanddock.bar.Description" xml:space="preserve">
+    <value>dock 的控件位于屏幕顶部的一条栏中，游戏时会自动隐藏——现在看它滑入又滑出。要让它重新出现，把鼠标停在屏幕顶部边缘，或把鼠标移向顶部并使用出现的小标签。锁图标开启布局编辑，+ 添加磁贴，保存图标保存命名布局，⚙ 打开设置，滑块缩放网格。</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Title" xml:space="preserve">
     <value>拖动、缩放、锁定</value>
   </data>
   <data name="Tutorials.Step.commanddock.arrange.Description" xml:space="preserve">
-    <value>把鼠标移到磁贴上可以移动它，拖动边角可以改变大小，× 则移除。标题栏上的锁把整个布局保护起来，不会被误拖；“布局”按钮则把 dock 以名字保存 —— 把鼠标移到已保存的名字上，就能在加载前看到它在原位的轮廓。</value>
+    <value>按栏上的锁图标开始整理：每个磁贴都会显示虚线边框——拖动即可移动，悬停会出现缩放角、⚙ 和用于移除的 ×。完成后按“完成”或 Esc，布局会重新锁定，避免误移。如果拖动已锁定的磁贴，应用会提示锁的位置。“布局”按钮把 dock 以名字保存——把鼠标移到已保存的名字上，就能在加载前看到它在原位的轮廓。</value>
   </data>
   <data name="Tutorials.Step.commanddock.style.Title" xml:space="preserve">
     <value>统一设置整个 dock</value>
@@ -7664,5 +7688,8 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="CommandDockEventHideLabelHint" xml:space="preserve">
     <value>在一个格子里，无论字号多大名称都会被截断；图标已经说明了是哪个事件。</value>
+  </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>回收计算器</value>
   </data>
 </root>

@@ -113,7 +113,7 @@ public partial class MainWindow
 
         _shopDataAvailable = false;
         AppendLog($"[shops] No vending data in {_emptyShopPolls} polls — hiding the shops UI, " +
-                  "events now come from audio detection.");
+                  "only Smart Alarm event timestamps remain available.");
         Dispatcher.Invoke(ApplyShopDataAvailability);
     }
 
@@ -130,7 +130,6 @@ public partial class MainWindow
         var source = show ? ServerEventSource.RustApi : ServerEventSource.Cloud;
         EventCapabilities.SetSource(source);
         RememberEventSource(source);
-        UpdateAudioListenerState();
         ApplyEventCapabilitiesToMenus();
 
         Visibility vis = show ? Visibility.Visible : Visibility.Collapsed;
@@ -142,11 +141,6 @@ public partial class MainWindow
         if (AlertsShopsColumn != null) AlertsShopsColumn.Visibility = vis;
         if (TradeAlertsMenuItem != null) TradeAlertsMenuItem.Visibility = vis;
 
-        // The event dock and the alerts "Events" column deliberately stay. They no longer
-        // carry Patrol Heli, Chinook or Travelling Vendor, but Cargo, Deep Sea and Oil Rig
-        // still arrive through audio detection — and the alert checkboxes must remain
-        // configurable even before anything has been detected, otherwise a player cannot
-        // decide in advance what they want to hear about.
         if (EventDock != null) EventDock.Visibility = Visibility.Visible;
         if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = Visibility.Visible;
 

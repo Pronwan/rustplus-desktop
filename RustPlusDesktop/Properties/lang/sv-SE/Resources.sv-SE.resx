@@ -5774,4 +5774,7 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="CommandDockTemplateDefaultHint" xml:space="preserve">
     <value>Tar bort alla widgetar och lägger tillbaka kartan i hörnet</value>
   </data>
+  <data name="RecyclingCalculatorName" xml:space="preserve">
+    <value>Återvinningsräknare</value>
+  </data>
 </root>

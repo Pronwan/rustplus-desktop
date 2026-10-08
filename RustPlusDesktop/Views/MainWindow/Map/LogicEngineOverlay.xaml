@@ -83,10 +83,10 @@
                         <ui:SymbolIcon Symbol="Pulse24" Margin="0,0,8,0" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                         <TextBlock Text="{DynamicResource UiLogicEngineRuntime}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
                         <Border Margin="8,0,0,0" Padding="6,2" CornerRadius="4" Background="{DynamicResource Accent}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Text="{DynamicResource UiRUNNING}" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Text="{DynamicResource UiRUNNING}" FontSize="11" FontWeight="Bold" Foreground="White"/>
                         </Border>
                         <Border Margin="8,0,0,0" Padding="6,2" CornerRadius="4" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Visibility="{Binding IsRunning, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
-                            <TextBlock Text="{DynamicResource UiIDLE}" FontSize="10" Foreground="{DynamicResource TextSubtle}"/>
+                            <TextBlock Text="{DynamicResource UiIDLE}" FontSize="11" Foreground="{DynamicResource TextSubtle}"/>
                         </Border>
                     </StackPanel>
 
@@ -337,7 +337,7 @@
                                      </WrapPanel>
  
                                      <!-- Gating Condition -->
-                                     <TextBlock Text="{DynamicResource UiGatingConditionOptional}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextSubtle}" Margin="0,4,0,4"/>
+                                     <TextBlock Text="{DynamicResource UiGatingConditionOptional}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextSubtle}" Margin="0,4,0,4"/>
                                      <WrapPanel Margin="0,0,0,8" VerticalAlignment="Center">
                                          <ComboBox SelectedValue="{Binding ConditionOperator, Mode=TwoWay}" SelectedValuePath="Tag" Width="90" Margin="0,0,8,4">
                                              <ComboBoxItem Content="{DynamicResource AlertDeepSeaUpVars}" Tag="NONE"/>
@@ -452,19 +452,6 @@
                                                                         </ui:TextBox.Style>
                                                                     </ui:TextBox>
 
-                                                                    <CheckBox Content="{DynamicResource UiShowCrateOnMap}" IsChecked="{Binding ShowCrateOnMap, Mode=TwoWay}"
-                                                                              VerticalAlignment="Center" FontSize="11">
-                                                                        <CheckBox.Style>
-                                                                            <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsOilRigTimer}" Value="True">
-                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </CheckBox.Style>
-                                                                    </CheckBox>
                                                                     </StackPanel>
 
                                                                     <!--  Own row: optional, and closes the gap for pushes carrying no entity ID.  -->
@@ -581,7 +568,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </StackPanel.Style>
-                                                            <TextBlock Text="{DynamicResource UiNestedStepsIfConditionMet}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
+                                                            <TextBlock Text="{DynamicResource UiNestedStepsIfConditionMet}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
                                                             <ItemsControl ItemsSource="{Binding ConditionalSteps}">
                                                                 <ItemsControl.ItemTemplate>
                                                                     <DataTemplate>
@@ -621,7 +608,7 @@
                                                                     </DataTemplate>
                                                                 </ItemsControl.ItemTemplate>
                                                             </ItemsControl>
-                                                            <ui:Button Click="BtnAddNestedStep_Click" Tag="{Binding}" Content="{DynamicResource UiAddNestedAction}" Margin="0,4,0,0" Padding="8,2" FontSize="10" Height="22"/>
+                                                            <ui:Button Click="BtnAddNestedStep_Click" Tag="{Binding}" Content="{DynamicResource UiAddNestedAction}" Margin="0,4,0,0" Padding="8,2" FontSize="11" Height="22"/>
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </Border>

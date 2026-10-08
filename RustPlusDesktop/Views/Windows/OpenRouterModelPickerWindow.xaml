@@ -148,22 +148,22 @@
                                                 <!-- Free Badge -->
                                                 <Border Margin="6,0,0,0" Padding="5,1" CornerRadius="4" Background="#2622C55E"
                                                         Visibility="{Binding IsFree, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                    <TextBlock Text="FREE" FontWeight="Bold" FontSize="9" Foreground="#22C55E" />
+                                                    <TextBlock Text="FREE" FontWeight="Bold" FontSize="10" Foreground="#22C55E" />
                                                 </Border>
 
                                                 <!-- Vision Badge -->
                                                 <Border Margin="4,0,0,0" Padding="4,1" CornerRadius="4" Background="#263B82F6"
                                                         Visibility="{Binding SupportsVision, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                    <TextBlock Text="VISION" FontWeight="SemiBold" FontSize="9" Foreground="#60A5FA" />
+                                                    <TextBlock Text="VISION" FontWeight="SemiBold" FontSize="10" Foreground="#60A5FA" />
                                                 </Border>
                                             </StackPanel>
 
-                                            <TextBlock Text="{Binding Id}" FontFamily="Consolas, monospace" FontSize="10"
+                                            <TextBlock Text="{Binding Id}" FontFamily="Consolas, monospace" FontSize="11"
                                                        Foreground="{DynamicResource Accent}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
 
                                             <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                                <TextBlock Text="{Binding ContextSummary}" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
-                                                <TextBlock Text="{Binding PricingSummary}" FontSize="10" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding ContextSummary}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
+                                                <TextBlock Text="{Binding PricingSummary}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </StackPanel>
 
@@ -218,23 +218,23 @@
                             <!-- Status & Capability Badges -->
                             <WrapPanel Margin="0,0,0,12">
                                 <Border x:Name="BadgeFree" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#2622C55E">
-                                    <TextBlock Text="🎁 100% FREE" FontWeight="Bold" FontSize="10" Foreground="#22C55E" />
+                                    <TextBlock Text="🎁 100% FREE" FontWeight="Bold" FontSize="11" Foreground="#22C55E" />
                                 </Border>
                                 <Border x:Name="BadgePaid" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#26EAB308">
-                                    <TextBlock Text="💳 PAID MODEL" FontWeight="Bold" FontSize="10" Foreground="#EAB308" />
+                                    <TextBlock Text="💳 PAID MODEL" FontWeight="Bold" FontSize="11" Foreground="#EAB308" />
                                 </Border>
                                 <Border x:Name="BadgeVision" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#263B82F6">
-                                    <TextBlock Text="👁️ Vision / Screenshots" FontWeight="SemiBold" FontSize="10" Foreground="#60A5FA" />
+                                    <TextBlock Text="👁️ Vision / Screenshots" FontWeight="SemiBold" FontSize="11" Foreground="#60A5FA" />
                                 </Border>
                                 <Border x:Name="BadgeTextOnly" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="{DynamicResource SubtleFillColorSecondaryBrush}">
-                                    <TextBlock Text="💬 Text Only" FontSize="10" Foreground="{DynamicResource TextSubtle}" />
+                                    <TextBlock Text="💬 Text Only" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
                                 </Border>
                             </WrapPanel>
 
                             <!-- Specifications Card -->
                             <ui:Card Margin="0,0,0,10" Padding="12,10">
                                 <StackPanel>
-                                    <TextBlock Text="SPECIFICATIONS" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
+                                    <TextBlock Text="SPECIFICATIONS" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
                                     
                                     <Grid Margin="0,2">
                                         <TextBlock Text="Context Window:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
@@ -271,7 +271,7 @@
                             <!-- Pricing Card -->
                             <ui:Card Margin="0,0,0,10" Padding="12,10">
                                 <StackPanel>
-                                    <TextBlock Text="PRICING (PER 1M TOKENS)" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
+                                    <TextBlock Text="PRICING (PER 1M TOKENS)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
 
                                     <Grid Margin="0,2">
                                         <TextBlock Text="Prompt (Input):" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
@@ -294,7 +294,7 @@
                             </ui:Card>
 
                             <!-- Description -->
-                            <TextBlock Text="DESCRIPTION" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" />
+                            <TextBlock Text="DESCRIPTION" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" />
                             <TextBlock x:Name="TxtDetailDescription" Text="Model description text here..." FontSize="11"
                                        Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,14" />
 

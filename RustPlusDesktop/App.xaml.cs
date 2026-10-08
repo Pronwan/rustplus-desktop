@@ -192,6 +192,7 @@ public partial class App : Application
                 _main.ShowInTaskbar = true;
                 _main.Opacity = 1;
                 _main.WindowState = targetState;
+                _main.ApplyStartupWindowState();
                 _main.Activate();
                 _main.Topmost = true; _main.Topmost = false;
             }
@@ -293,6 +294,7 @@ public partial class App : Application
             _main.WindowState = WindowState.Normal;
         }
         _main.Show();
+        _main.ApplyStartupWindowState();
         _main.Activate();
         _main.Topmost = true; _main.Topmost = false;
     }
