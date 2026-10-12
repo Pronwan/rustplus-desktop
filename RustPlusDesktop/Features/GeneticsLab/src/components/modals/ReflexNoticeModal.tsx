@@ -95,10 +95,10 @@ export const ReflexNoticeModal: React.FC<{
             <FlashOnIcon fontSize="small" />
           </Box>
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 800, fontFamily: '"Roboto Mono", monospace', lineHeight: 1.2 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, fontFamily: 'var(--font-family-mono)', lineHeight: 1.2 }}>
               Important: Scanner &amp; Game Performance
             </Typography>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', fontFamily: '"Roboto Mono", monospace', fontSize: '0.72rem' }}>
+            <Typography variant="caption" sx={{ color: '#9CA3AF', fontFamily: 'var(--font-family-mono)', fontSize: '0.72rem' }}>
               Prevent background starvation &amp; ensure real-time plant recognition
             </Typography>
           </Box>
@@ -129,7 +129,7 @@ export const ReflexNoticeModal: React.FC<{
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TuneIcon sx={{ fontSize: 18, color: '#60A5FA' }} />
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#F9FAFB', fontFamily: '"Roboto Mono", monospace' }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#F9FAFB', fontFamily: 'var(--font-family-mono)' }}>
               Method 1: In-Game Graphics Settings
             </Typography>
           </Box>
@@ -167,7 +167,7 @@ export const ReflexNoticeModal: React.FC<{
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <SpeedIcon sx={{ fontSize: 18, color: '#34D399' }} />
-            <Typography variant="body2" sx={{ fontWeight: 700, color: '#F9FAFB', fontFamily: '"Roboto Mono", monospace' }}>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#F9FAFB', fontFamily: 'var(--font-family-mono)' }}>
               Method 2: Rust Console Command (F1)
             </Typography>
           </Box>
@@ -263,7 +263,7 @@ export const ReflexNoticeModal: React.FC<{
             backgroundColor: '#F59E0B',
             color: '#000000',
             fontWeight: 800,
-            fontFamily: '"Roboto Mono", monospace',
+            fontFamily: 'var(--font-family-mono)',
             fontSize: '0.8rem',
             px: 2.5,
             py: 0.6,

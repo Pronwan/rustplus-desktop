@@ -103,33 +103,33 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
           flexDirection: 'column',
           gap: 0.75,
           backgroundColor: isCurrentlyDetecting
-            ? 'rgba(0, 229, 255, 0.08)'
+            ? 'rgba(var(--gl-primary-rgb), 0.08)'
             : isSelected
-              ? 'rgba(0, 229, 255, 0.04)'
+              ? 'rgba(var(--gl-primary-rgb), 0.04)'
               : 'rgba(20, 24, 30, 0.65)',
           border: '1px solid',
           borderColor: isCurrentlyDetecting
-            ? '#00E5FF'
+            ? 'var(--gl-primary)'
             : isSelected
-              ? 'rgba(0, 229, 255, 0.55)'
+              ? 'rgba(var(--gl-primary-rgb), 0.55)'
               : 'rgba(255, 255, 255, 0.08)',
           borderLeft: isCurrentlyDetecting
-            ? '4px solid #00E5FF'
+            ? '4px solid var(--gl-primary)'
             : isSelected
-              ? '3.5px solid var(--gl-primary, #00E5FF)'
+              ? '3.5px solid var(--gl-primary)'
               : '3.5px solid transparent',
           borderRadius: '6px',
           p: 1.25,
           cursor: 'pointer',
           transition: 'all 0.18s ease',
           boxShadow: isCurrentlyDetecting
-            ? '0 0 16px rgba(0, 229, 255, 0.45)'
+            ? '0 0 16px rgba(var(--gl-primary-rgb), 0.45)'
             : isSelected
-              ? '0 4px 16px rgba(0, 229, 255, 0.12)'
+              ? '0 4px 16px rgba(var(--gl-primary-rgb), 0.12)'
               : 'none',
           '&:hover': {
             borderColor: isSelected ? 'var(--gl-primary)' : 'rgba(255, 255, 255, 0.2)',
-            backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.07)' : 'rgba(255, 255, 255, 0.02)'
+            backgroundColor: isSelected ? 'rgba(var(--gl-primary-rgb), 0.07)' : 'rgba(255, 255, 255, 0.02)'
           }
         }}
       >
@@ -143,12 +143,12 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                 py: 0.1,
                 borderRadius: '3px',
                 backgroundColor: isCurrentlyDetecting
-                  ? '#00E5FF'
+                  ? 'var(--gl-primary)'
                   : isSelected
                     ? 'var(--gl-primary)'
                     : 'rgba(255, 255, 255, 0.08)',
                 color: isCurrentlyDetecting || isSelected ? '#000' : 'var(--gl-text-secondary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.66rem',
                 fontWeight: 800,
                 letterSpacing: '0.04em',
@@ -164,10 +164,10 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   px: 0.5,
                   py: 0.05,
                   borderRadius: '2px',
-                  backgroundColor: 'rgba(0, 229, 255, 0.22)',
-                  border: '1px solid rgba(0, 229, 255, 0.6)',
-                  color: '#00E5FF',
-                  fontFamily: '"Roboto Mono", monospace',
+                  backgroundColor: 'rgba(var(--gl-primary-rgb), 0.22)',
+                  border: '1px solid rgba(var(--gl-primary-rgb), 0.6)',
+                  color: 'var(--gl-primary)',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.6rem',
                   fontWeight: 800,
                   letterSpacing: '0.05em'
@@ -222,11 +222,11 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
               fontWeight: 800,
               backgroundColor: isSelected ? 'var(--gl-primary)' : 'transparent',
               color: isSelected ? '#000' : 'var(--gl-primary)',
-              borderColor: isSelected ? 'var(--gl-primary)' : 'rgba(0, 229, 255, 0.4)',
-              boxShadow: isSelected ? '0 0 10px rgba(0, 229, 255, 0.25)' : 'none',
+              borderColor: isSelected ? 'var(--gl-primary)' : 'rgba(var(--gl-primary-rgb), 0.4)',
+              boxShadow: isSelected ? '0 0 10px rgba(var(--gl-primary-rgb), 0.25)' : 'none',
               flexShrink: 0,
               '&:hover': {
-                backgroundColor: isSelected ? 'var(--gl-primary-hover, #00C8E0)' : 'rgba(0, 229, 255, 0.1)',
+                backgroundColor: isSelected ? 'var(--gl-primary-hover, #00C8E0)' : 'rgba(var(--gl-primary-rgb), 0.1)',
                 borderColor: 'var(--gl-primary)'
               }
             }}
@@ -243,7 +243,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
             backgroundColor: '#000000',
             borderRadius: '4px',
             border: '1px solid',
-            borderColor: isSelected ? 'rgba(0, 229, 255, 0.35)' : 'rgba(255, 255, 255, 0.1)',
+            borderColor: isSelected ? 'rgba(var(--gl-primary-rgb), 0.35)' : 'rgba(255, 255, 255, 0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -364,7 +364,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
             sx={{
               color: 'var(--gl-text-muted)',
               p: 0.35,
-              '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+              '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' }
             }}
           >
             <RestartAltIcon sx={{ fontSize: 15 }} />
@@ -397,7 +397,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
             <Typography
               variant="caption"
               sx={{
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.7rem',
                 color: 'var(--gl-text-primary)',
                 fontWeight: 700,
@@ -490,7 +490,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   '&:hover': {
                     color: 'var(--gl-primary)',
                     borderColor: 'var(--gl-primary)',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)'
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)'
                   }
                 }}
               >
@@ -516,7 +516,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   '&:hover': {
                     color: 'var(--gl-primary)',
                     borderColor: 'var(--gl-primary)',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)'
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)'
                   }
                 }}
               >
@@ -530,8 +530,8 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                 width: 28,
                 height: 28,
                 borderRadius: '4px',
-                border: '1px solid rgba(0, 229, 255, 0.4)',
-                backgroundColor: 'rgba(0, 229, 255, 0.08)',
+                border: '1px solid rgba(var(--gl-primary-rgb), 0.4)',
+                backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -567,7 +567,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   '&:hover': {
                     color: 'var(--gl-primary)',
                     borderColor: 'var(--gl-primary)',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)'
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)'
                   }
                 }}
               >
@@ -593,7 +593,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   '&:hover': {
                     color: 'var(--gl-primary)',
                     borderColor: 'var(--gl-primary)',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)'
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)'
                   }
                 }}
               >
@@ -637,7 +637,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   sx={{
                     color: 'var(--gl-text-secondary)',
                     p: 0.6,
-                    '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.1)' }
+                    '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)' }
                   }}
                 >
                   <ZoomOutIcon sx={{ fontSize: 17 }} />
@@ -656,7 +656,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
                   sx={{
                     color: 'var(--gl-text-secondary)',
                     p: 0.6,
-                    '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.1)' }
+                    '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)' }
                   }}
                 >
                   <ZoomInIcon sx={{ fontSize: 17 }} />

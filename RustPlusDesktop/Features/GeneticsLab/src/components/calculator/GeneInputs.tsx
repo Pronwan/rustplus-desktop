@@ -374,13 +374,13 @@ export const GeneInputs: React.FC = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
             <Typography
               variant="caption"
-              sx={{ color: C.primary, fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
+              sx={{ color: C.primary, fontWeight: 800, fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem' }}
             >
               GEN. {progress.currentGeneration} OF {progress.totalGenerations}
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: C.textPrimary, fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem' }}
+              sx={{ color: C.textPrimary, fontWeight: 800, fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem' }}
             >
               {(() => {
                 const p = Math.min(100, Math.max(0, progress.progressPercent || 0));
@@ -509,7 +509,7 @@ export const GeneInputs: React.FC = () => {
                 variant="caption"
                 sx={{
                   color: C.textMuted,
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   userSelect: 'none'
@@ -563,7 +563,7 @@ export const GeneInputs: React.FC = () => {
                 }}
               >
                 <Typography
-                  sx={{ color: C.textPrimary, fontFamily: '"Roboto Mono", monospace', fontSize: '0.78rem', mb: 1.25 }}
+                  sx={{ color: C.textPrimary, fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem', mb: 1.25 }}
                 >
                   Clear all gene input? This removes every plant you've entered.
                 </Typography>
@@ -639,7 +639,7 @@ export const GeneInputs: React.FC = () => {
                         variant="caption"
                         sx={{
                           color: isUsedInPlan ? C.warning : C.textMuted,
-                          fontFamily: '"Roboto Mono", monospace',
+                          fontFamily: 'var(--font-family-mono)',
                           fontSize: '0.82rem',
                           minWidth: 16,
                           fontWeight: isUsedInPlan ? 800 : 500,
@@ -674,7 +674,7 @@ export const GeneInputs: React.FC = () => {
                                   color: hasGene ? '#FFFFFF' : 'transparent',
                                   fontWeight: 800,
                                   fontSize: '0.8rem',
-                                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                                  fontFamily: 'var(--font-family-mono)',
                                   userSelect: 'none',
                                   lineHeight: 1,
                                   border: !hasGene ? `1px solid ${C.border}` : 'none'
@@ -727,7 +727,7 @@ export const GeneInputs: React.FC = () => {
                   border: 'none',
                   outline: 'none',
                   color: C.textPrimary,
-                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontWeight: 700,
                   fontSize: '0.88rem',
                   lineHeight: `${ROW_HEIGHT}px`,
@@ -811,7 +811,7 @@ export const GeneInputs: React.FC = () => {
                         sx={{
                           fontWeight: 700,
                           color: C.textPrimary,
-                          fontFamily: '"Roboto Mono", monospace',
+                          fontFamily: 'var(--font-family-mono)',
                           fontSize: '0.82rem',
                           minWidth: 80,
                           textAlign: 'left'
@@ -825,7 +825,7 @@ export const GeneInputs: React.FC = () => {
                         variant="caption"
                         sx={{
                           color: C.textSecondary,
-                          fontFamily: '"Roboto Mono", monospace',
+                          fontFamily: 'var(--font-family-mono)',
                           fontSize: '0.78rem',
                           textAlign: 'right',
                           flex: 1,

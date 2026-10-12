@@ -57,7 +57,7 @@ export const BreedingMode: React.FC = () => {
       >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1, borderBottom: '1px solid var(--gl-surface)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-primary)', fontFamily: '"Roboto Mono", monospace' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-primary)', fontFamily: 'var(--font-family-mono)' }}>
               STEP-BY-STEP BREEDING ASSISTANT
             </Typography>
             <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', textTransform: 'capitalize' }}>

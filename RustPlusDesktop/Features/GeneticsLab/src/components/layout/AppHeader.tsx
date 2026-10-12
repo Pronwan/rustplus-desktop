@@ -104,7 +104,7 @@ export const AppHeader: React.FC = () => {
               variant="subtitle1"
               sx={{
                 fontWeight: 900,
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 letterSpacing: '1px',
                 color: 'var(--gl-primary)',
                 fontSize: '0.95rem',
@@ -144,7 +144,7 @@ export const AppHeader: React.FC = () => {
             value={activeTab}
             onChange={(_, val) => setActiveTab(val)}
             variant={isCompact ? 'fullWidth' : 'standard'}
-            sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? '#00E5FF' : '#0284C7', height: 2.5 } }}
+            sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? 'var(--gl-primary)' : '#0284C7', height: 2.5 } }}
           >
             <Tab value="workspace" label={isCompact ? 'Breed' : 'Breeding Workspace'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
             <Tab value="livestock" label={<span>{isCompact ? 'Animals' : 'Livestock'}<Box component="span" sx={{ ml: 0.5, px: 0.5, fontSize: '0.58rem', lineHeight: 1.6, borderRadius: '3px', backgroundColor: '#F59E0B', color: '#111827', fontWeight: 900, verticalAlign: 'middle' }}>BETA</Box></span>} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />

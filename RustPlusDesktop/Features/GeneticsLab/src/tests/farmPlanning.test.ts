@@ -48,9 +48,10 @@ describe('farm planning engine', () => {
     });
 
     expect(plan.supported).toBe(true);
-    expect(plan.crops).toHaveLength(1);
-    expect(plan.crops[0].cropId).toBe('yellow-berry');
-    expect(plan.crops[0].requiredPerGoalUnit).toBe(64);
+    expect(plan.crops.map((crop) => [crop.cropId, crop.requiredPerGoalUnit]).sort()).toEqual([
+      ['blue-berry', 32],
+      ['yellow-berry', 32]
+    ]);
     expect(plan.goalOutputForPeriod).toBeGreaterThanOrEqual(1);
   });
 

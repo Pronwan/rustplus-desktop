@@ -30,7 +30,7 @@ export const CloneValueAnalysis: React.FC<CloneValueAnalysisProps> = ({ open, on
   }, [clones, results, targetConfig.targetGenetics]);
 
   const ratingColors = {
-    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: 'var(--gl-primary)', border: 'rgba(0, 229, 255, 0.4)' },
+    CORE: { bg: 'rgba(var(--gl-primary-rgb), 0.15)', text: 'var(--gl-primary)', border: 'rgba(var(--gl-primary-rgb), 0.4)' },
     HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.4)' },
     MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.4)' },
     LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: 'var(--gl-text-secondary)', border: 'rgba(150, 150, 150, 0.3)' },

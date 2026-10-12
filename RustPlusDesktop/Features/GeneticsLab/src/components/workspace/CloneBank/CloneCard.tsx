@@ -62,7 +62,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
   };
 
   const ratingColors = {
-    CORE: { bg: 'rgba(0, 229, 255, 0.15)', text: 'var(--gl-primary)', border: 'rgba(0, 229, 255, 0.4)' },
+    CORE: { bg: 'rgba(var(--gl-primary-rgb), 0.15)', text: 'var(--gl-primary)', border: 'rgba(var(--gl-primary-rgb), 0.4)' },
     HIGH: { bg: 'rgba(76, 175, 80, 0.15)', text: 'var(--gl-success)', border: 'rgba(76, 175, 80, 0.4)' },
     MEDIUM: { bg: 'rgba(255, 167, 38, 0.15)', text: 'var(--gl-warning)', border: 'rgba(255, 167, 38, 0.4)' },
     LOW: { bg: 'rgba(150, 150, 150, 0.12)', text: 'var(--gl-text-secondary)', border: 'rgba(150, 150, 150, 0.3)' },
@@ -93,7 +93,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             sx={{
               color: 'var(--gl-text-muted)',
               fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.72rem'
             }}
           >
@@ -225,7 +225,7 @@ export const CloneCard: React.FC<CloneCardProps> = ({
               p: '3px',
               color: 'var(--gl-text-muted)',
               borderRadius: '3px',
-              '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+              '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' }
             }}
           >
             <ContentCopyIcon sx={{ fontSize: 13 }} />
@@ -242,9 +242,9 @@ export const CloneCard: React.FC<CloneCardProps> = ({
             sx={{
               height: 16,
               fontSize: '0.62rem',
-              backgroundColor: 'rgba(0, 229, 255, 0.08)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)',
               color: 'var(--gl-primary)',
-              border: '1px solid rgba(0, 229, 255, 0.25)',
+              border: '1px solid rgba(var(--gl-primary-rgb), 0.25)',
               '& .MuiChip-label': { px: 0.5 }
             }}
           />

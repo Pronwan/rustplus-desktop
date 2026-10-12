@@ -176,7 +176,7 @@ export const CloneBank: React.FC = () => {
             variant="subtitle1"
             sx={{
               fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.85rem',
               color: 'var(--gl-text-primary)',
               letterSpacing: '0.5px'
@@ -187,13 +187,13 @@ export const CloneBank: React.FC = () => {
           <Typography
             variant="caption"
             sx={{
-              backgroundColor: 'rgba(0, 229, 255, 0.12)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
               color: 'var(--gl-primary)',
               fontWeight: 800,
               px: 0.75,
               py: 0.15,
               borderRadius: '3px',
-              border: '1px solid rgba(0, 229, 255, 0.3)',
+              border: '1px solid rgba(var(--gl-primary-rgb), 0.3)',
               fontFamily: 'monospace',
               fontSize: '0.72rem'
             }}
@@ -221,7 +221,7 @@ export const CloneBank: React.FC = () => {
             color: activeTab === 'scanner' ? '#000' : 'var(--gl-text-secondary)',
             borderColor: 'var(--gl-primary)',
             minWidth: 'auto',
-            boxShadow: activeTab === 'scanner' ? '0 0 8px rgba(0, 229, 255, 0.3)' : 'none'
+            boxShadow: activeTab === 'scanner' ? '0 0 8px rgba(var(--gl-primary-rgb), 0.3)' : 'none'
           }}
         >
           {isScannerActive ? 'Live Scanner' : 'Scan'}
@@ -283,7 +283,7 @@ export const CloneBank: React.FC = () => {
               variant="caption"
               sx={{
                 color: 'var(--gl-text-muted)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 userSelect: 'none'
@@ -422,12 +422,12 @@ export const CloneBank: React.FC = () => {
                         backgroundColor: isUsedInPlan
                           ? 'rgba(255, 152, 0, 0.12)'
                           : isActiveCursor
-                          ? 'rgba(0, 229, 255, 0.04)'
+                          ? 'rgba(var(--gl-primary-rgb), 0.04)'
                           : 'transparent',
                         borderBottom: isUsedInPlan
                           ? '1.5px solid var(--gl-warning)'
                           : isActiveCursor
-                          ? '1px solid rgba(0, 229, 255, 0.25)'
+                          ? '1px solid rgba(var(--gl-primary-rgb), 0.25)'
                           : '1px solid transparent',
                         borderLeft: isUsedInPlan ? '3px solid var(--gl-warning)' : '3px solid transparent',
                         borderRadius: isUsedInPlan ? '3px' : 0,
@@ -440,7 +440,7 @@ export const CloneBank: React.FC = () => {
                           variant="caption"
                           sx={{
                             color: isUsedInPlan ? 'var(--gl-warning)' : 'var(--gl-text-faint)',
-                            fontFamily: '"Roboto Mono", monospace',
+                            fontFamily: 'var(--font-family-mono)',
                             fontSize: '0.74rem',
                             fontWeight: isUsedInPlan ? 800 : 500,
                             userSelect: 'none'
@@ -489,7 +489,7 @@ export const CloneBank: React.FC = () => {
                                 color: hasGene ? '#FFFFFF' : 'transparent',
                                 fontWeight: 800,
                                 fontSize: '0.7rem',
-                                fontFamily: '"Roboto Mono", "Consolas", monospace',
+                                fontFamily: 'var(--font-family-mono)',
                                 userSelect: 'none',
                                 lineHeight: 1,
                                 border: !hasGene ? '1px solid var(--gl-surface)' : 'none'
@@ -527,7 +527,7 @@ export const CloneBank: React.FC = () => {
                   border: 'none',
                   outline: 'none',
                   color: 'var(--gl-text-primary)',
-                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontWeight: 700,
                   fontSize: '0.82rem',
                   lineHeight: `${ROW_HEIGHT}px`,

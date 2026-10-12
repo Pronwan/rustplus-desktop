@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { RecipeEngine } from '../domain/recipes/recipeEngine.ts';
-import { RUST_RECIPES } from '../domain/recipes/recipesData.ts';
+import { RUST_RECIPES, getItemImageSlug } from '../domain/recipes/recipesData.ts';
 
 describe('Recipe Engine', () => {
   const engine = new RecipeEngine(RUST_RECIPES);
@@ -15,16 +15,61 @@ describe('Recipe Engine', () => {
     expect(base[0].quantity).toBe(64);
   });
 
-  it('recursively expands Pure Max Health Tea into 32 Red and 32 Yellow Berries', () => {
-    // Basic = 2 Red + 2 Yellow
-    // Advanced = 4 Basic = 8 Red + 8 Yellow
-    // Pure = 4 Advanced = 32 Red + 32 Yellow
+  it('recursively expands Pure Max Health Tea into 48 Red and 16 Yellow Berries', () => {
+    // Basic = 3 Red + 1 Yellow
+    // Advanced = 4 Basic = 12 Red + 4 Yellow
+    // Pure = 4 Advanced = 48 Red + 16 Yellow
     const base = engine.expandItem('Pure Max Health Tea', 1);
     const red = base.find(b => b.item === 'Red Berry');
     const yellow = base.find(b => b.item === 'Yellow Berry');
 
-    expect(red?.quantity).toBe(32);
-    expect(yellow?.quantity).toBe(32);
+    expect(red?.quantity).toBe(48);
+    expect(yellow?.quantity).toBe(16);
+  });
+
+  it('has all three tiers of all ten tea lines', () => {
+    const types = ['Healing', 'Max Health', 'Ore', 'Wood', 'Scrap', 'Harvesting', 'Anti-Rad', 'Cooling', 'Warming', 'Crafting Quality'];
+    for (const type of types) {
+      for (const tier of ['Basic', 'Advanced', 'Pure']) {
+        expect(RUST_RECIPES.some((r) => r.name === `${tier} ${type} Tea`), `${tier} ${type}`).toBe(true);
+      }
+    }
+  });
+
+  it('makes every basic tea from exactly 4 berries', () => {
+    for (const r of RUST_RECIPES.filter((r) => r.name.startsWith('Basic '))) {
+      const berries = r.ingredients.reduce((sum, i) => sum + i.quantity, 0);
+      expect(berries, r.name).toBe(4);
+      expect(r.ingredients.every((i) => i.item.endsWith(' Berry')), r.name).toBe(true);
+    }
+  });
+
+  it('expands Rich Chicken Pie cream back to milk', () => {
+    const base = engine.expandItem('Rich Chicken Pie', 1);
+    expect(base).toContainEqual({ item: 'Milk', quantity: 4 });
+    expect(base).toContainEqual({ item: 'Wheat', quantity: 3 });
+    expect(base).toContainEqual({ item: 'Cooked Chicken', quantity: 3 });
+  });
+
+  it('expands Explosives through Mixing Table Gun Powder', () => {
+    // 50 Gun Powder = 5 batches of 20 Charcoal + 20 Sulfur, plus 10 Sulfur in the recipe.
+    const base = engine.expandItem('Explosives', 1);
+    expect(base).toContainEqual({ item: 'Charcoal', quantity: 100 });
+    expect(base).toContainEqual({ item: 'Sulfur', quantity: 110 });
+  });
+
+  it('has an icon for every recipe and ingredient', async () => {
+    // Non-literal specifier: the project carries no Node type definitions.
+    const fsName = 'node:fs';
+    const { existsSync } = await import(fsName);
+    const names = new Set(RUST_RECIPES.flatMap((r) => [r.name, ...r.ingredients.map((i) => i.item)]));
+    for (const name of names) {
+      expect(existsSync(`public/img/items/${getItemImageSlug(name)}.webp`), name).toBe(true);
+    }
+  });
+
+  it('has unique recipe ids', () => {
+    expect(new Set(RUST_RECIPES.map((r) => r.id)).size).toBe(RUST_RECIPES.length);
   });
 
   it('expands Low Grade Fuel with output batch ratio', () => {

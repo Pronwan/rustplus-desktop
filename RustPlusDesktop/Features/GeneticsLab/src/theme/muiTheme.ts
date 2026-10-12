@@ -42,7 +42,7 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
       primary: {
         main: tokens.colors.brand.primary,
         light: tokens.colors.brand.primaryHover,
-        contrastText: isDark ? '#000000' : '#FFFFFF'
+        contrastText: tokens.colors.text.inverse
       },
       secondary: {
         main: tokens.colors.brand.accent,
@@ -81,19 +81,19 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
       divider: tokens.colors.border.default
     },
     typography: {
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      fontFamily: '"Segoe UI Variable Text", "Segoe UI", sans-serif',
       h4: {
-        fontWeight: 800,
-        letterSpacing: '-0.02em'
+        fontWeight: 600,
+        letterSpacing: 'normal'
       },
       h5: {
-        fontWeight: 700,
-        letterSpacing: '-0.01em'
+        fontWeight: 600,
+        letterSpacing: 'normal'
       },
       h6: {
-        fontWeight: 700,
+        fontWeight: 600,
         fontSize: '1rem',
-        letterSpacing: '-0.01em'
+        letterSpacing: 'normal'
       },
       subtitle1: {
         fontWeight: 600
@@ -113,8 +113,8 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
       },
       button: {
         textTransform: 'none',
-        fontWeight: 700,
-        letterSpacing: '0.02em'
+        fontWeight: 600,
+        letterSpacing: 'normal'
       }
     },
     shape: {
@@ -144,7 +144,7 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
           body: {
             backgroundColor: tokens.colors.bg.app,
             color: tokens.colors.text.primary,
-            scrollbarColor: isDark ? '#333333 #121212' : '#CBD5E1 #F1F5F9'
+            scrollbarColor: `${tokens.colors.border.strong} ${tokens.colors.bg.app}`
           }
         }
       },
@@ -155,7 +155,7 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
             backgroundColor: tokens.colors.bg.card,
             border: `1px solid ${tokens.colors.border.default}`,
             boxShadow: 'none',
-            borderRadius: tokens.spacing.borderRadius,
+            borderRadius: 8,
             transition: 'border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease'
           }
         }
@@ -174,22 +174,25 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
             borderRadius: tokens.spacing.borderRadius,
             padding: density === 'compact' ? '4px 10px' : '6px 14px',
             fontSize: density === 'compact' ? '0.75rem' : '0.8rem',
-            fontWeight: 700,
+            fontWeight: 600,
             textTransform: 'none'
           },
-          contained: {
-            backgroundColor: tokens.colors.brand.primary,
-            color: isDark ? '#000000' : '#FFFFFF',
-            '&:hover': {
-              backgroundColor: tokens.colors.brand.primaryHover
-            }
-          }
+          contained: ({ ownerState }) => ({
+            boxShadow: 'none',
+            ...(ownerState.color === 'primary' ? {
+              backgroundColor: tokens.colors.brand.primary,
+              color: tokens.colors.text.inverse,
+              '&:hover': {
+                backgroundColor: tokens.colors.brand.primaryHover
+              }
+            } : {})
+          })
         }
       },
       MuiChip: {
         styleOverrides: {
           root: {
-            fontWeight: 700,
+            fontWeight: 600,
             borderRadius: 4,
             fontSize: '0.72rem'
           }
@@ -199,7 +202,7 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
         styleOverrides: {
           root: {
             textTransform: 'none',
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: '0.82rem',
             color: tokens.colors.text.secondary,
             minHeight: density === 'compact' ? 36 : 44,
@@ -223,9 +226,9 @@ export const getMuiTheme = (mode: 'dark' | 'light', density: 'comfortable' | 'co
       MuiTooltip: {
         styleOverrides: {
           tooltip: {
-            backgroundColor: isDark ? '#1C1C1C' : '#1E293B',
+            backgroundColor: isDark ? tokens.colors.bg.elevated : '#1E293B',
             color: '#FFFFFF',
-            border: `1px solid ${isDark ? '#333333' : '#475569'}`,
+            border: `1px solid ${isDark ? tokens.colors.border.default : '#475569'}`,
             fontSize: '0.75rem',
             boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
           }

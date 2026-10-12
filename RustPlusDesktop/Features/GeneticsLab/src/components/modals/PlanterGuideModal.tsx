@@ -59,7 +59,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
             variant="h6"
             sx={{
               fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               color: 'var(--gl-text-primary)',
               fontSize: '1.05rem'
             }}

@@ -75,7 +75,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
                 sx={{
                   fontWeight: 800,
                   color: 'var(--gl-text-primary)',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.95rem'
                 }}
               >
@@ -117,7 +117,7 @@ export const PlanterVisual: React.FC<PlanterVisualProps> = ({ map }) => {
             variant="body2"
             sx={{
               color: 'var(--gl-text-secondary)',
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               minHeight: 40,
               fontSize: '0.85rem'
             }}

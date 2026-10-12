@@ -49,7 +49,7 @@ export const ScannerGuideModal: React.FC = () => {
           m: 0,
           p: '20px 24px 12px',
           fontWeight: 800,
-          fontFamily: '"Roboto Mono", monospace',
+          fontFamily: 'var(--font-family-mono)',
           color: 'var(--gl-text-primary)',
           fontSize: '1.25rem'
         }}
@@ -63,7 +63,7 @@ export const ScannerGuideModal: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          fontFamily: '"Roboto Mono", monospace',
+          fontFamily: 'var(--font-family-mono)',
           fontSize: '0.85rem',
           lineHeight: 1.6,
           color: 'var(--gl-text-secondary)'

@@ -123,7 +123,7 @@ export const ResultsPanel: React.FC = () => {
             sx={{
               fontWeight: 800,
               color: 'var(--gl-text-primary)',
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.85rem',
               mb: 1.5,
               letterSpacing: '0.5px'
@@ -164,7 +164,7 @@ export const ResultsPanel: React.FC = () => {
               variant="body2"
               sx={{
                 color: 'var(--gl-text-secondary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.82rem',
                 lineHeight: 1.6,
                 mb: 1
@@ -177,7 +177,7 @@ export const ResultsPanel: React.FC = () => {
               variant="caption"
               sx={{
                 color: 'var(--gl-text-muted)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.78rem'
               }}
             >
@@ -284,10 +284,10 @@ export const ResultsPanel: React.FC = () => {
             sx={{
               color: 'var(--gl-primary)',
               fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.82rem',
-              backgroundColor: 'rgba(0, 229, 255, 0.06)',
-              border: '1px solid rgba(0, 229, 255, 0.25)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.06)',
+              border: '1px solid rgba(var(--gl-primary-rgb), 0.25)',
               borderRadius: '4px',
               px: 1.5,
               py: 0.35,
@@ -307,7 +307,7 @@ export const ResultsPanel: React.FC = () => {
           sx={{
             color: 'var(--gl-text-secondary)',
             fontSize: '0.85rem',
-            fontFamily: '"Roboto Mono", monospace',
+            fontFamily: 'var(--font-family-mono)',
             letterSpacing: '0.2px'
           }}
         >

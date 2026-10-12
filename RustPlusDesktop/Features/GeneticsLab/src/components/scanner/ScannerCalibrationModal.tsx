@@ -288,10 +288,10 @@ export const ScannerCalibrationModal: React.FC = () => {
                   color: '#000',
                   fontSize: '0.72rem',
                   fontWeight: 800,
-                  boxShadow: '0 0 10px rgba(0, 229, 255, 0.25)',
+                  boxShadow: '0 0 10px rgba(var(--gl-primary-rgb), 0.25)',
                   '&:hover': {
                     backgroundColor: 'var(--gl-primary-hover)',
-                    boxShadow: '0 0 14px rgba(0, 229, 255, 0.45)'
+                    boxShadow: '0 0 14px rgba(var(--gl-primary-rgb), 0.45)'
                   }
                 }}
               >
@@ -538,9 +538,9 @@ export const ScannerCalibrationModal: React.FC = () => {
                 sx={{
                   mt: 1,
                   p: 1,
-                  backgroundColor: 'rgba(0, 229, 255, 0.05)',
+                  backgroundColor: 'rgba(var(--gl-primary-rgb), 0.05)',
                   borderRadius: '4px',
-                  border: '1px dashed rgba(0, 229, 255, 0.25)',
+                  border: '1px dashed rgba(var(--gl-primary-rgb), 0.25)',
                   width: '100%',
                   textAlign: 'center'
                 }}

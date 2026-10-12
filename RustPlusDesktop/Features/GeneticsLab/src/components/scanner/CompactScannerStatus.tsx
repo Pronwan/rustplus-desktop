@@ -44,9 +44,9 @@ export const CompactScannerStatus: React.FC = () => {
           p: 1.5,
           backgroundColor: 'rgba(16, 20, 26, 0.96)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 229, 255, 0.3)',
+          border: '1px solid rgba(var(--gl-primary-rgb), 0.3)',
           borderRadius: '10px',
-          boxShadow: '0 16px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 229, 255, 0.12)',
+          boxShadow: '0 16px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(var(--gl-primary-rgb), 0.12)',
           display: 'flex',
           flexDirection: 'column',
           gap: 1.25,
@@ -62,8 +62,8 @@ export const CompactScannerStatus: React.FC = () => {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                backgroundColor: 'var(--gl-primary, #00E5FF)',
-                boxShadow: '0 0 8px #00E5FF',
+                backgroundColor: 'var(--gl-primary)',
+                boxShadow: '0 0 8px var(--gl-primary)',
                 animation: 'pulse 2s infinite'
               }}
             />
@@ -87,7 +87,7 @@ export const CompactScannerStatus: React.FC = () => {
                   color: 'var(--gl-text-muted)',
                   p: 0.35,
                   borderRadius: '4px',
-                  '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+                  '&:hover': { color: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' }
                 }}
               >
                 <KeyboardArrowDownIcon sx={{ fontSize: 20 }} />
@@ -163,7 +163,7 @@ export const CompactScannerStatus: React.FC = () => {
         backgroundColor: 'var(--gl-panel-header-bg)',
         border: '1.5px solid var(--gl-primary)',
         borderRadius: '8px',
-        boxShadow: '0 8px 32px rgba(0, 229, 255, 0.25)',
+        boxShadow: '0 8px 32px rgba(var(--gl-primary-rgb), 0.25)',
         display: 'flex',
         alignItems: 'center',
         gap: 1.75
@@ -210,7 +210,7 @@ export const CompactScannerStatus: React.FC = () => {
             py: 0.2,
             px: 0.9,
             '&:hover': {
-              backgroundColor: 'rgba(0, 229, 255, 0.1)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.1)',
               borderColor: 'var(--gl-primary)'
             }
           }}
@@ -229,8 +229,8 @@ export const CompactScannerStatus: React.FC = () => {
               color: 'var(--gl-primary)',
               border: '1px solid var(--gl-primary)',
               p: 0.4,
-              backgroundColor: 'rgba(0, 229, 255, 0.08)',
-              '&:hover': { backgroundColor: 'rgba(0, 229, 255, 0.2)' }
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)',
+              '&:hover': { backgroundColor: 'rgba(var(--gl-primary-rgb), 0.2)' }
             }}
           >
             {isAutoCalibrating ? <CircularProgress size={14} color="inherit" /> : <AutoFixHighIcon sx={{ fontSize: 16 }} />}

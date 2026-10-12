@@ -57,7 +57,7 @@ export const BreedingStepCard: React.FC<BreedingStepCardProps> = ({
             sx={{
               fontWeight: 800,
               fontSize: '0.72rem',
-              backgroundColor: step.isCompleted ? 'rgba(76, 175, 80, 0.2)' : isCurrent ? 'rgba(0, 229, 255, 0.2)' : 'var(--gl-border-subtle)',
+              backgroundColor: step.isCompleted ? 'rgba(76, 175, 80, 0.2)' : isCurrent ? 'rgba(var(--gl-primary-rgb), 0.2)' : 'var(--gl-border-subtle)',
               color: step.isCompleted ? 'var(--gl-success)' : isCurrent ? 'var(--gl-primary)' : 'var(--gl-text-muted)',
               border: '1px solid',
               borderColor: step.isCompleted ? 'var(--gl-success)' : isCurrent ? 'var(--gl-primary)' : 'var(--gl-surface-hover)'

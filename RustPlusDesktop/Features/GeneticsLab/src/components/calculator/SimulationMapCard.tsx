@@ -179,7 +179,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 sx={{
                   fontWeight: 800,
                   color: genColor,
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.8rem'
                 }}
               >
@@ -193,7 +193,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 sx={{
                   fontWeight: 700,
                   color: 'var(--gl-text-primary)',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.8rem'
                 }}
               >
@@ -207,7 +207,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 sx={{
                   fontWeight: 700,
                   color: chanceColor,
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.8rem'
                 }}
               >
@@ -234,7 +234,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 sx={{
                   color: 'var(--gl-text-muted)',
                   fontSize: '0.75rem',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   mb: 0.5,
                   cursor: 'help'
                 }}
@@ -281,7 +281,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 variant="caption"
                 sx={{
                   color: 'var(--gl-text-secondary)',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontWeight: 700,
                   fontSize: '0.78rem'
                 }}
@@ -309,7 +309,7 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                 sx={{
                   color: 'var(--gl-text-muted)',
                   fontSize: '0.75rem',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   mb: 0.75,
                   cursor: 'help'
                 }}
@@ -412,11 +412,11 @@ export const SimulationMapCard: React.FC<SimulationMapCardProps> = ({ group, onS
                   fontWeight: 700,
                   py: 0.25,
                   px: 1.2,
-                  border: '1px solid rgba(0, 229, 255, 0.25)',
+                  border: '1px solid rgba(var(--gl-primary-rgb), 0.25)',
                   borderRadius: '3px',
-                  backgroundColor: 'rgba(0, 229, 255, 0.04)',
+                  backgroundColor: 'rgba(var(--gl-primary-rgb), 0.04)',
                   '&:hover': {
-                    backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
                     borderColor: 'var(--gl-primary)'
                   }
                 }}

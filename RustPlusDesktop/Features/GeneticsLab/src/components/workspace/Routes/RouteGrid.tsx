@@ -332,10 +332,10 @@ export const RouteGrid: React.FC = () => {
                 endIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                 sx={{
                   color: 'var(--gl-primary)',
-                  borderColor: 'rgba(0, 229, 255, 0.4)',
+                  borderColor: 'rgba(var(--gl-primary-rgb), 0.4)',
                   fontWeight: 700,
                   fontSize: '0.75rem',
-                  '&:hover': { borderColor: 'var(--gl-primary)', backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+                  '&:hover': { borderColor: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' }
                 }}
               >
                 Show More (+{Math.min(PAGE_SIZE, filteredAndSortedRoutes.length - visibleCount)})

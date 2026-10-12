@@ -67,33 +67,33 @@ export const darkTokens: DesignTokens = {
   density: 'comfortable',
   colors: {
     bg: {
-      app: '#0E0E0E',
-      panel: '#141414',
-      panelHeader: '#181818',
-      elevated: '#1E1E1E',
-      card: '#161616',
-      cardHover: '#1C1C1C',
-      input: '#1A1A1A',
+      app: '#202020',
+      panel: '#272727',
+      panelHeader: '#303030',
+      elevated: '#303030',
+      card: '#272727',
+      cardHover: '#383838',
+      input: '#303030',
       backdrop: 'rgba(10, 10, 10, 0.85)'
     },
     text: {
-      primary: '#ECECEC',
-      secondary: '#9E9E9E',
-      muted: '#888888',
-      inverse: '#0E0E0E'
+      primary: '#F3F3F3',
+      secondary: '#A6A6A6',
+      muted: '#A6A6A6',
+      inverse: '#202020'
     },
     border: {
-      default: '#282828',
-      subtle: '#202020',
-      strong: '#383838',
-      focus: '#00E5FF'
+      default: '#414141',
+      subtle: '#383838',
+      strong: '#545454',
+      focus: '#60CDFF'
     },
     brand: {
-      primary: '#00E5FF',
-      primaryHover: '#33EBFF',
-      primaryGlow: 'rgba(0, 229, 255, 0.25)',
-      primarySubtle: 'rgba(0, 229, 255, 0.08)',
-      accent: '#FF9800'
+      primary: '#60CDFF',
+      primaryHover: '#7AD5FF',
+      primaryGlow: 'rgba(96, 205, 255, 0)',
+      primarySubtle: 'rgba(96, 205, 255, 0.13)',
+      accent: '#60CDFF'
     },
     gene: {
       greenBg: '#4A7C17',
@@ -105,7 +105,7 @@ export const darkTokens: DesignTokens = {
       emptyBg: '#2A2A2A',
       emptyText: '#777777',
       donorBorder: '#FFD700',
-      highlightBorder: '#00E5FF'
+      highlightBorder: '#60CDFF'
     },
     status: {
       success: '#4CAF50',
@@ -114,14 +114,14 @@ export const darkTokens: DesignTokens = {
       warningBg: 'rgba(255, 167, 38, 0.12)',
       error: '#E53935',
       errorBg: 'rgba(229, 57, 53, 0.12)',
-      info: '#00E5FF',
-      infoBg: 'rgba(0, 229, 255, 0.12)'
+      info: '#60CDFF',
+      infoBg: 'rgba(96, 205, 255, 0.13)'
     }
   },
   spacing: {
     cardPadding: 16,
     gap: 16,
-    borderRadius: 6,
+    borderRadius: 4,
     rowHeight: 32
   }
 };
@@ -185,7 +185,7 @@ export const lightTokens: DesignTokens = {
   spacing: {
     cardPadding: 16,
     gap: 16,
-    borderRadius: 6,
+    borderRadius: 4,
     rowHeight: 32
   }
 };

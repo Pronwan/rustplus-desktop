@@ -111,7 +111,7 @@ export const ScannerWidget: React.FC = () => {
         <Typography
           variant="caption"
           sx={{
-            fontFamily: '"Roboto Mono", monospace',
+            fontFamily: 'var(--font-family-mono)',
             fontSize: '0.82rem',
             color: 'var(--gl-text-primary)',
             fontWeight: 700
@@ -318,7 +318,7 @@ export const ScannerWidget: React.FC = () => {
           sx={{
             fontWeight: 700,
             color: 'var(--gl-text-primary)',
-            fontFamily: '"Roboto Mono", monospace',
+            fontFamily: 'var(--font-family-mono)',
             fontSize: '0.88rem'
           }}
         >
@@ -408,7 +408,7 @@ export const ScannerWidget: React.FC = () => {
                 variant="caption"
                 sx={{
                   color: 'var(--gl-error)',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.72rem',
                   fontWeight: 700,
                   lineHeight: 1.3
@@ -420,7 +420,7 @@ export const ScannerWidget: React.FC = () => {
                 variant="caption"
                 sx={{
                   color: 'var(--gl-error)',
-                  fontFamily: '"Roboto Mono", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontSize: '0.7rem',
                   lineHeight: 1.4
                 }}
@@ -444,7 +444,7 @@ export const ScannerWidget: React.FC = () => {
             <InfoOutlinedIcon sx={{ fontSize: 15, color: 'var(--gl-warning)', mt: '1px', flexShrink: 0 }} />
             <Typography
               variant="caption"
-              sx={{ color: 'var(--gl-gold)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.7rem', lineHeight: 1.4 }}
+              sx={{ color: 'var(--gl-gold)', fontFamily: 'var(--font-family-mono)', fontSize: '0.7rem', lineHeight: 1.4 }}
             >
               Scanning feels slow or laggy? Set Rust <strong>NVIDIA Reflex Mode</strong> to <strong>ON + BOOST</strong> (F1: <code>graphics.reflexmode 2</code>) and run in <strong>Borderless/Windowed</strong> mode.
             </Typography>
@@ -461,7 +461,7 @@ export const ScannerWidget: React.FC = () => {
             onClick={resetScannerRegions}
             sx={{
               color: 'var(--gl-text-muted)',
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
@@ -480,7 +480,7 @@ export const ScannerWidget: React.FC = () => {
             sx={{
               backgroundColor: 'var(--gl-primary)',
               color: '#FFFFFF',
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.75rem',
               fontWeight: 700,
               textTransform: 'uppercase',
