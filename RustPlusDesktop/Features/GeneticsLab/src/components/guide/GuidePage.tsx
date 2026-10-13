@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@mui/material';
 import { GUIDE_SECTIONS } from '../../domain/guide/guideData.ts';
-import { PlanterVisual } from './PlanterVisual.tsx';
+import { PlantingGuide3D } from '../planter3d/PlantingGuide3D.tsx';
 
 export const GuidePage: React.FC = () => {
   const [selectedSectionId, setSelectedSectionId] = useState(GUIDE_SECTIONS[0].id);
@@ -109,8 +109,8 @@ export const GuidePage: React.FC = () => {
 
         {/* Right Article Content */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Interactive 3x3 Planter Visualizer */}
-          <PlanterVisual />
+          {/* Interactive 3D planter: breeding steps, slot layout and growth stages */}
+          <PlantingGuide3D />
 
           {/* Article Section */}
           <Paper

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.10.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(guide): interactive 3D planter guide with Rust's own planter and plant models ([f1ae2e6](https://github.com/JawadYzbk/rust-genetics-lab/commit/f1ae2e6e8fa2aa4309da6e7eea5d0d051e48d16d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.9.0...v1.10.0
+All notable changes to this project will be documented in this file.
+
 ## [1.9.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.9.0) (2026-10-13)
 
 ### 🚀 Features

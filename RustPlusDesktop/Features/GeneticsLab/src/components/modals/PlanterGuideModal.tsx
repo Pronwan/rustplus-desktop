@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { GeneticsMap } from '../../domain/genetics/GeneticsMap.ts';
-import { PlanterVisual } from '../guide/PlanterVisual.tsx';
+import { PlantingGuide3D } from '../planter3d/PlantingGuide3D.tsx';
 import { SaplingGeneRepr } from '../common/SaplingGeneRepr.tsx';
 
 interface PlanterGuideModalProps {
@@ -31,7 +31,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       slotProps={{
         paper: {
@@ -80,7 +80,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ p: 0 }}>
-        <PlanterVisual map={map} />
+        <PlantingGuide3D map={map} height={420} />
       </DialogContent>
     </Dialog>
   );
