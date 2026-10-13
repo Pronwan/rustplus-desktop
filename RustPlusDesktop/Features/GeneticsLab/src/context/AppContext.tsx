@@ -63,6 +63,8 @@ interface AppContextType {
   setIsOptionsModalOpen: (open: boolean) => void;
   isAboutModalOpen: boolean;
   setIsAboutModalOpen: (open: boolean) => void;
+  isPatchNotesOpen: boolean;
+  setIsPatchNotesOpen: (open: boolean) => void;
   isConsentModalOpen: boolean;
   setIsConsentModalOpen: (open: boolean) => void;
   isScannerGuideOpen: boolean;
@@ -123,6 +125,7 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
   // Modals
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isPatchNotesOpen, setIsPatchNotesOpen] = useState(false);
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
   const [isScannerGuideOpen, setIsScannerGuideOpen] = useState(false);
   const [isReflexNoticeOpen, setIsReflexNoticeOpen] = useState(() => {
@@ -220,6 +223,7 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
       if (e.key === 'Escape') {
         setIsOptionsModalOpen(false);
         setIsAboutModalOpen(false);
+        setIsPatchNotesOpen(false);
         setIsScannerGuideOpen(false);
         setIsKeyboardShortcutsOpen(false);
         setIsProjectManagerOpen(false);
@@ -251,6 +255,8 @@ const AppInternalBridge: React.FC<{ children: React.ReactNode }> = ({ children }
     setIsOptionsModalOpen,
     isAboutModalOpen,
     setIsAboutModalOpen,
+    isPatchNotesOpen,
+    setIsPatchNotesOpen,
     isConsentModalOpen,
     setIsConsentModalOpen,
     isScannerGuideOpen,

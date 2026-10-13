@@ -24,6 +24,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import FolderIcon from '@mui/icons-material/Folder';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import InfoIcon from '@mui/icons-material/Info';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
@@ -43,6 +44,7 @@ export const AppHeader: React.FC = () => {
     toggleTheme,
     setIsOptionsModalOpen,
     setIsAboutModalOpen,
+    setIsPatchNotesOpen,
     setIsReflexNoticeOpen,
     setIsKeyboardShortcutsOpen,
     setIsProjectManagerOpen
@@ -193,6 +195,7 @@ export const AppHeader: React.FC = () => {
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsReflexNoticeOpen(true))}><ListItemIcon><FlashOnIcon sx={{ color: '#F59E0B' }} /></ListItemIcon><ListItemText>Scanner &amp; Reflex Guide</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsPatchNotesOpen(true))}><ListItemIcon><NewReleasesIcon /></ListItemIcon><ListItemText>Patch notes</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsAboutModalOpen(true))}><ListItemIcon><InfoIcon /></ListItemIcon><ListItemText>About</ListItemText></MenuItem>
             <MenuItem component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" onClick={() => setMenuAnchor(null)}><ListItemIcon><GitHubIcon /></ListItemIcon><ListItemText>GitHub repository</ListItemText></MenuItem>
           </Menu>

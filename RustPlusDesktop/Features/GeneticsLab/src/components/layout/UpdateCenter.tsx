@@ -23,6 +23,11 @@ import {
   connectUpdateChannel,
   fetchOwnChangelog
 } from '../../services/updates/updateChannel.ts';
+import { useApp } from '../../context/AppContext.tsx';
+
+const RELEASES_URL = 'https://github.com/JawadYzbk/rust-genetics-lab/releases';
+
+type DialogMode = 'preview' | 'whats-new' | 'all';
 
 const LAST_SEEN_KEY = 'GL_LAST_SEEN_VERSION';
 
@@ -49,12 +54,15 @@ function writeLastSeen(version: string): void {
  *   preview of what it changes and a button that switches to it.
  * - A "What's new" dialog on the first start of a newer version, listing every release
  *   since the one the user last had open.
+ * - "Patch notes" (header menu, About dialog) at any time: the installed version's history,
+ *   plus any newer release that is already downloading or ready.
  */
 export const UpdateCenter: React.FC = () => {
   const [notice, setNotice] = useState<UpdateNotice | null>(null);
   const [isBannerDismissed, setIsBannerDismissed] = useState(false);
-  const [dialog, setDialog] = useState<{ mode: 'preview' | 'whats-new'; entries: ChangelogEntry[] } | null>(null);
+  const [dialog, setDialog] = useState<{ mode: DialogMode; entries: ChangelogEntry[]; loading?: boolean } | null>(null);
   const [isApplying, setIsApplying] = useState(false);
+  const { isPatchNotesOpen, setIsPatchNotesOpen } = useApp();
 
   const showWhatsNewSince = useCallback(async (previous: string) => {
     if (compareVersions(__APP_VERSION__, previous) <= 0) return;
@@ -80,6 +88,34 @@ export const UpdateCenter: React.FC = () => {
       }
     });
   }, [showWhatsNewSince]);
+
+  // Patch notes on demand. The running build's own manifest holds its history; a pending
+  // update's notes are added on top so nothing newer is hidden.
+  useEffect(() => {
+    if (!isPatchNotesOpen) return;
+    let cancelled = false;
+    setDialog({ mode: 'all', entries: [], loading: true });
+
+    void fetchOwnChangelog().then((own) => {
+      if (cancelled) return;
+      const byVersion = new Map<string, ChangelogEntry>();
+      for (const entry of [...(notice?.changelog ?? []), ...own]) {
+        if (!byVersion.has(entry.version)) byVersion.set(entry.version, entry);
+      }
+      const entries = [...byVersion.values()].sort((a, b) => compareVersions(b.version, a.version));
+      setDialog({ mode: 'all', entries });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+    // Re-reading on every notice change would reset an open dialog; the notice at open time is enough.
+  }, [isPatchNotesOpen]);
+
+  const closeDialog = () => {
+    setDialog(null);
+    setIsPatchNotesOpen(false);
+  };
 
   const pendingChanges = notice
     ? notice.version
@@ -154,19 +190,43 @@ export const UpdateCenter: React.FC = () => {
         </Box>
       )}
 
-      <Dialog open={dialog !== null} onClose={() => setDialog(null)} maxWidth="sm" fullWidth>
+      <Dialog open={dialog !== null} onClose={closeDialog} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 6 }}>
           <NewReleasesIcon sx={{ color: 'var(--gl-primary)' }} />
-          {dialog?.mode === 'whats-new' ? `What's new in Genetics Lab v${__APP_VERSION__}` : `Coming in Genetics Lab${versionLabel}`}
-          <IconButton aria-label="Close" onClick={() => setDialog(null)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+          {dialog?.mode === 'whats-new'
+            ? `What's new in Genetics Lab v${__APP_VERSION__}`
+            : dialog?.mode === 'all'
+              ? 'Patch notes'
+              : `Coming in Genetics Lab${versionLabel}`}
+          <IconButton aria-label="Close" onClick={closeDialog} sx={{ position: 'absolute', right: 8, top: 8 }}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent dividers>
+          {dialog?.loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress size={28} />
+            </Box>
+          )}
+          {dialog && !dialog.loading && dialog.entries.length === 0 && (
+            <Typography variant="body2" sx={{ color: 'var(--gl-text-secondary)' }}>
+              Patch notes are not available offline in this build. See{' '}
+              <a href={RELEASES_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
+                all releases on GitHub
+              </a>
+              .
+            </Typography>
+          )}
           {dialog?.entries.map((entry) => (
             <Box key={entry.version} sx={{ '&:not(:last-of-type)': { mb: 2.5 } }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <Chip size="small" color="primary" label={`v${entry.version}`} sx={{ fontWeight: 800, fontFamily: 'monospace' }} />
+                {dialog.mode === 'all' && compareVersions(entry.version, __APP_VERSION__) === 0 && (
+                  <Chip size="small" variant="outlined" color="success" label="Installed" sx={{ fontWeight: 700 }} />
+                )}
+                {dialog.mode === 'all' && compareVersions(entry.version, __APP_VERSION__) > 0 && (
+                  <Chip size="small" variant="outlined" color="warning" label={notice?.state === 'ready' ? 'Ready to install' : 'Available'} sx={{ fontWeight: 700 }} />
+                )}
                 {entry.date && (
                   <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)' }}>
                     {entry.date}
@@ -191,12 +251,17 @@ export const UpdateCenter: React.FC = () => {
           ))}
         </DialogContent>
         <DialogActions>
-          {dialog?.mode === 'preview' && notice?.state === 'ready' && (
+          {dialog?.mode === 'all' && (
+            <Button component="a" href={RELEASES_URL} target="_blank" rel="noopener noreferrer" sx={{ mr: 'auto' }}>
+              All releases
+            </Button>
+          )}
+          {dialog?.mode !== 'whats-new' && notice?.state === 'ready' && (
             <Button variant="contained" disabled={isApplying} onClick={handleApply}>
               Reload now
             </Button>
           )}
-          <Button onClick={() => setDialog(null)}>{dialog?.mode === 'whats-new' ? 'Got it' : 'Later'}</Button>
+          <Button onClick={closeDialog}>{dialog?.mode === 'preview' ? 'Later' : dialog?.mode === 'whats-new' ? 'Got it' : 'Close'}</Button>
         </DialogActions>
       </Dialog>
     </>
