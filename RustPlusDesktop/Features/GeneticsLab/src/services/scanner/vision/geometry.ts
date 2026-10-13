@@ -273,6 +273,51 @@ export function groupSixBadgeRows(
         seen.add(key);
         results.push({ members, axis, normal, medianBadgeSide: medianSide, meanSpacing });
       }
+
+      // A blob inside the band but off the row (an icon just above the badges, a mark on the
+      // panel) sits between two badges in `t` order and breaks every consecutive window. So
+      // also step along the axis by the a->b spacing and, at each step, take the blob nearest
+      // the line.
+      const step = dot(delta, axis);
+      const hits: (BadgeComponent | null)[] = [];
+      for (let k = -(GENES_PER_ROW - 1); k <= GENES_PER_ROW - 1; k++) {
+        let best: BadgeComponent | null = null;
+        let bestOffset = Infinity;
+        for (const { component, t } of inBand) {
+          if (Math.abs(t - k * step) > step * 0.3) continue;
+          const offset = Math.abs(dot({ x: component.cx - a.cx, y: component.cy - a.cy }, normal));
+          if (offset < bestOffset) {
+            best = component;
+            bestOffset = offset;
+          }
+        }
+        hits.push(best);
+      }
+      for (let start = 0; start + GENES_PER_ROW <= hits.length; start++) {
+        const members = hits.slice(start, start + GENES_PER_ROW);
+        if (members.some(m => m === null) || !members.includes(a) || !members.includes(b)) continue;
+        const row = members as BadgeComponent[];
+        const key = row
+          .map(m => m.id)
+          .sort((p, q) => p - q)
+          .join(',');
+        if (seen.has(key)) continue;
+
+        const spacings: number[] = [];
+        for (let k = 1; k < row.length; k++) {
+          spacings.push(dot({ x: row[k].cx - row[k - 1].cx, y: row[k].cy - row[k - 1].cy }, axis));
+        }
+        if (spacings.some(s => s <= 0)) continue;
+        if (variation(spacings) > options.maxSpacingVariation) continue;
+
+        const medianSide = median(row.map(badgeSide));
+        const meanSpacing = mean(spacings);
+        if (meanSpacing < medianSide * options.minSpacingFactor) continue;
+        if (meanSpacing > medianSide * options.maxSpacingFactor) continue;
+
+        seen.add(key);
+        results.push({ members: row, axis, normal, medianBadgeSide: medianSide, meanSpacing });
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import { ScannerRegion } from '../storageService.ts';
 import { CanvasFrameGrabber } from './vision/frameGrabber.ts';
-import { detectBadgeCandidates, AnalysisFrame } from './vision/rasterOps.ts';
+import { detectBadgeCandidates, DEFAULT_BADGE_FILTER_OPTIONS } from './vision/rasterOps.ts';
 import { buildRowCandidates, BuiltCandidate, DEFAULT_BUILD_CANDIDATES_OPTIONS } from './vision/geometry.ts';
 import { GeneImagePreprocessor } from './GeneImagePreprocessor.ts';
 import { GeneRecognizer } from './scannerTypes.ts';
@@ -61,8 +61,11 @@ export class AutoCalibrator {
       };
     }
 
-    // 1. Detect Rust red/green badge candidates across the frame
-    const components = detectBadgeCandidates(frame);
+    // 1. Detect Rust red/green badge candidates across the frame. Dirt, sand and wood pass
+    // the red test, so a whole screen of terrain leaves a few hundred badge-shaped blobs;
+    // keeping only the largest 96 drops the badges first at small UI scales. Calibration
+    // runs once, so it can afford to keep them all.
+    const components = detectBadgeCandidates(frame, undefined, { ...DEFAULT_BADGE_FILTER_OPTIONS, maxCandidates: 400 });
     if (components.length < 6) {
       return {
         success: false,
