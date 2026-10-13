@@ -19,6 +19,7 @@ import { BreedingStepCard } from './BreedingStepCard.tsx';
 import { BreedingHistory } from './BreedingHistory.tsx';
 import { ConfirmDialog } from '../common/ConfirmDialog.tsx';
 import { GuidedBreeding3D } from '../planter3d/GuidedBreeding3D.tsx';
+import { PlantPicker } from '../common/PlantPicker.tsx';
 
 export const BreedingMode: React.FC = () => {
   const {
@@ -26,6 +27,7 @@ export const BreedingMode: React.FC = () => {
     updateSessionStepPlanted,
     completeBreedingStep,
     abandonBreedingSession,
+    setSessionCropType,
     selectedPlant
   } = useWorkspace();
 
@@ -36,6 +38,7 @@ export const BreedingMode: React.FC = () => {
 
   const currentStepIdx = activeSession.currentStepIndex || 0;
   const currentStep = activeSession.steps[currentStepIdx];
+  const cropType = activeSession.cropType || selectedPlant;
 
   return (
     <>
@@ -61,9 +64,8 @@ export const BreedingMode: React.FC = () => {
             <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-primary)', fontFamily: 'var(--font-family-mono)' }}>
               STEP-BY-STEP BREEDING ASSISTANT
             </Typography>
-            <Typography variant="caption" sx={{ color: 'var(--gl-text-muted)', textTransform: 'capitalize' }}>
-              {selectedPlant.replace(/-/g, ' ')}
-            </Typography>
+            {/* Saved with the session, so the planter, the 3D plants and the history all match. */}
+            <PlantPicker value={cropType} onChange={setSessionCropType} label="Plant type of this breeding session" />
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -98,7 +100,7 @@ export const BreedingMode: React.FC = () => {
           </Stepper>
 
           {/* The current generation in a 3D planter, following the checkboxes below */}
-          {currentStep && <GuidedBreeding3D step={currentStep} plantType={activeSession.cropType || selectedPlant} />}
+          {currentStep && <GuidedBreeding3D step={currentStep} plantType={cropType} />}
 
           {/* Active Generation Step Card */}
           {currentStep && (

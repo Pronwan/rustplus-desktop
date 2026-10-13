@@ -1,8 +1,11 @@
-import React, { Suspense, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
+import { GeneticsSequence } from '../common/GeneticsSequence.tsx';
 import type { BreedingSessionStep } from '../../services/storageService.ts';
 import { PLANTER_MODELS } from './planterModels.ts';
 import { donorSlotsFor } from './breedingLayout.ts';
@@ -33,6 +36,9 @@ interface GuidedBreeding3DProps {
 export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantType }) => {
   const [webglOk] = useState(isWebGLAvailable);
   const [isHidden, setIsHidden] = useState(readHidden);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  // A new generation (or a ticked box) changes what is planted; drop a stale selection.
+  useEffect(() => setSelectedSlot(null), [step]);
 
   const model = PLANTER_MODELS.large;
   const centre = model.centerSlot;
@@ -73,6 +79,8 @@ export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantT
     };
   }, [model, centre, donorSlots, donors, step, hasCentrePlant, allPlanted]);
 
+  const selectedContent = selectedSlot !== null ? view.slots[selectedSlot] : null;
+
   if (!webglOk) return null;
 
   const toggle = () => {
@@ -112,18 +120,64 @@ export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantT
         </Button>
       </Box>
       {!isHidden && (
-        <Box sx={{ height: { xs: 280, sm: 360 } }}>
+        <Box sx={{ position: 'relative', height: { xs: 320, sm: 440 } }}>
           <Suspense fallback={null}>
             <Planter3DView
               planterType="large"
               plantType={plantType}
               slots={view.slots}
-              highlights={view.highlights}
+              highlights={selectedSlot !== null && selectedContent ? view.highlights.map((h, i) => (i === selectedSlot ? 'selected' : h)) : view.highlights}
               flow={view.flow}
               celebrate={view.celebrate}
+              onSlotClick={(slot) => setSelectedSlot((current) => (current === slot ? null : slot))}
               fallback={null}
             />
           </Suspense>
+          {selectedSlot !== null && (
+            <Box
+              role="status"
+              sx={{
+                position: 'absolute',
+                left: 12,
+                bottom: 12,
+                maxWidth: 'min(360px, calc(100% - 24px))',
+                p: 1.25,
+                borderRadius: '8px',
+                backgroundColor: 'rgba(10,12,16,0.86)',
+                border: '1px solid var(--gl-primary)',
+                color: '#f3f4f6',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 0.75
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ flex: 1, fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-family-mono)', color: 'var(--gl-primary)' }}>
+                  Slot {model.slots[selectedSlot].number}
+                  {selectedContent?.caption ? ` · ${selectedContent.caption}` : selectedSlot === centre ? ' · Centre' : donorSlots.includes(selectedSlot) ? ` · Donor #${donorSlots.indexOf(selectedSlot) + 1}` : ''}
+                </Typography>
+                <IconButton size="small" aria-label="Close plant details" onClick={() => setSelectedSlot(null)} sx={{ color: '#9ca3af', p: 0.25 }}>
+                  <CloseIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Box>
+              {selectedContent?.genes ? (
+                <GeneticsSequence genes={selectedContent.genes} size="medium" showConnectors />
+              ) : donorSlots.includes(selectedSlot) ? (
+                <GeneticsSequence genes={donors[donorSlots.indexOf(selectedSlot)]} size="medium" showConnectors />
+              ) : null}
+              <Typography sx={{ fontSize: '0.72rem', color: '#d1d5db', fontFamily: 'var(--font-family-mono)' }}>
+                {selectedSlot === centre
+                  ? allPlanted
+                    ? 'Result of this generation once crossbreeding finishes.'
+                    : hasCentrePlant
+                      ? 'Centre plant: takes genes from the donors around it.'
+                      : 'Any plant of this type; crossbreeding overwrites its genes.'
+                  : donorSlots.includes(selectedSlot)
+                    ? `Donor: passes its genes to the centre, slot ${centreNumber}.${step.isSurroundingPlanted ? '' : ' Not planted yet.'}`
+                    : 'Leave this slot empty.'}
+              </Typography>
+            </Box>
+          )}
         </Box>
       )}
     </Box>

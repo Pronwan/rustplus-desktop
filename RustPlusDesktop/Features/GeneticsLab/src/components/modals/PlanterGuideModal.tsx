@@ -31,7 +31,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
       slotProps={{
         paper: {
@@ -80,7 +80,7 @@ export const PlanterGuideModal: React.FC<PlanterGuideModalProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ p: 0 }}>
-        <PlantingGuide3D map={map} height={420} />
+        <PlantingGuide3D map={map} height="min(62vh, 620px)" />
       </DialogContent>
     </Dialog>
   );

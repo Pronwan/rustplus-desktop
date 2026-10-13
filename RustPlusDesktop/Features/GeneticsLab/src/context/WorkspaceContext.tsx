@@ -60,6 +60,8 @@ interface WorkspaceContextType {
   updateSessionStepPlanted: (stepIndex: number, type: 'center' | 'surrounding', planted: boolean) => void;
   completeBreedingStep: (stepIndex: number) => void;
   abandonBreedingSession: () => void;
+  /** Changes the plant type of the active session; saved with it and kept in its history. */
+  setSessionCropType: (cropType: string) => void;
   breedingHistory: BreedingSession[];
 
   // Projects / Saved Workspaces
@@ -343,6 +345,20 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [activeSession]
   );
 
+  const setSessionCropType = useCallback(
+    (cropType: string) => {
+      if (!activeSession || activeSession.cropType === cropType) return;
+      const updatedSession: BreedingSession = {
+        ...activeSession,
+        cropType,
+        updatedAt: new Date().toISOString()
+      };
+      StorageService.saveActiveBreedingSession(updatedSession);
+      setActiveSession(updatedSession);
+    },
+    [activeSession]
+  );
+
   const completeBreedingStep = useCallback(
     (stepIndex: number) => {
       if (!activeSession) return;
@@ -526,6 +542,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateSessionStepPlanted,
         completeBreedingStep,
         abandonBreedingSession,
+        setSessionCropType,
         breedingHistory,
         projects,
         saveCurrentAsProject,

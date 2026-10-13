@@ -13,6 +13,7 @@ import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRe
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import type { PlanterType } from '../../domain/planner/farmPlanning.ts';
 import {
+  BERRY_TINTS,
   GENE_COLORS,
   PLANTER_MODELS,
   PLANT_MODEL_URLS,
@@ -73,11 +74,12 @@ function loadGltf(url: string): Promise<GLTF> {
  * The exported models carry no metallic/roughness factors, which glTF reads as fully
  * metallic: everything would render as dark chrome. They are plain diffuse props.
  *
- * Plant textures are leaf cut-outs (a berry bush texture is 83% transparent) but the
- * export marks every material opaque, so the clear parts render black. `foliage` turns
- * them back into alpha-tested, double-sided cards.
+ * Many textures carry cut-outs in their alpha (every plant's leaves, a berry bush's being
+ * 83% transparent, and the planters' tarps) but the export marks every material opaque,
+ * so the clear parts render black. Every textured material is alpha-tested and
+ * double-sided; on textures without alpha the test never discards anything.
  */
-function prepareModel(root: THREE.Object3D, foliage = false): void {
+function prepareModel(root: THREE.Object3D): void {
   root.traverse((node) => {
     const mesh = node as THREE.Mesh;
     if (!mesh.isMesh) return;
@@ -90,7 +92,7 @@ function prepareModel(root: THREE.Object3D, foliage = false): void {
         standard.metalness = 0;
         standard.roughness = 0.88;
         standard.envMapIntensity = 0.55;
-        if (foliage && standard.map) {
+        if (standard.map) {
           standard.alphaTest = 0.5;
           // Smooths the cut edges using the renderer's MSAA instead of hard stair-steps.
           standard.alphaToCoverage = true;
@@ -150,7 +152,7 @@ function loadPlantTemplate(plantType: string): Promise<PlantTemplate> {
         (Object.keys(stageUrls) as GrowthStage[]).map(async (stage) => {
           const gltf = await loadGltf(stageUrls[stage]);
           const scene = gltf.scene.clone(true);
-          prepareModel(scene, true);
+          prepareModel(scene);
           return [stage, scene] as const;
         })
       );
@@ -165,7 +167,9 @@ function loadPlantTemplate(plantType: string): Promise<PlantTemplate> {
 
     const gltf = await loadGltf(PLANT_MODEL_URLS[plantType] ?? PLANT_MODEL_URLS.hemp);
     const scene = gltf.scene.clone(true);
-    prepareModel(scene, true);
+    prepareModel(scene);
+    const tint = BERRY_TINTS[plantType];
+    if (tint) tintBerries(scene, tint);
     const { scale, height } = fitScale(scene);
     return { models: {}, fallback: fitted(scene, scale), staged: false, height };
   })();
@@ -173,6 +177,83 @@ function loadPlantTemplate(plantType: string): Promise<PlantTemplate> {
   pending.catch(() => templateCache.delete(plantType));
   templateCache.set(plantType, pending);
   return pending;
+}
+
+const MIXED_BERRIES: [number, number, number][] = [
+  [205, 35, 45],
+  [60, 95, 210],
+  [238, 192, 40]
+];
+
+/** RGB (0..255) to hue, saturation and value, each 0..1. */
+function hsv(r: number, g: number, b: number): [number, number, number] {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  if (d > 0) {
+    if (max === r) h = ((g - b) / d + 6) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+  }
+  return [h / 6, max === 0 ? 0 : d / max, max / 255];
+}
+
+/**
+ * Recolours the berries of the shared berry-bush texture. The berries are its only
+ * blue-grey pixels (leaves are green, stems and dry leaves brown), so those take the
+ * variety's colour with their original shading; everything else is left alone.
+ */
+function tintBerries(root: THREE.Object3D, tint: [number, number, number] | 'mixed'): void {
+  const recoloured = new Map<THREE.Texture, THREE.Texture>();
+  root.traverse((node) => {
+    const mesh = node as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const swap = (material: THREE.Material) => {
+      const standard = material as THREE.MeshStandardMaterial;
+      const source = standard.map;
+      const image = source?.image as CanvasImageSource & { width: number; height: number } | undefined;
+      if (!source || !image?.width) return material;
+
+      let texture = recoloured.get(source);
+      if (!texture) {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        ctx.drawImage(image, 0, 0);
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = pixels.data;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] < 128) continue;
+          const [h, sat, v] = hsv(data[i], data[i + 1], data[i + 2]);
+          const isBerry = (v > 0.3 && sat < 0.16) || (h >= 0.45 && h <= 0.8 && v > 0.22);
+          if (!isBerry) continue;
+          const p = i / 4;
+          const colour =
+            tint === 'mixed'
+              ? MIXED_BERRIES[(((Math.floor((p % canvas.width) / 5) * 73856093) ^ (Math.floor(p / canvas.width / 5) * 19349663)) >>> 0) % 3]
+              : tint;
+          const light = Math.min(1, v * 1.15);
+          data[i] = colour[0] * light;
+          data[i + 1] = colour[1] * light;
+          data[i + 2] = colour[2] * light;
+        }
+        ctx.putImageData(pixels, 0, 0);
+        // Its own Source: Texture.clone() shares the original's, and assigning `image` would
+        // overwrite the berry texture every other variety still reads from.
+        texture = source.clone();
+        texture.source = new THREE.Source(canvas);
+        texture.needsUpdate = true;
+        recoloured.set(source, texture);
+      }
+
+      const copy = standard.clone();
+      copy.map = texture;
+      return copy;
+    };
+    mesh.material = Array.isArray(mesh.material) ? mesh.material.map(swap) : swap(mesh.material);
+  });
 }
 
 /** A browned copy of a model for the dying stage of plants without a dying model. */

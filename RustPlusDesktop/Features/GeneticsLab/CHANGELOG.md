@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.13.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(ui): plant picker with item icons; change a breeding session's plant type ([b4f30e4](https://github.com/JawadYzbk/rust-genetics-lab/commit/b4f30e4834c62d94ff5851dc552d84ccdf903b21))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.12.0...v1.13.0
+All notable changes to this project will be documented in this file.
+
+## [1.12.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.12.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(guide): show your own route in 3D, click plants for their genes, bigger view ([e6c540a](https://github.com/JawadYzbk/rust-genetics-lab/commit/e6c540a574f404a2c51e7a4c2afdfbf360e434c1))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.11.0...v1.12.0
+All notable changes to this project will be documented in this file.
+
 ## [1.11.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.11.0) (2026-10-13)
 
 ### 🚀 Features

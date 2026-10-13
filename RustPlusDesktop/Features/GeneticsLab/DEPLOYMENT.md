@@ -56,6 +56,29 @@ This guide walks you through deploying **Genetics Lab** to your self-hosted **Co
 
 ---
 
+## Deploy Only on Releases
+
+The site deploys once per release, from the `Release` GitHub workflow, not on every push to
+`master`. A push to `master` with a `feat:` or `fix:` commit bumps the version
+(`chore(release): vX.Y.Z [skip ci]`) and starts `Release`, whose last step asks Coolify to deploy.
+
+One-time setup:
+
+1. **Coolify → the Genetics Lab application → Advanced**: turn **Auto Deploy** off, so Coolify's
+   GitHub webhook stops deploying every commit.
+2. **Coolify → the application → Webhooks**: copy the **Deploy Webhook** URL
+   (`https://<your-coolify>/api/v1/deploy?uuid=<app-uuid>&force=false`).
+3. **Coolify → Keys & Tokens → API tokens**: create a token with the **deploy** permission.
+4. **GitHub → rust-genetics-lab → Settings → Secrets and variables → Actions**: add
+   - `COOLIFY_DEPLOY_WEBHOOK`: the URL from step 2
+   - `COOLIFY_API_TOKEN`: the token from step 3
+
+Without the two secrets the step is skipped with a notice, so releases still publish.
+
+To deploy by hand, use **Deploy** in Coolify as before, or re-run the `Release` workflow.
+
+---
+
 ## Environment Variables (Optional)
 
 Genetics Lab is client-side and requires **zero required environment variables** to run.

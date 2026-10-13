@@ -152,3 +152,22 @@ jobs:
           gh release create "$TAG" "${ASSETS[@]}" --title "$TAG" "${NOTES_FLAG[@]}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The website deploys once per release, from here, instead of on every push: turn
+      # "Auto Deploy" off in Coolify so its own webhook stops deploying each commit. Coolify
+      # builds master's head, which at this point is this release's chore(release) commit.
+      # See DEPLOYMENT.md for the two secrets.
+      - name: Deploy website to Coolify
+        env:
+          COOLIFY_DEPLOY_WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
+        run: |
+          if [ -z "$COOLIFY_DEPLOY_WEBHOOK" ] || [ -z "$COOLIFY_API_TOKEN" ]; then
+            echo "::notice::COOLIFY_DEPLOY_WEBHOOK / COOLIFY_API_TOKEN not set; skipping the website deploy."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer $COOLIFY_API_TOKEN" \
+            "$COOLIFY_DEPLOY_WEBHOOK"
+          echo
+          echo "### 🚀 Website deploy queued in Coolify for ${{ steps.meta.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"

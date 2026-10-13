@@ -2,6 +2,7 @@ import type { GeneticsMap } from '../../domain/genetics/GeneticsMap.ts';
 import type { Sapling } from '../../domain/genetics/Sapling.ts';
 import { Sapling as SaplingClass, DEFAULT_GENE_SCORES } from '../../domain/genetics/Sapling.ts';
 import { evaluateCombination } from '../../domain/genetics/crossbreeding.ts';
+import { buildBreedingPlan } from '../../domain/genetics/breedingPlan.ts';
 import { neighboursOf, type PlanterModel } from './planterModels.ts';
 
 export interface BreedingPlan {
@@ -9,6 +10,13 @@ export interface BreedingPlan {
   target: string | null;
   donors: string[];
   result: string;
+  /** Generation this planting produces (1 for a single crossbreed). */
+  generation: number;
+  /** Chance the result comes out as planned, 0..1. */
+  chance: number;
+  /** Donor indexes to plant first / second when a gene column is tied. */
+  plantFirst?: number[];
+  plantSecond?: number[];
 }
 
 const geneString = (sapling: Sapling) => sapling.genes.map((g) => g.type).join('');
@@ -17,8 +25,28 @@ export function breedingPlanFromMap(map: GeneticsMap): BreedingPlan {
   return {
     target: map.baseSapling ? geneString(map.baseSapling) : null,
     donors: map.crossbreedingSaplings.map(geneString),
-    result: geneString(map.resultSapling)
+    result: geneString(map.resultSapling),
+    generation: map.resultSapling.generationIndex || 1,
+    chance: map.chance,
+    plantFirst: map.tieWinningCrossbreedingSaplingIndexes,
+    plantSecond: map.tieLosingCrossbreedingSaplingIndexes
   };
+}
+
+/**
+ * Every planting a route needs, in the order to do them: intermediate generations first,
+ * the final clone last. Same breakdown as guided breeding.
+ */
+export function breedingPlansFromRoute(map: GeneticsMap): BreedingPlan[] {
+  return buildBreedingPlan(map).map((step) => ({
+    target: step.centerSaplingString ?? null,
+    donors: step.surroundingSaplingsStrings,
+    result: step.targetGeneString,
+    generation: step.generationIndex,
+    chance: step.chance,
+    plantFirst: step.priorityWinningIndices,
+    plantSecond: step.priorityLosingIndices
+  }));
 }
 
 /**

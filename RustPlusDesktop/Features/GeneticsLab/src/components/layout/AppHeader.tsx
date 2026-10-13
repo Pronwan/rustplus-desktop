@@ -29,7 +29,8 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
+import { useApp } from '../../context/AppContext.tsx';
+import { PlantPicker } from '../common/PlantPicker.tsx';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../context/ScannerContext.tsx';
 
@@ -117,28 +118,7 @@ export const AppHeader: React.FC = () => {
             </Typography>
           </Box>
 
-          <Select
-            aria-label="Crop type"
-            size="small"
-            value={selectedPlant}
-            onChange={(e) => setSelectedPlant(e.target.value)}
-            sx={{
-              height: 32,
-              width: { xs: 104, sm: 150 },
-              fontSize: '0.78rem',
-              fontWeight: 800,
-              backgroundColor: themeMode === 'dark' ? '#181818' : '#F1F5F9',
-              color: themeMode === 'dark' ? '#FFFFFF' : '#1E293B',
-              textTransform: 'capitalize',
-              '& fieldset': { borderColor: themeMode === 'dark' ? '#333' : '#CBD5E1' }
-            }}
-          >
-            {PLANT_TYPES.map((plant) => (
-              <MenuItem key={plant} value={plant} sx={{ fontSize: '0.78rem', textTransform: 'capitalize' }}>
-                {plant.replace(/-/g, ' ')}
-              </MenuItem>
-            ))}
-          </Select>
+          <PlantPicker value={selectedPlant} onChange={setSelectedPlant} label="Crop type" compact={isCompact} />
         </Box>
 
         <Box component="nav" aria-label="Primary navigation" sx={{ order: { xs: 3, lg: 2 }, width: { xs: '100%', lg: 'auto' }, minWidth: 0 }}>

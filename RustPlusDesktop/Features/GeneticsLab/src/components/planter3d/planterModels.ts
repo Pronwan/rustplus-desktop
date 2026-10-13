@@ -94,13 +94,14 @@ export function neighboursOf(model: PlanterModel, slotIndex: number): number[] {
 /** Which collectable model stands in for each Genetics Lab plant type. */
 export const PLANT_MODEL_URLS: Record<string, string> = {
   hemp: './models/plants/hemp.glb',
-  'red-berry': './models/plants/red-berry.glb',
-  'blue-berry': './models/plants/blue-berry.glb',
-  'yellow-berry': './models/plants/yellow-berry.glb',
-  'green-berry': './models/plants/green-berry.glb',
-  'white-berry': './models/plants/white-berry.glb',
-  // There is no separate mixed-berry bush model; the red bush is the closest look.
-  'mixed-berry': './models/plants/red-berry.glb',
+  // Facepunch exports every berry bush with the same mesh and texture (the game colours
+  // the berries in a shader), so one model serves all of them; BERRY_TINTS recolours it.
+  'red-berry': './models/plants/berry.glb',
+  'blue-berry': './models/plants/berry.glb',
+  'yellow-berry': './models/plants/berry.glb',
+  'green-berry': './models/plants/berry.glb',
+  'white-berry': './models/plants/berry.glb',
+  'mixed-berry': './models/plants/berry.glb',
   potato: './models/plants/potato.glb',
   pumpkin: './models/plants/pumpkin.glb',
   corn: './models/plants/corn.glb',
@@ -108,6 +109,16 @@ export const PLANT_MODEL_URLS: Record<string, string> = {
   sunflower: './models/plants/sunflower.glb',
   rose: './models/plants/rose.glb',
   orchid: './models/plants/orchid.glb'
+};
+
+/** Berry colour per bush, as [r, g, b] at full brightness; 'mixed' mixes red, blue and yellow. */
+export const BERRY_TINTS: Record<string, [number, number, number] | 'mixed'> = {
+  'red-berry': [205, 35, 45],
+  'blue-berry': [60, 95, 210],
+  'yellow-berry': [238, 192, 40],
+  'green-berry': [96, 178, 52],
+  'white-berry': [240, 240, 234],
+  'mixed-berry': 'mixed'
 };
 
 export type GrowthStage = 'seed' | 'seedling' | 'sapling' | 'mature' | 'fruiting' | 'dying';
