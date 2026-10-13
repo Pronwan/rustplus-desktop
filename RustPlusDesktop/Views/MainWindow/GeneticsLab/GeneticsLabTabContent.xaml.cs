@@ -194,6 +194,8 @@ namespace RustPlusDesk.Views
                     case "host-hello":
                         _pageShowsUpdates = true;
                         UpdateReadyButton.Visibility = Visibility.Collapsed;
+                        // Only builds that can open their patch notes on request get the button.
+                        PatchNotesButton.Visibility = HasCapability(root, "patch-notes") ? Visibility.Visible : Visibility.Collapsed;
                         if (_previousVersionForPage != null)
                         {
                             PostToPage(new { type = "genetics-lab-host", previousVersion = _previousVersionForPage });
@@ -296,6 +298,7 @@ namespace RustPlusDesk.Views
 
             // Set again by the new page's "host-hello" if it shows update notices itself.
             _pageShowsUpdates = false;
+            PatchNotesButton.Visibility = Visibility.Collapsed;
 
             core.ClearVirtualHostNameToFolderMapping(VirtualHost);
             core.SetVirtualHostNameToFolderMapping(VirtualHost, content.Folder, CoreWebView2HostResourceAccessKind.Allow);
@@ -460,6 +463,14 @@ namespace RustPlusDesk.Views
 
         private void Reload_Click(object sender, RoutedEventArgs e) => Reload();
 
+        // The patch notes live in the page (they ship with each build); the button asks it to open them.
+        private void PatchNotes_Click(object sender, RoutedEventArgs e) => PostToPage(new { type = "open-patch-notes" });
+
+        private static bool HasCapability(JsonElement hello, string capability) =>
+            hello.TryGetProperty("capabilities", out JsonElement list) &&
+            list.ValueKind == JsonValueKind.Array &&
+            list.EnumerateArray().Any(item => item.ValueKind == JsonValueKind.String && item.GetString() == capability);
+
         /// <summary>
         /// Leaves the workspace with Genetics Lab still loaded.
         /// </summary>
@@ -536,6 +547,7 @@ namespace RustPlusDesk.Views
                 _content = null;
             }
             UpdateReadyButton.Visibility = Visibility.Collapsed;
+            PatchNotesButton.Visibility = Visibility.Collapsed;
 
             _webViewProcessIds = Array.Empty<int>();
             _sharedEnvironment = null;
