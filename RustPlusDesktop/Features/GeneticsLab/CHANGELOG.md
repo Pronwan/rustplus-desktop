@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.7.0) (2026-10-12)
+
+### 🚀 Features
+
+* feat(recipes): correct every recipe and add the livestock-update pies and breads ([c6b8045](https://github.com/JawadYzbk/rust-genetics-lab/commit/c6b80455b1982575f3e9d425e6770f4376466640))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.6.0...v1.7.0
+All notable changes to this project will be documented in this file.
+
 ## [1.6.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.6.0) (2026-10-02)
 
 ### 🚀 Features
