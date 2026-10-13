@@ -18,6 +18,7 @@ import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { BreedingStepCard } from './BreedingStepCard.tsx';
 import { BreedingHistory } from './BreedingHistory.tsx';
 import { ConfirmDialog } from '../common/ConfirmDialog.tsx';
+import { GuidedBreeding3D } from '../planter3d/GuidedBreeding3D.tsx';
 
 export const BreedingMode: React.FC = () => {
   const {
@@ -95,6 +96,9 @@ export const BreedingMode: React.FC = () => {
               </Step>
             ))}
           </Stepper>
+
+          {/* The current generation in a 3D planter, following the checkboxes below */}
+          {currentStep && <GuidedBreeding3D step={currentStep} plantType={activeSession.cropType || selectedPlant} />}
 
           {/* Active Generation Step Card */}
           {currentStep && (

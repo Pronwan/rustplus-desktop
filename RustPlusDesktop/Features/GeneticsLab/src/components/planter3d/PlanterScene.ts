@@ -72,8 +72,12 @@ function loadGltf(url: string): Promise<GLTF> {
 /**
  * The exported models carry no metallic/roughness factors, which glTF reads as fully
  * metallic: everything would render as dark chrome. They are plain diffuse props.
+ *
+ * Plant textures are leaf cut-outs (a berry bush texture is 83% transparent) but the
+ * export marks every material opaque, so the clear parts render black. `foliage` turns
+ * them back into alpha-tested, double-sided cards.
  */
-function prepareModel(root: THREE.Object3D): void {
+function prepareModel(root: THREE.Object3D, foliage = false): void {
   root.traverse((node) => {
     const mesh = node as THREE.Mesh;
     if (!mesh.isMesh) return;
@@ -86,6 +90,14 @@ function prepareModel(root: THREE.Object3D): void {
         standard.metalness = 0;
         standard.roughness = 0.88;
         standard.envMapIntensity = 0.55;
+        if (foliage && standard.map) {
+          standard.alphaTest = 0.5;
+          // Smooths the cut edges using the renderer's MSAA instead of hard stair-steps.
+          standard.alphaToCoverage = true;
+          standard.transparent = false;
+          standard.side = THREE.DoubleSide;
+          standard.needsUpdate = true;
+        }
       }
     }
   });
@@ -138,7 +150,7 @@ function loadPlantTemplate(plantType: string): Promise<PlantTemplate> {
         (Object.keys(stageUrls) as GrowthStage[]).map(async (stage) => {
           const gltf = await loadGltf(stageUrls[stage]);
           const scene = gltf.scene.clone(true);
-          prepareModel(scene);
+          prepareModel(scene, true);
           return [stage, scene] as const;
         })
       );
@@ -153,7 +165,7 @@ function loadPlantTemplate(plantType: string): Promise<PlantTemplate> {
 
     const gltf = await loadGltf(PLANT_MODEL_URLS[plantType] ?? PLANT_MODEL_URLS.hemp);
     const scene = gltf.scene.clone(true);
-    prepareModel(scene);
+    prepareModel(scene, true);
     const { scale, height } = fitScale(scene);
     return { models: {}, fallback: fitted(scene, scale), staged: false, height };
   })();
@@ -475,8 +487,9 @@ export class PlanterScene {
     if (!this.model) return;
     const [x, y, z] = this.model.camera;
     const aspect = this.camera.aspect || 1;
-    // Narrower viewports need more distance to fit the planter's width.
-    const distanceScale = aspect < 1.6 ? Math.min(1.9, 1.6 / aspect) : 1;
+    // Narrower viewports need more distance to fit the planter's width; very wide strips
+    // have spare width, so the camera comes closer to use their height.
+    const distanceScale = aspect < 1.6 ? Math.min(1.9, 1.6 / aspect) : aspect > 2.4 ? 0.82 : 1;
     const target = this.slotCentroid();
     this.controls.target.set(target.x, this.model.soilY * 0.7, target.z);
     this.camera.position.set(target.x + x * distanceScale, y * distanceScale, target.z + z * distanceScale);

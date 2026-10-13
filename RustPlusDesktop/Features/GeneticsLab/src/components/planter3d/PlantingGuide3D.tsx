@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -32,8 +32,7 @@ import { breedingPlanFromMap, demoBreedingPlan, donorSlotsFor, type BreedingPlan
 import type { SlotContent, SlotHighlight } from './PlanterScene.ts';
 import { isWebGLAvailable } from './webgl.ts';
 
-// three.js is ~600 KB; it loads only when a guide is actually shown.
-const Planter3DView = lazy(() => import('./Planter3DView.tsx'));
+import { LazyPlanter3DView as Planter3DView } from './lazyPlanter3DView.ts';
 
 type GuideMode = 'steps' | 'explore' | 'growth';
 

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.11.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(breeding): show the guided breeding step in a 3D planter; fix black plant leaves ([d40d049](https://github.com/JawadYzbk/rust-genetics-lab/commit/d40d04928dab02c968ca53b07ecd9c24bdf0159d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.10.0...v1.11.0
+All notable changes to this project will be documented in this file.
+
 ## [1.10.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.10.0) (2026-10-13)
 
 ### 🚀 Features
