@@ -202,6 +202,7 @@ export const FarmOutputPlanner: React.FC = () => {
       </Box>
 
       <ToggleButtonGroup
+        data-tour="planner-mode"
         exclusive
         fullWidth
         size="small"

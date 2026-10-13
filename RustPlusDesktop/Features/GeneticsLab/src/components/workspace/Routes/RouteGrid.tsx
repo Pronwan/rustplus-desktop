@@ -70,7 +70,7 @@ export const RouteGrid: React.FC = () => {
   const hasReadyRoute = filteredAndSortedRoutes.some(route => route.analysis.inventoryStatus === 'available');
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <Box data-tour="routes" sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       {/* Top Controls Toolbar */}
       <RouteToolbar />
 

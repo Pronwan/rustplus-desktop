@@ -143,6 +143,7 @@ export const RecipesPage: React.FC = () => {
       >
         {/* Category Tabs */}
         <Tabs
+          data-tour="recipe-categories"
           variant="scrollable"
           scrollButtons="auto"
           value={category}
@@ -203,7 +204,7 @@ export const RecipesPage: React.FC = () => {
 
           {/* Multiplier */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <ButtonGroup size="small" variant="outlined" aria-label="Recipe quantity multiplier">
+            <ButtonGroup data-tour="recipe-multiplier" size="small" variant="outlined" aria-label="Recipe quantity multiplier">
               {[1, 5, 10, 50].map((m) => (
                 <Button
                   key={m}

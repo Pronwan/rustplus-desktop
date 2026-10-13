@@ -139,7 +139,7 @@ export const LivestockPage: React.FC = () => {
         </Tooltip>
       </Box>
 
-      <Paper variant="outlined" sx={{ ...panelSx, p: { xs: 1.5, sm: 2 }, mb: 2 }}>
+      <Paper data-tour="livestock-scan" variant="outlined" sx={{ ...panelSx, p: { xs: 1.5, sm: 2 }, mb: 2 }}>
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
           <ScanKindSelect />
           {isDesktopCaptureSupported() && (
@@ -215,7 +215,7 @@ export const LivestockPage: React.FC = () => {
       </Paper>
 
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'minmax(340px, 440px) minmax(0, 1fr)' }, gap: 2, alignItems: 'start' }}>
-        <Paper component="section" variant="outlined" sx={{ ...panelSx, p: { xs: 1.5, sm: 2 }, minWidth: 0 }}>
+        <Paper data-tour="livestock-herd" component="section" variant="outlined" sx={{ ...panelSx, p: { xs: 1.5, sm: 2 }, minWidth: 0 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, mb: 1.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--gl-text-primary)' }}>
               Herd ({herd.length})
@@ -324,7 +324,7 @@ export const LivestockPage: React.FC = () => {
         </Paper>
 
         <Box component="section" sx={{ minWidth: 0 }}>
-          <Tabs value={rightTab} onChange={(_, v: RightTab) => setRightTab(v)} sx={{ mb: 1.5, minHeight: 40 }}>
+          <Tabs data-tour="livestock-tabs" value={rightTab} onChange={(_, v: RightTab) => setRightTab(v)} sx={{ mb: 1.5, minHeight: 40 }}>
             <Tab value="animal" label="Animal" sx={{ minHeight: 40 }} />
             <Tab value="pairs" label="Pair suggestions" sx={{ minHeight: 40 }} />
             <Tab value="rules" label="Rules" sx={{ minHeight: 40 }} />

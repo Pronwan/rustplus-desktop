@@ -162,6 +162,7 @@ export const CloneBank: React.FC = () => {
 
   return (
     <Paper
+      data-tour="gene-inputs"
       variant="outlined"
       sx={{
         backgroundColor: 'var(--gl-panel-bg)',
@@ -210,6 +211,7 @@ export const CloneBank: React.FC = () => {
         </Box>
 
         <Button
+          data-tour="panel-scan"
           variant={isScannerActive ? 'contained' : 'outlined'}
           size="small"
           // The regions and calibration live in the Scanner HUD that opens with the scanner.
@@ -257,6 +259,7 @@ export const CloneBank: React.FC = () => {
           />
           <Tab
             value="saved"
+            data-tour="saved-sets"
             label={`SAVED (${savedGeneSets.length})`}
             sx={{
               minHeight: 28,
@@ -382,6 +385,7 @@ export const CloneBank: React.FC = () => {
 
           {/* Interactive Multi-Line Editor Container */}
           <Paper
+            data-tour="gene-list"
             variant="outlined"
             sx={{
               flex: 1,

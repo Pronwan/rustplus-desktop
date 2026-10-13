@@ -25,6 +25,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import InfoIcon from '@mui/icons-material/Info';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import SchoolIcon from '@mui/icons-material/School';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
@@ -46,6 +47,7 @@ export const AppHeader: React.FC = () => {
     setIsOptionsModalOpen,
     setIsAboutModalOpen,
     setIsPatchNotesOpen,
+    setIsTourOpen,
     setIsReflexNoticeOpen,
     setIsKeyboardShortcutsOpen,
     setIsProjectManagerOpen
@@ -118,10 +120,12 @@ export const AppHeader: React.FC = () => {
             </Typography>
           </Box>
 
-          <PlantPicker value={selectedPlant} onChange={setSelectedPlant} label="Crop type" compact={isCompact} />
+          <Box data-tour="plant-picker" sx={{ display: 'flex' }}>
+            <PlantPicker value={selectedPlant} onChange={setSelectedPlant} label="Crop type" compact={isCompact} />
+          </Box>
         </Box>
 
-        <Box component="nav" aria-label="Primary navigation" sx={{ order: { xs: 3, lg: 2 }, width: { xs: '100%', lg: 'auto' }, minWidth: 0 }}>
+        <Box component="nav" data-tour="nav" aria-label="Primary navigation" sx={{ order: { xs: 3, lg: 2 }, width: { xs: '100%', lg: 'auto' }, minWidth: 0 }}>
           <Tabs
             value={activeTab}
             onChange={(_, val) => setActiveTab(val)}
@@ -138,6 +142,7 @@ export const AppHeader: React.FC = () => {
 
         <Box sx={{ order: { xs: 2, lg: 3 }, display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.75 }, flexShrink: 0 }}>
           <Button
+            data-tour="scan"
             aria-label={scannerBusy ? 'Stop Rust scanner' : 'Scan genetics from Rust'}
             size="small"
             variant={scannerBusy ? 'contained' : 'outlined'}
@@ -151,7 +156,7 @@ export const AppHeader: React.FC = () => {
 
           {!isCompact && (
             <Tooltip title="Farm projects & data" arrow>
-              <IconButton aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
+              <IconButton data-tour="projects" aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
                 <FolderIcon sx={{ fontSize: 19 }} />
               </IconButton>
             </Tooltip>
@@ -168,6 +173,7 @@ export const AppHeader: React.FC = () => {
           </Tooltip>
           <Tooltip title="More actions" arrow>
             <IconButton
+              data-tour="menu"
               aria-label="More actions"
               aria-controls={menuAnchor ? 'header-actions-menu' : undefined}
               aria-haspopup="menu"
@@ -181,6 +187,7 @@ export const AppHeader: React.FC = () => {
           <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
             {showPhoneCameraAction && <MenuItem onClick={closeMenuThen(openCameraScanner)}><ListItemIcon><PhotoCameraIcon /></ListItemIcon><ListItemText>Use phone camera (Beta)</ListItemText></MenuItem>}
             {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
+            <MenuItem onClick={closeMenuThen(() => setIsTourOpen(true))}><ListItemIcon><SchoolIcon /></ListItemIcon><ListItemText>Tutorial</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsReflexNoticeOpen(true))}><ListItemIcon><FlashOnIcon sx={{ color: '#F59E0B' }} /></ListItemIcon><ListItemText>Scanner &amp; Reflex Guide</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>

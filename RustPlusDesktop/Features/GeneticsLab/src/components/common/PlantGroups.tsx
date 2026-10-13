@@ -60,7 +60,7 @@ export const PlantGroups: React.FC = () => {
   const filledGroups = geneGroups.filter((g) => g.genes.length > 0);
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 0.5, mb: 1, minWidth: 0 }}>
+    <Box data-tour="plant-groups" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 0.5, mb: 1, minWidth: 0 }}>
       <Box
         role="tablist"
         aria-label="Plant groups"

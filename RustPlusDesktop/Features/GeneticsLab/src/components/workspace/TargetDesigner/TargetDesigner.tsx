@@ -47,6 +47,7 @@ export const TargetDesigner: React.FC = () => {
 
   return (
     <Paper
+      data-tour="goal"
       variant="outlined"
       sx={{
         backgroundColor: 'var(--gl-panel-bg)',
@@ -74,6 +75,7 @@ export const TargetDesigner: React.FC = () => {
           size="small"
           variant="outlined"
           startIcon={<TuneIcon sx={{ fontSize: 16 }} />}
+          data-tour="goal-advanced"
           aria-expanded={isAdvancedOpen}
           aria-controls="advanced-target-controls"
           onClick={() => setIsAdvancedOpen(open => !open)}

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): one set of region controls, in the Scanner HUD; live previews everywhere ([3f0ca4a](https://github.com/JawadYzbk/rust-genetics-lab/commit/3f0ca4a9c1becfb6540a2d780873c964f086cd43))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.16.0...v1.16.1
+All notable changes to this project will be documented in this file.
+
 ## [1.16.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.0) (2026-10-13)
 
 ### 🚀 Features

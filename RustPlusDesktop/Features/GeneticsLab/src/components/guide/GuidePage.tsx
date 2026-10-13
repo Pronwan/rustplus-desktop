@@ -110,7 +110,9 @@ export const GuidePage: React.FC = () => {
         {/* Right Article Content */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Interactive 3D planter: breeding steps, slot layout and growth stages */}
-          <PlantingGuide3D />
+          <Box data-tour="guide-3d">
+            <PlantingGuide3D />
+          </Box>
 
           {/* Article Section */}
           <Paper
