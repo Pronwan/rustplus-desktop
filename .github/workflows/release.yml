@@ -17,6 +17,11 @@ on:
         required: true
         default: "main"
         type: string
+      geneticslab_release:
+        description: "Genetics Lab release to bundle from JawadYzbk/rust-genetics-lab (e.g. v1.8.0), 'latest', or 'source' to build the copy in this repo."
+        required: false
+        default: "latest"
+        type: string
       create_github_release:
         description: "Create or update a GitHub Release with installer artifacts."
         required: true
@@ -83,11 +88,62 @@ jobs:
             MapParser/package-lock.json
             RustPlusDesktop/Features/GeneticsLab/package-lock.json
 
-      - name: Build GeneticsLab frontend
-        working-directory: RustPlusDesktop/Features/GeneticsLab
+      # The installer ships the newest published Genetics Lab build. Installed apps then
+      # keep themselves current from rust-genetics-lab's `dist` branch (or the hosted
+      # site), downloading only changed files, so this copy is just the starting point.
+      - name: Get GeneticsLab build
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GENETICSLAB_RELEASE: ${{ inputs.geneticslab_release || 'latest' }}
         run: |
-          npm ci
-          npm run build
+          $labDir = "RustPlusDesktop/Features/GeneticsLab"
+          $dist = Join-Path $labDir "dist"
+          $bundled = $false
+
+          if ($env:GENETICSLAB_RELEASE -ne "source") {
+            $download = Join-Path $env:RUNNER_TEMP "geneticslab"
+            New-Item -ItemType Directory -Force -Path $download | Out-Null
+            $ghArgs = @("release", "download")
+            if ($env:GENETICSLAB_RELEASE -ne "latest") { $ghArgs += $env:GENETICSLAB_RELEASE }
+            $ghArgs += @("--repo", "JawadYzbk/rust-genetics-lab", "--pattern", "genetics-lab-dist.zip", "--dir", $download, "--clobber")
+            gh @ghArgs
+
+            $zip = Join-Path $download "genetics-lab-dist.zip"
+            if ($LASTEXITCODE -eq 0 -and (Test-Path -LiteralPath $zip)) {
+              $extract = Join-Path $download "dist"
+              Expand-Archive -LiteralPath $zip -DestinationPath $extract -Force
+              # Releases from before the update manifest cannot seed partial updates.
+              if (Test-Path -LiteralPath (Join-Path $extract "genetics-lab-manifest.json")) {
+                if (Test-Path -LiteralPath $dist) { Remove-Item -LiteralPath $dist -Recurse -Force }
+                Move-Item -LiteralPath $extract -Destination $dist
+                $bundled = $true
+              } else {
+                Write-Warning "Genetics Lab release $($env:GENETICSLAB_RELEASE) has no update manifest; building from source."
+              }
+            } else {
+              Write-Warning "Could not download Genetics Lab release $($env:GENETICSLAB_RELEASE); building from source."
+            }
+          }
+
+          if (-not $bundled) {
+            Push-Location $labDir
+            npm ci
+            if ($LASTEXITCODE -ne 0) { throw "npm ci failed" }
+            npm run build
+            if ($LASTEXITCODE -ne 0) { throw "Genetics Lab build failed" }
+            Pop-Location
+          }
+
+      - name: Verify GeneticsLab update manifest
+        shell: pwsh
+        run: |
+          $manifestPath = "RustPlusDesktop/Features/GeneticsLab/dist/genetics-lab-manifest.json"
+          if (-not (Test-Path -LiteralPath $manifestPath)) {
+            throw "$manifestPath is missing; the GeneticsLab build must run scripts/generate-update-manifest.mjs."
+          }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          Write-Host "Bundling Genetics Lab v$($manifest.version) ($($manifest.files.Count) files, build $($manifest.buildId.Substring(0, 12)))"
 
       - name: Resolve release version
         id: version
@@ -159,6 +215,7 @@ jobs:
           -p:IncludeNativeLibrariesForSelfExtract=true
           -p:PublishDocumentationFiles=false
           -p:GenerateDocumentationFile=false
+          -p:SkipGeneticsLabBuild=true
 
       - name: Build Velopack release
         shell: pwsh
