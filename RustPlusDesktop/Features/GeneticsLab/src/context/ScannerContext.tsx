@@ -351,6 +351,9 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
           if (added && otherPlant && selectedCloneCountRef.current > 0) {
             notifyInfo(`${evt.geneString} is a ${otherPlant.replace(/-/g, ' ')} clone: added to its own group.`);
+          } else if (added && !detected) {
+            // Said out loud so a clone of another plant is not filed here unnoticed.
+            notifyInfo(`${evt.geneString} added to ${selectedPlant.replace(/-/g, ' ')}: the plant type could not be read.`);
           }
 
           if (added) {

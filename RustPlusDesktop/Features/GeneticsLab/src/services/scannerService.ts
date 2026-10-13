@@ -53,6 +53,8 @@ export class ScannerService {
   // Modular Pipeline Components
   private regions: ScannerRegion[] = [];
   private plantNameCanvas: HTMLCanvasElement | null = null;
+  /** Plant names read while a row was being confirmed, keyed by region and genes. */
+  private plantVotes = new Map<string, Map<string, number>>();
   private recognizer: GeneRecognizer;
   private changeDetector: RegionChangeDetector;
   private stabilityDetector: FrameStabilityDetector;
@@ -741,6 +743,7 @@ export class ScannerService {
 
     for (const candidate of candidates) {
       this.latestConfidence = candidate.confidence;
+      this.votePlantType(candidate);
 
       // Step 4: Temporal confirmation (per-region history with instant fast-path)
       const votedResult = this.votingService.addCandidate(
@@ -787,7 +790,7 @@ export class ScannerService {
         regionType: candidate.regionType,
         geneString: votedResult.geneString,
         confidence: votedResult.confidence,
-        plantType: this.readPlantType(candidate)
+        plantType: this.takePlantVote(candidate.regionIndex, votedResult.geneString)
       });
     }
 
@@ -801,19 +804,65 @@ export class ScannerService {
   }
 
   /**
-   * The plant the panel around an accepted row names, from the live frame. Runs once per
-   * accepted clone, not per frame; any failure just means "not detected".
+   * Reads the plant name on each frame a row is read and counts the answers, so one frame
+   * with the cursor over the title, a flicker or a misplaced band does not decide the plant.
+   * At most a few reads per row; each is a small crop.
+   */
+  private votePlantType(candidate: ScanCandidate): void {
+    const key = `${candidate.regionIndex}:${candidate.genes}`;
+    let votes = this.plantVotes.get(key);
+    if (!votes) {
+      if (this.plantVotes.size > 32) this.plantVotes.clear();
+      votes = new Map();
+      this.plantVotes.set(key, votes);
+    }
+    let total = 0;
+    for (const n of votes.values()) total += n;
+    if (total >= 5) return;
+    const plant = this.readPlantType(candidate);
+    if (plant) votes.set(plant, (votes.get(plant) ?? 0) + 1);
+  }
+
+  /** The plant most reads of this row named, or undefined; forgets the row's votes. */
+  private takePlantVote(regionIndex: number, genes: string): string | undefined {
+    const key = `${regionIndex}:${genes}`;
+    const votes = this.plantVotes.get(key);
+    this.plantVotes.delete(key);
+    let best: string | undefined;
+    let bestCount = 0;
+    for (const [plant, count] of votes ?? []) {
+      if (count > bestCount) {
+        best = plant;
+        bestCount = count;
+      }
+    }
+    if (best && votes && votes.size > 1) console.log('[Scanner] Plant name votes', Object.fromEntries(votes));
+    return best;
+  }
+
+  /**
+   * The plant the panel around a row names, from the live frame; any failure just means
+   * "not detected". The band is placed from the row's detected geometry; when that misses,
+   * nudged bands (a little higher or lower, pitch a little off) are tried.
    */
   private readPlantType(candidate: ScanCandidate): string | undefined {
     const row = candidate.rowGeometry;
     const frame = this.frameSource?.current();
     if (!row || !frame || !this.frameSource) return undefined;
     try {
-      const rect = plantNameRect(row, candidate.regionType);
-      const x0 = Math.max(0, Math.floor(rect.x0));
-      const y0 = Math.max(0, Math.floor(rect.y0));
-      const x1 = Math.min(this.frameSource.width, Math.ceil(rect.x1));
-      const y1 = Math.min(this.frameSource.height, Math.ceil(rect.y1));
+      const attempts = [
+        row,
+        { ...row, y: row.y - row.pitch * 0.15 },
+        { ...row, y: row.y + row.pitch * 0.15 },
+        { ...row, pitch: row.pitch * 0.95 },
+        { ...row, pitch: row.pitch * 1.05 }
+      ];
+      // One crop covers every attempt's band.
+      const rects = attempts.map(a => plantNameRect(a, candidate.regionType));
+      const x0 = Math.max(0, Math.floor(Math.min(...rects.map(r => r.x0))));
+      const y0 = Math.max(0, Math.floor(Math.min(...rects.map(r => r.y0))));
+      const x1 = Math.min(this.frameSource.width, Math.ceil(Math.max(...rects.map(r => r.x1))));
+      const y1 = Math.min(this.frameSource.height, Math.ceil(Math.max(...rects.map(r => r.y1))));
       const w = x1 - x0;
       const h = y1 - y0;
       if (w < 8 || h < 6) return undefined;
@@ -826,9 +875,15 @@ export class ScannerService {
       if (!ctx) return undefined;
       ctx.drawImage(frame, x0, y0, w, h, 0, 0, w, h);
       const image = { data: ctx.getImageData(0, 0, w, h).data, width: w, height: h };
-      const read = readPlantName(image, { x: row.x - x0, y: row.y - y0, pitch: row.pitch }, candidate.regionType);
-      if (read) console.log(`[Scanner] Plant name: ${read.text} -> ${read.plant}`);
-      return read?.plant;
+      for (const attempt of attempts) {
+        const read = readPlantName(image, { x: attempt.x - x0, y: attempt.y - y0, pitch: attempt.pitch }, candidate.regionType);
+        if (read) {
+          console.log(`[Scanner] Plant name: ${read.text} -> ${read.plant}`);
+          return read.plant;
+        }
+      }
+      console.log('[Scanner] Plant name not read');
+      return undefined;
     } catch (error) {
       console.warn('[Scanner] Plant name read failed', error);
       return undefined;

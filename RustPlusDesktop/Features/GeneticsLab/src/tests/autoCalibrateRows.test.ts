@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_BADGE_FILTER_OPTIONS, detectBadgeCandidates } from '../services/scanner/vision/rasterOps.ts';
 import { buildRowCandidates, DEFAULT_BUILD_CANDIDATES_OPTIONS } from '../services/scanner/vision/geometry.ts';
+import { AutoCalibrator } from '../services/scanner/AutoCalibrator.ts';
+import { DesktopTemplateRecognizer } from '../services/scanner/DesktopTemplateRecognizer.ts';
+import { readPlantName } from '../services/scanner/plantNameReader.ts';
 
 async function loadFixture(name: string, width: number, height: number) {
   const fsName = 'node:fs';
@@ -60,6 +63,48 @@ describe('auto-calibration row discovery', () => {
       expect(Math.abs(best.center.x - frame.border - capture.center.x)).toBeLessThan(6);
       expect(Math.abs(best.center.y - frame.border - capture.center.y)).toBeLessThan(6);
       expect(best.members.map(m => m.color[0]).join('')).toBe(capture.colors);
+    });
+  }
+});
+
+// Calibrate, cut the region the way the scanner does, read the row, then the plant above it.
+const PANELS = [
+  { name: 'badges-planter-sunflower-ui07-terrain', width: 440, height: 240, genes: 'WXYXYY', plant: 'sunflower' },
+  { name: 'badges-planter-ui07-terrain', width: 400, height: 190, genes: 'WGHXWW', plant: 'red-berry' },
+  { name: 'badges-planter-yellow-berry-ui07-terrain', width: 380, height: 190, genes: 'XYHYWX', plant: 'yellow-berry' }
+];
+
+describe('auto-calibration end to end', () => {
+  for (const panel of PANELS) {
+    it(`calibrates on ${panel.name} and reads ${panel.genes} as ${panel.plant}`, async () => {
+      // Wide enough that the row is no wider than half the frame, as on a real screen.
+      const frame = framedInDirt(await loadFixture(panel.name, panel.width, panel.height), 200);
+      const found = AutoCalibrator.findRegion(frame);
+      if ('error' in found) throw new Error(found.error);
+
+      const { region } = found;
+      const W = frame.width;
+      const H = frame.height;
+      const xPx = Math.round(W * region.TOP_LEFT_X);
+      const yPx = Math.round(H * region.TOP_LEFT_Y);
+      const wPx = Math.round(W * region.WIDTH);
+      const hPx = Math.ceil(H * region.WIDTH * region.HEIGHT_TO_WIDTH_RATIO);
+      const geneWPx = Math.round(wPx * region.GENE_WIDTH_TO_WIDTH_RATIO);
+      const roi = new Uint8ClampedArray(wPx * hPx * 4);
+      for (let y = 0; y < hPx; y++) {
+        roi.set(frame.data.subarray(((yPx + y) * W + xPx) * 4, ((yPx + y) * W + xPx + wPx) * 4), y * wPx * 4);
+      }
+
+      const read = DesktopTemplateRecognizer.recognizeFromRoi(roi, wPx, hPx, geneWPx, Math.max(0, (wPx - geneWPx * 6) / 5));
+      expect(read?.geneString).toBe(panel.genes);
+
+      const centers = read!.geometry!.centers;
+      const row = {
+        x: xPx + centers[0],
+        y: yPx + read!.geometry!.centerY,
+        pitch: (centers[centers.length - 1] - centers[0]) / (centers.length - 1)
+      };
+      expect(readPlantName(frame, row, 'planter')?.plant).toBe(panel.plant);
     });
   }
 });

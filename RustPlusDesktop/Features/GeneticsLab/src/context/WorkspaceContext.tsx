@@ -6,6 +6,7 @@ import { Sapling } from '../domain/genetics/Sapling.ts';
 import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
 import { buildBreedingPlan } from '../domain/genetics/breedingPlan.ts';
 import { useNotification } from './NotificationContext.tsx';
+import { PLANT_ORDER, plantLabel } from '../domain/plants.ts';
 
 const DEFAULT_SAMPLE_GENES: Record<string, string[]> = {
   hemp: ['GGYYHH', 'YGGYHH', 'HHGGYY', 'WYGGYX', 'GHGYHW', 'YYGGHH', 'XGYYHH'],
@@ -20,6 +21,12 @@ const DEFAULT_SAMPLE_GENES: Record<string, string[]> = {
   corn: ['GGYYHH', 'YYGGHH', 'GGGGYY', 'YYGGXX']
 };
 
+export interface GeneGroup {
+  plant: string;
+  /** Valid gene strings in the list, in order. */
+  genes: string[];
+}
+
 interface WorkspaceContextType {
   selectedPlant: string;
   setSelectedPlant: (plant: string) => void;
@@ -30,6 +37,12 @@ interface WorkspaceContextType {
   sourceSaplings: Sapling[]; // Valid saplings from current input text with line indices
   clones: SavedClone[]; // Clones for current crop
   allClones: SavedClone[];
+  /** Every plant with genes in its list (plus the selected one), in plant order. */
+  geneGroups: GeneGroup[];
+  /** Empties one plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
+  clearPlantGroup: (plant: string) => (() => void) | undefined;
+  /** Empties every plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
+  clearAllGroups: () => (() => void) | undefined;
   
   // Clone operations
   addClone: (genetics: string, options?: Partial<Omit<SavedClone, 'id' | 'genetics' | 'cropType' | 'createdAt' | 'updatedAt'>> & { cropType?: string }) => SavedClone | null;
@@ -150,6 +163,15 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return [...clones, ...out];
   }, [geneInputs, selectedPlant, clones]);
 
+  const geneGroups = useMemo<GeneGroup[]>(() => {
+    const byPlant: Record<string, string[]> = {};
+    for (const clone of allClones) (byPlant[clone.cropType] ??= []).push(clone.genetics);
+    return PLANT_ORDER.filter((plant) => byPlant[plant]?.length || plant === selectedPlant).map((plant) => ({
+      plant,
+      genes: byPlant[plant] ?? []
+    }));
+  }, [allClones, selectedPlant]);
+
   const setSelectedPlant = useCallback((plant: string) => {
     selectedPlantRef.current = plant;
     setSelectedPlantState(plant);
@@ -178,9 +200,31 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // --- MANUAL INPUT & CLONE ACTIONS ---
 
+  const clearPlantGroup = useCallback(
+    (plant: string) => {
+      const previous = geneInputsRef.current[plant] ?? '';
+      if (!previous.trim()) return undefined;
+      setGeneInputTextState('', plant);
+      const undo = () => setGeneInputTextState(previous, plant);
+      notifyInfo(`Cleared ${plantLabel(plant)}`, { label: 'Undo', onClick: undo });
+      return undo;
+    },
+    [notifyInfo, setGeneInputTextState]
+  );
+
+  // The toolbar's CLEAR: the open group only.
   const clearGeneInput = useCallback(() => {
-    setGeneInputTextState('');
-    notifyInfo('Cleared all inputs');
+    clearPlantGroup(selectedPlantRef.current);
+  }, [clearPlantGroup]);
+
+  const clearAllGroups = useCallback(() => {
+    const previous = geneInputsRef.current;
+    const filled = Object.values(previous).filter((text) => text.trim()).length;
+    if (filled === 0) return undefined;
+    setGeneInputs({});
+    const undo = () => setGeneInputs(previous);
+    notifyInfo(`Cleared ${filled} plant group${filled === 1 ? '' : 's'}`, { label: 'Undo', onClick: undo });
+    return undo;
   }, [notifyInfo]);
 
   const loadSampleGenes = useCallback(() => {
@@ -563,6 +607,9 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setGeneInputText,
         clones,
         allClones,
+        geneGroups,
+        clearPlantGroup,
+        clearAllGroups,
         sourceSaplings,
         addClone,
         addBatchClones,

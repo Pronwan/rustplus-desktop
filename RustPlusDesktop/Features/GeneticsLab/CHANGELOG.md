@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.2](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.2) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): auto-calibrate finds the gene row at small UI scales ([1069689](https://github.com/JawadYzbk/rust-genetics-lab/commit/1069689503fa352800778017044098969dddf3bd))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.1...v1.14.2
+All notable changes to this project will be documented in this file.
+
+## [1.14.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): read the plant name over bright terrain; tell R from P ([9def97e](https://github.com/JawadYzbk/rust-genetics-lab/commit/9def97e61de86343c7bb748b3517c87107fd2a7f))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.0...v1.14.1
+All notable changes to this project will be documented in this file.
+
 ## [1.14.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.0) (2026-10-13)
 
 ### 🚀 Features

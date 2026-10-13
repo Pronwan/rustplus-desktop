@@ -1,20 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Box, ButtonBase, Popover, Typography } from '@mui/material';
+import { Box, ButtonBase, Popover, Tooltip, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
+import { PLANT_GROUPS, PLANT_ORDER as ORDERED, plantLabel } from '../../domain/plants.ts';
 
-const PLANT_GROUPS: { title: string; plants: string[] }[] = [
-  { title: 'Crops', plants: ['hemp', 'corn', 'potato', 'pumpkin', 'wheat'] },
-  { title: 'Berries', plants: ['red-berry', 'blue-berry', 'yellow-berry', 'green-berry', 'white-berry', 'mixed-berry'] },
-  { title: 'Flowers', plants: ['sunflower', 'rose', 'orchid'] }
-];
+// Re-exported: other components import the label from here.
+export { plantLabel };
 
-const ORDERED = PLANT_GROUPS.flatMap((g) => g.plants);
-
-export const plantLabel = (plant: string) => plant.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-
-const PlantIcon: React.FC<{ plant: string; size: number }> = ({ plant, size }) => (
+export const PlantIcon: React.FC<{ plant: string; size: number }> = ({ plant, size }) => (
   <Box
     component="img"
     src={`./img/items/${plant}.webp`}
@@ -34,13 +29,17 @@ interface PlantPickerProps {
   label: string;
   /** Icon-only trigger for narrow headers. */
   compact?: boolean;
+  /** `add`: a small "+" trigger for starting another plant group; the grid is the same. */
+  variant?: 'select' | 'add';
+  /** Text next to the "+" of the `add` trigger; icon only when omitted. */
+  addText?: string;
 }
 
 /**
  * Plant chooser with the game's item icons: a trigger showing the current plant and how many
  * of its clones are saved, opening a grid of every plant grouped by kind.
  */
-export const PlantPicker: React.FC<PlantPickerProps> = ({ value, onChange, label, compact = false }) => {
+export const PlantPicker: React.FC<PlantPickerProps> = ({ value, onChange, label, compact = false, variant = 'select', addText }) => {
   const { allClones } = useWorkspace();
   const anchorRef = useRef<HTMLButtonElement | null>(null);
   const tileRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -75,41 +74,70 @@ export const PlantPicker: React.FC<PlantPickerProps> = ({ value, onChange, label
 
   return (
     <>
-      <ButtonBase
-        ref={anchorRef}
-        onClick={() => setOpen(true)}
-        aria-label={`${label}: ${plantLabel(value)}`}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        sx={{
-          height: 36,
-          px: compact ? 0.75 : 1,
-          gap: 1,
-          borderRadius: '8px',
-          border: '1px solid var(--gl-border-strong)',
-          backgroundColor: 'var(--gl-input-bg)',
-          color: 'var(--gl-text-primary)',
-          transition: 'border-color 140ms ease, background-color 140ms ease, transform 140ms ease',
-          '&:hover': { borderColor: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' },
-          '&:hover img': { transform: 'scale(1.12) rotate(-4deg)' },
-          '&:focus-visible': { outline: '2px solid var(--gl-primary)', outlineOffset: 2 }
-        }}
-      >
-        <PlantIcon plant={value} size={26} />
-        {!compact && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.05, minWidth: 0 }}>
-            <Typography component="span" sx={{ fontSize: '0.8rem', fontWeight: 800, whiteSpace: 'nowrap' }}>
-              {plantLabel(value)}
-            </Typography>
-            <Typography component="span" sx={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--gl-text-muted)', whiteSpace: 'nowrap' }}>
-              {count === 0 ? 'No clones yet' : `${count} clone${count === 1 ? '' : 's'}`}
-            </Typography>
-          </Box>
-        )}
-        <ExpandMoreIcon
-          sx={{ fontSize: 18, color: 'var(--gl-text-muted)', transition: 'transform 160ms ease', transform: open ? 'rotate(180deg)' : 'none' }}
-        />
-      </ButtonBase>
+      {variant === 'add' ? (
+        <Tooltip title={label}>
+          <ButtonBase
+            ref={anchorRef}
+            onClick={() => setOpen(true)}
+            aria-label={label}
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            sx={{
+              flexShrink: 0,
+              height: 26,
+              minWidth: 26,
+              px: addText ? 0.75 : 0,
+              gap: 0.25,
+              borderRadius: '999px',
+              border: '1px dashed var(--gl-border-strong)',
+              color: 'var(--gl-text-secondary)',
+              fontSize: '0.68rem',
+              fontWeight: 800,
+              transition: 'border-color 120ms ease, color 120ms ease',
+              '&:hover, &:focus-visible': { borderColor: 'var(--gl-primary)', color: 'var(--gl-primary)' }
+            }}
+          >
+            <AddIcon sx={{ fontSize: 16 }} />
+            {addText}
+          </ButtonBase>
+        </Tooltip>
+      ) : (
+        <ButtonBase
+          ref={anchorRef}
+          onClick={() => setOpen(true)}
+          aria-label={`${label}: ${plantLabel(value)}`}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          sx={{
+            height: 36,
+            px: compact ? 0.75 : 1,
+            gap: 1,
+            borderRadius: '8px',
+            border: '1px solid var(--gl-border-strong)',
+            backgroundColor: 'var(--gl-input-bg)',
+            color: 'var(--gl-text-primary)',
+            transition: 'border-color 140ms ease, background-color 140ms ease, transform 140ms ease',
+            '&:hover': { borderColor: 'var(--gl-primary)', backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' },
+            '&:hover img': { transform: 'scale(1.12) rotate(-4deg)' },
+            '&:focus-visible': { outline: '2px solid var(--gl-primary)', outlineOffset: 2 }
+          }}
+        >
+          <PlantIcon plant={value} size={26} />
+          {!compact && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.05, minWidth: 0 }}>
+              <Typography component="span" sx={{ fontSize: '0.8rem', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                {plantLabel(value)}
+              </Typography>
+              <Typography component="span" sx={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--gl-text-muted)', whiteSpace: 'nowrap' }}>
+                {count === 0 ? 'No clones yet' : `${count} clone${count === 1 ? '' : 's'}`}
+              </Typography>
+            </Box>
+          )}
+          <ExpandMoreIcon
+            sx={{ fontSize: 18, color: 'var(--gl-text-muted)', transition: 'transform 160ms ease', transform: open ? 'rotate(180deg)' : 'none' }}
+          />
+        </ButtonBase>
+      )}
 
       <Popover
         open={open}
