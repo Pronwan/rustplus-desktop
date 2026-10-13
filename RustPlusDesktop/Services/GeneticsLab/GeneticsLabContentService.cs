@@ -55,7 +55,13 @@ namespace RustPlusDesk.Services.GeneticsLab
         private const string StagingMarker = ".partial-";
         private const int MaxManifestBytes = 2 * 1024 * 1024;
         private const int MaxParallelDownloads = 4;
-        private static readonly TimeSpan MinCheckInterval = TimeSpan.FromHours(1);
+        // Floor between checks, however often they are asked for (start-up, opening the tab, the
+        // periodic timer). Also how long a failed check waits before the next try.
+        private static readonly TimeSpan MinCheckInterval = TimeSpan.FromMinutes(15);
+        // How often a running app looks again, so a release that lands mid-session is noticed
+        // without a restart.
+        private static readonly TimeSpan PeriodicCheckInterval = TimeSpan.FromMinutes(30);
+        private Timer? _periodicTimer;
 
         private readonly string _rootDir;
         private readonly string _versionsDir;
@@ -260,6 +266,20 @@ namespace RustPlusDesk.Services.GeneticsLab
         // ── Checking for updates ────────────────────────────────────────────────────────────────
 
         /// <summary>Starts a throttled update check without waiting for it.</summary>
+        /// <summary>
+        /// Checks again every 30 minutes for as long as the app runs. Safe to call more than
+        /// once; only the first call starts the timer.
+        /// </summary>
+        public void StartPeriodicChecks()
+        {
+            if (_periodicTimer != null) return;
+            _periodicTimer = new Timer(
+                _ => CheckForUpdatesInBackground(),
+                null,
+                PeriodicCheckInterval,
+                PeriodicCheckInterval);
+        }
+
         public void CheckForUpdatesInBackground(TimeSpan delay = default)
         {
             _ = Task.Run(async () =>

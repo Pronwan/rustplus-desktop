@@ -86,6 +86,9 @@ namespace RustPlusDesk.Views
                 // Genetics Lab updates on its own schedule, independent of desktop releases. Check
                 // shortly after startup so most users have the new build before they open the tab.
                 GeneticsLabContentService.Instance.CheckForUpdatesInBackground(TimeSpan.FromSeconds(60));
+                // ...and keep checking while the app runs, so a release that lands after start-up
+                // (or after the last update) is found without a restart.
+                GeneticsLabContentService.Instance.StartPeriodicChecks();
             }
         }
 
@@ -144,6 +147,9 @@ namespace RustPlusDesk.Views
             if (IsVisible)
             {
                 await EnsureWebViewAsync();
+                // Coming back to Genetics Lab is a natural moment to look for a newer build
+                // (at most every 15 minutes; the service throttles).
+                GeneticsLabContentService.Instance.CheckForUpdatesInBackground();
             }
 
             UpdatePerformanceMode();
