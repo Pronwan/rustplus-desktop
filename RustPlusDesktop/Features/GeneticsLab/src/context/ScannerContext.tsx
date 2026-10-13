@@ -79,7 +79,7 @@ const ScannerContext = createContext<ScannerContextValue | null>(null);
 
 export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { notifySuccess, notifyInfo, notifyWarning, notifyError } = useNotification();
-  const { addClone, selectedPlant, setSelectedPlant, clones } = useWorkspace();
+  const { addClone, replaceScannedGene, selectedPlant, setSelectedPlant, clones } = useWorkspace();
   // Read inside the scanner callback without re-subscribing it on every added clone.
   const selectedCloneCountRef = useRef(clones.length);
   selectedCloneCountRef.current = clones.length;
@@ -364,6 +364,15 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
           scannerService.acknowledgeGeneHandled(evt.geneString);
         }
+      } else if (evt.type === 'SAPLING-CORRECTED' && evt.geneString && evt.previousGeneString) {
+        // The same tooltip, read better a moment later: fix the entry instead of adding one.
+        lastProcessedGeneRef.current = evt.geneString;
+        lastProcessedTimeRef.current = Date.now();
+        setLastScannedGenes(evt.geneString);
+        if (replaceScannedGene(evt.previousGeneString, evt.geneString)) {
+          notifyInfo(`Corrected a misread: ${evt.previousGeneString} → ${evt.geneString}`);
+        }
+        scannerService.acknowledgeGeneHandled(evt.geneString);
       } else if (evt.type === 'IDLE') {
         // Idle event from scanner
       } else if (evt.type === 'ERROR') {
@@ -380,7 +389,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => {
       unsubscribe();
     };
-  }, [scannerService, addClone, selectedPlant, setSelectedPlant, notifySuccess, notifyInfo, notifyError]);
+  }, [scannerService, addClone, replaceScannedGene, selectedPlant, setSelectedPlant, notifySuccess, notifyInfo, notifyError]);
 
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {

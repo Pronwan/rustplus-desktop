@@ -9,6 +9,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useScanner } from '../../context/ScannerContext.tsx';
 import { GeneticsSequence } from '../common/GeneticsSequence.tsx';
 import { ScanningRegionsView } from './ScanningRegionsView.tsx';
+import { PlantReadStatus } from './PlantReadStatus.tsx';
 
 export const CompactScannerStatus: React.FC = () => {
   const {
@@ -116,6 +117,8 @@ export const CompactScannerStatus: React.FC = () => {
 
         {/* Live Scanning Regions Viewport & Controls */}
         <ScanningRegionsView compact onClose={() => setIsExpanded(false)} />
+
+        <PlantReadStatus />
 
         {/* Bottom Status bar with Last Scanned sequence */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(255, 255, 255, 0.06)', pt: 0.75 }}>

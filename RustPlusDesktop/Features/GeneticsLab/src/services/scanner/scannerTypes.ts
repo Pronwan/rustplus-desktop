@@ -18,6 +18,7 @@ export type ScannerEventType =
   | 'STOPPED'
   | 'PREVIEW'
   | 'SAPLING-FOUND'
+  | 'SAPLING-CORRECTED'
   | 'ERROR'
   | 'DIAGNOSTICS'
   | 'STARVATION_DETECTED'
@@ -39,6 +40,8 @@ export interface ScannerEvent {
   starvationReason?: StarvationReason;
   /** SAPLING-FOUND: the plant the panel names ("hemp", "green-berry"), when it could be read. */
   plantType?: string;
+  /** SAPLING-CORRECTED: the misread genes `geneString` replaces. */
+  previousGeneString?: string;
 }
 
 export type ScannerEventListener = (event: ScannerEvent) => void;
@@ -115,6 +118,11 @@ export interface ScannerDiagnostics {
   lastPartialRead: string;
   /** Rows completed by asking the OCR engine about a slot template matching gave up on. */
   fallbackReads: number;
+  /**
+   * The last plant-name read: the crop around the title with the band it read outlined,
+   * what the letters said and the plant they named (null: none matched).
+   */
+  plantRead?: { regionType: ScannerRegionType; text: string; plant: string | null; glyphs: number; imageUrl: string };
 }
 
 export interface GeneRecognizer {

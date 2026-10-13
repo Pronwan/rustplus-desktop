@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { RasterImage } from '../services/scanner/scannerTypes.ts';
-import { plantFromTitle, plantNameRect, readPlantName } from '../services/scanner/plantNameReader.ts';
+import { plantFromTitle, plantNameRect, readPlantName, searchPlantTitle } from '../services/scanner/plantNameReader.ts';
 
 async function loadFixture(name: string, width: number, height: number): Promise<RasterImage> {
   const fsName = 'node:fs';
@@ -58,7 +58,18 @@ const CAPTURES = [
   { name: 'plant-planter-hemp-c', width: 380, height: 120, row: { x: 113.5, y: 96, pitch: 46.1 }, type: 'planter', plant: 'hemp' },
   { name: 'plant-planter-yellow-berry', width: 320, height: 110, row: { x: 96, y: 85, pitch: 38.6 }, type: 'planter', plant: 'yellow-berry' },
   { name: 'plant-inventory-green-berry', width: 640, height: 250, row: { x: 171, y: 234, pitch: 29.3 }, type: 'inventory', plant: 'green-berry' },
-  { name: 'plant-inventory-blue-berry', width: 640, height: 240, row: { x: 205.5, y: 215.5, pitch: 27.3 }, type: 'inventory', plant: 'blue-berry' }
+  { name: 'plant-inventory-blue-berry', width: 640, height: 240, row: { x: 205.5, y: 215.5, pitch: 27.3 }, type: 'inventory', plant: 'blue-berry' },
+  // Planter panels over bright terrain seen through the translucent panel, UI scale 1.0 and 0.7.
+  { name: 'plant-planter-hemp-ui10-12', width: 480, height: 185, row: { x: 99, y: 142, pitch: 61.6 }, type: 'planter', plant: 'hemp' },
+  { name: 'plant-planter-orchid-ui10-13', width: 480, height: 185, row: { x: 99, y: 142, pitch: 61.6 }, type: 'planter', plant: 'orchid' },
+  { name: 'plant-planter-wheat-ui10-14', width: 480, height: 185, row: { x: 99, y: 142, pitch: 61.6 }, type: 'planter', plant: 'wheat' },
+  { name: 'plant-planter-green-berry-ui10-15', width: 480, height: 185, row: { x: 99, y: 142, pitch: 61.6 }, type: 'planter', plant: 'green-berry' },
+  { name: 'plant-planter-blue-berry-ui10-16', width: 480, height: 185, row: { x: 99, y: 142, pitch: 61.6 }, type: 'planter', plant: 'blue-berry' },
+  { name: 'plant-planter-rose-ui07-22', width: 337, height: 130, row: { x: 70, y: 100, pitch: 43.2 }, type: 'planter', plant: 'rose' },
+  { name: 'plant-planter-hemp-ui07-23', width: 337, height: 130, row: { x: 70, y: 100, pitch: 43.2 }, type: 'planter', plant: 'hemp' },
+  { name: 'plant-planter-red-berry-ui07-24', width: 337, height: 130, row: { x: 70, y: 100, pitch: 43.2 }, type: 'planter', plant: 'red-berry' },
+  { name: 'plant-planter-red-berry-ui07-25', width: 337, height: 130, row: { x: 70, y: 100, pitch: 43.2 }, type: 'planter', plant: 'red-berry' },
+  { name: 'plant-planter-sunflower-ui07-26', width: 337, height: 130, row: { x: 70, y: 100, pitch: 43.2 }, type: 'planter', plant: 'sunflower' }
 ] as const;
 
 describe('readPlantName on captures', () => {
@@ -69,6 +80,17 @@ describe('readPlantName on captures', () => {
       expect(read?.plant, read?.text).toBe(capture.plant);
     });
   }
+
+  it('tells R from P (the leg), even at UI scale 0.7', async () => {
+    for (const [name, width, height, row, expected] of [
+      ['plant-planter-green-berry-ui10-15', 480, 185, { x: 99, y: 142, pitch: 61.6 }, 'GREEN BERRY'],
+      ['plant-planter-sunflower-ui07-26', 337, 130, { x: 70, y: 100, pitch: 43.2 }, 'SUNFLOWER'],
+      ['plant-planter-red-berry-ui07-24', 337, 130, { x: 70, y: 100, pitch: 43.2 }, 'BERRY']
+    ] as const) {
+      const read = readPlantName(await loadFixture(name, width, height), row, 'planter');
+      expect(read?.text ?? '').toContain(expected);
+    }
+  });
 
   it('still reads a capture shrunk to half size (a smaller UI scale, blurrier text)', async () => {
     const source = await loadFixture('plant-planter-hemp-a', 628, 200);
@@ -87,5 +109,25 @@ describe('readPlantName on captures', () => {
     const image = await loadFixture('plant-planter-hemp-a', 628, 200);
     // Pretend the row is far lower: the band above it is empty panel and gene badges.
     expect(readPlantName(image, { x: 187, y: 195, pitch: 30 }, 'planter')).toBeNull();
+  });
+
+  it('finds a title that sits off the measured band (UI scale moves it relative to the genes)', async () => {
+    const inventory = await loadFixture('plant-inventory-green-berry', 640, 250);
+    const row = { x: 171, y: 234, pitch: 29.3 };
+    for (const dy of [-2, -1, 1, 2]) {
+      expect(searchPlantTitle(inventory, { ...row, y: row.y + dy * row.pitch }, 'inventory').read.plant).toBe('green-berry');
+    }
+    // The title starting further left than the band.
+    expect(searchPlantTitle(inventory, { ...row, x: row.x + 1.5 * row.pitch }, 'inventory').read.plant).toBe('green-berry');
+
+    const planter = await loadFixture('plant-planter-hemp-ui07-23', 337, 130);
+    for (const dy of [-0.5, 0.5]) {
+      expect(searchPlantTitle(planter, { x: 70, y: 100 + dy * 43.2, pitch: 43.2 }, 'planter').read.plant).toBe('hemp');
+    }
+  });
+
+  it('searching more widely still reads nothing where there is no title', async () => {
+    const image = await loadFixture('plant-planter-hemp-a', 628, 200);
+    expect(searchPlantTitle(image, { x: 187, y: 195, pitch: 30 }, 'planter').read.plant).toBeNull();
   });
 });

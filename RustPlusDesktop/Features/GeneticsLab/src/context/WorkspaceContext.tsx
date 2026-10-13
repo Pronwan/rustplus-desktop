@@ -41,6 +41,13 @@ interface WorkspaceContextType {
   geneGroups: GeneGroup[];
   /** Empties one plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
   clearPlantGroup: (plant: string) => (() => void) | undefined;
+  /**
+   * Moves line `lineIndex` of the open plant's list to `toPlant`'s list. `currentText` is the
+   * list as the editor shows it, which can be a keystroke ahead of the stored one.
+   */
+  moveGeneLine: (currentText: string, lineIndex: number, toPlant: string) => void;
+  /** Replaces a scanned gene that turned out to be misread; true if it was found. */
+  replaceScannedGene: (from: string, to: string, plant?: string) => boolean;
   /** Empties every plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
   clearAllGroups: () => (() => void) | undefined;
   
@@ -210,6 +217,61 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       return undo;
     },
     [notifyInfo, setGeneInputTextState]
+  );
+
+  const moveGeneLine = useCallback(
+    (currentText: string, lineIndex: number, toPlant: string) => {
+      const fromPlant = selectedPlantRef.current;
+      if (toPlant === fromPlant) return;
+      const lines = currentText.split('\n');
+      const gene = normalizeGene(lines[lineIndex] ?? '');
+      if (!Sapling.isValidGeneString(gene)) return;
+
+      const previousTarget = geneInputsRef.current[toPlant] ?? '';
+      const remaining = lines.filter((_, i) => i !== lineIndex).join('\n');
+      const targetGenes = previousTarget.split('\n').map(normalizeGene).filter(Boolean);
+      const alreadyThere = targetGenes.includes(gene);
+      const nextTarget = alreadyThere ? previousTarget : previousTarget.trim() ? `${previousTarget.trim()}\n${gene}` : gene;
+
+      geneInputsRef.current = { ...geneInputsRef.current, [fromPlant]: remaining, [toPlant]: nextTarget };
+      setGeneInputTextState(remaining, fromPlant);
+      setGeneInputTextState(nextTarget, toPlant);
+      notifyInfo(
+        alreadyThere
+          ? `${gene} was already in ${plantLabel(toPlant)}: removed from ${plantLabel(fromPlant)}`
+          : `Moved ${gene} to ${plantLabel(toPlant)}`,
+        {
+          label: 'Undo',
+          onClick: () => {
+            setGeneInputTextState(currentText, fromPlant);
+            setGeneInputTextState(previousTarget, toPlant);
+          }
+        }
+      );
+    },
+    [notifyInfo, setGeneInputTextState]
+  );
+
+  const replaceScannedGene = useCallback(
+    (from: string, to: string, plant?: string): boolean => {
+      const wrong = normalizeGene(from);
+      const right = normalizeGene(to);
+      const plants = plant ? [plant, ...Object.keys(geneInputsRef.current)] : Object.keys(geneInputsRef.current);
+      for (const key of plants) {
+        const lines = (geneInputsRef.current[key] ?? '').split('\n');
+        // The newest entry is the one just scanned.
+        const index = lines.map(normalizeGene).lastIndexOf(wrong);
+        if (index < 0) continue;
+        const hasRight = lines.some((line) => normalizeGene(line) === right);
+        const next = hasRight ? lines.filter((_, i) => i !== index) : lines.map((line, i) => (i === index ? right : line));
+        const text = next.join('\n');
+        geneInputsRef.current = { ...geneInputsRef.current, [key]: text };
+        flushSync(() => setGeneInputTextState(text, key));
+        return true;
+      }
+      return false;
+    },
+    [setGeneInputTextState]
   );
 
   // The toolbar's CLEAR: the open group only.
@@ -610,6 +672,8 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         geneGroups,
         clearPlantGroup,
         clearAllGroups,
+        moveGeneLine,
+        replaceScannedGene,
         sourceSaplings,
         addClone,
         addBatchClones,

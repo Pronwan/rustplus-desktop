@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.15.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(workspace): easier plant groups: add, view and clear with undo ([71f8d99](https://github.com/JawadYzbk/rust-genetics-lab/commit/71f8d9948822fc0c780629d1e010935fe3a02ea2))
+
+### 🐛 Bug Fixes
+
+* fix(scanner): vote on the plant type across frames; say when it is not read ([d2f32bf](https://github.com/JawadYzbk/rust-genetics-lab/commit/d2f32bf4306755fd4357bf76c6274e3b1ef5697d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.2...v1.15.0
+All notable changes to this project will be documented in this file.
+
 ## [1.14.2](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.2) (2026-10-13)
 
 ### 🐛 Bug Fixes

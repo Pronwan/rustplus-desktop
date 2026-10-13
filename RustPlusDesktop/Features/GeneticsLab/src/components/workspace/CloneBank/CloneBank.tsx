@@ -21,6 +21,7 @@ import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.
 import { AudioService } from '../../../services/audioService.ts';
 import { ScanningRegionsView } from '../../scanner/ScanningRegionsView.tsx';
 import { PlantGroups } from '../../common/PlantGroups.tsx';
+import { MoveCloneMenu } from '../../common/MoveCloneMenu.tsx';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
 
@@ -53,7 +54,8 @@ export const CloneBank: React.FC = () => {
     savedGeneSets,
     saveCurrentGeneSet,
     loadSavedGeneSet,
-    deleteSavedGeneSet
+    deleteSavedGeneSet,
+    moveGeneLine
   } = useWorkspace();
 
   const { isCalculating, highlightedGroup, selectedMap, options } = useCalculation();
@@ -62,6 +64,11 @@ export const CloneBank: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'current' | 'saved' | 'scanner'>('current');
   const [clearAnchorEl, setClearAnchorEl] = useState<HTMLElement | null>(null);
   const [activeLineIdx, setActiveLineIdx] = useState<number | null>(null);
+  // The row whose "Move to…" menu is open, and where it opens.
+  const [moveTarget, setMoveTarget] = useState<{
+    line: number;
+    anchor: { element: HTMLElement } | { top: number; left: number };
+  } | null>(null);
 
   // Local text state for instantaneous zero-latency typing
   const [localText, setLocalText] = useState(geneInputText);
@@ -412,11 +419,20 @@ export const CloneBank: React.FC = () => {
                   const chars = lineVal.toUpperCase().slice(0, 6).split('');
                   const isUsedInPlan = usedCloneIndices.has(rIdx);
                   const isActiveCursor = activeLineIdx === rIdx;
+                  const isMovable = /^[GHYWX]{6}$/.test(lineVal.trim().toUpperCase());
 
                   return (
                     <Box
                       key={rIdx}
                       title={isUsedInPlan ? `Plant #${rIdx + 1} is used in the selected route` : undefined}
+                      onContextMenu={
+                        isMovable
+                          ? (event: React.MouseEvent) => {
+                              event.preventDefault();
+                              setMoveTarget({ line: rIdx, anchor: { top: event.clientY, left: event.clientX } });
+                            }
+                          : undefined
+                      }
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -442,12 +458,30 @@ export const CloneBank: React.FC = () => {
                       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 32, gap: 0.25 }}>
                         <Typography
                           variant="caption"
+                          component={isMovable ? 'button' : 'span'}
+                          {...(isMovable
+                            ? {
+                                type: 'button' as const,
+                                'aria-label': `Move plant #${rIdx + 1} to another plant group`,
+                                title: 'Move to another plant group (or right-click the row)',
+                                onClick: (event: React.MouseEvent<HTMLElement>) =>
+                                  setMoveTarget({ line: rIdx, anchor: { element: event.currentTarget } })
+                              }
+                            : {})}
                           sx={{
                             color: isUsedInPlan ? 'var(--gl-warning)' : 'var(--gl-text-faint)',
                             fontFamily: 'var(--font-family-mono)',
                             fontSize: '0.74rem',
                             fontWeight: isUsedInPlan ? 800 : 500,
-                            userSelect: 'none'
+                            userSelect: 'none',
+                            background: 'none',
+                            border: 'none',
+                            p: 0,
+                            borderRadius: '3px',
+                            ...(isMovable && {
+                              cursor: 'pointer',
+                              '&:hover, &:focus-visible': { color: 'var(--gl-primary)', textDecoration: 'underline', outline: 'none' }
+                            })
                           }}
                         >
                           #{rIdx + 1}
@@ -548,6 +582,16 @@ export const CloneBank: React.FC = () => {
               />
             </Box>
           </Paper>
+
+          <MoveCloneMenu
+            anchor={moveTarget?.anchor ?? null}
+            gene={moveTarget ? (lines[moveTarget.line] ?? '').trim().toUpperCase() : ''}
+            onClose={() => setMoveTarget(null)}
+            onMove={(plant) => {
+              if (moveTarget) moveGeneLine(localText, moveTarget.line, plant);
+              setMoveTarget(null);
+            }}
+          />
 
           <Box
             sx={{
