@@ -147,9 +147,9 @@ namespace RustPlusDesk.Views
             if (IsVisible)
             {
                 await EnsureWebViewAsync();
-                // Coming back to Genetics Lab is a natural moment to look for a newer build
-                // (at most every 15 minutes; the service throttles).
-                GeneticsLabContentService.Instance.CheckForUpdatesInBackground();
+                // Every time Genetics Lab is opened, look for a newer build. It costs one small
+                // manifest request; files download only when there is a new release.
+                GeneticsLabContentService.Instance.CheckForUpdatesInBackground(force: true);
             }
 
             UpdatePerformanceMode();

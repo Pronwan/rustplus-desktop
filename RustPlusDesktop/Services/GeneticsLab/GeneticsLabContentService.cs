@@ -280,14 +280,18 @@ namespace RustPlusDesk.Services.GeneticsLab
                 PeriodicCheckInterval);
         }
 
-        public void CheckForUpdatesInBackground(TimeSpan delay = default)
+        /// <summary>
+        /// Checks for a newer build without blocking the caller. Unless <paramref name="force"/>
+        /// is set, a check within 15 minutes of the last one is skipped.
+        /// </summary>
+        public void CheckForUpdatesInBackground(TimeSpan delay = default, bool force = false)
         {
             _ = Task.Run(async () =>
             {
                 try
                 {
                     if (delay > TimeSpan.Zero) await Task.Delay(delay).ConfigureAwait(false);
-                    await CheckForUpdatesAsync(force: false, CancellationToken.None).ConfigureAwait(false);
+                    await CheckForUpdatesAsync(force, CancellationToken.None).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

@@ -307,11 +307,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else if (evt.type === 'PREVIEW') {
         if (evt.previewDataUrl && typeof evt.regionIndex === 'number') {
           // Direct DOM injection for 30-60 FPS zero-starvation real-time preview (bypasses React rerender overhead)
-          const img = document.getElementById(`scanner-preview-img-${evt.regionIndex}`) as HTMLImageElement;
-          if (img) {
-            img.src = evt.previewDataUrl;
+          // Every view showing this region (the HUD, the calibration dialog) gets the frame.
+          document.querySelectorAll<HTMLImageElement>(`img[data-scanner-preview="${evt.regionIndex}"]`).forEach((img) => {
+            img.src = evt.previewDataUrl!;
             img.style.display = 'block';
-          }
+          });
           if (!hasInitialPreviewRef.current[evt.regionIndex]) {
             hasInitialPreviewRef.current[evt.regionIndex] = true;
             setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
@@ -465,8 +465,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return scannerService.getDiagnostics();
   }, [scannerService]);
 
+  // Counted, so one view closing does not stop the previews of another still open.
+  const previewViewersRef = useRef(0);
   const setScannerPreviewEnabled = useCallback((enabled: boolean) => {
-    scannerService.setPreviewEnabled(enabled);
+    previewViewersRef.current = Math.max(0, previewViewersRef.current + (enabled ? 1 : -1));
+    scannerService.setPreviewEnabled(previewViewersRef.current > 0);
   }, [scannerService]);
 
   const acknowledgeGeneHandled = useCallback((geneString: string) => {

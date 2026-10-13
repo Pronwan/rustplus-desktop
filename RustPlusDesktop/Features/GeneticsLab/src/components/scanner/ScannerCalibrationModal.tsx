@@ -71,7 +71,9 @@ export const ScannerCalibrationModal: React.FC = () => {
 
   // Enable live preview streaming while calibration modal is open & add arrow key listener
   useEffect(() => {
-    if (isCalibrationModalOpen) {
+    // Paired with the cleanup below: previews are counted, so only this run's own "on" is undone.
+    const enabledPreview = isCalibrationModalOpen;
+    if (enabledPreview) {
       setScannerPreviewEnabled(true);
     }
 
@@ -104,7 +106,7 @@ export const ScannerCalibrationModal: React.FC = () => {
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      setScannerPreviewEnabled(false);
+      if (enabledPreview) setScannerPreviewEnabled(false);
       stopHold();
     };
   }, [
@@ -415,6 +417,8 @@ export const ScannerCalibrationModal: React.FC = () => {
                   >
                     <Box
                       component="img"
+                      // Live frames are written to every img carrying this attribute.
+                      data-scanner-preview={selectedRegionIdx}
                       src={scannerPreviews[selectedRegionIdx]}
                       alt={`Region ${selectedRegionIdx + 1} Preview`}
                       sx={{

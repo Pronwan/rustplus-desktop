@@ -19,7 +19,6 @@ import { useScanner } from '../../../context/ScannerContext.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.ts';
 import { AudioService } from '../../../services/audioService.ts';
-import { ScanningRegionsView } from '../../scanner/ScanningRegionsView.tsx';
 import { PlantGroups } from '../../common/PlantGroups.tsx';
 import { MoveCloneMenu } from '../../common/MoveCloneMenu.tsx';
 
@@ -61,7 +60,7 @@ export const CloneBank: React.FC = () => {
   const { isCalculating, highlightedGroup, selectedMap, options } = useCalculation();
   const { isScannerActive, startScanner } = useScanner();
 
-  const [activeTab, setActiveTab] = useState<'current' | 'saved' | 'scanner'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'saved'>('current');
   const [clearAnchorEl, setClearAnchorEl] = useState<HTMLElement | null>(null);
   const [activeLineIdx, setActiveLineIdx] = useState<number | null>(null);
   // The row whose "Move to…" menu is open, and where it opens.
@@ -211,13 +210,11 @@ export const CloneBank: React.FC = () => {
         </Box>
 
         <Button
-          variant={activeTab === 'scanner' ? 'contained' : 'outlined'}
+          variant={isScannerActive ? 'contained' : 'outlined'}
           size="small"
+          // The regions and calibration live in the Scanner HUD that opens with the scanner.
           onClick={() => {
-            setActiveTab('scanner');
-            if (!isScannerActive) {
-              startScanner();
-            }
+            if (!isScannerActive) startScanner();
           }}
           startIcon={<AutoAwesomeIcon sx={{ fontSize: 13 }} />}
           sx={{
@@ -225,11 +222,11 @@ export const CloneBank: React.FC = () => {
             px: 0.75,
             fontSize: '0.68rem',
             fontWeight: 700,
-            backgroundColor: activeTab === 'scanner' ? 'var(--gl-primary)' : 'transparent',
-            color: activeTab === 'scanner' ? '#000' : 'var(--gl-text-secondary)',
+            backgroundColor: isScannerActive ? 'var(--gl-primary)' : 'transparent',
+            color: isScannerActive ? '#000' : 'var(--gl-text-secondary)',
             borderColor: 'var(--gl-primary)',
             minWidth: 'auto',
-            boxShadow: activeTab === 'scanner' ? '0 0 8px rgba(var(--gl-primary-rgb), 0.3)' : 'none'
+            boxShadow: isScannerActive ? '0 0 8px rgba(var(--gl-primary-rgb), 0.3)' : 'none'
           }}
         >
           {isScannerActive ? 'Live Scanner' : 'Scan'}
@@ -239,7 +236,7 @@ export const CloneBank: React.FC = () => {
       {/* One chip per plant with clones; the selected one is shown and calculated */}
       <PlantGroups />
 
-      {/* Tabs: CURRENT | SAVED | SCANNER REGIONS */}
+      {/* Tabs: CURRENT | SAVED */}
       <Box sx={{ borderBottom: '1px solid var(--gl-surface)', mb: 1 }}>
         <Tabs
           value={activeTab}
@@ -268,18 +265,6 @@ export const CloneBank: React.FC = () => {
               fontSize: '0.72rem',
               fontWeight: 800,
               color: activeTab === 'saved' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
-            }}
-          />
-          <Tab
-            value="scanner"
-            label="SCANNER REGIONS"
-            sx={{
-              minHeight: 28,
-              py: 0.15,
-              px: 1,
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              color: activeTab === 'scanner' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
             }}
           />
         </Tabs>
@@ -723,12 +708,6 @@ export const CloneBank: React.FC = () => {
         </Box>
       )}
 
-      {/* TAB 3: LIVE SCANNING REGIONS & AUTO-CALIBRATION OUTSIDE WITHOUT MODAL */}
-      {activeTab === 'scanner' && (
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', pr: 0.5, pt: 0.5 }}>
-          <ScanningRegionsView compact />
-        </Box>
-      )}
     </Paper>
   );
 };

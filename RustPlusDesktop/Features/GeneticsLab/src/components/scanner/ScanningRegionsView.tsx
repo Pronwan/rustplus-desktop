@@ -254,7 +254,7 @@ export const ScanningRegionsView: React.FC<ScanningRegionsViewProps> = ({
         >
           <Box
             component="img"
-            id={`scanner-preview-img-${rIdx}`}
+            data-scanner-preview={rIdx}
             src={scannerPreviews[rIdx] || ''}
             alt={`${regionName} Preview`}
             sx={{

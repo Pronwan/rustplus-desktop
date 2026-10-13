@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat: move a clone to another plant group; fix double-adds and plant reads at small UI scales ([e47607d](https://github.com/JawadYzbk/rust-genetics-lab/commit/e47607df6f7443ce24a46a805f7c5fba84407377))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.15.0...v1.16.0
+All notable changes to this project will be documented in this file.
+
 ## [1.15.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.15.0) (2026-10-13)
 
 ### 🚀 Features
