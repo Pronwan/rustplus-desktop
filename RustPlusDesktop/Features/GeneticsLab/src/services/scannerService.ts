@@ -1,3 +1,4 @@
+import { plantNameRect, readPlantName } from './scanner/plantNameReader.ts';
 import { ScannerRegion, StorageService } from './storageService.ts';
 import {
   ScannerEvent,
@@ -51,6 +52,7 @@ export class ScannerService {
 
   // Modular Pipeline Components
   private regions: ScannerRegion[] = [];
+  private plantNameCanvas: HTMLCanvasElement | null = null;
   private recognizer: GeneRecognizer;
   private changeDetector: RegionChangeDetector;
   private stabilityDetector: FrameStabilityDetector;
@@ -678,6 +680,7 @@ export class ScannerService {
 
       if (!geneString || confidence < SCANNER_CONFIG.recognition.minConfidence) continue;
 
+      const centers = read.geometry?.centers;
       candidates.push({
         regionIndex: item.rIdx,
         regionType: item.type,
@@ -686,7 +689,16 @@ export class ScannerService {
         geneConfidences: read.slotConfidences,
         activityScore: item.activityScore,
         valid: true,
-        acceptImmediately: instantAccept
+        acceptImmediately: instantAccept,
+        // The ROI is drawn 1:1 from the frame at (xPx, yPx), so frame = ROI + offset.
+        rowGeometry:
+          centers && centers.length >= 2 && read.geometry
+            ? {
+                x: item.xPx + centers[0],
+                y: item.yPx + read.geometry.centerY,
+                pitch: (centers[centers.length - 1] - centers[0]) / (centers.length - 1)
+              }
+            : undefined
       });
     }
 
@@ -774,7 +786,8 @@ export class ScannerService {
         regionIndex: candidate.regionIndex,
         regionType: candidate.regionType,
         geneString: votedResult.geneString,
-        confidence: votedResult.confidence
+        confidence: votedResult.confidence,
+        plantType: this.readPlantType(candidate)
       });
     }
 
@@ -784,6 +797,41 @@ export class ScannerService {
       this.setPipelineStage('duplicate');
     } else {
       this.setPipelineStage('vote-wait');
+    }
+  }
+
+  /**
+   * The plant the panel around an accepted row names, from the live frame. Runs once per
+   * accepted clone, not per frame; any failure just means "not detected".
+   */
+  private readPlantType(candidate: ScanCandidate): string | undefined {
+    const row = candidate.rowGeometry;
+    const frame = this.frameSource?.current();
+    if (!row || !frame || !this.frameSource) return undefined;
+    try {
+      const rect = plantNameRect(row, candidate.regionType);
+      const x0 = Math.max(0, Math.floor(rect.x0));
+      const y0 = Math.max(0, Math.floor(rect.y0));
+      const x1 = Math.min(this.frameSource.width, Math.ceil(rect.x1));
+      const y1 = Math.min(this.frameSource.height, Math.ceil(rect.y1));
+      const w = x1 - x0;
+      const h = y1 - y0;
+      if (w < 8 || h < 6) return undefined;
+
+      this.plantNameCanvas ??= document.createElement('canvas');
+      const canvas = this.plantNameCanvas;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return undefined;
+      ctx.drawImage(frame, x0, y0, w, h, 0, 0, w, h);
+      const image = { data: ctx.getImageData(0, 0, w, h).data, width: w, height: h };
+      const read = readPlantName(image, { x: row.x - x0, y: row.y - y0, pitch: row.pitch }, candidate.regionType);
+      if (read) console.log(`[Scanner] Plant name: ${read.text} -> ${read.plant}`);
+      return read?.plant;
+    } catch (error) {
+      console.warn('[Scanner] Plant name read failed', error);
+      return undefined;
     }
   }
 

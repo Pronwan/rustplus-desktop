@@ -37,6 +37,8 @@ export interface ScannerEvent {
   diagnostics?: ScannerDiagnostics;
   isStarved?: boolean;
   starvationReason?: StarvationReason;
+  /** SAPLING-FOUND: the plant the panel names ("hemp", "green-berry"), when it could be read. */
+  plantType?: string;
 }
 
 export type ScannerEventListener = (event: ScannerEvent) => void;
@@ -61,6 +63,8 @@ export interface ScanCandidate {
    * window adds nothing to a read this clear, so it is skipped.
    */
   acceptImmediately?: boolean;
+  /** Where the gene row is in the captured frame, for reading the panel's plant name. */
+  rowGeometry?: { x: number; y: number; pitch: number };
 }
 
 export interface RegionActivity {

@@ -75,6 +75,12 @@ export interface DesktopRowRead {
   layoutSource: BadgeLayout['source'];
   reject: 'geometry' | 'not-a-row' | null;
   latencyMs: number;
+  /**
+   * Where the row is in the ROI: each slot's centre x and the badge band's centre y, in ROI
+   * pixels. Lets callers find the panel around the row (its plant name) in pitch units,
+   * which hold at every in-game UI scale.
+   */
+  geometry?: { centers: number[]; centerY: number };
 }
 
 export interface DesktopReadOptions {
@@ -488,6 +494,10 @@ export function readDesktopGeneRow(
     badgeCount,
     layoutSource: layout.source,
     reject: null,
+    geometry: {
+      centers: layout.columns.map(column => (column.x0 + column.x1) / 2),
+      centerY: (layout.bandY0 + layout.bandY1) / 2
+    },
     latencyMs:
       (typeof performance !== 'undefined' && typeof performance.now === 'function'
         ? performance.now()

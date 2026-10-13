@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, ToggleButton, Tooltip, Typography } from '@mui/material';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -7,13 +7,28 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import { GeneticsSequence } from '../common/GeneticsSequence.tsx';
 import type { BreedingSessionStep } from '../../services/storageService.ts';
-import { PLANTER_MODELS } from './planterModels.ts';
+import type { PlanterType } from '../../domain/planner/farmPlanning.ts';
+import { PLANTER_MODELS, neighboursOf } from './planterModels.ts';
 import { donorSlotsFor } from './breedingLayout.ts';
 import { LazyPlanter3DView as Planter3DView } from './lazyPlanter3DView.ts';
 import type { SlotContent, SlotHighlight } from './PlanterScene.ts';
 import { isWebGLAvailable } from './webgl.ts';
 
 const HIDDEN_KEY = 'GL_GUIDED_3D_HIDDEN';
+const PLANTER_KEY = 'GL_GUIDED_3D_PLANTER';
+const PLANTER_ORDER: PlanterType[] = ['large', 'small', 'triangle'];
+
+const readPlanter = (): PlanterType => {
+  try {
+    const stored = localStorage.getItem(PLANTER_KEY);
+    return stored === 'small' || stored === 'triangle' ? stored : 'large';
+  } catch {
+    return 'large';
+  }
+};
+
+/** Slots around a planter's centre, i.e. the most donors it can hold for one crossbreed. */
+const donorRoom = (type: PlanterType) => neighboursOf(PLANTER_MODELS[type], PLANTER_MODELS[type].centerSlot).length;
 
 const readHidden = () => {
   try {
@@ -29,7 +44,7 @@ interface GuidedBreeding3DProps {
 }
 
 /**
- * The current generation of a guided breeding session in a large planter. It follows the
+ * The current generation of a guided breeding session in a 3D planter. It follows the
  * session's checkboxes: empty slots marked where to plant, then the centre plant, then the
  * donors with their genes flowing into the centre, then the step's result.
  */
@@ -40,7 +55,22 @@ export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantT
   // A new generation (or a ticked box) changes what is planted; drop a stale selection.
   useEffect(() => setSelectedSlot(null), [step]);
 
-  const model = PLANTER_MODELS.large;
+  // The chosen planter is remembered; a generation with more donors than it can hold
+  // around its centre falls back to the large planter.
+  const [chosenPlanter, setChosenPlanter] = useState<PlanterType>(readPlanter);
+  const fits = (type: PlanterType) => donorRoom(type) >= step.surroundingSaplingsStrings.length;
+  const planterType: PlanterType = fits(chosenPlanter) ? chosenPlanter : 'large';
+  const choosePlanter = (type: PlanterType) => {
+    setChosenPlanter(type);
+    setSelectedSlot(null);
+    try {
+      localStorage.setItem(PLANTER_KEY, type);
+    } catch {
+      // Not remembered; harmless.
+    }
+  };
+
+  const model = PLANTER_MODELS[planterType];
   const centre = model.centerSlot;
   const donors = step.surroundingSaplingsStrings;
   const donorSlots = useMemo(() => donorSlotsFor(model, donors.length), [model, donors.length]);
@@ -77,7 +107,8 @@ export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantT
       flow: allPlanted ? { from: donorSlots, to: centre } : undefined,
       celebrate: allPlanted ? centre : null
     };
-  }, [model, centre, donorSlots, donors, step, hasCentrePlant, allPlanted]);
+    // The flags are listed as well as `step` so a step edited in place still re-renders.
+  }, [model, centre, donorSlots, donors, step, step.isCenterPlanted, step.isSurroundingPlanted, hasCentrePlant, allPlanted]);
 
   const selectedContent = selectedSlot !== null ? view.slots[selectedSlot] : null;
 
@@ -121,9 +152,48 @@ export const GuidedBreeding3D: React.FC<GuidedBreeding3DProps> = ({ step, plantT
       </Box>
       {!isHidden && (
         <Box sx={{ position: 'relative', height: { xs: 320, sm: 440 } }}>
+          <Box sx={{ position: 'absolute', top: 10, left: 10, zIndex: 1 }}>
+            {/* A plain group: ToggleButtonGroup would clone its props onto the tooltip spans. */}
+            <Box
+              role="group"
+              aria-label="Planter"
+              sx={{
+                display: 'flex',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                backgroundColor: 'rgba(10, 12, 16, 0.62)',
+                backdropFilter: 'blur(6px)',
+                '& .MuiToggleButton-root': { px: 1.25, py: 0.4, fontSize: '0.68rem', fontWeight: 800, fontFamily: 'var(--font-family-mono)', color: '#e5e7eb', borderRadius: 0 },
+                '& .Mui-selected': { color: 'var(--gl-primary) !important' },
+                '& .Mui-disabled': { color: 'rgba(229,231,235,0.35) !important' }
+              }}
+            >
+              {PLANTER_ORDER.map((type) => {
+                const ok = fits(type);
+                const label = `${PLANTER_MODELS[type].name.replace(' Planter', '')} · ${PLANTER_MODELS[type].slots.length}`;
+                return (
+                  <Tooltip
+                    key={type}
+                    title={
+                      ok
+                        ? `${PLANTER_MODELS[type].name}: room for ${donorRoom(type)} donors around the centre`
+                        : `Doesn't fit: this generation has ${donors.length} donors, the ${PLANTER_MODELS[type].name.toLowerCase()} has room for ${donorRoom(type)} around its centre`
+                    }
+                  >
+                    {/* The span keeps the tooltip working on a disabled button. */}
+                    <span>
+                      <ToggleButton size="small" value={type} disabled={!ok} selected={planterType === type} onChange={() => ok && choosePlanter(type)}>
+                        {label}
+                      </ToggleButton>
+                    </span>
+                  </Tooltip>
+                );
+              })}
+            </Box>
+          </Box>
           <Suspense fallback={null}>
             <Planter3DView
-              planterType="large"
+              planterType={planterType}
               plantType={plantType}
               slots={view.slots}
               highlights={selectedSlot !== null && selectedContent ? view.highlights.map((h, i) => (i === selectedSlot ? 'selected' : h)) : view.highlights}

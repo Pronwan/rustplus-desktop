@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(scanner): detect the plant type from the panel; keep clones of several plants ([43cbf4d](https://github.com/JawadYzbk/rust-genetics-lab/commit/43cbf4d10efe1db8929e87bcdcb40f00c3d0f633))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.13.1...v1.14.0
+All notable changes to this project will be documented in this file.
+
+## [1.13.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.13.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(breeding): show the centre plant as soon as it is ticked; feat: planter choice and theme toggle ([54f2261](https://github.com/JawadYzbk/rust-genetics-lab/commit/54f22611a79bb8f69daf5b82c2f11c9f11b36b45))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.13.0...v1.13.1
+All notable changes to this project will be documented in this file.
+
 ## [1.13.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.13.0) (2026-10-13)
 
 ### 🚀 Features

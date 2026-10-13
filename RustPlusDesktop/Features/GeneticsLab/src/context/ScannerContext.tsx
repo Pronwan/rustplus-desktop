@@ -79,7 +79,10 @@ const ScannerContext = createContext<ScannerContextValue | null>(null);
 
 export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { notifySuccess, notifyInfo, notifyWarning, notifyError } = useNotification();
-  const { addClone, selectedPlant } = useWorkspace();
+  const { addClone, selectedPlant, setSelectedPlant, clones } = useWorkspace();
+  // Read inside the scanner callback without re-subscribing it on every added clone.
+  const selectedCloneCountRef = useRef(clones.length);
+  selectedCloneCountRef.current = clones.length;
 
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [isScannerInitializing, setIsScannerInitializing] = useState(false);
@@ -332,10 +335,23 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
           lastProcessedGeneRef.current = evt.geneString;
           lastProcessedTimeRef.current = now;
 
+          // The panel names its plant. A clone of another plant joins that plant's group; if
+          // the list on screen is still empty the view follows it, otherwise it stays put and
+          // the clone is filed quietly under its own plant.
+          // readPlantName only ever returns one of the app's plant ids.
+          const detected = evt.plantType || null;
+          const otherPlant = detected && detected !== selectedPlant ? detected : null;
+          if (otherPlant && selectedCloneCountRef.current === 0) setSelectedPlant(otherPlant);
+
           const added = addClone(evt.geneString, {
             source: 'scanner',
-            quantity: 1
+            quantity: 1,
+            cropType: detected ?? undefined
           });
+
+          if (added && otherPlant && selectedCloneCountRef.current > 0) {
+            notifyInfo(`${evt.geneString} is a ${otherPlant.replace(/-/g, ' ')} clone: added to its own group.`);
+          }
 
           if (added) {
             AudioService.playPop(soundPrefRef.current);
@@ -361,7 +377,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => {
       unsubscribe();
     };
-  }, [scannerService, addClone, selectedPlant, notifySuccess, notifyInfo, notifyError]);
+  }, [scannerService, addClone, selectedPlant, setSelectedPlant, notifySuccess, notifyInfo, notifyError]);
 
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {

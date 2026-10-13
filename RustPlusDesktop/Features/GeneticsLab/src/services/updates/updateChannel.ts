@@ -83,6 +83,8 @@ export interface UpdateChannelHandlers {
   onNotice: (notice: UpdateNotice) => void;
   /** The version this page replaced, when the host has just switched builds. */
   onPreviousVersion: (version: string) => void;
+  /** The desktop host's own "Patch notes" button was pressed. */
+  onOpenPatchNotes?: () => void;
 }
 
 /** Starts listening for updates. Returns a function that stops listening. */
@@ -104,12 +106,14 @@ function connectDesktop(bridge: WebViewBridge, handlers: UpdateChannelHandlers):
       });
     } else if (data.type === 'genetics-lab-host' && typeof data.previousVersion === 'string') {
       handlers.onPreviousVersion(data.previousVersion);
+    } else if (data.type === 'open-patch-notes') {
+      handlers.onOpenPatchNotes?.();
     }
   };
 
   bridge.addEventListener('message', listener);
   // Tells the host this build shows update notices itself, and asks for anything pending.
-  bridge.postMessage({ type: 'host-hello', version: __APP_VERSION__, capabilities: ['update-notice', 'whats-new'] });
+  bridge.postMessage({ type: 'host-hello', version: __APP_VERSION__, capabilities: ['update-notice', 'whats-new', 'patch-notes'] });
   return () => bridge.removeEventListener('message', listener);
 }
 

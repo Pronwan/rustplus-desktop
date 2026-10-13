@@ -85,7 +85,9 @@ export const UpdateCenter: React.FC = () => {
       // The desktop host reports the build it replaced; older builds never wrote LAST_SEEN_KEY.
       onPreviousVersion: (previous) => {
         if (!lastSeen) void showWhatsNewSince(previous);
-      }
+      },
+      // Rust+ Desktop's own "Patch notes" button in its Genetics Lab header.
+      onOpenPatchNotes: () => setIsPatchNotesOpen(true)
     });
   }, [showWhatsNewSince]);
 

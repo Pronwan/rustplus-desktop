@@ -20,6 +20,7 @@ import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.ts';
 import { AudioService } from '../../../services/audioService.ts';
 import { ScanningRegionsView } from '../../scanner/ScanningRegionsView.tsx';
+import { PlantGroups } from '../../common/PlantGroups.tsx';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
 
@@ -227,6 +228,9 @@ export const CloneBank: React.FC = () => {
           {isScannerActive ? 'Live Scanner' : 'Scan'}
         </Button>
       </Box>
+
+      {/* One chip per plant with clones; the selected one is shown and calculated */}
+      <PlantGroups />
 
       {/* Tabs: CURRENT | SAVED | SCANNER REGIONS */}
       <Box sx={{ borderBottom: '1px solid var(--gl-surface)', mb: 1 }}>

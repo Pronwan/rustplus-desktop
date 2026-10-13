@@ -156,6 +156,16 @@ export const AppHeader: React.FC = () => {
               </IconButton>
             </Tooltip>
           )}
+          <Tooltip title={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} arrow>
+            <IconButton
+              aria-label={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              size="small"
+              onClick={toggleTheme}
+              sx={{ color: iconColor, '& svg': { transition: 'transform 300ms ease' }, '&:hover svg': { transform: 'rotate(25deg)' } }}
+            >
+              {themeMode === 'dark' ? <LightModeIcon sx={{ fontSize: 19 }} /> : <DarkModeIcon sx={{ fontSize: 19 }} />}
+            </IconButton>
+          </Tooltip>
           <Tooltip title="More actions" arrow>
             <IconButton
               aria-label="More actions"
@@ -171,7 +181,6 @@ export const AppHeader: React.FC = () => {
           <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
             {showPhoneCameraAction && <MenuItem onClick={closeMenuThen(openCameraScanner)}><ListItemIcon><PhotoCameraIcon /></ListItemIcon><ListItemText>Use phone camera (Beta)</ListItemText></MenuItem>}
             {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
-            <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsReflexNoticeOpen(true))}><ListItemIcon><FlashOnIcon sx={{ color: '#F59E0B' }} /></ListItemIcon><ListItemText>Scanner &amp; Reflex Guide</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
