@@ -10,7 +10,7 @@ on:
       - "web-port/**"
 
 concurrency:
-  group: web-port-ci-${{ github.ref }}
+  group: web-port-ci-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
