@@ -19,6 +19,7 @@ type ServerProfile = {
 };
 
 type FcmStatus = { configured: boolean; listening: boolean };
+type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
 type ServerSnapshot = {
   info: { name?: string; playerCount?: number; maxPlayerCount?: number } | null;
   map: { width?: number; height?: number; monuments?: { name?: string }[]; imageBase64?: string | null } | null;
@@ -65,6 +66,9 @@ export default function App() {
   const [snapshot, setSnapshot] = useState<ServerSnapshot | null>(null);
   const [snapshotError, setSnapshotError] = useState("");
   const [snapshotBusy, setSnapshotBusy] = useState(false);
+  const [devices, setDevices] = useState<PairedDevice[]>([]);
+  const [deviceError, setDeviceError] = useState("");
+  const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
 
   const refreshServers = useCallback(async () => {
     try {
@@ -108,6 +112,7 @@ export default function App() {
 
     connection.on("ServersChanged", () => { void refreshServers(); });
     connection.on("ServerStatusChanged", () => { void refreshServers(); });
+    connection.on("DevicesChanged", () => { void refreshServers(); });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
     connection.onreconnected(() => { void refreshServers(); });
     void connection.start().catch((error: unknown) => {
@@ -213,14 +218,40 @@ export default function App() {
   async function openSnapshot(server: ServerProfile) {
     setSelectedServer(server);
     setSnapshot(null);
+    setDevices([]);
     setSnapshotError("");
+    setDeviceError("");
     setSnapshotBusy(true);
     try {
       setSnapshot(await api<ServerSnapshot>(`/api/servers/${server.id}/snapshot`));
     } catch (error) {
       setSnapshotError(error instanceof Error ? error.message : "Could not load live server data.");
+    }
+    try {
+      setDevices(await api<PairedDevice[]>(`/api/servers/${server.id}/devices`));
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not load paired devices.");
     } finally {
       setSnapshotBusy(false);
+    }
+  }
+
+  async function toggleDevice(server: ServerProfile, device: PairedDevice) {
+    setDeviceActionId(device.entityId);
+    setDeviceError("");
+    try {
+      const result = await api<{ success: boolean; isActive: boolean | null; error?: string }>(
+        `/api/servers/${server.id}/devices/${device.entityId}/toggle`,
+        { method: "POST", body: JSON.stringify({}) }
+      );
+      if (!result.success) throw new Error(result.error ?? "Switch command failed.");
+      setDevices((current) => current.map((item) =>
+        item.entityId === device.entityId ? { ...item, isActive: result.isActive ?? undefined } : item
+      ));
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not control this device.");
+    } finally {
+      setDeviceActionId(null);
     }
   }
 
@@ -352,6 +383,11 @@ export default function App() {
               {snapshot.map?.monuments?.length ? <><h3 className="snapshot-subheading">Monuments</h3><div className="monument-list">{snapshot.map.monuments.slice(0, 24).map((monument, index) => <span key={`${monument.name ?? "monument"}-${index}`}>{monument.name ?? "Unknown monument"}</span>)}</div></> : null}
               <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
               <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>
+            </>}
+            {selectedServer.isPaired && <>
+              <h3 className="snapshot-subheading">Paired smart devices</h3>
+              {deviceError && <div className="error-banner" role="alert">{deviceError}</div>}
+              {devices.length === 0 ? <p className="muted">No paired devices have been received yet. Pair switches, alarms, or storage monitors from the Rust+ mobile app.</p> : <div className="device-list">{devices.map((device) => <div className="device-row" key={device.id}><div className="device-symbol">{device.type === "Switch" ? "⏻" : device.type === "Alarm" ? "◉" : "▤"}</div><div className="device-row-info"><strong>{device.name}</strong><span>{device.type} · ID {device.entityId}</span></div><div className="device-row-action">{device.type === "Switch" ? <><span className={device.isActive === undefined ? "device-state unknown" : device.isActive ? "device-state on" : "device-state"}>{device.isActive === undefined ? "State unknown" : device.isActive ? "On" : "Off"}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="secondary-button" disabled={deviceActionId === device.entityId} onClick={() => void toggleDevice(selectedServer, device)}>{deviceActionId === device.entityId ? "Sending…" : "Toggle"}</button>}</> : <span className="device-state unknown">Read only</span>}</div></div>)}</div>}
             </>}
             <div className="modal-actions"><button className="secondary-button" onClick={() => void openSnapshot(selectedServer)} disabled={snapshotBusy}>↻ Refresh data</button><button className="primary-button" onClick={() => setSelectedServer(null)}>Close</button></div>
           </section>

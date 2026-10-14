@@ -162,3 +162,17 @@ button:disabled { cursor: wait; opacity: .65; }
 .snapshot-json { max-height: 220px; overflow: auto; background: #101310; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: 10px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color: #a9b99f; white-space: pre-wrap; overflow-wrap: anywhere; }
 .snapshot-timestamp { font-size: 10px; color: var(--muted); }
 @media (max-width: 640px) { .pairing-setup { align-items: flex-start; flex-direction: column; } .upload-button { width: 100%; } }
+
+.device-list { display: grid; gap: 8px; }
+.device-row { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); background: #141814; border-radius: 8px; }
+.device-symbol { flex: 0 0 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; background: #253020; color: var(--green); font-size: 17px; }
+.device-row-info { flex: 1; min-width: 0; }
+.device-row-info strong, .device-row-info span { display: block; overflow-wrap: anywhere; }
+.device-row-info strong { font-size: 11px; }
+.device-row-info span { color: var(--muted); font-size: 9px; margin-top: 4px; }
+.device-row-action { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+.device-row-action .secondary-button { padding: 7px 10px; }
+.device-state { color: #a3afa0; font-size: 10px; }
+.device-state.on { color: var(--green); }
+.device-state.unknown { color: #89958a; }
+@media (max-width: 540px) { .device-row { align-items: flex-start; flex-wrap: wrap; } .device-row-action { width: 100%; justify-content: flex-end; } }
