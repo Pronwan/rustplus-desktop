@@ -25,7 +25,7 @@ The web API enforces same-host Origin checks for browser state-changing requests
 
 ## Important current limitation
 
-**The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Smart-device groups, full realtime map/team-position updates, event history, and alarm-history UI are not complete yet.
+**The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Map snapshots refresh every 30 seconds while the server view is open and are cached server-side for 30 seconds, but positions are not streamed continuously. Persistent event history and alarm-history UI are not complete yet.
 
 ## Run with Docker
 
@@ -47,7 +47,7 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/health`: minimal health status only.
 - `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout`.
 - `GET /api/auth/me`.
-- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET/POST /api/servers/{id}/chat`, `GET/POST /api/servers/{id}/timers`, `DELETE /api/servers/{id}/timers/{timerId}`, `GET /api/servers/{id}/devices`, `GET/POST /api/servers/{id}/device-groups`, `DELETE /api/servers/{id}/device-groups/{groupId}`, `PUT /api/servers/{id}/devices/{entityId}/group`, `GET /api/servers/{id}/devices/{entityId}/info`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
+- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot` (30-second per-server cache), `GET/POST /api/servers/{id}/chat`, `GET/POST /api/servers/{id}/timers`, `DELETE /api/servers/{id}/timers/{timerId}`, `GET /api/servers/{id}/devices`, `GET/POST /api/servers/{id}/device-groups`, `DELETE /api/servers/{id}/device-groups/{groupId}`, `PUT /api/servers/{id}/devices/{entityId}/group`, `GET /api/servers/{id}/devices/{entityId}/info`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
 - `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
 - `DELETE /api/paired-servers/{id}` and `POST /api/paired-servers/{id}/connection` (admin only).
 - `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).
