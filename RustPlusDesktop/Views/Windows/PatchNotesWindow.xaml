@@ -229,7 +229,7 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v10.2.0 | Smart Server Migration, Connection Tools &amp; 3D Planter Guide"
+                                            <TextBlock Text="v10.2.0 | Smart Server Migration, Widget Overlay Settings &amp; Hold-to-Peek Map"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
@@ -250,6 +250,31 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; UI &amp; Reliability Refinements:</Run>
                                         Refined server pairing controls layout, bundled newly cached item icons, fixed gene row auto-calibration at small UI scales, and improved background update checks.
                                     </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Hold a Key to See the Map:</Run>
+                                        For anyone playing on a single screen. Set a key in the mini-map settings and the overlay is only on screen while you hold it — the same bargain the game's own map makes, where looking at it costs you the view. No key set means the dock simply stays up, as before.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Widget Overlay Has Its Own Settings:</Run>
+                                        The gear in its title bar used to open the mini-map's panel — shape, size, layers — on a window that need not have a map on it at all. It now opens the overlay's own: which screen it sits on, and three switches that impose one opacity, text size or text colour on every widget at once. Each widget keeps its own settings underneath and gets them back when you switch the override off. There is a reset for the look alone, which leaves your arrangement where it is.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Time and Players, One Cell Each:</Run>
+                                        Two new widgets, the pair the mini-map has always carried along its bottom edge: the sun or the moon with the server clock, and the player count with the server's capacity. The fuller clock and server widgets are still there for the day-night timer and the population graph.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Removing the Mini-Map, and Getting It Back:</Run>
+                                        Unlock the overlay and every widget shows its × and its gear inside its own corner, the mini-map included — they used to hang just outside the window, where any widget along an edge had them clipped away. A removed mini-map stays removed across restarts, and Add Widget offers it back.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Overlay Closes With the App:</Run>
+                                        The widget overlay and the device overlay are deliberately not owned by the main window, so they stay up while it is minimised — which also meant nothing took them down, and they sat over the game after the app had gone. Every way out now closes them, including Exit from the tray.
+                                    </TextBlock>
+
+                                    <views:ImageGallery Margin="0,4,0,4">
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/10.0/new-overlay.jpg" Description="The Widget Overlay: its own settings behind the title bar gear, every widget removable from its own corner, and the mini-map addable again from Add Widget"/>
+                                    </views:ImageGallery>
                                 </StackPanel>
                             </Border>
 
