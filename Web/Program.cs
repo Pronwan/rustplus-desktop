@@ -235,7 +235,7 @@ app.MapGet("/api/servers/{id:guid}/snapshot", async Task<IResult> (
         : Results.NotFound();
 }).RequireAuthorization();
 
-app.MapGet("/api/servers/{id:guid}/devices", async (
+app.MapGet("/api/servers/{id:guid}/devices", async Task<IResult> (
     Guid id,
     AppDbContext db,
     CancellationToken cancellationToken) =>
