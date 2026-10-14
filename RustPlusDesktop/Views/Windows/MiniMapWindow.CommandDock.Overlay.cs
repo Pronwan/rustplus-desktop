@@ -63,7 +63,10 @@ namespace RustPlusDesk
                 AddTileRequested = IsDeviceOverlay
                     ? () => BtnAddTile_Click(this, new RoutedEventArgs())
                     : AddMapTile,
-                SettingsRequested = OpenSettings,
+                // The bar belongs to the whole overlay, so its gear opens the overlay's own
+                // settings. It used to open the map's — which is what made a window with no
+                // map on it offer a map's shape, size and layers.
+                SettingsRequested = OpenDockSettings,
                 ZoomChanged = SetGridZoom,
                 BarDragged = MoveDockBy,
                 PullTabActivated = () => _overlay?.ShowBar(true),

@@ -98,6 +98,13 @@ namespace RustPlusDesk
 
             InitArming();
 
+            // The map's close button, wired straight to the map rather than through the tile
+            // handles. Those are built for square tiles and put their buttons in a corner; the
+            // map is a circle whose buttons live along its top, and going through that
+            // machinery is why the × never turned up where anybody looked for it.
+            MapContainer.MouseEnter += (_, __) => ShowMapClose(true);
+            MapContainer.MouseLeave += (_, __) => ShowMapClose(false);
+
             // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
             // where Esc already means something to whoever is typing.
             PreviewKeyDown += (_, e) =>
@@ -294,17 +301,9 @@ namespace RustPlusDesk
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            // The map carries its own close button in its chrome, beside its gear, rather than
-            // a generated handle: the generated ones sit in a corner of a square tile, and the
-            // map is a circle with its buttons along the top. Same rule, though — unlocked, and
-            // only while the pointer is on it.
-            if (BtnMapClose != null)
-            {
-                BtnMapClose.Visibility =
-                    !_dock.Locked && _hoveredTileId == CommandDockTileKinds.MapTileId
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
-            }
+            // The map's own close button follows the lock as well, so letting go of edit
+            // mode with the pointer still on the map takes it away.
+            ShowMapClose(MapContainer?.IsMouseOver == true);
         }
 
         // ── Lock ────────────────────────────────────────────────────────────────
@@ -2215,6 +2214,21 @@ namespace RustPlusDesk
                     if (taken.Contains((c, r))) return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Shows or hides the map's close button.
+        ///
+        /// Only while the dock is unlocked: a × on a map in use is a × waiting to be hit by
+        /// accident. Pressing it is what removes the map — hovering only offers it.
+        /// </summary>
+        private void ShowMapClose(bool hovering)
+        {
+            if (BtnMapClose == null) return;
+
+            BtnMapClose.Visibility = hovering && !_dock.Locked
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         /// <summary>Takes the mini-map off the dock, remembered the way any removal is.</summary>

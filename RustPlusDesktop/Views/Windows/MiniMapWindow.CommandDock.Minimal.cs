@@ -39,8 +39,12 @@ namespace RustPlusDesk
         {
             _peeking = true;
 
+            // Topmost and nothing else. Activate was here and it was wrong: it made this the
+            // foreground window, so the game lost focus and had to be clicked back — which
+            // for a key you hold for two seconds mid-fight is worse than having no map. WPF
+            // sets Topmost without activating, so the dock comes forward over a full-screen
+            // game while the game keeps the keyboard and the mouse.
             Topmost = true;
-            Activate();
         }
 
         /// <summary>
