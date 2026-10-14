@@ -398,6 +398,8 @@ public sealed class RustPlusConnectionManager(
                 return;
 
             entry.Status = "Connecting";
+            entry.SnapshotCache = null;
+            entry.SnapshotCachedAtUtc = DateTime.MinValue;
             await NotifyStatusAsync(profile.Id, entry.Status);
 
             if (entry.Client is null)
