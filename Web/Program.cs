@@ -592,10 +592,10 @@ static async Task<UserResponse> ToUserResponseAsync(
         await userManager.GetRolesAsync(user));
 
 static ServerResponse ToServerResponse(ServerProfile profile) =>
-    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, "NotConnected", false);
+    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, "NotConnected", false, false);
 
 static ServerResponse ToPairedServerResponse(PairedServerCredential profile, string status) =>
-    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, status, true);
+    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, status, true, profile.ConnectionEnabled);
 
 public sealed record RegisterRequest(
     string Email, string DisplayName, string Password, string InviteCode, bool RememberMe = true);
@@ -606,5 +606,5 @@ public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record SetDeviceStateRequest(bool? IsActive = null);
 public sealed record SetConnectionRequest(bool Enabled);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
-public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired);
+public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired, bool ConnectionEnabled);
 public partial class Program { }
