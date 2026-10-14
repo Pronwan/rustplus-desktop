@@ -108,8 +108,29 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
             };
             db.PairedServerCredentials.Add(server);
             await db.SaveChangesAsync();
+            db.PairedDevices.Add(new PairedDevice
+            {
+                PairedServerCredentialId = server.Id,
+                EntityId = "12345",
+                Name = "Test Switch",
+                Type = "Switch"
+            });
+            await db.SaveChangesAsync();
             serverId = server.Id;
         }
+
+
+        var groupCreate = await admin.PostAsJsonAsync($"/api/servers/{serverId}/device-groups", new { name = "Lights" });
+        Assert.Equal(HttpStatusCode.Created, groupCreate.StatusCode);
+        using var groupCreatedJson = JsonDocument.Parse(await groupCreate.Content.ReadAsStringAsync());
+        var groupId = groupCreatedJson.RootElement.GetProperty("id").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(groupId));
+
+        var assignGroup = await admin.PutAsJsonAsync($"/api/servers/{serverId}/devices/12345/group", new { groupId });
+        Assert.Equal(HttpStatusCode.OK, assignGroup.StatusCode);
+        using var groupsJson = JsonDocument.Parse(await (await admin.GetAsync($"/api/servers/{serverId}/device-groups")).Content.ReadAsStringAsync());
+        Assert.Equal(1, groupsJson.RootElement.GetArrayLength());
+        Assert.Equal(1, groupsJson.RootElement[0].GetProperty("deviceCount").GetInt32());
 
         var create = await admin.PostAsJsonAsync($"/api/servers/{serverId}/timers", new
         {
@@ -132,6 +153,9 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
         });
         Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
 
+        using var memberGroupsJson = JsonDocument.Parse(await (await member.GetAsync($"/api/servers/{serverId}/device-groups")).Content.ReadAsStringAsync());
+        Assert.Equal(1, memberGroupsJson.RootElement.GetArrayLength());
+
         using var timersJson = JsonDocument.Parse(await (await member.GetAsync($"/api/servers/{serverId}/timers")).Content.ReadAsStringAsync());
         Assert.Equal(1, timersJson.RootElement.GetArrayLength());
         Assert.False(timersJson.RootElement[0].GetProperty("isOwner").GetBoolean());
@@ -141,6 +165,11 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
 
         var ownerDelete = await admin.DeleteAsync($"/api/servers/{serverId}/timers/{timerId}");
         Assert.Equal(HttpStatusCode.NoContent, ownerDelete.StatusCode);
+
+        var deleteGroup = await admin.DeleteAsync($"/api/servers/{serverId}/device-groups/{groupId}");
+        Assert.Equal(HttpStatusCode.NoContent, deleteGroup.StatusCode);
+        using var devicesJson = JsonDocument.Parse(await (await admin.GetAsync($"/api/servers/{serverId}/devices")).Content.ReadAsStringAsync());
+        Assert.Equal(JsonValueKind.Null, devicesJson.RootElement[0].GetProperty("groupId").ValueKind);
     }
 
     [Fact]
