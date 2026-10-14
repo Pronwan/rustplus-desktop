@@ -19,7 +19,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 
 ## Run with Docker
 
-1. Copy `.env.example` to `.env`.
+1. Copy `web.env.example` to `.env` (the existing root `.env.example` belongs to the desktop app).
 2. Set a strong unique `ADMIN_PASSWORD` (12+ characters including uppercase, lowercase, digit, and symbol).
 3. Set a long random `WEB_INVITE_CODE` to allow teammates to register. Leave it empty to disable registration.
 4. Run `docker compose up --build -d`.
