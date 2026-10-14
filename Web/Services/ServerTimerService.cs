@@ -30,8 +30,31 @@ public sealed class ServerTimerService(
                     if (expired.Count > 0)
                     {
                         foreach (var timer in expired)
+                        {
                             timer.Fired = true;
+                            db.AlarmEvents.Add(new AlarmEvent
+                            {
+                                RustServerId = timer.PairedServerCredentialId.ToString("D"),
+                                Title = "Timer expired",
+                                Message = timer.Name,
+                                ReceivedAtUtc = now
+                            });
+                        }
+
                         await db.SaveChangesAsync(stoppingToken);
+
+                        // Keep a bounded alert history, including alerts fired while nobody is online.
+                        var excess = await db.AlarmEvents.CountAsync(stoppingToken) - 2000;
+                        if (excess > 0)
+                        {
+                            var oldest = await db.AlarmEvents
+                                .OrderBy(item => item.ReceivedAtUtc)
+                                .ThenBy(item => item.Id)
+                                .Take(excess)
+                                .ToListAsync(stoppingToken);
+                            db.AlarmEvents.RemoveRange(oldest);
+                            await db.SaveChangesAsync(stoppingToken);
+                        }
                     }
                 }
 
