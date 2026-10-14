@@ -230,7 +230,7 @@ public sealed class RustPlusFcmService(
         {
             if (string.IsNullOrWhiteSpace(ownerUserId) || pairing.Data is not { } server ||
                 string.IsNullOrWhiteSpace(server.Ip) || server.Port is < 1 or > 65535 ||
-                pairing.PlayerId == 0 || pairing.PlayerToken <= 0)
+                pairing.PlayerId == 0 || pairing.PlayerToken == 0)
                 return;
 
             Guid profileId;
