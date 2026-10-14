@@ -39,13 +39,7 @@ namespace RustPlusDesk
         public void ShowForPeek()
         {
             _peeking = true;
-
-            // Topmost and nothing else. Activate was here and it was wrong: it made this the
-            // foreground window, so the game lost focus and had to be clicked back — which
-            // for a key you hold for two seconds mid-fight is worse than having no map. WPF
-            // sets Topmost without activating, so the dock comes forward over a full-screen
-            // game while the game keeps the keyboard and the mouse.
-            Topmost = true;
+            Reorder(HwndTopmost);
         }
 
         /// <summary>
@@ -63,46 +57,57 @@ namespace RustPlusDesk
             _peeking = false;
             Visibility = Visibility.Visible;
 
-            // Never in front of anything. The dock is a second-monitor window and was taken
-            // off topmost on purpose — putting it back over a full-screen game permanently is
-            // exactly what it must not do. The only thing that lifts it is the key being held,
-            // for as long as it is held, which is what makes that an option rather than an
-            // advantage.
+            // Never in front of anything. The mini-map is a second-monitor window and was
+            // taken off topmost on purpose — putting it back over a full-screen game
+            // permanently is exactly what it must not do. The only thing that lifts it is the
+            // key being held, for as long as it is held.
             Topmost = false;
+            Reorder(HwndNoTopmost);
         }
 
-        /// <summary>
-        /// Lets the game cover it again.
-        ///
-        /// Clearing Topmost is not enough on its own, and this is why the map stayed in front
-        /// after the key came up: dropping the flag takes the window out of the topmost band
-        /// and leaves it at the top of the ordinary one — which is still above the game. The
-        /// window has to be sent back down as well.
-        ///
-        /// Without activating anything. The game is the foreground window throughout and must
-        /// stay that way, so this moves the dock in the order and touches nothing else.
-        /// </summary>
+        /// <summary>Lets the game cover it again.</summary>
         public void HideAfterPeek()
         {
             if (!_peeking) return;
 
             _peeking = false;
-            Topmost = false;
 
+            // Out of the topmost band, then all the way down. The first alone leaves the
+            // window at the top of the ordinary band, which is still above the game — that is
+            // why the map stayed in front after the key came up.
+            Reorder(HwndNoTopmost);
+            Reorder(HwndBottom);
+        }
+
+        /// <summary>
+        /// Moves the window in the z-order, and nothing else.
+        ///
+        /// Deliberately not WPF's Topmost property. That property remembers what it last set
+        /// and skips the call when asked for the same thing again — while this is also moving
+        /// the window behind its back, which left the two disagreeing and the key working
+        /// exactly once. Going straight to the window manager means every press is a fresh
+        /// instruction with nothing cached in front of it.
+        ///
+        /// Never activates. The game stays the foreground window the whole time.
+        /// </summary>
+        private void Reorder(IntPtr placement)
+        {
             try
             {
                 var handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
-                if (handle != IntPtr.Zero)
-                    SetWindowPos(handle, HwndBottom, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
+                if (handle == IntPtr.Zero) return;
+
+                SetWindowPos(handle, placement, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
             }
             catch
             {
-                // The flag is off either way; the worst case is a map that stays visible on a
-                // screen where nothing was covering it anyway.
+                // A window with no handle yet is a window nobody can see either.
             }
         }
 
         // SetWindowPos itself is already imported for the on-screen check next door.
+        private static readonly IntPtr HwndTopmost = new(-1);
+        private static readonly IntPtr HwndNoTopmost = new(-2);
         private static readonly IntPtr HwndBottom = new(1);
 
         private const uint SwpNoSize = 0x0001;

@@ -98,14 +98,16 @@ namespace RustPlusDesk
 
             InitArming();
 
-            // The window's own mouse events, not the map container's.
+            // Hover is not available to this window, so the buttons do not depend on it.
             //
-            // The mini-map is its own window — the widgets live in a second one — so nothing
-            // about the dock's lock reaches it, and the container's events never arrived
-            // either. These are the ones the arming above already runs on, which is to say
-            // the ones that are known to fire on this window.
-            MouseEnter += (_, __) => ShowMapClose(true);
-            MouseLeave += (_, __) => ShowMapClose(false);
+            // The widget overlay is a second window, topmost, and spread across as much of
+            // the screen as its widgets reach — with the mini-map sitting underneath it.
+            // Mouse events do not get past that, which is why three attempts at showing
+            // these on hover each left the map with no way to close it. They are simply
+            // there, the way the gear always was.
+            // The widget overlay is a subclass of this window and shares this markup, but
+            // it has no map on it at all — so only the mini-map window ever shows them.
+            Loaded += (_, __) => ShowMapClose(!IsDeviceOverlay);
 
             // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
             // where Esc already means something to whoever is typing.
@@ -302,8 +304,6 @@ namespace RustPlusDesk
                 foreach (var handle in handles)
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
-
-            ShowMapClose(IsMouseOver);
         }
 
         // ── Lock ────────────────────────────────────────────────────────────────
@@ -2220,19 +2220,16 @@ namespace RustPlusDesk
         /// <summary>
         /// Shows or hides the two buttons on the map: its settings, and its close.
         ///
-        /// Shown while the pointer is anywhere on the mini-map's window.
+        /// Shows the mini-map's two buttons: its settings, and its close.
         ///
-        /// Not tied to the dock's lock, which was the mistake before this: the widgets are a
-        /// different window with its own layout, so unlocking them says nothing about this
-        /// one. The device overlay has no map and no buttons to show, so it skips all of it.
+        /// Both are simply present on the mini-map window. The device overlay has no map and
+        /// no buttons to show, so it skips all of it.
         ///
         /// Pressing the × closes the mini-map. Showing it only offers that.
         /// </summary>
-        private void ShowMapClose(bool hovering)
+        private void ShowMapClose(bool show)
         {
-            if (IsDeviceOverlay) return;
-
-            var shown = hovering ? Visibility.Visible : Visibility.Collapsed;
+            var shown = show && !IsDeviceOverlay ? Visibility.Visible : Visibility.Collapsed;
 
             if (BtnMapClose != null) BtnMapClose.Visibility = shown;
             if (BtnMapSettings != null) BtnMapSettings.Visibility = shown;
