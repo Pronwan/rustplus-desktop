@@ -73,6 +73,7 @@ builder.Services.AddSingleton<RustPlusConnectionManager>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<RustPlusConnectionManager>());
 builder.Services.AddSingleton<RustPlusFcmService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<RustPlusFcmService>());
+builder.Services.AddHostedService<ServerTimerService>();
 builder.Services.AddProblemDetails();
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
@@ -268,6 +269,88 @@ app.MapGet("/api/servers/{id:guid}/snapshot", async Task<IResult> (
         : Results.NotFound();
 }).RequireAuthorization();
 
+app.MapGet("/api/servers/{id:guid}/timers", async Task<IResult> (
+    Guid id,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    AppDbContext db,
+    CancellationToken cancellationToken) =>
+{
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var userId = userManager.GetUserId(principal);
+    var timers = await db.ServerTimers.AsNoTracking()
+        .Where(timer => timer.PairedServerCredentialId == id)
+        .OrderBy(timer => timer.ExpiresAtUtc)
+        .ToListAsync(cancellationToken);
+    return Results.Ok(timers.Select(timer => ToTimerResponse(timer, timer.OwnerUserId == userId)).ToList());
+}).RequireAuthorization();
+
+app.MapPost("/api/servers/{id:guid}/timers", async Task<IResult> (
+    Guid id,
+    CreateServerTimerRequest request,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    AppDbContext db,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var name = request.Name?.Trim();
+    if (string.IsNullOrWhiteSpace(name) || name.Length > 80)
+        return Results.BadRequest(new { error = "Timer names must contain 1 to 80 characters." });
+    if (request.DurationSeconds is < 1 or > 86400)
+        return Results.BadRequest(new { error = "Timer duration must be between 1 second and 24 hours." });
+
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var ownerUserId = userManager.GetUserId(principal);
+    if (string.IsNullOrWhiteSpace(ownerUserId))
+        return Results.Unauthorized();
+
+    var timer = new ServerTimer
+    {
+        PairedServerCredentialId = id,
+        OwnerUserId = ownerUserId,
+        Name = name,
+        CreatedAtUtc = DateTime.UtcNow,
+        ExpiresAtUtc = DateTime.UtcNow.AddSeconds(request.DurationSeconds)
+    };
+    db.ServerTimers.Add(timer);
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("TimersChanged", new { serverId = id }, cancellationToken);
+    return Results.Created($"/api/servers/{id}/timers", ToTimerResponse(timer, true));
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
+app.MapDelete("/api/servers/{id:guid}/timers/{timerId:guid}", async Task<IResult> (
+    Guid id,
+    Guid timerId,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    AppDbContext db,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var timer = await db.ServerTimers.SingleOrDefaultAsync(item =>
+        item.Id == timerId && item.PairedServerCredentialId == id, cancellationToken);
+    if (timer is null)
+        return Results.NotFound();
+
+    var userId = userManager.GetUserId(principal);
+    if (timer.OwnerUserId != userId && !principal.IsInRole("Admin"))
+        return Results.Forbid();
+
+    db.ServerTimers.Remove(timer);
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("TimersChanged", new { serverId = id }, cancellationToken);
+    return Results.NoContent();
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
 app.MapGet("/api/servers/{id:guid}/chat", async Task<IResult> (
     Guid id,
     AppDbContext db,
@@ -427,6 +510,10 @@ app.MapDelete("/api/paired-servers/{id:guid}", async Task<IResult> (
         .Where(device => device.PairedServerCredentialId == id)
         .ToListAsync(cancellationToken);
     db.PairedDevices.RemoveRange(devices);
+    var timers = await db.ServerTimers
+        .Where(timer => timer.PairedServerCredentialId == id)
+        .ToListAsync(cancellationToken);
+    db.ServerTimers.RemoveRange(timers);
     db.PairedServerCredentials.Remove(profile);
     await db.SaveChangesAsync(cancellationToken);
     await hub.Clients.All.SendAsync("ServersChanged", cancellationToken);
@@ -615,6 +702,21 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedDevices_PairedServerCredentialId_EntityId"
         ON "PairedDevices" ("PairedServerCredentialId", "EntityId");
         """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "ServerTimers" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_ServerTimers" PRIMARY KEY,
+            "PairedServerCredentialId" TEXT NOT NULL,
+            "OwnerUserId" TEXT NOT NULL,
+            "Name" TEXT NOT NULL,
+            "ExpiresAtUtc" TEXT NOT NULL,
+            "CreatedAtUtc" TEXT NOT NULL,
+            "Fired" INTEGER NOT NULL
+        );
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE INDEX IF NOT EXISTS "IX_ServerTimers_PairedServerCredentialId_ExpiresAtUtc"
+        ON "ServerTimers" ("PairedServerCredentialId", "ExpiresAtUtc");
+        """);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     foreach (var role in new[] { "Admin", "Member", "ViewOnly" })
@@ -672,6 +774,9 @@ static ServerResponse ToServerResponse(ServerProfile profile) =>
 static ServerResponse ToPairedServerResponse(PairedServerCredential profile, string status) =>
     new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, status, true, profile.ConnectionEnabled);
 
+static ServerTimerResponse ToTimerResponse(ServerTimer timer, bool isOwner) =>
+    new(timer.Id, timer.Name, timer.ExpiresAtUtc, timer.CreatedAtUtc, timer.Fired, isOwner);
+
 public sealed record RegisterRequest(
     string Email, string DisplayName, string Password, string InviteCode, bool RememberMe = true);
 public sealed record LoginRequest(string Email, string Password, bool RememberMe = true);
@@ -681,6 +786,8 @@ public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record SetDeviceStateRequest(bool? IsActive = null);
 public sealed record SetConnectionRequest(bool Enabled);
 public sealed record SendTeamMessageRequest(string Message);
+public sealed record CreateServerTimerRequest(string Name, int DurationSeconds);
+public sealed record ServerTimerResponse(Guid Id, string Name, DateTime ExpiresAtUtc, DateTime CreatedAtUtc, bool Fired, bool IsOwner);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired, bool ConnectionEnabled);
 public partial class Program { }
