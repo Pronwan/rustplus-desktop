@@ -71,6 +71,8 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
         });
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        var hubResponse = await client.GetAsync("/hubs/servers");
+        Assert.Equal(HttpStatusCode.Forbidden, hubResponse.StatusCode);
     }
 
     [Fact]

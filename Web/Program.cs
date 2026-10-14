@@ -96,7 +96,9 @@ app.Use(async (context, next) =>
         HttpMethods.IsPatch(context.Request.Method) ||
         HttpMethods.IsDelete(context.Request.Method);
 
-    if (isApiRequest && isStateChanging &&
+    var shouldCheckOrigin = path.StartsWithSegments("/hubs") ||
+        (path.StartsWithSegments("/api") && isStateChanging);
+    if (shouldCheckOrigin &&
         context.Request.Headers.TryGetValue("Origin", out var originHeader))
     {
         if (!Uri.TryCreate(originHeader.ToString(), UriKind.Absolute, out var origin) ||
