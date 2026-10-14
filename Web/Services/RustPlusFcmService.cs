@@ -154,7 +154,9 @@ public sealed class RustPlusFcmService(
         var normalizedJson = JsonSerializer.Serialize(credentials);
         var saved = JsonSerializer.Serialize(new SavedFcmConfiguration(ownerUserId, normalizedJson));
         Directory.CreateDirectory(Path.GetDirectoryName(_credentialsPath)!);
-        await File.WriteAllTextAsync(_credentialsPath, _configurationProtector.Protect(saved), cancellationToken);
+        var temporaryPath = _credentialsPath + ".tmp";
+        await File.WriteAllTextAsync(temporaryPath, _configurationProtector.Protect(saved), cancellationToken);
+        File.Move(temporaryPath, _credentialsPath, overwrite: true);
 
         await _lifecycleGate.WaitAsync(cancellationToken);
         try
@@ -179,14 +181,17 @@ public sealed class RustPlusFcmService(
         _isListening = false;
 
         var listener = new RustPlusFcm(credentials, _persistentIds);
+        var listenerOwnerUserId = _ownerUserId;
         listener.Connected += (_, _) =>
         {
+            if (!ReferenceEquals(_listener, listener)) return;
             _isListening = true;
             logger.LogInformation("Rust+ FCM listener connected.");
             _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = true });
         };
         listener.Disconnected += (_, _) =>
         {
+            if (!ReferenceEquals(_listener, listener)) return;
             _isListening = false;
             logger.LogWarning("Rust+ FCM listener disconnected.");
             _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = false });
@@ -194,11 +199,11 @@ public sealed class RustPlusFcmService(
         listener.ErrorOccurred += (_, exception) =>
             logger.LogWarning("Rust+ FCM listener error ({ExceptionType}).", exception.GetType().Name);
         listener.PersistentIdReceived += (_, persistentId) => PersistPersistentId(persistentId);
-        listener.OnServerPairing += (_, pairing) => _ = HandlePairingSafelyAsync(pairing);
+        listener.OnServerPairing += (_, pairing) => _ = HandlePairingSafelyAsync(pairing, listenerOwnerUserId);
         listener.OnEntityPairing += (_, pairing) => _ = HandleEntityPairingSafelyAsync(pairing);
         listener.OnAlarmTriggered += (_, alarm) =>
         {
-            if (alarm is not null)
+            if (ReferenceEquals(_listener, listener) && alarm is not null)
                 _ = hub.Clients.All.SendAsync("AlarmReceived", new
                 {
                     serverId = alarm.ServerId,
@@ -212,11 +217,11 @@ public sealed class RustPlusFcmService(
         await listener.ConnectAsync(cancellationToken);
     }
 
-    private async Task HandlePairingSafelyAsync(Notification<RustPlusApi.Fcm.Data.Events.ServerEvent?> pairing)
+    private async Task HandlePairingSafelyAsync(Notification<RustPlusApi.Fcm.Data.Events.ServerEvent?> pairing, string? ownerUserId)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(_ownerUserId) || pairing.Data is not { } server ||
+            if (string.IsNullOrWhiteSpace(ownerUserId) || pairing.Data is not { } server ||
                 string.IsNullOrWhiteSpace(server.Ip) || server.Port is < 1 or > 65535 ||
                 pairing.PlayerId == 0 || pairing.PlayerToken <= 0)
                 return;
@@ -232,7 +237,7 @@ public sealed class RustPlusFcmService(
                 {
                     profile = new PairedServerCredential
                     {
-                        OwnerUserId = _ownerUserId,
+                        OwnerUserId = ownerUserId,
                         RustServerId = pairing.ServerId,
                         Name = string.IsNullOrWhiteSpace(server.Name) ? "Rust server" : server.Name,
                         Host = server.Ip,
@@ -245,7 +250,7 @@ public sealed class RustPlusFcmService(
                 }
                 else
                 {
-                    profile.OwnerUserId = _ownerUserId;
+                    profile.OwnerUserId = ownerUserId;
                     profile.Name = string.IsNullOrWhiteSpace(server.Name) ? profile.Name : server.Name;
                     profile.Host = server.Ip;
                     profile.Port = server.Port;
