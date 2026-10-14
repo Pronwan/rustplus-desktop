@@ -25,9 +25,10 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Build backend
+      - name: Build and test backend
         run: |
-          dotnet restore Web/RustPlusWeb.csproj
+          dotnet restore Web.Tests/RustPlusWeb.Tests.csproj
           dotnet build Web/RustPlusWeb.csproj --configuration Release --no-restore
+          dotnet test Web.Tests/RustPlusWeb.Tests.csproj --configuration Release --no-restore
       - name: Build container image
         run: docker build --tag rustplus-web:ci .

@@ -481,3 +481,4 @@ public sealed record SetUserRoleRequest(string Role);
 public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired);
+public partial class Program { }
