@@ -9,6 +9,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ServerProfile> ServerProfiles => Set<ServerProfile>();
     public DbSet<PairedServerCredential> PairedServerCredentials => Set<PairedServerCredential>();
     public DbSet<PairedDevice> PairedDevices => Set<PairedDevice>();
+    public DbSet<ServerTimer> ServerTimers => Set<ServerTimer>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -32,6 +33,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
             .Property(device => device.Name).HasMaxLength(120);
         builder.Entity<PairedDevice>()
             .Property(device => device.Type).HasMaxLength(32);
+        builder.Entity<ServerTimer>()
+            .HasIndex(timer => new { timer.PairedServerCredentialId, timer.ExpiresAtUtc });
+        builder.Entity<ServerTimer>()
+            .Property(timer => timer.Name).HasMaxLength(80);
     }
 }
 
