@@ -129,6 +129,35 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    selectedServerIdRef.current = selectedServer?.id ?? null;
+  }, [selectedServer?.id]);
+
+  useEffect(() => {
+    if (!selectedServer?.isPaired || !selectedServer.connectionEnabled) return;
+
+    let active = true;
+    const refreshSnapshot = async () => {
+      try {
+        const next = await api<ServerSnapshot>(`/api/servers/${selectedServer.id}/snapshot`);
+        if (active) {
+          setSnapshot(next);
+          setSnapshotError("");
+        }
+      } catch (error) {
+        if (active) setSnapshotError(error instanceof Error ? error.message : "Live map refresh failed.");
+      }
+    };
+
+    // Refresh only while a paired server's modal is open. The backend caches snapshots
+    // per server so teammates share Rust+ reads rather than multiplying API traffic.
+    const intervalId = window.setInterval(() => { void refreshSnapshot(); }, 30_000);
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+    };
+  }, [selectedServer?.id, selectedServer?.isPaired, selectedServer?.connectionEnabled]);
+
+  useEffect(() => {
     if (!user) {
       setServers([]);
       return;
@@ -606,7 +635,7 @@ export default function App() {
             </div>
           )}
 
-          <section className="roadmap-note"><div className="roadmap-icon">↗</div><div><strong>Foundation build</strong><p>Authentication, private server profiles, and realtime profile updates are in place. Pairing, live map data, team state, and device control are the next milestones.</p></div></section>
+          <section className="roadmap-note"><div className="roadmap-icon">↗</div><div><strong>Foundation build</strong><p>Authentication, pairing, map/team snapshots, chat, device controls, groups, and timers are in place. Live map snapshots refresh every 30 seconds while open; remaining features are listed in the project README.</p></div></section>
         </div>
       </section>
 
@@ -623,7 +652,7 @@ export default function App() {
               {snapshot.map?.imageBase64 && <div className="snapshot-map-wrap" style={{ aspectRatio: `${snapshot.map.width ?? 1} / ${snapshot.map.height ?? 1}` }}><img className="snapshot-map" alt="Rust server map" src={`data:image/jpeg;base64,${snapshot.map.imageBase64}`} /><svg className="snapshot-map-overlay" viewBox={`0 0 ${snapshot.map.width ?? 1} ${snapshot.map.height ?? 1}`} preserveAspectRatio="none" aria-label="Team member positions">{snapshot.team?.members?.map((member, index) => { const width = snapshot.map?.width ?? 0; const height = snapshot.map?.height ?? 0; const mapSize = snapshot.info?.mapSize ?? 0; if (!width || !height || !mapSize) return null; const margin = snapshot.map?.oceanMargin ?? 0; const x = member.x * ((width - 2 * margin) / mapSize) + margin; const y = height - (member.y * ((height - 2 * margin) / mapSize) + margin); return <g key={`${member.name ?? "player"}-${index}`}><circle className={`player-dot ${member.isAlive ? "" : "dead"} ${member.isOnline ? "" : "offline"}`} cx={x} cy={y} r={Math.max(5, width * 0.005)} /><text className="player-label" x={x} y={y - Math.max(8, width * 0.009)} textAnchor="middle">{member.name ?? "Player"}</text></g>; })}</svg></div>}
               {snapshot.map?.monuments?.length ? <><h3 className="snapshot-subheading">Monuments</h3><div className="monument-list">{snapshot.map.monuments.slice(0, 24).map((monument, index) => <span key={`${monument.name ?? "monument"}-${index}`}>{monument.name ?? "Unknown monument"}</span>)}</div></> : null}
               <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
-              <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>
+              <p className="snapshot-timestamp">Updated {new Date(snapshot.retrievedAtUtc).toLocaleTimeString()} · refreshes every 30 seconds while open</p>
             </>}
             {selectedServer.isPaired && <section className="server-timers"><div className="chat-panel-heading"><div><h3 className="snapshot-subheading">Event timers</h3><p>Timers run on the server and persist when browsers close.</p></div></div>
               {timerError && <div className="error-banner" role="alert">{timerError}</div>}
