@@ -14,5 +14,6 @@ public sealed class PairedServerCredential
     public int Port { get; set; }
     public string PlayerId { get; set; } = "";
     public string ProtectedPlayerToken { get; set; } = "";
+    public bool ConnectionEnabled { get; set; } = true;
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }

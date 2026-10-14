@@ -25,6 +25,7 @@ public sealed class RustPlusConnectionManager(
     {
         if (!_entries.TryGetValue(id, out var entry))
             return "Disconnected";
+        if (entry.Status == "Disabled") return "Disabled";
         if (entry.Client?.IsConnected == true) return "Connected";
         return entry.Status == "Connected" ? "Reconnecting" : entry.Status;
     }
@@ -75,6 +76,46 @@ public sealed class RustPlusConnectionManager(
             .SingleOrDefaultAsync(item => item.Id == id, cancellationToken);
         if (profile is not null)
             await EnsureConnectedAsync(profile, cancellationToken);
+    }
+
+    public async Task SetConnectionEnabledAsync(Guid id, bool enabled, CancellationToken cancellationToken = default)
+    {
+        if (!enabled)
+        {
+            if (!_entries.TryGetValue(id, out var entry))
+                entry = _entries.GetOrAdd(id, _ => new ConnectionEntry());
+
+            await entry.Gate.WaitAsync(cancellationToken);
+            try
+            {
+                if (entry.Client is not null)
+                {
+                    try { await entry.Client.DisconnectAsync(forceClose: true); }
+                    catch { /* The explicit disabled state must still be recorded. */ }
+                    entry.Client.Dispose();
+                    entry.Client = null;
+                }
+                entry.Status = "Disabled";
+                entry.Failures = 0;
+                entry.NextAttemptUtc = DateTime.MaxValue;
+            }
+            finally { entry.Gate.Release(); }
+            await NotifyStatusAsync(id, "Disabled");
+            return;
+        }
+
+        if (_entries.TryGetValue(id, out var existing))
+        {
+            await existing.Gate.WaitAsync(cancellationToken);
+            try
+            {
+                existing.Status = "Disconnected";
+                existing.NextAttemptUtc = DateTime.MinValue;
+                existing.Failures = 0;
+            }
+            finally { existing.Gate.Release(); }
+        }
+        await EnsureConnectedAsync(id, cancellationToken);
     }
 
     public async Task DisconnectAsync(Guid id, CancellationToken cancellationToken = default)
@@ -183,6 +224,12 @@ public sealed class RustPlusConnectionManager(
                 foreach (var profile in profiles)
                 {
                     if (cancellationToken.IsCancellationRequested) break;
+                    if (!profile.ConnectionEnabled)
+                    {
+                        if (!_entries.TryGetValue(profile.Id, out var disabledEntry) || disabledEntry.Status != "Disabled")
+                            await SetConnectionEnabledAsync(profile.Id, false, cancellationToken);
+                        continue;
+                    }
                     await EnsureConnectedAsync(profile, cancellationToken);
                 }
             }
@@ -203,6 +250,12 @@ public sealed class RustPlusConnectionManager(
 
     private async Task EnsureConnectedAsync(PairedServerCredential profile, CancellationToken cancellationToken)
     {
+        if (!profile.ConnectionEnabled)
+        {
+            await SetConnectionEnabledAsync(profile.Id, false, cancellationToken);
+            return;
+        }
+
         var entry = _entries.GetOrAdd(profile.Id, _ => new ConnectionEntry());
         await entry.Gate.WaitAsync(cancellationToken);
         try
