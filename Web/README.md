@@ -61,3 +61,5 @@ All application endpoints except the minimal health check and invite-gated regis
 **Startup behavior:** FCM network connection attempts run in the background so an upstream FCM outage does not block the dashboard from starting.
 
 Automated tests also cover shared timer visibility and owner/admin delete permissions.
+
+The same-host Origin check also protects SignalR negotiation and WebSocket requests against cross-site connection attempts.
