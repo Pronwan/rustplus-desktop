@@ -21,6 +21,7 @@ type ServerProfile = {
 
 type FcmStatus = { configured: boolean; listening: boolean };
 type AlarmAlert = { serverId?: string; title: string; message: string; receivedAtUtc: string };
+type AdminUser = { id: string; email: string; displayName: string; roles: string[] };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
 type ServerSnapshot = {
@@ -74,6 +75,9 @@ export default function App() {
   const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
   const [connectionActionId, setConnectionActionId] = useState<string | null>(null);
   const [alarms, setAlarms] = useState<AlarmAlert[]>([]);
+  const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
+  const [roleBusyId, setRoleBusyId] = useState<string | null>(null);
+  const [roleMessage, setRoleMessage] = useState("");
 
   const refreshServers = useCallback(async () => {
     try {
@@ -108,6 +112,7 @@ export default function App() {
     void refreshServers();
     if (user.roles.includes("Admin")) {
       api<FcmStatus>("/api/admin/fcm-status").then(setFcmStatus).catch(() => undefined);
+      api<AdminUser[]>("/api/admin/users").then(setAdminUsers).catch(() => undefined);
     }
     const connection = new HubConnectionBuilder()
       .withUrl("/hubs/servers")
@@ -242,6 +247,27 @@ export default function App() {
     }
   }
 
+  async function updateUserRole(account: AdminUser, role: string) {
+    setRoleBusyId(account.id);
+    setRoleMessage("");
+    try {
+      const updated = await api<User>(`/api/admin/users/${account.id}/role`, {
+        method: "PUT",
+        body: JSON.stringify({ role })
+      });
+      setAdminUsers((current) => current.map((item) =>
+        item.id === updated.id ? { ...item, roles: updated.roles } : item
+      ));
+      setRoleMessage(`Updated ${account.email} to ${role}.`);
+    } catch (error) {
+      setRoleMessage(error instanceof Error ? error.message : "Could not update the account role.");
+      const refreshed = await api<AdminUser[]>("/api/admin/users").catch(() => null);
+      if (refreshed) setAdminUsers(refreshed);
+    } finally {
+      setRoleBusyId(null);
+    }
+  }
+
   async function setServerConnection(server: ServerProfile, enabled: boolean) {
     setConnectionActionId(server.id);
     setServerError("");
@@ -362,6 +388,9 @@ export default function App() {
               <label className="upload-button">Upload credentials<input type="file" accept=".json,application/json" disabled={busy} onChange={(event) => void uploadFcmCredentials(event)} /></label>
             </section>
           )}
+
+
+          {user.roles.includes("Admin") && <section className="admin-users-panel"><div className="admin-users-heading"><div><p className="eyebrow">ACCESS CONTROL</p><h2>Team accounts</h2><p>New invite-code registrations start as members. Assign view-only access here.</p></div><button className="secondary-button" onClick={() => void api<AdminUser[]>("/api/admin/users").then(setAdminUsers).catch((error: unknown) => setRoleMessage(error instanceof Error ? error.message : "Could not load accounts."))}>↻ Refresh</button></div>{roleMessage && <p className="role-message" role="status">{roleMessage}</p>}<div className="admin-users-list">{adminUsers.map((account) => <div className="admin-user-row" key={account.id}><div className="admin-user-avatar">{account.displayName.slice(0, 1).toUpperCase()}</div><div className="admin-user-info"><strong>{account.displayName}</strong><span>{account.email}</span></div><select aria-label={`Role for ${account.email}`} value={account.roles[0] ?? "Member"} disabled={roleBusyId === account.id || account.id === user.id} onChange={(event) => void updateUserRole(account, event.target.value)}><option value="Member">Member</option><option value="ViewOnly">View only</option><option value="Admin">Admin</option></select>{account.id === user.id && <span className="self-role-label">You</span>}</div>)}</div></section>}
 
           <div className="section-heading"><div><h2>Your servers</h2><p>{servers.length} saved {servers.length === 1 ? "profile" : "profiles"}</p></div><button className="secondary-button" onClick={() => void refreshServers()}>↻ Refresh</button></div>
 
