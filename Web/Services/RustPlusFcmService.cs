@@ -191,6 +191,7 @@ public sealed class RustPlusFcmService(
             logger.LogWarning("Rust+ FCM listener error ({ExceptionType}).", exception.GetType().Name);
         listener.PersistentIdReceived += (_, persistentId) => PersistPersistentId(persistentId);
         listener.OnServerPairing += (_, pairing) => _ = HandlePairingSafelyAsync(pairing);
+        listener.OnEntityPairing += (_, pairing) => _ = HandleEntityPairingSafelyAsync(pairing);
         listener.OnAlarmTriggered += (_, alarm) =>
         {
             if (alarm is not null)
@@ -260,6 +261,65 @@ public sealed class RustPlusFcmService(
         catch (Exception exception)
         {
             logger.LogWarning("Could not persist a Rust+ pairing event ({ExceptionType}).", exception.GetType().Name);
+        }
+    }
+
+    private async Task HandleEntityPairingSafelyAsync(
+        Notification<RustPlusApi.Fcm.Data.Events.EntityEvent?> pairing)
+    {
+        try
+        {
+            var entity = pairing.Data;
+            if (entity?.EntityId is not ulong entityId || entity.EntityType is not { } entityType)
+                return;
+
+            Guid pairedServerId;
+            await using (var scope = scopeFactory.CreateAsyncScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var server = await db.PairedServerCredentials.SingleOrDefaultAsync(
+                    item => item.RustServerId == pairing.ServerId);
+                if (server is null)
+                {
+                    logger.LogInformation("Ignoring entity pairing before its server pairing was saved.");
+                    return;
+                }
+
+                var entityIdText = entityId.ToString(CultureInfo.InvariantCulture);
+                var device = await db.PairedDevices.SingleOrDefaultAsync(item =>
+                    item.PairedServerCredentialId == server.Id && item.EntityId == entityIdText);
+                var typeName = entityType.ToString();
+                var name = string.IsNullOrWhiteSpace(entity.EntityName)
+                    ? $"{typeName} {entityIdText}"
+                    : entity.EntityName;
+
+                if (device is null)
+                {
+                    device = new PairedDevice
+                    {
+                        PairedServerCredentialId = server.Id,
+                        EntityId = entityIdText,
+                        Name = name,
+                        Type = typeName
+                    };
+                    db.PairedDevices.Add(device);
+                }
+                else
+                {
+                    device.Name = name;
+                    device.Type = typeName;
+                }
+
+                await db.SaveChangesAsync();
+                pairedServerId = server.Id;
+            }
+
+            await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = pairedServerId });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Could not persist a Rust+ entity pairing event ({ExceptionType}).",
+                exception.GetType().Name);
         }
     }
 

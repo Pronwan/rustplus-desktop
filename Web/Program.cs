@@ -235,6 +235,58 @@ app.MapGet("/api/servers/{id:guid}/snapshot", async Task<IResult> (
         : Results.NotFound();
 }).RequireAuthorization();
 
+app.MapGet("/api/servers/{id:guid}/devices", async (
+    Guid id,
+    AppDbContext db,
+    CancellationToken cancellationToken) =>
+{
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var devices = await db.PairedDevices.AsNoTracking()
+        .Where(device => device.PairedServerCredentialId == id)
+        .OrderBy(device => device.Name)
+        .ToListAsync(cancellationToken);
+    return Results.Ok(devices.Select(device => new
+    {
+        device.Id,
+        device.EntityId,
+        device.Name,
+        device.Type,
+        device.CreatedAtUtc
+    }).ToList());
+}).RequireAuthorization();
+
+app.MapPost("/api/servers/{id:guid}/devices/{entityId}/toggle", async Task<IResult> (
+    Guid id,
+    string entityId,
+    SetDeviceStateRequest request,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    if (!ulong.TryParse(entityId, out var numericEntityId))
+        return Results.BadRequest(new { error = "Invalid device ID." });
+
+    var device = await db.PairedDevices.AsNoTracking().SingleOrDefaultAsync(item =>
+        item.PairedServerCredentialId == id && item.EntityId == entityId, cancellationToken);
+    if (device is null)
+        return Results.NotFound();
+    if (!string.Equals(device.Type, "Switch", StringComparison.OrdinalIgnoreCase))
+        return Results.BadRequest(new { error = "Only smart switches can be controlled from this endpoint." });
+
+    var result = await connections.SetSwitchAsync(id, numericEntityId, request.IsActive, cancellationToken);
+    if (result is null)
+        return Results.Problem("The Rust+ connection is not ready yet.", statusCode: 503);
+    if (!result.Success)
+        return Results.Problem(result.Error ?? "The switch command failed.", statusCode: 502);
+
+    
+    return Results.Ok(new { success = true, isActive = result.IsActive });
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
 app.MapGet("/api/admin/fcm-status", (RustPlusFcmService fcm) =>
     Results.Ok(new { configured = fcm.IsConfigured, listening = fcm.IsListening }))
     .RequireAuthorization(policy => policy.RequireRole("Admin"));
@@ -416,6 +468,20 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedServerCredentials_RustServerId"
         ON "PairedServerCredentials" ("RustServerId");
         """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "PairedDevices" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_PairedDevices" PRIMARY KEY,
+            "PairedServerCredentialId" TEXT NOT NULL,
+            "EntityId" TEXT NOT NULL,
+            "Name" TEXT NOT NULL,
+            "Type" TEXT NOT NULL,
+            "CreatedAtUtc" TEXT NOT NULL
+        );
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedDevices_PairedServerCredentialId_EntityId"
+        ON "PairedDevices" ("PairedServerCredentialId", "EntityId");
+        """);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     foreach (var role in new[] { "Admin", "Member", "ViewOnly" })
@@ -479,6 +545,7 @@ public sealed record LoginRequest(string Email, string Password, bool RememberMe
 public sealed record CreateServerRequest(string Name, string Host, int Port = 28082);
 public sealed record SetUserRoleRequest(string Role);
 public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
+public sealed record SetDeviceStateRequest(bool? IsActive = null);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired);
 public partial class Program { }
