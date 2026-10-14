@@ -9,6 +9,10 @@ on:
       - master
       - "web-port/**"
 
+concurrency:
+  group: web-port-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
