@@ -116,7 +116,7 @@ export default function App() {
     connection.on("ServerStatusChanged", () => { void refreshServers(); });
     connection.on("DevicesChanged", () => { void refreshServers(); });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
-    connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5));
+    connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5)));
     connection.onreconnected(() => { void refreshServers(); });
     void connection.start().catch((error: unknown) => {
       console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
