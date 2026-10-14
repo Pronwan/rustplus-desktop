@@ -7844,4 +7844,13 @@
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>خلية واحدة: كم عدد المتصلين وكم يتسع — كما في الخريطة المصغّرة</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>اضغط مع الاستمرار للإظهار</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>ظاهرة دائمًا — انقر لتعيين مفتاح</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>لشاشة واحدة: تظهر اللوحة فقط أثناء الضغط على المفتاح، تمامًا كما تحجب خريطة اللعبة الرؤية.</value>
+  </data>
 </root>

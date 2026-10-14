@@ -6929,4 +6929,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>Tek hücre: kaç kişi var ve kaç kişi sığıyor — mini haritadaki gibi</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Göstermek için tuşu basılı tut</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Her zaman görünür — tuş atamak için tıkla</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Tek ekran için: panel yalnızca tuş basılıyken görünür — oyunun kendi haritasının görüşü kapatması gibi.</value>
+  </data>
 </root>

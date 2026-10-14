@@ -7953,4 +7953,13 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>Une cellule : combien sont connectés et combien tiennent — comme sur la mini-carte</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Maintenir une touche pour afficher</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Toujours visible — cliquez pour définir une touche</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Pour un seul écran : le dock n'est visible que tant que la touche est maintenue, comme la carte du jeu qui vous prive de la vue.</value>
+  </data>
 </root>

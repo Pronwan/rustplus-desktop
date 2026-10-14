@@ -8047,4 +8047,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>Eine Zelle: wie viele online sind und wie viele passen — wie auf der Mini-Karte</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Taste halten zum Einblenden</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Immer sichtbar — zum Festlegen klicken</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Für einen Monitor: Das Dock ist nur sichtbar, solange die Taste gehalten wird — so wie dich auch die Karte im Spiel die Sicht kostet.</value>
+  </data>
 </root>

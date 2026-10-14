@@ -39,6 +39,10 @@ public partial class MainWindow
         _aiHotkeyGesture = wanted;
 
         if (_aiHotkeyGesture != null) _hotkeyMgr.Register(_aiHotkeyGesture);
+
+        // The map's peek gesture is in the same position — it belongs to a window rather
+        // than to a server — so it is re-applied wherever this is.
+        ApplyMiniMapPeekHotkey();
     }
 
     /// <summary>

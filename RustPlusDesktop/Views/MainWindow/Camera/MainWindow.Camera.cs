@@ -372,6 +372,12 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             };
 
             _miniMap.Show();
+
+            // With a peek key set the dock belongs off screen until it is held. Applied after
+            // Show so the window exists and has been laid out — hiding one that was never shown
+            // leaves it with no size to come back to.
+            _miniMap.ApplyPeekVisibility();
+
             EnsureDeviceOverlayOpen();
 
             // It may want the grid or the death markers that this map has switched off.

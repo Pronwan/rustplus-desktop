@@ -8302,4 +8302,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>One cell: how many are on, and how many fit — as on the mini-map</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Hold a key to show</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Always visible — click to set a key</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>For one screen: the dock is only up while the key is held, the way the game's own map costs you the view.</value>
+  </data>
 </root>

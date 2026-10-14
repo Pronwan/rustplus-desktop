@@ -7953,4 +7953,13 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>Una celda: cuántos hay y cuántos caben, como en el minimapa</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Mantener una tecla para mostrar</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Siempre visible: haz clic para asignar una tecla</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Para una sola pantalla: el panel solo se ve mientras se mantiene la tecla, igual que el mapa del juego te quita la vista.</value>
+  </data>
 </root>

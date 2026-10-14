@@ -7953,4 +7953,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>Одна ячейка: сколько онлайн и сколько вмещается — как на мини-карте</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Удерживать клавишу для показа</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Всегда видна — нажмите, чтобы задать клавишу</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Для одного экрана: док виден только пока клавиша удерживается — так же, как карта в самой игре закрывает обзор.</value>
+  </data>
 </root>

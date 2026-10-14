@@ -7874,4 +7874,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="CommandDockServerMinimalHint" xml:space="preserve">
     <value>한 칸: 접속 인원과 정원 — 미니맵과 동일</value>
   </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>키를 누르는 동안 표시</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>항상 표시 — 클릭하여 키 설정</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>모니터가 하나일 때: 키를 누르고 있는 동안만 독이 표시됩니다 — 게임 내 지도가 시야를 가리는 것과 같습니다.</value>
+  </data>
 </root>

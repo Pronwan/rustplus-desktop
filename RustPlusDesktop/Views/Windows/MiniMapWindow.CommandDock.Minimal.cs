@@ -23,6 +23,48 @@ namespace RustPlusDesk
         /// <summary>The clock style that means "just the time".</summary>
         public const int ClockStyleMinimal = 3;
 
+        /// <summary>Set while the window is only on screen because a key is being held.</summary>
+        private bool _peeking;
+
+        /// <summary>
+        /// Brings the dock up for as long as the peek key is held.
+        ///
+        /// Hidden rather than closed on the way out, because closing it would tear down every
+        /// tile and rebuild them on the next press — which for a key people tap several times a
+        /// minute would be a stutter each time, and would lose anything a tile was holding.
+        /// </summary>
+        public void ShowForPeek()
+        {
+            _peeking = true;
+
+            Show();
+            Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Hides the dock straight away when a peek key is set, and shows it when none is.
+        ///
+        /// Called when the window opens and when the key is changed, so the two agree: with a
+        /// key configured the dock is only ever on screen while it is held, and taking the key
+        /// away puts the dock back for good rather than leaving it invisible with no way up.
+        /// </summary>
+        public void ApplyPeekVisibility()
+        {
+            bool peek = !string.IsNullOrWhiteSpace(Services.TrackingService.MiniMapPeekHotkey);
+
+            _peeking = false;
+            Visibility = peek ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        /// <summary>Puts it away again, unless it was already up before the key was pressed.</summary>
+        public void HideAfterPeek()
+        {
+            if (!_peeking) return;
+
+            _peeking = false;
+            Visibility = Visibility.Hidden;
+        }
+
         private FrameworkElement BuildMinimalClockTile(CommandDockTile tile)
         {
             var style = StyleFor(tile);

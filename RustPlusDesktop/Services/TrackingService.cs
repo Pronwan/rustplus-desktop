@@ -84,6 +84,9 @@ public class TrackingSettings
     // Off by default: the Players tab (and its background tracking) is opt-in from Settings.
     public bool ShowPlayersTab { get; set; } = false;
     public bool CloseToTrayEnabled { get; set; } = false;
+
+    /// <summary>The gesture that shows the dock while it is held, or empty for not at all.</summary>
+    public string MiniMapPeekHotkey { get; set; } = "";
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
     public bool AutoStartEnabled { get; set; } = false;
@@ -610,6 +613,19 @@ public static class TrackingService
     {
         _settings.RailLayout = layout;
         SaveDB();
+    }
+
+    /// <summary>
+    /// The gesture that shows the dock while it is held, or empty for not at all.
+    ///
+    /// Off by default, and worth leaving off with two screens: this exists so that having one
+    /// screen is not a reason to go without the map, by making it cost what the game's own map
+    /// costs — the view, for as long as you are looking at it.
+    /// </summary>
+    public static string MiniMapPeekHotkey
+    {
+        get => _settings.MiniMapPeekHotkey ?? "";
+        set { _settings.MiniMapPeekHotkey = value ?? ""; SaveDB(); }
     }
 
     public static bool CloseToTrayEnabled
