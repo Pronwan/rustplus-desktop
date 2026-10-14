@@ -2,6 +2,29 @@
 
 The `Release` GitHub Actions workflow builds the RustPlusDesk Windows app, bundles MapParser into the app output, then creates a Velopack installer and update packages.
 
+## Smart Version Bump (Automated & Manual)
+
+The repository provides a smart conventional-commit-based version bumper in `scripts/bump-version.mjs` and the `.github/workflows/bump-version.yml` workflow.
+
+### Using the GitHub Actions Workflow:
+1. Open GitHub Actions and select **Smart Version Bump**.
+2. Select the `bump_type`:
+   - `auto` (default): inspects commits since the previous tag. If new features (`feat`) were committed, it bumps `minor`. If only bug fixes/improvements (`fix`, `perf`, `refactor`) were committed, it bumps `patch`. If breaking changes exist, it bumps `major`.
+   - `patch`, `minor`, `major`: forces the specified bump.
+   - `custom`: bumps to a custom version string provided in `custom_version`.
+3. Optionally set `from_ref` to analyze from a specific tag or commit.
+4. Set `dry_run` to true to preview the calculated version and release notes without tagging or committing.
+5. With `trigger_release` enabled (default), pushing the tag or triggering the release workflow automatically generates and attaches modern, categorized release notes to the GitHub Release.
+
+### Local CLI Usage:
+```bash
+# Preview bump and release notes without making changes:
+npm run version:preview
+
+# Apply bump to RustPlusDesk.csproj, CHANGELOG.md, and create a git commit + tag:
+node scripts/bump-version.mjs --update-files --create-tag
+```
+
 ## Manual Release
 
 1. Open GitHub Actions.

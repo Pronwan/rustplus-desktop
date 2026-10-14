@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.1.2 HOTFIX -->
+                            <!-- v10.2.0 UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_1_2"
+                            <Border x:Name="Card_v10_2_0"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,43 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.2.0 | Smart Server Migration, Connection Tools &amp; 3D Planter Guide"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Smart Server Re-pairing &amp; Port Migration:</Run>
+                                        When a Rust server changes its companion port or IP, re-pairing now actively verifies and probes existing smart devices to guarantee a 100% match. It seamlessly migrates your existing switches, alarms, cameras, and automations without creating blank duplicate server profiles.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Connection Management Dialogs:</Run>
+                                        Added a new "Edit Connection..." modal with live socket reachability and device probe testing, plus a "Transfer Devices &amp; Settings..." dialog to copy or merge devices, cameras, and automations between profiles.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Genetics Lab 3D Interactive Planter Guide:</Run>
+                                        Interactive 3D planter guide rendered with authentic in-game planter and crop models, real-time guided crossbreeding visualization, updated recipes with livestock-update items (pies and breads), and seamless in-place updates.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; UI &amp; Reliability Refinements:</Run>
+                                        Refined server pairing controls layout, bundled newly cached item icons, fixed gene row auto-calibration at small UI scales, and improved background update checks.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.1.2 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_1_2"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.1.2 | Navigation, Mini-Map &amp; Full-Screen Improvements"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>

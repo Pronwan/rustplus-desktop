@@ -269,7 +269,13 @@ jobs:
         run: |
           $tag = "${{ steps.version.outputs.tag }}"
           $title = "Rust+ Desktop ${{ steps.version.outputs.version }}"
-          $notes = "Automated Rust+ Desktop release for $tag."
+          $notesFile = ".github/release-notes.md"
+
+          if (-not (Test-Path -LiteralPath $notesFile)) {
+            Write-Host "Generating release notes from commits..."
+            node scripts/bump-version.mjs --generate-notes-only --to-ref=$tag
+          }
+
           $assets = @(
             Get-ChildItem -Path "${{ env.VELOPACK_OUTPUT_DIR }}" -File -Recurse
           ) | Select-Object -ExpandProperty FullName -Unique
@@ -282,9 +288,18 @@ jobs:
           }
 
           if (-not $releaseExists) {
-            $args = @("release", "create", $tag, "--target", "${{ github.sha }}", "--title", $title, "--notes", $notes)
+            $args = @("release", "create", $tag, "--target", "${{ github.sha }}", "--title", $title)
+            if (Test-Path -LiteralPath $notesFile) {
+              $args += @("--notes-file", $notesFile)
+            } else {
+              $args += @("--notes", "Automated Rust+ Desktop release for $tag.")
+            }
             if ($prerelease) { $args += "--prerelease" }
             gh @args
+          } else {
+            if (Test-Path -LiteralPath $notesFile) {
+              gh release edit $tag --notes-file $notesFile
+            }
           }
 
           gh release upload $tag @assets --clobber
