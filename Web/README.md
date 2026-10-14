@@ -42,7 +42,7 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/auth/me`.
 - `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET /api/servers/{id}/devices`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
 - `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
-- `DELETE /api/paired-servers/{id}` (admin only).
+- `DELETE /api/paired-servers/{id}` and `POST /api/paired-servers/{id}/connection` (admin only).
 - `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).
 - `/hubs/servers`: authenticated SignalR hub; profile changes send `ServersChanged`.
 
