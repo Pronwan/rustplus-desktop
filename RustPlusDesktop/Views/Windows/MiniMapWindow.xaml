@@ -119,6 +119,20 @@
                     </Border>
                 </StackPanel>
 
+                <!--  Only while the dock is unlocked: the mini-map is a widget like any other
+                      and can be taken off, and Add Widget offers it back. A close button on a
+                      map in use would be a button sitting there to be hit by accident.  -->
+                <ui:Button x:Name="BtnMapClose"
+                           HorizontalAlignment="Right" VerticalAlignment="Top"
+                           Width="34" Height="34" Margin="0,10,52,0" Padding="6"
+                           Visibility="Collapsed"
+                           Appearance="Secondary" Background="#E6B3261E"
+                           BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
+                           Foreground="White" Click="BtnMapClose_Click"
+                           ToolTip="{DynamicResource CommandDockRemoveTile}"
+                           AutomationProperties.Name="{DynamicResource CommandDockRemoveTile}"
+                           Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+
                 <ui:Button x:Name="BtnMapSettings"
                            HorizontalAlignment="Right" VerticalAlignment="Top"
                            Width="34" Height="34" Margin="0,10,10,0" Padding="6"

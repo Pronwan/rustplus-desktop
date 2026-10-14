@@ -55,11 +55,15 @@ namespace RustPlusDesk
         /// </summary>
         public void ApplyPeekVisibility()
         {
-            bool peek = !string.IsNullOrWhiteSpace(Services.TrackingService.MiniMapPeekHotkey);
-
             _peeking = false;
             Visibility = Visibility.Visible;
-            Topmost = !peek;
+
+            // Never in front of anything. The dock is a second-monitor window and was taken
+            // off topmost on purpose — putting it back over a full-screen game permanently is
+            // exactly what it must not do. The only thing that lifts it is the key being held,
+            // for as long as it is held, which is what makes that an option rather than an
+            // advantage.
+            Topmost = false;
         }
 
         /// <summary>Lets the game cover it again, unless it was in front before the key.</summary>

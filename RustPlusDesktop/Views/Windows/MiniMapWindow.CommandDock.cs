@@ -293,6 +293,18 @@ namespace RustPlusDesk
                 foreach (var handle in handles)
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
+
+            // The map carries its own close button in its chrome, beside its gear, rather than
+            // a generated handle: the generated ones sit in a corner of a square tile, and the
+            // map is a circle with its buttons along the top. Same rule, though — unlocked, and
+            // only while the pointer is on it.
+            if (BtnMapClose != null)
+            {
+                BtnMapClose.Visibility =
+                    !_dock.Locked && _hoveredTileId == CommandDockTileKinds.MapTileId
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+            }
         }
 
         // ── Lock ────────────────────────────────────────────────────────────────
@@ -2204,6 +2216,9 @@ namespace RustPlusDesk
 
             return false;
         }
+
+        /// <summary>Takes the mini-map off the dock, remembered the way any removal is.</summary>
+        internal void RemoveMapTile() => RemoveTile(CommandDockTileKinds.MapTileId);
 
         private void RemoveTile(string tileId)
         {

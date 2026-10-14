@@ -364,6 +364,15 @@ namespace RustPlusDesk
         // settings; the one in the title bar belongs to the window and opens the dock's.
         private void BtnMapSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
 
+        /// <summary>
+        /// Takes the mini-map off the dock.
+        ///
+        /// The same thing the × on any other widget does, and remembered the same way: the
+        /// dock knows the map was removed on purpose and does not put it back on the next
+        /// start. Add Widget offers it again.
+        /// </summary>
+        private void BtnMapClose_Click(object sender, RoutedEventArgs e) => RemoveMapTile();
+
         private void BtnDockSettings_Click(object sender, RoutedEventArgs e) => OpenDockSettings();
 
         /// <summary>
