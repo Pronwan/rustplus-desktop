@@ -246,7 +246,35 @@ public partial class MainWindow
         }
     }
 
+    // Rapid server hopping used to start several reset/connect sequences at once, because this
+    // handler is async void and nothing serialised it. The gate runs them one at a time and the
+    // generation counter lets superseded selections bail out instead of connecting and tearing down.
+    private readonly SemaphoreSlim _serverSwitchGate = new(1, 1);
+    private int _serverSwitchGeneration;
+
     private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        int generation = Interlocked.Increment(ref _serverSwitchGeneration);
+
+        await _serverSwitchGate.WaitAsync();
+        try
+        {
+            if (generation != Volatile.Read(ref _serverSwitchGeneration))
+                return; // a newer selection is already queued behind us; skip this intermediate one
+
+            await HandleServerSelectionChangedAsync();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[server switch] Failed: {ex.Message}");
+        }
+        finally
+        {
+            _serverSwitchGate.Release();
+        }
+    }
+
+    private async Task HandleServerSelectionChangedAsync()
     {
         _lastChatTsForCurrentServer = null;
 
