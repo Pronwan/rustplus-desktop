@@ -4085,7 +4085,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _lastPairingPingAt = DateTime.UtcNow;
         AppendLog("Pairing_Paired fired");
 
-        Dispatcher.Invoke(() =>
+        _ = Dispatcher.InvokeAsync(async () =>
         {
             // Add to Notification Center!
             var pairedMsg = e.EntityId.HasValue 
@@ -4157,19 +4157,109 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (prof is null)
             {
-                prof = new ServerProfile
+                // Smart Re-Pairing Detection: Check if this is an existing server whose port or address changed
+                ServerProfile? candidateMatch = null;
+                var candidates = _vm.Servers.Where(s =>
+                    s.SteamId64 == keySteam &&
+                    (s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrWhiteSpace(e.ServerName) && s.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase)))
+                ).ToList();
+
+                if (candidates.Count > 0 &&
+                    ulong.TryParse(keySteam, NumberStyles.Integer, CultureInfo.InvariantCulture, out var steamNum) &&
+                    int.TryParse(e.PlayerToken, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tokenNum))
                 {
-                    Name = serverName,
-                    Host = e.Host ?? string.Empty,
-                    Port = e.Port,
-                    SteamId64 = keySteam,
-                    PlayerToken = e.PlayerToken,
-                    IsAccessDenied = false,
-                    UseFacepunchProxy = false,
-                    Devices = new ObservableCollection<SmartDevice>()
-                };
-                _vm.AddServer(prof);
-                AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
+                    // 1. Try to find a candidate whose existing devices respond 100% on the new server connection
+                    foreach (var c in candidates)
+                    {
+                        var entityIds = c.Devices?
+                            .Where(d => !d.IsGroup && d.EntityId > 0)
+                            .Select(d => d.EntityId)
+                            .ToList();
+
+                        if (entityIds != null && entityIds.Count > 0)
+                        {
+                            AppendLog($"[pairing] Verifying {entityIds.Count} existing devices for candidate '{c.Name}' on {keyHost}:{keyPort}...");
+                            var verifyResult = await Task.Run(() => Services.RustPlusConnectionVerifier.VerifyServerAndDevicesAsync(
+                                keyHost, keyPort, steamNum, tokenNum, entityIds, c.UseFacepunchProxy, TimeSpan.FromSeconds(5)));
+
+                            if (verifyResult.DevicesVerified)
+                            {
+                                candidateMatch = c;
+                                AppendLog($"[pairing] 100% Device Match Confirmed! Existing devices verified on {keyHost}:{keyPort} for '{c.Name}'.");
+                                ShowInfoSnackbarOnMain(
+                                    "Server Connection Updated",
+                                    $"'{c.Name}' port updated ({c.Port} → {keyPort}). All {c.Devices?.Count ?? 0} devices and automations preserved!",
+                                    Wpf.Ui.Controls.ControlAppearance.Success);
+                                break;
+                            }
+                        }
+                    }
+
+                    // 2. If no devices were verified (e.g. wiped or empty device list), check if exactly 1 server matches the host
+                    if (candidateMatch == null && candidates.Count == 1)
+                    {
+                        var c = candidates[0];
+                        bool sameHost = c.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase);
+                        bool sameName = !string.IsNullOrWhiteSpace(e.ServerName) &&
+                            (c.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
+                             c.Name.Contains(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
+                             e.ServerName.Contains(c.Name, StringComparison.OrdinalIgnoreCase));
+
+                        if (sameHost && (sameName || (c.Devices?.Count ?? 0) == 0))
+                        {
+                            candidateMatch = c;
+                            AppendLog($"[pairing] Matched candidate by host & name: '{c.Name}' ({c.Port} -> {keyPort}).");
+                            ShowInfoSnackbarOnMain(
+                                "Server Port Updated",
+                                $"'{c.Name}' port updated from {c.Port} to {keyPort}.",
+                                Wpf.Ui.Controls.ControlAppearance.Success);
+                        }
+                    }
+                }
+
+                // If this is an entity pairing (switch, alarm, TC) and port didn't match, link to host server if exists
+                if (candidateMatch == null && e.EntityId.HasValue)
+                {
+                    var hostMatch = _vm.Servers.FirstOrDefault(s =>
+                        s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
+                        s.SteamId64 == keySteam);
+
+                    if (hostMatch != null)
+                    {
+                        candidateMatch = hostMatch;
+                        AppendLog($"[pairing] Entity #{e.EntityId.Value} linked to existing server '{hostMatch.Name}' on {keyHost}:{keyPort}.");
+                    }
+                }
+
+                if (candidateMatch != null)
+                {
+                    prof = candidateMatch;
+                    prof.Host = keyHost;
+                    prof.Port = keyPort;
+                    prof.PlayerToken = e.PlayerToken;
+                    prof.SteamId64 = keySteam;
+                    if (!string.IsNullOrWhiteSpace(e.ServerName)) prof.Name = e.ServerName;
+                    prof.IsAccessDenied = false;
+                    prof.Devices ??= new ObservableCollection<SmartDevice>();
+                    _vm.Save();
+                }
+                else
+                {
+                    prof = new ServerProfile
+                    {
+                        Name = serverName,
+                        Host = e.Host ?? string.Empty,
+                        Port = e.Port,
+                        SteamId64 = keySteam,
+                        PlayerToken = e.PlayerToken,
+                        IsAccessDenied = false,
+                        UseFacepunchProxy = false,
+                        Devices = new ObservableCollection<SmartDevice>()
+                    };
+                    _vm.AddServer(prof);
+                    AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
+                }
             }
             else
             {
@@ -4515,6 +4605,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private ServerProfile? _serverToDelete;
 
 
+
+    public void Server_EditConnection_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        var dlg = new Views.Windows.EditServerConnectionDialog(prof, _vm)
+        {
+            Owner = this
+        };
+        if (dlg.ShowDialog() == true && dlg.HasChanged)
+        {
+            AppendLog($"[server] Connection updated for '{prof.Name}' -> {prof.Host}:{prof.Port}");
+            ShowInfoSnackbar("Server Connection Updated", $"'{prof.Name}' connection updated to {prof.Host}:{prof.Port}.", WpfUi.ControlAppearance.Success);
+            if (_vm.Selected == prof)
+            {
+                _ = Dispatcher.InvokeAsync(async () =>
+                {
+                    try
+                    {
+                        await HardResetAsync(reconnect: false);
+                        await PerformConnectAsync(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[server] Reconnect after connection edit failed: {ex.Message}");
+                    }
+                });
+            }
+        }
+    }
+
+    public void Server_TransferDevices_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        var dlg = new Views.Windows.TransferDevicesDialog(prof, _vm)
+        {
+            Owner = this
+        };
+        dlg.ShowDialog();
+    }
 
     public void Server_Delete_Click(object sender, RoutedEventArgs e)
     {

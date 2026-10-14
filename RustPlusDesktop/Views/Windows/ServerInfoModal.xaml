@@ -98,6 +98,17 @@
                                 <TextBlock Text="{DynamicResource UiCopyIP}"/>
                             </StackPanel>
                         </ui:Button>
+                        <ui:Button Appearance="Secondary"
+                                   Padding="6,3"
+                                   FontSize="11"
+                                   Cursor="Hand"
+                                   Margin="6,0,0,0"
+                                   Click="BtnEditConnection_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Edit20" Margin="0,0,4,0" FontSize="12"/>
+                                <TextBlock Text="Edit Connection"/>
+                            </StackPanel>
+                        </ui:Button>
                     </StackPanel>
 
                     <!-- Stats Cards -->
