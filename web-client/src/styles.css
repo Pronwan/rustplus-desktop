@@ -226,3 +226,18 @@ button:disabled { cursor: wait; opacity: .65; }
 .chat-composer { display: flex; gap: 8px; margin-top: 9px; }
 .chat-composer input { flex: 1; min-width: 0; border: 1px solid #394633; border-radius: 7px; background: #121612; color: var(--text); padding: 10px; font-size: 11px; }
 .chat-composer .primary-button { flex: 0 0 auto; padding: 9px 13px; }
+
+.server-timers { margin-top: 22px; padding-top: 2px; }
+.timer-composer { display: flex; align-items: end; gap: 8px; margin: 10px 0 14px; }
+.timer-composer > input { flex: 1; min-width: 0; border: 1px solid #394633; border-radius: 7px; background: #121612; color: var(--text); padding: 10px; font-size: 11px; }
+.timer-composer label { display: grid; gap: 4px; color: var(--muted); font-size: 9px; }
+.timer-composer label input { width: 72px; border: 1px solid #394633; border-radius: 7px; background: #121612; color: var(--text); padding: 9px 7px; font-size: 11px; }
+.timer-composer .primary-button { padding: 9px 12px; white-space: nowrap; }
+.timer-list { display: grid; gap: 7px; }
+.timer-row { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: #141814; }
+.timer-icon { flex: 0 0 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: #2a3323; color: var(--green); }
+.timer-info { flex: 1; min-width: 0; }
+.timer-info strong, .timer-info span { display: block; overflow-wrap: anywhere; }
+.timer-info strong { font-size: 11px; }
+.timer-info span { margin-top: 4px; color: var(--muted); font-size: 9px; }
+@media (max-width: 620px) { .timer-composer { align-items: stretch; flex-wrap: wrap; } .timer-composer > input { flex-basis: 100%; } .timer-composer label { flex: 1; } .timer-composer .primary-button { flex: 1; } }

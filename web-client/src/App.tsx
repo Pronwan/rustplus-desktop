@@ -24,6 +24,7 @@ type AlarmAlert = { serverId?: string; title: string; message: string; receivedA
 type AdminUser = { id: string; email: string; displayName: string; roles: string[] };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
 type TeamChatMessage = { steamId: string; name: string; message: string; time: string };
+type ServerTimer = { id: string; name: string; expiresAtUtc: string; createdAtUtc: string; fired: boolean; isOwner: boolean };
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
 type ServerSnapshot = {
   info: { name?: string; playerCount?: number; maxPlayerCount?: number; mapSize?: number | null } | null;
@@ -83,6 +84,11 @@ export default function App() {
   const [chatInput, setChatInput] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [timers, setTimers] = useState<ServerTimer[]>([]);
+  const [timerName, setTimerName] = useState("");
+  const [timerDurationMinutes, setTimerDurationMinutes] = useState(15);
+  const [timerBusy, setTimerBusy] = useState(false);
+  const [timerError, setTimerError] = useState("");
   const selectedServerIdRef = useRef<string | null>(null);
 
   const refreshServers = useCallback(async () => {
@@ -131,6 +137,17 @@ export default function App() {
     connection.on("DevicesChanged", () => { void refreshServers(); });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
     connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5)));
+    connection.on("TimersChanged", (payload: { serverId: string }) => {
+      if (selectedServerIdRef.current === payload.serverId) {
+        void api<ServerTimer[]>(`/api/servers/${payload.serverId}/timers`).then(setTimers).catch(() => undefined);
+      }
+    });
+    connection.on("TimerExpired", (payload: { serverId: string; name: string; firedAtUtc: string }) => {
+      setAlarms((current) => [{ serverId: payload.serverId, title: "Timer expired", message: payload.name, receivedAtUtc: payload.firedAtUtc }, ...current].slice(0, 5));
+      if (selectedServerIdRef.current === payload.serverId) {
+        void api<ServerTimer[]>(`/api/servers/${payload.serverId}/timers`).then(setTimers).catch(() => undefined);
+      }
+    });
     connection.on("TeamChatMessageReceived", (payload: { serverId: string; message: TeamChatMessage }) => {
       if (selectedServerIdRef.current === payload.serverId) {
         setChatMessages((current) => [...current, payload.message].slice(-100));
@@ -246,6 +263,9 @@ export default function App() {
     setChatMessages([]);
     setChatInput("");
     setChatError("");
+    setTimers([]);
+    setTimerError("");
+    setTimerName("");
     setSnapshotBusy(true);
     try {
       setSnapshot(await api<ServerSnapshot>(`/api/servers/${server.id}/snapshot`));
@@ -261,6 +281,11 @@ export default function App() {
       setChatMessages(await api<TeamChatMessage[]>(`/api/servers/${server.id}/chat`));
     } catch (error) {
       setChatError(error instanceof Error ? error.message : "Could not load team chat.");
+    }
+    try {
+      setTimers(await api<ServerTimer[]>(`/api/servers/${server.id}/timers`));
+    } catch (error) {
+      setTimerError(error instanceof Error ? error.message : "Could not load event timers.");
     } finally {
       setSnapshotBusy(false);
     }
@@ -300,6 +325,35 @@ export default function App() {
       setServerError(error instanceof Error ? error.message : "Could not change the server connection.");
     } finally {
       setConnectionActionId(null);
+    }
+  }
+
+  async function createServerTimer(server: ServerProfile) {
+    const name = timerName.trim();
+    if (!name || timerDurationMinutes < 1 || timerDurationMinutes > 1440) return;
+    setTimerBusy(true);
+    setTimerError("");
+    try {
+      await api<ServerTimer>(`/api/servers/${server.id}/timers`, {
+        method: "POST",
+        body: JSON.stringify({ name, durationSeconds: Math.round(timerDurationMinutes * 60) })
+      });
+      setTimerName("");
+      setTimers(await api<ServerTimer[]>(`/api/servers/${server.id}/timers`));
+    } catch (error) {
+      setTimerError(error instanceof Error ? error.message : "Could not create the timer.");
+    } finally {
+      setTimerBusy(false);
+    }
+  }
+
+  async function deleteServerTimer(server: ServerProfile, timer: ServerTimer) {
+    setTimerError("");
+    try {
+      await api<void>(`/api/servers/${server.id}/timers/${timer.id}`, { method: "DELETE" });
+      setTimers((current) => current.filter((item) => item.id !== timer.id));
+    } catch (error) {
+      setTimerError(error instanceof Error ? error.message : "Could not delete the timer.");
     }
   }
 
@@ -413,7 +467,7 @@ export default function App() {
         </header>
 
         <div className="content-area">
-          {alarms.length > 0 && <section className="alarm-dock"><div className="alarm-dock-heading"><span className="alarm-indicator">!</span><div><strong>Smart alarm activity</strong><p>Recent alarms received by this web session</p></div><button className="text-button" onClick={() => setAlarms([])}>Clear</button></div>{alarms.map((alarm, index) => <div className="alarm-row" key={`${alarm.serverId ?? "server"}-${alarm.receivedAtUtc}-${index}`}><div><strong>{alarm.title || "Smart alarm"}</strong><p>{alarm.message}</p></div><time>{new Date(alarm.receivedAtUtc).toLocaleTimeString()}</time></div>)}</section>}
+          {alarms.length > 0 && <section className="alarm-dock"><div className="alarm-dock-heading"><span className="alarm-indicator">!</span><div><strong>Recent alerts</strong><p>Smart alarms and timer expirations received by this browser session</p></div><button className="text-button" onClick={() => setAlarms([])}>Clear</button></div>{alarms.map((alarm, index) => <div className="alarm-row" key={`${alarm.serverId ?? "server"}-${alarm.receivedAtUtc}-${index}`}><div><strong>{alarm.title || "Smart alarm"}</strong><p>{alarm.message}</p></div><time>{new Date(alarm.receivedAtUtc).toLocaleTimeString()}</time></div>)}</section>}
           <section className="welcome-strip">
             <div className="welcome-icon">⌁</div>
             <div><strong>Welcome in, {user.displayName}</strong><p>Your self-hosted workspace is ready. Add a profile to start organizing your servers.</p></div>
@@ -477,6 +531,11 @@ export default function App() {
               <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
               <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>
             </>}
+            {selectedServer.isPaired && <section className="server-timers"><div className="chat-panel-heading"><div><h3 className="snapshot-subheading">Event timers</h3><p>Timers run on the server and persist when browsers close.</p></div></div>
+              {timerError && <div className="error-banner" role="alert">{timerError}</div>}
+              {(user.roles.includes("Admin") || user.roles.includes("Member")) && <form className="timer-composer" onSubmit={(event) => { event.preventDefault(); void createServerTimer(selectedServer); }}><input value={timerName} onChange={(event) => setTimerName(event.target.value)} maxLength={80} placeholder="Cargo, Oil Rig, custom event…" aria-label="Timer name" disabled={timerBusy} /><label><span>Minutes</span><input type="number" min={1} max={1440} value={timerDurationMinutes} onChange={(event) => setTimerDurationMinutes(Number(event.target.value))} aria-label="Timer duration in minutes" disabled={timerBusy} /></label><button className="primary-button" type="submit" disabled={timerBusy || !timerName.trim() || timerDurationMinutes < 1 || timerDurationMinutes > 1440}>{timerBusy ? "Adding…" : "Add timer"}</button></form>}
+              {timers.length === 0 ? <p className="muted">No event timers yet.</p> : <div className="timer-list">{timers.map((timer) => <div className="timer-row" key={timer.id}><div className="timer-icon">{timer.fired ? "✓" : "◷"}</div><div className="timer-info"><strong>{timer.name}</strong><span>{timer.fired ? "Expired" : `Expires at ${new Date(timer.expiresAtUtc).toLocaleTimeString()}`}</span></div>{(user.roles.includes("Admin") || (user.roles.includes("Member") && timer.isOwner)) && <button className="text-button danger-text" onClick={() => void deleteServerTimer(selectedServer, timer)}>Remove</button>}</div>)}</div>}
+            </section>}
             {selectedServer.isPaired && <section className="team-chat-panel"><div className="chat-panel-heading"><div><h3 className="snapshot-subheading">Team chat</h3><p>Messages are relayed through the paired Rust+ connection.</p></div><button className="text-button" onClick={() => void api<TeamChatMessage[]>(`/api/servers/${selectedServer.id}/chat`).then(setChatMessages).catch((error: unknown) => setChatError(error instanceof Error ? error.message : "Could not refresh team chat."))}>Refresh</button></div>
               {chatError && <div className="error-banner" role="alert">{chatError}</div>}
               <div className="chat-messages">{chatMessages.length === 0 ? <p className="muted">No team chat messages returned.</p> : chatMessages.slice(-100).map((message, index) => <div className="chat-message" key={`${message.steamId}-${message.time}-${index}`}><div className="chat-message-meta"><strong>{message.name}</strong><time>{new Date(message.time).toLocaleTimeString()}</time></div><p>{message.message}</p></div>)}</div>
