@@ -30,8 +30,11 @@ public sealed class RustPlusFcmService(
     private readonly string _persistentIdsPath = configuration["FCM_PERSISTENT_IDS_PATH"] ??
         Path.Combine(AppContext.BaseDirectory, "App_Data", "fcm-persistent-ids.protected");
     private readonly object _idsLock = new();
+    private const int MaxPersistedNotificationIds = 2000;
+    private int _reconnectFailures;
+    private DateTime _nextReconnectUtc = DateTime.MinValue;
     private readonly SemaphoreSlim _lifecycleGate = new(1, 1);
-    private HashSet<string> _persistentIds = new(StringComparer.Ordinal);
+    private List<string> _persistentIds = new();
     private RustPlusFcm? _listener;
     private string? _ownerUserId;
     private volatile bool _isListening;
@@ -106,7 +109,7 @@ public sealed class RustPlusFcmService(
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (File.Exists(_credentialsPath) && !_isListening)
+            if (File.Exists(_credentialsPath) && !_isListening && DateTime.UtcNow >= _nextReconnectUtc)
             {
                 try
                 {
@@ -135,12 +138,13 @@ public sealed class RustPlusFcmService(
                 catch (Exception exception)
                 {
                     _isListening = false;
+                    ScheduleReconnect();
                     logger.LogWarning("FCM reconnect attempt failed ({ExceptionType}); retrying automatically.",
                         exception.GetType().Name);
                 }
             }
 
-            try { await Task.Delay(_isListening ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(15), cancellationToken); }
+            try { await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken); }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { break; }
         }
     }
@@ -186,6 +190,8 @@ public sealed class RustPlusFcmService(
         {
             if (!ReferenceEquals(_listener, listener)) return;
             _isListening = true;
+            _reconnectFailures = 0;
+            _nextReconnectUtc = DateTime.MinValue;
             logger.LogInformation("Rust+ FCM listener connected.");
             _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = true });
         };
@@ -193,6 +199,7 @@ public sealed class RustPlusFcmService(
         {
             if (!ReferenceEquals(_listener, listener)) return;
             _isListening = false;
+            ScheduleReconnect();
             logger.LogWarning("Rust+ FCM listener disconnected.");
             _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = false });
         };
@@ -341,13 +348,14 @@ public sealed class RustPlusFcmService(
         try
         {
             var plain = _persistentIdsProtector.Unprotect(File.ReadAllText(_persistentIdsPath));
-            _persistentIds = JsonSerializer.Deserialize<HashSet<string>>(plain) ?? new HashSet<string>(StringComparer.Ordinal);
+            _persistentIds = JsonSerializer.Deserialize<List<string>>(plain) ?? new List<string>();
+            TrimPersistentIds();
         }
         catch (Exception exception)
         {
             logger.LogWarning("FCM de-duplication state could not be read ({ExceptionType}); starting a fresh set.",
                 exception.GetType().Name);
-            _persistentIds = new HashSet<string>(StringComparer.Ordinal);
+            _persistentIds = new List<string>();
         }
     }
 
@@ -358,7 +366,9 @@ public sealed class RustPlusFcmService(
 
         lock (_idsLock)
         {
-            _persistentIds.Add(persistentId);
+            if (!_persistentIds.Contains(persistentId, StringComparer.Ordinal))
+                _persistentIds.Add(persistentId);
+            TrimPersistentIds();
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(_persistentIdsPath)!);
@@ -371,6 +381,22 @@ public sealed class RustPlusFcmService(
                     exception.GetType().Name);
             }
         }
+    }
+
+    private void TrimPersistentIds()
+    {
+        if (_persistentIds.Count > MaxPersistedNotificationIds)
+            _persistentIds.RemoveRange(0, _persistentIds.Count - MaxPersistedNotificationIds);
+    }
+
+    private void ScheduleReconnect()
+    {
+        if (_nextReconnectUtc > DateTime.UtcNow)
+            return;
+
+        _reconnectFailures = Math.Min(_reconnectFailures + 1, 6);
+        var delaySeconds = Math.Min(300, 15 * Math.Pow(2, _reconnectFailures - 1));
+        _nextReconnectUtc = DateTime.UtcNow.AddSeconds(delaySeconds);
     }
 
     private static Credentials ParseCredentials(string json)
