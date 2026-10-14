@@ -10,6 +10,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PairedServerCredential> PairedServerCredentials => Set<PairedServerCredential>();
     public DbSet<PairedDevice> PairedDevices => Set<PairedDevice>();
     public DbSet<ServerTimer> ServerTimers => Set<ServerTimer>();
+    public DbSet<DeviceGroup> DeviceGroups => Set<DeviceGroup>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -33,6 +34,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
             .Property(device => device.Name).HasMaxLength(120);
         builder.Entity<PairedDevice>()
             .Property(device => device.Type).HasMaxLength(32);
+        builder.Entity<DeviceGroup>()
+            .HasIndex(group => new { group.PairedServerCredentialId, group.Name }).IsUnique();
+        builder.Entity<DeviceGroup>()
+            .Property(group => group.Name).HasMaxLength(50);
         builder.Entity<ServerTimer>()
             .HasIndex(timer => new { timer.PairedServerCredentialId, timer.ExpiresAtUtc });
         builder.Entity<ServerTimer>()
