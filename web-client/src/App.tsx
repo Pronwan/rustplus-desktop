@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent, type ChangeEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ChangeEvent } from "react";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 type User = {
@@ -23,6 +23,7 @@ type FcmStatus = { configured: boolean; listening: boolean };
 type AlarmAlert = { serverId?: string; title: string; message: string; receivedAtUtc: string };
 type AdminUser = { id: string; email: string; displayName: string; roles: string[] };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
+type TeamChatMessage = { steamId: string; name: string; message: string; time: string };
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
 type ServerSnapshot = {
   info: { name?: string; playerCount?: number; maxPlayerCount?: number; mapSize?: number | null } | null;
@@ -78,6 +79,11 @@ export default function App() {
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [roleBusyId, setRoleBusyId] = useState<string | null>(null);
   const [roleMessage, setRoleMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState<TeamChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatBusy, setChatBusy] = useState(false);
+  const [chatError, setChatError] = useState("");
+  const selectedServerIdRef = useRef<string | null>(null);
 
   const refreshServers = useCallback(async () => {
     try {
@@ -125,6 +131,11 @@ export default function App() {
     connection.on("DevicesChanged", () => { void refreshServers(); });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
     connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5)));
+    connection.on("TeamChatMessageReceived", (payload: { serverId: string; message: TeamChatMessage }) => {
+      if (selectedServerIdRef.current === payload.serverId) {
+        setChatMessages((current) => [...current, payload.message].slice(-100));
+      }
+    });
     connection.onreconnected(() => { void refreshServers(); });
     void connection.start().catch((error: unknown) => {
       console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
@@ -232,6 +243,9 @@ export default function App() {
     setDevices([]);
     setSnapshotError("");
     setDeviceError("");
+    setChatMessages([]);
+    setChatInput("");
+    setChatError("");
     setSnapshotBusy(true);
     try {
       setSnapshot(await api<ServerSnapshot>(`/api/servers/${server.id}/snapshot`));
@@ -242,6 +256,11 @@ export default function App() {
       setDevices(await api<PairedDevice[]>(`/api/servers/${server.id}/devices`));
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not load paired devices.");
+    }
+    try {
+      setChatMessages(await api<TeamChatMessage[]>(`/api/servers/${server.id}/chat`));
+    } catch (error) {
+      setChatError(error instanceof Error ? error.message : "Could not load team chat.");
     } finally {
       setSnapshotBusy(false);
     }
@@ -281,6 +300,25 @@ export default function App() {
       setServerError(error instanceof Error ? error.message : "Could not change the server connection.");
     } finally {
       setConnectionActionId(null);
+    }
+  }
+
+  async function sendTeamMessage(server: ServerProfile) {
+    const message = chatInput.trim();
+    if (!message || message.length > 200) return;
+    setChatBusy(true);
+    setChatError("");
+    try {
+      await api<{ success: boolean }>(`/api/servers/${server.id}/chat`, {
+        method: "POST",
+        body: JSON.stringify({ message })
+      });
+      setChatInput("");
+      setChatMessages(await api<TeamChatMessage[]>(`/api/servers/${server.id}/chat`));
+    } catch (error) {
+      setChatError(error instanceof Error ? error.message : "Could not send the team chat message.");
+    } finally {
+      setChatBusy(false);
     }
   }
 
@@ -439,6 +477,11 @@ export default function App() {
               <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
               <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>
             </>}
+            {selectedServer.isPaired && <section className="team-chat-panel"><div className="chat-panel-heading"><div><h3 className="snapshot-subheading">Team chat</h3><p>Messages are relayed through the paired Rust+ connection.</p></div><button className="text-button" onClick={() => void api<TeamChatMessage[]>(`/api/servers/${selectedServer.id}/chat`).then(setChatMessages).catch((error: unknown) => setChatError(error instanceof Error ? error.message : "Could not refresh team chat."))}>Refresh</button></div>
+              {chatError && <div className="error-banner" role="alert">{chatError}</div>}
+              <div className="chat-messages">{chatMessages.length === 0 ? <p className="muted">No team chat messages returned.</p> : chatMessages.slice(-100).map((message, index) => <div className="chat-message" key={`${message.steamId}-${message.time}-${index}`}><div className="chat-message-meta"><strong>{message.name}</strong><time>{new Date(message.time).toLocaleTimeString()}</time></div><p>{message.message}</p></div>)}</div>
+              {(user.roles.includes("Admin") || user.roles.includes("Member")) && <form className="chat-composer" onSubmit={(event) => { event.preventDefault(); void sendTeamMessage(selectedServer); }}><input value={chatInput} onChange={(event) => setChatInput(event.target.value)} maxLength={200} placeholder="Message your team…" aria-label="Team chat message" disabled={chatBusy || !selectedServer.connectionEnabled} /><button className="primary-button" type="submit" disabled={chatBusy || !chatInput.trim() || !selectedServer.connectionEnabled}>{chatBusy ? "Sending…" : "Send"}</button></form>}
+            </section>}
             {selectedServer.isPaired && <>
               <h3 className="snapshot-subheading">Paired smart devices</h3>
               {deviceError && <div className="error-banner" role="alert">{deviceError}</div>}

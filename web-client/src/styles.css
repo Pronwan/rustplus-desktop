@@ -212,3 +212,17 @@ button:disabled { cursor: wait; opacity: .65; }
 .self-role-label { color: #7c8978; font-size: 9px; }
 .role-message { color: #b9d8a4; font-size: 11px; margin: 0 0 12px; }
 @media (max-width: 540px) { .admin-users-panel { padding: 14px; } .admin-user-row { flex-wrap: wrap; } .admin-user-info { min-width: 55%; } .admin-user-row select { margin-left: auto; } }
+
+.team-chat-panel { margin-top: 22px; padding-top: 2px; }
+.chat-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.chat-panel-heading p { margin: -3px 0 10px; color: var(--muted); font-size: 10px; }
+.chat-messages { max-height: 240px; overflow: auto; display: grid; gap: 8px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: #101310; }
+.chat-message { padding: 8px 0; border-bottom: 1px solid #262d24; }
+.chat-message:last-child { border-bottom: 0; }
+.chat-message-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.chat-message-meta strong { font-size: 10px; color: #c9e4b7; }
+.chat-message-meta time { font-size: 9px; color: var(--muted); }
+.chat-message p { margin: 5px 0 0; color: #d5ddd0; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.chat-composer { display: flex; gap: 8px; margin-top: 9px; }
+.chat-composer input { flex: 1; min-width: 0; border: 1px solid #394633; border-radius: 7px; background: #121612; color: var(--text); padding: 10px; font-size: 11px; }
+.chat-composer .primary-button { flex: 0 0 auto; padding: 9px 13px; }
