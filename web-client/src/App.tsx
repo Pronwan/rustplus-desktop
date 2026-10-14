@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 type User = {
@@ -186,8 +186,9 @@ export default function App() {
     }
   }
 
-  async function uploadFcmCredentials(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.currentTarget.files?.[0];
+  async function uploadFcmCredentials(event: ChangeEvent<HTMLInputElement>) {
+    const inputElement = event.currentTarget;
+    const file = inputElement.files?.[0];
     if (!file) return;
     setBusy(true);
     setFcmMessage("Uploading credentials and connecting to FCM…");
@@ -205,7 +206,7 @@ export default function App() {
       setFcmMessage(error instanceof Error ? error.message : "Could not configure FCM credentials.");
     } finally {
       setBusy(false);
-      event.currentTarget.value = "";
+      inputElement.value = "";
     }
   }
 

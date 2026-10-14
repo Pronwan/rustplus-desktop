@@ -9,13 +9,17 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Invite-code-gated account registration (`WEB_INVITE_CODE`).
 - Roles seeded as `Admin`, `Member`, and `ViewOnly`.
 - Authenticated server profile create/list/delete endpoints with owner scoping.
-- Authenticated SignalR hub that notifies the signed-in owner when their profile list changes.
+- Authenticated SignalR hub that notifies signed-in clients when profiles or connection states change.
+- Admin-only FCM credential upload, protected credential storage, pairing notifications, and persisted notification de-duplication IDs.
+- Shared Rust+ server profiles created from FCM pairing events, with one backend-owned Rust+ socket per paired server and bounded exponential reconnect attempts.
+- Live snapshot endpoint for supported server info, map image/monuments, and team data.
+- Admin-only role assignment and protection against demoting the final administrator.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
 ## Important current limitation
 
-**Server profiles are saved configuration only. The Rust+ pairing listener, FCM registration, live Rust+ connection, map/team/device data, and control commands are not implemented yet.** The UI labels profiles as disconnected and does not pretend a Rust+ server is connected. The next implementation step is a headless Linux compatibility spike for the exact RustPlusAPI dependency and pairing flow.
+**The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Smart-device commands, full realtime team/map updates, chat, and alarm-history UI are not complete yet.
 
 ## Run with Docker
 
@@ -25,6 +29,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 4. Run `docker compose up --build -d`.
 5. Put the service behind an HTTPS reverse proxy before exposing it to the internet. The production auth cookie is Secure-only.
 6. Open `http://localhost:8080` for a local smoke test. For HTTPS deployments, configure the reverse proxy to preserve the original scheme and restrict direct access to the app port.
+7. In the Rust+ Web dashboard as the admin, upload a native RustPlusApi credentials JSON or a legacy `rustplus.config.json` file. Pair the desired server from the Rust+ mobile app. The server profile should appear after the FCM pairing notification is received.
 
 The database and Data Protection key ring are stored in the `rustplus-web-data` volume. Treat this volume and its backups as sensitive. Back it up before upgrading. This first version uses EF Core `EnsureCreated`; schema migrations must be added before production schema evolution.
 
@@ -33,7 +38,10 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/health`: minimal health status only.
 - `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout`.
 - `GET /api/auth/me`.
-- `GET/POST /api/servers`, `DELETE /api/servers/{id}`.
+- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`.
+- `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
+- `DELETE /api/paired-servers/{id}` (admin only).
+- `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).
 - `/hubs/servers`: authenticated SignalR hub; profile changes send `ServersChanged`.
 
-All application endpoints except the minimal health check and invite-gated registration require an authenticated session. Server profile reads and mutations are scoped to the current account. Role-based admin/member/view-only policy enforcement is the next step before broader sharing/control features are enabled.
+All application endpoints except the minimal health check and invite-gated registration require an authenticated session. Server profile reads and mutations are scoped to the current account. Paired servers are visible to all signed-in accounts on this self-hosted instance; only admins can upload/replace FCM credentials or remove a pairing. View-only accounts can read data but cannot create or delete server profiles.
