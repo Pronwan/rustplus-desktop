@@ -8,6 +8,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     public DbSet<ServerProfile> ServerProfiles => Set<ServerProfile>();
     public DbSet<PairedServerCredential> PairedServerCredentials => Set<PairedServerCredential>();
+    public DbSet<PairedDevice> PairedDevices => Set<PairedDevice>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,6 +26,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
             .Property(profile => profile.Name).HasMaxLength(120);
         builder.Entity<PairedServerCredential>()
             .Property(profile => profile.Host).HasMaxLength(255);
+        builder.Entity<PairedDevice>()
+            .HasIndex(device => new { device.PairedServerCredentialId, device.EntityId }).IsUnique();
+        builder.Entity<PairedDevice>()
+            .Property(device => device.Name).HasMaxLength(120);
+        builder.Entity<PairedDevice>()
+            .Property(device => device.Type).HasMaxLength(32);
     }
 }
 
