@@ -35,6 +35,16 @@ type ServerSnapshot = {
   retrievedAtUtc: string;
 };
 
+function showDesktopNotification(title: string, body: string): void {
+  if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+    try {
+      new Notification(title, { body, tag: "rustplus-web-alert" });
+    } catch {
+      // The in-dashboard alert remains available if desktop notifications are blocked.
+    }
+  }
+}
+
 function formatProtectionExpiry(value?: string): string {
   if (!value) return "Unknown";
   const date = new Date(value);
@@ -68,6 +78,9 @@ async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | "unsupported">(
+    typeof Notification === "undefined" ? "unsupported" : Notification.permission
+  );
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [authError, setAuthError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -185,14 +198,18 @@ export default function App() {
       }
     });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
-    connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5)));
+    connection.on("AlarmReceived", (alarm: AlarmAlert) => {
+      setAlarms((current) => [alarm, ...current].slice(0, 50));
+      showDesktopNotification(alarm.title || "Rust+ smart alarm", alarm.message);
+    });
     connection.on("TimersChanged", (payload: { serverId: string }) => {
       if (selectedServerIdRef.current === payload.serverId) {
         void api<ServerTimer[]>(`/api/servers/${payload.serverId}/timers`).then(setTimers).catch(() => undefined);
       }
     });
     connection.on("TimerExpired", (payload: { serverId: string; name: string; firedAtUtc: string }) => {
-      setAlarms((current) => [{ serverId: payload.serverId, title: "Timer expired", message: payload.name, receivedAtUtc: payload.firedAtUtc }, ...current].slice(0, 5));
+      setAlarms((current) => [{ serverId: payload.serverId, title: "Timer expired", message: payload.name, receivedAtUtc: payload.firedAtUtc }, ...current].slice(0, 50));
+      showDesktopNotification("Rust+ timer expired", payload.name);
       if (selectedServerIdRef.current === payload.serverId) {
         void api<ServerTimer[]>(`/api/servers/${payload.serverId}/timers`).then(setTimers).catch(() => undefined);
       }
@@ -587,7 +604,7 @@ export default function App() {
       <section className="main-panel">
         <header className="topbar">
           <div><p className="eyebrow">WORKSPACE / SERVERS</p><h1>Server dashboard</h1></div>
-          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span><button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
+          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span>{notificationPermission !== "unsupported" && notificationPermission !== "granted" && <button className="secondary-button" disabled={notificationPermission === "denied"} title={notificationPermission === "denied" ? "Allow notifications in your browser site settings." : "Show Rust+ alerts even when this tab is in the background"} onClick={() => { void Notification.requestPermission().then(setNotificationPermission); }}> {notificationPermission === "denied" ? "Notifications blocked" : "Enable notifications"} </button>}<button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
         </header>
 
         <div className="content-area">
