@@ -77,14 +77,18 @@ public sealed class RustPlusFcmService(
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        _stopping?.Cancel();
-        if (_reconnectLoop is not null)
+        var stopping = Interlocked.Exchange(ref _stopping, null);
+        if (stopping is not null)
         {
-            try { await _reconnectLoop.WaitAsync(cancellationToken); }
-            catch (OperationCanceledException) { }
+            stopping.Cancel();
+            if (_reconnectLoop is not null)
+            {
+                try { await _reconnectLoop; }
+                catch (OperationCanceledException) { }
+            }
         }
 
-        await _lifecycleGate.WaitAsync(cancellationToken);
+        await _lifecycleGate.WaitAsync(CancellationToken.None);
         try
         {
             _listener?.Disconnect();
@@ -94,7 +98,7 @@ public sealed class RustPlusFcmService(
         finally
         {
             _lifecycleGate.Release();
-            _stopping?.Dispose();
+            stopping?.Dispose();
         }
     }
 

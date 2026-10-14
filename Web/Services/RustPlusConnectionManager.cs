@@ -37,32 +37,33 @@ public sealed class RustPlusConnectionManager(
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        if (_stopping is not null)
+        var stopping = Interlocked.Exchange(ref _stopping, null);
+        if (stopping is null)
+            return;
+
+        stopping.Cancel();
+        if (_loop is not null)
         {
-            _stopping.Cancel();
-            if (_loop is not null)
-            {
-                try { await _loop.WaitAsync(cancellationToken); }
-                catch (OperationCanceledException) { }
-            }
+            try { await _loop; }
+            catch (OperationCanceledException) { }
         }
 
         foreach (var entry in _entries.Values)
         {
-            await entry.Gate.WaitAsync(cancellationToken);
+            await entry.Gate.WaitAsync(CancellationToken.None);
             try
             {
                 if (entry.Client is not null)
                 {
                     try { await entry.Client.DisconnectAsync(forceClose: true); }
-                    catch { /* Continue cleanup if the remote socket is already gone. */ }
+                    catch { /* Shutdown should continue even if a remote socket is already gone. */ }
                     entry.Client.Dispose();
                     entry.Client = null;
                 }
             }
             finally { entry.Gate.Release(); }
         }
-        _stopping?.Dispose();
+        stopping.Dispose();
     }
 
     public async Task EnsureConnectedAsync(Guid id, CancellationToken cancellationToken = default)
