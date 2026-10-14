@@ -176,3 +176,14 @@ button:disabled { cursor: wait; opacity: .65; }
 .device-state.on { color: var(--green); }
 .device-state.unknown { color: #89958a; }
 @media (max-width: 540px) { .device-row { align-items: flex-start; flex-wrap: wrap; } .device-row-action { width: 100%; justify-content: flex-end; } }
+
+.alarm-dock { margin-bottom: 20px; border: 1px solid #674438; border-radius: 10px; background: linear-gradient(110deg, #2a1e19, #1b1916); padding: 14px 16px; }
+.alarm-dock-heading { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; }
+.alarm-indicator { width: 25px; height: 25px; border-radius: 50%; display: grid; place-items: center; background: #ff9b77; color: #321810; font-weight: 800; }
+.alarm-dock-heading > div { flex: 1; }
+.alarm-dock-heading strong { font-size: 12px; }
+.alarm-dock-heading p { margin: 3px 0 0; color: #b49d90; font-size: 10px; }
+.alarm-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-top: 1px solid #4b332a; padding: 10px 0 2px; }
+.alarm-row strong { font-size: 11px; color: #ffd1bd; }
+.alarm-row p { margin: 4px 0 0; color: #c4ada1; font-size: 11px; line-height: 1.5; }
+.alarm-row time { flex: 0 0 auto; color: #9b8275; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }

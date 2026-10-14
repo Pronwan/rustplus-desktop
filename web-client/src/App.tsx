@@ -19,6 +19,7 @@ type ServerProfile = {
 };
 
 type FcmStatus = { configured: boolean; listening: boolean };
+type AlarmAlert = { serverId?: string; title: string; message: string; receivedAtUtc: string };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
 type ServerSnapshot = {
   info: { name?: string; playerCount?: number; maxPlayerCount?: number } | null;
@@ -69,6 +70,7 @@ export default function App() {
   const [devices, setDevices] = useState<PairedDevice[]>([]);
   const [deviceError, setDeviceError] = useState("");
   const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
+  const [alarms, setAlarms] = useState<AlarmAlert[]>([]);
 
   const refreshServers = useCallback(async () => {
     try {
@@ -114,6 +116,7 @@ export default function App() {
     connection.on("ServerStatusChanged", () => { void refreshServers(); });
     connection.on("DevicesChanged", () => { void refreshServers(); });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
+    connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5));
     connection.onreconnected(() => { void refreshServers(); });
     void connection.start().catch((error: unknown) => {
       console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
@@ -327,6 +330,7 @@ export default function App() {
         </header>
 
         <div className="content-area">
+          {alarms.length > 0 && <section className="alarm-dock"><div className="alarm-dock-heading"><span className="alarm-indicator">!</span><div><strong>Smart alarm activity</strong><p>Recent alarms received by this web session</p></div><button className="text-button" onClick={() => setAlarms([])}>Clear</button></div>{alarms.map((alarm, index) => <div className="alarm-row" key={`${alarm.serverId ?? "server"}-${alarm.receivedAtUtc}-${index}`}><div><strong>{alarm.title || "Smart alarm"}</strong><p>{alarm.message}</p></div><time>{new Date(alarm.receivedAtUtc).toLocaleTimeString()}</time></div>)}</section>}
           <section className="welcome-strip">
             <div className="welcome-icon">⌁</div>
             <div><strong>Welcome in, {user.displayName}</strong><p>Your self-hosted workspace is ready. Add a profile to start organizing your servers.</p></div>
