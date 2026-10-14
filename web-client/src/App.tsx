@@ -25,7 +25,7 @@ type PairedDevice = { id: string; entityId: string; name: string; type: string; 
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
 type ServerSnapshot = {
   info: { name?: string; playerCount?: number; maxPlayerCount?: number; mapSize?: number | null } | null;
-  map: { width?: number; height?: number; monuments?: { name?: string }[]; imageBase64?: string | null } | null;
+  map: { width?: number; height?: number; oceanMargin?: number | null; monuments?: { name?: string }[]; imageBase64?: string | null } | null;
   team: { members?: TeamMember[] | null } | null;
   retrievedAtUtc: string;
 };
