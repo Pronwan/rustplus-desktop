@@ -65,3 +65,5 @@ Automated tests also cover shared timer visibility and owner/admin delete permis
 The same-host Origin check also protects SignalR negotiation and WebSocket requests against cross-site connection attempts.
 
 Device detail requests are on-demand to avoid polling every paired entity; storage monitors show item IDs, quantities, capacity, and TC-protection expiry when Rust+ returns them.
+
+Storage-monitor details are rendered defensively because Rust+ may omit inventory or tool-cupboard protection fields for a given entity.
