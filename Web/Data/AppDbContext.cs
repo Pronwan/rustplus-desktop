@@ -11,6 +11,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PairedDevice> PairedDevices => Set<PairedDevice>();
     public DbSet<ServerTimer> ServerTimers => Set<ServerTimer>();
     public DbSet<DeviceGroup> DeviceGroups => Set<DeviceGroup>();
+    public DbSet<AlarmEvent> AlarmEvents => Set<AlarmEvent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -42,6 +43,14 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasIndex(timer => new { timer.PairedServerCredentialId, timer.ExpiresAtUtc });
         builder.Entity<ServerTimer>()
             .Property(timer => timer.Name).HasMaxLength(80);
+        builder.Entity<AlarmEvent>()
+            .HasIndex(alarm => alarm.ReceivedAtUtc);
+        builder.Entity<AlarmEvent>()
+            .Property(alarm => alarm.RustServerId).HasMaxLength(128);
+        builder.Entity<AlarmEvent>()
+            .Property(alarm => alarm.Title).HasMaxLength(120);
+        builder.Entity<AlarmEvent>()
+            .Property(alarm => alarm.Message).HasMaxLength(500);
     }
 }
 

@@ -205,6 +205,27 @@ app.MapPost("/api/auth/login", async Task<IResult> (
     return Results.Ok(await ToUserResponseAsync(user, userManager));
 }).AllowAnonymous();
 
+app.MapGet("/api/alarms", async Task<IResult> (
+    int? limit,
+    AppDbContext db,
+    CancellationToken cancellationToken) =>
+{
+    var take = Math.Clamp(limit ?? 50, 1, 100);
+    var alarms = await db.AlarmEvents.AsNoTracking()
+        .OrderByDescending(alarm => alarm.ReceivedAtUtc)
+        .ThenByDescending(alarm => alarm.Id)
+        .Take(take)
+        .Select(alarm => new
+        {
+            serverId = alarm.RustServerId,
+            alarm.Title,
+            alarm.Message,
+            receivedAtUtc = alarm.ReceivedAtUtc
+        })
+        .ToListAsync(cancellationToken);
+    return Results.Ok(alarms);
+}).RequireAuthorization();
+
 app.MapGet("/api/auth/me", async Task<IResult> (
     System.Security.Claims.ClaimsPrincipal principal,
     UserManager<ApplicationUser> userManager) =>
@@ -879,6 +900,19 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
     await db.Database.ExecuteSqlRawAsync("""
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_DeviceGroups_PairedServerCredentialId_Name"
         ON "DeviceGroups" ("PairedServerCredentialId", "Name");
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "AlarmEvents" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_AlarmEvents" PRIMARY KEY,
+            "RustServerId" TEXT NOT NULL,
+            "Title" TEXT NOT NULL,
+            "Message" TEXT NOT NULL,
+            "ReceivedAtUtc" TEXT NOT NULL
+        );
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE INDEX IF NOT EXISTS "IX_AlarmEvents_ReceivedAtUtc"
+        ON "AlarmEvents" ("ReceivedAtUtc");
         """);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

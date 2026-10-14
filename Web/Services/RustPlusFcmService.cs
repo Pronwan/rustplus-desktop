@@ -31,6 +31,7 @@ public sealed class RustPlusFcmService(
         Path.Combine(AppContext.BaseDirectory, "App_Data", "fcm-persistent-ids.protected");
     private readonly object _idsLock = new();
     private const int MaxPersistedNotificationIds = 2000;
+    private const int MaxPersistedAlarmEvents = 2000;
     private int _reconnectFailures;
     private DateTime _nextReconnectUtc = DateTime.MinValue;
     private readonly SemaphoreSlim _lifecycleGate = new(1, 1);
@@ -212,17 +213,62 @@ public sealed class RustPlusFcmService(
         listener.OnAlarmTriggered += (_, alarm) =>
         {
             if (ReferenceEquals(_listener, listener) && alarm is not null)
-                _ = hub.Clients.All.SendAsync("AlarmReceived", new
-                {
-                    serverId = alarm.ServerId,
-                    title = alarm.Title,
-                    message = alarm.Message,
-                    receivedAtUtc = DateTime.UtcNow
-                });
+                _ = PersistAlarmSafelyAsync(alarm.ServerId, alarm.Title, alarm.Message);
         };
 
         _listener = listener;
         await listener.ConnectAsync(cancellationToken);
+    }
+
+    private async Task PersistAlarmSafelyAsync(string? rustServerId, string? title, string? message)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(rustServerId))
+                return;
+
+            var alarm = new AlarmEvent
+            {
+                RustServerId = rustServerId.Trim()[..Math.Min(rustServerId.Trim().Length, 128)],
+                Title = (title ?? "Smart alarm").Trim()[..Math.Min((title ?? "Smart alarm").Trim().Length, 120)],
+                Message = (message ?? "").Trim()[..Math.Min((message ?? "").Trim().Length, 500)],
+                ReceivedAtUtc = DateTime.UtcNow
+            };
+
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.AlarmEvents.Add(alarm);
+            await db.SaveChangesAsync();
+
+            // Keep a bounded history. Delete in batches so one unusually large old database
+            // does not turn a single alarm notification into an unbounded cleanup operation.
+            var staleIds = await db.AlarmEvents.AsNoTracking()
+                .OrderByDescending(item => item.ReceivedAtUtc)
+                .ThenByDescending(item => item.Id)
+                .Skip(MaxPersistedAlarmEvents)
+                .Select(item => item.Id)
+                .Take(100)
+                .ToListAsync();
+            if (staleIds.Count > 0)
+            {
+                var stale = await db.AlarmEvents.Where(item => staleIds.Contains(item.Id)).ToListAsync();
+                db.AlarmEvents.RemoveRange(stale);
+                await db.SaveChangesAsync();
+            }
+
+            await hub.Clients.All.SendAsync("AlarmReceived", new
+            {
+                serverId = alarm.RustServerId,
+                title = alarm.Title,
+                message = alarm.Message,
+                receivedAtUtc = alarm.ReceivedAtUtc
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Could not persist or broadcast Rust+ alarm ({ExceptionType}).",
+                exception.GetType().Name);
+        }
     }
 
     private async Task HandlePairingSafelyAsync(Notification<RustPlusApi.Fcm.Data.Events.ServerEvent?> pairing, string? ownerUserId)

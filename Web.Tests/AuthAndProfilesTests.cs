@@ -76,6 +76,35 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task RecentSmartAlarmHistoryRequiresAuthenticationAndHonorsLimit()
+    {
+        using var anonymous = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        Assert.Equal(HttpStatusCode.Unauthorized, (await anonymous.GetAsync("/api/alarms")).StatusCode);
+
+        using var admin = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var login = await admin.PostAsJsonAsync("/api/auth/login", new
+        {
+            email = "admin@test.local",
+            password = "AdminPassword!234",
+            rememberMe = true
+        });
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.AlarmEvents.AddRange(
+                new AlarmEvent { RustServerId = "server-a", Title = "Older alarm", Message = "Earlier", ReceivedAtUtc = DateTime.UtcNow.AddMinutes(-2) },
+                new AlarmEvent { RustServerId = "server-b", Title = "Latest alarm", Message = "Recent", ReceivedAtUtc = DateTime.UtcNow });
+            await db.SaveChangesAsync();
+        }
+
+        using var json = JsonDocument.Parse(await (await admin.GetAsync("/api/alarms?limit=1")).Content.ReadAsStringAsync());
+        Assert.Equal(1, json.RootElement.GetArrayLength());
+        Assert.Equal("Latest alarm", json.RootElement[0].GetProperty("title").GetString());
+    }
+
+    [Fact]
     public async Task ServerTimersAreSharedButOnlyOwnersOrAdminsCanDeleteThem()
     {
         using var admin = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
