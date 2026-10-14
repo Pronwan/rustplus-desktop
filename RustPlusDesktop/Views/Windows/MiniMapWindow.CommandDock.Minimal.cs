@@ -27,42 +27,48 @@ namespace RustPlusDesk
         private bool _peeking;
 
         /// <summary>
-        /// Brings the dock up for as long as the peek key is held.
+        /// Lifts the dock over the game for as long as the peek key is held.
         ///
-        /// Hidden rather than closed on the way out, because closing it would tear down every
-        /// tile and rebuild them on the next press — which for a key people tap several times a
-        /// minute would be a stutter each time, and would lose anything a tile was holding.
+        /// Topmost rather than shown and hidden. The window stays where it is and keeps every
+        /// tile alive; what changes is whether it is in front of a full-screen game or behind
+        /// it. Hiding it outright was the first attempt and it was wrong twice over — the
+        /// tiles went with it on a second monitor where nothing was in the way, and a window
+        /// left hidden had no way back.
         /// </summary>
         public void ShowForPeek()
         {
             _peeking = true;
 
-            Show();
-            Visibility = Visibility.Visible;
+            Topmost = true;
+            Activate();
         }
 
         /// <summary>
-        /// Hides the dock straight away when a peek key is set, and shows it when none is.
+        /// Sets whether the dock sits in front of everything, or only while the key is held.
         ///
-        /// Called when the window opens and when the key is changed, so the two agree: with a
-        /// key configured the dock is only ever on screen while it is held, and taking the key
-        /// away puts the dock back for good rather than leaving it invisible with no way up.
+        /// Called when the window opens and whenever the key changes. With a key set the dock
+        /// gives up being topmost, so a full-screen game covers it until the key brings it
+        /// back; with no key it is in front as it always was.
+        ///
+        /// Visibility is forced on either way. An earlier version of this hid the window
+        /// instead, and anybody who tried it is left with a dock that is still hidden.
         /// </summary>
         public void ApplyPeekVisibility()
         {
             bool peek = !string.IsNullOrWhiteSpace(Services.TrackingService.MiniMapPeekHotkey);
 
             _peeking = false;
-            Visibility = peek ? Visibility.Hidden : Visibility.Visible;
+            Visibility = Visibility.Visible;
+            Topmost = !peek;
         }
 
-        /// <summary>Puts it away again, unless it was already up before the key was pressed.</summary>
+        /// <summary>Lets the game cover it again, unless it was in front before the key.</summary>
         public void HideAfterPeek()
         {
             if (!_peeking) return;
 
             _peeking = false;
-            Visibility = Visibility.Hidden;
+            Topmost = false;
         }
 
         private FrameworkElement BuildMinimalClockTile(CommandDockTile tile)

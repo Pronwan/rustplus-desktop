@@ -359,9 +359,12 @@ namespace RustPlusDesk
 
         // ── Settings popup ──────────────────────────────────────────────────────
 
-        // The title bar belongs to the dock, so its gear opens the dock's settings. The map's
-        // own gear still opens the map's — see the tile handles.
-        private void BtnSettings_Click(object sender, RoutedEventArgs e) => OpenDockSettings();
+        // Two gears, and they used to share this one handler — which is why pointing it at the
+        // dock's panel moved the map's gear with it. The gear on the map opens the map's
+        // settings; the one in the title bar belongs to the window and opens the dock's.
+        private void BtnMapSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
+
+        private void BtnDockSettings_Click(object sender, RoutedEventArgs e) => OpenDockSettings();
 
         /// <summary>
         /// Opens the settings popup beside the map and pins it there.

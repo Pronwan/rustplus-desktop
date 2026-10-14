@@ -16,9 +16,24 @@ namespace RustPlusDesk
     /// </summary>
     public partial class MiniMapWindow
     {
+        /// <summary>
+        /// Points the dock settings panel at this window, once.
+        ///
+        /// Every write the panel makes goes through its ParentWindow, so a null one is a panel
+        /// whose switches do nothing and say nothing about it. It is set when the window is
+        /// built rather than only when the panel is opened, so there is no order of events that
+        /// leaves it unset.
+        /// </summary>
+        private void BindDockSettingsPanel()
+        {
+            if (DockSettingsOverlay != null) DockSettingsOverlay.ParentWindow = this;
+        }
+
         public void OpenDockSettings()
         {
             if (DockSettingsPopup.IsOpen) return;
+
+            BindDockSettingsPanel();
 
             // Beside the dock rather than beside the map: this one belongs to the whole window,
             // and the map may not be on it.
@@ -37,7 +52,6 @@ namespace RustPlusDesk
                 offsetY = Math.Min(0, screen.Bottom - panelHeight - Top);
             if (Top + offsetY < screen.Top) offsetY = screen.Top - Top;
 
-            DockSettingsOverlay.ParentWindow = this;
             DockSettingsOverlay.Load(_dock, CurrentMonitorDeviceName());
 
             DockSettingsPopup.HorizontalOffset = offsetX;

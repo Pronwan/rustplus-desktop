@@ -124,7 +124,7 @@
                            Width="34" Height="34" Margin="0,10,10,0" Padding="6"
                            Appearance="Secondary" Background="#E6101518"
                            BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
-                           Foreground="White" Click="BtnSettings_Click"
+                           Foreground="White" Click="BtnMapSettings_Click"
                            ToolTip="{DynamicResource MiniMapSettings}"
                            AutomationProperties.Name="{DynamicResource MiniMapSettings}"
                            Icon="{ui:SymbolIcon Symbol=Settings24}"/>
@@ -209,7 +209,7 @@
                                    Padding="3"
                                    Appearance="Transparent"
                                    Foreground="White"
-                                   Click="BtnSettings_Click"
+                                   Click="BtnDockSettings_Click"
                                    tutorials:Tutorial.TargetId="MiniMap.Settings"
                                    Icon="{ui:SymbolIcon Symbol=Settings24}"/>
                     </StackPanel>
