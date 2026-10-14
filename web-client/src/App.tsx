@@ -71,6 +71,7 @@ export default function App() {
   const [devices, setDevices] = useState<PairedDevice[]>([]);
   const [deviceError, setDeviceError] = useState("");
   const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
+  const [connectionActionId, setConnectionActionId] = useState<string | null>(null);
   const [alarms, setAlarms] = useState<AlarmAlert[]>([]);
 
   const refreshServers = useCallback(async () => {
@@ -240,6 +241,22 @@ export default function App() {
     }
   }
 
+  async function setServerConnection(server: ServerProfile, enabled: boolean) {
+    setConnectionActionId(server.id);
+    setServerError("");
+    try {
+      await api<{ id: string; connectionStatus: string }>(`/api/paired-servers/${server.id}/connection`, {
+        method: "POST",
+        body: JSON.stringify({ enabled })
+      });
+      await refreshServers();
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : "Could not change the server connection.");
+    } finally {
+      setConnectionActionId(null);
+    }
+  }
+
   async function toggleDevice(server: ServerProfile, device: PairedDevice) {
     setDeviceActionId(device.entityId);
     setDeviceError("");
@@ -364,7 +381,8 @@ export default function App() {
                   <h3>{server.name}</h3><p className="server-address">{server.host}:{server.port}</p>
                   <div className="server-card-divider" />
                   <div className="server-card-bottom"><span>{server.isPaired ? "Paired via Rust+" : "Profile saved"}</span>{(!server.isPaired || user.roles.includes("Admin")) && <button className="text-button danger-text" onClick={() => void removeServer(server)}>{server.isPaired ? "Remove pairing" : "Delete"}</button>}</div>
-                  {server.isPaired ? <button className="secondary-button snapshot-button" onClick={() => void openSnapshot(server)}>View live data ↗</button> : <p className="adapter-note">Pair this server in the Rust+ mobile app after the FCM listener is configured.</p>}
+                  {server.isPaired ? {server.connectionStatus !== "Disabled" && <button className="secondary-button snapshot-button" onClick={() => void openSnapshot(server)}>View live data ↗</button>}
+                  {server.isPaired && user.roles.includes("Admin") && <button className="secondary-button snapshot-button" disabled={connectionActionId === server.id} onClick={() => void setServerConnection(server, server.connectionStatus === "Disabled")}>{connectionActionId === server.id ? "Updating…" : server.connectionStatus === "Disabled" ? "Connect" : "Disconnect"}</button>} : <p className="adapter-note">Pair this server in the Rust+ mobile app after the FCM listener is configured.</p>}
                 </article>
               ))}
             </div>

@@ -203,7 +203,7 @@ app.MapGet("/api/servers", async (
         .ToListAsync();
 
     var result = savedProfiles.Select(ToServerResponse)
-        .Concat(pairedProfiles.Select(profile => ToPairedServerResponse(profile, connections.GetStatus(profile.Id))))
+        .Concat(pairedProfiles.Select(profile => ToPairedServerResponse(profile, profile.ConnectionEnabled ? connections.GetStatus(profile.Id) : "Disabled")))
         .OrderBy(profile => profile.Name)
         .ToList();
     return Results.Ok(result);
