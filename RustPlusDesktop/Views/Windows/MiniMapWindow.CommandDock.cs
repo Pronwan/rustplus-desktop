@@ -301,8 +301,6 @@ namespace RustPlusDesk
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            // The map's own close button follows the lock as well, so letting go of edit
-            // mode with the pointer still on the map takes it away.
             ShowMapClose(MapContainer?.IsMouseOver == true);
         }
 
@@ -2217,18 +2215,21 @@ namespace RustPlusDesk
         }
 
         /// <summary>
-        /// Shows or hides the map's close button.
+        /// Shows or hides the two buttons on the map: its settings, and its close.
         ///
-        /// Only while the dock is unlocked: a × on a map in use is a × waiting to be hit by
-        /// accident. Pressing it is what removes the map — hovering only offers it.
+        /// Both on hover, and on hover alone. The gear used to sit there permanently, which
+        /// is a button over the map the whole time it is being read; the × was behind the
+        /// lock as well, which meant it was invisible during the hours the dock is locked and
+        /// being used — which is when somebody decides they would rather not have a map.
+        ///
+        /// Pressing the × removes the map. Hovering only offers it.
         /// </summary>
         private void ShowMapClose(bool hovering)
         {
-            if (BtnMapClose == null) return;
+            var shown = hovering ? Visibility.Visible : Visibility.Collapsed;
 
-            BtnMapClose.Visibility = hovering && !_dock.Locked
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            if (BtnMapClose != null) BtnMapClose.Visibility = shown;
+            if (BtnMapSettings != null) BtnMapSettings.Visibility = shown;
         }
 
         /// <summary>Takes the mini-map off the dock, remembered the way any removal is.</summary>

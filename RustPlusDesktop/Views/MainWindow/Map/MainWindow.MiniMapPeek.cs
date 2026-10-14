@@ -28,6 +28,22 @@ public partial class MainWindow
     private DispatcherTimer? _peekReleaseTimer;
     private bool _peeking;
 
+    /// <summary>When the current peek started, for the limit below.</summary>
+    private DateTime _peekStartedUtc;
+
+    /// <summary>
+    /// How long the map can be held up for.
+    ///
+    /// The bargain this makes is that seeing the map costs the view, the way the game's own
+    /// map does. Taping the key down and playing on with the map in the corner is not that
+    /// bargain, so after this it goes away whether the key is still down or not, and stays
+    /// away until the key is released and pressed again.
+    /// </summary>
+    private static readonly TimeSpan PeekLimit = TimeSpan.FromSeconds(20);
+
+    /// <summary>Set when the limit ran out, so the same hold cannot start a new peek.</summary>
+    private bool _peekSpent;
+
     /// <summary>
     /// Registers the configured peek gesture, replacing whatever was registered before.
     ///
@@ -73,7 +89,12 @@ public partial class MainWindow
     {
         if (_miniMap == null || _peeking) return;
 
+        // The key is auto-repeating into this while it is held, so a hold that has already
+        // run out of time must not simply start again.
+        if (_peekSpent) return;
+
         _peeking = true;
+        _peekStartedUtc = DateTime.UtcNow;
         _miniMap.ShowForPeek();
 
         _peekReleaseTimer ??= new DispatcherTimer(DispatcherPriority.Input)
@@ -88,15 +109,36 @@ public partial class MainWindow
 
     private void OnPeekTick(object? sender, EventArgs e)
     {
-        if (!_peeking || PeekKeyStillDown()) return;
+        if (!_peeking) return;
 
+        bool down = PeekKeyStillDown();
+
+        // Still held, and still within its time: nothing to do.
+        if (down && DateTime.UtcNow - _peekStartedUtc < PeekLimit) return;
+
+        // Out of time rather than let go: the map goes, and this hold cannot bring it back.
+        // The flag clears when the key finally comes up, which is what the timer keeps
+        // running for.
+        if (down)
+        {
+            _peekSpent = true;
+            EndMiniMapPeek(keepWatching: true);
+            return;
+        }
+
+        _peekSpent = false;
         EndMiniMapPeek();
     }
 
-    private void EndMiniMapPeek()
+    /// <param name="keepWatching">
+    /// Leaves the timer running so the key coming up is still noticed. Used when the limit
+    /// ran out while the key is held: without it nothing would ever clear the spent flag and
+    /// the key would be dead until the next restart.
+    /// </param>
+    private void EndMiniMapPeek(bool keepWatching = false)
     {
         _peeking = false;
-        _peekReleaseTimer?.Stop();
+        if (!keepWatching) _peekReleaseTimer?.Stop();
 
         _miniMap?.HideAfterPeek();
     }

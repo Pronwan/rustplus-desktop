@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -70,14 +71,43 @@ namespace RustPlusDesk
             Topmost = false;
         }
 
-        /// <summary>Lets the game cover it again, unless it was in front before the key.</summary>
+        /// <summary>
+        /// Lets the game cover it again.
+        ///
+        /// Clearing Topmost is not enough on its own, and this is why the map stayed in front
+        /// after the key came up: dropping the flag takes the window out of the topmost band
+        /// and leaves it at the top of the ordinary one — which is still above the game. The
+        /// window has to be sent back down as well.
+        ///
+        /// Without activating anything. The game is the foreground window throughout and must
+        /// stay that way, so this moves the dock in the order and touches nothing else.
+        /// </summary>
         public void HideAfterPeek()
         {
             if (!_peeking) return;
 
             _peeking = false;
             Topmost = false;
+
+            try
+            {
+                var handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+                if (handle != IntPtr.Zero)
+                    SetWindowPos(handle, HwndBottom, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
+            }
+            catch
+            {
+                // The flag is off either way; the worst case is a map that stays visible on a
+                // screen where nothing was covering it anyway.
+            }
         }
+
+        // SetWindowPos itself is already imported for the on-screen check next door.
+        private static readonly IntPtr HwndBottom = new(1);
+
+        private const uint SwpNoSize = 0x0001;
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoActivate = 0x0010;
 
         private FrameworkElement BuildMinimalClockTile(CommandDockTile tile)
         {

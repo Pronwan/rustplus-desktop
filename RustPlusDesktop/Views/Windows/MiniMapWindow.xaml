@@ -124,7 +124,7 @@
                       map in use would be a button sitting there to be hit by accident.  -->
                 <ui:Button x:Name="BtnMapClose"
                            HorizontalAlignment="Right" VerticalAlignment="Top"
-                           Width="34" Height="34" Margin="0,10,52,0" Padding="6"
+                           Width="34" Height="34" Margin="0,10,50,0" Padding="6"
                            Visibility="Collapsed"
                            Appearance="Secondary" Background="#E6B3261E"
                            BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
@@ -136,6 +136,7 @@
                 <ui:Button x:Name="BtnMapSettings"
                            HorizontalAlignment="Right" VerticalAlignment="Top"
                            Width="34" Height="34" Margin="0,10,10,0" Padding="6"
+                           Visibility="Collapsed"
                            Appearance="Secondary" Background="#E6101518"
                            BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
                            Foreground="White" Click="BtnMapSettings_Click"
