@@ -2704,7 +2704,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // filter existed for a long while without ever being able to fire: a queued
         // push from two hours ago arrived stamped "now".
         var eventTime = n.EventTime ?? n.Timestamp;
-        if (source == "FCM" && OilRigTriggerRegistry.Lookup(n.EntityId, n.Title) is string oilRigLabel)
+        if (OilRigTriggerRegistry.Lookup(n.EntityId, n.Title, n.Message) is string oilRigLabel)
             RecordOilRigAlarm(n, oilRigLabel);
         if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
 
@@ -9099,6 +9099,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _lastGestureAt[gesture] = now;
 
         if (HandledByAiCompanion(gesture)) return;
+        if (HandledByMiniMapPeek(gesture)) return;
 
         var map = MapForCurrentServer();
         if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;

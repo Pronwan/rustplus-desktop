@@ -36,10 +36,12 @@ namespace RustPlusDesk
         /// tiles went with it on a second monitor where nothing was in the way, and a window
         /// left hidden had no way back.
         /// </summary>
+        public bool IsPeeking => _peeking;
+
         public void ShowForPeek()
         {
             _peeking = true;
-            Reorder(HwndTopmost);
+            Reorder(HwndTopmost, show: true);
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace RustPlusDesk
             // permanently is exactly what it must not do. The only thing that lifts it is the
             // key being held, for as long as it is held.
             Topmost = false;
-            Reorder(HwndNoTopmost);
+            Reorder(HwndNoTopmost, show: true);
         }
 
         /// <summary>Lets the game cover it again.</summary>
@@ -75,8 +77,8 @@ namespace RustPlusDesk
             // Out of the topmost band, then all the way down. The first alone leaves the
             // window at the top of the ordinary band, which is still above the game — that is
             // why the map stayed in front after the key came up.
-            Reorder(HwndNoTopmost);
-            Reorder(HwndBottom);
+            Reorder(HwndNoTopmost, show: false);
+            Reorder(HwndBottom, show: false);
         }
 
         /// <summary>
@@ -90,14 +92,17 @@ namespace RustPlusDesk
         ///
         /// Never activates. The game stays the foreground window the whole time.
         /// </summary>
-        private void Reorder(IntPtr placement)
+        private void Reorder(IntPtr placement, bool show = false)
         {
             try
             {
                 var handle = new System.Windows.Interop.WindowInteropHelper(this).Handle;
                 if (handle == IntPtr.Zero) return;
 
-                SetWindowPos(handle, placement, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
+                uint flags = SwpNoMove | SwpNoSize | SwpNoActivate;
+                if (show) flags |= SwpShowWindow;
+
+                SetWindowPos(handle, placement, 0, 0, 0, 0, flags);
             }
             catch
             {
@@ -113,6 +118,7 @@ namespace RustPlusDesk
         private const uint SwpNoSize = 0x0001;
         private const uint SwpNoMove = 0x0002;
         private const uint SwpNoActivate = 0x0010;
+        private const uint SwpShowWindow = 0x0040;
 
         private FrameworkElement BuildMinimalClockTile(CommandDockTile tile)
         {

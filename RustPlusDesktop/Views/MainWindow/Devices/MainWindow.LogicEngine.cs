@@ -310,6 +310,10 @@ namespace RustPlusDesk.Views
             if (rigName != null)
             {
                 bool started = _monumentWatcher.TriggerExternal(rigName, minutes * 60, false);
+                if (started)
+                {
+                    RecordOilRigAlarmDirect(rigName);
+                }
                 AppendLog(started
                     ? $"[LogicEngine] Started {minutes} min hack timer for {rigName}" +
                       " (no map marker)."

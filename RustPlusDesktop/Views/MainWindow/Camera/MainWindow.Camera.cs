@@ -303,6 +303,10 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         CenterMiniMapOnPlayer();
     }
 
+    public bool IsMiniMapPresent => _miniMap != null && _miniMap.IsLoaded;
+
+    public void ShowMiniMap() => ShowMiniMapAgain();
+
     private MiniMapWindow? _miniMap;
 
     /// <summary>
@@ -393,16 +397,13 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 RefreshIndependentLayers();
             };
 
+            TrackingService.MiniMapHidden = false;
+
             _miniMap.Show();
 
             // Not in front of anything until the peek key says so. Applied after Show so the
             // window exists and has a handle to reorder.
             _miniMap.ApplyPeekVisibility();
-
-            // Put away on purpose last time: the widgets still open, the map does not. Closed
-            // rather than never created, so everything that follows has a window to talk to
-            // and the usual Closed handler does the tidying.
-            if (TrackingService.MiniMapHidden) _miniMap.Hide();
 
             EnsureDeviceOverlayOpen();
 
@@ -421,6 +422,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         {
             _miniMap.Close();
             _deviceOverlay?.Close();
+            ApplyMiniMapPeekHotkey();
         }
     }
 
@@ -434,7 +436,12 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             DataContext = _vm,
             DockHost = this
         };
-        _deviceOverlay.Closed += (_, __) => _deviceOverlay = null;
+        _deviceOverlay.Loaded += (_, __) => ApplyMiniMapPeekHotkey();
+        _deviceOverlay.Closed += (_, __) =>
+        {
+            _deviceOverlay = null;
+            ApplyMiniMapPeekHotkey();
+        };
         Closed += (_, __) => _deviceOverlay?.Close();
         _deviceOverlay.Show();
     }

@@ -19,6 +19,65 @@ public partial class MiniMapWindow
             ApplyLoadedSettings(settings);
         SourceInitialized += (_, _) => RestoreMapPosition();
         Closing += (_, _) => SaveMapPosition();
+        InitMiniMapButtons();
+    }
+
+    internal void InitMiniMapButtons()
+    {
+        MouseEnter += (_, _) => UpdateMiniMapButtons();
+        MouseLeave += (_, _) => UpdateMiniMapButtons();
+        MouseMove += (_, _) =>
+        {
+            if (BtnMapClose?.Visibility != Visibility.Visible && (IsMouseOver || MapContainer?.IsMouseOver == true))
+                UpdateMiniMapButtons();
+        };
+
+        if (MapContainer != null)
+        {
+            MapContainer.MouseEnter += (_, _) => UpdateMiniMapButtons();
+            MapContainer.MouseLeave += (_, _) => UpdateMiniMapButtons();
+        }
+
+        Loaded += (_, _) => UpdateMiniMapButtons();
+    }
+
+    internal void UpdateMiniMapButtons()
+    {
+        if (IsDeviceOverlay)
+        {
+            if (BtnMapClose != null) BtnMapClose.Visibility = Visibility.Collapsed;
+            if (BtnMapSettings != null) BtnMapSettings.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        bool isUnlocked = !IsDockLocked();
+        bool isHovered = IsMouseOver || MapContainer?.IsMouseOver == true;
+        var visibility = (isUnlocked || isHovered) ? Visibility.Visible : Visibility.Collapsed;
+
+        if (BtnMapClose != null) BtnMapClose.Visibility = visibility;
+        if (BtnMapSettings != null) BtnMapSettings.Visibility = visibility;
+    }
+
+    internal void OnDockLockChanged(bool locked)
+    {
+        UpdateMiniMapButtons();
+    }
+
+    internal void ShowMapButtons(bool show)
+    {
+        var visibility = show && !IsDeviceOverlay ? Visibility.Visible : Visibility.Collapsed;
+        if (BtnMapClose != null) BtnMapClose.Visibility = visibility;
+        if (BtnMapSettings != null) BtnMapSettings.Visibility = visibility;
+    }
+
+    internal static bool IsDockLocked()
+    {
+        var overlay = Application.Current?.Windows.OfType<DeviceOverlayWindow>().FirstOrDefault();
+        if (overlay != null)
+        {
+            return overlay.IsLocked;
+        }
+        return true;
     }
 
     private void SaveMapPosition()

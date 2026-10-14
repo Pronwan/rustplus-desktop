@@ -89,6 +89,12 @@ namespace RustPlusDesk.Services
 
         /// <summary>Posts the current map view into one of those channels.</summary>
         Task<bool> SendDockMapToDiscordAsync(string channelType);
+
+        /// <summary>Whether the separate mini-map window is currently open.</summary>
+        bool IsMiniMapPresent { get; }
+
+        /// <summary>Brings the separate mini-map window back or opens it.</summary>
+        void ShowMiniMap();
     }
 
     /// <summary>An event dock entry, flattened so the dock does not depend on the main window's

@@ -27,6 +27,7 @@ public partial class MainWindow
 
     private DispatcherTimer? _peekReleaseTimer;
     private bool _peeking;
+    private int _consecutiveUpTicks;
 
     /// <summary>When the current peek started, for the limit below.</summary>
     private DateTime _peekStartedUtc;
@@ -54,6 +55,18 @@ public partial class MainWindow
     internal void ApplyMiniMapPeekHotkey()
     {
         if (_hotkeyMgr == null) return;
+
+        // If widget overlay is not open, disable/unregister the hotkey
+        bool overlayOpen = _deviceOverlay != null && _deviceOverlay.IsLoaded;
+        if (!overlayOpen)
+        {
+            if (_peekGesture != null)
+            {
+                _hotkeyMgr.Unregister(_peekGesture);
+                _peekGesture = null;
+            }
+            return;
+        }
 
         var wanted = TrackingService.MiniMapPeekHotkey?.Trim();
         if (string.IsNullOrEmpty(wanted)) wanted = null;
@@ -87,22 +100,26 @@ public partial class MainWindow
     /// </summary>
     private void BeginMiniMapPeek()
     {
-        if (_miniMap == null || _peeking) return;
+        // When the widget overlay or the minimap is not open, hotkey must not bring them back
+        if (_deviceOverlay == null || !_deviceOverlay.IsLoaded || _miniMap == null || !_miniMap.IsLoaded || _peeking)
+            return;
 
         // The key is auto-repeating into this while it is held, so a hold that has already
         // run out of time must not simply start again.
         if (_peekSpent) return;
 
         _peeking = true;
+        _consecutiveUpTicks = 0;
         _peekStartedUtc = DateTime.UtcNow;
         _miniMap.ShowForPeek();
 
-        _peekReleaseTimer ??= new DispatcherTimer(DispatcherPriority.Input)
+        // Always create a clean, fresh timer so no stale pending ticks can cause instant hide
+        StopPeekTimer();
+
+        _peekReleaseTimer = new DispatcherTimer(DispatcherPriority.Input)
         {
             Interval = TimeSpan.FromMilliseconds(40),
         };
-
-        _peekReleaseTimer.Tick -= OnPeekTick;
         _peekReleaseTimer.Tick += OnPeekTick;
         _peekReleaseTimer.Start();
     }
@@ -111,29 +128,42 @@ public partial class MainWindow
     {
         bool down = PeekKeyStillDown();
 
-        // The key coming up is checked before anything else, and that is the whole fix for a
-        // peek key that worked once and then never again. This used to begin by returning
-        // when nothing was on screen — which is exactly the state the watch is left in after
-        // the time limit runs out — so the flag saying "this hold is spent" was never
-        // cleared, and every later press was refused.
-        if (!down)
+        // Still down with nothing showing: the limit has already run out on this hold, and
+        // the watch is only here to see it released.
+        if (!_peeking)
         {
-            _peekSpent = false;
-
-            if (_peeking) EndMiniMapPeek();
-            else _peekReleaseTimer?.Stop();
-
+            if (!down)
+            {
+                _peekSpent = false;
+                StopPeekTimer();
+            }
             return;
         }
 
-        // Still down with nothing showing: the limit has already run out on this hold, and
-        // the watch is only here to see it released.
-        if (!_peeking) return;
+        if (down)
+        {
+            _consecutiveUpTicks = 0;
 
-        if (DateTime.UtcNow - _peekStartedUtc < PeekLimit) return;
+            // Still held within time limit: keep showing
+            if (DateTime.UtcNow - _peekStartedUtc < PeekLimit)
+                return;
 
-        _peekSpent = true;
-        EndMiniMapPeek(keepWatching: true);
+            // 20-second safety limit reached: hide map, keep timer running until key is released
+            _peekSpent = true;
+            EndMiniMapPeek(keepWatching: true);
+            return;
+        }
+
+        // Key is NOT detected down
+        _consecutiveUpTicks++;
+
+        // Require 2 consecutive ticks (~80ms) of key-up to prevent key bounce or initial poll latency
+        // from prematurely killing the peek.
+        if (_consecutiveUpTicks >= 2)
+        {
+            _peekSpent = false;
+            EndMiniMapPeek();
+        }
     }
 
     /// <param name="keepWatching">
@@ -144,9 +174,25 @@ public partial class MainWindow
     private void EndMiniMapPeek(bool keepWatching = false)
     {
         _peeking = false;
-        if (!keepWatching) _peekReleaseTimer?.Stop();
+        _consecutiveUpTicks = 0;
+
+        if (!keepWatching)
+        {
+            _peekSpent = false;
+            StopPeekTimer();
+        }
 
         _miniMap?.HideAfterPeek();
+    }
+
+    private void StopPeekTimer()
+    {
+        if (_peekReleaseTimer != null)
+        {
+            _peekReleaseTimer.Stop();
+            _peekReleaseTimer.Tick -= OnPeekTick;
+            _peekReleaseTimer = null;
+        }
     }
 
     /// <summary>

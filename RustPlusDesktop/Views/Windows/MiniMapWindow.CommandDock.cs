@@ -30,6 +30,7 @@ namespace RustPlusDesk
         public ICommandDockHost? DockHost { get; set; }
 
         private CommandDockLayout _dock = new();
+        internal bool IsLocked => _dock.Locked;
         private readonly Dictionary<string, FrameworkElement> _tileElements = new();
         private readonly List<Action> _tileRefreshers = new();
         private DispatcherTimer? _dockTimer;
@@ -98,16 +99,7 @@ namespace RustPlusDesk
 
             InitArming();
 
-            // Hover is not available to this window, so the buttons do not depend on it.
-            //
-            // The widget overlay is a second window, topmost, and spread across as much of
-            // the screen as its widgets reach — with the mini-map sitting underneath it.
-            // Mouse events do not get past that, which is why three attempts at showing
-            // these on hover each left the map with no way to close it. They are simply
-            // there, the way the gear always was.
-            // The widget overlay is a subclass of this window and shares this markup, but
-            // it has no map on it at all — so only the mini-map window ever shows them.
-            Loaded += (_, __) => ShowMapClose(!IsDeviceOverlay);
+            Loaded += (_, __) => UpdateMiniMapButtons();
 
             // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
             // where Esc already means something to whoever is typing.
@@ -333,6 +325,14 @@ namespace RustPlusDesk
             // The bar on the overlay carries the same lock, so it is repainted here rather than
             // by whoever happened to flip it.
             _overlay?.SetLocked(locked);
+
+            foreach (var map in Application.Current?.Windows.OfType<MiniMapWindow>() ?? Enumerable.Empty<MiniMapWindow>())
+            {
+                if (!map.IsDeviceOverlay)
+                {
+                    map.OnDockLockChanged(locked);
+                }
+            }
 
             // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
             // because it is the only way back to locking it. A hint telling them to unlock has
@@ -1474,7 +1474,7 @@ namespace RustPlusDesk
             shell.Child = stack;
             stack.Children.Add(new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/smartalarm.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/crate.png")),
                 Width = style.Icon(26), Height = style.Icon(26),
                 HorizontalAlignment = HorizontalAlignment.Center
             });
@@ -1496,10 +1496,16 @@ namespace RustPlusDesk
                 var host = Application.Current?.MainWindow as Views.MainWindow;
                 var latest = host?.DockOilRigAlarms.FirstOrDefault();
                 timestamp.Text = latest?.Timestamp.ToLocalTime().ToString("HH:mm:ss") ?? "—";
-                shell.Opacity = latest == null ? 0.5 : 1.0;
-                ToolTipService.SetToolTip(shell, latest == null
+                bool isActive = false;
+                if (latest != null)
+                {
+                    var elapsed = DateTime.UtcNow - latest.Timestamp.ToUniversalTime();
+                    isActive = elapsed.TotalSeconds >= 0 && elapsed.TotalMinutes < 15;
+                }
+                shell.Opacity = isActive ? 1.0 : 0.5;
+                ToolTipService.SetToolTip(shell, host?.BuildOilRigAlarmAnswer() ?? (latest == null
                     ? "Pair a Smart Alarm with an RF receiver and name its notification Oil Rig."
-                    : $"Smart Alarm received: {latest.Timestamp.ToLocalTime():g}\n{latest.Title}");
+                    : $"Smart Alarm received: {latest.Timestamp.ToLocalTime():g}\n{latest.Title}"));
             });
             return shell;
         }
@@ -2227,13 +2233,7 @@ namespace RustPlusDesk
         ///
         /// Pressing the × closes the mini-map. Showing it only offers that.
         /// </summary>
-        private void ShowMapClose(bool show)
-        {
-            var shown = show && !IsDeviceOverlay ? Visibility.Visible : Visibility.Collapsed;
-
-            if (BtnMapClose != null) BtnMapClose.Visibility = shown;
-            if (BtnMapSettings != null) BtnMapSettings.Visibility = shown;
-        }
+        private void ShowMapClose(bool show) => ShowMapButtons(show);
 
         /// <summary>Takes the mini-map off the dock, remembered the way any removal is.</summary>
         internal void RemoveMapTile() => RemoveTile(CommandDockTileKinds.MapTileId);
@@ -2261,8 +2261,15 @@ namespace RustPlusDesk
         /// looks either way, which is why it answers for both.
         /// </summary>
         public bool CanAddMap => IsDeviceOverlay
-            ? Services.TrackingService.MiniMapHidden
+            ? !IsMiniMapWindowOpen()
             : !MapOccupiesCells;
+
+        internal bool IsMiniMapWindowOpen()
+        {
+            if (DockHost != null) return DockHost.IsMiniMapPresent;
+            if (Application.Current?.MainWindow is Views.MainWindow mainWin) return mainWin.IsMiniMapPresent;
+            return Application.Current?.Windows.OfType<MiniMapWindow>().Any(w => !w.IsDeviceOverlay && w.IsLoaded) == true;
+        }
 
         /// <summary>
         /// Puts the map back on the dock, with every layer on.
@@ -2276,7 +2283,8 @@ namespace RustPlusDesk
             // what is wanted is that window back.
             if (IsDeviceOverlay)
             {
-                (Application.Current?.MainWindow as Views.MainWindow)?.ShowMiniMapAgain();
+                if (DockHost != null) DockHost.ShowMiniMap();
+                else (Application.Current?.MainWindow as Views.MainWindow)?.ShowMiniMapAgain();
                 return;
             }
 
