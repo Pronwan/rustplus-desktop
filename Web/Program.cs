@@ -195,6 +195,55 @@ app.MapGet("/api/servers", async (
     return Results.Ok(profiles);
 }).RequireAuthorization();
 
+app.MapGet("/api/admin/users", async (UserManager<ApplicationUser> userManager) =>
+{
+    var accounts = await userManager.Users.OrderBy(user => user.Email).ToListAsync();
+    var result = new List<object>();
+    foreach (var account in accounts)
+    {
+        result.Add(new
+        {
+            account.Id,
+            Email = account.Email ?? "",
+            account.DisplayName,
+            Roles = await userManager.GetRolesAsync(account)
+        });
+    }
+    return Results.Ok(result);
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+
+app.MapPut("/api/admin/users/{id}/role", async Task<IResult> (
+    string id,
+    SetUserRoleRequest request,
+    UserManager<ApplicationUser> userManager) =>
+{
+    var role = request.Role.Trim();
+    if (role is not ("Admin" or "Member" or "ViewOnly"))
+        return Results.BadRequest(new { error = "Role must be Admin, Member, or ViewOnly." });
+
+    var target = await userManager.FindByIdAsync(id);
+    if (target is null)
+        return Results.NotFound();
+
+    var currentRoles = await userManager.GetRolesAsync(target);
+    if (currentRoles.Contains("Admin") && role != "Admin")
+    {
+        var administrators = await userManager.GetUsersInRoleAsync("Admin");
+        if (administrators.Count <= 1)
+            return Results.Conflict(new { error = "The last administrator cannot be demoted." });
+    }
+
+    var removed = await userManager.RemoveFromRolesAsync(target, currentRoles);
+    if (!removed.Succeeded)
+        return Results.Problem("Could not update the account role.", statusCode: 500);
+
+    var added = await userManager.AddToRoleAsync(target, role);
+    if (!added.Succeeded)
+        return Results.Problem("Could not assign the new account role.", statusCode: 500);
+
+    return Results.Ok(await ToUserResponseAsync(target, userManager));
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+
 app.MapPost("/api/servers", async Task<IResult> (
     CreateServerRequest request,
     System.Security.Claims.ClaimsPrincipal principal,
@@ -230,7 +279,7 @@ app.MapPost("/api/servers", async Task<IResult> (
     await db.SaveChangesAsync();
     await hub.Clients.Group($"user:{userId}").SendAsync("ServersChanged");
     return Results.Created($"/api/servers/{profile.Id}", ToServerResponse(profile));
-}).RequireAuthorization();
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
 
 app.MapDelete("/api/servers/{id:guid}", async Task<IResult> (
     Guid id,
@@ -249,7 +298,7 @@ app.MapDelete("/api/servers/{id:guid}", async Task<IResult> (
     await db.SaveChangesAsync();
     await hub.Clients.Group($"user:{userId}").SendAsync("ServersChanged");
     return Results.NoContent();
-}).RequireAuthorization();
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
 
 app.MapHub<ServerHub>("/hubs/servers").RequireAuthorization();
 
@@ -319,5 +368,6 @@ public sealed record RegisterRequest(
     string Email, string DisplayName, string Password, string InviteCode, bool RememberMe = true);
 public sealed record LoginRequest(string Email, string Password, bool RememberMe = true);
 public sealed record CreateServerRequest(string Name, string Host, int Port = 28082);
+public sealed record SetUserRoleRequest(string Role);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus);
