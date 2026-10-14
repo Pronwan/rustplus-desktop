@@ -22,7 +22,8 @@ type ServerProfile = {
 type FcmStatus = { configured: boolean; listening: boolean };
 type AlarmAlert = { serverId?: string; title: string; message: string; receivedAtUtc: string };
 type AdminUser = { id: string; email: string; displayName: string; roles: string[] };
-type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
+type PairedDevice = { id: string; entityId: string; name: string; type: string; groupId?: string | null; isActive?: boolean };
+type DeviceGroup = { id: string; name: string; createdAtUtc: string; deviceCount: number };
 type TeamChatMessage = { steamId: string; name: string; message: string; time: string };
 type ServerTimer = { id: string; name: string; expiresAtUtc: string; createdAtUtc: string; fired: boolean; isOwner: boolean };
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
@@ -73,6 +74,9 @@ export default function App() {
   const [snapshotError, setSnapshotError] = useState("");
   const [snapshotBusy, setSnapshotBusy] = useState(false);
   const [devices, setDevices] = useState<PairedDevice[]>([]);
+  const [deviceGroups, setDeviceGroups] = useState<DeviceGroup[]>([]);
+  const [groupName, setGroupName] = useState("");
+  const [groupBusy, setGroupBusy] = useState(false);
   const [deviceError, setDeviceError] = useState("");
   const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
   const [connectionActionId, setConnectionActionId] = useState<string | null>(null);
@@ -134,7 +138,13 @@ export default function App() {
 
     connection.on("ServersChanged", () => { void refreshServers(); });
     connection.on("ServerStatusChanged", () => { void refreshServers(); });
-    connection.on("DevicesChanged", () => { void refreshServers(); });
+    connection.on("DevicesChanged", (payload: { serverId: string }) => {
+      void refreshServers();
+      if (selectedServerIdRef.current === payload.serverId) {
+        void api<PairedDevice[]>(`/api/servers/${payload.serverId}/devices`).then(setDevices).catch(() => undefined);
+        void api<DeviceGroup[]>(`/api/servers/${payload.serverId}/device-groups`).then(setDeviceGroups).catch(() => undefined);
+      }
+    });
     connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
     connection.on("AlarmReceived", (alarm: AlarmAlert) => setAlarms((current) => [alarm, ...current].slice(0, 5)));
     connection.on("TimersChanged", (payload: { serverId: string }) => {
@@ -258,6 +268,8 @@ export default function App() {
     setSelectedServer(server);
     setSnapshot(null);
     setDevices([]);
+    setDeviceGroups([]);
+    setGroupName("");
     setSnapshotError("");
     setDeviceError("");
     setChatMessages([]);
@@ -274,6 +286,7 @@ export default function App() {
     }
     try {
       setDevices(await api<PairedDevice[]>(`/api/servers/${server.id}/devices`));
+      setDeviceGroups(await api<DeviceGroup[]>(`/api/servers/${server.id}/device-groups`));
     } catch (error) {
       setDeviceError(error instanceof Error ? error.message : "Could not load paired devices.");
     }
@@ -373,6 +386,59 @@ export default function App() {
       setChatError(error instanceof Error ? error.message : "Could not send the team chat message.");
     } finally {
       setChatBusy(false);
+    }
+  }
+
+  async function createDeviceGroup(server: ServerProfile) {
+    const name = groupName.trim();
+    if (!name || name.length > 50) return;
+    setGroupBusy(true);
+    setDeviceError("");
+    try {
+      await api<DeviceGroup>(`/api/servers/${server.id}/device-groups`, {
+        method: "POST",
+        body: JSON.stringify({ name })
+      });
+      setGroupName("");
+      const [nextGroups, nextDevices] = await Promise.all([
+        api<DeviceGroup[]>(`/api/servers/${server.id}/device-groups`),
+        api<PairedDevice[]>(`/api/servers/${server.id}/devices`)
+      ]);
+      setDeviceGroups(nextGroups);
+      setDevices(nextDevices);
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not create the device group.");
+    } finally {
+      setGroupBusy(false);
+    }
+  }
+
+  async function deleteDeviceGroup(server: ServerProfile, group: DeviceGroup) {
+    setDeviceError("");
+    try {
+      await api<void>(`/api/servers/${server.id}/device-groups/${group.id}`, { method: "DELETE" });
+      const [nextGroups, nextDevices] = await Promise.all([
+        api<DeviceGroup[]>(`/api/servers/${server.id}/device-groups`),
+        api<PairedDevice[]>(`/api/servers/${server.id}/devices`)
+      ]);
+      setDeviceGroups(nextGroups);
+      setDevices(nextDevices);
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not delete the device group.");
+    }
+  }
+
+  async function assignDeviceGroup(server: ServerProfile, device: PairedDevice, groupId: string | null) {
+    setDeviceError("");
+    try {
+      await api<{ entityId: string; groupId: string | null }>(`/api/servers/${server.id}/devices/${device.entityId}/group`, {
+        method: "PUT",
+        body: JSON.stringify({ groupId })
+      });
+      setDevices((current) => current.map((item) => item.entityId === device.entityId ? { ...item, groupId } : item));
+      setDeviceGroups(await api<DeviceGroup[]>(`/api/servers/${server.id}/device-groups`));
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not assign the device group.");
     }
   }
 
@@ -543,8 +609,11 @@ export default function App() {
             </section>}
             {selectedServer.isPaired && <>
               <h3 className="snapshot-subheading">Paired smart devices</h3>
+              {(user.roles.includes("Admin") || user.roles.includes("Member")) && <form className="device-group-composer" onSubmit={(event) => { event.preventDefault(); void createDeviceGroup(selectedServer); }}><input value={groupName} onChange={(event) => setGroupName(event.target.value)} maxLength={50} placeholder="New group name…" aria-label="New device group name" disabled={groupBusy} /><button className="secondary-button" type="submit" disabled={groupBusy || !groupName.trim()}>{groupBusy ? "Saving…" : "Create group"}</button></form>}
+              {deviceGroups.length > 0 && <div className="device-group-list">{deviceGroups.map((group) => <div className="device-group-chip" key={group.id}><span>{group.name} <small>{group.deviceCount}</small></span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="text-button danger-text" onClick={() => void deleteDeviceGroup(selectedServer, group)} aria-label={`Delete ${group.name} group`}>×</button>}</div>)}</div>}
+
               {deviceError && <div className="error-banner" role="alert">{deviceError}</div>}
-              {devices.length === 0 ? <p className="muted">No paired devices have been received yet. Pair switches, alarms, or storage monitors from the Rust+ mobile app.</p> : <div className="device-list">{devices.map((device) => <div className="device-row" key={device.id}><div className="device-symbol">{device.type === "Switch" ? "⏻" : device.type === "Alarm" ? "◉" : "▤"}</div><div className="device-row-info"><strong>{device.name}</strong><span>{device.type} · ID {device.entityId}</span></div><div className="device-row-action">{device.type === "Switch" ? <><span className={device.isActive === undefined ? "device-state unknown" : device.isActive ? "device-state on" : "device-state"}>{device.isActive === undefined ? "State unknown" : device.isActive ? "On" : "Off"}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="secondary-button" disabled={deviceActionId === device.entityId || !selectedServer.connectionEnabled} onClick={() => void toggleDevice(selectedServer, device)}>{deviceActionId === device.entityId ? "Sending…" : "Toggle"}</button>}</> : <span className="device-state unknown">Read only</span>}</div></div>)}</div>}
+              {devices.length === 0 ? <p className="muted">No paired devices have been received yet. Pair switches, alarms, or storage monitors from the Rust+ mobile app.</p> : <div className="device-list">{devices.map((device) => <div className="device-row" key={device.id}><div className="device-symbol">{device.type === "Switch" ? "⏻" : device.type === "Alarm" ? "◉" : "▤"}</div><div className="device-row-info"><strong>{device.name}</strong><span>{device.type} · ID {device.entityId}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <select aria-label={`Group for ${device.name}`} value={device.groupId ?? ""} onChange={(event) => void assignDeviceGroup(selectedServer, device, event.target.value || null)}><option value="">Ungrouped</option>{deviceGroups.map((group) => <option value={group.id} key={group.id}>{group.name}</option>)}</select>}</div><div className="device-row-action">{device.type === "Switch" ? <><span className={device.isActive === undefined ? "device-state unknown" : device.isActive ? "device-state on" : "device-state"}>{device.isActive === undefined ? "State unknown" : device.isActive ? "On" : "Off"}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="secondary-button" disabled={deviceActionId === device.entityId || !selectedServer.connectionEnabled} onClick={() => void toggleDevice(selectedServer, device)}>{deviceActionId === device.entityId ? "Sending…" : "Toggle"}</button>}</> : <span className="device-state unknown">Read only</span>}</div></div>)}</div>}
             </>}
             <div className="modal-actions"><button className="secondary-button" onClick={() => void openSnapshot(selectedServer)} disabled={snapshotBusy}>↻ Refresh data</button><button className="primary-button" onClick={() => setSelectedServer(null)}>Close</button></div>
           </section>

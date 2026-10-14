@@ -241,3 +241,13 @@ button:disabled { cursor: wait; opacity: .65; }
 .timer-info strong { font-size: 11px; }
 .timer-info span { margin-top: 4px; color: var(--muted); font-size: 9px; }
 @media (max-width: 620px) { .timer-composer { align-items: stretch; flex-wrap: wrap; } .timer-composer > input { flex-basis: 100%; } .timer-composer label { flex: 1; } .timer-composer .primary-button { flex: 1; } }
+
+.device-group-composer { display: flex; gap: 8px; margin: 10px 0; }
+.device-group-composer input { flex: 1; min-width: 0; border: 1px solid #394633; border-radius: 7px; background: #121612; color: var(--text); padding: 9px; font-size: 10px; }
+.device-group-composer .secondary-button { padding: 8px 11px; }
+.device-group-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 8px 0 14px; }
+.device-group-chip { display: flex; align-items: center; gap: 8px; border: 1px solid #34422c; background: #1b2418; border-radius: 20px; padding: 5px 9px 5px 11px; font-size: 10px; color: #d6e7cb; }
+.device-group-chip small { color: #91a285; margin-left: 4px; }
+.device-group-chip .text-button { padding: 0 2px; font-size: 14px; }
+.device-row-info select { margin-top: 7px; max-width: 180px; color: #dce6d6; background: #1d241b; border: 1px solid #394633; border-radius: 6px; padding: 6px 7px; font-size: 9px; }
+@media (max-width: 540px) { .device-group-composer { flex-wrap: wrap; } .device-group-composer input { flex-basis: 100%; } }
