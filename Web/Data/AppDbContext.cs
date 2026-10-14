@@ -7,6 +7,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<ServerProfile> ServerProfiles => Set<ServerProfile>();
+    public DbSet<PairedServerCredential> PairedServerCredentials => Set<PairedServerCredential>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -17,6 +18,12 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.Entity<ServerProfile>()
             .Property(profile => profile.Name).HasMaxLength(80);
         builder.Entity<ServerProfile>()
+            .Property(profile => profile.Host).HasMaxLength(255);
+        builder.Entity<PairedServerCredential>()
+            .HasIndex(profile => profile.RustServerId).IsUnique();
+        builder.Entity<PairedServerCredential>()
+            .Property(profile => profile.Name).HasMaxLength(120);
+        builder.Entity<PairedServerCredential>()
             .Property(profile => profile.Host).HasMaxLength(255);
     }
 }

@@ -26,6 +26,8 @@ COPY --from=frontend --chown=app:app /src/web-client/dist ./wwwroot
 ENV ASPNETCORE_URLS=http://+:8080
 ENV DATABASE_PATH=/data/rustplus-web.db
 ENV DATA_PROTECTION_KEYS_PATH=/data/keys
+ENV FCM_CREDENTIALS_PATH=/data/fcm-credentials.protected
+ENV FCM_PERSISTENT_IDS_PATH=/data/fcm-persistent-ids.protected
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl --fail --silent http://127.0.0.1:8080/api/health || exit 1
 USER app
