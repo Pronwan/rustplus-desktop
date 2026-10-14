@@ -13,6 +13,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Admin-only FCM credential upload, protected credential storage, pairing notifications, and persisted notification de-duplication IDs.
 - Shared Rust+ server profiles created from FCM pairing events, with one backend-owned Rust+ socket per paired server and bounded exponential reconnect attempts.
 - Live snapshot endpoint for supported server info, map image/monuments, and team data.
+- Smart switch, alarm, and storage-monitor pairing metadata; authenticated smart-switch toggle commands with view-only role protection.
 - Admin-only role assignment and protection against demoting the final administrator.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
@@ -39,7 +40,7 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/health`: minimal health status only.
 - `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout`.
 - `GET /api/auth/me`.
-- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`.
+- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET /api/servers/{id}/devices`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
 - `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
 - `DELETE /api/paired-servers/{id}` (admin only).
 - `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).

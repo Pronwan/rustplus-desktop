@@ -319,6 +319,7 @@ public sealed class RustPlusFcmService(
             }
 
             await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = pairedServerId });
+            await hub.Clients.All.SendAsync("ServersChanged");
         }
         catch (Exception exception)
         {

@@ -399,7 +399,7 @@ export default function App() {
           <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="add-server-title">
             <button className="modal-close" aria-label="Close" onClick={() => setShowAddServer(false)}>×</button>
             <p className="eyebrow">SERVER CONFIGURATION</p><h2 id="add-server-title">Add server profile</h2>
-            <p className="muted">Enter a label and the server endpoint. Connection credentials and pairing will be added in a later step.</p>
+            <p className="muted">This saves a private placeholder profile. For live data, an admin must configure the FCM listener and pair the server through the Rust+ mobile app.</p>
             <form onSubmit={submitServer} className="stack-form">
               <label>Profile name<input name="name" placeholder="Main base" required maxLength={80} /></label>
               <label>Host or IP address<input name="host" placeholder="play.example.net" required maxLength={255} /></label>
