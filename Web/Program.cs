@@ -330,6 +330,10 @@ app.MapDelete("/api/paired-servers/{id:guid}", async Task<IResult> (
         return Results.NotFound();
 
     await connections.DisconnectAsync(id, cancellationToken);
+    var devices = await db.PairedDevices
+        .Where(device => device.PairedServerCredentialId == id)
+        .ToListAsync(cancellationToken);
+    db.PairedDevices.RemoveRange(devices);
     db.PairedServerCredentials.Remove(profile);
     await db.SaveChangesAsync(cancellationToken);
     await hub.Clients.All.SendAsync("ServersChanged", cancellationToken);
