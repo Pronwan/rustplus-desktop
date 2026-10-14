@@ -1,0 +1,21 @@
+services:
+  rustplus-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - rustplus-web-data:/data
+    healthcheck:
+      test: ["CMD", "dotnet", "exec", "/app/RustPlusWeb.dll", "--healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  rustplus-web-data:
