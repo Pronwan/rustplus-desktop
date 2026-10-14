@@ -15,6 +15,15 @@ type ServerProfile = {
   port: number;
   createdAtUtc: string;
   connectionStatus: string;
+  isPaired: boolean;
+};
+
+type FcmStatus = { configured: boolean; listening: boolean };
+type ServerSnapshot = {
+  info: { name?: string; playerCount?: number; maxPlayers?: number } | null;
+  map: { width?: number; height?: number; monuments?: { name?: string }[]; imageBase64?: string | null } | null;
+  team: unknown;
+  retrievedAtUtc: string;
 };
 
 async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -50,6 +59,12 @@ export default function App() {
   const [servers, setServers] = useState<ServerProfile[]>([]);
   const [serverError, setServerError] = useState("");
   const [showAddServer, setShowAddServer] = useState(false);
+  const [fcmStatus, setFcmStatus] = useState<FcmStatus>({ configured: false, listening: false });
+  const [fcmMessage, setFcmMessage] = useState("");
+  const [selectedServer, setSelectedServer] = useState<ServerProfile | null>(null);
+  const [snapshot, setSnapshot] = useState<ServerSnapshot | null>(null);
+  const [snapshotError, setSnapshotError] = useState("");
+  const [snapshotBusy, setSnapshotBusy] = useState(false);
 
   const refreshServers = useCallback(async () => {
     try {
@@ -82,6 +97,9 @@ export default function App() {
     }
 
     void refreshServers();
+    if (user.roles.includes("Admin")) {
+      api<FcmStatus>("/api/admin/fcm-status").then(setFcmStatus).catch(() => undefined);
+    }
     const connection = new HubConnectionBuilder()
       .withUrl("/hubs/servers")
       .withAutomaticReconnect()
@@ -89,6 +107,8 @@ export default function App() {
       .build();
 
     connection.on("ServersChanged", () => { void refreshServers(); });
+    connection.on("ServerStatusChanged", () => { void refreshServers(); });
+    connection.on("FcmStatusChanged", (status: FcmStatus) => setFcmStatus(status));
     connection.onreconnected(() => { void refreshServers(); });
     void connection.start().catch((error: unknown) => {
       console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
@@ -155,12 +175,51 @@ export default function App() {
   }
 
   async function removeServer(server: ServerProfile) {
-    if (!window.confirm(`Delete the saved profile “${server.name}”?`)) return;
+    const action = server.isPaired ? "Remove the Rust+ pairing for" : "Delete the saved profile";
+    if (!window.confirm(`${action} “${server.name}”?`)) return;
     try {
-      await api<void>(`/api/servers/${server.id}`, { method: "DELETE" });
+      const path = server.isPaired ? `/api/paired-servers/${server.id}` : `/api/servers/${server.id}`;
+      await api<void>(path, { method: "DELETE" });
       await refreshServers();
     } catch (error) {
-      setServerError(error instanceof Error ? error.message : "Could not delete this profile.");
+      setServerError(error instanceof Error ? error.message : "Could not remove this server.");
+    }
+  }
+
+  async function uploadFcmCredentials(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
+    if (!file) return;
+    setBusy(true);
+    setFcmMessage("Uploading credentials and connecting to FCM…");
+    try {
+      const credentialsJson = await file.text();
+      const status = await api<FcmStatus>("/api/admin/fcm-credentials", {
+        method: "POST",
+        body: JSON.stringify({ credentialsJson })
+      });
+      setFcmStatus(status);
+      setFcmMessage(status.listening
+        ? "FCM listener connected. Pair a server in the Rust+ mobile app."
+        : "Credentials saved. The listener is not connected yet; check network access and retry if needed.");
+    } catch (error) {
+      setFcmMessage(error instanceof Error ? error.message : "Could not configure FCM credentials.");
+    } finally {
+      setBusy(false);
+      event.currentTarget.value = "";
+    }
+  }
+
+  async function openSnapshot(server: ServerProfile) {
+    setSelectedServer(server);
+    setSnapshot(null);
+    setSnapshotError("");
+    setSnapshotBusy(true);
+    try {
+      setSnapshot(await api<ServerSnapshot>(`/api/servers/${server.id}/snapshot`));
+    } catch (error) {
+      setSnapshotError(error instanceof Error ? error.message : "Could not load live server data.");
+    } finally {
+      setSnapshotBusy(false);
     }
   }
 
@@ -242,6 +301,13 @@ export default function App() {
             <span className="role-chip">{user.roles.join(" · ")}</span>
           </section>
 
+          {user.roles.includes("Admin") && (
+            <section className="pairing-setup">
+              <div className="pairing-setup-copy"><p className="eyebrow">ONE-TIME SETUP</p><h2>Rust+ pairing listener</h2><p>Upload a native RustPlusApi credentials file or an existing rustplus.js config. Credentials are encrypted on the server and never sent back to the browser.</p><div className="pairing-status"><span className={fcmStatus.listening ? "status-light online" : "status-light"} />{fcmStatus.listening ? "Listener connected" : fcmStatus.configured ? "Configured, not connected" : "Not configured"}</div>{fcmMessage && <p className="pairing-message" role="status">{fcmMessage}</p>}</div>
+              <label className="upload-button">Upload credentials<input type="file" accept=".json,application/json" disabled={busy} onChange={(event) => void uploadFcmCredentials(event)} /></label>
+            </section>
+          )}
+
           <div className="section-heading"><div><h2>Your servers</h2><p>{servers.length} saved {servers.length === 1 ? "profile" : "profiles"}</p></div><button className="secondary-button" onClick={() => void refreshServers()}>↻ Refresh</button></div>
 
           {serverError && <div className="error-banner" role="alert">{serverError}</div>}
@@ -257,11 +323,11 @@ export default function App() {
             <div className="server-grid">
               {servers.map((server) => (
                 <article className="server-card" key={server.id}>
-                  <div className="server-card-top"><div className="server-symbol">⌘</div><span className="status-pill"><i /> Not connected</span></div>
+                  <div className="server-card-top"><div className="server-symbol">⌘</div><span className={`status-pill ${server.connectionStatus.toLowerCase()}`}><i /> {server.connectionStatus}</span></div>
                   <h3>{server.name}</h3><p className="server-address">{server.host}:{server.port}</p>
                   <div className="server-card-divider" />
-                  <div className="server-card-bottom"><span>Profile saved</span><button className="text-button danger-text" onClick={() => void removeServer(server)}>Delete</button></div>
-                  <p className="adapter-note">Rust+ connection adapter pending</p>
+                  <div className="server-card-bottom"><span>{server.isPaired ? "Paired via Rust+" : "Profile saved"}</span>{(!server.isPaired || user.roles.includes("Admin")) && <button className="text-button danger-text" onClick={() => void removeServer(server)}>{server.isPaired ? "Remove pairing" : "Delete"}</button>}</div>
+                  {server.isPaired ? <button className="secondary-button snapshot-button" onClick={() => void openSnapshot(server)}>View live data ↗</button> : <p className="adapter-note">Pair this server in the Rust+ mobile app after the FCM listener is configured.</p>}
                 </article>
               ))}
             </div>
@@ -270,6 +336,26 @@ export default function App() {
           <section className="roadmap-note"><div className="roadmap-icon">↗</div><div><strong>Foundation build</strong><p>Authentication, private server profiles, and realtime profile updates are in place. Pairing, live map data, team state, and device control are the next milestones.</p></div></section>
         </div>
       </section>
+
+      {selectedServer && (
+        <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedServer(null); }}>
+          <section className="modal-card snapshot-modal" role="dialog" aria-modal="true" aria-labelledby="snapshot-title">
+            <button className="modal-close" aria-label="Close" onClick={() => setSelectedServer(null)}>×</button>
+            <p className="eyebrow">LIVE RUST+ DATA</p><h2 id="snapshot-title">{selectedServer.name}</h2>
+            <p className="muted">{selectedServer.host}:{selectedServer.port}</p>
+            {snapshotBusy && <p className="muted">Requesting server info, map, and team data…</p>}
+            {snapshotError && <div className="error-banner" role="alert">{snapshotError}</div>}
+            {snapshot && <>
+              <div className="snapshot-stats"><div><span>Players online</span><strong>{snapshot.info?.playerCount ?? "?"} / {snapshot.info?.maxPlayers ?? "?"}</strong></div><div><span>Map size</span><strong>{snapshot.map?.width ?? "?"} × {snapshot.map?.height ?? "?"}</strong></div></div>
+              {snapshot.map?.imageBase64 && <img className="snapshot-map" alt="Rust server map" src={`data:image/jpeg;base64,${snapshot.map.imageBase64}`} />}
+              {snapshot.map?.monuments?.length ? <><h3 className="snapshot-subheading">Monuments</h3><div className="monument-list">{snapshot.map.monuments.slice(0, 24).map((monument, index) => <span key={`${monument.name ?? "monument"}-${index}`}>{monument.name ?? "Unknown monument"}</span>)}</div></> : null}
+              <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
+              <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>
+            </>}
+            <div className="modal-actions"><button className="secondary-button" onClick={() => void openSnapshot(selectedServer)} disabled={snapshotBusy}>↻ Refresh data</button><button className="primary-button" onClick={() => setSelectedServer(null)}>Close</button></div>
+          </section>
+        </div>
+      )}
 
       {showAddServer && (
         <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowAddServer(false); }}>
