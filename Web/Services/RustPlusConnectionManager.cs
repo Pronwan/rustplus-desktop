@@ -142,6 +142,72 @@ public sealed class RustPlusConnectionManager(
         await NotifyStatusAsync(id, "Disconnected");
     }
 
+    public async Task<object?> GetTeamChatAsync(Guid serverId, CancellationToken cancellationToken = default)
+    {
+        if (!_entries.TryGetValue(serverId, out var entry))
+            return null;
+
+        await entry.Gate.WaitAsync(cancellationToken);
+        try
+        {
+            if (entry.Client is not { IsConnected: true } client)
+                return null;
+
+            var response = await client.GetTeamChatAsync(cancellationToken);
+            if (!response.IsSuccess || response.Data is null)
+                return null;
+
+            return response.Data.Messages?.Select(message => (object)new
+            {
+                steamId = message.SteamId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                name = message.Name,
+                message = message.Message,
+                time = message.Time
+            }).ToList() ?? new List<object>();
+        }
+        finally { entry.Gate.Release(); }
+    }
+
+    public async Task<TeamChatCommandResult?> SendTeamMessageAsync(
+        Guid serverId, string message, CancellationToken cancellationToken = default)
+    {
+        if (!_entries.TryGetValue(serverId, out var entry))
+            return null;
+
+        await entry.Gate.WaitAsync(cancellationToken);
+        try
+        {
+            if (entry.Client is not { IsConnected: true } client)
+                return null;
+
+            var response = await client.SendTeamMessageAsync(message, cancellationToken);
+            return new TeamChatCommandResult(response.IsSuccess, response.Error?.Message);
+        }
+        finally { entry.Gate.Release(); }
+    }
+
+    private async Task BroadcastTeamChatAsync(Guid serverId, RustPlusApi.Data.Events.TeamMessageEventArg message)
+    {
+        try
+        {
+            await hub.Clients.All.SendAsync("TeamChatMessageReceived", new
+            {
+                serverId,
+                message = new
+                {
+                    steamId = message.SteamId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    name = message.Name,
+                    message = message.Message,
+                    time = message.Time
+                }
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogDebug("Realtime team chat notification failed ({ExceptionType}).", exception.GetType().Name);
+        }
+    }
+
     public async Task<SwitchCommandResult?> SetSwitchAsync(
         Guid serverId, ulong entityId, bool? isActive, CancellationToken cancellationToken = default)
     {
@@ -280,6 +346,8 @@ public sealed class RustPlusConnectionManager(
 
                 entry.Client = new RustPlus(new RustPlusConnection(
                     profile.Host, profile.Port, playerId, playerToken));
+                var pairedServerId = profile.Id;
+                entry.Client.OnTeamChatReceived += (_, message) => _ = BroadcastTeamChatAsync(pairedServerId, message);
             }
 
             try
@@ -342,6 +410,7 @@ public sealed class RustPlusConnectionManager(
     }
 
     public sealed record SwitchCommandResult(bool Success, bool? IsActive, string? Error);
+    public sealed record TeamChatCommandResult(bool Success, string? Error);
 
     private sealed class ConnectionEntry
     {

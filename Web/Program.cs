@@ -268,6 +268,48 @@ app.MapGet("/api/servers/{id:guid}/snapshot", async Task<IResult> (
         : Results.NotFound();
 }).RequireAuthorization();
 
+app.MapGet("/api/servers/{id:guid}/chat", async Task<IResult> (
+    Guid id,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var messages = await connections.GetTeamChatAsync(id, cancellationToken);
+    return messages is null
+        ? Results.Problem("The Rust+ connection is not ready or team chat is unavailable.", statusCode: 503)
+        : Results.Ok(messages);
+}).RequireAuthorization();
+
+app.MapPost("/api/servers/{id:guid}/chat", async Task<IResult> (
+    Guid id,
+    SendTeamMessageRequest request,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    var message = request.Message?.Trim();
+    if (string.IsNullOrWhiteSpace(message) || message.Length > 200)
+        return Results.BadRequest(new { error = "Team chat messages must contain 1 to 200 characters." });
+
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var result = await connections.SendTeamMessageAsync(id, message, cancellationToken);
+    if (result is null)
+        return Results.Problem("The Rust+ connection is not ready yet.", statusCode: 503);
+    if (!result.Success)
+        return Results.Problem(result.Error ?? "The team chat message could not be sent.", statusCode: 502);
+
+    return Results.Ok(new { success = true });
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
 app.MapGet("/api/servers/{id:guid}/devices", async Task<IResult> (
     Guid id,
     AppDbContext db,
@@ -638,6 +680,7 @@ public sealed record SetUserRoleRequest(string Role);
 public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record SetDeviceStateRequest(bool? IsActive = null);
 public sealed record SetConnectionRequest(bool Enabled);
+public sealed record SendTeamMessageRequest(string Message);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired, bool ConnectionEnabled);
 public partial class Program { }
