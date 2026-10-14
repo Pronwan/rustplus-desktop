@@ -47,7 +47,7 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/health`: minimal health status only.
 - `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout`.
 - `GET /api/auth/me`.
-- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET/POST /api/servers/{id}/chat`, `GET/POST /api/servers/{id}/timers`, `DELETE /api/servers/{id}/timers/{timerId}`, `GET /api/servers/{id}/devices`, `GET/POST /api/servers/{id}/device-groups`, `DELETE /api/servers/{id}/device-groups/{groupId}`, `PUT /api/servers/{id}/devices/{entityId}/group`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
+- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET/POST /api/servers/{id}/chat`, `GET/POST /api/servers/{id}/timers`, `DELETE /api/servers/{id}/timers/{timerId}`, `GET /api/servers/{id}/devices`, `GET/POST /api/servers/{id}/device-groups`, `DELETE /api/servers/{id}/device-groups/{groupId}`, `PUT /api/servers/{id}/devices/{entityId}/group`, `GET /api/servers/{id}/devices/{entityId}/info`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
 - `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
 - `DELETE /api/paired-servers/{id}` and `POST /api/paired-servers/{id}/connection` (admin only).
 - `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).
