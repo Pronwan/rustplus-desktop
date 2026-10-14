@@ -9091,15 +9091,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void OnHotkeyPressed(string gesture)
     {
-        // kleiner Debounce pro Geste (falls OS NOREPEAT ignoriert)
+        if (HandledByAiCompanion(gesture)) return;
+        if (HandledByMiniMapPeek(gesture)) return;
+
+        // kleiner Debounce pro Geste für Geräte-Aktionen (falls OS NOREPEAT ignoriert)
         var now = DateTime.UtcNow;
         if (_lastGestureAt.TryGetValue(gesture, out var last) &&
             (now - last).TotalMilliseconds < 350)
             return;
         _lastGestureAt[gesture] = now;
-
-        if (HandledByAiCompanion(gesture)) return;
-        if (HandledByMiniMapPeek(gesture)) return;
 
         var map = MapForCurrentServer();
         if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;
