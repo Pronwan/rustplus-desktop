@@ -61,7 +61,7 @@ public sealed class RustPlusFcmService(
                     throw new InvalidOperationException("Saved FCM configuration is incomplete.");
 
                 _ownerUserId = saved.OwnerUserId;
-                await StartListenerAsync(saved.CredentialsJson, _stopping.Token);
+                _ = ParseCredentials(saved.CredentialsJson);
             }
             catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
             {
@@ -69,13 +69,14 @@ public sealed class RustPlusFcmService(
             }
             catch (Exception exception)
             {
-                _isListening = false;
-                logger.LogWarning("Saved FCM listener could not start ({ExceptionType}); automatic retry is enabled.",
+                ScheduleReconnect();
+                logger.LogWarning("Saved FCM configuration could not be validated ({ExceptionType}); automatic retry is enabled.",
                     exception.GetType().Name);
             }
         }
 
-        _reconnectLoop = RunReconnectLoopAsync(_stopping.Token);
+        // Keep FCM network startup out of host startup; a slow upstream must not prevent the web UI from booting.
+        _reconnectLoop = Task.Run(() => RunReconnectLoopAsync(_stopping.Token), _stopping.Token);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
