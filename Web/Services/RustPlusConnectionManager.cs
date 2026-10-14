@@ -99,6 +99,27 @@ public sealed class RustPlusConnectionManager(
         await NotifyStatusAsync(id, "Disconnected");
     }
 
+    public async Task<SwitchCommandResult?> SetSwitchAsync(
+        Guid serverId, ulong entityId, bool? isActive, CancellationToken cancellationToken = default)
+    {
+        if (!_entries.TryGetValue(serverId, out var entry))
+            return null;
+
+        await entry.Gate.WaitAsync(cancellationToken);
+        try
+        {
+            if (entry.Client is not { IsConnected: true } client)
+                return null;
+
+            var response = isActive.HasValue
+                ? await client.SetSmartSwitchValueAsync(entityId, isActive.Value, cancellationToken)
+                : await client.ToggleSmartSwitchAsync(entityId, cancellationToken);
+
+            return new SwitchCommandResult(response.IsSuccess, response.Data?.IsActive, response.Error?.Message);
+        }
+        finally { entry.Gate.Release(); }
+    }
+
     public async Task<object?> GetSnapshotAsync(Guid id, CancellationToken cancellationToken = default)
     {
         if (!_entries.TryGetValue(id, out var entry))
@@ -252,6 +273,8 @@ public sealed class RustPlusConnectionManager(
             logger.LogDebug("Realtime status notification failed ({ExceptionType}).", exception.GetType().Name);
         }
     }
+
+    public sealed record SwitchCommandResult(bool Success, bool? IsActive, string? Error);
 
     private sealed class ConnectionEntry
     {
