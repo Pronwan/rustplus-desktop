@@ -322,32 +322,7 @@ public partial class MainWindow
     }
 
     internal List<List<RustPlusClientReal.ShopMarker>> ClusterShops(IEnumerable<RustPlusClientReal.ShopMarker> shops)
-    {
-        var clusters = new List<List<RustPlusClientReal.ShopMarker>>();
-        const double CLUSTER_DIST = 50.0; // World units
-
-        foreach (var s in shops)
-        {
-            List<RustPlusClientReal.ShopMarker>? target = null;
-            foreach (var c in clusters)
-            {
-                // Compare against cluster average position
-                double avgX = c.Average(x => x.X);
-                double avgY = c.Average(y => y.Y);
-                double dx = avgX - s.X;
-                double dy = avgY - s.Y;
-                if (Math.Sqrt(dx * dx + dy * dy) < CLUSTER_DIST)
-                {
-                    target = c;
-                    break;
-                }
-            }
-
-            if (target != null) target.Add(s);
-            else clusters.Add(new List<RustPlusClientReal.ShopMarker> { s });
-        }
-        return clusters;
-    }
+        => ShopClustering.Cluster(shops, s => s.Id, s => s.X, s => s.Y);
 
     private void UpdateShopLifetimes(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
     {
@@ -445,9 +420,8 @@ public partial class MainWindow
         var incoming = new HashSet<uint>();
         foreach (var cluster in clusters)
         {
-            // Use the ID of the first shop as the cluster key
-            var primary = cluster[0];
-            uint clusterId = primary.Id;
+            // Keyed by the lowest shop ID so the icon survives a poll that reorders the shops
+            uint clusterId = ShopClustering.KeyOf(cluster, s => s.Id);
             incoming.Add(clusterId);
 
             // Average position for the cluster icon
@@ -602,6 +576,23 @@ public partial class MainWindow
         ShopDetailsPopup.MouseLeave += (s, e) => StartShopDetailHideTimer();
     }
 
+    private string? _shopDetailsSignature;
+
+    private static string ShopDetailsSignature(List<RustPlusClientReal.ShopMarker> cluster)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var s in cluster.OrderBy(s => s.Id))
+        {
+            sb.Append(s.Id).Append('|').Append(s.Label).Append('|');
+            foreach (var o in s.Orders ?? new List<RustPlusClientReal.ShopOrder>())
+                sb.Append(o.ItemId).Append(',').Append(o.Quantity).Append(',')
+                  .Append(o.CurrencyItemId).Append(',').Append(o.CurrencyAmount).Append(',')
+                  .Append(o.Stock).Append(';');
+            sb.Append('#');
+        }
+        return sb.ToString();
+    }
+
     private void ShowShopDetails(List<RustPlusClientReal.ShopMarker> cluster, FrameworkElement? anchor = null)
     {
         if (ShopDetailsPopup == null || ShopDetailsContent == null) return;
@@ -611,6 +602,13 @@ public partial class MainWindow
             SetupShopPopupHover();
             ShopDetailsPopup.Tag = "setup";
         }
+
+        // Moving from the icon to the popup and back re-enters the icon. Rebuilding an
+        // identical popup each time flashes it and throws the scroll position away.
+        var signature = ShopDetailsSignature(cluster);
+        if (ShopDetailsPopup.Visibility == Visibility.Visible && signature == _shopDetailsSignature)
+            return;
+        _shopDetailsSignature = signature;
 
         ShopDetailsContent.Children.Clear();
 
