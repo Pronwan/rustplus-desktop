@@ -317,6 +317,24 @@ app.MapPost("/api/admin/fcm-credentials", async Task<IResult> (
     }
 }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
+app.MapPost("/api/paired-servers/{id:guid}/connection", async Task<IResult> (
+    Guid id,
+    SetConnectionRequest request,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    var profile = await db.PairedServerCredentials.SingleOrDefaultAsync(
+        item => item.Id == id, cancellationToken);
+    if (profile is null)
+        return Results.NotFound();
+
+    profile.ConnectionEnabled = request.Enabled;
+    await db.SaveChangesAsync(cancellationToken);
+    await connections.SetConnectionEnabledAsync(id, request.Enabled, cancellationToken);
+    return Results.Ok(new { id, connectionStatus = connections.GetStatus(id) });
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+
 app.MapDelete("/api/paired-servers/{id:guid}", async Task<IResult> (
     Guid id,
     AppDbContext db,
@@ -450,6 +468,40 @@ app.MapHub<ServerHub>("/hubs/servers").RequireAuthorization();
 app.MapFallbackToFile("index.html");
 app.Run();
 
+static async Task EnsureColumnAsync(AppDbContext db, string tableName, string columnName, string columnDefinition)
+{
+    var connection = db.Database.GetDbConnection();
+    await connection.OpenAsync();
+    try
+    {
+        var exists = false;
+        await using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"PRAGMA table_info(\"{tableName}\");";
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                if (string.Equals(reader.GetString(1), columnName, StringComparison.Ordinal))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+
+        if (!exists)
+        {
+            await using var command = connection.CreateCommand();
+            command.CommandText = $"ALTER TABLE \"{tableName}\" ADD COLUMN \"{columnName}\" {columnDefinition};";
+            await command.ExecuteNonQueryAsync();
+        }
+    }
+    finally
+    {
+        await connection.CloseAsync();
+    }
+}
+
 static async Task InitializeDatabaseAsync(IServiceProvider services, IConfiguration configuration)
 {
     await using var scope = services.CreateAsyncScope();
@@ -465,9 +517,11 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
             "Port" INTEGER NOT NULL,
             "PlayerId" TEXT NOT NULL,
             "ProtectedPlayerToken" TEXT NOT NULL,
+            "ConnectionEnabled" INTEGER NOT NULL DEFAULT 1,
             "CreatedAtUtc" TEXT NOT NULL
         );
         """);
+    await EnsureColumnAsync(db, "PairedServerCredentials", "ConnectionEnabled", "INTEGER NOT NULL DEFAULT 1");
     await db.Database.ExecuteSqlRawAsync("""
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedServerCredentials_RustServerId"
         ON "PairedServerCredentials" ("RustServerId");
@@ -550,6 +604,7 @@ public sealed record CreateServerRequest(string Name, string Host, int Port = 28
 public sealed record SetUserRoleRequest(string Role);
 public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record SetDeviceStateRequest(bool? IsActive = null);
+public sealed record SetConnectionRequest(bool Enabled);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
 public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired);
 public partial class Program { }
