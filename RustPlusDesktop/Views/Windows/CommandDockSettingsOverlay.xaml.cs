@@ -18,7 +18,15 @@ namespace RustPlusDesk.Views
     /// </summary>
     public partial class CommandDockSettingsOverlay : UserControl
     {
-        private bool _loading;
+        /// <summary>
+        /// Set while the panel is being filled in, and true until it first is.
+        ///
+        /// Starting true is the half that matters. Setting a slider's Value in the markup
+        /// raises ValueChanged during InitializeComponent, in declaration order — so the
+        /// first slider's handler runs while the label underneath it is still null, and read
+        /// it. Nothing a handler does before the panel has been loaded is a user's doing.
+        /// </summary>
+        private bool _loading = true;
 
         public MiniMapWindow? ParentWindow { get; set; }
 
@@ -68,6 +76,10 @@ namespace RustPlusDesk.Views
 
         private void ShowValues()
         {
+            // Belt as well as braces: these run from handlers that fire while the markup is
+            // still being built, and the control a line below has not been made yet.
+            if (LblOpacity == null || LblFont == null) return;
+
             LblOpacity.Text = string.Format(
                 Loc.Text("CommandDockTileOpacity", "Opacity {0}%"), (int)Math.Round(SliOpacity.Value * 100));
 
@@ -83,6 +95,8 @@ namespace RustPlusDesk.Views
         /// </summary>
         private void ApplyEnabled()
         {
+            if (SliOpacity == null || SliFont == null || ColorSwatches == null) return;
+
             SliOpacity.IsEnabled = ChkGlobalOpacity.IsChecked == true;
             SliFont.IsEnabled = ChkGlobalFont.IsChecked == true;
             ColorSwatches.IsEnabled = ChkGlobalColor.IsChecked == true;
