@@ -133,7 +133,8 @@ export default function App() {
     event.preventDefault();
     setBusy(true);
     setServerError("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     try {
       await api<ServerProfile>("/api/servers", {
         method: "POST",
@@ -144,7 +145,7 @@ export default function App() {
         })
       });
       setShowAddServer(false);
-      event.currentTarget.reset();
+      formElement.reset();
       await refreshServers();
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "Could not save this profile.");

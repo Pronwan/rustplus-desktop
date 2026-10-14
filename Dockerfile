@@ -17,11 +17,15 @@ RUN dotnet publish Web/RustPlusWeb.csproj -c Release -o /app/publish --no-restor
 # Runtime image has no SDK or frontend toolchain.
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-COPY --from=backend-build /app/publish ./
-COPY --from=frontend /src/web-client/dist ./wwwroot
-RUN mkdir -p /data && chown -R app:app /app /data
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /data/keys \
+    && chown -R app:app /app /data
+COPY --from=backend-build --chown=app:app /app/publish ./
+COPY --from=frontend --chown=app:app /src/web-client/dist ./wwwroot
 ENV ASPNETCORE_URLS=http://+:8080
 ENV DATABASE_PATH=/data/rustplus-web.db
 EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl --fail --silent http://127.0.0.1:8080/api/health || exit 1
 USER app
 ENTRYPOINT ["dotnet", "RustPlusWeb.dll"]

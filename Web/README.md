@@ -11,7 +11,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Authenticated server profile create/list/delete endpoints with owner scoping.
 - Authenticated SignalR hub that notifies the signed-in owner when their profile list changes.
 - React frontend served from the same origin, avoiding a separate CORS surface.
-- SQLite data persisted in the Docker volume.
+- SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
 ## Important current limitation
 
@@ -21,12 +21,12 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 
 1. Copy `.env.example` to `.env`.
 2. Set a strong unique `ADMIN_PASSWORD` (12+ characters including uppercase, lowercase, digit, and symbol).
-3. Set a long random `WEB_INVITE_CODE` to allow teammates to register. Keep `.env` private.
+3. Set a long random `WEB_INVITE_CODE` to allow teammates to register. Leave it empty to disable registration.
 4. Run `docker compose up --build -d`.
 5. Put the service behind an HTTPS reverse proxy before exposing it to the internet. The production auth cookie is Secure-only.
 6. Open `http://localhost:8080` for a local smoke test. For HTTPS deployments, configure the reverse proxy to preserve the original scheme and restrict direct access to the app port.
 
-The database is stored in the `rustplus-web-data` volume. Back it up before upgrading. This first version uses EF Core `EnsureCreated`; schema migrations must be added before production schema evolution.
+The database and Data Protection key ring are stored in the `rustplus-web-data` volume. Treat this volume and its backups as sensitive. Back it up before upgrading. This first version uses EF Core `EnsureCreated`; schema migrations must be added before production schema evolution.
 
 ## Endpoints
 

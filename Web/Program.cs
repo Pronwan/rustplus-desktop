@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection;
 using RustPlusWeb.Data;
 using RustPlusWeb.Realtime;
 
@@ -17,6 +18,8 @@ if (databasePath != ":memory:")
     databasePath = fullPath;
 }
 
+Directory.CreateDirectory("/data/keys");
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo("/data/keys"));
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={databasePath}"));
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
@@ -69,6 +72,10 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
 {
     options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
 });
+
+var dummyUser = new ApplicationUser { UserName = "unknown-user" };
+var dummyPasswordHasher = new PasswordHasher<ApplicationUser>();
+var dummyPasswordHash = dummyPasswordHasher.HashPassword(dummyUser, "DummyPassword!234");
 
 var app = builder.Build();
 
@@ -144,11 +151,7 @@ app.MapPost("/api/auth/login", async (
     var user = await userManager.FindByEmailAsync(email);
     if (user is null)
     {
-        // Run a password verification against a dummy hash to reduce obvious timing differences.
-        _ = userManager.PasswordHasher.VerifyHashedPassword(
-            new ApplicationUser { UserName = "invalid" },
-            userManager.PasswordHasher.HashPassword(new ApplicationUser { UserName = "invalid" }, "DummyPassword!234"),
-            request.Password);
+        _ = dummyPasswordHasher.VerifyHashedPassword(dummyUser, dummyPasswordHash, request.Password);
         return Results.Unauthorized();
     }
 
@@ -181,7 +184,7 @@ app.MapGet("/api/servers", async (
     UserManager<ApplicationUser> userManager,
     AppDbContext db) =>
 {
-    var userId = await userManager.GetUserIdAsync(principal);
+    var userId = userManager.GetUserId(principal);
     var profiles = await db.ServerProfiles
         .AsNoTracking()
         .Where(profile => profile.OwnerUserId == userId)
@@ -206,7 +209,10 @@ app.MapPost("/api/servers", async (
         host.Any(char.IsWhiteSpace))
         return Results.BadRequest(new { error = "Provide a name, hostname/IP without a scheme, and a valid port." });
 
-    var userId = await userManager.GetUserIdAsync(principal);
+    var userId = userManager.GetUserId(principal);
+    if (string.IsNullOrWhiteSpace(userId))
+        return Results.Unauthorized();
+
     var duplicate = await db.ServerProfiles.AnyAsync(profile =>
         profile.OwnerUserId == userId && profile.Name.ToLower() == name.ToLower());
     if (duplicate)
@@ -214,7 +220,7 @@ app.MapPost("/api/servers", async (
 
     var profile = new ServerProfile
     {
-        OwnerUserId = userId!,
+        OwnerUserId = userId,
         Name = name,
         Host = host,
         Port = request.Port
@@ -232,7 +238,7 @@ app.MapDelete("/api/servers/{id:guid}", async (
     AppDbContext db,
     IHubContext<ServerHub> hub) =>
 {
-    var userId = await userManager.GetUserIdAsync(principal);
+    var userId = userManager.GetUserId(principal);
     var profile = await db.ServerProfiles.SingleOrDefaultAsync(item =>
         item.Id == id && item.OwnerUserId == userId);
     if (profile is null)
