@@ -213,7 +213,7 @@ public sealed class RustPlusFcmService(
         listener.OnAlarmTriggered += (_, alarm) =>
         {
             if (ReferenceEquals(_listener, listener) && alarm is not null)
-                _ = PersistAlarmSafelyAsync(alarm.ServerId, alarm.Title, alarm.Message);
+                _ = PersistAlarmSafelyAsync(alarm.ServerId.ToString("D"), alarm.Title, alarm.Message);
         };
 
         _listener = listener;
