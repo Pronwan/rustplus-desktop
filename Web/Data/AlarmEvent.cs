@@ -1,6 +1,6 @@
 namespace RustPlusWeb.Data;
 
-/// <summary>A bounded, durable record of a smart-alarm notification received from Rust+.</summary>
+/// <summary>A bounded, durable record of a smart-alarm or server-timer alert.</summary>
 public sealed class AlarmEvent
 {
     public Guid Id { get; set; } = Guid.NewGuid();
