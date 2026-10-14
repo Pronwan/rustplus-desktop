@@ -25,7 +25,8 @@ public sealed class RustPlusConnectionManager(
     {
         if (!_entries.TryGetValue(id, out var entry))
             return "Disconnected";
-        return entry.Client?.IsConnected == true ? "Connected" : entry.Status;
+        if (entry.Client?.IsConnected == true) return "Connected";
+        return entry.Status == "Connected" ? "Reconnecting" : entry.Status;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
