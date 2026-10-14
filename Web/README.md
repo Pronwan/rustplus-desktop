@@ -19,6 +19,10 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
+## Security notes
+
+The web API enforces same-host Origin checks for browser state-changing requests, sets CSP and common security headers, marks API responses no-store, and uses HttpOnly/SameSite=Strict cookies (Secure-only outside Development). Keep the application port private behind an HTTPS reverse proxy.
+
 ## Important current limitation
 
 **The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Smart-device commands, full realtime team/map updates, chat, and alarm-history UI are not complete yet.
