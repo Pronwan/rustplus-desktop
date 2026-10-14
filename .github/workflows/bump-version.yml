@@ -27,15 +27,9 @@ on:
         required: true
         default: false
         type: boolean
-      trigger_release:
-        description: "Trigger the Release build workflow immediately after tagging."
-        required: true
-        default: true
-        type: boolean
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
   bump:
@@ -93,13 +87,5 @@ jobs:
         run: |
           git push origin HEAD
           git push origin "$TAG"
-
-      - name: Trigger Release Workflow
-        if: ${{ inputs.dry_run == false && inputs.trigger_release == true && steps.bumper.outputs.bumped == 'true' }}
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.bumper.outputs.version }}
-        run: |
-          echo "Dispatching release.yml for version $VERSION..."
-          gh workflow run release.yml -f version="$VERSION" -f create_github_release=true
+          echo "Version bump and tag pushed: $TAG."
+          echo "To build and publish release assets, manually trigger the 'Release' workflow when ready."

@@ -32,9 +32,6 @@ on:
         required: true
         default: false
         type: boolean
-  push:
-    tags:
-      - "v*"
 
 permissions:
   contents: write
@@ -262,7 +259,7 @@ jobs:
           compression-level: 0
 
       - name: Create or update GitHub Release
-        if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.create_github_release) }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.create_github_release }}
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
