@@ -257,3 +257,5 @@ button:disabled { cursor: wait; opacity: .65; }
 .device-details strong { color: #dce8d5; font-weight: 600; }
 .storage-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
 .storage-items span { border: 1px solid #34422c; background: #1b2418; border-radius: 5px; padding: 4px 6px; color: #c8d9bc; font-size: 9px; }
+
+.device-row { flex-wrap: wrap; }
