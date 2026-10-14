@@ -15,7 +15,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Live snapshot endpoint for supported server info, map image/monuments, and team data.
 - Smart switch, alarm, and storage-monitor pairing metadata; authenticated smart-switch toggle commands with view-only role protection.
 - Admin-only role assignment UI and API, plus protection against demoting the final administrator.
-- 2D map/team-position snapshots that auto-refresh every 30 seconds while open and are cached per server for 30 seconds; a shared smart-alarm and expired-timer history persisted to SQLite (capped at 2,000 events), and durable server-scoped event timers.
+- 2D map/team-position snapshots that auto-refresh every 30 seconds while open and are cached per server for 30 seconds; a shared smart-alarm and expired-timer history persisted to SQLite (capped at 2,000 events), and durable server-scoped event timers; optional browser desktop notifications for incoming smart alarms and expired timers.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
@@ -25,7 +25,7 @@ The web API enforces same-host Origin checks for browser state-changing requests
 
 ## Important current limitation
 
-**The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Map snapshots refresh every 30 seconds while the server view is open and are cached server-side for 30 seconds, but positions are not streamed continuously. Persistent history for smart alarms and expired server timers is available in the dashboard. Other Rust+ event types are not yet recorded in the shared history.
+**The FCM pairing and connection code has been added but is not yet verified against a real Rust+ account/server.** The CI workflow builds the frontend, backend, and container; live FCM registration, pairing delivery, Linux network behavior, and reconnect behavior still require runtime testing with real credentials. Map snapshots refresh every 30 seconds while the server view is open and are cached server-side for 30 seconds, but positions are not streamed continuously. Persistent history for smart alarms and expired server timers is available in the dashboard. Browser desktop notifications require browser permission and a secure context (HTTPS, or localhost during local testing). Other Rust+ event types are not yet recorded in the shared history.
 
 ## Run with Docker
 
