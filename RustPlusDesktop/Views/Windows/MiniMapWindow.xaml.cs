@@ -365,13 +365,18 @@ namespace RustPlusDesk
         private void BtnMapSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
 
         /// <summary>
-        /// Takes the mini-map off the dock.
+        /// Closes the mini-map window, and remembers that it was closed on purpose.
         ///
-        /// The same thing the × on any other widget does, and remembered the same way: the
-        /// dock knows the map was removed on purpose and does not put it back on the next
-        /// start. Add Widget offers it again.
+        /// The mini-map is its own window — the widgets are a second one — so this closes a
+        /// window rather than removing a tile. Remembered, because the button that opens
+        /// these opens both, and somebody who has just put the map away does not want it
+        /// back the next time they ask for their widgets. Add Widget offers it again.
         /// </summary>
-        private void BtnMapClose_Click(object sender, RoutedEventArgs e) => RemoveMapTile();
+        private void BtnMapClose_Click(object sender, RoutedEventArgs e)
+        {
+            Services.TrackingService.MiniMapHidden = true;
+            Close();
+        }
 
         private void BtnDockSettings_Click(object sender, RoutedEventArgs e) => OpenDockSettings();
 

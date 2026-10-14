@@ -281,6 +281,28 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     /// <summary>Repoints the mini-map's brushes after the scene was rebuilt for a new map.</summary>
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
 
+    /// <summary>
+    /// Brings the mini-map window back after its × was pressed.
+    ///
+    /// Called from the widget overlay's Add Widget list, which is the one place somebody
+    /// looks for a thing they have removed. Clearing the flag is part of it: the next press
+    /// of Mini should open it again too.
+    /// </summary>
+    public void ShowMiniMapAgain()
+    {
+        TrackingService.MiniMapHidden = false;
+
+        if (_miniMap == null)
+        {
+            BtnToggleMiniMap_Click(this, null!);
+            return;
+        }
+
+        _miniMap.Show();
+        _miniMap.ApplyPeekVisibility();
+        CenterMiniMapOnPlayer();
+    }
+
     private MiniMapWindow? _miniMap;
 
     /// <summary>
@@ -373,10 +395,14 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
             _miniMap.Show();
 
-            // With a peek key set the dock belongs off screen until it is held. Applied after
-            // Show so the window exists and has been laid out — hiding one that was never shown
-            // leaves it with no size to come back to.
+            // Not in front of anything until the peek key says so. Applied after Show so the
+            // window exists and has a handle to reorder.
             _miniMap.ApplyPeekVisibility();
+
+            // Put away on purpose last time: the widgets still open, the map does not. Closed
+            // rather than never created, so everything that follows has a window to talk to
+            // and the usual Closed handler does the tidying.
+            if (TrackingService.MiniMapHidden) _miniMap.Hide();
 
             EnsureDeviceOverlayOpen();
 

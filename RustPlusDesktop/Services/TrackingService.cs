@@ -87,6 +87,9 @@ public class TrackingSettings
 
     /// <summary>The gesture that shows the dock while it is held, or empty for not at all.</summary>
     public string MiniMapPeekHotkey { get; set; } = "";
+
+    /// <summary>Whether the mini-map window was closed on purpose and should stay closed.</summary>
+    public bool MiniMapHidden { get; set; }
     public bool StartMinimizedEnabled { get; set; } = false;
     public bool AutoConnectEnabled { get; set; } = false;
     public bool AutoStartEnabled { get; set; } = false;
@@ -626,6 +629,19 @@ public static class TrackingService
     {
         get => _settings.MiniMapPeekHotkey ?? "";
         set { _settings.MiniMapPeekHotkey = value ?? ""; SaveDB(); }
+    }
+
+    /// <summary>
+    /// Whether the mini-map window was closed on purpose.
+    ///
+    /// The mini-map and the widget overlay are two windows opened by one button, so without
+    /// this, putting the map away would last until the next time somebody wanted their widgets.
+    /// Add Widget brings it back, which is also what clears this.
+    /// </summary>
+    public static bool MiniMapHidden
+    {
+        get => _settings.MiniMapHidden;
+        set { _settings.MiniMapHidden = value; SaveDB(); }
     }
 
     public static bool CloseToTrayEnabled

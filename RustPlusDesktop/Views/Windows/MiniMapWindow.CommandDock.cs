@@ -98,12 +98,14 @@ namespace RustPlusDesk
 
             InitArming();
 
-            // The map's close button, wired straight to the map rather than through the tile
-            // handles. Those are built for square tiles and put their buttons in a corner; the
-            // map is a circle whose buttons live along its top, and going through that
-            // machinery is why the × never turned up where anybody looked for it.
-            MapContainer.MouseEnter += (_, __) => ShowMapClose(true);
-            MapContainer.MouseLeave += (_, __) => ShowMapClose(false);
+            // The window's own mouse events, not the map container's.
+            //
+            // The mini-map is its own window — the widgets live in a second one — so nothing
+            // about the dock's lock reaches it, and the container's events never arrived
+            // either. These are the ones the arming above already runs on, which is to say
+            // the ones that are known to fire on this window.
+            MouseEnter += (_, __) => ShowMapClose(true);
+            MouseLeave += (_, __) => ShowMapClose(false);
 
             // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
             // where Esc already means something to whoever is typing.
@@ -301,7 +303,7 @@ namespace RustPlusDesk
                     handle.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            ShowMapClose(MapContainer?.IsMouseOver == true);
+            ShowMapClose(IsMouseOver);
         }
 
         // ── Lock ────────────────────────────────────────────────────────────────
@@ -325,10 +327,6 @@ namespace RustPlusDesk
         /// <summary>Puts the lock button into the state it is actually in.</summary>
         private void ApplyLockState()
         {
-            // Every path that locks or unlocks comes through here, including the bar on
-            // screen, so this is the one place the map's buttons can be sure of hearing about
-            // it.
-            ShowMapClose(MapContainer?.IsMouseOver == true);
 
             bool locked = _dock.Locked;
 
@@ -2222,16 +2220,19 @@ namespace RustPlusDesk
         /// <summary>
         /// Shows or hides the two buttons on the map: its settings, and its close.
         ///
-        /// Unlocked, or hovered. The lock is the half to rely on: it is a state the dock
-        /// holds and this is called wherever it changes, while hovering a window that sits
-        /// under a full-screen game is not something to hang a button's only chance on — two
-        /// attempts at hover alone left the map with no visible way to remove it at all.
+        /// Shown while the pointer is anywhere on the mini-map's window.
         ///
-        /// Pressing the × removes the map. Showing it only offers that.
+        /// Not tied to the dock's lock, which was the mistake before this: the widgets are a
+        /// different window with its own layout, so unlocking them says nothing about this
+        /// one. The device overlay has no map and no buttons to show, so it skips all of it.
+        ///
+        /// Pressing the × closes the mini-map. Showing it only offers that.
         /// </summary>
         private void ShowMapClose(bool hovering)
         {
-            var shown = hovering || !_dock.Locked ? Visibility.Visible : Visibility.Collapsed;
+            if (IsDeviceOverlay) return;
+
+            var shown = hovering ? Visibility.Visible : Visibility.Collapsed;
 
             if (BtnMapClose != null) BtnMapClose.Visibility = shown;
             if (BtnMapSettings != null) BtnMapSettings.Visibility = shown;
@@ -2255,7 +2256,16 @@ namespace RustPlusDesk
         /// one of its layers was switched off. Both look the same to the user, so the picker
         /// offers to bring it back in both cases.
         /// </summary>
-        public bool CanAddMap => !IsDeviceOverlay && !MapOccupiesCells;
+        /// <summary>
+        /// Whether the picker should offer the mini-map.
+        ///
+        /// Two windows, two reasons it can be missing: this one has no map tile on it, or the
+        /// mini-map window itself was closed with its ×. The widget overlay is where somebody
+        /// looks either way, which is why it answers for both.
+        /// </summary>
+        public bool CanAddMap => IsDeviceOverlay
+            ? Services.TrackingService.MiniMapHidden
+            : !MapOccupiesCells;
 
         /// <summary>
         /// Puts the map back on the dock, with every layer on.
@@ -2265,7 +2275,14 @@ namespace RustPlusDesk
         /// </summary>
         public void AddMapTile()
         {
-            if (IsDeviceOverlay) return;
+            // On the widget overlay there is no tile to add — the map is its own window, and
+            // what is wanted is that window back.
+            if (IsDeviceOverlay)
+            {
+                (Application.Current?.MainWindow as Views.MainWindow)?.ShowMiniMapAgain();
+                return;
+            }
+
             if (MapTile == null)
             {
                 _dock.MapRemoved = false;
