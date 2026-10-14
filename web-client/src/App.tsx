@@ -21,10 +21,11 @@ type ServerProfile = {
 type FcmStatus = { configured: boolean; listening: boolean };
 type AlarmAlert = { serverId?: string; title: string; message: string; receivedAtUtc: string };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; isActive?: boolean };
+type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
 type ServerSnapshot = {
-  info: { name?: string; playerCount?: number; maxPlayerCount?: number } | null;
+  info: { name?: string; playerCount?: number; maxPlayerCount?: number; mapSize?: number | null } | null;
   map: { width?: number; height?: number; monuments?: { name?: string }[]; imageBase64?: string | null } | null;
-  team: unknown;
+  team: { members?: TeamMember[] | null } | null;
   retrievedAtUtc: string;
 };
 
@@ -383,7 +384,7 @@ export default function App() {
             {snapshotError && <div className="error-banner" role="alert">{snapshotError}</div>}
             {snapshot && <>
               <div className="snapshot-stats"><div><span>Players online</span><strong>{snapshot.info?.playerCount ?? "?"} / {snapshot.info?.maxPlayerCount ?? "?"}</strong></div><div><span>Map size</span><strong>{snapshot.map?.width ?? "?"} × {snapshot.map?.height ?? "?"}</strong></div></div>
-              {snapshot.map?.imageBase64 && <img className="snapshot-map" alt="Rust server map" src={`data:image/jpeg;base64,${snapshot.map.imageBase64}`} />}
+              {snapshot.map?.imageBase64 && <div className="snapshot-map-wrap" style={{ aspectRatio: `${snapshot.map.width ?? 1} / ${snapshot.map.height ?? 1}` }}><img className="snapshot-map" alt="Rust server map" src={`data:image/jpeg;base64,${snapshot.map.imageBase64}`} /><svg className="snapshot-map-overlay" viewBox={`0 0 ${snapshot.map.width ?? 1} ${snapshot.map.height ?? 1}`} preserveAspectRatio="none" aria-label="Team member positions">{snapshot.team?.members?.map((member, index) => { const width = snapshot.map?.width ?? 0; const height = snapshot.map?.height ?? 0; const mapSize = snapshot.info?.mapSize ?? 0; if (!width || !height || !mapSize) return null; const margin = snapshot.map?.oceanMargin ?? 0; const x = member.x * ((width - 2 * margin) / mapSize) + margin; const y = height - (member.y * ((height - 2 * margin) / mapSize) + margin); return <g key={`${member.name ?? "player"}-${index}`}><circle className={`player-dot ${member.isAlive ? "" : "dead"} ${member.isOnline ? "" : "offline"}`} cx={x} cy={y} r={Math.max(5, width * 0.005)} /><text className="player-label" x={x} y={y - Math.max(8, width * 0.009)} textAnchor="middle">{member.name ?? "Player"}</text></g>; })}</svg></div>}
               {snapshot.map?.monuments?.length ? <><h3 className="snapshot-subheading">Monuments</h3><div className="monument-list">{snapshot.map.monuments.slice(0, 24).map((monument, index) => <span key={`${monument.name ?? "monument"}-${index}`}>{monument.name ?? "Unknown monument"}</span>)}</div></> : null}
               <h3 className="snapshot-subheading">Team data</h3><pre className="snapshot-json">{JSON.stringify(snapshot.team, null, 2)}</pre>
               <p className="snapshot-timestamp">Retrieved {new Date(snapshot.retrievedAtUtc).toLocaleString()}</p>

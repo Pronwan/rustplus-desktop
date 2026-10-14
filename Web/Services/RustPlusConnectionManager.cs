@@ -152,7 +152,19 @@ public sealed class RustPlusConnectionManager(
                             : null
                     }
                     : null,
-                team = team.IsSuccess ? team.Data : null,
+                team = team.IsSuccess && team.Data is not null
+                    ? new
+                    {
+                        members = team.Data.Members?.Select(member => new
+                        {
+                            name = member.Name,
+                            x = member.X,
+                            y = member.Y,
+                            isOnline = member.IsOnline,
+                            isAlive = member.IsAlive
+                        }).ToList()
+                    }
+                    : null,
                 retrievedAtUtc = DateTime.UtcNow
             };
         }

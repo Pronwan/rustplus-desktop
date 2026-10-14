@@ -187,3 +187,11 @@ button:disabled { cursor: wait; opacity: .65; }
 .alarm-row strong { font-size: 11px; color: #ffd1bd; }
 .alarm-row p { margin: 4px 0 0; color: #c4ada1; font-size: 11px; line-height: 1.5; }
 .alarm-row time { flex: 0 0 auto; color: #9b8275; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.snapshot-map-wrap { position: relative; width: 100%; max-width: 680px; margin: 16px auto; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #101310; }
+.snapshot-map-wrap .snapshot-map { width: 100%; height: 100%; max-height: none; display: block; object-fit: fill; border: 0; border-radius: 0; margin: 0; }
+.snapshot-map-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.player-dot { fill: #b7f36b; stroke: #101310; stroke-width: 3; }
+.player-dot.dead { fill: #ff9c8d; }
+.player-dot.offline { fill: #a1aaa0; opacity: .65; }
+.player-label { fill: #f3f7ef; font-size: 18px; font-weight: 600; paint-order: stroke; stroke: #101310; stroke-width: 4px; stroke-linejoin: round; }
