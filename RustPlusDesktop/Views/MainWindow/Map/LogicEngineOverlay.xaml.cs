@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using RustPlusDesk.Models;
+using RustPlusDesk.Services;
 using RustPlusDesk.ViewModels;
 
 namespace RustPlusDesk.Views
@@ -240,6 +241,104 @@ namespace RustPlusDesk.Views
             Ach.Unlock(Ach.LogicRule);
             RefreshListBindings();
             _vm.Save();
+        }
+
+        private const string RuleFileFilter = "Logic Engine rules (*.json)|*.json|All files (*.*)|*.*";
+
+        private void BtnExportRules_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm?.Selected == null) return;
+
+            var rules = _vm.Selected.LogicRules;
+            if (rules == null || rules.Count == 0)
+            {
+                MessageBox.Show("There are no rules on this server to export.", "Export rules",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var serverName = string.Concat((_vm.Selected.Name ?? "server")
+                .Select(c => System.IO.Path.GetInvalidFileNameChars().Contains(c) ? '_' : c)).Trim();
+            if (serverName.Length == 0) serverName = "server";
+
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Export Logic Engine rules",
+                Filter = RuleFileFilter,
+                FileName = $"logic-rules-{serverName}.json",
+                AddExtension = true,
+                DefaultExt = ".json",
+            };
+            if (dialog.ShowDialog() != true) return;
+
+            try
+            {
+                System.IO.File.WriteAllText(dialog.FileName, LogicRuleTransfer.Export(rules),
+                    new System.Text.UTF8Encoding(false));
+                MessageBox.Show($"Exported {rules.Count} rule(s).", "Export rules",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show($"Could not write the file: {ex.Message}", "Export rules",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void BtnImportRules_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm?.Selected == null) return;
+
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Import Logic Engine rules",
+                Filter = RuleFileFilter,
+                CheckFileExists = true,
+            };
+            if (dialog.ShowDialog() != true) return;
+
+            string json;
+            try
+            {
+                if (new System.IO.FileInfo(dialog.FileName).Length > LogicRuleTransfer.MaxFileBytes)
+                {
+                    MessageBox.Show("The file is too large to be a rule export.", "Import rules",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                json = System.IO.File.ReadAllText(dialog.FileName);
+            }
+            catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show($"Could not read the file: {ex.Message}", "Import rules",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _vm.Selected.LogicRules ??= new List<LogicRule>();
+            var result = LogicRuleTransfer.Import(json, _vm.Selected.Devices, _vm.Selected.LogicRules);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Error, "Import rules", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            foreach (var rule in _vm.Selected.LogicRules)
+                rule.IsExpanded = false;
+            foreach (var rule in result.Rules)
+                _vm.Selected.LogicRules.Add(rule);
+
+            Ach.Unlock(Ach.LogicRule);
+            RefreshListBindings();
+            _vm.Save();
+
+            var message = $"Imported {result.Rules.Count} rule(s). They are all switched off until you review and enable them.";
+            if (result.UnknownDeviceCount > 0)
+                message += $"\n\n{result.UnknownDeviceCount} device ID(s) in these rules do not exist on this server. " +
+                           "Device IDs are specific to each server, so pick the matching devices again before enabling.";
+            if (result.BrokenRuleLinks > 0)
+                message += $"\n\n{result.BrokenRuleLinks} rule(s) were triggered by a rule that is not in the file. Their trigger link was cleared.";
+            MessageBox.Show(message, "Import rules", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void BtnDeleteRule_Click(object sender, RoutedEventArgs e)

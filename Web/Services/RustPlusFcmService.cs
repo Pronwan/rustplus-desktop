@@ -1,0 +1,489 @@
+using System.Globalization;
+using System.Text.Json;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using RustPlusApi.Fcm;
+using RustPlusApi.Fcm.Data;
+using RustPlusWeb.Data;
+using RustPlusWeb.Realtime;
+
+namespace RustPlusWeb.Services;
+
+/// <summary>Owns the self-hosted FCM listener; credentials and replay IDs are protected at rest.</summary>
+public sealed class RustPlusFcmService(
+    IServiceScopeFactory scopeFactory,
+    IDataProtectionProvider protectionProvider,
+    IConfiguration configuration,
+    IHubContext<ServerHub> hub,
+    RustPlusConnectionManager connections,
+    ILogger<RustPlusFcmService> logger) : IHostedService
+{
+    private readonly IDataProtector _configurationProtector =
+        protectionProvider.CreateProtector("RustPlusWeb.FcmConfiguration.v1");
+    private readonly IDataProtector _tokenProtector =
+        protectionProvider.CreateProtector("RustPlusWeb.PairedServer.PlayerToken.v1");
+    private readonly IDataProtector _persistentIdsProtector =
+        protectionProvider.CreateProtector("RustPlusWeb.FcmPersistentIds.v1");
+    private readonly string _credentialsPath = configuration["FCM_CREDENTIALS_PATH"] ??
+        Path.Combine(AppContext.BaseDirectory, "App_Data", "fcm-credentials.protected");
+    private readonly string _persistentIdsPath = configuration["FCM_PERSISTENT_IDS_PATH"] ??
+        Path.Combine(AppContext.BaseDirectory, "App_Data", "fcm-persistent-ids.protected");
+    private readonly object _idsLock = new();
+    private const int MaxPersistedNotificationIds = 2000;
+    private const int MaxPersistedAlarmEvents = 2000;
+    private int _reconnectFailures;
+    private DateTime _nextReconnectUtc = DateTime.MinValue;
+    private readonly SemaphoreSlim _lifecycleGate = new(1, 1);
+    private List<string> _persistentIds = new();
+    private RustPlusFcm? _listener;
+    private string? _ownerUserId;
+    private volatile bool _isListening;
+    private CancellationTokenSource? _stopping;
+    private Task? _reconnectLoop;
+
+    public bool IsConfigured => File.Exists(_credentialsPath);
+    public bool IsListening => _isListening;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        _stopping = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        LoadPersistentIds();
+
+        if (File.Exists(_credentialsPath))
+        {
+            try
+            {
+                var protectedJson = await File.ReadAllTextAsync(_credentialsPath, _stopping.Token);
+                var saved = JsonSerializer.Deserialize<SavedFcmConfiguration>(
+                    _configurationProtector.Unprotect(protectedJson));
+                if (saved is null || string.IsNullOrWhiteSpace(saved.OwnerUserId) ||
+                    string.IsNullOrWhiteSpace(saved.CredentialsJson))
+                    throw new InvalidOperationException("Saved FCM configuration is incomplete.");
+
+                _ownerUserId = saved.OwnerUserId;
+                _ = ParseCredentials(saved.CredentialsJson);
+            }
+            catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception exception)
+            {
+                ScheduleReconnect();
+                logger.LogWarning("Saved FCM configuration could not be validated ({ExceptionType}); automatic retry is enabled.",
+                    exception.GetType().Name);
+            }
+        }
+
+        // Keep FCM network startup out of host startup; a slow upstream must not prevent the web UI from booting.
+        _reconnectLoop = Task.Run(() => RunReconnectLoopAsync(_stopping.Token), _stopping.Token);
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        var stopping = Interlocked.Exchange(ref _stopping, null);
+        if (stopping is not null)
+        {
+            stopping.Cancel();
+            if (_reconnectLoop is not null)
+            {
+                try { await _reconnectLoop; }
+                catch (OperationCanceledException) { }
+            }
+        }
+
+        await _lifecycleGate.WaitAsync(CancellationToken.None);
+        try
+        {
+            _listener?.Disconnect();
+            _listener = null;
+            _isListening = false;
+        }
+        finally
+        {
+            _lifecycleGate.Release();
+            stopping?.Dispose();
+        }
+    }
+
+    private async Task RunReconnectLoopAsync(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            if (File.Exists(_credentialsPath) && !_isListening && DateTime.UtcNow >= _nextReconnectUtc)
+            {
+                try
+                {
+                    await _lifecycleGate.WaitAsync(cancellationToken);
+                    try
+                    {
+                        if (!_isListening)
+                        {
+                            var protectedJson = await File.ReadAllTextAsync(_credentialsPath, cancellationToken);
+                            var saved = JsonSerializer.Deserialize<SavedFcmConfiguration>(
+                                _configurationProtector.Unprotect(protectedJson));
+                            if (saved is not null && !string.IsNullOrWhiteSpace(saved.OwnerUserId) &&
+                                !string.IsNullOrWhiteSpace(saved.CredentialsJson))
+                            {
+                                _ownerUserId = saved.OwnerUserId;
+                                await StartListenerCoreAsync(ParseCredentials(saved.CredentialsJson), cancellationToken);
+                            }
+                        }
+                    }
+                    finally { _lifecycleGate.Release(); }
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+                catch (Exception exception)
+                {
+                    _isListening = false;
+                    ScheduleReconnect();
+                    logger.LogWarning("FCM reconnect attempt failed ({ExceptionType}); retrying automatically.",
+                        exception.GetType().Name);
+                }
+            }
+
+            try { await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken); }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { break; }
+        }
+    }
+
+    public async Task ConfigureAsync(string credentialsJson, string ownerUserId, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(credentialsJson) || credentialsJson.Length > 128_000)
+            throw new ArgumentException("The credentials file is empty or too large.");
+
+        var credentials = ParseCredentials(credentialsJson);
+        var normalizedJson = JsonSerializer.Serialize(credentials);
+        var saved = JsonSerializer.Serialize(new SavedFcmConfiguration(ownerUserId, normalizedJson));
+        Directory.CreateDirectory(Path.GetDirectoryName(_credentialsPath)!);
+        var temporaryPath = _credentialsPath + ".tmp";
+        await File.WriteAllTextAsync(temporaryPath, _configurationProtector.Protect(saved), cancellationToken);
+        File.Move(temporaryPath, _credentialsPath, overwrite: true);
+
+        await _lifecycleGate.WaitAsync(cancellationToken);
+        try
+        {
+            _ownerUserId = ownerUserId;
+            await StartListenerCoreAsync(credentials, cancellationToken);
+        }
+        finally { _lifecycleGate.Release(); }
+    }
+
+    private async Task StartListenerAsync(string credentialsJson, CancellationToken cancellationToken)
+    {
+        await _lifecycleGate.WaitAsync(cancellationToken);
+        try { await StartListenerCoreAsync(ParseCredentials(credentialsJson), cancellationToken); }
+        finally { _lifecycleGate.Release(); }
+    }
+
+    private async Task StartListenerCoreAsync(Credentials credentials, CancellationToken cancellationToken)
+    {
+        _listener?.Disconnect();
+        _listener = null;
+        _isListening = false;
+
+        var listener = new RustPlusFcm(credentials, _persistentIds);
+        var listenerOwnerUserId = _ownerUserId;
+        listener.Connected += (_, _) =>
+        {
+            if (!ReferenceEquals(_listener, listener)) return;
+            _isListening = true;
+            _reconnectFailures = 0;
+            _nextReconnectUtc = DateTime.MinValue;
+            logger.LogInformation("Rust+ FCM listener connected.");
+            _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = true });
+        };
+        listener.Disconnected += (_, _) =>
+        {
+            if (!ReferenceEquals(_listener, listener)) return;
+            _isListening = false;
+            ScheduleReconnect();
+            logger.LogWarning("Rust+ FCM listener disconnected.");
+            _ = hub.Clients.All.SendAsync("FcmStatusChanged", new { configured = true, listening = false });
+        };
+        listener.ErrorOccurred += (_, exception) =>
+            logger.LogWarning("Rust+ FCM listener error ({ExceptionType}).", exception.GetType().Name);
+        listener.PersistentIdReceived += (_, persistentId) => PersistPersistentId(persistentId);
+        listener.OnServerPairing += (_, pairing) => _ = HandlePairingSafelyAsync(pairing, listenerOwnerUserId);
+        listener.OnEntityPairing += (_, pairing) => _ = HandleEntityPairingSafelyAsync(pairing);
+        listener.OnAlarmTriggered += (_, alarm) =>
+        {
+            if (ReferenceEquals(_listener, listener) && alarm is not null)
+                _ = PersistAlarmSafelyAsync(alarm.ServerId.ToString("D"), alarm.Title, alarm.Message);
+        };
+
+        _listener = listener;
+        await listener.ConnectAsync(cancellationToken);
+    }
+
+    private async Task PersistAlarmSafelyAsync(string? rustServerId, string? title, string? message)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(rustServerId))
+                return;
+
+            var alarm = new AlarmEvent
+            {
+                RustServerId = rustServerId.Trim()[..Math.Min(rustServerId.Trim().Length, 128)],
+                Title = (title ?? "Smart alarm").Trim()[..Math.Min((title ?? "Smart alarm").Trim().Length, 120)],
+                Message = (message ?? "").Trim()[..Math.Min((message ?? "").Trim().Length, 500)],
+                ReceivedAtUtc = DateTime.UtcNow
+            };
+
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.AlarmEvents.Add(alarm);
+            await db.SaveChangesAsync();
+
+            // Keep a bounded history. Delete in batches so one unusually large old database
+            // does not turn a single alarm notification into an unbounded cleanup operation.
+            var staleIds = await db.AlarmEvents.AsNoTracking()
+                .OrderByDescending(item => item.ReceivedAtUtc)
+                .ThenByDescending(item => item.Id)
+                .Skip(MaxPersistedAlarmEvents)
+                .Select(item => item.Id)
+                .Take(100)
+                .ToListAsync();
+            if (staleIds.Count > 0)
+            {
+                var stale = await db.AlarmEvents.Where(item => staleIds.Contains(item.Id)).ToListAsync();
+                db.AlarmEvents.RemoveRange(stale);
+                await db.SaveChangesAsync();
+            }
+
+            await hub.Clients.All.SendAsync("AlarmReceived", new
+            {
+                serverId = alarm.RustServerId,
+                title = alarm.Title,
+                message = alarm.Message,
+                receivedAtUtc = alarm.ReceivedAtUtc
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Could not persist or broadcast Rust+ alarm ({ExceptionType}).",
+                exception.GetType().Name);
+        }
+    }
+
+    private async Task HandlePairingSafelyAsync(Notification<RustPlusApi.Fcm.Data.Events.ServerEvent?> pairing, string? ownerUserId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(ownerUserId) || pairing.Data is not { } server ||
+                string.IsNullOrWhiteSpace(server.Ip) || server.Port is < 1 or > 65535 ||
+                pairing.PlayerId == 0 || pairing.PlayerToken == 0)
+                return;
+
+            Guid profileId;
+            await using (var scope = scopeFactory.CreateAsyncScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var profile = await db.PairedServerCredentials.SingleOrDefaultAsync(
+                    item => item.RustServerId == pairing.ServerId);
+
+                if (profile is null)
+                {
+                    profile = new PairedServerCredential
+                    {
+                        OwnerUserId = ownerUserId,
+                        RustServerId = pairing.ServerId,
+                        Name = string.IsNullOrWhiteSpace(server.Name) ? "Rust server" : server.Name,
+                        Host = server.Ip,
+                        Port = server.Port,
+                        PlayerId = pairing.PlayerId.ToString(CultureInfo.InvariantCulture),
+                        ProtectedPlayerToken = _tokenProtector.Protect(
+                            pairing.PlayerToken.ToString(CultureInfo.InvariantCulture))
+                    };
+                    db.PairedServerCredentials.Add(profile);
+                }
+                else
+                {
+                    profile.OwnerUserId = ownerUserId;
+                    profile.Name = string.IsNullOrWhiteSpace(server.Name) ? profile.Name : server.Name;
+                    profile.Host = server.Ip;
+                    profile.Port = server.Port;
+                    profile.PlayerId = pairing.PlayerId.ToString(CultureInfo.InvariantCulture);
+                    profile.ProtectedPlayerToken = _tokenProtector.Protect(
+                        pairing.PlayerToken.ToString(CultureInfo.InvariantCulture));
+                }
+
+                await db.SaveChangesAsync();
+                profileId = profile.Id;
+            }
+
+            logger.LogInformation("Received pairing for Rust+ server {ServerId}.", pairing.ServerId);
+            await hub.Clients.All.SendAsync("ServersChanged");
+            await connections.EnsureConnectedAsync(profileId);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Could not persist a Rust+ pairing event ({ExceptionType}).", exception.GetType().Name);
+        }
+    }
+
+    private async Task HandleEntityPairingSafelyAsync(
+        Notification<RustPlusApi.Fcm.Data.Events.EntityEvent?> pairing)
+    {
+        try
+        {
+            var entity = pairing.Data;
+            if (entity?.EntityId is not ulong entityId || entity.EntityType is not { } entityType)
+                return;
+
+            Guid pairedServerId;
+            await using (var scope = scopeFactory.CreateAsyncScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var server = await db.PairedServerCredentials.SingleOrDefaultAsync(
+                    item => item.RustServerId == pairing.ServerId);
+                if (server is null)
+                {
+                    logger.LogInformation("Ignoring entity pairing before its server pairing was saved.");
+                    return;
+                }
+
+                var entityIdText = entityId.ToString(CultureInfo.InvariantCulture);
+                var device = await db.PairedDevices.SingleOrDefaultAsync(item =>
+                    item.PairedServerCredentialId == server.Id && item.EntityId == entityIdText);
+                var typeName = entityType.ToString();
+                var name = string.IsNullOrWhiteSpace(entity.EntityName)
+                    ? $"{typeName} {entityIdText}"
+                    : entity.EntityName;
+
+                if (device is null)
+                {
+                    device = new PairedDevice
+                    {
+                        PairedServerCredentialId = server.Id,
+                        EntityId = entityIdText,
+                        Name = name,
+                        Type = typeName
+                    };
+                    db.PairedDevices.Add(device);
+                }
+                else
+                {
+                    device.Name = name;
+                    device.Type = typeName;
+                }
+
+                await db.SaveChangesAsync();
+                pairedServerId = server.Id;
+            }
+
+            await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = pairedServerId });
+            await hub.Clients.All.SendAsync("ServersChanged");
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Could not persist a Rust+ entity pairing event ({ExceptionType}).",
+                exception.GetType().Name);
+        }
+    }
+
+    private void LoadPersistentIds()
+    {
+        if (!File.Exists(_persistentIdsPath))
+            return;
+
+        try
+        {
+            var plain = _persistentIdsProtector.Unprotect(File.ReadAllText(_persistentIdsPath));
+            _persistentIds = JsonSerializer.Deserialize<List<string>>(plain) ?? new List<string>();
+            TrimPersistentIds();
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("FCM de-duplication state could not be read ({ExceptionType}); starting a fresh set.",
+                exception.GetType().Name);
+            _persistentIds = new List<string>();
+        }
+    }
+
+    private void PersistPersistentId(string persistentId)
+    {
+        if (string.IsNullOrWhiteSpace(persistentId))
+            return;
+
+        lock (_idsLock)
+        {
+            if (!_persistentIds.Contains(persistentId, StringComparer.Ordinal))
+                _persistentIds.Add(persistentId);
+            TrimPersistentIds();
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_persistentIdsPath)!);
+                var plain = JsonSerializer.Serialize(_persistentIds);
+                File.WriteAllText(_persistentIdsPath, _persistentIdsProtector.Protect(plain));
+            }
+            catch (Exception exception)
+            {
+                logger.LogWarning("FCM de-duplication state could not be saved ({ExceptionType}).",
+                    exception.GetType().Name);
+            }
+        }
+    }
+
+    private void TrimPersistentIds()
+    {
+        if (_persistentIds.Count > MaxPersistedNotificationIds)
+            _persistentIds.RemoveRange(0, _persistentIds.Count - MaxPersistedNotificationIds);
+    }
+
+    private void ScheduleReconnect()
+    {
+        if (_nextReconnectUtc > DateTime.UtcNow)
+            return;
+
+        _reconnectFailures = Math.Min(_reconnectFailures + 1, 6);
+        var delaySeconds = Math.Min(300, 15 * Math.Pow(2, _reconnectFailures - 1));
+        _nextReconnectUtc = DateTime.UtcNow.AddSeconds(delaySeconds);
+    }
+
+    private static Credentials ParseCredentials(string json)
+    {
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        try
+        {
+            var native = JsonSerializer.Deserialize<Credentials>(json, options);
+            if (native?.Gcm is { AndroidId: > 0, SecurityToken: > 0 })
+                return native;
+        }
+        catch (JsonException)
+        {
+            // Try the legacy rustplus.js config shape below.
+        }
+
+        using var document = JsonDocument.Parse(json);
+        if (!document.RootElement.TryGetProperty("fcm_credentials", out var fcmCredentials) ||
+            !fcmCredentials.TryGetProperty("gcm", out var gcm))
+            throw new ArgumentException("Credentials must be native RustPlusApi JSON or rustplus.js JSON.");
+
+        var androidId = ReadUlong(gcm, "androidId");
+        var securityToken = ReadUlong(gcm, "securityToken");
+        if (androidId == 0 || securityToken == 0)
+            throw new ArgumentException("The credentials file is missing its GCM Android ID or security token.");
+
+        return new Credentials { Gcm = new Gcm { AndroidId = androidId, SecurityToken = securityToken } };
+    }
+
+    private static ulong ReadUlong(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+            return 0;
+        if (property.ValueKind == JsonValueKind.Number && property.TryGetUInt64(out var numeric))
+            return numeric;
+        if (property.ValueKind == JsonValueKind.String &&
+            ulong.TryParse(property.GetString(), CultureInfo.InvariantCulture, out var parsed))
+            return parsed;
+        return 0;
+    }
+
+    private sealed record SavedFcmConfiguration(string OwnerUserId, string CredentialsJson);
+}

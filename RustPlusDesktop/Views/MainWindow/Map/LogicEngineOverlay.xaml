@@ -62,6 +62,8 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:Button x:Name="BtnExportRules" Click="BtnExportRules_Click" Appearance="Secondary" Margin="0,0,8,0" ToolTip="Export all rules on this server to a file" Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"/>
+                        <ui:Button x:Name="BtnImportRules" Click="BtnImportRules_Click" Appearance="Secondary" Margin="0,0,8,0" ToolTip="Import rules from a file (imported rules start disabled)" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"/>
                         <ui:Button x:Name="BtnAddOilRigRule" tutorials:Tutorial.TargetId="Automation.CreateOilRigRule" Click="BtnAddOilRigRule_Click" Appearance="Secondary" Margin="0,0,8,0" ToolTip="Add Oil Rig Trigger Template" Padding="5,3">
                             <Image Source="pack://application:,,,/Assets/icons/oilrig.png" Width="26" Height="26" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </ui:Button>
