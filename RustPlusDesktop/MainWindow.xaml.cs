@@ -3637,6 +3637,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         e.Cancel = true;
         this.Hide();
 
+        // The app is going; its overlays go with it.
+        CloseOverlayWindows();
+
         try
         {
             AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
@@ -7562,6 +7565,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var path = _updateService.PendingInstallerPath;
         _updateService.PendingInstallerPath = null;
         _updateService.StartInstaller(path, restart: true);
+
+        CloseOverlayWindows();
         System.Windows.Application.Current.Shutdown();
     }
 
@@ -8817,6 +8822,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
             _updateService.PendingInstallerPath = null;
             _updateService.StartInstaller(path, restart: true);
+
+            CloseOverlayWindows();
             System.Windows.Application.Current.Shutdown();
         }
         catch (Exception ex)

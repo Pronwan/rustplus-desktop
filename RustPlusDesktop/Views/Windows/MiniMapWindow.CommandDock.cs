@@ -1691,7 +1691,11 @@ namespace RustPlusDesk
                 Width = 12,
                 Height = 12,
                 CornerRadius = new CornerRadius(3),
-                Margin = new Thickness(0, 0, -4, -4),
+                // Inside the tile, not hanging off it. The dock is sized to exactly the
+                // rectangle its tiles occupy, so a handle on a negative margin lands outside
+                // the window and is clipped away by it — which is every tile along an edge,
+                // and the map is almost always one of them.
+                Margin = new Thickness(0, 0, 2, 2),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
@@ -1704,13 +1708,14 @@ namespace RustPlusDesk
             // any amount of saved pixels.
             //
             // Bottom-left, opposite the grip: the title bar overlays the dock's top edge, and a
-            // × in the top-right corner of a first-row tile would sit underneath it.
+            // × in the top-right corner of a first-row tile would sit underneath it. Inset for
+            // the same reason as the grip above.
             var remove = new Border
             {
                 Width = 16,
                 Height = 16,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(-6, 0, 0, -6),
+                Margin = new Thickness(4, 0, 0, 4),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)),
@@ -1737,7 +1742,7 @@ namespace RustPlusDesk
                 Width = 16,
                 Height = 16,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(14, 0, 0, -6),
+                Margin = new Thickness(24, 0, 0, 4),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),

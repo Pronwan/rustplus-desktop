@@ -328,6 +328,11 @@ public partial class App : Application
             menu.Items.Add(RustPlusDesk.Properties.Resources.Exit, null, (s, ex) =>
             {
                 if (_trayIcon != null) _trayIcon.Visible = false;
+
+                // The dock and the device overlay are not owned by the main window — see
+                // CloseOverlayWindows — so leaving from the tray has to say so itself.
+                try { _main?.CloseOverlayWindows(); } catch { }
+
                 Current.Shutdown();
             });
         };

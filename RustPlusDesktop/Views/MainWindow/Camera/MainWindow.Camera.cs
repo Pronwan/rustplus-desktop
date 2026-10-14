@@ -282,6 +282,27 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
 
     private MiniMapWindow? _miniMap;
+
+    /// <summary>
+    /// Closes the windows that float over the game, on the way out.
+    ///
+    /// These are deliberately not owned by the main window: an owned window hides when its
+    /// owner is minimised, and the whole point of the dock is to be up while the app is not.
+    /// The cost of that is that nothing takes them down automatically, which left the dock
+    /// sitting over the game after the app it belongs to had gone.
+    ///
+    /// Called before the shutdown rather than relying on it: every exit path ends in
+    /// Application.Shutdown, and by the time that runs there is no saying how much of the app
+    /// is still there to do it.
+    /// </summary>
+    public void CloseOverlayWindows()
+    {
+        try { _deviceOverlay?.Close(); } catch { }
+        try { _miniMap?.Close(); } catch { }
+
+        _deviceOverlay = null;
+        _miniMap = null;
+    }
     private DeviceOverlayWindow? _deviceOverlay;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
     public void EnsureMiniMapOpen()
