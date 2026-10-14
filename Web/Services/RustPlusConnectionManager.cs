@@ -132,6 +132,8 @@ public sealed class RustPlusConnectionManager(
                 catch { /* Continue cleanup after a failed disconnect. */ }
                 entry.Client.Dispose();
                 entry.Client = null;
+                entry.SnapshotCache = null;
+                entry.SnapshotCachedAtUtc = DateTime.MinValue;
             }
             entry.Status = "Disconnected";
             entry.Failures = 0;
@@ -292,11 +294,17 @@ public sealed class RustPlusConnectionManager(
             if (entry.Client is not { IsConnected: true } client)
                 return null;
 
+            // Snapshot reads are shared across browser sessions. Avoid duplicate Rust+ requests
+            // when several teammates open or refresh the same server at once.
+            if (entry.SnapshotCache is not null &&
+                DateTime.UtcNow - entry.SnapshotCachedAtUtc < TimeSpan.FromSeconds(30))
+                return entry.SnapshotCache;
+
             var info = await client.GetInfoAsync(cancellationToken);
             var map = await client.GetMapAsync(cancellationToken);
             var team = await client.GetTeamInfoAsync(cancellationToken);
 
-            return new
+            var snapshot = new
             {
                 info = info.IsSuccess ? info.Data : null,
                 map = map.IsSuccess && map.Data is not null
@@ -326,6 +334,9 @@ public sealed class RustPlusConnectionManager(
                     : null,
                 retrievedAtUtc = DateTime.UtcNow
             };
+            entry.SnapshotCache = snapshot;
+            entry.SnapshotCachedAtUtc = DateTime.UtcNow;
+            return snapshot;
         }
         finally { entry.Gate.Release(); }
     }
@@ -471,5 +482,7 @@ public sealed class RustPlusConnectionManager(
         public string Status { get; set; } = "Disconnected";
         public int Failures { get; set; }
         public DateTime NextAttemptUtc { get; set; } = DateTime.MinValue;
+        public object? SnapshotCache { get; set; }
+        public DateTime SnapshotCachedAtUtc { get; set; } = DateTime.MinValue;
     }
 }
