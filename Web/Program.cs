@@ -395,6 +395,125 @@ app.MapPost("/api/servers/{id:guid}/chat", async Task<IResult> (
     return Results.Ok(new { success = true });
 }).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
 
+app.MapGet("/api/servers/{id:guid}/device-groups", async Task<IResult> (
+    Guid id,
+    AppDbContext db,
+    CancellationToken cancellationToken) =>
+{
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var groups = await db.DeviceGroups.AsNoTracking()
+        .Where(group => group.PairedServerCredentialId == id)
+        .OrderBy(group => group.Name)
+        .Select(group => new
+        {
+            group.Id,
+            group.Name,
+            group.CreatedAtUtc,
+            DeviceCount = db.PairedDevices.Count(device => device.GroupId == group.Id)
+        })
+        .ToListAsync(cancellationToken);
+    return Results.Ok(groups);
+}).RequireAuthorization();
+
+app.MapPost("/api/servers/{id:guid}/device-groups", async Task<IResult> (
+    Guid id,
+    CreateDeviceGroupRequest request,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    AppDbContext db,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var name = request.Name?.Trim();
+    if (string.IsNullOrWhiteSpace(name) || name.Length > 50)
+        return Results.BadRequest(new { error = "Group names must contain 1 to 50 characters." });
+
+    var exists = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (!exists)
+        return Results.NotFound();
+
+    var existingNames = await db.DeviceGroups.AsNoTracking()
+        .Where(group => group.PairedServerCredentialId == id)
+        .Select(group => group.Name)
+        .ToListAsync(cancellationToken);
+    if (existingNames.Any(existing => string.Equals(existing, name, StringComparison.OrdinalIgnoreCase)))
+        return Results.Conflict(new { error = "A device group with that name already exists." });
+
+    var userId = userManager.GetUserId(principal);
+    if (string.IsNullOrWhiteSpace(userId))
+        return Results.Unauthorized();
+
+    var group = new DeviceGroup
+    {
+        PairedServerCredentialId = id,
+        Name = name,
+        CreatedByUserId = userId,
+        CreatedAtUtc = DateTime.UtcNow
+    };
+    db.DeviceGroups.Add(group);
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = id }, cancellationToken);
+    return Results.Created($"/api/servers/{id}/device-groups", new
+    {
+        group.Id, group.Name, group.CreatedAtUtc, deviceCount = 0
+    });
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
+app.MapDelete("/api/servers/{id:guid}/device-groups/{groupId:guid}", async Task<IResult> (
+    Guid id,
+    Guid groupId,
+    AppDbContext db,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var group = await db.DeviceGroups.SingleOrDefaultAsync(item =>
+        item.Id == groupId && item.PairedServerCredentialId == id, cancellationToken);
+    if (group is null)
+        return Results.NotFound();
+
+    var devices = await db.PairedDevices
+        .Where(device => device.PairedServerCredentialId == id && device.GroupId == groupId)
+        .ToListAsync(cancellationToken);
+    foreach (var device in devices)
+        device.GroupId = null;
+    db.DeviceGroups.Remove(group);
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = id }, cancellationToken);
+    return Results.NoContent();
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
+app.MapPut("/api/servers/{id:guid}/devices/{entityId}/group", async Task<IResult> (
+    Guid id,
+    string entityId,
+    SetDeviceGroupRequest request,
+    AppDbContext db,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var device = await db.PairedDevices.SingleOrDefaultAsync(item =>
+        item.PairedServerCredentialId == id && item.EntityId == entityId, cancellationToken);
+    if (device is null)
+        return Results.NotFound();
+
+    if (request.GroupId.HasValue)
+    {
+        var groupExists = await db.DeviceGroups.AsNoTracking().AnyAsync(group =>
+            group.Id == request.GroupId.Value && group.PairedServerCredentialId == id, cancellationToken);
+        if (!groupExists)
+            return Results.BadRequest(new { error = "The group does not belong to this server." });
+    }
+
+    device.GroupId = request.GroupId;
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("DevicesChanged", new { serverId = id }, cancellationToken);
+    return Results.Ok(new { entityId, groupId = device.GroupId });
+}).RequireAuthorization(policy => policy.RequireRole("Admin", "Member"));
+
 app.MapGet("/api/servers/{id:guid}/devices", async Task<IResult> (
     Guid id,
     AppDbContext db,
@@ -415,6 +534,7 @@ app.MapGet("/api/servers/{id:guid}/devices", async Task<IResult> (
         device.EntityId,
         device.Name,
         device.Type,
+        device.GroupId,
         device.CreatedAtUtc
     }).ToList());
 }).RequireAuthorization();
@@ -516,6 +636,10 @@ app.MapDelete("/api/paired-servers/{id:guid}", async Task<IResult> (
         .Where(timer => timer.PairedServerCredentialId == id)
         .ToListAsync(cancellationToken);
     db.ServerTimers.RemoveRange(timers);
+    var groups = await db.DeviceGroups
+        .Where(group => group.PairedServerCredentialId == id)
+        .ToListAsync(cancellationToken);
+    db.DeviceGroups.RemoveRange(groups);
     db.PairedServerCredentials.Remove(profile);
     await db.SaveChangesAsync(cancellationToken);
     await hub.Clients.All.SendAsync("ServersChanged", cancellationToken);
@@ -686,6 +810,7 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
         );
         """);
     await EnsureColumnAsync(db, "PairedServerCredentials", "ConnectionEnabled", "INTEGER NOT NULL DEFAULT 1");
+    await EnsureColumnAsync(db, "PairedDevices", "GroupId", "TEXT NULL");
     await db.Database.ExecuteSqlRawAsync("""
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedServerCredentials_RustServerId"
         ON "PairedServerCredentials" ("RustServerId");
@@ -718,6 +843,19 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
     await db.Database.ExecuteSqlRawAsync("""
         CREATE INDEX IF NOT EXISTS "IX_ServerTimers_PairedServerCredentialId_ExpiresAtUtc"
         ON "ServerTimers" ("PairedServerCredentialId", "ExpiresAtUtc");
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "DeviceGroups" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_DeviceGroups" PRIMARY KEY,
+            "PairedServerCredentialId" TEXT NOT NULL,
+            "Name" TEXT NOT NULL,
+            "CreatedByUserId" TEXT NOT NULL,
+            "CreatedAtUtc" TEXT NOT NULL
+        );
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE UNIQUE INDEX IF NOT EXISTS "IX_DeviceGroups_PairedServerCredentialId_Name"
+        ON "DeviceGroups" ("PairedServerCredentialId", "Name");
         """);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -788,6 +926,8 @@ public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record SetDeviceStateRequest(bool? IsActive = null);
 public sealed record SetConnectionRequest(bool Enabled);
 public sealed record SendTeamMessageRequest(string Message);
+public sealed record CreateDeviceGroupRequest(string Name);
+public sealed record SetDeviceGroupRequest(Guid? GroupId);
 public sealed record CreateServerTimerRequest(string Name, int DurationSeconds);
 public sealed record ServerTimerResponse(Guid Id, string Name, DateTime ExpiresAtUtc, DateTime CreatedAtUtc, bool Fired, bool IsOwner);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
