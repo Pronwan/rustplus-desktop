@@ -35,38 +35,55 @@ public sealed class RustPlusFcmService(
     private RustPlusFcm? _listener;
     private string? _ownerUserId;
     private volatile bool _isListening;
+    private CancellationTokenSource? _stopping;
+    private Task? _reconnectLoop;
 
     public bool IsConfigured => File.Exists(_credentialsPath);
     public bool IsListening => _isListening;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        _stopping = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         LoadPersistentIds();
-        if (!File.Exists(_credentialsPath))
-            return;
 
-        try
+        if (File.Exists(_credentialsPath))
         {
-            var protectedJson = await File.ReadAllTextAsync(_credentialsPath, cancellationToken);
-            var saved = JsonSerializer.Deserialize<SavedFcmConfiguration>(
-                _configurationProtector.Unprotect(protectedJson));
-            if (saved is null || string.IsNullOrWhiteSpace(saved.OwnerUserId) ||
-                string.IsNullOrWhiteSpace(saved.CredentialsJson))
-                throw new InvalidOperationException("Saved FCM configuration is incomplete.");
+            try
+            {
+                var protectedJson = await File.ReadAllTextAsync(_credentialsPath, _stopping.Token);
+                var saved = JsonSerializer.Deserialize<SavedFcmConfiguration>(
+                    _configurationProtector.Unprotect(protectedJson));
+                if (saved is null || string.IsNullOrWhiteSpace(saved.OwnerUserId) ||
+                    string.IsNullOrWhiteSpace(saved.CredentialsJson))
+                    throw new InvalidOperationException("Saved FCM configuration is incomplete.");
 
-            _ownerUserId = saved.OwnerUserId;
-            await StartListenerAsync(saved.CredentialsJson, cancellationToken);
+                _ownerUserId = saved.OwnerUserId;
+                await StartListenerAsync(saved.CredentialsJson, _stopping.Token);
+            }
+            catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception exception)
+            {
+                _isListening = false;
+                logger.LogWarning("Saved FCM listener could not start ({ExceptionType}); automatic retry is enabled.",
+                    exception.GetType().Name);
+            }
         }
-        catch (Exception exception)
-        {
-            _isListening = false;
-            logger.LogWarning("Saved FCM listener could not start ({ExceptionType}); an administrator can re-upload credentials.",
-                exception.GetType().Name);
-        }
+
+        _reconnectLoop = RunReconnectLoopAsync(_stopping.Token);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        _stopping?.Cancel();
+        if (_reconnectLoop is not null)
+        {
+            try { await _reconnectLoop.WaitAsync(cancellationToken); }
+            catch (OperationCanceledException) { }
+        }
+
         await _lifecycleGate.WaitAsync(cancellationToken);
         try
         {
@@ -74,7 +91,54 @@ public sealed class RustPlusFcmService(
             _listener = null;
             _isListening = false;
         }
-        finally { _lifecycleGate.Release(); }
+        finally
+        {
+            _lifecycleGate.Release();
+            _stopping?.Dispose();
+        }
+    }
+
+    private async Task RunReconnectLoopAsync(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            if (File.Exists(_credentialsPath) && !_isListening)
+            {
+                try
+                {
+                    await _lifecycleGate.WaitAsync(cancellationToken);
+                    try
+                    {
+                        if (!_isListening)
+                        {
+                            var protectedJson = await File.ReadAllTextAsync(_credentialsPath, cancellationToken);
+                            var saved = JsonSerializer.Deserialize<SavedFcmConfiguration>(
+                                _configurationProtector.Unprotect(protectedJson));
+                            if (saved is not null && !string.IsNullOrWhiteSpace(saved.OwnerUserId) &&
+                                !string.IsNullOrWhiteSpace(saved.CredentialsJson))
+                            {
+                                _ownerUserId = saved.OwnerUserId;
+                                await StartListenerCoreAsync(ParseCredentials(saved.CredentialsJson), cancellationToken);
+                            }
+                        }
+                    }
+                    finally { _lifecycleGate.Release(); }
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+                catch (Exception exception)
+                {
+                    _isListening = false;
+                    logger.LogWarning("FCM reconnect attempt failed ({ExceptionType}); retrying automatically.",
+                        exception.GetType().Name);
+                }
+            }
+
+            try { await Task.Delay(_isListening ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(15), cancellationToken); }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { break; }
+        }
     }
 
     public async Task ConfigureAsync(string credentialsJson, string ownerUserId, CancellationToken cancellationToken)

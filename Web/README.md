@@ -29,7 +29,8 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 4. Run `docker compose up --build -d`.
 5. Put the service behind an HTTPS reverse proxy before exposing it to the internet. The production auth cookie is Secure-only.
 6. Open `http://localhost:8080` for a local smoke test. For HTTPS deployments, configure the reverse proxy to preserve the original scheme and restrict direct access to the app port.
-7. In the Rust+ Web dashboard as the admin, upload a native RustPlusApi credentials JSON or a legacy `rustplus.config.json` file. Pair the desired server from the Rust+ mobile app. The server profile should appear after the FCM pairing notification is received.
+7. Obtain an FCM credentials file. The recommended native route is the upstream [RustPlusApi Register Console App](https://github.com/HandyS11/RustPlusApi/tree/develop/samples/RustPlus.Register.ConsoleApp); its README explains the one-time Steam login and credential file. An existing legacy `rustplus.config.json` is also accepted. Never commit or share this file publicly.
+8. In the Rust+ Web dashboard as the admin, upload the credentials file. Pair the desired server from the Rust+ mobile app. The server profile should appear after the FCM pairing notification is received. The hosted listener retries after disconnects.
 
 The database and Data Protection key ring are stored in the `rustplus-web-data` volume. Treat this volume and its backups as sensitive. Back it up before upgrading. This first version uses EF Core `EnsureCreated`; schema migrations must be added before production schema evolution.
 
