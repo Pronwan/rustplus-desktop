@@ -57,3 +57,5 @@ All application endpoints except the minimal health check and invite-gated regis
 
 
 **Token note:** Rust+ player tokens are signed integers and can be negative. The web backend preserves the exact signed value when storing and using the token.
+
+**Startup behavior:** FCM network connection attempts run in the background so an upstream FCM outage does not block the dashboard from starting.
