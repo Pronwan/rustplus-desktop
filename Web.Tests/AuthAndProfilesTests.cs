@@ -2,6 +2,9 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using RustPlusWeb.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Xunit;
@@ -68,6 +71,74 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
         });
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ServerTimersAreSharedButOnlyOwnersOrAdminsCanDeleteThem()
+    {
+        using var admin = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var login = await admin.PostAsJsonAsync("/api/auth/login", new
+        {
+            email = "admin@test.local",
+            password = "AdminPassword!234",
+            rememberMe = true
+        });
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+
+        Guid serverId;
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var users = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var adminUser = await users.FindByEmailAsync("admin@test.local");
+            Assert.NotNull(adminUser);
+
+            var server = new PairedServerCredential
+            {
+                OwnerUserId = adminUser.Id,
+                RustServerId = Guid.NewGuid(),
+                Name = "Timer Test Server",
+                Host = "127.0.0.1",
+                Port = 28082,
+                PlayerId = "76561198000000000",
+                ProtectedPlayerToken = "",
+                ConnectionEnabled = false
+            };
+            db.PairedServerCredentials.Add(server);
+            await db.SaveChangesAsync();
+            serverId = server.Id;
+        }
+
+        var create = await admin.PostAsJsonAsync($"/api/servers/{serverId}/timers", new
+        {
+            name = "Cargo",
+            durationSeconds = 60
+        });
+        Assert.Equal(HttpStatusCode.Created, create.StatusCode);
+        using var createdJson = JsonDocument.Parse(await create.Content.ReadAsStringAsync());
+        var timerId = createdJson.RootElement.GetProperty("id").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(timerId));
+
+        using var member = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var registration = await member.PostAsJsonAsync("/api/auth/register", new
+        {
+            email = "timer-member@test.local",
+            displayName = "Timer Member",
+            password = "MemberPassword!234",
+            inviteCode = "test-invite-code",
+            rememberMe = true
+        });
+        Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
+
+        using var timersJson = JsonDocument.Parse(await (await member.GetAsync($"/api/servers/{serverId}/timers")).Content.ReadAsStringAsync());
+        Assert.Equal(1, timersJson.RootElement.GetArrayLength());
+        Assert.False(timersJson.RootElement[0].GetProperty("isOwner").GetBoolean());
+
+        var forbiddenDelete = await member.DeleteAsync($"/api/servers/{serverId}/timers/{timerId}");
+        Assert.Equal(HttpStatusCode.Forbidden, forbiddenDelete.StatusCode);
+
+        var ownerDelete = await admin.DeleteAsync($"/api/servers/{serverId}/timers/{timerId}");
+        Assert.Equal(HttpStatusCode.NoContent, ownerDelete.StatusCode);
     }
 
     [Fact]
