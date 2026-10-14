@@ -6917,4 +6917,16 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Geri Dönüşüm Hesaplayıcı</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Sunucu saati, küçük</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Tek hücre: güneş ya da ay, ve saat — mini haritadaki gibi</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Oyuncular, küçük</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Tek hücre: kaç kişi var ve kaç kişi sığıyor — mini haritadaki gibi</value>
+  </data>
 </root>

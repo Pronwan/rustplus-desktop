@@ -295,10 +295,16 @@ namespace RustPlusDesk
                 case CommandDockTileKinds.Clock:
                 {
                     var box = new StackPanel();
-                    box.Children.Add(SettingsCheck(
-                        Loc.Text("CommandDockClockDayNight", "Show time until day or night"),
-                        tile.ClockShowDayNight,
-                        on => { tile.ClockShowDayNight = on; TileSettingChanged(immediate: true); }));
+
+                    // The small clock is a glyph and a reading. There is no second line on it
+                    // to put the phase on, which is what makes it the small one.
+                    if (tile.ClockStyle != MiniMapWindow.ClockStyleMinimal)
+                    {
+                        box.Children.Add(SettingsCheck(
+                            Loc.Text("CommandDockClockDayNight", "Show time until day or night"),
+                            tile.ClockShowDayNight,
+                            on => { tile.ClockShowDayNight = on; TileSettingChanged(immediate: true); }));
+                    }
 
                     // The analogue face is a dial either way, so the option is only offered
                     // where it changes something.
@@ -376,10 +382,16 @@ namespace RustPlusDesk
                 case CommandDockTileKinds.ServerInfo:
                 {
                     var box = new StackPanel();
-                    box.Children.Add(SettingsCheck(
-                        Loc.Text("CommandDockServerShowGraph", "Show the population graph"),
-                        tile.ShowGraph,
-                        on => { tile.ShowGraph = on; TileSettingChanged(immediate: true); }));
+
+                    // Nowhere to draw a graph on a tile that is a glyph and a figure.
+                    if (!tile.ServerInfoMinimal)
+                    {
+                        box.Children.Add(SettingsCheck(
+                            Loc.Text("CommandDockServerShowGraph", "Show the population graph"),
+                            tile.ShowGraph,
+                            on => { tile.ShowGraph = on; TileSettingChanged(immediate: true); }));
+                    }
+
                     return box;
                 }
 

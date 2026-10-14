@@ -7832,4 +7832,16 @@
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>حاسبة إعادة التدوير</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>وقت الخادم، صغير</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>خلية واحدة: الشمس أو القمر والوقت — كما في الخريطة المصغّرة</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>اللاعبون، صغير</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>خلية واحدة: كم عدد المتصلين وكم يتسع — كما في الخريطة المصغّرة</value>
+  </data>
 </root>

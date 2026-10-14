@@ -8035,4 +8035,16 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recycling-Rechner</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Serverzeit, klein</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Eine Zelle: Sonne oder Mond und die Uhrzeit — wie auf der Mini-Karte</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Spieler, klein</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Eine Zelle: wie viele online sind und wie viele passen — wie auf der Mini-Karte</value>
+  </data>
 </root>

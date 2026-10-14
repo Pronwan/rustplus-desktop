@@ -1684,4 +1684,16 @@
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>恢复为实测默认值</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>服务器时间（小）</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>一个格子：太阳或月亮，加上时间——和小地图上一样</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>在线人数（小）</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>一个格子：在线人数和容量——和小地图上一样</value>
+  </data>
 </root>

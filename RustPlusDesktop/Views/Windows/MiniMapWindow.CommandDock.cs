@@ -993,13 +993,17 @@ namespace RustPlusDesk
 
         private FrameworkElement? BuildTile(CommandDockTile tile) => tile.Kind switch
         {
-            CommandDockTileKinds.Clock => BuildClockTile(tile),
+            CommandDockTileKinds.Clock => tile.ClockStyle == ClockStyleMinimal
+                ? BuildMinimalClockTile(tile)
+                : BuildClockTile(tile),
             CommandDockTileKinds.Device => BuildDeviceTile(tile),
             CommandDockTileKinds.Event => BuildEventTile(tile),
             CommandDockTileKinds.Rule => BuildRuleTile(tile),
             CommandDockTileKinds.Session => BuildSessionTile(tile),
             CommandDockTileKinds.Discord => BuildDiscordTile(tile),
-            CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
+            CommandDockTileKinds.ServerInfo => tile.ServerInfoMinimal
+                ? BuildMinimalPopulationTile(tile)
+                : BuildServerInfoTile(tile),
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.Collapse => BuildCollapseTile(tile),

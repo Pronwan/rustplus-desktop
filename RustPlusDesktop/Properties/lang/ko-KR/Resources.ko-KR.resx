@@ -7862,4 +7862,16 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>재활용 계산기</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>서버 시간, 작게</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>한 칸: 해 또는 달과 시간 — 미니맵과 동일</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>플레이어 수, 작게</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>한 칸: 접속 인원과 정원 — 미니맵과 동일</value>
+  </data>
 </root>

@@ -7941,4 +7941,16 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculateur de recyclage</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Heure du serveur, petite</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Une cellule : le soleil ou la lune, et l'heure — comme sur la mini-carte</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Joueurs, petit</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Une cellule : combien sont connectés et combien tiennent — comme sur la mini-carte</value>
+  </data>
 </root>

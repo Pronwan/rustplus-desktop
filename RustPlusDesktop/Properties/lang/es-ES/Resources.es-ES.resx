@@ -7941,4 +7941,16 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculadora de reciclaje</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Hora del servidor, pequeña</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Una celda: el sol o la luna, y la hora, como en el minimapa</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Jugadores, pequeño</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Una celda: cuántos hay y cuántos caben, como en el minimapa</value>
+  </data>
 </root>
