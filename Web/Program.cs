@@ -86,6 +86,39 @@ var dummyPasswordHash = dummyPasswordHasher.HashPassword(dummyUser, "DummyPasswo
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path;
+    var isApiRequest = path.StartsWithSegments("/api") || path.StartsWithSegments("/hubs");
+    var isStateChanging = HttpMethods.IsPost(context.Request.Method) ||
+        HttpMethods.IsPut(context.Request.Method) ||
+        HttpMethods.IsPatch(context.Request.Method) ||
+        HttpMethods.IsDelete(context.Request.Method);
+
+    if (isApiRequest && isStateChanging &&
+        context.Request.Headers.TryGetValue("Origin", out var originHeader))
+    {
+        if (!Uri.TryCreate(originHeader.ToString(), UriKind.Absolute, out var origin) ||
+            !string.Equals(origin.Authority, context.Request.Host.Value, StringComparison.OrdinalIgnoreCase))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return;
+        }
+    }
+
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "no-referrer";
+    context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+    context.Response.Headers["Cross-Origin-Resource-Policy"] = "same-origin";
+    context.Response.Headers["Content-Security-Policy"] =
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'";
+    if (isApiRequest)
+        context.Response.Headers.CacheControl = "no-store";
+
+    await next();
+});
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthentication();

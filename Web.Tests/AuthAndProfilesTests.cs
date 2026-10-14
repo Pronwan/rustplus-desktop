@@ -51,7 +51,23 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
         var profiles = await client.GetAsync("/api/servers");
 
         Assert.Equal(HttpStatusCode.OK, health.StatusCode);
+        Assert.Equal("nosniff", health.Headers.GetValues("X-Content-Type-Options").Single());
         Assert.Equal(HttpStatusCode.Unauthorized, profiles.StatusCode);
+    }
+
+    [Fact]
+    public async Task CrossOriginStateChangingRequestsAreRejected()
+    {
+        using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        client.DefaultRequestHeaders.Add("Origin", "https://attacker.invalid");
+
+        var response = await client.PostAsJsonAsync("/api/auth/login", new
+        {
+            email = "admin@test.local",
+            password = "AdminPassword!234"
+        });
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Fact]
