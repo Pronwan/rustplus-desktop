@@ -8311,4 +8311,28 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
     <value>For one screen: the dock is only up while the key is held, the way the game's own map costs you the view.</value>
   </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Apply to every tile</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>While a switch is on, this value wins over whatever a tile was given through its own gear. Switch it off and the tiles have their own back.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Opacity for all</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Text size for all</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Text colour for all</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Reset the look</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Clear the global settings and every tile's own opacity, text size and colour? The tiles themselves stay where they are.</value>
+  </data>
 </root>

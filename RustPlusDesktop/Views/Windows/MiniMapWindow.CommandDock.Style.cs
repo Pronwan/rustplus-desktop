@@ -68,8 +68,14 @@ namespace RustPlusDesk
 
         private TileStyle StyleFor(CommandDockTile tile)
         {
-            double opacity = Math.Clamp(tile.Opacity ?? _dock.DefaultOpacity, 0, 1);
-            double scale = Math.Clamp(tile.FontScale ?? _dock.DefaultFontScale, 0.7, 2.0);
+            // The dock's value where it is set to override, the tile's own otherwise, and
+            // the dock's again as the fallback for a tile that has never been given one.
+            double opacity = Math.Clamp(
+                _dock.OverrideOpacity ? _dock.DefaultOpacity : tile.Opacity ?? _dock.DefaultOpacity, 0, 1);
+
+            double scale = Math.Clamp(
+                _dock.OverrideFontScale ? _dock.DefaultFontScale : tile.FontScale ?? _dock.DefaultFontScale,
+                0.7, 2.0);
 
             // The grid's zoom rides on the font scale rather than being a second knob the
             // builders have to remember. Every tile already sizes its text and its icons through
@@ -80,7 +86,9 @@ namespace RustPlusDesk
             // scale is a preference, the zoom is the pitch of the grid - and a tile set to 2.0
             // on a grid at 2.0 would otherwise silently lose one of them.
             scale = Math.Clamp(scale * DockZoom, 0.7, 4.0);
-            string key = tile.TextColorKey ?? _dock.DefaultTextColorKey ?? CommandDockTextColors.Auto;
+            string key = _dock.OverrideTextColor
+                ? _dock.DefaultTextColorKey ?? CommandDockTextColors.Auto
+                : tile.TextColorKey ?? _dock.DefaultTextColorKey ?? CommandDockTextColors.Auto;
 
             var (main, sub) = TextBrushes(key);
 

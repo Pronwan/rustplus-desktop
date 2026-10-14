@@ -378,6 +378,21 @@ namespace RustPlusDesk.Models
 
         public double DefaultOpacity { get; set; } = 1.0;
 
+        // ── Global overrides ────────────────────────────────────────────────
+        //
+        // The three values above are defaults: a tile that has never been given its own
+        // falls back to them. These turn each one into an override instead, so it wins over
+        // what a tile was given.
+        //
+        // Nothing is overwritten by that. A tile's own values stay exactly where they were
+        // and come back the moment the switch goes off — which is the whole point, because
+        // the usual reason to turn one on is to see how the dock looks a different way, and
+        // the usual next thing is to change it back.
+
+        public bool OverrideOpacity { get; set; }
+        public bool OverrideFontScale { get; set; }
+        public bool OverrideTextColor { get; set; }
+
         public double DefaultFontScale { get; set; } = 1.0;
 
         public string DefaultTextColorKey { get; set; } = CommandDockTextColors.Auto;

@@ -1453,4 +1453,28 @@
   <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
     <value>適用於單螢幕：僅在按住按鍵時顯示面板，就像遊戲內地圖一樣會擋住視野。</value>
   </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>顯示器</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>套用至所有磁貼</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>開關開啟時，此值優先於磁貼自身設定的值；關閉後磁貼恢復各自的設定。</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>統一不透明度</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>統一文字大小</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>統一文字顏色</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>重設外觀</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>清除全域設定以及每個磁貼自身的不透明度、文字大小和顏色？磁貼本身的位置保持不變。</value>
+  </data>
 </root>

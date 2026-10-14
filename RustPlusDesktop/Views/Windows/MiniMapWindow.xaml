@@ -230,6 +230,18 @@
             <views:MiniMapSettingsOverlay x:Name="SettingsOverlay"/>
         </Popup>
 
+        <!--  The dock's own settings. Separate from the panel above, which belongs to the
+              map: the gear in the title bar used to open that one on a window that need not
+              have a map on it at all.  -->
+        <Popup x:Name="DockSettingsPopup"
+               Placement="RelativePoint"
+               PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+               StaysOpen="True"
+               AllowsTransparency="True"
+               Focusable="False">
+            <views:CommandDockSettingsOverlay x:Name="DockSettingsOverlay"/>
+        </Popup>
+
         <!--  One panel, retargeted at whichever tile's gear was pressed. Its contents are built
               in code because the kind-specific half differs per tile.  -->
         <Popup x:Name="TileSettingsPopup"
