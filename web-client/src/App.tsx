@@ -382,8 +382,10 @@ export default function App() {
                   <h3>{server.name}</h3><p className="server-address">{server.host}:{server.port}</p>
                   <div className="server-card-divider" />
                   <div className="server-card-bottom"><span>{server.isPaired ? "Paired via Rust+" : "Profile saved"}</span>{(!server.isPaired || user.roles.includes("Admin")) && <button className="text-button danger-text" onClick={() => void removeServer(server)}>{server.isPaired ? "Remove pairing" : "Delete"}</button>}</div>
-                  {server.isPaired ? {server.connectionEnabled && <button className="secondary-button snapshot-button" onClick={() => void openSnapshot(server)}>View live data ↗</button>}
-                  {server.isPaired && user.roles.includes("Admin") && <button className="secondary-button snapshot-button" disabled={connectionActionId === server.id} onClick={() => void setServerConnection(server, !server.connectionEnabled)}>{connectionActionId === server.id ? "Updating…" : server.connectionEnabled ? "Disconnect" : "Connect"}</button>} : <p className="adapter-note">Pair this server in the Rust+ mobile app after the FCM listener is configured.</p>}
+                  {server.isPaired ? <>
+                    {server.connectionEnabled && <button className="secondary-button snapshot-button" onClick={() => void openSnapshot(server)}>View live data ↗</button>}
+                    {user.roles.includes("Admin") && <button className="secondary-button snapshot-button" disabled={connectionActionId === server.id} onClick={() => void setServerConnection(server, !server.connectionEnabled)}>{connectionActionId === server.id ? "Updating…" : server.connectionEnabled ? "Disconnect" : "Connect"}</button>}
+                  </> : <p className="adapter-note">Pair this server in the Rust+ mobile app after the FCM listener is configured.</p>}
                 </article>
               ))}
             </div>
