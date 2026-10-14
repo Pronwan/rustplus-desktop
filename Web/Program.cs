@@ -810,7 +810,6 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
         );
         """);
     await EnsureColumnAsync(db, "PairedServerCredentials", "ConnectionEnabled", "INTEGER NOT NULL DEFAULT 1");
-    await EnsureColumnAsync(db, "PairedDevices", "GroupId", "TEXT NULL");
     await db.Database.ExecuteSqlRawAsync("""
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedServerCredentials_RustServerId"
         ON "PairedServerCredentials" ("RustServerId");
@@ -825,6 +824,7 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
             "CreatedAtUtc" TEXT NOT NULL
         );
         """);
+    await EnsureColumnAsync(db, "PairedDevices", "GroupId", "TEXT NULL");
     await db.Database.ExecuteSqlRawAsync("""
         CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedDevices_PairedServerCredentialId_EntityId"
         ON "PairedDevices" ("PairedServerCredentialId", "EntityId");
