@@ -10,7 +10,7 @@ using RustPlusWeb.Realtime;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var databasePath = builder.Configuration["DATABASE_PATH"] ?? "/data/rustplus-web.db";
+var databasePath = builder.Configuration["DATABASE_PATH"] ?? Path.Combine(builder.Environment.ContentRootPath, "App_Data", "rustplus-web.db");
 if (databasePath != ":memory:")
 {
     var fullPath = Path.GetFullPath(databasePath);
@@ -18,8 +18,9 @@ if (databasePath != ":memory:")
     databasePath = fullPath;
 }
 
-Directory.CreateDirectory("/data/keys");
-builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo("/data/keys"));
+var keysPath = builder.Configuration["DATA_PROTECTION_KEYS_PATH"] ?? Path.Combine(Path.GetDirectoryName(databasePath)!, "keys");
+Directory.CreateDirectory(keysPath);
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={databasePath}"));
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
@@ -94,7 +95,7 @@ app.MapGet("/api/health", () => Results.Ok(new
     version = "phase-1-foundation"
 }));
 
-app.MapPost("/api/auth/register", async (
+app.MapPost("/api/auth/register", async Task<IResult> (
     RegisterRequest request,
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
@@ -139,7 +140,7 @@ app.MapPost("/api/auth/register", async (
     return Results.Ok(await ToUserResponseAsync(user, userManager));
 }).AllowAnonymous();
 
-app.MapPost("/api/auth/login", async (
+app.MapPost("/api/auth/login", async Task<IResult> (
     LoginRequest request,
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager) =>
@@ -163,7 +164,7 @@ app.MapPost("/api/auth/login", async (
     return Results.Ok(await ToUserResponseAsync(user, userManager));
 }).AllowAnonymous();
 
-app.MapGet("/api/auth/me", async (
+app.MapGet("/api/auth/me", async Task<IResult> (
     System.Security.Claims.ClaimsPrincipal principal,
     UserManager<ApplicationUser> userManager) =>
 {
@@ -194,7 +195,7 @@ app.MapGet("/api/servers", async (
     return Results.Ok(profiles);
 }).RequireAuthorization();
 
-app.MapPost("/api/servers", async (
+app.MapPost("/api/servers", async Task<IResult> (
     CreateServerRequest request,
     System.Security.Claims.ClaimsPrincipal principal,
     UserManager<ApplicationUser> userManager,
@@ -231,7 +232,7 @@ app.MapPost("/api/servers", async (
     return Results.Created($"/api/servers/{profile.Id}", ToServerResponse(profile));
 }).RequireAuthorization();
 
-app.MapDelete("/api/servers/{id:guid}", async (
+app.MapDelete("/api/servers/{id:guid}", async Task<IResult> (
     Guid id,
     System.Security.Claims.ClaimsPrincipal principal,
     UserManager<ApplicationUser> userManager,
