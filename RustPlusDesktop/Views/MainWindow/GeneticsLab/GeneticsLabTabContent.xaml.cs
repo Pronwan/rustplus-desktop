@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using RustPlusDesk.Services.GeneticsLab;
 
 namespace RustPlusDesk.Views
 {
@@ -16,7 +17,16 @@ namespace RustPlusDesk.Views
     {
         public event RoutedEventHandler? CloseRequested;
 
+        private const string VirtualHost = "geneticslab.rustplus";
+
         private WebView2? _webView;
+        // The Genetics Lab build the WebView is mapped to; see GeneticsLabContentService.
+        private GeneticsLabContent? _content;
+        // Version of the build the current page replaced, handed to the page for "What's new".
+        private string? _previousVersionForPage;
+        // Builds that send "host-hello" show update notices themselves; for older ones the
+        // header button is the only sign an update is waiting.
+        private bool _pageShowsUpdates;
         private bool _isInitialized;
         private bool _isInitializing;
         private static CoreWebView2Environment? _sharedEnvironment;
@@ -69,6 +79,58 @@ namespace RustPlusDesk.Views
             InitializeComponent();
             Loaded += GeneticsLabTabContent_Loaded;
             IsVisibleChanged += GeneticsLabTabContent_IsVisibleChanged;
+
+            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            {
+                GeneticsLabContentService.Instance.StatusChanged += ContentService_StatusChanged;
+                // Genetics Lab updates on its own schedule, independent of desktop releases. Check
+                // shortly after startup so most users have the new build before they open the tab.
+                GeneticsLabContentService.Instance.CheckForUpdatesInBackground(TimeSpan.FromSeconds(60));
+                // ...and keep checking while the app runs, so a release that lands after start-up
+                // (or after the last update) is found without a restart.
+                GeneticsLabContentService.Instance.StartPeriodicChecks();
+            }
+        }
+
+        // Nothing changes under an open page -- it may be mid-scan -- so the page is told and offers
+        // a reload; a closed tab simply picks the new build up when reopened.
+        private void ContentService_StatusChanged(object? sender, GeneticsLabUpdateStatus? status)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!_isInitialized) return;
+                PostUpdateStatusToPage(status);
+                UpdateReadyButton.Visibility = status?.State == "ready" && !_pageShowsUpdates
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }));
+        }
+
+        private void PostUpdateStatusToPage(GeneticsLabUpdateStatus? status)
+        {
+            if (status == null || _webView?.CoreWebView2 == null) return;
+            // A "ready" build the page is already running is not news.
+            if (status.State == "ready" && GeneticsLabContentService.Instance.FindNewerThan(_content) == null) return;
+
+            PostToPage(new
+            {
+                type = "genetics-lab-update",
+                state = status.State,
+                version = status.Version,
+                changelog = status.Changelog
+            });
+        }
+
+        private void PostToPage(object message)
+        {
+            try
+            {
+                _webView?.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(message));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[GeneticsLab] Posting to the page failed: {ex.Message}");
+            }
         }
 
         private async void GeneticsLabTabContent_Loaded(object sender, RoutedEventArgs e)
@@ -85,6 +147,9 @@ namespace RustPlusDesk.Views
             if (IsVisible)
             {
                 await EnsureWebViewAsync();
+                // Every time Genetics Lab is opened, look for a newer build. It costs one small
+                // manifest request; files download only when there is a new release.
+                GeneticsLabContentService.Instance.CheckForUpdatesInBackground(force: true);
             }
 
             UpdatePerformanceMode();
@@ -120,13 +185,34 @@ namespace RustPlusDesk.Views
             {
                 using JsonDocument doc = JsonDocument.Parse(e.WebMessageAsJson);
                 JsonElement root = doc.RootElement;
-                if (root.TryGetProperty("type", out JsonElement type) &&
-                    type.GetString() == "scanner-state")
+                string? type = root.TryGetProperty("type", out JsonElement typeElement) ? typeElement.GetString() : null;
+                switch (type)
                 {
-                    _isScannerActive =
-                        root.TryGetProperty("active", out JsonElement active) &&
-                        active.ValueKind == JsonValueKind.True;
-                    UpdatePerformanceMode();
+                    case "scanner-state":
+                        _isScannerActive =
+                            root.TryGetProperty("active", out JsonElement active) &&
+                            active.ValueKind == JsonValueKind.True;
+                        UpdatePerformanceMode();
+                        break;
+
+                    // Sent by the page on start-up: it shows update notices itself, so it gets the
+                    // pending status and, right after an update, the version it replaced.
+                    case "host-hello":
+                        _pageShowsUpdates = true;
+                        UpdateReadyButton.Visibility = Visibility.Collapsed;
+                        // Only builds that can open their patch notes on request get the button.
+                        PatchNotesButton.Visibility = HasCapability(root, "patch-notes") ? Visibility.Visible : Visibility.Collapsed;
+                        if (_previousVersionForPage != null)
+                        {
+                            PostToPage(new { type = "genetics-lab-host", previousVersion = _previousVersionForPage });
+                            _previousVersionForPage = null;
+                        }
+                        PostUpdateStatusToPage(GeneticsLabContentService.Instance.Status);
+                        break;
+
+                    case "apply-update":
+                        Reload();
+                        break;
                 }
             }
             catch
@@ -139,28 +225,8 @@ namespace RustPlusDesk.Views
         {
             try
             {
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string distFolder = Path.Combine(baseDir, "Features", "GeneticsLab", "dist");
-
-                // In debug / development mode, look in project source tree if not in bin
-                if (!Directory.Exists(distFolder))
-                {
-                    string candidate = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Features", "GeneticsLab", "dist"));
-                    if (Directory.Exists(candidate))
-                    {
-                        distFolder = candidate;
-                    }
-                }
-
-                if (!Directory.Exists(distFolder))
-                {
-                    // Fallback to non-dist folder if dist is not yet built
-                    string nonDist = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "Features", "GeneticsLab"));
-                    if (Directory.Exists(nonDist))
-                    {
-                        distFolder = nonDist;
-                    }
-                }
+                // The newest of the bundled build and the last update downloaded (GitHub or the hosted site).
+                _content = GeneticsLabContentService.Instance.ResolveContent();
 
                 string webViewDataFolder = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -197,16 +263,10 @@ namespace RustPlusDesk.Views
                 _sharedEnvironment.ProcessInfosChanged += SharedEnvironment_ProcessInfosChanged;
                 RefreshWebViewProcessIds();
 
-                if (Directory.Exists(distFolder))
+                if (_content != null)
                 {
-                    _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
-                        "geneticslab.rustplus",
-                        distFolder,
-                        CoreWebView2HostResourceAccessKind.Allow);
-
                     _webView.NavigationCompleted += GeneticsWebView_NavigationCompleted;
-
-                    _webView.CoreWebView2.Navigate("https://geneticslab.rustplus/index.html");
+                    await NavigateToContentAsync(_content);
                 }
                 else
                 {
@@ -214,6 +274,7 @@ namespace RustPlusDesk.Views
                 }
 
                 _isInitialized = true;
+                GeneticsLabContentService.Instance.CheckForUpdatesInBackground();
             }
             catch (Exception ex)
             {
@@ -223,6 +284,34 @@ namespace RustPlusDesk.Views
                 // would add a second one beside it.
                 ShutdownWebView();
             }
+        }
+
+        private async Task NavigateToContentAsync(GeneticsLabContent content)
+        {
+            CoreWebView2 core = _webView!.CoreWebView2;
+
+            // Hashed JS/CSS names change with their content, but images and OCR files keep their
+            // names across builds, so a cached response could outlive the build it came from. The
+            // profile belongs to Genetics Lab alone and only its HTTP cache is dropped, never the
+            // page's saved projects in localStorage/IndexedDB.
+            (bool changed, string? previousVersion) = GeneticsLabContentService.Instance.MarkLoaded(content);
+            if (changed)
+            {
+                _previousVersionForPage = previousVersion;
+                try { await core.Profile.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.DiskCache); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[GeneticsLab] Cache clear failed: {ex.Message}"); }
+            }
+
+            // Set again by the new page's "host-hello" if it shows update notices itself.
+            _pageShowsUpdates = false;
+            PatchNotesButton.Visibility = Visibility.Collapsed;
+
+            core.ClearVirtualHostNameToFolderMapping(VirtualHost);
+            core.SetVirtualHostNameToFolderMapping(VirtualHost, content.Folder, CoreWebView2HostResourceAccessKind.Allow);
+
+            // The query makes index.html a fresh URL per build; the page itself ignores it.
+            string build = content.BuildId is { Length: >= 12 } id ? $"?build={id[..12]}" : string.Empty;
+            core.Navigate($"https://{VirtualHost}/index.html{build}");
         }
 
         private async void GeneticsWebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -348,11 +437,29 @@ namespace RustPlusDesk.Views
             }
         }
 
-        public void Reload()
+        /// <summary>Reloads the page, switching to a newer Genetics Lab build if one was installed.</summary>
+        public async void Reload()
         {
             try
             {
-                _webView?.CoreWebView2?.Reload();
+                if (_webView?.CoreWebView2 == null) return;
+
+                GeneticsLabContent? newer = GeneticsLabContentService.Instance.FindNewerThan(_content);
+                if (newer != null)
+                {
+                    GeneticsLabContent? previous = _content;
+                    _content = GeneticsLabContentService.Instance.ResolveContent();
+                    if (_content != null)
+                    {
+                        LoadingOverlay.Visibility = Visibility.Visible;
+                        await NavigateToContentAsync(_content);
+                        if (previous != null) GeneticsLabContentService.Instance.ReleaseContent(previous);
+                        UpdateReadyButton.Visibility = Visibility.Collapsed;
+                        return;
+                    }
+                }
+
+                _webView.CoreWebView2.Reload();
             }
             catch
             {
@@ -361,6 +468,14 @@ namespace RustPlusDesk.Views
         }
 
         private void Reload_Click(object sender, RoutedEventArgs e) => Reload();
+
+        // The patch notes live in the page (they ship with each build); the button asks it to open them.
+        private void PatchNotes_Click(object sender, RoutedEventArgs e) => PostToPage(new { type = "open-patch-notes" });
+
+        private static bool HasCapability(JsonElement hello, string capability) =>
+            hello.TryGetProperty("capabilities", out JsonElement list) &&
+            list.ValueKind == JsonValueKind.Array &&
+            list.EnumerateArray().Any(item => item.ValueKind == JsonValueKind.String && item.GetString() == capability);
 
         /// <summary>
         /// Leaves the workspace with Genetics Lab still loaded.
@@ -431,6 +546,14 @@ namespace RustPlusDesk.Views
                 try { _webView.Dispose(); } catch { }
                 _webView = null;
             }
+
+            if (_content != null)
+            {
+                GeneticsLabContentService.Instance.ReleaseContent(_content);
+                _content = null;
+            }
+            UpdateReadyButton.Visibility = Visibility.Collapsed;
+            PatchNotesButton.Visibility = Visibility.Collapsed;
 
             _webViewProcessIds = Array.Empty<int>();
             _sharedEnvironment = null;

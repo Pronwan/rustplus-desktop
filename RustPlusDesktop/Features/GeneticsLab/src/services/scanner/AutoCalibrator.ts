@@ -1,6 +1,6 @@
 import { ScannerRegion } from '../storageService.ts';
 import { CanvasFrameGrabber } from './vision/frameGrabber.ts';
-import { detectBadgeCandidates, AnalysisFrame } from './vision/rasterOps.ts';
+import { AnalysisFrame, detectBadgeCandidates, DEFAULT_BADGE_FILTER_OPTIONS } from './vision/rasterOps.ts';
 import { buildRowCandidates, BuiltCandidate, DEFAULT_BUILD_CANDIDATES_OPTIONS } from './vision/geometry.ts';
 import { GeneImagePreprocessor } from './GeneImagePreprocessor.ts';
 import { GeneRecognizer } from './scannerTypes.ts';
@@ -18,57 +18,21 @@ export class AutoCalibrator {
   private static grabber = new CanvasFrameGrabber();
 
   /**
-   * Detects plant gene rows in a captured frame and computes ScannerRegion coordinates.
-   *
-   * Takes a drawable and its size rather than a video element, because the scanner may be
-   * pulling frames straight off the capture track. Calibrating from the video element in
-   * that case would measure whatever the renderer last managed to present, which behind a
-   * fullscreen game is not what is on screen now.
-   *
-   * @param source The frame to calibrate from
-   * @param sourceWidth Captured surface width in pixels
-   * @param sourceHeight Captured surface height in pixels
-   * @param preferredRegionIndex Optional target region (0 for Inventory, 1 for Planter)
-   * @param recognizer Optional GeneRecognizer to read and verify genes
+   * The gene row's region in an analysis frame: discovers badge rows, picks the one in the
+   * half of the screen the region belongs to (inventory left, planter right) and fits the
+   * region to it. Coordinates are normalised, so they hold for the full-size capture too.
    */
-  public static async calibrateFromFrame(
-    source: CanvasImageSource | null,
-    sourceWidth: number,
-    sourceHeight: number,
-    preferredRegionIndex?: number,
-    recognizer?: GeneRecognizer
-  ): Promise<AutoCalibrateResult> {
-    if (!source || sourceWidth === 0 || sourceHeight === 0) {
-      return {
-        success: false,
-        regionIndex: preferredRegionIndex ?? 0,
-        message: 'Screen capture is not active. Please start the scanner first.'
-      };
-    }
-
-    const video = source;
-    const videoW = sourceWidth;
-    const videoH = sourceHeight;
-
-    // Use full-fidelity discovery resolution (up to 1920px wide) for precise sub-pixel boundary fitting
-    const discoveryWidth = Math.min(videoW, 1920);
-    const frame = this.grabber.grabAnalysis(video, discoveryWidth, { width: videoW, height: videoH });
-    if (!frame) {
-      return {
-        success: false,
-        regionIndex: preferredRegionIndex ?? 0,
-        message: 'Could not capture frame from screen video stream.'
-      };
-    }
-
-    // 1. Detect Rust red/green badge candidates across the frame
-    const components = detectBadgeCandidates(frame);
+  public static findRegion(
+    frame: AnalysisFrame,
+    preferredRegionIndex?: number
+  ): { regionIndex: number; region: ScannerRegion } | { error: string } {
+    // 1. Detect Rust red/green badge candidates across the frame. Dirt, sand and wood pass
+    // the red test, so a whole screen of terrain leaves a few hundred badge-shaped blobs;
+    // keeping only the largest 96 drops the badges first at small UI scales. Calibration
+    // runs once, so it can afford to keep them all.
+    const components = detectBadgeCandidates(frame, undefined, { ...DEFAULT_BADGE_FILTER_OPTIONS, maxCandidates: 400 });
     if (components.length < 6) {
-      return {
-        success: false,
-        regionIndex: preferredRegionIndex ?? 0,
-        message: 'No plant gene badges detected on screen. Hover over a plant in Rust and try again.'
-      };
+      return { error: 'No plant gene badges detected on screen. Hover over a plant in Rust and try again.' };
     }
 
     // 2. Discover collinear 6-badge gene rows
@@ -91,11 +55,7 @@ export class AutoCalibrator {
     );
 
     if (rowCandidates.length === 0) {
-      return {
-        success: false,
-        regionIndex: preferredRegionIndex ?? 0,
-        message: 'Found badges, but could not align a complete 6-gene row. Make sure the tooltip is fully visible.'
-      };
+      return { error: 'Found badges, but could not align a complete 6-gene row. Make sure the tooltip is fully visible.' };
     }
 
     // 3. Select best candidate based on target region or screen position
@@ -154,6 +114,59 @@ export class AutoCalibrator {
       HEIGHT_TO_WIDTH_RATIO: Math.max(0.05, Math.min(0.25, Math.round((normH / normW) * 10000) / 10000)),
       GENE_WIDTH_TO_WIDTH_RATIO: Math.max(0.04, Math.min(0.25, Math.round(((avgBadgeW * 0.90) / totalW) * 10000) / 10000))
     };
+
+    return { regionIndex: resolvedRegionIndex, region: calibratedRegion };
+  }
+
+  /**
+   * Detects plant gene rows in a captured frame and computes ScannerRegion coordinates.
+   *
+   * Takes a drawable and its size rather than a video element, because the scanner may be
+   * pulling frames straight off the capture track. Calibrating from the video element in
+   * that case would measure whatever the renderer last managed to present, which behind a
+   * fullscreen game is not what is on screen now.
+   *
+   * @param source The frame to calibrate from
+   * @param sourceWidth Captured surface width in pixels
+   * @param sourceHeight Captured surface height in pixels
+   * @param preferredRegionIndex Optional target region (0 for Inventory, 1 for Planter)
+   * @param recognizer Optional GeneRecognizer to read and verify genes
+   */
+  public static async calibrateFromFrame(
+    source: CanvasImageSource | null,
+    sourceWidth: number,
+    sourceHeight: number,
+    preferredRegionIndex?: number,
+    recognizer?: GeneRecognizer
+  ): Promise<AutoCalibrateResult> {
+    if (!source || sourceWidth === 0 || sourceHeight === 0) {
+      return {
+        success: false,
+        regionIndex: preferredRegionIndex ?? 0,
+        message: 'Screen capture is not active. Please start the scanner first.'
+      };
+    }
+
+    const video = source;
+    const videoW = sourceWidth;
+    const videoH = sourceHeight;
+
+    // Use full-fidelity discovery resolution (up to 1920px wide) for precise sub-pixel boundary fitting
+    const discoveryWidth = Math.min(videoW, 1920);
+    const frame = this.grabber.grabAnalysis(video, discoveryWidth, { width: videoW, height: videoH });
+    if (!frame) {
+      return {
+        success: false,
+        regionIndex: preferredRegionIndex ?? 0,
+        message: 'Could not capture frame from screen video stream.'
+      };
+    }
+
+    const found = AutoCalibrator.findRegion(frame, preferredRegionIndex);
+    if ('error' in found) {
+      return { success: false, regionIndex: preferredRegionIndex ?? 0, message: found.error };
+    }
+    const { regionIndex: resolvedRegionIndex, region: calibratedRegion } = found;
 
     // 4. Test-recognize genes on the newly calibrated region
     let detectedGenes: string | undefined;

@@ -24,11 +24,14 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import FolderIcon from '@mui/icons-material/Folder';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import InfoIcon from '@mui/icons-material/Info';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import SchoolIcon from '@mui/icons-material/School';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { useApp, PLANT_TYPES } from '../../context/AppContext.tsx';
+import { useApp } from '../../context/AppContext.tsx';
+import { PlantPicker } from '../common/PlantPicker.tsx';
 import { useWorkspace } from '../../context/WorkspaceContext.tsx';
 import { useScanner } from '../../context/ScannerContext.tsx';
 
@@ -43,6 +46,8 @@ export const AppHeader: React.FC = () => {
     toggleTheme,
     setIsOptionsModalOpen,
     setIsAboutModalOpen,
+    setIsPatchNotesOpen,
+    setIsTourOpen,
     setIsReflexNoticeOpen,
     setIsKeyboardShortcutsOpen,
     setIsProjectManagerOpen
@@ -104,7 +109,7 @@ export const AppHeader: React.FC = () => {
               variant="subtitle1"
               sx={{
                 fontWeight: 900,
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 letterSpacing: '1px',
                 color: 'var(--gl-primary)',
                 fontSize: '0.95rem',
@@ -115,36 +120,17 @@ export const AppHeader: React.FC = () => {
             </Typography>
           </Box>
 
-          <Select
-            aria-label="Crop type"
-            size="small"
-            value={selectedPlant}
-            onChange={(e) => setSelectedPlant(e.target.value)}
-            sx={{
-              height: 32,
-              width: { xs: 104, sm: 150 },
-              fontSize: '0.78rem',
-              fontWeight: 800,
-              backgroundColor: themeMode === 'dark' ? '#181818' : '#F1F5F9',
-              color: themeMode === 'dark' ? '#FFFFFF' : '#1E293B',
-              textTransform: 'capitalize',
-              '& fieldset': { borderColor: themeMode === 'dark' ? '#333' : '#CBD5E1' }
-            }}
-          >
-            {PLANT_TYPES.map((plant) => (
-              <MenuItem key={plant} value={plant} sx={{ fontSize: '0.78rem', textTransform: 'capitalize' }}>
-                {plant.replace(/-/g, ' ')}
-              </MenuItem>
-            ))}
-          </Select>
+          <Box data-tour="plant-picker" sx={{ display: 'flex' }}>
+            <PlantPicker value={selectedPlant} onChange={setSelectedPlant} label="Crop type" compact={isCompact} />
+          </Box>
         </Box>
 
-        <Box component="nav" aria-label="Primary navigation" sx={{ order: { xs: 3, lg: 2 }, width: { xs: '100%', lg: 'auto' }, minWidth: 0 }}>
+        <Box component="nav" data-tour="nav" aria-label="Primary navigation" sx={{ order: { xs: 3, lg: 2 }, width: { xs: '100%', lg: 'auto' }, minWidth: 0 }}>
           <Tabs
             value={activeTab}
             onChange={(_, val) => setActiveTab(val)}
             variant={isCompact ? 'fullWidth' : 'standard'}
-            sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? '#00E5FF' : '#0284C7', height: 2.5 } }}
+            sx={{ minHeight: 40, '& .MuiTabs-indicator': { backgroundColor: themeMode === 'dark' ? 'var(--gl-primary)' : '#0284C7', height: 2.5 } }}
           >
             <Tab value="workspace" label={isCompact ? 'Breed' : 'Breeding Workspace'} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
             <Tab value="livestock" label={<span>{isCompact ? 'Animals' : 'Livestock'}<Box component="span" sx={{ ml: 0.5, px: 0.5, fontSize: '0.58rem', lineHeight: 1.6, borderRadius: '3px', backgroundColor: '#F59E0B', color: '#111827', fontWeight: 900, verticalAlign: 'middle' }}>BETA</Box></span>} sx={{ minWidth: 0, px: { xs: 0.5, sm: 2 } }} />
@@ -156,6 +142,7 @@ export const AppHeader: React.FC = () => {
 
         <Box sx={{ order: { xs: 2, lg: 3 }, display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.75 }, flexShrink: 0 }}>
           <Button
+            data-tour="scan"
             aria-label={scannerBusy ? 'Stop Rust scanner' : 'Scan genetics from Rust'}
             size="small"
             variant={scannerBusy ? 'contained' : 'outlined'}
@@ -169,13 +156,24 @@ export const AppHeader: React.FC = () => {
 
           {!isCompact && (
             <Tooltip title="Farm projects & data" arrow>
-              <IconButton aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
+              <IconButton data-tour="projects" aria-label="Open farm projects" size="small" onClick={() => setIsProjectManagerOpen(true)} sx={{ color: iconColor }}>
                 <FolderIcon sx={{ fontSize: 19 }} />
               </IconButton>
             </Tooltip>
           )}
+          <Tooltip title={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} arrow>
+            <IconButton
+              aria-label={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              size="small"
+              onClick={toggleTheme}
+              sx={{ color: iconColor, '& svg': { transition: 'transform 300ms ease' }, '&:hover svg': { transform: 'rotate(25deg)' } }}
+            >
+              {themeMode === 'dark' ? <LightModeIcon sx={{ fontSize: 19 }} /> : <DarkModeIcon sx={{ fontSize: 19 }} />}
+            </IconButton>
+          </Tooltip>
           <Tooltip title="More actions" arrow>
             <IconButton
+              data-tour="menu"
               aria-label="More actions"
               aria-controls={menuAnchor ? 'header-actions-menu' : undefined}
               aria-haspopup="menu"
@@ -189,10 +187,11 @@ export const AppHeader: React.FC = () => {
           <Menu id="header-actions-menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
             {showPhoneCameraAction && <MenuItem onClick={closeMenuThen(openCameraScanner)}><ListItemIcon><PhotoCameraIcon /></ListItemIcon><ListItemText>Use phone camera (Beta)</ListItemText></MenuItem>}
             {isCompact && <MenuItem onClick={closeMenuThen(() => setIsProjectManagerOpen(true))}><ListItemIcon><FolderIcon /></ListItemIcon><ListItemText>Farm projects</ListItemText></MenuItem>}
-            <MenuItem onClick={closeMenuThen(toggleTheme)}><ListItemIcon>{themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}</ListItemIcon><ListItemText>{themeMode === 'dark' ? 'Light mode' : 'Dark mode'}</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsTourOpen(true))}><ListItemIcon><SchoolIcon /></ListItemIcon><ListItemText>Tutorial</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsKeyboardShortcutsOpen(true))}><ListItemIcon><KeyboardIcon /></ListItemIcon><ListItemText>Keyboard shortcuts</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsReflexNoticeOpen(true))}><ListItemIcon><FlashOnIcon sx={{ color: '#F59E0B' }} /></ListItemIcon><ListItemText>Scanner &amp; Reflex Guide</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsOptionsModalOpen(true))}><ListItemIcon><SettingsIcon /></ListItemIcon><ListItemText>Options</ListItemText></MenuItem>
+            <MenuItem onClick={closeMenuThen(() => setIsPatchNotesOpen(true))}><ListItemIcon><NewReleasesIcon /></ListItemIcon><ListItemText>Patch notes</ListItemText></MenuItem>
             <MenuItem onClick={closeMenuThen(() => setIsAboutModalOpen(true))}><ListItemIcon><InfoIcon /></ListItemIcon><ListItemText>About</ListItemText></MenuItem>
             <MenuItem component="a" href="https://github.com/JawadYzbk/rust-genetics-lab" target="_blank" rel="noopener noreferrer" onClick={() => setMenuAnchor(null)}><ListItemIcon><GitHubIcon /></ListItemIcon><ListItemText>GitHub repository</ListItemText></MenuItem>
           </Menu>

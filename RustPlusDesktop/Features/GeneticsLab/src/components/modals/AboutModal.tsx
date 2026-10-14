@@ -17,7 +17,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { useApp } from '../../context/AppContext.tsx';
 
 export const AboutModal: React.FC = () => {
-  const { isAboutModalOpen, setIsAboutModalOpen } = useApp();
+  const { isAboutModalOpen, setIsAboutModalOpen, setIsPatchNotesOpen, setIsTourOpen } = useApp();
 
   return (
     <Dialog
@@ -112,9 +112,27 @@ export const AboutModal: React.FC = () => {
         >
           Contribute
         </Button>
-        <Button variant="contained" onClick={() => setIsAboutModalOpen(false)}>
-          Close
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            onClick={() => {
+              setIsAboutModalOpen(false);
+              setIsTourOpen(true);
+            }}
+          >
+            Tutorial
+          </Button>
+          <Button
+            onClick={() => {
+              setIsAboutModalOpen(false);
+              setIsPatchNotesOpen(true);
+            }}
+          >
+            Patch notes
+          </Button>
+          <Button variant="contained" onClick={() => setIsAboutModalOpen(false)}>
+            Close
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );

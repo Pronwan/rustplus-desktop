@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>10.1.2</Version>
+		<Version>10.2.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -441,6 +441,7 @@
   <ItemGroup>
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)src\**\*.*" />
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)public\**\*.*" />
+    <GeneticsLabSourceFiles Include="$(GeneticsLabDir)scripts\**\*.*" />
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)index.html" />
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)package.json" />
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)package-lock.json" />
@@ -448,7 +449,8 @@
     <GeneticsLabSourceFiles Include="$(GeneticsLabDir)vite.config.ts" />
   </ItemGroup>
 
-  <Target Name="BuildGeneticsLabDist" BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish" Inputs="@(GeneticsLabSourceFiles)" Outputs="$(GeneticsLabDir)dist\index.html" Condition="Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <!-- CI passes SkipGeneticsLabBuild=true after placing a released Genetics Lab build in dist. -->
+  <Target Name="BuildGeneticsLabDist" BeforeTargets="AssignTargetPaths;BeforeBuild;BeforePublish" Inputs="@(GeneticsLabSourceFiles)" Outputs="$(GeneticsLabDir)dist\index.html" Condition="'$(SkipGeneticsLabBuild)' != 'true' And Exists('$(GeneticsLabDir)package.json') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <Message Importance="high" Text="Building GeneticsLab frontend (npm run build)..." />
     <Exec Command="npm ci" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and Exists('$(GeneticsLabDir)package-lock.json')" />
     <Exec Command="npm install" WorkingDirectory="$(GeneticsLabDir)" Condition="!Exists('$(GeneticsLabDir)node_modules') and !Exists('$(GeneticsLabDir)package-lock.json')" />

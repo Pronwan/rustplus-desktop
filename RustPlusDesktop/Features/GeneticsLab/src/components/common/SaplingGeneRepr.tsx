@@ -69,10 +69,10 @@ export const SaplingGeneRepr: React.FC<SaplingGeneReprProps> = ({
                   color: '#FFFFFF',
                   fontWeight: 800,
                   fontSize: dim.font,
-                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   border: isHighlighted || isDonor ? '2px solid' : 'none',
                   borderColor: borderColor,
-                  boxShadow: isHighlighted ? '0 0 8px rgba(0, 229, 255, 0.8)' : 'none',
+                  boxShadow: isHighlighted ? '0 0 8px rgba(var(--gl-primary-rgb), 0.8)' : 'none',
                   userSelect: 'none',
                   lineHeight: 1
                 }}

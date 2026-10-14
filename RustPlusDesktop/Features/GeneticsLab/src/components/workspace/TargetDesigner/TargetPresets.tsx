@@ -47,7 +47,7 @@ export const TargetPresets: React.FC = () => {
                 height: 28,
                 fontWeight: isSelected ? 800 : 700,
                 fontSize: '0.75rem',
-                backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.15)' : 'var(--gl-panel-header-bg)',
+                backgroundColor: isSelected ? 'rgba(var(--gl-primary-rgb), 0.15)' : 'var(--gl-panel-header-bg)',
                 color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)',
                 border: '1px solid',
                 borderColor: isSelected ? 'var(--gl-primary)' : 'var(--gl-surface)'

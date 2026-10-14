@@ -1,3 +1,4 @@
+import { NameBand, PLANT_NAME_SEARCH, RowGeometry, plantNameRect, searchPlantTitle } from './scanner/plantNameReader.ts';
 import { ScannerRegion, StorageService } from './storageService.ts';
 import {
   ScannerEvent,
@@ -37,6 +38,16 @@ const SLOT_CANVAS_POOL_BASE = 10;
 const GREEN_GENES = new Set(['G', 'Y', 'H']);
 const RED_GENES = new Set(['W', 'X']);
 
+/** How soon after an instant accept a one-slot-different read counts as its correction. */
+const MISREAD_CORRECTION_WINDOW_MS = 2500;
+
+function hammingDistance(a: string, b: string): number {
+  if (a.length !== b.length) return Infinity;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) d++;
+  return d;
+}
+
 export class ScannerService {
   private listeners: ScannerEventListener[] = [];
   private mediaStream: MediaStream | null = null;
@@ -51,6 +62,10 @@ export class ScannerService {
 
   // Modular Pipeline Components
   private regions: ScannerRegion[] = [];
+  private plantNameCanvas: HTMLCanvasElement | null = null;
+  /** Plant names read while a row was being confirmed, keyed by region and genes. */
+  private plantVotes = new Map<string, Map<string, number>>();
+  private lastPlantRead: ScannerDiagnostics['plantRead'];
   private recognizer: GeneRecognizer;
   private changeDetector: RegionChangeDetector;
   private stabilityDetector: FrameStabilityDetector;
@@ -64,6 +79,8 @@ export class ScannerService {
   private lastOcrTimestamps: Record<number, number> = {};
   private scanCount = 0;
   private acceptedCount = 0;
+  /** The last row each region emitted, to recognise a quick re-read of the same tooltip. */
+  private lastEmits: Record<number, { genes: string; at: number; instant: boolean }> = {};
   private rejectedCount = 0;
   private frameCount = 0;
   private lastFpsCalcTime = Date.now();
@@ -678,6 +695,7 @@ export class ScannerService {
 
       if (!geneString || confidence < SCANNER_CONFIG.recognition.minConfidence) continue;
 
+      const centers = read.geometry?.centers;
       candidates.push({
         regionIndex: item.rIdx,
         regionType: item.type,
@@ -686,7 +704,16 @@ export class ScannerService {
         geneConfidences: read.slotConfidences,
         activityScore: item.activityScore,
         valid: true,
-        acceptImmediately: instantAccept
+        acceptImmediately: instantAccept,
+        // The ROI is drawn 1:1 from the frame at (xPx, yPx), so frame = ROI + offset.
+        rowGeometry:
+          centers && centers.length >= 2 && read.geometry
+            ? {
+                x: item.xPx + centers[0],
+                y: item.yPx + read.geometry.centerY,
+                pitch: (centers[centers.length - 1] - centers[0]) / (centers.length - 1)
+              }
+            : undefined
       });
     }
 
@@ -729,6 +756,7 @@ export class ScannerService {
 
     for (const candidate of candidates) {
       this.latestConfidence = candidate.confidence;
+      this.votePlantType(candidate);
 
       // Step 4: Temporal confirmation (per-region history with instant fast-path)
       const votedResult = this.votingService.addCandidate(
@@ -751,6 +779,18 @@ export class ScannerService {
       const targetRegion = regionsToScan.find(r => r.rIdx === candidate.regionIndex);
       const signature = targetRegion ? targetRegion.signature : 0;
 
+      // A row accepted instantly (one confident frame, no vote) can carry one misread slot;
+      // the next frames then settle on the true genes, which differ from it in that one slot.
+      // That is the same tooltip read better, not a second plant, so it replaces the first.
+      const previousEmit = this.lastEmits[candidate.regionIndex];
+      const emitNow = performance.now();
+      const isCorrection =
+        !!previousEmit &&
+        previousEmit.instant &&
+        this.deduplicator.isRegionCurrentlyVisible(candidate.regionIndex) &&
+        emitNow - previousEmit.at < MISREAD_CORRECTION_WINDOW_MS &&
+        hammingDistance(previousEmit.genes, votedResult.geneString) === 1;
+
       const shouldEmit = this.deduplicator.shouldAccept(
         candidate.regionIndex,
         votedResult.geneString,
@@ -758,6 +798,28 @@ export class ScannerService {
       );
 
       if (!shouldEmit) {
+        continue;
+      }
+
+      // A correction is never itself corrected, so two readings cannot flip back and forth.
+      this.lastEmits[candidate.regionIndex] = {
+        genes: votedResult.geneString,
+        at: emitNow,
+        instant: !!candidate.acceptImmediately && !isCorrection
+      };
+
+      if (isCorrection) {
+        console.log(`[Scanner EMIT] >>> SAPLING-CORRECTED: ${previousEmit.genes} -> ${votedResult.geneString}`);
+        emittedGenesThisCycle.add(votedResult.geneString);
+        emittedAny = true;
+        this.emit({
+          type: 'SAPLING-CORRECTED',
+          regionIndex: candidate.regionIndex,
+          regionType: candidate.regionType,
+          geneString: votedResult.geneString,
+          previousGeneString: previousEmit.genes,
+          confidence: votedResult.confidence
+        });
         continue;
       }
 
@@ -774,7 +836,8 @@ export class ScannerService {
         regionIndex: candidate.regionIndex,
         regionType: candidate.regionType,
         geneString: votedResult.geneString,
-        confidence: votedResult.confidence
+        confidence: votedResult.confidence,
+        plantType: this.takePlantVote(candidate.regionIndex, votedResult.geneString)
       });
     }
 
@@ -784,6 +847,131 @@ export class ScannerService {
       this.setPipelineStage('duplicate');
     } else {
       this.setPipelineStage('vote-wait');
+    }
+  }
+
+  /**
+   * Keeps the last plant-name read for the HUD: the crop with the band outlined, so a miss
+   * can be told apart at a glance (band off the title, title unreadable, unknown plant).
+   */
+  private recordPlantRead(
+    crop: HTMLCanvasElement,
+    row: RowGeometry,
+    band: NameBand,
+    x0: number,
+    y0: number,
+    regionType: ScannerRegionType,
+    read: { text: string; plant: string | null; glyphCount: number }
+  ): void {
+    try {
+      const debug = document.createElement('canvas');
+      debug.width = crop.width;
+      debug.height = crop.height;
+      const ctx = debug.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(crop, 0, 0);
+      const rect = plantNameRect(row, regionType, band);
+      ctx.strokeStyle = read.plant ? '#22c55e' : '#ef4444';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(rect.x0 - x0 + 0.5, rect.y0 - y0 + 0.5, rect.x1 - rect.x0, rect.y1 - rect.y0);
+      this.lastPlantRead = {
+        regionType,
+        text: read.text,
+        plant: read.plant,
+        glyphs: read.glyphCount,
+        imageUrl: debug.toDataURL('image/png')
+      };
+    } catch {
+      // Diagnostics only.
+    }
+  }
+
+  /**
+   * Reads the plant name on each frame a row is read and counts the answers, so one frame
+   * with the cursor over the title, a flicker or a misplaced band does not decide the plant.
+   * At most a few reads per row; each is a small crop.
+   */
+  private votePlantType(candidate: ScanCandidate): void {
+    const key = `${candidate.regionIndex}:${candidate.genes}`;
+    let votes = this.plantVotes.get(key);
+    if (!votes) {
+      if (this.plantVotes.size > 32) this.plantVotes.clear();
+      votes = new Map();
+      this.plantVotes.set(key, votes);
+    }
+    let total = 0;
+    for (const n of votes.values()) total += n;
+    if (total >= 5) return;
+    const plant = this.readPlantType(candidate);
+    if (plant) votes.set(plant, (votes.get(plant) ?? 0) + 1);
+  }
+
+  /** The plant most reads of this row named, or undefined; forgets the row's votes. */
+  private takePlantVote(regionIndex: number, genes: string): string | undefined {
+    const key = `${regionIndex}:${genes}`;
+    const votes = this.plantVotes.get(key);
+    this.plantVotes.delete(key);
+    let best: string | undefined;
+    let bestCount = 0;
+    for (const [plant, count] of votes ?? []) {
+      if (count > bestCount) {
+        best = plant;
+        bestCount = count;
+      }
+    }
+    if (best && votes && votes.size > 1) console.log('[Scanner] Plant name votes', Object.fromEntries(votes));
+    return best;
+  }
+
+  /**
+   * The plant the panel around a row names, from the live frame; any failure just means
+   * "not detected". The bands are placed from the row's detected geometry.
+   */
+  private readPlantType(candidate: ScanCandidate): string | undefined {
+    const row = candidate.rowGeometry;
+    const frame = this.frameSource?.current();
+    if (!row || !frame || !this.frameSource) return undefined;
+    try {
+      // The detected geometry first, then with the pitch a little off; each searches the
+      // bands above the row (see PLANT_NAME_SEARCH).
+      const attempts = [row, { ...row, pitch: row.pitch * 0.95 }, { ...row, pitch: row.pitch * 1.05 }];
+      // One crop covers every band of every attempt.
+      const rects = attempts.flatMap(a => PLANT_NAME_SEARCH[candidate.regionType].map(band => plantNameRect(a, candidate.regionType, band)));
+      const x0 = Math.max(0, Math.floor(Math.min(...rects.map(r => r.x0))));
+      const y0 = Math.max(0, Math.floor(Math.min(...rects.map(r => r.y0))));
+      const x1 = Math.min(this.frameSource.width, Math.ceil(Math.max(...rects.map(r => r.x1))));
+      const y1 = Math.min(this.frameSource.height, Math.ceil(Math.max(...rects.map(r => r.y1))));
+      const w = x1 - x0;
+      const h = y1 - y0;
+      if (w < 8 || h < 6) return undefined;
+
+      this.plantNameCanvas ??= document.createElement('canvas');
+      const canvas = this.plantNameCanvas;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return undefined;
+      ctx.drawImage(frame, x0, y0, w, h, 0, 0, w, h);
+      const image = { data: ctx.getImageData(0, 0, w, h).data, width: w, height: h };
+
+      let best: { attempt: RowGeometry; band: NameBand; read: ReturnType<typeof searchPlantTitle>['read'] } | null = null;
+      for (const attempt of attempts) {
+        const local = { x: attempt.x - x0, y: attempt.y - y0, pitch: attempt.pitch };
+        const { read, band } = searchPlantTitle(image, local, candidate.regionType);
+        if (!best || read.plant || read.text.length > best.read.text.length) best = { attempt, band, read };
+        if (read.plant) break;
+      }
+      if (!best) return undefined;
+      this.recordPlantRead(canvas, best.attempt, best.band, x0, y0, candidate.regionType, best.read);
+      console.log(
+        best.read.plant
+          ? `[Scanner] Plant name: ${best.read.text} -> ${best.read.plant}`
+          : `[Scanner] Plant name not read (saw "${best.read.text}", ${best.read.glyphCount} letters)`
+      );
+      return best.read.plant ?? undefined;
+    } catch (error) {
+      console.warn('[Scanner] Plant name read failed', error);
+      return undefined;
     }
   }
 
@@ -923,7 +1111,8 @@ export class ScannerService {
       layoutSource: lastRead?.layoutSource ?? 'none',
       resolvedSlots: lastRead?.resolvedCount ?? 0,
       lastPartialRead: lastRead?.partial ?? '',
-      fallbackReads: this.fallbackReadCount
+      fallbackReads: this.fallbackReadCount,
+      plantRead: this.lastPlantRead
     };
   }
 

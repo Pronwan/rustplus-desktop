@@ -1,0 +1,94 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.EditServerConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Edit Server Connection" Width="480" SizeToContent="Height"
+        MinHeight="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ExtendsContentIntoTitleBar="True"
+        WindowCornerPreference="Round"
+        WindowBackdropType="Mica"
+        Background="#141820"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Border BorderBrush="#252F3D" BorderThickness="1" CornerRadius="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ui:TitleBar Grid.Row="0" Height="40" Title="Edit Server Connection"
+                         ShowMinimize="False" ShowMaximize="False"
+                         Background="Transparent" Foreground="{DynamicResource TextPrimary}">
+                <ui:TitleBar.Icon>
+                    <ui:SymbolIcon Symbol="ServerPlay20" />
+                </ui:TitleBar.Icon>
+            </ui:TitleBar>
+
+            <StackPanel Grid.Row="1" Margin="24,10,24,24">
+                <TextBlock Text="Edit Connection Details" FontSize="18" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"/>
+                <TextBlock Margin="0,4,0,16" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12.5"
+                           Text="Update server address or port if the server re-hosted or changed its Rust+ companion port. All existing devices and settings will be preserved."/>
+
+                <!-- Server Name -->
+                <TextBlock Text="Server Name" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                <ui:TextBox x:Name="TxtName" Margin="0,0,0,12"
+                            PlaceholderText="Server Name"
+                            FontSize="13"
+                            Icon="{ui:SymbolIcon Symbol=Server24}"/>
+
+                <!-- Host & Port Grid -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2.5*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Host / IP Address" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                        <ui:TextBox x:Name="TxtHost"
+                                    PlaceholderText="e.g. 192.168.1.100"
+                                    FontSize="13"
+                                    Icon="{ui:SymbolIcon Symbol=Globe24}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Port" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                        <ui:TextBox x:Name="TxtPort"
+                                    PlaceholderText="28082"
+                                    FontSize="13"
+                                    Icon="{ui:SymbolIcon Symbol=PlugConnected24}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Test Connection button & status -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Button x:Name="BtnTest" Content="Test Connection &amp; Devices" Appearance="Secondary"
+                               Icon="{ui:SymbolIcon Symbol=CheckmarkCircle24}" Click="BtnTest_Click"/>
+
+                    <ui:ProgressRing x:Name="TestProgress" Grid.Column="1" HorizontalAlignment="Left"
+                                     Margin="14,0,0,0" Width="20" Height="20" IsIndeterminate="True"
+                                     Visibility="Collapsed"/>
+                </Grid>
+
+                <ui:InfoBar x:Name="InfoTestResult" Margin="0,6,0,0" IsClosable="True" IsOpen="False"/>
+
+                <!-- Actions -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                    <ui:Button Content="Cancel" Appearance="Secondary" MinWidth="92" Margin="0,0,10,0" Click="Cancel_Click"/>
+                    <ui:Button x:Name="BtnSave" Content="Save Changes" Appearance="Primary" MinWidth="130"
+                               Icon="{ui:SymbolIcon Symbol=Save24}" Click="Save_Click" IsDefault="True"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</ui:FluentWindow>

@@ -1065,6 +1065,23 @@
                                         x:Key="ServerCtx"
                                         Style="{StaticResource DarkContextMenu}">
                                         <MenuItem
+                                            Click="Server_EditConnection_Click"
+                                            Header="Edit Connection..."
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="Edit24" Width="13" Height="13" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem
+                                            Click="Server_TransferDevices_Click"
+                                            Header="Transfer Devices &amp; Settings..."
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="ArrowRight24" Width="13" Height="13" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator Style="{StaticResource DarkSeparator}" />
+                                        <MenuItem
                                             Click="Server_Delete_Click"
                                             Header="{DynamicResource DeleteServerEllipsis}"
                                             Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
@@ -1424,7 +1441,9 @@
                                     <ui:Button
                                         x:Name="BtnListenPairing"
                                         tutorials:Tutorial.TargetId="Servers.Pair"
-                                        Padding="8,2"
+                                        Height="30"
+                                        Padding="10,0"
+                                        VerticalContentAlignment="Center"
                                         Appearance="Secondary"
                                         AutomationProperties.HelpText="{DynamicResource UiListenForRustPairingRequestsRightClickForRecoveryOptions}"
                                         Click="BtnListenPairing_Click"
@@ -1436,7 +1455,9 @@
 
                                     <ui:Button
                                         x:Name="BtnStopPairing"
-                                        Padding="8,2"
+                                        Height="30"
+                                        Padding="10,0"
+                                        VerticalContentAlignment="Center"
                                         Appearance="Caution"
                                         Click="BtnStopPairing_Click"
                                         Content="{DynamicResource Stop}"
@@ -1446,7 +1467,7 @@
 
                                     <ui:Button
                                         x:Name="BtnFcmInfo"
-                                        Width="32"
+                                        Width="30"
                                         Height="30"
                                         Margin="6,0,0,0"
                                         Padding="0"
@@ -1461,13 +1482,14 @@
                                       still under way, red after a failure, grey when simply off.  -->
                                 <Border
                                     Grid.Column="1"
+                                    Height="30"
                                     Margin="10,0"
-                                    Padding="8,3"
+                                    Padding="10,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{DynamicResource WhiteA14}"
-                                    CornerRadius="10">
-                                    <StackPanel Orientation="Horizontal">
+                                    CornerRadius="15">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Ellipse Width="8" Height="8" VerticalAlignment="Center">
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
@@ -1955,7 +1977,17 @@
                                             Margin="0,0,8,0"
                                             Padding="8,3"
                                             FontSize="11"
-                                            PlaceholderText="{DynamicResource UiSearchDevices}" />
+                                            PlaceholderText="{DynamicResource UiSearchDevices}">
+                                            <ui:TextBox.Resources>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <TranslateTransform Y="2" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ui:TextBox.Resources>
+                                        </ui:TextBox>
 
                                         <ComboBox
                                             x:Name="CmbDeviceTypeFilter"

@@ -6917,4 +6917,49 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Geri Dönüşüm Hesaplayıcı</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Sunucu saati, küçük</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Tek hücre: güneş ya da ay, ve saat — mini haritadaki gibi</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Oyuncular, küçük</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Tek hücre: kaç kişi var ve kaç kişi sığıyor — mini haritadaki gibi</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Göstermek için tuşu basılı tut</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Her zaman görünür — tuş atamak için tıkla</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Tek ekran için: panel yalnızca tuş basılıyken görünür — oyunun kendi haritasının görüşü kapatması gibi.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Ekran</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Tüm kartlara uygula</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>Anahtar açıkken bu değer, kartın kendi dişlisinden verilen değerin önüne geçer. Kapatınca kartlar kendi değerlerine döner.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Tümü için saydamlık</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Tümü için yazı boyutu</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Tümü için yazı rengi</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Görünümü sıfırla</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Genel ayarlar ve her kartın kendi saydamlığı, yazı boyutu ve rengi temizlensin mi? Kartların kendisi yerinde kalır.</value>
+  </data>
 </root>

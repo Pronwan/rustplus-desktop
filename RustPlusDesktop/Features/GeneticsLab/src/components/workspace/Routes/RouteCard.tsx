@@ -119,7 +119,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
           variant="caption"
           sx={{
             fontWeight: 900,
-            fontFamily: '"Roboto Mono", monospace',
+            fontFamily: 'var(--font-family-mono)',
             fontSize: '0.75rem',
             color: isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)',
             whiteSpace: 'nowrap',
@@ -152,8 +152,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                 fontSize: '0.72rem',
                 fontWeight: 900,
                 color: 'var(--gl-primary)',
-                border: '1px solid rgba(0, 229, 255, 0.5)',
-                backgroundColor: 'rgba(0, 229, 255, 0.12)'
+                border: '1px solid rgba(var(--gl-primary-rgb), 0.5)',
+                backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)'
               }}
             />
           )}

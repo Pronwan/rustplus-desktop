@@ -1,9 +1,9 @@
 :root {
   /* Common Colors */
-  --color-primary: #0097a7;
-  --color-primary-hover: #00acc1;
-  --color-primary-active: #00838f;
-  --color-primary-light: rgba(0, 151, 167, 0.15);
+  --color-primary: var(--gl-primary);
+  --color-primary-hover: var(--gl-primary-hover);
+  --color-primary-active: var(--gl-primary);
+  --color-primary-light: rgba(96, 205, 255, 0.13);
   
   --color-good: #00c853;
   --color-good-bg: rgba(0, 200, 83, 0.15);
@@ -21,7 +21,7 @@
   --color-info: #0288d1;
 
   /* Typography */
-  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-base: 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
   --font-family-mono: 'Consolas', 'Courier New', Courier, monospace;
 
   /* Spacing */
@@ -36,9 +36,9 @@
 
   /* Borders & Radius */
   --radius-xs: 3px;
-  --radius-sm: 6px;
+  --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-lg: 8px;
   --radius-pill: 9999px;
 
   /* Transitions */
@@ -61,51 +61,52 @@
 
 /* Dark Theme (Default) */
 [data-theme='dark'] {
-  --color-bg: #121418;
-  --color-bg-alt: #181b20;
-  --color-surface: #1e2229;
-  --color-surface-raised: #282d36;
-  --color-surface-hover: #2f3540;
-  --color-border: #333a46;
-  --color-border-subtle: #252b35;
+  --color-bg: #202020;
+  --color-bg-alt: #272727;
+  --color-surface: #272727;
+  --color-surface-raised: #303030;
+  --color-surface-hover: #383838;
+  --color-border: #414141;
+  --color-border-subtle: #383838;
 
-  --color-text-primary: #f0f3f6;
-  --color-text-secondary: #9aa5b5;
-  --color-text-muted: #6b7787;
+  --color-text-primary: #F3F3F3;
+  --color-text-secondary: #A6A6A6;
+  --color-text-muted: #A6A6A6;
 
   --color-card-highlight: #ffffff;
   --color-card-highlight-glow: rgba(255, 255, 255, 0.25);
-  --article-highlight-color: #00acc1;
+  --article-highlight-color: #60CDFF;
 
   /* Genetics Lab semantic palette (dark) — consumed by component sx/style props.
      A matching light block lives under [data-theme='light']. These let inline
      colors follow the active theme without per-component hooks. */
-  --gl-app-bg: #0E0E0E;
-  --gl-panel-bg: #141414;
-  --gl-panel-header-bg: #181818;
-  --gl-card-bg: #161616;
-  --gl-card-hover-bg: #1C1C1C;
-  --gl-elevated-bg: #1E1E1E;
-  --gl-input-bg: #111111;
-  --gl-surface: #262626;
-  --gl-surface-hover: #333333;
-  --gl-surface-active: #3A3A3A;
-  --gl-border: #282828;
-  --gl-border-strong: #383838;
-  --gl-border-subtle: #202020;
-  --gl-text-primary: #ECECEC;
-  --gl-text-secondary: #AAAAAA;
-  --gl-text-muted: #888888;
-  --gl-text-faint: #808080;
-  --gl-primary: #00E5FF;
-  --gl-primary-hover: #33EBFF;
+  --gl-app-bg: #202020;
+  --gl-panel-bg: #272727;
+  --gl-panel-header-bg: #303030;
+  --gl-card-bg: #272727;
+  --gl-card-hover-bg: #383838;
+  --gl-elevated-bg: #303030;
+  --gl-input-bg: #303030;
+  --gl-surface: #303030;
+  --gl-surface-hover: #383838;
+  --gl-surface-active: #414141;
+  --gl-border: #414141;
+  --gl-border-strong: #545454;
+  --gl-border-subtle: #383838;
+  --gl-text-primary: #F3F3F3;
+  --gl-text-secondary: #A6A6A6;
+  --gl-text-muted: #A6A6A6;
+  --gl-text-faint: #A6A6A6;
+  --gl-primary: #60CDFF;
+  --gl-primary-rgb: 96, 205, 255;
+  --gl-primary-hover: #7AD5FF;
   --gl-error: #E53935;
   --gl-error-hover: #D32F2F;
   --gl-warning: #FF9800;
   --gl-warning-hover: #FB8C00;
   --gl-success: #4CAF50;
   --gl-gold: #FFD700;
-  --gl-on-accent: #000000;
+  --gl-on-accent: #202020;
   --gl-tint-green: #141E16;
   --gl-tint-cyan: #101A1C;
   /* Lighter-than-panel slate so dark item art (teas) reads against it. */
@@ -150,6 +151,7 @@
   --gl-text-muted: #526174;
   --gl-text-faint: #526174;
   --gl-primary: #0369A1;
+  --gl-primary-rgb: 3, 105, 161;
   --gl-primary-hover: #075985;
   --gl-error: #DC2626;
   --gl-error-hover: #B91C1C;

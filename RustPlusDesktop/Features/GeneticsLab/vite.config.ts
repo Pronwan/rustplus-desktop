@@ -21,6 +21,10 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            // Only the lazily loaded 3D planter guide uses three.js.
+            if (id.includes('/three/')) {
+              return 'vendor-three';
+            }
             if (id.includes('@mui') || id.includes('@emotion')) {
               return 'vendor-mui';
             }

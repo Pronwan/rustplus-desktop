@@ -119,9 +119,9 @@ export const RouteComparisonModal: React.FC = () => {
                       label={`Score ${item.analysis.recommendationScore}`}
                       sx={{
                         fontWeight: 800,
-                        backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                        backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
                         color: 'var(--gl-primary)',
-                        border: '1px solid rgba(0, 229, 255, 0.3)'
+                        border: '1px solid rgba(var(--gl-primary-rgb), 0.3)'
                       }}
                     />
                   </TableCell>

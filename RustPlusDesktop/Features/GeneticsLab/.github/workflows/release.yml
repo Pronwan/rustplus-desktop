@@ -25,28 +25,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Resolved after checkout: `git describe` needs the repository, and a manual run
+      # with no tag used to fail here before it existed.
       - name: Determine tag and version
         id: meta
         run: |
           TAG="${{ inputs.tag || github.ref_name }}"
-          if [ -z "$TAG" ] || [ "$TAG" = "master" ]; then
-            TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$TAG" ] || [[ "$TAG" != v* ]]; then
+            TAG=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
           fi
           if [ -z "$TAG" ]; then
             echo "Error: No tag specified or found."
             exit 1
           fi
+          git checkout --quiet "refs/tags/$TAG"
           VERSION="${TAG#v}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "dist_ref=dist-$TAG" >> "$GITHUB_OUTPUT"
           echo "Releasing tag: $TAG (version $VERSION)"
-
-      - name: Checkout repository at tag
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.meta.outputs.tag }}
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -75,13 +78,57 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm ci --prefer-offline --no-audit --no-fund
 
+      # Also writes dist/genetics-lab-manifest.json, which points Rust+ Desktop at the
+      # dist-<tag> ref published below.
       - name: Build production bundle
         run: npm run build
+        env:
+          GENETICS_LAB_DIST_REF: ${{ steps.meta.outputs.dist_ref }}
 
       - name: Package release assets
         run: |
-          cd dist && zip -r -1 "../genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" . && cd ..
+          test -f dist/genetics-lab-manifest.json || { echo "dist/genetics-lab-manifest.json is missing"; exit 1; }
+          cd dist && zip -r -1 "../genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" . -x '*.map' && cd ..
           cp "genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" genetics-lab-dist.zip
+          cp dist/genetics-lab-manifest.json genetics-lab-manifest.json
+
+      # Rust+ Desktop updates its embedded Genetics Lab from this branch, downloading
+      # only the files whose hash changed. Each release is one commit on `dist`, so git
+      # stores unchanged files (the ~40 MB of OCR data) once, and the dist-<tag> tag
+      # gives every release an immutable URL on raw.githubusercontent.com.
+      - name: Publish build to the dist branch
+        env:
+          DIST_REF: ${{ steps.meta.outputs.dist_ref }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          WORK="$(mktemp -d)"
+          if git ls-remote --exit-code --heads origin dist >/dev/null; then
+            git fetch --quiet origin dist
+            git worktree add --quiet --detach "$WORK" FETCH_HEAD
+          else
+            git worktree add --quiet --detach "$WORK"
+            git -C "$WORK" checkout --quiet --orphan dist-publish
+          fi
+
+          git -C "$WORK" rm -r -q --cached --ignore-unmatch .
+          find "$WORK" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R dist/. "$WORK/"
+          find "$WORK" -name '*.map' -delete
+
+          git -C "$WORK" add -A -f
+          if git -C "$WORK" diff --cached --quiet; then
+            echo "dist branch already matches $TAG"
+          else
+            git -C "$WORK" commit --quiet -m "dist: $TAG"
+          fi
+
+          git -C "$WORK" tag -f "$DIST_REF"
+          git -C "$WORK" push origin HEAD:refs/heads/dist
+          git -C "$WORK" push --force origin "refs/tags/$DIST_REF"
+          git worktree remove --force "$WORK"
 
       - name: Extract release notes
         id: notes
@@ -89,16 +136,38 @@ jobs:
 
       - name: Publish GitHub Release
         run: |
-          NOTES_FLAG=""
-          if [ -n "${{ steps.notes.outputs.notes_file }}" ] && [ -f "${{ steps.notes.outputs.notes_file }}" ]; then
-            NOTES_FLAG="--notes-file ${{ steps.notes.outputs.notes_file }}"
-          else
-            NOTES_FLAG="--generate-notes"
+          TAG="${{ steps.meta.outputs.tag }}"
+          ASSETS=("genetics-lab-dist-$TAG.zip" "genetics-lab-dist.zip" "genetics-lab-manifest.json")
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # Re-running a release refreshes its assets instead of failing.
+            gh release upload "$TAG" "${ASSETS[@]}" --clobber
+            exit 0
           fi
-          gh release create "${{ steps.meta.outputs.tag }}" \
-            "genetics-lab-dist-${{ steps.meta.outputs.tag }}.zip" \
-            "genetics-lab-dist.zip" \
-            --title "${{ steps.meta.outputs.tag }}" \
-            $NOTES_FLAG
+
+          NOTES_FLAG=("--generate-notes")
+          if [ -n "${{ steps.notes.outputs.notes_file }}" ] && [ -f "${{ steps.notes.outputs.notes_file }}" ]; then
+            NOTES_FLAG=("--notes-file" "${{ steps.notes.outputs.notes_file }}")
+          fi
+          gh release create "$TAG" "${ASSETS[@]}" --title "$TAG" "${NOTES_FLAG[@]}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The website deploys once per release, from here, instead of on every push: turn
+      # "Auto Deploy" off in Coolify so its own webhook stops deploying each commit. Coolify
+      # builds master's head, which at this point is this release's chore(release) commit.
+      # See DEPLOYMENT.md for the two secrets.
+      - name: Deploy website to Coolify
+        env:
+          COOLIFY_DEPLOY_WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
+        run: |
+          if [ -z "$COOLIFY_DEPLOY_WEBHOOK" ] || [ -z "$COOLIFY_API_TOKEN" ]; then
+            echo "::notice::COOLIFY_DEPLOY_WEBHOOK / COOLIFY_API_TOKEN not set; skipping the website deploy."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer $COOLIFY_API_TOKEN" \
+            "$COOLIFY_DEPLOY_WEBHOOK"
+          echo
+          echo "### 🚀 Website deploy queued in Coolify for ${{ steps.meta.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"

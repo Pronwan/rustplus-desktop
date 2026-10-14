@@ -19,7 +19,8 @@ import { useScanner } from '../../../context/ScannerContext.tsx';
 import { GREEN_GENES } from '../../../domain/genetics/Gene.ts';
 import { getRequiredSourceIndexes } from '../../../domain/genetics/routeScoring.ts';
 import { AudioService } from '../../../services/audioService.ts';
-import { ScanningRegionsView } from '../../scanner/ScanningRegionsView.tsx';
+import { PlantGroups } from '../../common/PlantGroups.tsx';
+import { MoveCloneMenu } from '../../common/MoveCloneMenu.tsx';
 
 const ROW_HEIGHT = 28; // Exact pixel height per line for perfect vertical alignment
 
@@ -52,15 +53,21 @@ export const CloneBank: React.FC = () => {
     savedGeneSets,
     saveCurrentGeneSet,
     loadSavedGeneSet,
-    deleteSavedGeneSet
+    deleteSavedGeneSet,
+    moveGeneLine
   } = useWorkspace();
 
   const { isCalculating, highlightedGroup, selectedMap, options } = useCalculation();
   const { isScannerActive, startScanner } = useScanner();
 
-  const [activeTab, setActiveTab] = useState<'current' | 'saved' | 'scanner'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'saved'>('current');
   const [clearAnchorEl, setClearAnchorEl] = useState<HTMLElement | null>(null);
   const [activeLineIdx, setActiveLineIdx] = useState<number | null>(null);
+  // The row whose "Move to…" menu is open, and where it opens.
+  const [moveTarget, setMoveTarget] = useState<{
+    line: number;
+    anchor: { element: HTMLElement } | { top: number; left: number };
+  } | null>(null);
 
   // Local text state for instantaneous zero-latency typing
   const [localText, setLocalText] = useState(geneInputText);
@@ -155,6 +162,7 @@ export const CloneBank: React.FC = () => {
 
   return (
     <Paper
+      data-tour="gene-inputs"
       variant="outlined"
       sx={{
         backgroundColor: 'var(--gl-panel-bg)',
@@ -176,7 +184,7 @@ export const CloneBank: React.FC = () => {
             variant="subtitle1"
             sx={{
               fontWeight: 800,
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.85rem',
               color: 'var(--gl-text-primary)',
               letterSpacing: '0.5px'
@@ -187,13 +195,13 @@ export const CloneBank: React.FC = () => {
           <Typography
             variant="caption"
             sx={{
-              backgroundColor: 'rgba(0, 229, 255, 0.12)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
               color: 'var(--gl-primary)',
               fontWeight: 800,
               px: 0.75,
               py: 0.15,
               borderRadius: '3px',
-              border: '1px solid rgba(0, 229, 255, 0.3)',
+              border: '1px solid rgba(var(--gl-primary-rgb), 0.3)',
               fontFamily: 'monospace',
               fontSize: '0.72rem'
             }}
@@ -203,13 +211,12 @@ export const CloneBank: React.FC = () => {
         </Box>
 
         <Button
-          variant={activeTab === 'scanner' ? 'contained' : 'outlined'}
+          data-tour="panel-scan"
+          variant={isScannerActive ? 'contained' : 'outlined'}
           size="small"
+          // The regions and calibration live in the Scanner HUD that opens with the scanner.
           onClick={() => {
-            setActiveTab('scanner');
-            if (!isScannerActive) {
-              startScanner();
-            }
+            if (!isScannerActive) startScanner();
           }}
           startIcon={<AutoAwesomeIcon sx={{ fontSize: 13 }} />}
           sx={{
@@ -217,18 +224,21 @@ export const CloneBank: React.FC = () => {
             px: 0.75,
             fontSize: '0.68rem',
             fontWeight: 700,
-            backgroundColor: activeTab === 'scanner' ? 'var(--gl-primary)' : 'transparent',
-            color: activeTab === 'scanner' ? '#000' : 'var(--gl-text-secondary)',
+            backgroundColor: isScannerActive ? 'var(--gl-primary)' : 'transparent',
+            color: isScannerActive ? '#000' : 'var(--gl-text-secondary)',
             borderColor: 'var(--gl-primary)',
             minWidth: 'auto',
-            boxShadow: activeTab === 'scanner' ? '0 0 8px rgba(0, 229, 255, 0.3)' : 'none'
+            boxShadow: isScannerActive ? '0 0 8px rgba(var(--gl-primary-rgb), 0.3)' : 'none'
           }}
         >
           {isScannerActive ? 'Live Scanner' : 'Scan'}
         </Button>
       </Box>
 
-      {/* Tabs: CURRENT | SAVED | SCANNER REGIONS */}
+      {/* One chip per plant with clones; the selected one is shown and calculated */}
+      <PlantGroups />
+
+      {/* Tabs: CURRENT | SAVED */}
       <Box sx={{ borderBottom: '1px solid var(--gl-surface)', mb: 1 }}>
         <Tabs
           value={activeTab}
@@ -249,6 +259,7 @@ export const CloneBank: React.FC = () => {
           />
           <Tab
             value="saved"
+            data-tour="saved-sets"
             label={`SAVED (${savedGeneSets.length})`}
             sx={{
               minHeight: 28,
@@ -257,18 +268,6 @@ export const CloneBank: React.FC = () => {
               fontSize: '0.72rem',
               fontWeight: 800,
               color: activeTab === 'saved' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
-            }}
-          />
-          <Tab
-            value="scanner"
-            label="SCANNER REGIONS"
-            sx={{
-              minHeight: 28,
-              py: 0.15,
-              px: 1,
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              color: activeTab === 'scanner' ? 'var(--gl-primary)' : 'var(--gl-text-muted)'
             }}
           />
         </Tabs>
@@ -283,7 +282,7 @@ export const CloneBank: React.FC = () => {
               variant="caption"
               sx={{
                 color: 'var(--gl-text-muted)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.72rem',
                 fontWeight: 700,
                 userSelect: 'none'
@@ -386,6 +385,7 @@ export const CloneBank: React.FC = () => {
 
           {/* Interactive Multi-Line Editor Container */}
           <Paper
+            data-tour="gene-list"
             variant="outlined"
             sx={{
               flex: 1,
@@ -408,11 +408,20 @@ export const CloneBank: React.FC = () => {
                   const chars = lineVal.toUpperCase().slice(0, 6).split('');
                   const isUsedInPlan = usedCloneIndices.has(rIdx);
                   const isActiveCursor = activeLineIdx === rIdx;
+                  const isMovable = /^[GHYWX]{6}$/.test(lineVal.trim().toUpperCase());
 
                   return (
                     <Box
                       key={rIdx}
                       title={isUsedInPlan ? `Plant #${rIdx + 1} is used in the selected route` : undefined}
+                      onContextMenu={
+                        isMovable
+                          ? (event: React.MouseEvent) => {
+                              event.preventDefault();
+                              setMoveTarget({ line: rIdx, anchor: { top: event.clientY, left: event.clientX } });
+                            }
+                          : undefined
+                      }
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -422,12 +431,12 @@ export const CloneBank: React.FC = () => {
                         backgroundColor: isUsedInPlan
                           ? 'rgba(255, 152, 0, 0.12)'
                           : isActiveCursor
-                          ? 'rgba(0, 229, 255, 0.04)'
+                          ? 'rgba(var(--gl-primary-rgb), 0.04)'
                           : 'transparent',
                         borderBottom: isUsedInPlan
                           ? '1.5px solid var(--gl-warning)'
                           : isActiveCursor
-                          ? '1px solid rgba(0, 229, 255, 0.25)'
+                          ? '1px solid rgba(var(--gl-primary-rgb), 0.25)'
                           : '1px solid transparent',
                         borderLeft: isUsedInPlan ? '3px solid var(--gl-warning)' : '3px solid transparent',
                         borderRadius: isUsedInPlan ? '3px' : 0,
@@ -438,12 +447,30 @@ export const CloneBank: React.FC = () => {
                       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 32, gap: 0.25 }}>
                         <Typography
                           variant="caption"
+                          component={isMovable ? 'button' : 'span'}
+                          {...(isMovable
+                            ? {
+                                type: 'button' as const,
+                                'aria-label': `Move plant #${rIdx + 1} to another plant group`,
+                                title: 'Move to another plant group (or right-click the row)',
+                                onClick: (event: React.MouseEvent<HTMLElement>) =>
+                                  setMoveTarget({ line: rIdx, anchor: { element: event.currentTarget } })
+                              }
+                            : {})}
                           sx={{
                             color: isUsedInPlan ? 'var(--gl-warning)' : 'var(--gl-text-faint)',
-                            fontFamily: '"Roboto Mono", monospace',
+                            fontFamily: 'var(--font-family-mono)',
                             fontSize: '0.74rem',
                             fontWeight: isUsedInPlan ? 800 : 500,
-                            userSelect: 'none'
+                            userSelect: 'none',
+                            background: 'none',
+                            border: 'none',
+                            p: 0,
+                            borderRadius: '3px',
+                            ...(isMovable && {
+                              cursor: 'pointer',
+                              '&:hover, &:focus-visible': { color: 'var(--gl-primary)', textDecoration: 'underline', outline: 'none' }
+                            })
                           }}
                         >
                           #{rIdx + 1}
@@ -489,7 +516,7 @@ export const CloneBank: React.FC = () => {
                                 color: hasGene ? '#FFFFFF' : 'transparent',
                                 fontWeight: 800,
                                 fontSize: '0.7rem',
-                                fontFamily: '"Roboto Mono", "Consolas", monospace',
+                                fontFamily: 'var(--font-family-mono)',
                                 userSelect: 'none',
                                 lineHeight: 1,
                                 border: !hasGene ? '1px solid var(--gl-surface)' : 'none'
@@ -527,7 +554,7 @@ export const CloneBank: React.FC = () => {
                   border: 'none',
                   outline: 'none',
                   color: 'var(--gl-text-primary)',
-                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   fontWeight: 700,
                   fontSize: '0.82rem',
                   lineHeight: `${ROW_HEIGHT}px`,
@@ -544,6 +571,16 @@ export const CloneBank: React.FC = () => {
               />
             </Box>
           </Paper>
+
+          <MoveCloneMenu
+            anchor={moveTarget?.anchor ?? null}
+            gene={moveTarget ? (lines[moveTarget.line] ?? '').trim().toUpperCase() : ''}
+            onClose={() => setMoveTarget(null)}
+            onMove={(plant) => {
+              if (moveTarget) moveGeneLine(localText, moveTarget.line, plant);
+              setMoveTarget(null);
+            }}
+          />
 
           <Box
             sx={{
@@ -675,12 +712,6 @@ export const CloneBank: React.FC = () => {
         </Box>
       )}
 
-      {/* TAB 3: LIVE SCANNING REGIONS & AUTO-CALIBRATION OUTSIDE WITHOUT MODAL */}
-      {activeTab === 'scanner' && (
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', pr: 0.5, pt: 0.5 }}>
-          <ScanningRegionsView compact />
-        </Box>
-      )}
     </Paper>
   );
 };

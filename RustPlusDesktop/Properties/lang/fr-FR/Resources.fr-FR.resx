@@ -7941,4 +7941,49 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculateur de recyclage</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Heure du serveur, petite</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Une cellule : le soleil ou la lune, et l'heure — comme sur la mini-carte</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Joueurs, petit</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Une cellule : combien sont connectés et combien tiennent — comme sur la mini-carte</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Maintenir une touche pour afficher</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Toujours visible — cliquez pour définir une touche</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Pour un seul écran : le dock n'est visible que tant que la touche est maintenue, comme la carte du jeu qui vous prive de la vue.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Écran</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Appliquer à toutes les tuiles</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>Tant que l'interrupteur est activé, cette valeur prime sur celle donnée à une tuile. Désactivez-le et les tuiles retrouvent la leur.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Opacité pour toutes</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Taille du texte pour toutes</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Couleur du texte pour toutes</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Réinitialiser l'apparence</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Effacer les réglages globaux et l'opacité, la taille du texte et la couleur propres à chaque tuile ? Les tuiles restent où elles sont.</value>
+  </data>
 </root>

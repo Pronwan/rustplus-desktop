@@ -102,7 +102,7 @@ export const GeneticsSequence: React.FC<GeneticsSequenceProps> = ({
                     color: isDark ? 'var(--gl-text-muted)' : 'var(--gl-text-muted)',
                     mb: '2px',
                     fontWeight: 700,
-                    fontFamily: '"Roboto Mono", monospace'
+                    fontFamily: 'var(--font-family-mono)'
                   }}
                 >
                   {idx + 1}
@@ -130,7 +130,7 @@ export const GeneticsSequence: React.FC<GeneticsSequenceProps> = ({
                   color: textColor,
                   fontWeight: 800,
                   fontSize: dim.font,
-                  fontFamily: '"Roboto Mono", "Consolas", monospace',
+                  fontFamily: 'var(--font-family-mono)',
                   border: isHighlighted || isDonor || isWildcard ? '2px solid' : '1.5px solid transparent',
                   borderColor: borderColor,
                   boxShadow: isHighlighted ? `0 0 8px ${theme.palette.primary.main}` : isDonor ? '0 0 6px rgba(255, 215, 0, 0.6)' : 'none',

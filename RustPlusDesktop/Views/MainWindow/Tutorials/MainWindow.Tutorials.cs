@@ -105,7 +105,7 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
     }
 
     /// <summary>The Devices tab's empty state: walk through pairing a smart device.</summary>
-    private void BtnDevicesShowHow_Click(object sender, RoutedEventArgs e) => _ = _tutorialService.StartAsync("smart-devices");
+    private void BtnDevicesShowHow_Click(object sender, RoutedEventArgs e) => _ = _tutorialService?.StartAsync("smart-devices");
 
     private async Task OfferNewFeatureTutorialOnceAsync(string tutorialId)
     {

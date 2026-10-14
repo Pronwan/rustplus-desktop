@@ -105,7 +105,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map }) => {
           flexDirection: 'column',
           alignItems: 'center',
           gap: 0.5,
-          boxShadow: '0 0 12px rgba(0, 229, 255, 0.2)',
+          boxShadow: '0 0 12px rgba(var(--gl-primary-rgb), 0.2)',
           zIndex: 2
         }}
       >
@@ -117,7 +117,7 @@ export const RouteTree: React.FC<RouteTreeProps> = ({ map }) => {
               height: 18,
               fontSize: '0.65rem',
               fontWeight: 800,
-              backgroundColor: 'rgba(0, 229, 255, 0.15)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.15)',
               color: 'var(--gl-primary)'
             }}
           />
@@ -270,7 +270,7 @@ const PlantRow: React.FC<{
           '&:hover': {
             borderColor: 'var(--gl-primary)',
             backgroundColor: 'var(--gl-card-hover-bg)',
-            boxShadow: '0 0 8px rgba(0, 229, 255, 0.25)'
+            boxShadow: '0 0 8px rgba(var(--gl-primary-rgb), 0.25)'
           }
         }}
       >

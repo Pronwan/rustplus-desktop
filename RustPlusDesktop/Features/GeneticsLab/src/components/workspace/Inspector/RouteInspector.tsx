@@ -147,7 +147,7 @@ export const RouteInspector: React.FC<{ onClose?: () => void }> = ({ onClose }) 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <Typography
           variant="subtitle2"
-          sx={{ fontWeight: 800, fontFamily: '"Roboto Mono", monospace', fontSize: '0.85rem', letterSpacing: '0.5px' }}
+          sx={{ fontWeight: 800, fontFamily: 'var(--font-family-mono)', fontSize: '0.85rem', letterSpacing: '0.5px' }}
         >
           ROUTE INSPECTOR
         </Typography>

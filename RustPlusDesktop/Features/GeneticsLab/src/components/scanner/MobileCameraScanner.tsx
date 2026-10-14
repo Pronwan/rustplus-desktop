@@ -26,7 +26,7 @@ const CAMERA_CONFIRMATION_SAMPLES = CAMERA_SCANNER_CONFIG.confirmation.samples;
 const TONE_COLORS: Record<CameraStatusTone, string> = {
   neutral: '#9CA3AF',
   warn: '#F59E0B',
-  active: '#00E5FF',
+  active: 'var(--gl-primary)',
   success: '#22C55E',
   error: '#EF4444'
 };
@@ -427,7 +427,7 @@ export const MobileCameraScanner: React.FC = () => {
                 p: 0,
                 fontFamily: 'monospace',
                 fontSize: '0.66rem',
-                color: isCameraDebugEnabled ? '#00E5FF' : '#6B7280',
+                color: isCameraDebugEnabled ? 'var(--gl-primary)' : '#6B7280',
                 mt: 0.5,
                 wordBreak: 'break-all'
               }}
@@ -591,7 +591,7 @@ const CaptureReview: React.FC<CaptureReviewProps> = ({ result, onConfirm, onDism
         zIndex: 10,
         p: 2,
         backgroundColor: '#0B0B0BF5',
-        borderTop: '2px solid #00E5FF',
+        borderTop: '2px solid var(--gl-primary)',
         ...SURFACE_PADDING
       }}
     >
@@ -616,8 +616,8 @@ const CaptureReview: React.FC<CaptureReviewProps> = ({ result, onConfirm, onDism
                   fontSize: '1.1rem',
                   borderRadius: '50%',
                   color: '#FFFFFF',
-                  backgroundColor: editingSlot === index ? '#00E5FF33' : '#1F2937',
-                  border: editingSlot === index ? '2px solid #00E5FF' : '2px solid #374151'
+                  backgroundColor: editingSlot === index ? 'var(--gl-primary)33' : '#1F2937',
+                  border: editingSlot === index ? '2px solid var(--gl-primary)' : '2px solid #374151'
                 }}
               >
                 {gene}
@@ -641,7 +641,7 @@ const CaptureReview: React.FC<CaptureReviewProps> = ({ result, onConfirm, onDism
                     fontFamily: 'monospace',
                     fontWeight: 900,
                     color: '#111827',
-                    backgroundColor: '#00E5FF'
+                    backgroundColor: 'var(--gl-primary)'
                   }}
                 >
                   {letter}
@@ -712,7 +712,7 @@ const PermissionExplainer: React.FC<PermissionExplainerProps> = ({
   return (
     <Box sx={{ maxWidth: 460, mx: 'auto', px: 2, textAlign: 'left' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-        <PhotoCameraIcon sx={{ color: '#00E5FF' }} />
+        <PhotoCameraIcon sx={{ color: 'var(--gl-primary)' }} />
         <Typography sx={{ fontFamily: 'monospace', fontWeight: 800, fontSize: '1rem' }}>
           Scan with your phone camera
         </Typography>

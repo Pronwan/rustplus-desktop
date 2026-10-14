@@ -37,6 +37,8 @@ installer/Output/*
 
 # Lokale Server-/Helper-Skripte
 **/Scripts/
+!/scripts/
+!.github/scripts/
 !RustPlusDesktop/Scripts/
 RustPlusDesktop/Scripts/*.py
 RustPlusDesktop/Scripts/*.conf

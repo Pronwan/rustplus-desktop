@@ -6,6 +6,7 @@ import { Sapling } from '../domain/genetics/Sapling.ts';
 import { GeneticsMap } from '../domain/genetics/GeneticsMap.ts';
 import { buildBreedingPlan } from '../domain/genetics/breedingPlan.ts';
 import { useNotification } from './NotificationContext.tsx';
+import { PLANT_ORDER, plantLabel } from '../domain/plants.ts';
 
 const DEFAULT_SAMPLE_GENES: Record<string, string[]> = {
   hemp: ['GGYYHH', 'YGGYHH', 'HHGGYY', 'WYGGYX', 'GHGYHW', 'YYGGHH', 'XGYYHH'],
@@ -20,6 +21,12 @@ const DEFAULT_SAMPLE_GENES: Record<string, string[]> = {
   corn: ['GGYYHH', 'YYGGHH', 'GGGGYY', 'YYGGXX']
 };
 
+export interface GeneGroup {
+  plant: string;
+  /** Valid gene strings in the list, in order. */
+  genes: string[];
+}
+
 interface WorkspaceContextType {
   selectedPlant: string;
   setSelectedPlant: (plant: string) => void;
@@ -30,11 +37,24 @@ interface WorkspaceContextType {
   sourceSaplings: Sapling[]; // Valid saplings from current input text with line indices
   clones: SavedClone[]; // Clones for current crop
   allClones: SavedClone[];
+  /** Every plant with genes in its list (plus the selected one), in plant order. */
+  geneGroups: GeneGroup[];
+  /** Empties one plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
+  clearPlantGroup: (plant: string) => (() => void) | undefined;
+  /**
+   * Moves line `lineIndex` of the open plant's list to `toPlant`'s list. `currentText` is the
+   * list as the editor shows it, which can be a keystroke ahead of the stored one.
+   */
+  moveGeneLine: (currentText: string, lineIndex: number, toPlant: string) => void;
+  /** Replaces a scanned gene that turned out to be misread; true if it was found. */
+  replaceScannedGene: (from: string, to: string, plant?: string) => boolean;
+  /** Empties every plant's list; the notice offers Undo. Returns the undo, if anything was cleared. */
+  clearAllGroups: () => (() => void) | undefined;
   
   // Clone operations
-  addClone: (genetics: string, options?: Partial<Omit<SavedClone, 'id' | 'genetics' | 'cropType' | 'createdAt' | 'updatedAt'>>) => SavedClone | null;
+  addClone: (genetics: string, options?: Partial<Omit<SavedClone, 'id' | 'genetics' | 'cropType' | 'createdAt' | 'updatedAt'>> & { cropType?: string }) => SavedClone | null;
   addBatchClones: (geneStrings: string[], source?: 'manual' | 'scanner' | 'import') => number;
-  appendScannedGene: (geneString: string) => void;
+  appendScannedGene: (geneString: string, plant?: string) => void;
   updateClone: (id: string, updates: Partial<SavedClone>) => void;
   removeClone: (id: string) => void;
   duplicateClone: (id: string) => void;
@@ -60,6 +80,8 @@ interface WorkspaceContextType {
   updateSessionStepPlanted: (stepIndex: number, type: 'center' | 'surrounding', planted: boolean) => void;
   completeBreedingStep: (stepIndex: number) => void;
   abandonBreedingSession: () => void;
+  /** Changes the plant type of the active session; saved with it and kept in its history. */
+  setSessionCropType: (cropType: string) => void;
   breedingHistory: BreedingSession[];
 
   // Projects / Saved Workspaces
@@ -79,9 +101,30 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const { notifySuccess, notifyInfo, notifyError } = useNotification();
 
   const [selectedPlant, setSelectedPlantState] = useState<string>(() => StorageService.getSelectedPlantType());
-  // Always start with an empty gene list. Users load plants via Scan, the SAMPLE
+  // Always start with empty gene lists. Users load plants via Scan, the SAMPLE
   // button, or the SAVED sets tab — we no longer auto-restore the previous input.
-  const [geneInputText, setGeneInputTextState] = useState<string>('');
+  //
+  // One list per plant type: clones of several plants can be collected side by side (the
+  // scanner files each under the plant it detects), and the selected plant's list is the one
+  // shown, edited and calculated.
+  const [geneInputs, setGeneInputs] = useState<Record<string, string>>({});
+  const geneInputText = geneInputs[selectedPlant] ?? '';
+  // Updated synchronously by setSelectedPlant, so a handler that switches plant and then
+  // writes genes writes them to the new plant.
+  const selectedPlantRef = useRef(selectedPlant);
+
+  /** Writes a plant's list (the selected plant's unless `plant` is given). */
+  const setGeneInputTextState = useCallback(
+    (value: string | ((previous: string) => string), plant?: string) => {
+      const key = plant ?? selectedPlantRef.current;
+      setGeneInputs((all) => {
+        const previous = all[key] ?? '';
+        const next = typeof value === 'function' ? value(previous) : value;
+        return next === previous ? all : { ...all, [key]: next };
+      });
+    },
+    []
+  );
 
   const [savedGeneSets, setSavedGeneSets] = useState<StoredGeneSet[]>(() => StorageService.getSavedGeneSets());
   const [targetConfig, setTargetConfig] = useState<TargetConfiguration>(() => StorageService.getTargetConfig());
@@ -112,9 +155,32 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return { sourceSaplings: validSaplings, clones: validClones };
   }, [geneInputText, selectedPlant]);
 
-  const allClones = clones;
+  // Every plant's clones, for per-plant counts (the plant picker, the gene groups).
+  const allClones = useMemo(() => {
+    const out: SavedClone[] = [];
+    for (const [plant, text] of Object.entries(geneInputs)) {
+      if (plant === selectedPlant) continue;
+      text.split('\n').forEach((line, idx) => {
+        const clean = line.trim().toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6);
+        if (clean.length === 6 && Sapling.isValidGeneString(clean)) {
+          out.push(CloneUtils.create(clean, plant, { name: `Plant #${idx + 1}`, quantity: 1, source: 'manual' }));
+        }
+      });
+    }
+    return [...clones, ...out];
+  }, [geneInputs, selectedPlant, clones]);
+
+  const geneGroups = useMemo<GeneGroup[]>(() => {
+    const byPlant: Record<string, string[]> = {};
+    for (const clone of allClones) (byPlant[clone.cropType] ??= []).push(clone.genetics);
+    return PLANT_ORDER.filter((plant) => byPlant[plant]?.length || plant === selectedPlant).map((plant) => ({
+      plant,
+      genes: byPlant[plant] ?? []
+    }));
+  }, [allClones, selectedPlant]);
 
   const setSelectedPlant = useCallback((plant: string) => {
+    selectedPlantRef.current = plant;
     setSelectedPlantState(plant);
     StorageService.saveSelectedPlantType(plant);
   }, []);
@@ -126,10 +192,10 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Always-current mirror of the input text so scan-dedup can read it without
   // making addClone/appendScannedGene change identity on every keystroke (which
   // would churn the scanner's event subscription).
-  const geneInputTextRef = useRef(geneInputText);
+  const geneInputsRef = useRef(geneInputs);
   useEffect(() => {
-    geneInputTextRef.current = geneInputText;
-  }, [geneInputText]);
+    geneInputsRef.current = geneInputs;
+  }, [geneInputs]);
 
   const normalizeGene = (s: string) =>
     s.trim().toUpperCase().replace(/[^GHYWX]/g, '').slice(0, 6);
@@ -141,9 +207,86 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // --- MANUAL INPUT & CLONE ACTIONS ---
 
+  const clearPlantGroup = useCallback(
+    (plant: string) => {
+      const previous = geneInputsRef.current[plant] ?? '';
+      if (!previous.trim()) return undefined;
+      setGeneInputTextState('', plant);
+      const undo = () => setGeneInputTextState(previous, plant);
+      notifyInfo(`Cleared ${plantLabel(plant)}`, { label: 'Undo', onClick: undo });
+      return undo;
+    },
+    [notifyInfo, setGeneInputTextState]
+  );
+
+  const moveGeneLine = useCallback(
+    (currentText: string, lineIndex: number, toPlant: string) => {
+      const fromPlant = selectedPlantRef.current;
+      if (toPlant === fromPlant) return;
+      const lines = currentText.split('\n');
+      const gene = normalizeGene(lines[lineIndex] ?? '');
+      if (!Sapling.isValidGeneString(gene)) return;
+
+      const previousTarget = geneInputsRef.current[toPlant] ?? '';
+      const remaining = lines.filter((_, i) => i !== lineIndex).join('\n');
+      const targetGenes = previousTarget.split('\n').map(normalizeGene).filter(Boolean);
+      const alreadyThere = targetGenes.includes(gene);
+      const nextTarget = alreadyThere ? previousTarget : previousTarget.trim() ? `${previousTarget.trim()}\n${gene}` : gene;
+
+      geneInputsRef.current = { ...geneInputsRef.current, [fromPlant]: remaining, [toPlant]: nextTarget };
+      setGeneInputTextState(remaining, fromPlant);
+      setGeneInputTextState(nextTarget, toPlant);
+      notifyInfo(
+        alreadyThere
+          ? `${gene} was already in ${plantLabel(toPlant)}: removed from ${plantLabel(fromPlant)}`
+          : `Moved ${gene} to ${plantLabel(toPlant)}`,
+        {
+          label: 'Undo',
+          onClick: () => {
+            setGeneInputTextState(currentText, fromPlant);
+            setGeneInputTextState(previousTarget, toPlant);
+          }
+        }
+      );
+    },
+    [notifyInfo, setGeneInputTextState]
+  );
+
+  const replaceScannedGene = useCallback(
+    (from: string, to: string, plant?: string): boolean => {
+      const wrong = normalizeGene(from);
+      const right = normalizeGene(to);
+      const plants = plant ? [plant, ...Object.keys(geneInputsRef.current)] : Object.keys(geneInputsRef.current);
+      for (const key of plants) {
+        const lines = (geneInputsRef.current[key] ?? '').split('\n');
+        // The newest entry is the one just scanned.
+        const index = lines.map(normalizeGene).lastIndexOf(wrong);
+        if (index < 0) continue;
+        const hasRight = lines.some((line) => normalizeGene(line) === right);
+        const next = hasRight ? lines.filter((_, i) => i !== index) : lines.map((line, i) => (i === index ? right : line));
+        const text = next.join('\n');
+        geneInputsRef.current = { ...geneInputsRef.current, [key]: text };
+        flushSync(() => setGeneInputTextState(text, key));
+        return true;
+      }
+      return false;
+    },
+    [setGeneInputTextState]
+  );
+
+  // The toolbar's CLEAR: the open group only.
   const clearGeneInput = useCallback(() => {
-    setGeneInputTextState('');
-    notifyInfo('Cleared all inputs');
+    clearPlantGroup(selectedPlantRef.current);
+  }, [clearPlantGroup]);
+
+  const clearAllGroups = useCallback(() => {
+    const previous = geneInputsRef.current;
+    const filled = Object.values(previous).filter((text) => text.trim()).length;
+    if (filled === 0) return undefined;
+    setGeneInputs({});
+    const undo = () => setGeneInputs(previous);
+    notifyInfo(`Cleared ${filled} plant group${filled === 1 ? '' : 's'}`, { label: 'Undo', onClick: undo });
+    return undo;
   }, [notifyInfo]);
 
   const loadSampleGenes = useCallback(() => {
@@ -154,24 +297,27 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Append a scanned gene string, de-duplicating against what's already in the
   // list. Returns true only if it was newly added (false when it's a duplicate).
-  const appendScannedGene = useCallback((geneString: string): boolean => {
+  /** Adds a gene to a plant's list (the selected plant's by default); false if already there. */
+  const appendScannedGene = useCallback((geneString: string, plant?: string): boolean => {
     const clean = normalizeGene(geneString);
     if (!Sapling.isValidGeneString(clean)) return false;
+    const key = plant ?? selectedPlantRef.current;
+    const current = geneInputsRef.current[key] ?? '';
 
-    const existing = geneInputTextRef.current.split('\n').map(normalizeGene).filter(Boolean);
+    const existing = current.split('\n').map(normalizeGene).filter(Boolean);
     if (existing.includes(clean)) return false; // dedup: already scanned
 
     // Immediately update ref so any immediate subsequent frame knows it's already in the bank!
-    const trimmed = geneInputTextRef.current.trim();
+    const trimmed = current.trim();
     const updated = trimmed ? `${trimmed}\n${clean}` : clean;
-    geneInputTextRef.current = updated;
+    geneInputsRef.current = { ...geneInputsRef.current, [key]: updated };
 
     // flushSync guarantees immediate synchronous DOM repaint even if the window is in the background
     flushSync(() => {
-      setGeneInputTextState(updated);
+      setGeneInputTextState(updated, key);
     });
     return true;
-  }, []);
+  }, [setGeneInputTextState]);
 
   const addClone = useCallback(
     (
@@ -183,9 +329,12 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         notifyError(`Invalid gene string: "${genetics}"`);
         return null;
       }
+      // `cropType` files the clone under another plant's list (a scanner read of a
+      // different plant); otherwise it joins the selected plant's.
+      const plant: string = _options?.cropType ?? selectedPlant;
       // Null signals a duplicate (already in the list) so callers can react.
-      if (!appendScannedGene(clean)) return null;
-      return CloneUtils.create(clean, selectedPlant);
+      if (!appendScannedGene(clean, plant)) return null;
+      return CloneUtils.create(clean, plant);
     },
     [appendScannedGene, selectedPlant, notifyError]
   );
@@ -256,10 +405,10 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const loadSavedGeneSet = useCallback(
     (set: StoredGeneSet) => {
-      setGeneInputTextState(set.genes);
       if (set.selectedPlantType) {
         setSelectedPlant(set.selectedPlantType);
       }
+      setGeneInputTextState(set.genes, set.selectedPlantType || undefined);
       notifySuccess(`Loaded saved set (${set.genes.split('\n').filter(Boolean).length} plants)`);
     },
     [setSelectedPlant, notifySuccess]
@@ -327,11 +476,17 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const updateSessionStepPlanted = useCallback(
     (stepIndex: number, type: 'center' | 'surrounding', planted: boolean) => {
       if (!activeSession) return;
-      const updatedSteps = [...activeSession.steps];
-      if (updatedSteps[stepIndex]) {
-        if (type === 'center') updatedSteps[stepIndex].isCenterPlanted = planted;
-        if (type === 'surrounding') updatedSteps[stepIndex].isSurroundingPlanted = planted;
-      }
+      // A new step object, not an edit of the old one: views memoised on the step (the 3D
+      // planter) only see the change when the reference changes.
+      const updatedSteps = activeSession.steps.map((s, i) =>
+        i !== stepIndex
+          ? s
+          : {
+              ...s,
+              ...(type === 'center' ? { isCenterPlanted: planted } : {}),
+              ...(type === 'surrounding' ? { isSurroundingPlanted: planted } : {})
+            }
+      );
       const updatedSession: BreedingSession = {
         ...activeSession,
         steps: updatedSteps,
@@ -343,15 +498,26 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [activeSession]
   );
 
+  const setSessionCropType = useCallback(
+    (cropType: string) => {
+      if (!activeSession || activeSession.cropType === cropType) return;
+      const updatedSession: BreedingSession = {
+        ...activeSession,
+        cropType,
+        updatedAt: new Date().toISOString()
+      };
+      StorageService.saveActiveBreedingSession(updatedSession);
+      setActiveSession(updatedSession);
+    },
+    [activeSession]
+  );
+
   const completeBreedingStep = useCallback(
     (stepIndex: number) => {
       if (!activeSession) return;
-      const updatedSteps = [...activeSession.steps];
-      if (updatedSteps[stepIndex]) {
-        updatedSteps[stepIndex].isCompleted = true;
-        updatedSteps[stepIndex].isCenterPlanted = true;
-        updatedSteps[stepIndex].isSurroundingPlanted = true;
-      }
+      const updatedSteps = activeSession.steps.map((s, i) =>
+        i === stepIndex ? { ...s, isCompleted: true, isCenterPlanted: true, isSurroundingPlanted: true } : s
+      );
 
       const nextStepIdx = stepIndex + 1;
       const isAllComplete = nextStepIdx >= updatedSteps.length;
@@ -424,7 +590,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         targetGenetics: proj.targetGenetics,
         matchMode: 'best-possible'
       });
-      setGeneInputTextState(proj.clones.map(c => c.genetics).join('\n'));
+      setGeneInputTextState(proj.clones.map(c => c.genetics).join('\n'), proj.cropType);
       notifySuccess(`Loaded project "${proj.name}" (${proj.clones.length} clones)`);
     },
     [projects, setSelectedPlant, notifySuccess]
@@ -481,7 +647,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
         if (importedGeneLines.length > 0) {
           setSelectedPlant(cropType);
-          setGeneInputTextState(importedGeneLines.join('\n'));
+          setGeneInputTextState(importedGeneLines.join('\n'), cropType);
           notifySuccess(`Successfully imported ${importedGeneLines.length} clones for ${cropType}`);
           return { success: true, count: importedGeneLines.length };
         }
@@ -503,6 +669,11 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setGeneInputText,
         clones,
         allClones,
+        geneGroups,
+        clearPlantGroup,
+        clearAllGroups,
+        moveGeneLine,
+        replaceScannedGene,
         sourceSaplings,
         addClone,
         addBatchClones,
@@ -526,6 +697,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateSessionStepPlanted,
         completeBreedingStep,
         abandonBreedingSession,
+        setSessionCropType,
         breedingHistory,
         projects,
         saveCurrentAsProject,

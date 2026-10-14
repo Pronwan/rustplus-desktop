@@ -3,10 +3,21 @@ export interface Ingredient {
   quantity: number;
 }
 
+/** Where the recipe is made in game. */
+export type CraftStation = 'mixing-table' | 'cooking-workbench' | 'workbench' | 'fridge';
+
+export const STATION_LABELS: Record<CraftStation, string> = {
+  'mixing-table': 'Mixing Table or Cooking Workbench',
+  'cooking-workbench': 'Cooking Workbench',
+  workbench: 'Workbench Level 1',
+  fridge: 'Powered fridge, 4 hours'
+};
+
 export interface Recipe {
   id: string;
   name: string;
   category: 'tea' | 'food' | 'resource' | 'pie';
+  station: CraftStation;
   imageSlug: string;
   ingredients: Ingredient[];
   output: {
@@ -20,110 +31,11 @@ export interface ExpandedRecipe extends Recipe {
   baseIngredients: Ingredient[];
 }
 
+/** Icon file names that the generic slug rule below cannot derive. */
 export const ITEM_IMAGE_MAP: Record<string, string> = {
-  'Bread Loaf': 'bread-loaf',
-  'Chicken Pie': 'chicken-pie',
-  'Apple Pie': 'apple-pie',
-  'Pumpkin Pie': 'pumpkin-pie',
-  'Meat Pie': 'pork-pie',
-  'Fish Pie': 'fish-pie',
-  'Bear Pie': 'bear-pie',
-  'Pork Pie': 'pork-pie',
-  'Big Cat Pie': 'big-cat-pie',
-  'Hunters Pie': 'hunters-pie',
-  'Raw Meat Pie': 'pork-pie',
-
-  'Basic Healing Tea': 'basic-healing-tea',
-  'Advanced Healing Tea': 'advanced-healing-tea',
-  'Pure Healing Tea': 'pure-healing-tea',
-
-  'Basic Max Health Tea': 'basic-max-health-tea',
-  'Advanced Max Health Tea': 'advanced-max-health-tea',
-  'Pure Max Health Tea': 'pure-max-health-tea',
-
-  'Basic Ore Tea': 'basic-ore-tea',
-  'Advanced Ore Tea': 'advanced-ore-tea',
-  'Pure Ore Tea': 'pure-ore-tea',
-
-  'Basic Wood Tea': 'basic-wood-tea',
-  'Advanced Wood Tea': 'advanced-wood-tea',
-  'Pure Wood Tea': 'pure-wood-tea',
-
-  'Basic Scrap Tea': 'basic-scrap-tea',
-  'Advanced Scrap Tea': 'advanced-scrap-tea',
-  'Pure Scrap Tea': 'pure-scrap-tea',
-
-  'Basic Harvesting Tea': 'basic-harvesting-tea',
-  'Advanced Harvesting Tea': 'advanced-harvesting-tea',
-  'Pure Harvesting Tea': 'pure-harvesting-tea',
-
-  'Basic Anti-Rad Tea': 'basic-anti-rad-tea',
-  'Advanced Anti-Rad Tea': 'advanced-anti-rad-tea',
-  'Pure Anti-Rad Tea': 'pure-anti-rad-tea',
-
-  'Basic Cooling Tea': 'basic-cooling-tea',
-  'Advanced Cooling Tea': 'advanced-cooling-tea',
-  'Pure Cooling Tea': 'pure-cooling-tea',
-
-  'Basic Warming Tea': 'basic-warming-tea',
-  'Advanced Warming Tea': 'advanced-warming-tea',
-  'Pure Warming Tea': 'pure-warming-tea',
-
-  'Basic Crafting Quality Tea': 'basic-crafting-quality-tea',
-  'Advanced Crafting Quality Tea': 'advanced-crafting-quality-tea',
-  'Pure Crafting Quality Tea': 'pure-crafting-quality-tea',
-
-  'Milk': 'milk',
-  'Cream': 'cream',
-  'Skimmed Milk': 'skimmed-milk',
-
-  'Red Berry': 'red-berry',
-  'Green Berry': 'green-berry',
-  'Blue Berry': 'blue-berry',
-  'Yellow Berry': 'yellow-berry',
-  'White Berry': 'white-berry',
-  'Mixed Berry': 'mixed-berry',
-
-  'Apple': 'apple',
-  'Egg': 'egg',
-  'Corn': 'corn',
-  'Potato': 'potato',
-  'Pumpkin': 'pumpkin',
-  'Wheat': 'wheat',
-  'Flour': 'wheat',
-  'Water': 'cloth',
-  'Honey': 'jar-of-honey',
-  'Jar of Honey': 'jar-of-honey',
-  'Pie Crust': 'wheat',
-
-  'Cooked Chicken': 'cooked-chicken',
-  'Chicken Meat': 'cooked-chicken',
-  'Cooked Pork': 'cooked-pork',
-  'Pork Meat': 'cooked-pork',
-  'Cooked Bear Meat': 'cooked-bear-meat',
-  'Bear Meat': 'cooked-bear-meat',
-  'Cooked Fish': 'cooked-fish',
-  'Fish Meat': 'cooked-fish',
-  'Cooked Big Cat Meat': 'cooked-big-cat-meat',
-  'Cooked Deer Meat': 'cooked-deer-meat',
-
-  'Low Grade Fuel': 'low-grade-fuel',
-  'Animal Fat': 'animal-fat',
-  'Cloth': 'cloth',
-  'Gun Powder': 'gun-powder',
-  'Charcoal': 'charcoal',
-  'Sulfur': 'sulfur',
-  'Explosives': 'explosives',
-  'Metal Fragments': 'metal-fragments',
-  'Pipes': 'metal-fragments',
-
   '5.56 Rifle Ammo': '5_56-rifle-ammo',
   'HV 5.56 Rifle Ammo': 'hv-5_56-rifle-ammo',
-  'HV Pistol Ammo': 'hv-pistol-ammo',
-  'Pistol Bullet': 'pistol-bullet',
-  'Incendiary Pistol Bullet': 'incendiary-pistol-bullet',
-  'Incendiary 5.56 Rifle Ammo': 'incendiary-5_56-rifle-ammo',
-  'Rocket': 'explosives'
+  'Incendiary 5.56 Rifle Ammo': 'incendiary-5_56-rifle-ammo'
 };
 
 export const getItemImageSlug = (itemName: string): string => {
@@ -134,534 +46,324 @@ export const getItemImageSlug = (itemName: string): string => {
   return slug;
 };
 
-const BASE_RECIPES: Recipe[] = [
-  // --- FOOD & BREAD ---
-  {
-    id: 'bread-loaf',
-    name: 'Bread Loaf',
-    category: 'food',
-    imageSlug: 'bread-loaf',
-    ingredients: [
-      { item: 'Wheat', quantity: 3 }
-    ],
-    output: { item: 'Bread Loaf', quantity: 1 },
-    description: 'Fresh baked bread providing steady nourishment.'
-  },
+const slugOf = (name: string) => getItemImageSlug(name);
 
-  // --- PIES ---
-  {
-    id: 'chicken-pie',
-    name: 'Chicken Pie',
-    category: 'pie',
-    imageSlug: 'chicken-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Corn', quantity: 1 },
-      { item: 'Cooked Chicken', quantity: 1 },
-      { item: 'Potato', quantity: 1 }
-    ],
-    output: { item: 'Chicken Pie', quantity: 1 },
-    description: 'Delicious poultry pie providing high energy.'
-  },
-  {
-    id: 'apple-pie',
-    name: 'Apple Pie',
-    category: 'pie',
-    imageSlug: 'apple-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Apple', quantity: 3 },
-      { item: 'Jar of Honey', quantity: 1 }
-    ],
-    output: { item: 'Apple Pie', quantity: 1 },
-    description: 'Sweet apple pastry restoring health and hydration.'
-  },
-  {
-    id: 'pumpkin-pie',
-    name: 'Pumpkin Pie',
-    category: 'pie',
-    imageSlug: 'pumpkin-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Pumpkin', quantity: 1 }
-    ],
-    output: { item: 'Pumpkin Pie', quantity: 1 },
-    description: 'A hearty baked pie that restores hunger and health.'
-  },
-  {
-    id: 'meat-pie',
-    name: 'Meat Pie',
-    category: 'pie',
-    imageSlug: 'pork-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Bear Meat', quantity: 1 },
-      { item: 'Cooked Pork', quantity: 1 },
-      { item: 'Potato', quantity: 1 }
-    ],
-    output: { item: 'Meat Pie', quantity: 1 },
-    description: 'Filling combination meat pie with prolonged healing.'
-  },
-  {
-    id: 'fish-pie',
-    name: 'Fish Pie',
-    category: 'pie',
-    imageSlug: 'fish-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Fish', quantity: 2 },
-      { item: 'Potato', quantity: 1 }
-    ],
-    output: { item: 'Fish Pie', quantity: 1 },
-    description: 'Nutritious seafood pie with rapid hunger restoration.'
-  },
-  {
-    id: 'bear-pie',
-    name: 'Bear Pie',
-    category: 'pie',
-    imageSlug: 'bear-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Bear Meat', quantity: 2 }
-    ],
-    output: { item: 'Bear Pie', quantity: 1 },
-    description: 'Hearty big game pie offering massive calorie gains.'
-  },
-  {
-    id: 'pork-pie',
-    name: 'Pork Pie',
-    category: 'pie',
-    imageSlug: 'pork-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Pork', quantity: 2 }
-    ],
-    output: { item: 'Pork Pie', quantity: 1 },
-    description: 'Savory meat pie that replenishes calories.'
-  },
-  {
-    id: 'big-cat-pie',
-    name: 'Big Cat Pie',
-    category: 'pie',
-    imageSlug: 'big-cat-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Big Cat Meat', quantity: 2 }
-    ],
-    output: { item: 'Big Cat Pie', quantity: 1 },
-    description: 'Exotic predator meat pie providing stamina.'
-  },
-  {
-    id: 'hunters-pie',
-    name: 'Hunters Pie',
-    category: 'pie',
-    imageSlug: 'hunters-pie',
-    ingredients: [
-      { item: 'Wheat', quantity: 1 },
-      { item: 'Egg', quantity: 1 },
-      { item: 'Cooked Deer Meat', quantity: 2 }
-    ],
-    output: { item: 'Hunters Pie', quantity: 1 },
-    description: 'Wild game pie offering high nutritional value.'
-  },
-
-  // --- TEAS: MAX HEALTH ---
-  {
-    id: 'basic-max-health-tea',
-    name: 'Basic Max Health Tea',
-    category: 'tea',
-    imageSlug: 'basic-max-health-tea',
-    ingredients: [
-      { item: 'Red Berry', quantity: 2 },
-      { item: 'Yellow Berry', quantity: 2 }
-    ],
-    output: { item: 'Basic Max Health Tea', quantity: 1 },
-    description: 'Increases max health by +5% for 5 minutes.'
-  },
-  {
-    id: 'advanced-max-health-tea',
-    name: 'Advanced Max Health Tea',
-    category: 'tea',
-    imageSlug: 'advanced-max-health-tea',
-    ingredients: [{ item: 'Basic Max Health Tea', quantity: 4 }],
-    output: { item: 'Advanced Max Health Tea', quantity: 1 },
-    description: 'Increases max health by +12.5% for 15 minutes.'
-  },
-  {
-    id: 'pure-max-health-tea',
-    name: 'Pure Max Health Tea',
-    category: 'tea',
-    imageSlug: 'pure-max-health-tea',
-    ingredients: [{ item: 'Advanced Max Health Tea', quantity: 4 }],
-    output: { item: 'Pure Max Health Tea', quantity: 1 },
-    description: '+20% max health for 20 minutes. +30 hydration.'
-  },
-
-  // --- TEAS: HEALING ---
-  {
-    id: 'basic-healing-tea',
-    name: 'Basic Healing Tea',
-    category: 'tea',
-    imageSlug: 'basic-healing-tea',
-    ingredients: [{ item: 'Red Berry', quantity: 4 }],
-    output: { item: 'Basic Healing Tea', quantity: 1 },
-    description: 'Instantly restores 30 HP.'
-  },
-  {
-    id: 'advanced-healing-tea',
-    name: 'Advanced Healing Tea',
-    category: 'tea',
-    imageSlug: 'advanced-healing-tea',
-    ingredients: [{ item: 'Basic Healing Tea', quantity: 4 }],
-    output: { item: 'Advanced Healing Tea', quantity: 1 },
-    description: 'Instantly restores 50 HP.'
-  },
-  {
-    id: 'pure-healing-tea',
-    name: 'Pure Healing Tea',
-    category: 'tea',
-    imageSlug: 'pure-healing-tea',
-    ingredients: [{ item: 'Advanced Healing Tea', quantity: 4 }],
-    output: { item: 'Pure Healing Tea', quantity: 1 },
-    description: 'Restores 10 HP, then heals a large amount over time. +30 hydration.'
-  },
-
-  // --- TEAS: ORE ---
-  {
-    id: 'basic-ore-tea',
-    name: 'Basic Ore Tea',
-    category: 'tea',
-    imageSlug: 'basic-ore-tea',
-    ingredients: [{ item: 'Yellow Berry', quantity: 4 }],
-    output: { item: 'Basic Ore Tea', quantity: 1 },
-    description: 'Increases ore node yield by +20% for 5 minutes.'
-  },
-  {
-    id: 'advanced-ore-tea',
-    name: 'Advanced Ore Tea',
-    category: 'tea',
-    imageSlug: 'advanced-ore-tea',
-    ingredients: [{ item: 'Basic Ore Tea', quantity: 4 }],
-    output: { item: 'Advanced Ore Tea', quantity: 1 },
-    description: 'Increases ore node yield by +35% for 15 minutes.'
-  },
-  {
-    id: 'pure-ore-tea',
-    name: 'Pure Ore Tea',
-    category: 'tea',
-    imageSlug: 'pure-ore-tea',
-    ingredients: [{ item: 'Advanced Ore Tea', quantity: 4 }],
-    output: { item: 'Pure Ore Tea', quantity: 1 },
-    description: '+50% ore yield for 30 minutes. +30 hydration.'
-  },
-
-  // --- TEAS: WOOD ---
-  {
-    id: 'basic-wood-tea',
-    name: 'Basic Wood Tea',
-    category: 'tea',
-    imageSlug: 'basic-wood-tea',
-    ingredients: [{ item: 'Blue Berry', quantity: 4 }],
-    output: { item: 'Basic Wood Tea', quantity: 1 },
-    description: 'Increases tree wood yield by +50% for 5 minutes.'
-  },
-  {
-    id: 'advanced-wood-tea',
-    name: 'Advanced Wood Tea',
-    category: 'tea',
-    imageSlug: 'advanced-wood-tea',
-    ingredients: [{ item: 'Basic Wood Tea', quantity: 4 }],
-    output: { item: 'Advanced Wood Tea', quantity: 1 },
-    description: 'Increases tree wood yield by +100% for 15 minutes.'
-  },
-  {
-    id: 'pure-wood-tea',
-    name: 'Pure Wood Tea',
-    category: 'tea',
-    imageSlug: 'pure-wood-tea',
-    ingredients: [{ item: 'Advanced Wood Tea', quantity: 4 }],
-    output: { item: 'Pure Wood Tea', quantity: 1 },
-    description: '+200% wood yield for 30 minutes. +30 hydration.'
-  },
-
-  // --- TEAS: SCRAP ---
-  {
-    id: 'basic-scrap-tea',
-    name: 'Basic Scrap Tea',
-    category: 'tea',
-    imageSlug: 'basic-scrap-tea',
-    ingredients: [
-      { item: 'White Berry', quantity: 2 },
-      { item: 'Yellow Berry', quantity: 2 }
-    ],
-    output: { item: 'Basic Scrap Tea', quantity: 1 },
-    description: 'Increases barrel scrap yield by +1 for 5 minutes.'
-  },
-  {
-    id: 'advanced-scrap-tea',
-    name: 'Advanced Scrap Tea',
-    category: 'tea',
-    imageSlug: 'advanced-scrap-tea',
-    ingredients: [{ item: 'Basic Scrap Tea', quantity: 4 }],
-    output: { item: 'Advanced Scrap Tea', quantity: 1 },
-    description: 'Increases barrel scrap yield by +2 for 15 minutes.'
-  },
-  {
-    id: 'pure-scrap-tea',
-    name: 'Pure Scrap Tea',
-    category: 'tea',
-    imageSlug: 'pure-scrap-tea',
-    ingredients: [{ item: 'Advanced Scrap Tea', quantity: 4 }],
-    output: { item: 'Pure Scrap Tea', quantity: 1 },
-    description: '+350% scrap yield for 1 hour. +30 hydration.'
-  },
-
-  // --- TEAS: HARVESTING / CLOTH ---
-  {
-    id: 'basic-harvesting-tea',
-    name: 'Basic Harvesting Tea',
-    category: 'tea',
-    imageSlug: 'basic-harvesting-tea',
-    ingredients: [
-      { item: 'Green Berry', quantity: 2 },
-      { item: 'Yellow Berry', quantity: 2 }
-    ],
-    output: { item: 'Basic Harvesting Tea', quantity: 1 },
-    description: 'Increases plant gather yield by 150% for 5 minutes.'
-  },
-  {
-    id: 'advanced-harvesting-tea',
-    name: 'Advanced Harvesting Tea',
-    category: 'tea',
-    imageSlug: 'advanced-harvesting-tea',
-    ingredients: [{ item: 'Basic Harvesting Tea', quantity: 4 }],
-    output: { item: 'Advanced Harvesting Tea', quantity: 1 },
-    description: 'Increases plant gather yield by 200% for 15 minutes.'
-  },
-  {
-    id: 'pure-harvesting-tea',
-    name: 'Pure Harvesting Tea',
-    category: 'tea',
-    imageSlug: 'pure-harvesting-tea',
-    ingredients: [{ item: 'Advanced Harvesting Tea', quantity: 4 }],
-    output: { item: 'Pure Harvesting Tea', quantity: 1 },
-    description: '+65% harvesting yield from corpses for 20 minutes. +30 hydration.'
-  },
-
-  // --- TEAS: ANTI-RAD ---
-  {
-    id: 'basic-anti-rad-tea',
-    name: 'Basic Anti-Rad Tea',
-    category: 'tea',
-    imageSlug: 'basic-anti-rad-tea',
-    ingredients: [
-      { item: 'Red Berry', quantity: 2 },
-      { item: 'Green Berry', quantity: 2 }
-    ],
-    output: { item: 'Basic Anti-Rad Tea', quantity: 1 },
-    description: 'Decreases radiation poisoning by 10 points.'
-  },
-  {
-    id: 'advanced-anti-rad-tea',
-    name: 'Advanced Anti-Rad Tea',
-    category: 'tea',
-    imageSlug: 'advanced-anti-rad-tea',
-    ingredients: [{ item: 'Basic Anti-Rad Tea', quantity: 4 }],
-    output: { item: 'Advanced Anti-Rad Tea', quantity: 1 },
-    description: 'Decreases radiation poisoning by 25 points.'
-  },
-  {
-    id: 'pure-anti-rad-tea',
-    name: 'Pure Anti-Rad Tea',
-    category: 'tea',
-    imageSlug: 'pure-anti-rad-tea',
-    ingredients: [{ item: 'Advanced Anti-Rad Tea', quantity: 4 }],
-    output: { item: 'Pure Anti-Rad Tea', quantity: 1 },
-    description: '+45% radiation resistance for 30 minutes. +30 hydration.'
-  },
-
-  // --- RESOURCE & REFINING ---
-  {
-    id: 'low-grade-fuel',
-    name: 'Low Grade Fuel',
-    category: 'resource',
-    imageSlug: 'low-grade-fuel',
-    ingredients: [
-      { item: 'Animal Fat', quantity: 3 },
-      { item: 'Cloth', quantity: 1 }
-    ],
-    output: { item: 'Low Grade Fuel', quantity: 4 },
-    description: 'Refined fuel for lamps, torches, engines, and explosives.'
-  },
-  {
-    id: 'gun-powder',
-    name: 'Gun Powder',
-    category: 'resource',
-    imageSlug: 'gun-powder',
-    ingredients: [
-      { item: 'Charcoal', quantity: 30 },
-      { item: 'Sulfur', quantity: 20 }
-    ],
-    output: { item: 'Gun Powder', quantity: 10 },
-    description: 'Standard propellant powder for ballistics and raiding tools.'
-  },
-  {
-    id: 'explosives',
-    name: 'Explosives',
-    category: 'resource',
-    imageSlug: 'explosives',
-    ingredients: [
-      { item: 'Gun Powder', quantity: 50 },
-      { item: 'Low Grade Fuel', quantity: 3 },
-      { item: 'Sulfur', quantity: 10 },
-      { item: 'Metal Fragments', quantity: 10 }
-    ],
-    output: { item: 'Explosives', quantity: 1 },
-    description: 'High explosive compound used in C4 and Rockets.'
-  },
-
-  // --- AMMUNITION ---
-  {
-    id: '5_56-rifle-ammo',
-    name: '5.56 Rifle Ammo',
-    category: 'resource',
-    imageSlug: '5_56-rifle-ammo',
-    ingredients: [
-      { item: 'Metal Fragments', quantity: 5 },
-      { item: 'Gun Powder', quantity: 10 }
-    ],
-    output: { item: '5.56 Rifle Ammo', quantity: 3 },
-    description: 'Standard intermediate cartridge for AK, LR-300, and Bolt Action.'
-  },
-  {
-    id: 'hv-5_56-rifle-ammo',
-    name: 'HV 5.56 Rifle Ammo',
-    category: 'resource',
-    imageSlug: 'hv-5_56-rifle-ammo',
-    ingredients: [
-      { item: 'Metal Fragments', quantity: 5 },
-      { item: 'Gun Powder', quantity: 20 }
-    ],
-    output: { item: 'HV 5.56 Rifle Ammo', quantity: 3 },
-    description: 'High-velocity rifle ammunition with flatter trajectory.'
-  },
-  {
-    id: 'hv-pistol-ammo',
-    name: 'HV Pistol Ammo',
-    category: 'resource',
-    imageSlug: 'hv-pistol-ammo',
-    ingredients: [
-      { item: 'Metal Fragments', quantity: 5 },
-      { item: 'Gun Powder', quantity: 10 }
-    ],
-    output: { item: 'HV Pistol Ammo', quantity: 4 },
-    description: 'High-velocity 9mm handgun and SMG ammunition.'
-  },
-  {
-    id: 'incendiary-pistol-bullet',
-    name: 'Incendiary Pistol Bullet',
-    category: 'resource',
-    imageSlug: 'incendiary-pistol-bullet',
-    ingredients: [
-      { item: 'Metal Fragments', quantity: 5 },
-      { item: 'Gun Powder', quantity: 10 },
-      { item: 'Sulfur', quantity: 5 }
-    ],
-    output: { item: 'Incendiary Pistol Bullet', quantity: 4 },
-    description: 'Pistol ammunition that ignites targets on impact.'
-  },
-  {
-    id: 'incendiary-5_56-rifle-ammo',
-    name: 'Incendiary 5.56 Rifle Ammo',
-    category: 'resource',
-    imageSlug: 'incendiary-5_56-rifle-ammo',
-    ingredients: [
-      { item: 'Metal Fragments', quantity: 5 },
-      { item: 'Gun Powder', quantity: 10 },
-      { item: 'Sulfur', quantity: 5 }
-    ],
-    output: { item: 'Incendiary 5.56 Rifle Ammo', quantity: 3 },
-    description: 'Rifle ammunition that produces fire on contact.'
-  }
-];
+function recipe(
+  name: string,
+  category: Recipe['category'],
+  station: CraftStation,
+  ingredients: Array<[string, number]>,
+  description: string,
+  outputQuantity = 1
+): Recipe {
+  const id = slugOf(name);
+  return {
+    id,
+    name,
+    category,
+    station,
+    imageSlug: id,
+    ingredients: ingredients.map(([item, quantity]) => ({ item, quantity })),
+    output: { item: name, quantity: outputQuantity },
+    description
+  };
+}
 
 /* ------------------------------------------------------------------ *
- * Dairy and enriched teas (October 2026 livestock update)
+ * Teas
  *
- * Every Pure tea except Crafting Quality has a Milky and a Creamy version: one Pure tea plus
- * three Milk or three Cream. Milk makes the effect last 50% longer; Cream makes it stronger
- * and shorter. Values verified against the game on 2026-10-01.
+ * Every tea line is Basic (4 berries) -> Advanced (4 Basic) -> Pure (4 Advanced), made at a
+ * Mixing Table or Cooking Workbench without a blueprint. Every tea also gives +30 hydration.
+ * Recipes and effects verified against the game data on 2026-10-12.
  * ------------------------------------------------------------------ */
 
-const DAIRY_RECIPES: Recipe[] = [
+interface TeaLine {
+  type: string;
+  berries: Array<[string, number]>;
+  /** Effect of the Basic, Advanced and Pure tea. */
+  effects: [string, string, string];
+}
+
+const TEA_LINES: TeaLine[] = [
   {
-    id: 'cream',
-    name: 'Cream',
-    category: 'resource',
-    imageSlug: 'cream',
-    ingredients: [{ item: 'Milk', quantity: 1 }],
-    output: { item: 'Cream', quantity: 1 },
-    description: 'Skim milk: 4 hours in a powered fridge turns each Milk into 1 Cream and 1 Skimmed Milk. Milk comes from tame cows, 1 every 5 minutes at an Ok Yield gene.'
+    type: 'Healing',
+    berries: [['Red Berry', 4]],
+    effects: ['Heals 30 HP over time', '+5 HP, then heals 50 HP over time', '+10 HP, then heals 75 HP over time']
+  },
+  {
+    type: 'Max Health',
+    berries: [['Red Berry', 3], ['Yellow Berry', 1]],
+    effects: ['+5% max health for 20 minutes', '+12.5% max health for 20 minutes', '+20% max health for 20 minutes']
+  },
+  {
+    type: 'Ore',
+    berries: [['Yellow Berry', 2], ['Blue Berry', 2]],
+    effects: ['+20% ore yield for 30 minutes', '+35% ore yield for 30 minutes', '+50% ore yield for 30 minutes']
+  },
+  {
+    type: 'Wood',
+    berries: [['Red Berry', 2], ['Blue Berry', 2]],
+    effects: ['+50% wood yield for 30 minutes', '+100% wood yield for 30 minutes', '+200% wood yield for 30 minutes']
+  },
+  {
+    type: 'Scrap',
+    berries: [['Yellow Berry', 2], ['White Berry', 2]],
+    effects: ['+100% scrap yield for 30 minutes', '+225% scrap yield for 45 minutes', '+350% scrap yield for 1 hour']
+  },
+  {
+    type: 'Harvesting',
+    berries: [['Green Berry', 3], ['Yellow Berry', 1]],
+    effects: ['+35% harvesting yield for 20 minutes', '+50% harvesting yield for 20 minutes', '+65% harvesting yield for 20 minutes']
+  },
+  {
+    type: 'Anti-Rad',
+    berries: [['Red Berry', 2], ['Green Berry', 2]],
+    effects: ['+15% radiation resistance for 30 minutes', '+30% radiation resistance for 30 minutes', '+45% radiation resistance for 30 minutes']
+  },
+  {
+    type: 'Cooling',
+    berries: [['White Berry', 2], ['Blue Berry', 2]],
+    effects: [
+      '+10° cooling, max core temperature +40°, for 20 minutes',
+      '+15° cooling, max core temperature +40°, for 45 minutes',
+      '+20° cooling, max core temperature +40°, for 1 hour'
+    ]
+  },
+  {
+    type: 'Warming',
+    berries: [['White Berry', 2], ['Yellow Berry', 2]],
+    effects: [
+      '+5° warming, min core temperature -15°, for 20 minutes',
+      '+10° warming, min core temperature -8°, for 45 minutes',
+      '+15° warming, min core temperature 0°, for 1 hour'
+    ]
+  },
+  {
+    type: 'Crafting Quality',
+    berries: [['Green Berry', 3], ['White Berry', 1]],
+    effects: ['+50% crafting quality for 3m 20s', '+75% crafting quality for 5 minutes', '+85% crafting quality for 6m 40s']
   }
 ];
+
+function teaRecipes(): Recipe[] {
+  return TEA_LINES.flatMap((line) => {
+    const basic = `Basic ${line.type} Tea`;
+    const advanced = `Advanced ${line.type} Tea`;
+    const pure = `Pure ${line.type} Tea`;
+    return [
+      recipe(basic, 'tea', 'mixing-table', line.berries, `${line.effects[0]}. +30 hydration.`),
+      recipe(advanced, 'tea', 'mixing-table', [[basic, 4]], `${line.effects[1]}. +30 hydration.`),
+      recipe(pure, 'tea', 'mixing-table', [[advanced, 4]], `${line.effects[2]}. +30 hydration.`)
+    ];
+  });
+}
+
+/* ------------------------------------------------------------------ *
+ * Milky and Creamy teas (October 2026 livestock update)
+ *
+ * Every Pure tea except Crafting Quality has a Milky and a Creamy version: one Pure tea plus
+ * three Milk or three Cream, crafted at a Level 1 Workbench. Milk makes the effect last 50%
+ * longer; Cream makes it stronger and shorter.
+ * ------------------------------------------------------------------ */
 
 interface EnrichedTea {
   /** Tea type as it appears in the item name, e.g. "Ore". */
   type: string;
-  slug: string;
   milky: string;
   creamy: string;
 }
 
 const ENRICHED_TEAS: EnrichedTea[] = [
-  { type: 'Healing', slug: 'healing', milky: 'Restores 10 HP and heals a large amount over time', creamy: 'Restores 18 HP and heals a large amount over time' },
-  { type: 'Max Health', slug: 'max-health', milky: '+20% max health for 30 minutes', creamy: '+26% max health for 16 minutes' },
-  { type: 'Ore', slug: 'ore', milky: '+50% ore yield for 45 minutes', creamy: '+65% ore yield for 24 minutes' },
-  { type: 'Wood', slug: 'wood', milky: '+200% wood yield for 45 minutes', creamy: '+260% wood yield for 24 minutes' },
-  { type: 'Scrap', slug: 'scrap', milky: '+350% scrap yield for 1h 30m', creamy: '+450% scrap yield for 48 minutes' },
-  { type: 'Harvesting', slug: 'harvesting', milky: '+65% harvesting yield for 30 minutes', creamy: '+85% harvesting yield for 16 minutes' },
-  { type: 'Anti-Rad', slug: 'anti-rad', milky: '+45% radiation resistance for 45 minutes', creamy: '+60% radiation resistance for 24 minutes' },
-  { type: 'Cooling', slug: 'cooling', milky: '+20\u00b0 cooling, max core temperature +40\u00b0, for 1h 30m', creamy: '+26\u00b0 cooling, max core temperature +40\u00b0, for 48 minutes' },
-  { type: 'Warming', slug: 'warming', milky: '+15\u00b0 warming, min core temperature 0\u00b0, for 1h 30m', creamy: '+19.5\u00b0 warming, min core temperature 0\u00b0, for 48 minutes' }
+  { type: 'Healing', milky: '+10 HP, then heals 112 HP over time', creamy: '+18 HP, then heals 97 HP over time' },
+  { type: 'Max Health', milky: '+20% max health for 30 minutes', creamy: '+26% max health for 16 minutes' },
+  { type: 'Ore', milky: '+50% ore yield for 45 minutes', creamy: '+65% ore yield for 24 minutes' },
+  { type: 'Wood', milky: '+200% wood yield for 45 minutes', creamy: '+260% wood yield for 24 minutes' },
+  { type: 'Scrap', milky: '+350% scrap yield for 1h 30m', creamy: '+450% scrap yield for 48 minutes' },
+  { type: 'Harvesting', milky: '+65% harvesting yield for 30 minutes', creamy: '+85% harvesting yield for 16 minutes' },
+  { type: 'Anti-Rad', milky: '+45% radiation resistance for 45 minutes', creamy: '+60% radiation resistance for 24 minutes' },
+  { type: 'Cooling', milky: '+20° cooling, max core temperature +40°, for 1h 30m', creamy: '+26° cooling, max core temperature +40°, for 48 minutes' },
+  { type: 'Warming', milky: '+15° warming, min core temperature 0°, for 1h 30m', creamy: '+19.5° warming, min core temperature 0°, for 48 minutes' }
 ];
 
 function enrichedTeaRecipes(): Recipe[] {
   return ENRICHED_TEAS.flatMap((tea) => {
     const pure = `Pure ${tea.type} Tea`;
+    // The Creamy Healing tea's +18 HP already includes the cream's +5 HP bonus.
+    const creamyBonus = tea.type === 'Healing' ? '+30 hydration, +45 calories' : '+30 hydration, +45 calories, +5 HP';
     return [
-      {
-        id: `milky-pure-${tea.slug}-tea`,
-        name: `Milky ${pure}`,
-        category: 'tea' as const,
-        imageSlug: `milky-pure-${tea.slug}-tea`,
-        ingredients: [
-          { item: pure, quantity: 1 },
-          { item: 'Milk', quantity: 3 }
-        ],
-        output: { item: `Milky ${pure}`, quantity: 1 },
-        description: `${tea.milky}. +45 hydration, +90 calories. Milk makes the effect last longer.`
-      },
-      {
-        id: `creamy-pure-${tea.slug}-tea`,
-        name: `Creamy ${pure}`,
-        category: 'tea' as const,
-        imageSlug: `creamy-pure-${tea.slug}-tea`,
-        ingredients: [
-          { item: pure, quantity: 1 },
-          { item: 'Cream', quantity: 3 }
-        ],
-        output: { item: `Creamy ${pure}`, quantity: 1 },
-        description: `${tea.creamy}. +30 hydration, +45 calories, +5 HP. Cream makes the effect stronger and shorter.`
-      }
+      recipe(
+        `Milky ${pure}`,
+        'tea',
+        'workbench',
+        [[pure, 1], ['Milk', 3]],
+        `${tea.milky}. +45 hydration, +90 calories. Milk makes the effect last longer.`
+      ),
+      recipe(
+        `Creamy ${pure}`,
+        'tea',
+        'workbench',
+        [[pure, 1], ['Cream', 3]],
+        `${tea.creamy}. ${creamyBonus}. Cream makes the effect stronger and shorter.`
+      )
     ];
   });
 }
 
-export const RUST_RECIPES: Recipe[] = [...BASE_RECIPES, ...DAIRY_RECIPES, ...enrichedTeaRecipes()];
+/* ------------------------------------------------------------------ *
+ * Bread and pies (Cooking Workbench)
+ *
+ * Every pie gives +80 calories, +15 hydration and +2 HP; a Rich pie adds Cream and gives
+ * +100 calories, +19 hydration, +3 HP and a stronger or longer effect.
+ * ------------------------------------------------------------------ */
+
+const PIE_BASE = '+80 calories, +15 hydration, +2 HP';
+const RICH_PIE_BASE = '+100 calories, +19 hydration, +3 HP';
+
+interface PieDef {
+  name: string;
+  ingredients: Array<[string, number]>;
+  effect: string;
+  rich: { ingredients: Array<[string, number]>; effect: string };
+}
+
+const PIES: PieDef[] = [
+  {
+    name: 'Apple Pie',
+    ingredients: [['Wheat', 3], ['Apple', 1], ['Jar of Honey', 2]],
+    effect: '+100% vision care for 15 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Apple', 1], ['Jar of Honey', 2], ['Cream', 4]], effect: '+100% vision care for 20 minutes' }
+  },
+  {
+    name: 'Pumpkin Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Pumpkin', 1]],
+    effect: '+10% max health for 10 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Pumpkin', 1], ['Cream', 4]], effect: '+15% max health for 10 minutes' }
+  },
+  {
+    name: 'Chicken Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Corn', 3], ['Cooked Chicken', 3]],
+    effect: '+52% better gene chance for 10 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Corn', 3], ['Cooked Chicken', 3], ['Cream', 4]], effect: '+65% better gene chance for 10 minutes' }
+  },
+  {
+    name: 'Fish Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Mushroom', 1], ['Potato', 2], ['Cooked Fish', 1]],
+    effect: '+100% comfort for 20 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Potato', 2], ['Cooked Fish', 1], ['Cream', 6]], effect: '+100% comfort for 25 minutes' }
+  },
+  {
+    name: 'Bear Pie',
+    ingredients: [['Wheat', 3], ['Egg', 2], ['Mushroom', 2], ['Cooked Bear Meat', 3]],
+    effect: '+150% digestion boost for 15 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 2], ['Mushroom', 2], ['Cooked Bear Meat', 3], ['Cream', 4]], effect: '+175% digestion boost for 15 minutes' }
+  },
+  {
+    name: 'Pork Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Pork', 2]],
+    effect: '+200% metabolism boost for 30 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Pork', 2], ['Cream', 4]], effect: '+250% metabolism boost for 30 minutes' }
+  },
+  {
+    name: 'Big Cat Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Big Cat Meat', 2]],
+    effect: '+100% hunter vision for 30 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Big Cat Meat', 2], ['Cream', 4]], effect: '+100% hunter vision for 40 minutes' }
+  },
+  {
+    name: 'Hunters Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Mushroom', 1], ['Potato', 2], ['Cooked Deer Meat', 2]],
+    effect: '+90% clotting for 30 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Potato', 2], ['Cooked Deer Meat', 2], ['Cream', 6]], effect: '+100% clotting for 30 minutes' }
+  },
+  {
+    name: 'Beef Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Beef', 3]],
+    effect: '+75% hunger capacity for 2 hours',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Beef', 3], ['Cream', 4]], effect: '+100% hunger capacity for 2 hours' }
+  },
+  {
+    name: 'Shepherds Pie',
+    ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Mutton', 2], ['Potato', 1]],
+    effect: '+100% livestock handling for 15 minutes',
+    rich: { ingredients: [['Wheat', 3], ['Egg', 3], ['Cooked Mutton', 2], ['Cream', 4]], effect: '+150% livestock handling for 15 minutes' }
+  }
+];
+
+function pieRecipes(): Recipe[] {
+  const pies = PIES.map((pie) => recipe(pie.name, 'pie', 'cooking-workbench', pie.ingredients, `${pie.effect}. ${PIE_BASE}.`));
+  const rich = PIES.map((pie) =>
+    recipe(`Rich ${pie.name}`, 'pie', 'cooking-workbench', pie.rich.ingredients, `${pie.rich.effect}. ${RICH_PIE_BASE}.`)
+  );
+  return [...pies, ...rich];
+}
+
+const FOOD_RECIPES: Recipe[] = [
+  recipe('Bread Loaf', 'food', 'cooking-workbench', [['Wheat', 5]], '+150 calories, +10 hydration, heals 8 HP over time. +250% horse dung for 2 minutes.'),
+  recipe(
+    'Brioche Bread',
+    'food',
+    'cooking-workbench',
+    [['Wheat', 5], ['Egg', 2], ['Cream', 5]],
+    '+190 calories, +13 hydration, heals 10 HP over time. +312.5% horse dung for 2 minutes.'
+  )
+];
+
+/* ------------------------------------------------------------------ *
+ * Dairy (October 2026 livestock update)
+ * ------------------------------------------------------------------ */
+
+const DAIRY_RECIPES: Recipe[] = [
+  recipe(
+    'Cream',
+    'resource',
+    'fridge',
+    [['Milk', 1]],
+    'Skim milk: 4 hours in a powered fridge or vending machine turns each Milk into 1 Cream and 1 Skimmed Milk. Milk comes from tame cows, 1 every 5 minutes.'
+  )
+];
+
+/* ------------------------------------------------------------------ *
+ * Resources and ammunition (blueprint required; the Mixing Table uses less charcoal for
+ * Gun Powder than hand crafting)
+ * ------------------------------------------------------------------ */
+
+const RESOURCE_RECIPES: Recipe[] = [
+  recipe('Low Grade Fuel', 'resource', 'mixing-table', [['Animal Fat', 3], ['Cloth', 1]], 'Fuel for lamps, furnaces, engines and explosives.', 4),
+  recipe('Gun Powder', 'resource', 'mixing-table', [['Charcoal', 20], ['Sulfur', 20]], 'Propellant for ammunition and explosives. Hand crafting costs 30 Charcoal instead of 20.', 10),
+  recipe(
+    'Explosives',
+    'resource',
+    'mixing-table',
+    [['Gun Powder', 50], ['Low Grade Fuel', 3], ['Sulfur', 10], ['Metal Fragments', 10]],
+    'High explosive used in C4 and rockets.'
+  ),
+  recipe('Pistol Bullet', 'resource', 'mixing-table', [['Metal Fragments', 10], ['Gun Powder', 5]], 'Standard pistol and SMG ammunition.', 4),
+  recipe('HV Pistol Ammo', 'resource', 'mixing-table', [['Metal Fragments', 10], ['Gun Powder', 10]], 'High-velocity pistol and SMG ammunition.', 4),
+  recipe(
+    'Incendiary Pistol Bullet',
+    'resource',
+    'mixing-table',
+    [['Metal Fragments', 10], ['Gun Powder', 10], ['Sulfur', 5]],
+    'Pistol ammunition that sets targets on fire.',
+    3
+  ),
+  recipe('5.56 Rifle Ammo', 'resource', 'mixing-table', [['Metal Fragments', 10], ['Gun Powder', 5]], 'Standard rifle ammunition.', 3),
+  recipe('HV 5.56 Rifle Ammo', 'resource', 'mixing-table', [['Metal Fragments', 10], ['Gun Powder', 10]], 'High-velocity rifle ammunition with a flatter trajectory.', 3),
+  recipe(
+    'Incendiary 5.56 Rifle Ammo',
+    'resource',
+    'mixing-table',
+    [['Metal Fragments', 10], ['Gun Powder', 10], ['Sulfur', 5]],
+    'Rifle ammunition that sets targets on fire.',
+    2
+  )
+];
+
+export const RUST_RECIPES: Recipe[] = [
+  ...FOOD_RECIPES,
+  ...pieRecipes(),
+  ...teaRecipes(),
+  ...enrichedTeaRecipes(),
+  ...DAIRY_RECIPES,
+  ...RESOURCE_RECIPES
+];

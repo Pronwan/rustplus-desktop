@@ -1,0 +1,91 @@
+name: Smart Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: "Bump type: auto (calculates from Conventional Commits), minor, patch, major, or custom."
+        required: true
+        default: "auto"
+        type: choice
+        options:
+          - "auto"
+          - "patch"
+          - "minor"
+          - "major"
+          - "custom"
+      custom_version:
+        description: "Explicit custom version (e.g. 10.2.0), only used when bump_type is 'custom'."
+        required: false
+        type: string
+      from_ref:
+        description: "Starting commit or tag (leave empty to use the latest release tag)."
+        required: false
+        type: string
+      dry_run:
+        description: "Dry run: preview version calculation and release notes without committing or tagging."
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Smart Bump & Changelog
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Configure Git Author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run smart version bumper
+        id: bumper
+        shell: bash
+        env:
+          INPUT_BUMP_TYPE: ${{ inputs.bump_type }}
+          INPUT_CUSTOM_VERSION: ${{ inputs.custom_version }}
+          INPUT_FROM_REF: ${{ inputs.from_ref }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            FLAGS="--dry-run"
+          else
+            FLAGS="--update-files --create-tag"
+          fi
+          node scripts/bump-version.mjs $FLAGS
+
+      - name: Display Release Notes Summary
+        if: always()
+        run: |
+          if [ -f ".github/release-notes.md" ]; then
+            echo "### 📋 Generated Release Notes" >> $GITHUB_STEP_SUMMARY
+            cat .github/release-notes.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Push version bump commit and tag
+        if: ${{ inputs.dry_run == false && steps.bumper.outputs.bumped == 'true' }}
+        shell: bash
+        env:
+          TAG: ${{ steps.bumper.outputs.tag }}
+        run: |
+          git push origin HEAD
+          git push origin "$TAG"
+          echo "Version bump and tag pushed: $TAG."
+          echo "To build and publish release assets, manually trigger the 'Release' workflow when ready."

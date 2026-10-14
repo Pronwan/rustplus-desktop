@@ -119,12 +119,26 @@
                     </Border>
                 </StackPanel>
 
+                <!--  Only while the dock is unlocked: the mini-map is a widget like any other
+                      and can be taken off, and Add Widget offers it back. A close button on a
+                      map in use would be a button sitting there to be hit by accident.  -->
+                <ui:Button x:Name="BtnMapClose"
+                           HorizontalAlignment="Right" VerticalAlignment="Top"
+                           Width="34" Height="34" Margin="0,10,50,0" Padding="6"
+                           Visibility="Collapsed"
+                           Appearance="Secondary" Background="#E6B3261E"
+                           BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
+                           Foreground="White" Click="BtnMapClose_Click"
+                           ToolTip="{DynamicResource CommandDockRemoveTile}"
+                           AutomationProperties.Name="{DynamicResource CommandDockRemoveTile}"
+                           Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
+
                 <ui:Button x:Name="BtnMapSettings"
                            HorizontalAlignment="Right" VerticalAlignment="Top"
                            Width="34" Height="34" Margin="0,10,10,0" Padding="6"
                            Appearance="Secondary" Background="#E6101518"
                            BorderBrush="#99FFFFFF" BorderThickness="1" Cursor="Hand"
-                           Foreground="White" Click="BtnSettings_Click"
+                           Foreground="White" Click="BtnMapSettings_Click"
                            ToolTip="{DynamicResource MiniMapSettings}"
                            AutomationProperties.Name="{DynamicResource MiniMapSettings}"
                            Icon="{ui:SymbolIcon Symbol=Settings24}"/>
@@ -209,7 +223,7 @@
                                    Padding="3"
                                    Appearance="Transparent"
                                    Foreground="White"
-                                   Click="BtnSettings_Click"
+                                   Click="BtnDockSettings_Click"
                                    tutorials:Tutorial.TargetId="MiniMap.Settings"
                                    Icon="{ui:SymbolIcon Symbol=Settings24}"/>
                     </StackPanel>
@@ -228,6 +242,18 @@
                AllowsTransparency="True"
                Focusable="False">
             <views:MiniMapSettingsOverlay x:Name="SettingsOverlay"/>
+        </Popup>
+
+        <!--  The dock's own settings. Separate from the panel above, which belongs to the
+              map: the gear in the title bar used to open that one on a window that need not
+              have a map on it at all.  -->
+        <Popup x:Name="DockSettingsPopup"
+               Placement="RelativePoint"
+               PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+               StaysOpen="True"
+               AllowsTransparency="True"
+               Focusable="False">
+            <views:CommandDockSettingsOverlay x:Name="DockSettingsOverlay"/>
         </Popup>
 
         <!--  One panel, retargeted at whichever tile's gear was pressed. Its contents are built

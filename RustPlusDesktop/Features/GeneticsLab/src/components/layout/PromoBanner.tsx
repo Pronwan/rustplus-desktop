@@ -75,7 +75,7 @@ export const PromoBanner: React.FC = () => {
           fontSize: '0.7rem',
           fontWeight: 800,
           color: 'var(--gl-primary)',
-          '&:hover': { backgroundColor: 'rgba(0, 229, 255, 0.08)' }
+          '&:hover': { backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)' }
         }}
       >
         {PROMO.cta}

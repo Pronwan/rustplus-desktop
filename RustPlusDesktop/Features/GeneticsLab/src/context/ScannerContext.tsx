@@ -79,7 +79,10 @@ const ScannerContext = createContext<ScannerContextValue | null>(null);
 
 export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { notifySuccess, notifyInfo, notifyWarning, notifyError } = useNotification();
-  const { addClone, selectedPlant } = useWorkspace();
+  const { addClone, replaceScannedGene, selectedPlant, setSelectedPlant, clones } = useWorkspace();
+  // Read inside the scanner callback without re-subscribing it on every added clone.
+  const selectedCloneCountRef = useRef(clones.length);
+  selectedCloneCountRef.current = clones.length;
 
   const [isScannerActive, setIsScannerActive] = useState(false);
   const [isScannerInitializing, setIsScannerInitializing] = useState(false);
@@ -304,11 +307,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else if (evt.type === 'PREVIEW') {
         if (evt.previewDataUrl && typeof evt.regionIndex === 'number') {
           // Direct DOM injection for 30-60 FPS zero-starvation real-time preview (bypasses React rerender overhead)
-          const img = document.getElementById(`scanner-preview-img-${evt.regionIndex}`) as HTMLImageElement;
-          if (img) {
-            img.src = evt.previewDataUrl;
+          // Every view showing this region (the HUD, the calibration dialog) gets the frame.
+          document.querySelectorAll<HTMLImageElement>(`img[data-scanner-preview="${evt.regionIndex}"]`).forEach((img) => {
+            img.src = evt.previewDataUrl!;
             img.style.display = 'block';
-          }
+          });
           if (!hasInitialPreviewRef.current[evt.regionIndex]) {
             hasInitialPreviewRef.current[evt.regionIndex] = true;
             setScannerPreviews(prev => ({ ...prev, [evt.regionIndex!]: evt.previewDataUrl! }));
@@ -332,10 +335,26 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
           lastProcessedGeneRef.current = evt.geneString;
           lastProcessedTimeRef.current = now;
 
+          // The panel names its plant. A clone of another plant joins that plant's group; if
+          // the list on screen is still empty the view follows it, otherwise it stays put and
+          // the clone is filed quietly under its own plant.
+          // readPlantName only ever returns one of the app's plant ids.
+          const detected = evt.plantType || null;
+          const otherPlant = detected && detected !== selectedPlant ? detected : null;
+          if (otherPlant && selectedCloneCountRef.current === 0) setSelectedPlant(otherPlant);
+
           const added = addClone(evt.geneString, {
             source: 'scanner',
-            quantity: 1
+            quantity: 1,
+            cropType: detected ?? undefined
           });
+
+          if (added && otherPlant && selectedCloneCountRef.current > 0) {
+            notifyInfo(`${evt.geneString} is a ${otherPlant.replace(/-/g, ' ')} clone: added to its own group.`);
+          } else if (added && !detected) {
+            // Said out loud so a clone of another plant is not filed here unnoticed.
+            notifyInfo(`${evt.geneString} added to ${selectedPlant.replace(/-/g, ' ')}: the plant type could not be read.`);
+          }
 
           if (added) {
             AudioService.playPop(soundPrefRef.current);
@@ -345,6 +364,15 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
           scannerService.acknowledgeGeneHandled(evt.geneString);
         }
+      } else if (evt.type === 'SAPLING-CORRECTED' && evt.geneString && evt.previousGeneString) {
+        // The same tooltip, read better a moment later: fix the entry instead of adding one.
+        lastProcessedGeneRef.current = evt.geneString;
+        lastProcessedTimeRef.current = Date.now();
+        setLastScannedGenes(evt.geneString);
+        if (replaceScannedGene(evt.previousGeneString, evt.geneString)) {
+          notifyInfo(`Corrected a misread: ${evt.previousGeneString} → ${evt.geneString}`);
+        }
+        scannerService.acknowledgeGeneHandled(evt.geneString);
       } else if (evt.type === 'IDLE') {
         // Idle event from scanner
       } else if (evt.type === 'ERROR') {
@@ -361,7 +389,7 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => {
       unsubscribe();
     };
-  }, [scannerService, addClone, selectedPlant, notifySuccess, notifyInfo, notifyError]);
+  }, [scannerService, addClone, replaceScannedGene, selectedPlant, setSelectedPlant, notifySuccess, notifyInfo, notifyError]);
 
   // Non-destructive startScanner (Rule #27: DO NOT DESTROY RESULTS ON START/CANCEL)
   const startScanner = useCallback(async () => {
@@ -437,8 +465,11 @@ export const ScannerProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return scannerService.getDiagnostics();
   }, [scannerService]);
 
+  // Counted, so one view closing does not stop the previews of another still open.
+  const previewViewersRef = useRef(0);
   const setScannerPreviewEnabled = useCallback((enabled: boolean) => {
-    scannerService.setPreviewEnabled(enabled);
+    previewViewersRef.current = Math.max(0, previewViewersRef.current + (enabled ? 1 : -1));
+    scannerService.setPreviewEnabled(previewViewersRef.current > 0);
   }, [scannerService]);
 
   const acknowledgeGeneHandled = useCallback((geneString: string) => {

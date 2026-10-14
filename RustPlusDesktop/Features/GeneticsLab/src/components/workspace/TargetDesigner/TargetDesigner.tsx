@@ -47,6 +47,7 @@ export const TargetDesigner: React.FC = () => {
 
   return (
     <Paper
+      data-tour="goal"
       variant="outlined"
       sx={{
         backgroundColor: 'var(--gl-panel-bg)',
@@ -58,7 +59,7 @@ export const TargetDesigner: React.FC = () => {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, minWidth: { xs: '100%', md: 170 } }}>
-          <Typography sx={{ fontWeight: 900, fontFamily: '"Roboto Mono", monospace', fontSize: '0.8rem', color: 'var(--gl-text-primary)' }}>
+          <Typography sx={{ fontWeight: 900, fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', color: 'var(--gl-text-primary)' }}>
             BREEDING GOAL
           </Typography>
           <Tooltip title="Choose a common goal, or open Advanced for an exact six-slot target and match mode." arrow>
@@ -74,6 +75,7 @@ export const TargetDesigner: React.FC = () => {
           size="small"
           variant="outlined"
           startIcon={<TuneIcon sx={{ fontSize: 16 }} />}
+          data-tour="goal-advanced"
           aria-expanded={isAdvancedOpen}
           aria-controls="advanced-target-controls"
           onClick={() => setIsAdvancedOpen(open => !open)}
@@ -135,7 +137,7 @@ export const TargetDesigner: React.FC = () => {
               slotProps={{ htmlInput: { 'aria-label': 'Target genetics', maxLength: 6, style: { textTransform: 'uppercase', letterSpacing: '0.3em', textAlign: 'center', fontWeight: 800 } } }}
               sx={{
                 width: 150,
-                '& .MuiInputBase-root': { height: 36, backgroundColor: 'var(--gl-input-bg)', color: 'var(--gl-text-primary)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.9rem' },
+                '& .MuiInputBase-root': { height: 36, backgroundColor: 'var(--gl-input-bg)', color: 'var(--gl-text-primary)', fontFamily: 'var(--font-family-mono)', fontSize: '0.9rem' },
                 '& fieldset': { borderColor: 'var(--gl-surface-hover)' }
               }}
             />

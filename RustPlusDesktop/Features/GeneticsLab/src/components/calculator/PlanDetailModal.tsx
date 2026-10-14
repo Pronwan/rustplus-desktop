@@ -65,7 +65,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
         maxWidth: '100%',
         cursor: onSelect ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
-        boxShadow: isSelected ? '0 0 0 1px rgba(0, 229, 255, 0.35), 0 8px 24px rgba(0, 229, 255, 0.12)' : 'none',
+        boxShadow: isSelected ? '0 0 0 1px rgba(var(--gl-primary-rgb), 0.35), 0 8px 24px rgba(var(--gl-primary-rgb), 0.12)' : 'none',
         '&:hover': onSelect ? { borderColor: 'var(--gl-primary)', transform: 'translateY(-2px)' } : {}
       }}
     >
@@ -78,7 +78,7 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
               textAlign: 'center',
               fontWeight: 800,
               color: isSelected ? 'var(--gl-primary)' : isBest ? 'var(--gl-primary)' : 'var(--gl-text-primary)',
-              fontFamily: '"Roboto Mono", monospace',
+              fontFamily: 'var(--font-family-mono)',
               fontSize: '0.85rem'
             }}
           >
@@ -91,8 +91,8 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
                 px: 0.9,
                 py: 0.1,
                 borderRadius: '3px',
-                backgroundColor: 'rgba(0, 229, 255, 0.14)',
-                border: '1px solid rgba(0, 229, 255, 0.5)',
+                backgroundColor: 'rgba(var(--gl-primary-rgb), 0.14)',
+                border: '1px solid rgba(var(--gl-primary-rgb), 0.5)',
                 color: 'var(--gl-primary)',
                 fontWeight: 800,
                 fontFamily: 'monospace',
@@ -339,11 +339,11 @@ export const SinglePlanCard: React.FC<SinglePlanCardProps> = ({
               fontWeight: 700,
               py: 0.25,
               px: 1.2,
-              border: '1px solid rgba(0, 229, 255, 0.25)',
+              border: '1px solid rgba(var(--gl-primary-rgb), 0.25)',
               borderRadius: '3px',
-              backgroundColor: 'rgba(0, 229, 255, 0.04)',
+              backgroundColor: 'rgba(var(--gl-primary-rgb), 0.04)',
               '&:hover': {
-                backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
                 borderColor: 'var(--gl-primary)'
               }
             }}
@@ -509,18 +509,18 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               size="small"
               sx={{
                 color: 'var(--gl-primary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.76rem',
                 fontWeight: 800,
                 textTransform: 'none',
                 letterSpacing: '0.3px',
-                backgroundColor: 'rgba(0, 229, 255, 0.08)',
-                border: '1px solid rgba(0, 229, 255, 0.35)',
+                backgroundColor: 'rgba(var(--gl-primary-rgb), 0.08)',
+                border: '1px solid rgba(var(--gl-primary-rgb), 0.35)',
                 borderRadius: '4px',
                 px: 1.4,
                 py: 0.35,
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 229, 255, 0.2)',
+                  backgroundColor: 'rgba(var(--gl-primary-rgb), 0.2)',
                   borderColor: 'var(--gl-primary)'
                 }
               }}
@@ -555,9 +555,9 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                         fontSize: '0.75rem',
                         px: 0.8,
                         py: 0.2,
-                        backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                        backgroundColor: 'rgba(var(--gl-primary-rgb), 0.12)',
                         borderRadius: '3px',
-                        border: '1px solid rgba(0, 229, 255, 0.35)'
+                        border: '1px solid rgba(var(--gl-primary-rgb), 0.35)'
                       }}
                     >
                       {label}
@@ -613,7 +613,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               variant="body2"
               sx={{
                 color: 'var(--gl-text-secondary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.85rem',
                 lineHeight: 1.6,
                 textAlign: 'center',
@@ -635,7 +635,7 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
               variant="body2"
               sx={{
                 color: 'var(--gl-text-secondary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 fontSize: '0.9rem',
                 lineHeight: 1.6,
                 textAlign: 'center',
@@ -683,12 +683,12 @@ export const PlanDetailModal: React.FC<PlanDetailModalProps> = ({
                   fontWeight: 800,
                   py: 0.6,
                   px: 3,
-                  border: '1px solid rgba(0, 229, 255, 0.4)',
+                  border: '1px solid rgba(var(--gl-primary-rgb), 0.4)',
                   borderRadius: '4px',
-                  backgroundColor: 'rgba(0, 229, 255, 0.06)',
+                  backgroundColor: 'rgba(var(--gl-primary-rgb), 0.06)',
                   letterSpacing: '0.05em',
                   '&:hover': {
-                    backgroundColor: 'rgba(0, 229, 255, 0.14)',
+                    backgroundColor: 'rgba(var(--gl-primary-rgb), 0.14)',
                     borderColor: 'var(--gl-primary)'
                   }
                 }}

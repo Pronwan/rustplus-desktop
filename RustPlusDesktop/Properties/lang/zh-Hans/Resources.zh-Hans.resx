@@ -1684,4 +1684,49 @@
   <data name="CommandDockDeathTrackResetRegion" xml:space="preserve">
     <value>恢复为实测默认值</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>服务器时间（小）</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>一个格子：太阳或月亮，加上时间——和小地图上一样</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>在线人数（小）</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>一个格子：在线人数和容量——和小地图上一样</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>按住按键显示</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>始终显示——点击设置按键</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>适用于单显示器：仅在按住按键时显示面板，就像游戏内地图一样会挡住视野。</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>显示器</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>应用于所有磁贴</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>开关打开时，此值优先于磁贴自身设置的值；关闭后磁贴恢复各自的设置。</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>统一不透明度</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>统一文字大小</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>统一文字颜色</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>重置外观</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>清除全局设置以及每个磁贴自身的不透明度、文字大小和颜色？磁贴本身的位置保持不变。</value>
+  </data>
 </root>

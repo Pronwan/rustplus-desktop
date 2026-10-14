@@ -7941,4 +7941,49 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculadora de reciclaje</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Hora del servidor, pequeña</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Una celda: el sol o la luna, y la hora, como en el minimapa</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Jugadores, pequeño</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Una celda: cuántos hay y cuántos caben, como en el minimapa</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Mantener una tecla para mostrar</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Siempre visible: haz clic para asignar una tecla</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Para una sola pantalla: el panel solo se ve mientras se mantiene la tecla, igual que el mapa del juego te quita la vista.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Pantalla</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Aplicar a todos los paneles</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>Mientras el interruptor esté activado, este valor prevalece sobre el de cada panel. Al desactivarlo, los paneles recuperan el suyo.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Opacidad para todos</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Tamaño de texto para todos</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Color de texto para todos</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Restablecer la apariencia</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>¿Borrar los ajustes globales y la opacidad, el tamaño de texto y el color propios de cada panel? Los paneles se quedan donde están.</value>
+  </data>
 </root>

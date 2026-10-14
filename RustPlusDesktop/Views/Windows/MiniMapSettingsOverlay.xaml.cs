@@ -114,6 +114,39 @@ namespace RustPlusDesk.Views
         private void BtnSettingsClose_Click(object sender, RoutedEventArgs e)
             => ParentWindow?.CloseSettings();
 
+        /// <summary>
+        /// Picks the key that shows the dock while it is held.
+        ///
+        /// Clearing it is a real answer and the dialog offers it: without a key the dock is
+        /// simply up, which is what somebody with a second screen wants.
+        /// </summary>
+        private void BtnPeekHotkey_Click(object sender, RoutedEventArgs e)
+        {
+            var capture = new Windows.HotkeyCaptureWindow { Owner = Window.GetWindow(this), AllowClear = true };
+            if (capture.ShowDialog() != true) return;
+
+            Services.TrackingService.MiniMapPeekHotkey = capture.Gesture?.Trim() ?? "";
+
+            // Registered now rather than at the next start: the obvious next thing anybody does
+            // after choosing a key is press it.
+            (Application.Current?.MainWindow as Views.MainWindow)?.ApplyMiniMapPeekHotkey();
+
+            ShowPeekHotkey();
+            ParentWindow?.ApplyPeekVisibility();
+        }
+
+        /// <summary>Puts the chosen key on its button, or says there is none.</summary>
+        public void ShowPeekHotkey()
+        {
+            if (BtnPeekHotkey == null) return;
+
+            var gesture = Services.TrackingService.MiniMapPeekHotkey;
+
+            BtnPeekHotkey.Content = string.IsNullOrWhiteSpace(gesture)
+                ? Helpers.Loc.Text("MiniMapPeekHotkeyNone", "Always visible — click to set a key")
+                : gesture;
+        }
+
         private void ApplyLayerChecks(MiniMapSettings settings)
         {
             ChkLayerTexture.IsChecked = settings.ShowTexture;
@@ -125,6 +158,7 @@ namespace RustPlusDesk.Views
             ChkLayerHeatmap.IsChecked = settings.ShowHeatmap;
             ChkLayerNoBuild.IsChecked = settings.ShowNoBuild;
             RefreshNoBuildAvailability();
+            ShowPeekHotkey();
         }
 
         /// <summary>

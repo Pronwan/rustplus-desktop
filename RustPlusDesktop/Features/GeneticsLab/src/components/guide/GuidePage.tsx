@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@mui/material';
 import { GUIDE_SECTIONS } from '../../domain/guide/guideData.ts';
-import { PlanterVisual } from './PlanterVisual.tsx';
+import { PlantingGuide3D } from '../planter3d/PlantingGuide3D.tsx';
 
 export const GuidePage: React.FC = () => {
   const [selectedSectionId, setSelectedSectionId] = useState(GUIDE_SECTIONS[0].id);
@@ -34,7 +34,7 @@ export const GuidePage: React.FC = () => {
         sx={{
           fontWeight: 800,
           color: 'var(--gl-text-primary)',
-          fontFamily: '"Roboto Mono", monospace',
+          fontFamily: 'var(--font-family-mono)',
           mb: 3,
           letterSpacing: '0.5px'
         }}
@@ -88,14 +88,14 @@ export const GuidePage: React.FC = () => {
                       mb: 0.5,
                       py: 1,
                       px: 1.5,
-                      backgroundColor: isSelected ? 'rgba(0, 229, 255, 0.12)' : 'transparent',
+                      backgroundColor: isSelected ? 'rgba(var(--gl-primary-rgb), 0.12)' : 'transparent',
                       borderLeft: isSelected ? '3px solid var(--gl-primary)' : '3px solid transparent',
                       '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.04)' }
                     }}
                   >
                     <ListItemText
                       primary={
-                        <Typography variant="body2" sx={{ fontWeight: isSelected ? 800 : 500, color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)', fontFamily: '"Roboto Mono", monospace', fontSize: '0.85rem' }}>
+                        <Typography variant="body2" sx={{ fontWeight: isSelected ? 800 : 500, color: isSelected ? 'var(--gl-primary)' : 'var(--gl-text-secondary)', fontFamily: 'var(--font-family-mono)', fontSize: '0.85rem' }}>
                           {sec.title}
                         </Typography>
                       }
@@ -109,8 +109,10 @@ export const GuidePage: React.FC = () => {
 
         {/* Right Article Content */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Interactive 3x3 Planter Visualizer */}
-          <PlanterVisual />
+          {/* Interactive 3D planter: breeding steps, slot layout and growth stages */}
+          <Box data-tour="guide-3d">
+            <PlantingGuide3D />
+          </Box>
 
           {/* Article Section */}
           <Paper
@@ -130,7 +132,7 @@ export const GuidePage: React.FC = () => {
               sx={{
                 fontWeight: 800,
                 color: 'var(--gl-text-primary)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 mb: 1
               }}
             >
@@ -141,7 +143,7 @@ export const GuidePage: React.FC = () => {
               variant="body2"
               sx={{
                 color: 'var(--gl-text-muted)',
-                fontFamily: '"Roboto Mono", monospace',
+                fontFamily: 'var(--font-family-mono)',
                 mb: 3
               }}
             >
@@ -160,7 +162,7 @@ export const GuidePage: React.FC = () => {
                   sx={{
                     lineHeight: 1.8,
                     color: 'var(--gl-text-secondary)',
-                    fontFamily: '"Roboto Mono", monospace',
+                    fontFamily: 'var(--font-family-mono)',
                     fontSize: '0.88rem',
                     '& strong': { color: 'var(--gl-primary)', fontWeight: 700 }
                   }}

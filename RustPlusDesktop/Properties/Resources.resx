@@ -8290,4 +8290,49 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="TeamFindTeammates" xml:space="preserve">
     <value>Find teammates</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Server time, small</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>One cell: the sun or the moon, and the time — as on the mini-map</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Players, small</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>One cell: how many are on, and how many fit — as on the mini-map</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Hold a key to show</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Always visible — click to set a key</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>For one screen: the dock is only up while the key is held, the way the game's own map costs you the view.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Apply to every tile</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>While a switch is on, this value wins over whatever a tile was given through its own gear. Switch it off and the tiles have their own back.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Opacity for all</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Text size for all</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Text colour for all</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Reset the look</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Clear the global settings and every tile's own opacity, text size and colour? The tiles themselves stay where they are.</value>
+  </data>
 </root>

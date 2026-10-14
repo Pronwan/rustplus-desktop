@@ -80,6 +80,15 @@ namespace RustPlusDesk
                   Loc.Text("CommandDockClockRustHint", "Server time in the game's own lettering"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.Clock, ClockStyle = 2 },
                   SymbolRegular.Clock24);
+            Entry(Loc.Text("CommandDockClockMinimal", "Server time, small"),
+                  Loc.Text("CommandDockClockMinimalHint",
+                      "One cell: the sun or the moon, and the time — as on the mini-map"),
+                  () => new CommandDockTile
+                  {
+                      Kind = CommandDockTileKinds.Clock,
+                      ClockStyle = MiniMapWindow.ClockStyleMinimal,
+                  },
+                  SymbolRegular.WeatherSunny24);
 
             Section(Loc.Text("CommandDockSectionSession", "Session"), SymbolRegular.DataUsage24);
             Entry(Loc.Text("CommandDockSessionTitle", "Session stats"),
@@ -131,6 +140,16 @@ namespace RustPlusDesk
                   Loc.Text("CommandDockServerInfoHint", "Players on now, and how that has moved this session"),
                   () => new CommandDockTile { Kind = CommandDockTileKinds.ServerInfo, ColSpan = 2, RowSpan = 1 },
                   SymbolRegular.Server24);
+            Entry(Loc.Text("CommandDockServerMinimal", "Players, small"),
+                  Loc.Text("CommandDockServerMinimalHint",
+                      "One cell: how many are on, and how many fit — as on the mini-map"),
+                  () => new CommandDockTile
+                  {
+                      Kind = CommandDockTileKinds.ServerInfo,
+                      ServerInfoMinimal = true,
+                      ShowGraph = false,
+                  },
+                  SymbolRegular.People24);
 
             // Heli, Chinook and the travelling vendor are gone on purpose: the event dock hides
             // them whenever the server does not report them, and a tile that is empty on most

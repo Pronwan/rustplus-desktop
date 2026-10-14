@@ -22,6 +22,8 @@ import { ScannerGuideModal } from './components/modals/ScannerGuideModal.tsx';
 import { ReflexNoticeModal } from './components/modals/ReflexNoticeModal.tsx';
 import { CookieConsentBanner } from './components/modals/CookieConsentBanner.tsx';
 import { LivestockBanner } from './components/livestock/LivestockBanner.tsx';
+import { UpdateCenter } from './components/layout/UpdateCenter.tsx';
+import { AppTour } from './components/tour/AppTour.tsx';
 
 // Loaded on first visit to the tab, so the plant workspace does not pay for it.
 const LivestockPage = lazy(() => import('./components/livestock/LivestockPage.tsx'));
@@ -55,6 +57,12 @@ export const App: React.FC = () => {
       >
         {/* Global Navigation Header */}
         <AppHeader />
+
+        {/* Update available / ready banner and the post-update "What's new" dialog */}
+        <UpdateCenter />
+
+        {/* The app tour: offered once, reopened from the header menu or About */}
+        <AppTour />
 
         {/* Compact phone-camera entry point, mobile layouts only */}
         <CameraScannerBanner />

@@ -163,8 +163,18 @@ function erode(presence: Uint8Array, width: number, height: number): Uint8Array 
  * would do it too, but a structuring element wide enough to span the letter is also wide
  * enough to bridge the gap between neighbouring badges and weld the whole row into one blob.
  * Flooding the background inward from the frame border cannot do that.
+ *
+ * Only holes that fit inside a badge (`maxHoleSide` on both axes) are filled. Brown dirt,
+ * sand and wood pass the red test, so in game the terrain around a tooltip is often one
+ * masked ring; the tooltip's whole dark body is then "enclosed", and filling it would merge
+ * all six badges into a single panel-sized blob.
  */
-export function fillEnclosedHoles(presence: Uint8Array, width: number, height: number): Uint8Array {
+export function fillEnclosedHoles(
+  presence: Uint8Array,
+  width: number,
+  height: number,
+  maxHoleSide = Infinity
+): Uint8Array {
   const reachable = new Uint8Array(presence.length);
   const stack: number[] = [];
 
@@ -172,6 +182,21 @@ export function fillEnclosedHoles(presence: Uint8Array, width: number, height: n
     if (presence[index] || reachable[index]) return;
     reachable[index] = 1;
     stack.push(index);
+  };
+
+  // 4-connected background flood, the complement of the 8-connected foreground labelling.
+  const flood = (onPixel?: (index: number) => void) => {
+    while (stack.length > 0) {
+      const index = stack.pop()!;
+      onPixel?.(index);
+      const x = index % width;
+      const y = (index - x) / width;
+
+      if (x > 0) seed(index - 1);
+      if (x < width - 1) seed(index + 1);
+      if (y > 0) seed(index - width);
+      if (y < height - 1) seed(index + width);
+    }
   };
 
   for (let x = 0; x < width; x++) {
@@ -182,31 +207,45 @@ export function fillEnclosedHoles(presence: Uint8Array, width: number, height: n
     seed(y * width);
     seed(y * width + width - 1);
   }
-
-  // 4-connected background flood, the complement of the 8-connected foreground labelling.
-  while (stack.length > 0) {
-    const index = stack.pop()!;
-    const x = index % width;
-    const y = (index - x) / width;
-
-    if (x > 0) seed(index - 1);
-    if (x < width - 1) seed(index + 1);
-    if (y > 0) seed(index - width);
-    if (y < height - 1) seed(index + width);
-  }
+  flood();
 
   const out = new Uint8Array(presence.length);
   for (let p = 0; p < presence.length; p++) {
     out[p] = presence[p] || !reachable[p] ? 1 : 0;
+  }
+  if (maxHoleSide === Infinity) return out;
+
+  // Each enclosed hole is flooded on its own; one too big to be a letter is left open.
+  for (let start = 0; start < presence.length; start++) {
+    if (presence[start] || reachable[start]) continue;
+    const pixels: number[] = [];
+    let minX = width;
+    let maxX = -1;
+    let minY = height;
+    let maxY = -1;
+    seed(start);
+    flood(index => {
+      pixels.push(index);
+      const x = index % width;
+      const y = (index - x) / width;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    });
+    if (maxX - minX + 1 > maxHoleSide || maxY - minY + 1 > maxHoleSide) {
+      for (const index of pixels) out[index] = 0;
+    }
   }
   return out;
 }
 
 /**
  * Removes speckle from monitor subpixel noise and moire, then restores the gene letters to
- * their badges. Returns a 0/1 presence buffer.
+ * their badges. Returns a 0/1 presence buffer. `maxHoleSide` bounds the holes filled back
+ * in; see `fillEnclosedHoles`.
  */
-export function cleanBadgeMask(mask: BadgeMask, openIterations = 1): Uint8Array {
+export function cleanBadgeMask(mask: BadgeMask, openIterations = 1, maxHoleSide = Infinity): Uint8Array {
   const { width, height } = mask;
   let presence: Uint8Array = new Uint8Array(mask.labels.length);
   for (let p = 0; p < presence.length; p++) {
@@ -216,7 +255,7 @@ export function cleanBadgeMask(mask: BadgeMask, openIterations = 1): Uint8Array 
   for (let i = 0; i < openIterations; i++) presence = erode(presence, width, height);
   for (let i = 0; i < openIterations; i++) presence = dilate(presence, width, height);
 
-  return fillEnclosedHoles(presence, width, height);
+  return fillEnclosedHoles(presence, width, height, maxHoleSide);
 }
 
 /**
@@ -376,9 +415,11 @@ export function detectBadgeCandidates(
 ): BadgeComponent[] {
   const mask = buildBadgeMask(frame, maskOptions);
   // Do NOT erode small badges (openIterations = 0) so thin 1-2px badge rings at 0.5-0.7 UI scales are never deleted!
-  const presence = cleanBadgeMask(mask, 0);
-  const components = findComponents(presence, mask);
   const reference = sizeReference ?? frame;
+  // A hole can only be a gene letter if it fits inside the largest badge allowed.
+  const maxHoleSide = Math.min(reference.width, reference.height) * filterOptions.maxSideFraction;
+  const presence = cleanBadgeMask(mask, 0, maxHoleSide);
+  const components = findComponents(presence, mask);
   return filterBadgeCandidates(components, reference.width, reference.height, filterOptions);
 }
 

@@ -78,7 +78,7 @@ export const GeneExplanation: React.FC<GeneExplanationProps> = ({ map }) => {
                 borderRadius: '4px',
                 borderBottom: '2px solid',
                 borderColor: isActive ? 'var(--gl-primary)' : 'transparent',
-                backgroundColor: isActive ? 'rgba(0, 229, 255, 0.10)' : 'transparent',
+                backgroundColor: isActive ? 'rgba(var(--gl-primary-rgb), 0.10)' : 'transparent',
                 '&:hover': { backgroundColor: 'var(--gl-surface)' }
               }}
             >

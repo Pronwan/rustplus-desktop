@@ -7941,4 +7941,49 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Калькулятор переработки</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Время сервера, маленькое</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Одна ячейка: солнце или луна и время — как на мини-карте</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Игроки, маленькое</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Одна ячейка: сколько онлайн и сколько вмещается — как на мини-карте</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Удерживать клавишу для показа</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Всегда видна — нажмите, чтобы задать клавишу</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Для одного экрана: док виден только пока клавиша удерживается — так же, как карта в самой игре закрывает обзор.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Экран</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Применить ко всем плиткам</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>Пока переключатель включён, это значение важнее того, что задано самой плитке. Выключите — и плитки вернут своё.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Прозрачность для всех</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Размер текста для всех</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Цвет текста для всех</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Сбросить оформление</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Сбросить глобальные настройки и собственные прозрачность, размер текста и цвет каждой плитки? Сами плитки останутся на месте.</value>
+  </data>
 </root>

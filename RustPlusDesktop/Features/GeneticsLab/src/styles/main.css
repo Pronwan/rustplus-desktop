@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap');
 @import './tokens.css';
 
 :root {
-  --bg-primary: #0E0E0E;
-  --bg-secondary: #181818;
-  --bg-tertiary: #202020;
-  --color-border: #282828;
-  --color-accent: #00E5FF;
+  --bg-primary: var(--gl-app-bg);
+  --bg-secondary: var(--gl-panel-bg);
+  --bg-tertiary: var(--gl-surface);
+  --color-border: var(--gl-border);
+  --color-accent: var(--gl-primary);
   --color-gene-green: #4CAF50;
   --color-gene-red: #C62828;
 }
@@ -20,7 +19,7 @@
 body {
   background-color: var(--gl-app-bg);
   color: var(--gl-text-primary);
-  font-family: 'Roboto Mono', 'Consolas', monospace;
+  font-family: var(--font-family-base);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -93,7 +92,7 @@ body {
   border: none;
   border-bottom: 1px solid var(--gl-border-strong);
   color: var(--gl-text-primary);
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-family-mono);
   font-size: 0.9rem;
   padding: 4px 2px;
   width: 100%;

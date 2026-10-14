@@ -8035,4 +8035,49 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recycling-Rechner</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>Serverzeit, klein</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>Eine Zelle: Sonne oder Mond und die Uhrzeit — wie auf der Mini-Karte</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>Spieler, klein</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>Eine Zelle: wie viele online sind und wie viele passen — wie auf der Mini-Karte</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>Taste halten zum Einblenden</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>Immer sichtbar — zum Festlegen klicken</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>Für einen Monitor: Das Dock ist nur sichtbar, solange die Taste gehalten wird — so wie dich auch die Karte im Spiel die Sicht kostet.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>Bildschirm</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>Für alle Kacheln übernehmen</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>Solange ein Schalter an ist, gilt dieser Wert vor dem, was eine Kachel über ihr eigenes Zahnrad bekommen hat. Schaltest du ihn aus, gelten wieder die Werte der Kacheln.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>Deckkraft für alle</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>Textgröße für alle</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>Textfarbe für alle</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>Darstellung zurücksetzen</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>Globale Einstellungen und die eigene Deckkraft, Textgröße und Farbe aller Kacheln zurücksetzen? Die Kacheln selbst bleiben, wo sie sind.</value>
+  </data>
 </root>

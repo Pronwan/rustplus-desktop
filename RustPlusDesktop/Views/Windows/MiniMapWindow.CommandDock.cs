@@ -30,6 +30,7 @@ namespace RustPlusDesk
         public ICommandDockHost? DockHost { get; set; }
 
         private CommandDockLayout _dock = new();
+        internal bool IsLocked => _dock.Locked;
         private readonly Dictionary<string, FrameworkElement> _tileElements = new();
         private readonly List<Action> _tileRefreshers = new();
         private DispatcherTimer? _dockTimer;
@@ -97,6 +98,8 @@ namespace RustPlusDesk
             SizeChanged += (_, __) => PositionOverlay();
 
             InitArming();
+
+            Loaded += (_, __) => UpdateMiniMapButtons();
 
             // Esc ends arranging, as it ends most modes. Not from inside a tile's text box,
             // where Esc already means something to whoever is typing.
@@ -316,11 +319,20 @@ namespace RustPlusDesk
         /// <summary>Puts the lock button into the state it is actually in.</summary>
         private void ApplyLockState()
         {
+
             bool locked = _dock.Locked;
 
             // The bar on the overlay carries the same lock, so it is repainted here rather than
             // by whoever happened to flip it.
             _overlay?.SetLocked(locked);
+
+            foreach (var map in Application.Current?.Windows.OfType<MiniMapWindow>() ?? Enumerable.Empty<MiniMapWindow>())
+            {
+                if (!map.IsDeviceOverlay)
+                {
+                    map.OnDockLockChanged(locked);
+                }
+            }
 
             // Unlocked means somebody is arranging: the bar stays out for as long as that lasts,
             // because it is the only way back to locking it. A hint telling them to unlock has
@@ -993,13 +1005,17 @@ namespace RustPlusDesk
 
         private FrameworkElement? BuildTile(CommandDockTile tile) => tile.Kind switch
         {
-            CommandDockTileKinds.Clock => BuildClockTile(tile),
+            CommandDockTileKinds.Clock => tile.ClockStyle == ClockStyleMinimal
+                ? BuildMinimalClockTile(tile)
+                : BuildClockTile(tile),
             CommandDockTileKinds.Device => BuildDeviceTile(tile),
             CommandDockTileKinds.Event => BuildEventTile(tile),
             CommandDockTileKinds.Rule => BuildRuleTile(tile),
             CommandDockTileKinds.Session => BuildSessionTile(tile),
             CommandDockTileKinds.Discord => BuildDiscordTile(tile),
-            CommandDockTileKinds.ServerInfo => BuildServerInfoTile(tile),
+            CommandDockTileKinds.ServerInfo => tile.ServerInfoMinimal
+                ? BuildMinimalPopulationTile(tile)
+                : BuildServerInfoTile(tile),
             CommandDockTileKinds.AiCompanion => BuildAiTile(tile),
             CommandDockTileKinds.Translate => BuildTranslateTile(tile),
             CommandDockTileKinds.Collapse => BuildCollapseTile(tile),
@@ -1458,7 +1474,7 @@ namespace RustPlusDesk
             shell.Child = stack;
             stack.Children.Add(new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/smartalarm.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/crate.png")),
                 Width = style.Icon(26), Height = style.Icon(26),
                 HorizontalAlignment = HorizontalAlignment.Center
             });
@@ -1480,10 +1496,16 @@ namespace RustPlusDesk
                 var host = Application.Current?.MainWindow as Views.MainWindow;
                 var latest = host?.DockOilRigAlarms.FirstOrDefault();
                 timestamp.Text = latest?.Timestamp.ToLocalTime().ToString("HH:mm:ss") ?? "—";
-                shell.Opacity = latest == null ? 0.5 : 1.0;
-                ToolTipService.SetToolTip(shell, latest == null
+                bool isActive = false;
+                if (latest != null)
+                {
+                    var elapsed = DateTime.UtcNow - latest.Timestamp.ToUniversalTime();
+                    isActive = elapsed.TotalSeconds >= 0 && elapsed.TotalMinutes < 15;
+                }
+                shell.Opacity = isActive ? 1.0 : 0.5;
+                ToolTipService.SetToolTip(shell, host?.BuildOilRigAlarmAnswer() ?? (latest == null
                     ? "Pair a Smart Alarm with an RF receiver and name its notification Oil Rig."
-                    : $"Smart Alarm received: {latest.Timestamp.ToLocalTime():g}\n{latest.Title}");
+                    : $"Smart Alarm received: {latest.Timestamp.ToLocalTime():g}\n{latest.Title}"));
             });
             return shell;
         }
@@ -1691,7 +1713,11 @@ namespace RustPlusDesk
                 Width = 12,
                 Height = 12,
                 CornerRadius = new CornerRadius(3),
-                Margin = new Thickness(0, 0, -4, -4),
+                // Inside the tile, not hanging off it. The dock is sized to exactly the
+                // rectangle its tiles occupy, so a handle on a negative margin lands outside
+                // the window and is clipped away by it — which is every tile along an edge,
+                // and the map is almost always one of them.
+                Margin = new Thickness(0, 0, 2, 2),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
@@ -1704,13 +1730,14 @@ namespace RustPlusDesk
             // any amount of saved pixels.
             //
             // Bottom-left, opposite the grip: the title bar overlays the dock's top edge, and a
-            // × in the top-right corner of a first-row tile would sit underneath it.
+            // × in the top-right corner of a first-row tile would sit underneath it. Inset for
+            // the same reason as the grip above.
             var remove = new Border
             {
                 Width = 16,
                 Height = 16,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(-6, 0, 0, -6),
+                Margin = new Thickness(4, 0, 0, 4),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)),
@@ -1737,7 +1764,7 @@ namespace RustPlusDesk
                 Width = 16,
                 Height = 16,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(14, 0, 0, -6),
+                Margin = new Thickness(24, 0, 0, 4),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Background = Brush("Accent", Color.FromRgb(0x3F, 0xD7, 0xFF)),
@@ -2196,6 +2223,21 @@ namespace RustPlusDesk
             return false;
         }
 
+        /// <summary>
+        /// Shows or hides the two buttons on the map: its settings, and its close.
+        ///
+        /// Shows the mini-map's two buttons: its settings, and its close.
+        ///
+        /// Both are simply present on the mini-map window. The device overlay has no map and
+        /// no buttons to show, so it skips all of it.
+        ///
+        /// Pressing the × closes the mini-map. Showing it only offers that.
+        /// </summary>
+        private void ShowMapClose(bool show) => ShowMapButtons(show);
+
+        /// <summary>Takes the mini-map off the dock, remembered the way any removal is.</summary>
+        internal void RemoveMapTile() => RemoveTile(CommandDockTileKinds.MapTileId);
+
         private void RemoveTile(string tileId)
         {
             if (_dock.Tiles.FirstOrDefault(t => t.Id == tileId) is { Kind: CommandDockTileKinds.Map })
@@ -2211,7 +2253,23 @@ namespace RustPlusDesk
         /// one of its layers was switched off. Both look the same to the user, so the picker
         /// offers to bring it back in both cases.
         /// </summary>
-        public bool CanAddMap => !IsDeviceOverlay && !MapOccupiesCells;
+        /// <summary>
+        /// Whether the picker should offer the mini-map.
+        ///
+        /// Two windows, two reasons it can be missing: this one has no map tile on it, or the
+        /// mini-map window itself was closed with its ×. The widget overlay is where somebody
+        /// looks either way, which is why it answers for both.
+        /// </summary>
+        public bool CanAddMap => IsDeviceOverlay
+            ? !IsMiniMapWindowOpen()
+            : !MapOccupiesCells;
+
+        internal bool IsMiniMapWindowOpen()
+        {
+            if (DockHost != null) return DockHost.IsMiniMapPresent;
+            if (Application.Current?.MainWindow is Views.MainWindow mainWin) return mainWin.IsMiniMapPresent;
+            return Application.Current?.Windows.OfType<MiniMapWindow>().Any(w => !w.IsDeviceOverlay && w.IsLoaded) == true;
+        }
 
         /// <summary>
         /// Puts the map back on the dock, with every layer on.
@@ -2221,7 +2279,15 @@ namespace RustPlusDesk
         /// </summary>
         public void AddMapTile()
         {
-            if (IsDeviceOverlay) return;
+            // On the widget overlay there is no tile to add — the map is its own window, and
+            // what is wanted is that window back.
+            if (IsDeviceOverlay)
+            {
+                if (DockHost != null) DockHost.ShowMiniMap();
+                else (Application.Current?.MainWindow as Views.MainWindow)?.ShowMiniMapAgain();
+                return;
+            }
+
             if (MapTile == null)
             {
                 _dock.MapRemoved = false;

@@ -25,8 +25,35 @@ public class ServerProfile : INotifyPropertyChanged
         set { _description = value; OnProp(); }
     }
 
-    public string Host { get; set; } = "";
-    public int Port { get; set; } = 28082;
+    private string _host = "";
+    public string Host
+    {
+        get => _host;
+        set
+        {
+            if (_host != value)
+            {
+                _host = value ?? "";
+                OnProp();
+                OnProp(nameof(MatchKey));
+            }
+        }
+    }
+
+    private int _port = 28082;
+    public int Port
+    {
+        get => _port;
+        set
+        {
+            if (_port != value)
+            {
+                _port = value;
+                OnProp();
+                OnProp(nameof(MatchKey));
+            }
+        }
+    }
     public string SteamId64 { get; set; } = "";
     private string _playerToken = "";
     public string PlayerToken

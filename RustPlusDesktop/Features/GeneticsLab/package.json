@@ -1,11 +1,11 @@
 {
   "name": "genetics-lab",
   "private": true,
-  "version": "1.6.0",
+  "version": "1.16.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/generate-update-manifest.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "version:bump": "node .github/scripts/bump-version.mjs",
@@ -19,11 +19,13 @@
     "lucide-react": "^1.50.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tesseract.js": "^5.1.1"
+    "tesseract.js": "^5.1.1",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",

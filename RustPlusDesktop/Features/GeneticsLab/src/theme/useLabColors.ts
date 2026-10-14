@@ -46,8 +46,8 @@ export const useLabColors = () => {
     primary: p.primary.main,
     primaryHover: p.primary.light,
     onPrimary: p.primary.contrastText,
-    primarySubtle: isDark ? 'rgba(0, 229, 255, 0.08)' : 'rgba(2, 132, 199, 0.08)',
-    primaryBorder: isDark ? 'rgba(0, 229, 255, 0.3)' : 'rgba(2, 132, 199, 0.35)',
+    primarySubtle: isDark ? 'rgba(var(--gl-primary-rgb), 0.08)' : 'rgba(2, 132, 199, 0.08)',
+    primaryBorder: isDark ? 'rgba(var(--gl-primary-rgb), 0.3)' : 'rgba(2, 132, 199, 0.35)',
 
     // Status
     error: p.error.main,

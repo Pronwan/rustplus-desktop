@@ -27,6 +27,8 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:Button x:Name="PatchNotesButton" Appearance="Secondary" Click="PatchNotes_Click" Visibility="Collapsed" Content="Patch notes" Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}" ToolTip="What changed in each Genetics Lab update" AutomationProperties.Name="Genetics Lab patch notes" Margin="0,0,8,0" />
+                <ui:Button x:Name="UpdateReadyButton" Appearance="Primary" Click="Reload_Click" Visibility="Collapsed" Content="Update ready" Icon="{ui:SymbolIcon Symbol=ArrowDownload24}" ToolTip="A newer Genetics Lab was downloaded. Reload to switch to it; a running scan stops." AutomationProperties.Name="Reload to apply the Genetics Lab update" Margin="0,0,8,0" />
                 <ui:Button Appearance="Secondary" Click="Reload_Click" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" ToolTip="Reload Genetics Lab" AutomationProperties.Name="Reload Genetics Lab" Margin="0,0,8,0" />
                 <ui:Button Appearance="Secondary" Click="Minimize_Click" Icon="{ui:SymbolIcon Symbol=Subtract24}" ToolTip="Minimise to the workspace and keep Genetics Lab running in the background" AutomationProperties.Name="Minimise Genetics Lab" Margin="0,0,8,0" />
                 <ui:Button Appearance="Secondary" Click="Close_Click" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="Close Genetics Lab and release its memory. Any running scan stops." AutomationProperties.Name="Close Genetics Lab" />

@@ -24,6 +24,7 @@ export interface DesktopTemplateResult {
   layoutSource: DesktopRowRead['layoutSource'];
   slots: DesktopSlotRead[];
   latencyMs: number;
+  geometry?: DesktopRowRead['geometry'];
 }
 
 /**
@@ -74,7 +75,8 @@ export class DesktopTemplateRecognizer {
       chromaticVerified: read.slots.every(slot => slot.color !== 'unknown'),
       layoutSource: read.layoutSource,
       slots: read.slots,
-      latencyMs: read.latencyMs
+      latencyMs: read.latencyMs,
+      geometry: read.geometry
     };
   }
 }

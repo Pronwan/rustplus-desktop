@@ -281,7 +281,54 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     /// <summary>Repoints the mini-map's brushes after the scene was rebuilt for a new map.</summary>
     private void RefreshMiniMapLayers() => _miniMap?.SetLayers(CurrentMiniMapLayers());
 
+    /// <summary>
+    /// Brings the mini-map window back after its × was pressed.
+    ///
+    /// Called from the widget overlay's Add Widget list, which is the one place somebody
+    /// looks for a thing they have removed. Clearing the flag is part of it: the next press
+    /// of Mini should open it again too.
+    /// </summary>
+    public void ShowMiniMapAgain()
+    {
+        TrackingService.MiniMapHidden = false;
+
+        if (_miniMap == null)
+        {
+            BtnToggleMiniMap_Click(this, null!);
+            return;
+        }
+
+        _miniMap.Show();
+        _miniMap.ApplyPeekVisibility();
+        CenterMiniMapOnPlayer();
+    }
+
+    public bool IsMiniMapPresent => _miniMap != null && _miniMap.IsLoaded;
+
+    public void ShowMiniMap() => ShowMiniMapAgain();
+
     private MiniMapWindow? _miniMap;
+
+    /// <summary>
+    /// Closes the windows that float over the game, on the way out.
+    ///
+    /// These are deliberately not owned by the main window: an owned window hides when its
+    /// owner is minimised, and the whole point of the dock is to be up while the app is not.
+    /// The cost of that is that nothing takes them down automatically, which left the dock
+    /// sitting over the game after the app it belongs to had gone.
+    ///
+    /// Called before the shutdown rather than relying on it: every exit path ends in
+    /// Application.Shutdown, and by the time that runs there is no saying how much of the app
+    /// is still there to do it.
+    /// </summary>
+    public void CloseOverlayWindows()
+    {
+        try { _deviceOverlay?.Close(); } catch { }
+        try { _miniMap?.Close(); } catch { }
+
+        _deviceOverlay = null;
+        _miniMap = null;
+    }
     private DeviceOverlayWindow? _deviceOverlay;
     // z.B. Click-Handler deines „Mini-Map“-Buttons:
     public void EnsureMiniMapOpen()
@@ -350,7 +397,14 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
                 RefreshIndependentLayers();
             };
 
+            TrackingService.MiniMapHidden = false;
+
             _miniMap.Show();
+
+            // Not in front of anything until the peek key says so. Applied after Show so the
+            // window exists and has a handle to reorder.
+            _miniMap.ApplyPeekVisibility();
+
             EnsureDeviceOverlayOpen();
 
             // It may want the grid or the death markers that this map has switched off.
@@ -368,6 +422,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         {
             _miniMap.Close();
             _deviceOverlay?.Close();
+            ApplyMiniMapPeekHotkey();
         }
     }
 
@@ -381,7 +436,12 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             DataContext = _vm,
             DockHost = this
         };
-        _deviceOverlay.Closed += (_, __) => _deviceOverlay = null;
+        _deviceOverlay.Loaded += (_, __) => ApplyMiniMapPeekHotkey();
+        _deviceOverlay.Closed += (_, __) =>
+        {
+            _deviceOverlay = null;
+            ApplyMiniMapPeekHotkey();
+        };
         Closed += (_, __) => _deviceOverlay?.Close();
         _deviceOverlay.Show();
     }

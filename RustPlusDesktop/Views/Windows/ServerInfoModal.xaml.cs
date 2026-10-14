@@ -186,5 +186,19 @@ namespace RustPlusDesk.Views
             }
             catch { }
         }
+
+        private void BtnEditConnection_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Windows.EditServerConnectionDialog(_profile, _vm)
+            {
+                Owner = this
+            };
+            if (dlg.ShowDialog() == true && dlg.HasChanged)
+            {
+                TxtName.Text = _profile.Name;
+                TxtAddress.Text = $"{_profile.Host}:{_profile.Port}";
+                Title = _profile.Name;
+            }
+        }
     }
 }

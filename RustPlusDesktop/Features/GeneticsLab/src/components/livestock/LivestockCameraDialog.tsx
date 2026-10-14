@@ -56,7 +56,7 @@ export const LivestockCameraDialog: React.FC<{ open: boolean; onClose: () => voi
           width: badge.diameter * scale,
           height: badge.diameter * scale,
           borderRadius: '50%',
-          border: `2px solid ${badge.detected ? '#00E5FF' : '#FFB300'}`,
+          border: `2px solid ${badge.detected ? 'var(--gl-primary)' : '#FFB300'}`,
           pointerEvents: 'none'
         }}
       />

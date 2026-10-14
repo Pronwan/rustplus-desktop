@@ -93,7 +93,7 @@ export const BreedingHistory: React.FC<BreedingHistoryProps> = ({ open, onClose 
                   sx={{
                     fontWeight: 800,
                     fontSize: '0.68rem',
-                    backgroundColor: isDone ? 'rgba(76, 175, 80, 0.15)' : isAbandoned ? 'rgba(229, 57, 53, 0.15)' : 'rgba(0, 229, 255, 0.15)',
+                    backgroundColor: isDone ? 'rgba(76, 175, 80, 0.15)' : isAbandoned ? 'rgba(229, 57, 53, 0.15)' : 'rgba(var(--gl-primary-rgb), 0.15)',
                     color: isDone ? 'var(--gl-success)' : isAbandoned ? 'var(--gl-error)' : 'var(--gl-primary)',
                     border: '1px solid',
                     borderColor: isDone ? 'var(--gl-success)' : isAbandoned ? 'var(--gl-error)' : 'var(--gl-primary)'

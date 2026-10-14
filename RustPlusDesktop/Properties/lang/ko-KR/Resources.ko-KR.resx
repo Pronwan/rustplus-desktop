@@ -7862,4 +7862,49 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>재활용 계산기</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>서버 시간, 작게</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>한 칸: 해 또는 달과 시간 — 미니맵과 동일</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>플레이어 수, 작게</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>한 칸: 접속 인원과 정원 — 미니맵과 동일</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>키를 누르는 동안 표시</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>항상 표시 — 클릭하여 키 설정</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>모니터가 하나일 때: 키를 누르고 있는 동안만 독이 표시됩니다 — 게임 내 지도가 시야를 가리는 것과 같습니다.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>디스플레이</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>모든 타일에 적용</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>스위치가 켜져 있는 동안에는 이 값이 타일 자체 설정보다 우선합니다. 끄면 타일이 원래 값을 되찾습니다.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>전체 불투명도</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>전체 글자 크기</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>전체 글자 색</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>모양 초기화</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>전역 설정과 각 타일의 불투명도·글자 크기·색을 모두 지울까요? 타일 자체는 그대로 남습니다.</value>
+  </data>
 </root>

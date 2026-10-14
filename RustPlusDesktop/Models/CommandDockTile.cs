@@ -52,7 +52,7 @@ namespace RustPlusDesk.Models
         /// </summary>
         public bool EventHideLabel { get; set; }
 
-        /// <summary>Clock tiles: 0 digital, 1 analog, 2 Rust style.</summary>
+        /// <summary>Clock tiles: 0 digital, 1 analog, 2 Rust style, 3 minimal.</summary>
         public int ClockStyle { get; set; }
 
         /// <summary>Clock tiles: append the time left until sunrise or sunset.</summary>
@@ -84,6 +84,15 @@ namespace RustPlusDesk.Models
 
         /// <summary>Server info tiles: draw the population line, not just the figure.</summary>
         public bool ShowGraph { get; set; } = true;
+
+        /// <summary>
+        /// Server info tiles: a glyph and the figure, in one cell.
+        ///
+        /// The same reading the mini-map has always shown along its bottom edge. Not a
+        /// smaller version of the full tile but a different one — no caption, no graph, no
+        /// room for either.
+        /// </summary>
+        public bool ServerInfoMinimal { get; set; }
 
         /// <summary>
         /// Translate tiles: the language to translate into, as a culture name such as "ru-RU".
@@ -368,6 +377,21 @@ namespace RustPlusDesk.Models
         // What a tile uses until it is given its own value.
 
         public double DefaultOpacity { get; set; } = 1.0;
+
+        // ── Global overrides ────────────────────────────────────────────────
+        //
+        // The three values above are defaults: a tile that has never been given its own
+        // falls back to them. These turn each one into an override instead, so it wins over
+        // what a tile was given.
+        //
+        // Nothing is overwritten by that. A tile's own values stay exactly where they were
+        // and come back the moment the switch goes off — which is the whole point, because
+        // the usual reason to turn one on is to see how the dock looks a different way, and
+        // the usual next thing is to change it back.
+
+        public bool OverrideOpacity { get; set; }
+        public bool OverrideFontScale { get; set; }
+        public bool OverrideTextColor { get; set; }
 
         public double DefaultFontScale { get; set; } = 1.0;
 

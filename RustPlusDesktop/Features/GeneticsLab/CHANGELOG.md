@@ -2,6 +2,136 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): one set of region controls, in the Scanner HUD; live previews everywhere ([3f0ca4a](https://github.com/JawadYzbk/rust-genetics-lab/commit/3f0ca4a9c1becfb6540a2d780873c964f086cd43))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.16.0...v1.16.1
+All notable changes to this project will be documented in this file.
+
+## [1.16.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat: move a clone to another plant group; fix double-adds and plant reads at small UI scales ([e47607d](https://github.com/JawadYzbk/rust-genetics-lab/commit/e47607df6f7443ce24a46a805f7c5fba84407377))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.15.0...v1.16.0
+All notable changes to this project will be documented in this file.
+
+## [1.15.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.15.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(workspace): easier plant groups: add, view and clear with undo ([71f8d99](https://github.com/JawadYzbk/rust-genetics-lab/commit/71f8d9948822fc0c780629d1e010935fe3a02ea2))
+
+### 🐛 Bug Fixes
+
+* fix(scanner): vote on the plant type across frames; say when it is not read ([d2f32bf](https://github.com/JawadYzbk/rust-genetics-lab/commit/d2f32bf4306755fd4357bf76c6274e3b1ef5697d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.2...v1.15.0
+All notable changes to this project will be documented in this file.
+
+## [1.14.2](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.2) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): auto-calibrate finds the gene row at small UI scales ([1069689](https://github.com/JawadYzbk/rust-genetics-lab/commit/1069689503fa352800778017044098969dddf3bd))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.1...v1.14.2
+All notable changes to this project will be documented in this file.
+
+## [1.14.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(scanner): read the plant name over bright terrain; tell R from P ([9def97e](https://github.com/JawadYzbk/rust-genetics-lab/commit/9def97e61de86343c7bb748b3517c87107fd2a7f))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.14.0...v1.14.1
+All notable changes to this project will be documented in this file.
+
+## [1.14.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.14.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(scanner): detect the plant type from the panel; keep clones of several plants ([43cbf4d](https://github.com/JawadYzbk/rust-genetics-lab/commit/43cbf4d10efe1db8929e87bcdcb40f00c3d0f633))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.13.1...v1.14.0
+All notable changes to this project will be documented in this file.
+
+## [1.13.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.13.1) (2026-10-13)
+
+### 🐛 Bug Fixes
+
+* fix(breeding): show the centre plant as soon as it is ticked; feat: planter choice and theme toggle ([54f2261](https://github.com/JawadYzbk/rust-genetics-lab/commit/54f22611a79bb8f69daf5b82c2f11c9f11b36b45))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.13.0...v1.13.1
+All notable changes to this project will be documented in this file.
+
+## [1.13.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.13.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(ui): plant picker with item icons; change a breeding session's plant type ([b4f30e4](https://github.com/JawadYzbk/rust-genetics-lab/commit/b4f30e4834c62d94ff5851dc552d84ccdf903b21))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.12.0...v1.13.0
+All notable changes to this project will be documented in this file.
+
+## [1.12.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.12.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(guide): show your own route in 3D, click plants for their genes, bigger view ([e6c540a](https://github.com/JawadYzbk/rust-genetics-lab/commit/e6c540a574f404a2c51e7a4c2afdfbf360e434c1))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.11.0...v1.12.0
+All notable changes to this project will be documented in this file.
+
+## [1.11.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.11.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(breeding): show the guided breeding step in a 3D planter; fix black plant leaves ([d40d049](https://github.com/JawadYzbk/rust-genetics-lab/commit/d40d04928dab02c968ca53b07ecd9c24bdf0159d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.10.0...v1.11.0
+All notable changes to this project will be documented in this file.
+
+## [1.10.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.10.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(guide): interactive 3D planter guide with Rust's own planter and plant models ([f1ae2e6](https://github.com/JawadYzbk/rust-genetics-lab/commit/f1ae2e6e8fa2aa4309da6e7eea5d0d051e48d16d))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.9.0...v1.10.0
+All notable changes to this project will be documented in this file.
+
+## [1.9.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.9.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(updates): open patch notes at any time ([ef8f507](https://github.com/JawadYzbk/rust-genetics-lab/commit/ef8f507a5da47fe6618831d167399d8f26701ae4))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.8.0...v1.9.0
+All notable changes to this project will be documented in this file.
+
+## [1.8.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.8.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat(updates): ship update manifests and show updates inside Genetics Lab ([2bdb841](https://github.com/JawadYzbk/rust-genetics-lab/commit/2bdb84190e7a681146ab907e63c62b25360f29ee))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.7.0...v1.8.0
+All notable changes to this project will be documented in this file.
+
+## [1.7.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.7.0) (2026-10-12)
+
+### 🚀 Features
+
+* feat(recipes): correct every recipe and add the livestock-update pies and breads ([c6b8045](https://github.com/JawadYzbk/rust-genetics-lab/commit/c6b80455b1982575f3e9d425e6770f4376466640))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.6.0...v1.7.0
+All notable changes to this project will be documented in this file.
+
 ## [1.6.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.6.0) (2026-10-02)
 
 ### 🚀 Features

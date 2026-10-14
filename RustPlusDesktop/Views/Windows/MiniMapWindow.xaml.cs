@@ -359,7 +359,26 @@ namespace RustPlusDesk
 
         // ── Settings popup ──────────────────────────────────────────────────────
 
-        private void BtnSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
+        // Two gears, and they used to share this one handler — which is why pointing it at the
+        // dock's panel moved the map's gear with it. The gear on the map opens the map's
+        // settings; the one in the title bar belongs to the window and opens the dock's.
+        private void BtnMapSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
+
+        /// <summary>
+        /// Closes the mini-map window, and remembers that it was closed on purpose.
+        ///
+        /// The mini-map is its own window — the widgets are a second one — so this closes a
+        /// window rather than removing a tile. Remembered, because the button that opens
+        /// these opens both, and somebody who has just put the map away does not want it
+        /// back the next time they ask for their widgets. Add Widget offers it again.
+        /// </summary>
+        private void BtnMapClose_Click(object sender, RoutedEventArgs e)
+        {
+            Services.TrackingService.MiniMapHidden = true;
+            Close();
+        }
+
+        private void BtnDockSettings_Click(object sender, RoutedEventArgs e) => OpenDockSettings();
 
         /// <summary>
         /// Opens the settings popup beside the map and pins it there.

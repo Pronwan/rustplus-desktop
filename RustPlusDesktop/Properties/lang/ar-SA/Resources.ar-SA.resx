@@ -7832,4 +7832,49 @@
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>حاسبة إعادة التدوير</value>
   </data>
+  <data name="CommandDockClockMinimal" xml:space="preserve">
+    <value>وقت الخادم، صغير</value>
+  </data>
+  <data name="CommandDockClockMinimalHint" xml:space="preserve">
+    <value>خلية واحدة: الشمس أو القمر والوقت — كما في الخريطة المصغّرة</value>
+  </data>
+  <data name="CommandDockServerMinimal" xml:space="preserve">
+    <value>اللاعبون، صغير</value>
+  </data>
+  <data name="CommandDockServerMinimalHint" xml:space="preserve">
+    <value>خلية واحدة: كم عدد المتصلين وكم يتسع — كما في الخريطة المصغّرة</value>
+  </data>
+  <data name="MiniMapPeekHotkey" xml:space="preserve">
+    <value>اضغط مع الاستمرار للإظهار</value>
+  </data>
+  <data name="MiniMapPeekHotkeyNone" xml:space="preserve">
+    <value>ظاهرة دائمًا — انقر لتعيين مفتاح</value>
+  </data>
+  <data name="MiniMapPeekHotkeyHint" xml:space="preserve">
+    <value>لشاشة واحدة: تظهر اللوحة فقط أثناء الضغط على المفتاح، تمامًا كما تحجب خريطة اللعبة الرؤية.</value>
+  </data>
+  <data name="CommandDockDisplay" xml:space="preserve">
+    <value>الشاشة</value>
+  </data>
+  <data name="CommandDockGlobalLook" xml:space="preserve">
+    <value>تطبيق على كل البطاقات</value>
+  </data>
+  <data name="CommandDockGlobalLookHint" xml:space="preserve">
+    <value>طالما كان المفتاح مفعّلًا، تتقدّم هذه القيمة على ما أُعطي للبطاقة عبر إعداداتها. أوقفه لتستعيد البطاقات قيمها.</value>
+  </data>
+  <data name="CommandDockGlobalOpacity" xml:space="preserve">
+    <value>العتامة للجميع</value>
+  </data>
+  <data name="CommandDockGlobalFontSize" xml:space="preserve">
+    <value>حجم النص للجميع</value>
+  </data>
+  <data name="CommandDockGlobalTextColor" xml:space="preserve">
+    <value>لون النص للجميع</value>
+  </data>
+  <data name="CommandDockResetLook" xml:space="preserve">
+    <value>إعادة ضبط المظهر</value>
+  </data>
+  <data name="CommandDockResetLookConfirm" xml:space="preserve">
+    <value>هل تريد مسح الإعدادات العامة وكذلك العتامة وحجم النص واللون الخاصة بكل بطاقة؟ تبقى البطاقات في أماكنها.</value>
+  </data>
 </root>
