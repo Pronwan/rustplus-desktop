@@ -54,3 +54,6 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `/hubs/servers`: authenticated SignalR hub; profile changes send `ServersChanged`.
 
 All application endpoints except the minimal health check and invite-gated registration require an authenticated session. Server profile reads and mutations are scoped to the current account. Paired servers are visible to all signed-in accounts on this self-hosted instance; only admins can upload/replace FCM credentials or remove a pairing. View-only accounts can read data but cannot create or delete server profiles.
+
+
+**Token note:** Rust+ player tokens are signed integers and can be negative. The web backend preserves the exact signed value when storing and using the token.
