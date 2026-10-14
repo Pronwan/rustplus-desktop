@@ -15,7 +15,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Live snapshot endpoint for supported server info, map image/monuments, and team data.
 - Smart switch, alarm, and storage-monitor pairing metadata; authenticated smart-switch toggle commands with view-only role protection.
 - Admin-only role assignment UI and API, plus protection against demoting the final administrator.
-- On-demand 2D map snapshot with a world-coordinate transform for team-member markers, and a browser-session smart-alarm notification dock.
+- On-demand 2D map snapshot with a world-coordinate transform for team-member markers, a browser-session smart-alarm/timer alert dock, and durable server-scoped event timers.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
@@ -47,7 +47,7 @@ The database and Data Protection key ring are stored in the `rustplus-web-data` 
 - `GET /api/health`: minimal health status only.
 - `POST /api/auth/login`, `POST /api/auth/register`, `POST /api/auth/logout`.
 - `GET /api/auth/me`.
-- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET/POST /api/servers/{id}/chat`, `GET /api/servers/{id}/devices`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
+- `GET/POST /api/servers`, `DELETE /api/servers/{id}`, `GET /api/servers/{id}/snapshot`, `GET/POST /api/servers/{id}/chat`, `GET/POST /api/servers/{id}/timers`, `DELETE /api/servers/{id}/timers/{timerId}`, `GET /api/servers/{id}/devices`, `POST /api/servers/{id}/devices/{entityId}/toggle`.
 - `GET /api/admin/fcm-status`, `POST /api/admin/fcm-credentials` (admin only).
 - `DELETE /api/paired-servers/{id}` and `POST /api/paired-servers/{id}/connection` (admin only).
 - `GET /api/admin/users`, `PUT /api/admin/users/{id}/role` (admin only).
