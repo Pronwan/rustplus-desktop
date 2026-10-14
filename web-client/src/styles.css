@@ -251,3 +251,9 @@ button:disabled { cursor: wait; opacity: .65; }
 .device-group-chip .text-button { padding: 0 2px; font-size: 14px; }
 .device-row-info select { margin-top: 7px; max-width: 180px; color: #dce6d6; background: #1d241b; border: 1px solid #394633; border-radius: 6px; padding: 6px 7px; font-size: 9px; }
 @media (max-width: 540px) { .device-group-composer { flex-wrap: wrap; } .device-group-composer input { flex-basis: 100%; } }
+
+.device-details { flex: 0 0 100%; border-top: 1px solid #2b342a; margin-top: 7px; padding-top: 8px; color: #aeb9a7; font-size: 10px; line-height: 1.5; }
+.device-details p { margin: 4px 0; }
+.device-details strong { color: #dce8d5; font-weight: 600; }
+.storage-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.storage-items span { border: 1px solid #34422c; background: #1b2418; border-radius: 5px; padding: 4px 6px; color: #c8d9bc; font-size: 9px; }

@@ -24,6 +24,7 @@ type AlarmAlert = { serverId?: string; title: string; message: string; receivedA
 type AdminUser = { id: string; email: string; displayName: string; roles: string[] };
 type PairedDevice = { id: string; entityId: string; name: string; type: string; groupId?: string | null; isActive?: boolean };
 type DeviceGroup = { id: string; name: string; createdAtUtc: string; deviceCount: number };
+type DeviceInfoData = { isActive?: boolean; capacity?: number | null; hasProtection?: boolean | null; protectionExpiry?: string; items?: { id: number; quantity?: number | null; isItemBlueprint?: boolean | null }[] | null };
 type TeamChatMessage = { steamId: string; name: string; message: string; time: string };
 type ServerTimer = { id: string; name: string; expiresAtUtc: string; createdAtUtc: string; fired: boolean; isOwner: boolean };
 type TeamMember = { name?: string | null; x: number; y: number; isOnline: boolean; isAlive: boolean };
@@ -79,6 +80,8 @@ export default function App() {
   const [groupBusy, setGroupBusy] = useState(false);
   const [deviceError, setDeviceError] = useState("");
   const [deviceActionId, setDeviceActionId] = useState<string | null>(null);
+  const [deviceInfoBusyId, setDeviceInfoBusyId] = useState<string | null>(null);
+  const [deviceDetails, setDeviceDetails] = useState<Record<string, DeviceInfoData>>({});
   const [connectionActionId, setConnectionActionId] = useState<string | null>(null);
   const [alarms, setAlarms] = useState<AlarmAlert[]>([]);
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
@@ -269,6 +272,7 @@ export default function App() {
     setSnapshot(null);
     setDevices([]);
     setDeviceGroups([]);
+    setDeviceDetails({});
     setGroupName("");
     setSnapshotError("");
     setDeviceError("");
@@ -386,6 +390,24 @@ export default function App() {
       setChatError(error instanceof Error ? error.message : "Could not send the team chat message.");
     } finally {
       setChatBusy(false);
+    }
+  }
+
+  async function loadDeviceInfo(server: ServerProfile, device: PairedDevice) {
+    setDeviceInfoBusyId(device.entityId);
+    setDeviceError("");
+    try {
+      const result = await api<{ entityId: string; type: string; info: DeviceInfoData }>(
+        `/api/servers/${server.id}/devices/${device.entityId}/info`
+      );
+      setDeviceDetails((current) => ({ ...current, [device.entityId]: result.info }));
+      if (typeof result.info.isActive === "boolean") {
+        setDevices((current) => current.map((item) => item.entityId === device.entityId ? { ...item, isActive: result.info.isActive } : item));
+      }
+    } catch (error) {
+      setDeviceError(error instanceof Error ? error.message : "Could not load device details.");
+    } finally {
+      setDeviceInfoBusyId(null);
     }
   }
 
@@ -613,7 +635,7 @@ export default function App() {
               {deviceGroups.length > 0 && <div className="device-group-list">{deviceGroups.map((group) => <div className="device-group-chip" key={group.id}><span>{group.name} <small>{group.deviceCount}</small></span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="text-button danger-text" onClick={() => void deleteDeviceGroup(selectedServer, group)} aria-label={`Delete ${group.name} group`}>×</button>}</div>)}</div>}
 
               {deviceError && <div className="error-banner" role="alert">{deviceError}</div>}
-              {devices.length === 0 ? <p className="muted">No paired devices have been received yet. Pair switches, alarms, or storage monitors from the Rust+ mobile app.</p> : <div className="device-list">{devices.map((device) => <div className="device-row" key={device.id}><div className="device-symbol">{device.type === "Switch" ? "⏻" : device.type === "Alarm" ? "◉" : "▤"}</div><div className="device-row-info"><strong>{device.name}</strong><span>{device.type} · ID {device.entityId}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <select aria-label={`Group for ${device.name}`} value={device.groupId ?? ""} onChange={(event) => void assignDeviceGroup(selectedServer, device, event.target.value || null)}><option value="">Ungrouped</option>{deviceGroups.map((group) => <option value={group.id} key={group.id}>{group.name}</option>)}</select>}</div><div className="device-row-action">{device.type === "Switch" ? <><span className={device.isActive === undefined ? "device-state unknown" : device.isActive ? "device-state on" : "device-state"}>{device.isActive === undefined ? "State unknown" : device.isActive ? "On" : "Off"}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="secondary-button" disabled={deviceActionId === device.entityId || !selectedServer.connectionEnabled} onClick={() => void toggleDevice(selectedServer, device)}>{deviceActionId === device.entityId ? "Sending…" : "Toggle"}</button>}</> : <span className="device-state unknown">Read only</span>}</div></div>)}</div>}
+              {devices.length === 0 ? <p className="muted">No paired devices have been received yet. Pair switches, alarms, or storage monitors from the Rust+ mobile app.</p> : <div className="device-list">{devices.map((device) => <div className="device-row" key={device.id}><div className="device-symbol">{device.type === "Switch" ? "⏻" : device.type === "Alarm" ? "◉" : "▤"}</div><div className="device-row-info"><strong>{device.name}</strong><span>{device.type} · ID {device.entityId}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <select aria-label={`Group for ${device.name}`} value={device.groupId ?? ""} onChange={(event) => void assignDeviceGroup(selectedServer, device, event.target.value || null)}><option value="">Ungrouped</option>{deviceGroups.map((group) => <option value={group.id} key={group.id}>{group.name}</option>)}</select>}</div><div className="device-row-action">{device.type === "Switch" ? <><span className={device.isActive === undefined ? "device-state unknown" : device.isActive ? "device-state on" : "device-state"}>{device.isActive === undefined ? "State unknown" : device.isActive ? "On" : "Off"}</span>{(user.roles.includes("Admin") || user.roles.includes("Member")) && <button className="secondary-button" disabled={deviceActionId === device.entityId || !selectedServer.connectionEnabled} onClick={() => void toggleDevice(selectedServer, device)}>{deviceActionId === device.entityId ? "Sending…" : "Toggle"}</button>}</> : <span className="device-state unknown">Read only</span>}<button className="text-button" disabled={deviceInfoBusyId === device.entityId || !selectedServer.connectionEnabled} onClick={() => void loadDeviceInfo(selectedServer, device)}>{deviceInfoBusyId === device.entityId ? "Loading…" : deviceDetails[device.entityId] ? "Refresh details" : "Details"}</button></div>{deviceDetails[device.entityId] && <div className="device-details">{typeof deviceDetails[device.entityId].isActive === "boolean" ? <p>Device state: <strong>{deviceDetails[device.entityId].isActive ? "Active" : "Inactive"}</strong></p> : <><p>Capacity: <strong>{deviceDetails[device.entityId].capacity ?? "Unknown"}</strong> slots</p><p>Tool cupboard protection: <strong>{deviceDetails[device.entityId].hasProtection === true ? "Active" : deviceDetails[device.entityId].hasProtection === false ? "Inactive" : "Unknown"}</strong></p><p>Protection expiry: <strong>{deviceDetails[device.entityId].protectionExpiry && new Date(deviceDetails[device.entityId].protectionExpiry).getFullYear() > 1 ? new Date(deviceDetails[device.entityId].protectionExpiry).toLocaleString() : "Unknown"}</strong></p>{deviceDetails[device.entityId].items && deviceDetails[device.entityId].items.length > 0 && <div className="storage-items">{deviceDetails[device.entityId].items.map((item, index) => <span key={`${item.id}-${index}`}>Item {item.id}: {item.quantity ?? "?"}{item.isItemBlueprint ? " (BP)" : ""}</span>)}</div>}</>}</div>}</div>)}</div>}
             </>}
             <div className="modal-actions"><button className="secondary-button" onClick={() => void openSnapshot(selectedServer)} disabled={snapshotBusy}>↻ Refresh data</button><button className="primary-button" onClick={() => setSelectedServer(null)}>Close</button></div>
           </section>
