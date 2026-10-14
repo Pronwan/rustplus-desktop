@@ -190,9 +190,8 @@ app.MapGet("/api/servers", async (
         .AsNoTracking()
         .Where(profile => profile.OwnerUserId == userId)
         .OrderBy(profile => profile.Name)
-        .Select(profile => ToServerResponse(profile))
         .ToListAsync();
-    return Results.Ok(profiles);
+    return Results.Ok(profiles.Select(ToServerResponse).ToList());
 }).RequireAuthorization();
 
 app.MapGet("/api/admin/users", async (UserManager<ApplicationUser> userManager) =>
