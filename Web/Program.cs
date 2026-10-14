@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using RustPlusWeb.Data;
 using RustPlusWeb.Realtime;
+using RustPlusWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +69,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<RustPlusConnectionManager>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<RustPlusConnectionManager>());
+builder.Services.AddSingleton<RustPlusFcmService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<RustPlusFcmService>());
 builder.Services.AddProblemDetails();
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
@@ -183,16 +188,101 @@ app.MapPost("/api/auth/logout", async (SignInManager<ApplicationUser> signInMana
 app.MapGet("/api/servers", async (
     System.Security.Claims.ClaimsPrincipal principal,
     UserManager<ApplicationUser> userManager,
-    AppDbContext db) =>
+    AppDbContext db,
+    RustPlusConnectionManager connections) =>
 {
     var userId = userManager.GetUserId(principal);
-    var profiles = await db.ServerProfiles
+    var savedProfiles = await db.ServerProfiles
         .AsNoTracking()
         .Where(profile => profile.OwnerUserId == userId)
         .OrderBy(profile => profile.Name)
         .ToListAsync();
-    return Results.Ok(profiles.Select(ToServerResponse).ToList());
+    var pairedProfiles = await db.PairedServerCredentials
+        .AsNoTracking()
+        .OrderBy(profile => profile.Name)
+        .ToListAsync();
+
+    var result = savedProfiles.Select(ToServerResponse)
+        .Concat(pairedProfiles.Select(profile => ToPairedServerResponse(profile, connections.GetStatus(profile.Id))))
+        .OrderBy(profile => profile.Name)
+        .ToList();
+    return Results.Ok(result);
 }).RequireAuthorization();
+
+app.MapGet("/api/servers/{id:guid}/snapshot", async Task<IResult> (
+    Guid id,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    var paired = await db.PairedServerCredentials.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id, cancellationToken);
+    if (paired)
+    {
+        var snapshot = await connections.GetSnapshotAsync(id, cancellationToken);
+        return snapshot is null
+            ? Results.Problem("The Rust+ connection is not ready yet.", statusCode: 503)
+            : Results.Ok(snapshot);
+    }
+
+    var userId = userManager.GetUserId(principal);
+    var saved = await db.ServerProfiles.AsNoTracking()
+        .AnyAsync(profile => profile.Id == id && profile.OwnerUserId == userId, cancellationToken);
+    return saved
+        ? Results.Conflict(new { error = "This saved profile has not been paired with Rust+ yet." })
+        : Results.NotFound();
+}).RequireAuthorization();
+
+app.MapGet("/api/admin/fcm-status", (RustPlusFcmService fcm) =>
+    Results.Ok(new { configured = fcm.IsConfigured, listening = fcm.IsListening }))
+    .RequireAuthorization(policy => policy.RequireRole("Admin"));
+
+app.MapPost("/api/admin/fcm-credentials", async Task<IResult> (
+    UploadFcmCredentialsRequest request,
+    System.Security.Claims.ClaimsPrincipal principal,
+    UserManager<ApplicationUser> userManager,
+    RustPlusFcmService fcm,
+    CancellationToken cancellationToken) =>
+{
+    var ownerUserId = userManager.GetUserId(principal);
+    if (string.IsNullOrWhiteSpace(ownerUserId))
+        return Results.Unauthorized();
+
+    try
+    {
+        await fcm.ConfigureAsync(request.CredentialsJson, ownerUserId, cancellationToken);
+        return Results.Ok(new { configured = fcm.IsConfigured, listening = fcm.IsListening });
+    }
+    catch (ArgumentException exception)
+    {
+        return Results.BadRequest(new { error = exception.Message });
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Credentials were saved, but the FCM listener could not connect. Check the file and server network, then retry.", statusCode: 503);
+    }
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+
+app.MapDelete("/api/paired-servers/{id:guid}", async Task<IResult> (
+    Guid id,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    IHubContext<ServerHub> hub,
+    CancellationToken cancellationToken) =>
+{
+    var profile = await db.PairedServerCredentials.SingleOrDefaultAsync(
+        item => item.Id == id, cancellationToken);
+    if (profile is null)
+        return Results.NotFound();
+
+    await connections.DisconnectAsync(id, cancellationToken);
+    db.PairedServerCredentials.Remove(profile);
+    await db.SaveChangesAsync(cancellationToken);
+    await hub.Clients.All.SendAsync("ServersChanged", cancellationToken);
+    return Results.NoContent();
+}).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
 app.MapGet("/api/admin/users", async (UserManager<ApplicationUser> userManager) =>
 {
@@ -309,6 +399,23 @@ static async Task InitializeDatabaseAsync(IServiceProvider services, IConfigurat
     await using var scope = services.CreateAsyncScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.EnsureCreatedAsync();
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "PairedServerCredentials" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_PairedServerCredentials" PRIMARY KEY,
+            "OwnerUserId" TEXT NOT NULL,
+            "RustServerId" TEXT NOT NULL,
+            "Name" TEXT NOT NULL,
+            "Host" TEXT NOT NULL,
+            "Port" INTEGER NOT NULL,
+            "PlayerId" TEXT NOT NULL,
+            "ProtectedPlayerToken" TEXT NOT NULL,
+            "CreatedAtUtc" TEXT NOT NULL
+        );
+        """);
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE UNIQUE INDEX IF NOT EXISTS "IX_PairedServerCredentials_RustServerId"
+        ON "PairedServerCredentials" ("RustServerId");
+        """);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     foreach (var role in new[] { "Admin", "Member", "ViewOnly" })
@@ -361,12 +468,16 @@ static async Task<UserResponse> ToUserResponseAsync(
         await userManager.GetRolesAsync(user));
 
 static ServerResponse ToServerResponse(ServerProfile profile) =>
-    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, "NotConnected");
+    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, "NotConnected", false);
+
+static ServerResponse ToPairedServerResponse(PairedServerCredential profile, string status) =>
+    new(profile.Id, profile.Name, profile.Host, profile.Port, profile.CreatedAtUtc, status, true);
 
 public sealed record RegisterRequest(
     string Email, string DisplayName, string Password, string InviteCode, bool RememberMe = true);
 public sealed record LoginRequest(string Email, string Password, bool RememberMe = true);
 public sealed record CreateServerRequest(string Name, string Host, int Port = 28082);
 public sealed record SetUserRoleRequest(string Role);
+public sealed record UploadFcmCredentialsRequest(string CredentialsJson);
 public sealed record UserResponse(string Id, string Email, string DisplayName, IList<string> Roles);
-public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus);
+public sealed record ServerResponse(Guid Id, string Name, string Host, int Port, DateTime CreatedAtUtc, string ConnectionStatus, bool IsPaired);
