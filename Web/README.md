@@ -14,7 +14,8 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Shared Rust+ server profiles created from FCM pairing events, with one backend-owned Rust+ socket per paired server and bounded exponential reconnect attempts.
 - Live snapshot endpoint for supported server info, map image/monuments, and team data.
 - Smart switch, alarm, and storage-monitor pairing metadata; authenticated smart-switch toggle commands with view-only role protection.
-- Admin-only role assignment and protection against demoting the final administrator.
+- Admin-only role assignment UI and API, plus protection against demoting the final administrator.
+- On-demand 2D map snapshot with a world-coordinate transform for team-member markers, and a browser-session smart-alarm notification dock.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
