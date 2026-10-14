@@ -109,25 +109,31 @@ public partial class MainWindow
 
     private void OnPeekTick(object? sender, EventArgs e)
     {
-        if (!_peeking) return;
-
         bool down = PeekKeyStillDown();
 
-        // Still held, and still within its time: nothing to do.
-        if (down && DateTime.UtcNow - _peekStartedUtc < PeekLimit) return;
-
-        // Out of time rather than let go: the map goes, and this hold cannot bring it back.
-        // The flag clears when the key finally comes up, which is what the timer keeps
-        // running for.
-        if (down)
+        // The key coming up is checked before anything else, and that is the whole fix for a
+        // peek key that worked once and then never again. This used to begin by returning
+        // when nothing was on screen — which is exactly the state the watch is left in after
+        // the time limit runs out — so the flag saying "this hold is spent" was never
+        // cleared, and every later press was refused.
+        if (!down)
         {
-            _peekSpent = true;
-            EndMiniMapPeek(keepWatching: true);
+            _peekSpent = false;
+
+            if (_peeking) EndMiniMapPeek();
+            else _peekReleaseTimer?.Stop();
+
             return;
         }
 
-        _peekSpent = false;
-        EndMiniMapPeek();
+        // Still down with nothing showing: the limit has already run out on this hold, and
+        // the watch is only here to see it released.
+        if (!_peeking) return;
+
+        if (DateTime.UtcNow - _peekStartedUtc < PeekLimit) return;
+
+        _peekSpent = true;
+        EndMiniMapPeek(keepWatching: true);
     }
 
     /// <param name="keepWatching">

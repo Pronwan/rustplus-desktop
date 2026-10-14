@@ -325,6 +325,11 @@ namespace RustPlusDesk
         /// <summary>Puts the lock button into the state it is actually in.</summary>
         private void ApplyLockState()
         {
+            // Every path that locks or unlocks comes through here, including the bar on
+            // screen, so this is the one place the map's buttons can be sure of hearing about
+            // it.
+            ShowMapClose(MapContainer?.IsMouseOver == true);
+
             bool locked = _dock.Locked;
 
             // The bar on the overlay carries the same lock, so it is repainted here rather than
@@ -2217,16 +2222,16 @@ namespace RustPlusDesk
         /// <summary>
         /// Shows or hides the two buttons on the map: its settings, and its close.
         ///
-        /// Both on hover, and on hover alone. The gear used to sit there permanently, which
-        /// is a button over the map the whole time it is being read; the × was behind the
-        /// lock as well, which meant it was invisible during the hours the dock is locked and
-        /// being used — which is when somebody decides they would rather not have a map.
+        /// Unlocked, or hovered. The lock is the half to rely on: it is a state the dock
+        /// holds and this is called wherever it changes, while hovering a window that sits
+        /// under a full-screen game is not something to hang a button's only chance on — two
+        /// attempts at hover alone left the map with no visible way to remove it at all.
         ///
-        /// Pressing the × removes the map. Hovering only offers it.
+        /// Pressing the × removes the map. Showing it only offers that.
         /// </summary>
         private void ShowMapClose(bool hovering)
         {
-            var shown = hovering ? Visibility.Visible : Visibility.Collapsed;
+            var shown = hovering || !_dock.Locked ? Visibility.Visible : Visibility.Collapsed;
 
             if (BtnMapClose != null) BtnMapClose.Visibility = shown;
             if (BtnMapSettings != null) BtnMapSettings.Visibility = shown;
