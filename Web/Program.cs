@@ -114,7 +114,7 @@ app.Use(async (context, next) =>
     context.Response.Headers["Content-Security-Policy"] =
         "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'";
     if (isApiRequest)
-        context.Response.Headers.CacheControl = "no-store";
+        context.Response.Headers["Cache-Control"] = "no-store";
 
     await next();
 });
