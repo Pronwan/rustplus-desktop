@@ -539,6 +539,29 @@ app.MapGet("/api/servers/{id:guid}/devices", async Task<IResult> (
     }).ToList());
 }).RequireAuthorization();
 
+app.MapGet("/api/servers/{id:guid}/devices/{entityId}/info", async Task<IResult> (
+    Guid id,
+    string entityId,
+    AppDbContext db,
+    RustPlusConnectionManager connections,
+    CancellationToken cancellationToken) =>
+{
+    if (!ulong.TryParse(entityId, out var numericEntityId))
+        return Results.BadRequest(new { error = "Invalid device ID." });
+
+    var device = await db.PairedDevices.AsNoTracking().SingleOrDefaultAsync(item =>
+        item.PairedServerCredentialId == id && item.EntityId == entityId, cancellationToken);
+    if (device is null)
+        return Results.NotFound();
+    if (device.Type is not ("Switch" or "Alarm" or "StorageMonitor"))
+        return Results.BadRequest(new { error = "This device type does not expose details through the Rust+ API." });
+
+    var info = await connections.GetDeviceInfoAsync(id, numericEntityId, device.Type, cancellationToken);
+    return info is null
+        ? Results.Problem("The Rust+ connection is not ready or device details are unavailable.", statusCode: 503)
+        : Results.Ok(new { entityId, device.Type, info });
+}).RequireAuthorization();
+
 app.MapPost("/api/servers/{id:guid}/devices/{entityId}/toggle", async Task<IResult> (
     Guid id,
     string entityId,

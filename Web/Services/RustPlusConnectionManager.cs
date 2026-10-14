@@ -142,6 +142,58 @@ public sealed class RustPlusConnectionManager(
         await NotifyStatusAsync(id, "Disconnected");
     }
 
+    public async Task<object?> GetDeviceInfoAsync(
+        Guid serverId, ulong entityId, string deviceType, CancellationToken cancellationToken = default)
+    {
+        if (!_entries.TryGetValue(serverId, out var entry))
+            return null;
+
+        await entry.Gate.WaitAsync(cancellationToken);
+        try
+        {
+            if (entry.Client is not { IsConnected: true } client)
+                return null;
+
+            if (string.Equals(deviceType, "Switch", StringComparison.OrdinalIgnoreCase))
+            {
+                var response = await client.GetSmartSwitchInfoAsync(entityId, cancellationToken);
+                return response.IsSuccess && response.Data is not null
+                    ? new { isActive = response.Data.IsActive }
+                    : null;
+            }
+
+            if (string.Equals(deviceType, "Alarm", StringComparison.OrdinalIgnoreCase))
+            {
+                var response = await client.GetAlarmInfoAsync(entityId, cancellationToken);
+                return response.IsSuccess && response.Data is not null
+                    ? new { isActive = response.Data.IsActive }
+                    : null;
+            }
+
+            if (string.Equals(deviceType, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+            {
+                var response = await client.GetStorageMonitorInfoAsync(entityId, cancellationToken);
+                return response.IsSuccess && response.Data is not null
+                    ? new
+                    {
+                        capacity = response.Data.Capacity,
+                        hasProtection = response.Data.HasProtection,
+                        protectionExpiry = response.Data.ProtectionExpiry,
+                        items = response.Data.Items?.Select(item => new
+                        {
+                            id = item.Id,
+                            quantity = item.Quantity,
+                            isItemBlueprint = item.IsItemBlueprint
+                        }).ToList()
+                    }
+                    : null;
+            }
+
+            return null;
+        }
+        finally { entry.Gate.Release(); }
+    }
+
     public async Task<object?> GetTeamChatAsync(Guid serverId, CancellationToken cancellationToken = default)
     {
         if (!_entries.TryGetValue(serverId, out var entry))
