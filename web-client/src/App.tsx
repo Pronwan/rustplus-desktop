@@ -615,7 +615,7 @@ export default function App() {
             <section className="empty-state">
               <div className="empty-illustration"><span>⌖</span><i /><i /><i /></div>
               <h3>No server profiles yet</h3>
-              <p>Add your first server address. This saves a profile only; live Rust+ pairing and connection support are still being built.</p>
+              <p>Add a server address to save a profile. For live data, pair the server through Rust+ after an admin configures the FCM pairing listener.</p>
               <button className="primary-button" onClick={() => setShowAddServer(true)}>＋ Add your first server</button>
             </section>
           ) : (
