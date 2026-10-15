@@ -112,6 +112,33 @@ var dummyPasswordHash = dummyPasswordHasher.HashPassword(dummyUser, "DummyPasswo
 
 var app = builder.Build();
 
+// Behind a reverse proxy every request reaches the app from the proxy's address, which would put
+// all users in one login rate-limit bucket. The proxy passes the real client address in
+// X-Forwarded-For; it is only believed when the direct peer is listed in WEB_TRUSTED_PROXIES
+// (IP addresses or CIDR ranges), because any client can send that header itself. This runs before
+// everything else so the rate limiter sees the resolved address.
+var trustedProxies = TrustedProxyList.Parse(app.Configuration["WEB_TRUSTED_PROXIES"]);
+if (trustedProxies.IsEmpty)
+{
+    app.Logger.LogWarning(
+        "WEB_TRUSTED_PROXIES is not set. Rate limits use the address of the direct connection, so behind a " +
+        "reverse proxy all users share one limit. Set it to the proxy's address or network, for example 172.18.0.0/16.");
+}
+else
+{
+    app.Use(async (context, next) =>
+    {
+        var forwardedFor = context.Request.Headers["X-Forwarded-For"];
+        if (forwardedFor.Count > 0)
+        {
+            context.Connection.RemoteIpAddress = trustedProxies.ResolveClient(
+                context.Connection.RemoteIpAddress, forwardedFor.ToString());
+        }
+
+        await next();
+    });
+}
+
 app.UseExceptionHandler();
 app.Use(async (context, next) =>
 {

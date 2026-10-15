@@ -78,4 +78,9 @@ Storage-monitor details are rendered defensively because Rust+ may omit inventor
 
 The backup helper requires Docker Compose and a running `rustplus-web` service. The container includes `sqlite3` specifically for consistent online backups.
 
-- Authentication endpoints are rate limited to 10 attempts per minute per client IP. FCM credential configuration uploads are limited to 3 attempts per minute per client IP; excess requests receive HTTP 429. These limits complement account lockout and should be revisited if the app is deployed behind a reverse proxy, where trusted forwarded-IP handling must be configured carefully.
+- Authentication endpoints are rate limited to 10 attempts per minute per client IP. FCM credential configuration uploads are limited to 3 attempts per minute per client IP; excess requests receive HTTP 429. These limits complement account lockout.
+
+### Running behind a reverse proxy
+
+The limits are keyed on the client address. Behind a reverse proxy every request arrives from the proxy, so without further configuration all users share one bucket: ten logins a minute for the whole instance, and one person mistyping a password can lock everyone else out. Set `WEB_TRUSTED_PROXIES` to the address or network of the proxy (comma separated IP addresses or CIDR ranges, for example `172.18.0.0/16`). The app then reads `X-Forwarded-For` only when the direct connection comes from one of those addresses, and uses the right-most address in the header that is not itself a trusted proxy, so entries a client prepends cannot be used to dodge the limit. Invalid entries stop the app at startup rather than being ignored, and an unset value logs a warning. Your proxy must overwrite, not append blindly to, any `X-Forwarded-For` header sent by the client, and must keep the original `Host` header because the Origin check compares against it. In Docker Compose the proxy's address is usually its container network (find it with `docker network inspect`); do not trust a range that includes untrusted clients.
+
