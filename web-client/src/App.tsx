@@ -104,6 +104,8 @@ export default function App() {
   const [deviceDetails, setDeviceDetails] = useState<Record<string, DeviceInfoData>>({});
   const [connectionActionId, setConnectionActionId] = useState<string | null>(null);
   const [alarms, setAlarms] = useState<AlarmAlert[]>([]);
+  const [alarmSearch, setAlarmSearch] = useState("");
+  const [alarmTypeFilter, setAlarmTypeFilter] = useState<"all" | "smart" | "timer">("all");
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [roleBusyId, setRoleBusyId] = useState<string | null>(null);
   const [roleMessage, setRoleMessage] = useState("");
@@ -656,7 +658,28 @@ export default function App() {
         </header>
 
         <div className="content-area">
-          {alarms.length > 0 && <section className="alarm-dock"><div className="alarm-dock-heading"><span className="alarm-indicator">!</span><div><strong>Recent alerts</strong><p>Smart alarms and expired server timers are saved on the server</p></div><button className="text-button" onClick={() => setAlarms([])}>Clear view</button></div>{alarms.map((alarm, index) => <div className="alarm-row" key={`${alarm.serverId ?? "server"}-${alarm.receivedAtUtc}-${index}`}><div><strong>{alarm.title || "Smart alarm"}</strong><p>{alarm.message}</p></div><time>{new Date(alarm.receivedAtUtc).toLocaleTimeString()}</time></div>)}</section>}
+          <section className="alarm-dock">
+            <div className="alarm-dock-heading"><span className="alarm-indicator">!</span><div><strong>Recent alerts</strong><p>Showing up to 50 recent smart alarms and expired server timers</p></div>{alarms.length > 0 && <button className="text-button" onClick={() => setAlarms([])}>Clear view</button>}</div>
+            <div className="alarm-tools">
+              <input aria-label="Search recent alerts" placeholder="Search alert title or message…" value={alarmSearch} onChange={(event) => setAlarmSearch(event.target.value)} />
+              <select aria-label="Filter alert type" value={alarmTypeFilter} onChange={(event) => setAlarmTypeFilter(event.target.value as "all" | "smart" | "timer")}>
+                <option value="all">All alert types</option><option value="smart">Smart alarms</option><option value="timer">Expired timers</option>
+              </select>
+            </div>
+            {alarms.filter((alarm) => {
+              const isTimer = /timer expired/i.test(alarm.title || "");
+              const matchesType = alarmTypeFilter === "all" || (alarmTypeFilter === "timer" ? isTimer : !isTimer);
+              const query = alarmSearch.trim().toLocaleLowerCase();
+              return matchesType && (!query || `${alarm.title} ${alarm.message}`.toLocaleLowerCase().includes(query));
+            }).map((alarm, index) => <div className="alarm-row" key={`${alarm.serverId ?? "server"}-${alarm.receivedAtUtc}-${index}`}><div><strong>{alarm.title || "Smart alarm"}</strong><p>{alarm.message}</p></div><time>{new Date(alarm.receivedAtUtc).toLocaleString()}</time></div>)}
+            {alarms.length === 0 && <p className="alarm-empty">No recent alerts. New smart alarms and expired timers will appear here.</p>}
+            {alarms.length > 0 && alarms.filter((alarm) => {
+              const isTimer = /timer expired/i.test(alarm.title || "");
+              const matchesType = alarmTypeFilter === "all" || (alarmTypeFilter === "timer" ? isTimer : !isTimer);
+              const query = alarmSearch.trim().toLocaleLowerCase();
+              return matchesType && (!query || `${alarm.title} ${alarm.message}`.toLocaleLowerCase().includes(query));
+            }).length === 0 && <p className="alarm-empty">No alerts match these filters.</p>}
+          </section>
           <section className="welcome-strip">
             <div className="welcome-icon">⌁</div>
             <div><strong>Welcome in, {user.displayName}</strong><p>Your self-hosted workspace is ready. Add a profile to start organizing your servers.</p></div>
