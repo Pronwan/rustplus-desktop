@@ -263,3 +263,15 @@ button:disabled { cursor: wait; opacity: .65; }
 .storage-items span { border: 1px solid #34422c; background: #1b2418; border-radius: 5px; padding: 4px 6px; color: #c8d9bc; font-size: 9px; }
 
 .device-row { flex-wrap: wrap; }
+
+.alarm-tools { display: flex; gap: 8px; margin: 0 0 4px; }
+.alarm-tools input, .alarm-tools select { min-width: 0; border: 1px solid #5b4035; border-radius: 6px; background: #171412; color: #f0e3dc; padding: 8px 10px; font: inherit; font-size: 11px; }
+.alarm-tools input { flex: 1; }
+.alarm-tools select { flex: 0 0 auto; max-width: 180px; }
+.alarm-empty { margin: 8px 0 2px; color: #b49d90; font-size: 11px; }
+@media (max-width: 600px) {
+  .alarm-tools { flex-direction: column; }
+  .alarm-tools select { max-width: none; width: 100%; }
+  .alarm-row { gap: 8px; }
+  .alarm-row time { max-width: 42%; text-align: right; white-space: normal; }
+}
