@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ChangeEvent } from "react";
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 
 type User = {
   id: string;
@@ -192,6 +192,38 @@ export default function App() {
       .configureLogging(LogLevel.Warning)
       .build();
 
+    let active = true;
+    let startInProgress = false;
+    let retryTimer: number | undefined;
+    const scheduleStartRetry = () => {
+      if (!active || retryTimer !== undefined) return;
+      retryTimer = window.setTimeout(() => {
+        retryTimer = undefined;
+        void startConnection();
+      }, 5_000);
+    };
+    const startConnection = async () => {
+      if (!active || startInProgress || connection.state !== HubConnectionState.Disconnected) return;
+      startInProgress = true;
+      setRealtimeStatus("connecting");
+      try {
+        await connection.start();
+        if (active) {
+          setRealtimeStatus("connected");
+          void refreshServers();
+          void api<AlarmAlert[]>("/api/alarms?limit=50").then(setAlarms).catch(() => undefined);
+        }
+      } catch (error) {
+        if (active) {
+          setRealtimeStatus("disconnected");
+          console.warn("Realtime connection failed; retrying in five seconds.", error);
+          scheduleStartRetry();
+        }
+      } finally {
+        startInProgress = false;
+      }
+    };
+
     connection.on("ServersChanged", () => { void refreshServers(); });
     connection.on("ServerStatusChanged", () => { void refreshServers(); });
     connection.on("DevicesChanged", (payload: { serverId: string }) => {
@@ -229,15 +261,18 @@ export default function App() {
       void refreshServers();
       void api<AlarmAlert[]>("/api/alarms?limit=50").then(setAlarms).catch(() => undefined);
     });
-    connection.onclose(() => { setRealtimeStatus("disconnected"); });
-    void connection.start()
-      .then(() => setRealtimeStatus("connected"))
-      .catch((error: unknown) => {
-        setRealtimeStatus("disconnected");
-        console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
-      });
+    connection.onclose(() => {
+      if (!active) return;
+      setRealtimeStatus("disconnected");
+      scheduleStartRetry();
+    });
+    void startConnection();
 
-    return () => { void connection.stop(); };
+    return () => {
+      active = false;
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+      void connection.stop();
+    };
   }, [user, refreshServers]);
 
   async function submitAuth(event: FormEvent<HTMLFormElement>) {
@@ -617,7 +652,7 @@ export default function App() {
       <section className="main-panel">
         <header className="topbar">
           <div><p className="eyebrow">WORKSPACE / SERVERS</p><h1>Server dashboard</h1></div>
-          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span><span className="secure-pill" title="Live dashboard updates use this connection"><span /> Realtime: {realtimeStatus}</span>{notificationPermission !== "unsupported" && notificationPermission !== "granted" && <button className="secondary-button" disabled={notificationPermission === "denied"} title={notificationPermission === "denied" ? "Allow notifications in your browser site settings." : "Show Rust+ alerts even when this tab is in the background"} onClick={() => { void Notification.requestPermission().then(setNotificationPermission); }}> {notificationPermission === "denied" ? "Notifications blocked" : "Enable notifications"} </button>}<button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
+          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span><span className={`secure-pill realtime-pill realtime-${realtimeStatus}`} title="Live dashboard updates use this connection"><span /> Realtime: {realtimeStatus}</span>{notificationPermission !== "unsupported" && notificationPermission !== "granted" && <button className="secondary-button" disabled={notificationPermission === "denied"} title={notificationPermission === "denied" ? "Allow notifications in your browser site settings." : "Show Rust+ alerts even when this tab is in the background"} onClick={() => { void Notification.requestPermission().then(setNotificationPermission); }}> {notificationPermission === "denied" ? "Notifications blocked" : "Enable notifications"} </button>}<button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
         </header>
 
         <div className="content-area">
