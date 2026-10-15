@@ -78,6 +78,7 @@ async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [realtimeStatus, setRealtimeStatus] = useState<"connecting" | "connected" | "reconnecting" | "disconnected">("connecting");
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | "unsupported">(
     typeof Notification === "undefined" ? "unsupported" : Notification.permission
   );
@@ -173,8 +174,11 @@ export default function App() {
   useEffect(() => {
     if (!user) {
       setServers([]);
+      setRealtimeStatus("disconnected");
       return;
     }
+
+    setRealtimeStatus("connecting");
 
     void refreshServers();
     api<AlarmAlert[]>("/api/alarms?limit=50").then(setAlarms).catch(() => undefined);
@@ -219,10 +223,19 @@ export default function App() {
         setChatMessages((current) => [...current, payload.message].slice(-100));
       }
     });
-    connection.onreconnected(() => { void refreshServers(); });
-    void connection.start().catch((error: unknown) => {
-      console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
+    connection.onreconnecting(() => { setRealtimeStatus("reconnecting"); });
+    connection.onreconnected(() => {
+      setRealtimeStatus("connected");
+      void refreshServers();
+      void api<AlarmAlert[]>("/api/alarms?limit=50").then(setAlarms).catch(() => undefined);
     });
+    connection.onclose(() => { setRealtimeStatus("disconnected"); });
+    void connection.start()
+      .then(() => setRealtimeStatus("connected"))
+      .catch((error: unknown) => {
+        setRealtimeStatus("disconnected");
+        console.warn("Realtime updates are unavailable; refresh the page to sync.", error);
+      });
 
     return () => { void connection.stop(); };
   }, [user, refreshServers]);
@@ -604,7 +617,7 @@ export default function App() {
       <section className="main-panel">
         <header className="topbar">
           <div><p className="eyebrow">WORKSPACE / SERVERS</p><h1>Server dashboard</h1></div>
-          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span>{notificationPermission !== "unsupported" && notificationPermission !== "granted" && <button className="secondary-button" disabled={notificationPermission === "denied"} title={notificationPermission === "denied" ? "Allow notifications in your browser site settings." : "Show Rust+ alerts even when this tab is in the background"} onClick={() => { void Notification.requestPermission().then(setNotificationPermission); }}> {notificationPermission === "denied" ? "Notifications blocked" : "Enable notifications"} </button>}<button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
+          <div className="topbar-actions"><span className="secure-pill"><span /> Private workspace</span><span className="secure-pill" title="Live dashboard updates use this connection"><span /> Realtime: {realtimeStatus}</span>{notificationPermission !== "unsupported" && notificationPermission !== "granted" && <button className="secondary-button" disabled={notificationPermission === "denied"} title={notificationPermission === "denied" ? "Allow notifications in your browser site settings." : "Show Rust+ alerts even when this tab is in the background"} onClick={() => { void Notification.requestPermission().then(setNotificationPermission); }}> {notificationPermission === "denied" ? "Notifications blocked" : "Enable notifications"} </button>}<button className="primary-button compact" onClick={() => setShowAddServer(true)}>＋ Add server</button></div>
         </header>
 
         <div className="content-area">
