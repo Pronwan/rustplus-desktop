@@ -12,6 +12,7 @@
 .antigravitycli
 # NuGet / Paketmanager
 *.nupkg
+!packages-local/*.nupkg
 **/packages/
 *.snupkg
 Releases/

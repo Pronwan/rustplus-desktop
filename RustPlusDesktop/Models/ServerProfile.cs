@@ -71,6 +71,17 @@ public class ServerProfile : INotifyPropertyChanged
     }
     public string? BattleMetricsId { get; set; } = null;
 
+    /// <summary>
+    /// Facepunch's id for this server, a GUID carried as "id" in every pairing push.
+    ///
+    /// Facepunch is removing direct connections to a server's app.port and the old
+    /// companion /game/{ip}/{port} relay already answers 418, so the one route left is
+    /// companion-rust.facepunch.com/socket/{ServerId}. It cannot be derived from host and
+    /// port — not even getInfo reports it — so it has to be kept from the pairing that
+    /// delivered it. Empty on servers paired before it was captured.
+    /// </summary>
+    public string? ServerId { get; set; } = null;
+
     // Stable identity used to remember the last selected server across restarts.
     // PlayerToken is deliberately excluded so a re-pair on the same server still matches.
     public string MatchKey => $"{Host}:{Port}|{SteamId64}";

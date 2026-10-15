@@ -429,15 +429,18 @@ namespace RustPlusDesk.Services
                         break;
                 }
 
-                // Server description can ride along on any message that carries a Body.Desc.
-                if (!string.IsNullOrWhiteSpace(body?.Desc))
+                // Server description and Facepunch's server id ride along on any message that
+                // carries a Body, so alarms and deaths can fill them in for servers paired
+                // before we kept them.
+                if (body is not null && (!string.IsNullOrWhiteSpace(body.Desc) || ServerIdOf(body.Id) is not null))
                 {
                     ServerInfoReceived?.Invoke(this, new PairingPayload
                     {
-                        Host = body!.Ip ?? string.Empty,
+                        Host = body.Ip ?? string.Empty,
                         Port = body.Port,
+                        ServerId = ServerIdOf(body.Id),
                         ServerName = body.Name,
-                        ServerDescription = body.Desc!.Trim(),
+                        ServerDescription = NullIfEmpty(body.Desc)?.Trim(),
                     });
                 }
             }
@@ -464,6 +467,7 @@ namespace RustPlusDesk.Services
             {
                 Host = body.Ip,
                 Port = body.Port,
+                ServerId = ServerIdOf(body.Id),
                 ServerName = string.IsNullOrWhiteSpace(body.Name) ? null : body.Name,
                 ServerDescription = string.IsNullOrWhiteSpace(body.Desc) ? null : body.Desc,
                 SteamId64 = body.PlayerId.ToString(CultureInfo.InvariantCulture),
@@ -557,6 +561,7 @@ namespace RustPlusDesk.Services
         }
 
         private static string? NullIfEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
+        private static string? ServerIdOf(Guid id) => id == Guid.Empty ? null : id.ToString("D");
         private static int? NonZero(int? p) => p is > 0 ? p : null;
 
         /// <summary>

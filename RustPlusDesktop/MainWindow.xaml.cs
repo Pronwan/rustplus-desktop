@@ -635,7 +635,19 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
 
             StartPairingSilent(true);
-            
+
+            // Servers paired before we kept Facepunch's server id can't use the companion socket
+            // yet; look their ids up once per launch so they move off direct connections.
+            var serversWithoutId = _vm.Servers.Where(s => string.IsNullOrWhiteSpace(s.ServerId)).ToList();
+            if (serversWithoutId.Count > 0)
+            {
+                _ = Task.Run(async () =>
+                {
+                    var filled = await ServerIdBackfill.RunAsync(serversWithoutId, msg => Dispatcher.BeginInvoke(() => AppendLog(msg)));
+                    if (filled > 0) await Dispatcher.InvokeAsync(() => _vm.Save());
+                });
+            }
+
             // Auto-connect if enabled and not already connected
             if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
             {
@@ -4041,7 +4053,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
     private void CaptureFcmServerDescription(PairingPayload info)
     {
-        if (string.IsNullOrWhiteSpace(info.ServerDescription)) return;
+        if (string.IsNullOrWhiteSpace(info.ServerDescription) && string.IsNullOrWhiteSpace(info.ServerId)) return;
 
         var profile = !string.IsNullOrWhiteSpace(info.Host)
             ? _vm.Servers.FirstOrDefault(server =>
@@ -4052,10 +4064,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ? _vm.Servers.FirstOrDefault(server => server.Name.Equals(info.ServerName, StringComparison.OrdinalIgnoreCase))
             : null;
 
-        if (profile == null || !string.IsNullOrWhiteSpace(profile.Description)) return;
-        profile.Description = info.ServerDescription.Trim();
-        _vm.Save();
-        AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+        if (profile == null) return;
+
+        bool changed = false;
+        if (string.IsNullOrWhiteSpace(profile.Description) && !string.IsNullOrWhiteSpace(info.ServerDescription))
+        {
+            profile.Description = info.ServerDescription.Trim();
+            changed = true;
+            AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+        }
+        // Only matched by host and port here, so fill a missing id but never overwrite one.
+        if (string.IsNullOrWhiteSpace(profile.ServerId) && !string.IsNullOrWhiteSpace(info.ServerId))
+        {
+            profile.ServerId = info.ServerId;
+            changed = true;
+            AppendLog($"[FCM] Saved server id for '{profile.Name}'.");
+        }
+        if (changed) _vm.Save();
     }
 
     private void Pairing_Paired(object? sender, PairingPayload e)
@@ -4151,10 +4176,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 SetSidebarExpanded(_isSidebarPinnedExpanded);
             }
 
-            var prof = _vm.Servers.FirstOrDefault(s =>
-                s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
-                s.Port == keyPort &&
-                s.SteamId64 == keySteam);
+            // Facepunch's server id is the one identity that survives an address or port
+            // change, so it wins over host:port whenever both sides have it.
+            var prof = (!string.IsNullOrWhiteSpace(e.ServerId)
+                    ? _vm.Servers.FirstOrDefault(s =>
+                        string.Equals(s.ServerId, e.ServerId, StringComparison.OrdinalIgnoreCase) &&
+                        s.SteamId64 == keySteam)
+                    : null)
+                ?? _vm.Servers.FirstOrDefault(s =>
+                    s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
+                    s.Port == keyPort &&
+                    s.SteamId64 == keySteam);
 
             var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
 
@@ -4242,6 +4274,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     prof.Port = keyPort;
                     prof.PlayerToken = e.PlayerToken;
                     prof.SteamId64 = keySteam;
+                    if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
                     if (!string.IsNullOrWhiteSpace(e.ServerName)) prof.Name = e.ServerName;
                     prof.IsAccessDenied = false;
                     prof.Devices ??= new ObservableCollection<SmartDevice>();
@@ -4254,6 +4287,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Name = serverName,
                         Host = e.Host ?? string.Empty,
                         Port = e.Port,
+                        ServerId = e.ServerId,
                         SteamId64 = keySteam,
                         PlayerToken = e.PlayerToken,
                         IsAccessDenied = false,
@@ -4267,10 +4301,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             else
             {
                 prof.Name = serverName;
+                // Matched by id, the address is the part that may have moved.
+                if (!string.IsNullOrWhiteSpace(keyHost)) prof.Host = keyHost;
+                if (keyPort > 0) prof.Port = keyPort;
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
+                if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
                 prof.IsAccessDenied = false;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
+                _vm.Save();
                 AppendLog($"[pairing] Pairing updated -> {prof.Name}");
             }
 

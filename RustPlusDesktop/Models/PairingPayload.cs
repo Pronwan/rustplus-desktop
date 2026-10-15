@@ -7,6 +7,7 @@ public class PairingPayload
 {
     public string Host { get; set; } = "";
     public int Port { get; set; }
+    public string? ServerId { get; set; } // Facepunch server GUID ("id" in the push); see ServerProfile.ServerId
     public string SteamId64 { get; set; } = "";
     public string PlayerToken { get; set; } = ""; // numerisch als String ok; wir parsen später zu int
     public string? ServerName { get; set; }
