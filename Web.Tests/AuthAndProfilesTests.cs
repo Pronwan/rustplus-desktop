@@ -59,6 +59,18 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task ReadinessEndpointConfirmsDatabaseIsReachable()
+    {
+        using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        var readiness = await client.GetAsync("/api/health/ready");
+
+        Assert.Equal(HttpStatusCode.OK, readiness.StatusCode);
+        using var json = JsonDocument.Parse(await readiness.Content.ReadAsStringAsync());
+        Assert.Equal("ready", json.RootElement.GetProperty("status").GetString());
+    }
+
+    [Fact]
     public async Task CrossOriginStateChangingRequestsAreRejected()
     {
         using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
