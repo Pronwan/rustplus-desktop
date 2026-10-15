@@ -17,7 +17,7 @@ RUN dotnet publish Web/RustPlusWeb.csproj -c Release -o /app/publish --no-restor
 # Runtime image has no SDK or frontend toolchain.
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
+RUN apt-get update && apt-get install -y --no-install-recommends curl sqlite3 \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /data/keys \
     && chown -R app:app /app /data
