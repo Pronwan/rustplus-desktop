@@ -25,7 +25,7 @@ docker compose exec -T rustplus-web sh -c '
   backup="/tmp/rustplus-web-backup-$$.db"
   trap '"'"'rm -f "$backup"'"'"' EXIT
   sqlite3 "$DATABASE_PATH" ".backup $backup"
-  files="$(basename "$backup") keys"
+  files="keys"
   [ ! -f /data/fcm-credentials.protected ] || files="$files fcm-credentials.protected"
   [ ! -f /data/fcm-persistent-ids.protected ] || files="$files fcm-persistent-ids.protected"
   tar -czf - -C /tmp "$(basename "$backup")" -C /data $files
