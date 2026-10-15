@@ -6205,6 +6205,13 @@
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="CustomTimer" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource UpkeepLowAlert}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="UpkeepLow" />
                                                      </MenuItem>
 
                                                      <!-- Column 2: Players -->

@@ -1629,6 +1629,21 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
   <data name="AlertSuspiciousShop" xml:space="preserve">
     <value>Suspicious shop {0} [{1}] was online {2}s, sold {3}</value>
   </data>
+  <data name="UpkeepLowAlert" xml:space="preserve">
+    <value>Low Upkeep (Tool Cupboard)</value>
+  </data>
+  <data name="AlertUpkeepLow" xml:space="preserve">
+    <value>Low upkeep: {0} has {1} left</value>
+  </data>
+  <data name="AlertUpkeepLowName" xml:space="preserve">
+    <value>Low Upkeep</value>
+  </data>
+  <data name="AlertUpkeepLowDesc" xml:space="preserve">
+    <value>Sent when a tool cupboard's upkeep drops under 2 hours, and again under 30 minutes.</value>
+  </data>
+  <data name="AlertUpkeepLowVars" xml:space="preserve">
+    <value>{0}: Tool cupboard name, {1}: Time left</value>
+  </data>
   <data name="AlertCargoSpawned" xml:space="preserve">
     <value>Cargo Ship spawned {0}</value>
   </data>

@@ -32,6 +32,7 @@ namespace RustPlusDesk.Views.Windows
                 "AlertNewShop",
                 "AlertSuspiciousShop",
                 "AlertShopMatch",
+                "AlertUpkeepLow",
                 "AlertCargoSpawned",
                 // Audio-sourced variants: the API templates carry placeholders we cannot fill
                 // (ship position, rig name, crate unlock time), so the fallback needs its own.

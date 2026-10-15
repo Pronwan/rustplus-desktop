@@ -128,6 +128,7 @@ public class TrackingSettings
     public bool AnnounceNewShops { get; set; } = false;
     public bool AnnounceSuspiciousShops { get; set; } = false;
     public bool AnnounceTradeAlerts { get; set; } = false;
+    public bool AnnounceUpkeepLow { get; set; } = false;
     public string SelectedLanguage { get; set; } = "";
     public string DiscordWebhookUrl { get; set; } = "";
     public string DiscordWebhookMention { get; set; } = "None";
@@ -858,6 +859,11 @@ public static class TrackingService
     {
         get => _settings.AnnounceSuspiciousShops;
         set { _settings.AnnounceSuspiciousShops = value; SaveDB(); }
+    }
+    public static bool AnnounceUpkeepLow
+    {
+        get => _settings.AnnounceUpkeepLow;
+        set { _settings.AnnounceUpkeepLow = value; SaveDB(); }
     }
     public static bool AnnounceTradeAlerts
     {

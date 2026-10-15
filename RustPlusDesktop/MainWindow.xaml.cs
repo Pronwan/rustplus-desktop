@@ -211,6 +211,44 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
     }
 
+    private readonly UpkeepAlertTracker _upkeepAlerts = new();
+
+    // Runs on the 60 second upkeep timer. UpkeepSeconds counts down from the last storage snapshot,
+    // so a cupboard that nobody touches still crosses a threshold here; a refill produces a new
+    // snapshot and a higher value, which re-arms the warnings.
+    private void CheckUpkeepAlerts()
+    {
+        try
+        {
+            if (!_announceSpawns || !TrackingService.AnnounceUpkeepLow) return;
+
+            var server = _vm.Selected;
+            if (server?.Devices == null || !server.IsConnected) return;
+
+            string serverKey = CurrentServerKey();
+            foreach (var dev in server.Devices.ToList())
+            {
+                if (dev.Storage?.IsToolCupboard != true) continue;
+
+                int? remaining = dev.UpkeepSeconds;
+                var crossed = _upkeepAlerts.Evaluate($"{serverKey}#{dev.EntityId}", remaining);
+                if (crossed == null) continue;
+
+                string name = string.IsNullOrWhiteSpace(dev.Name) ? $"TC #{dev.EntityId}" : dev.Name!;
+                string msg = AlertTemplateService.GetFormattedAlert(
+                    "AlertUpkeepLow", name, UpkeepAlertTracker.FormatDuration(remaining ?? 0));
+
+                AppendLog($"[upkeep] {name} dropped under {crossed.Value / 60} min: {msg}");
+                _ = SendTeamChatSafeAsync(msg, false, true);
+                _ = RustPlusDesk.Services.DiscordBotListenerService.Instance.SendNotificationAsync("events", $"🏠 **Low Upkeep:** {msg}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[upkeep] alert check failed: " + ex.Message);
+        }
+    }
+
     private void RefreshUpkeepUI()
     {
         if (_vm.Servers == null) return;
@@ -225,6 +263,8 @@ public partial class MainWindow : WpfUi.FluentWindow
                 }
             }
         }
+
+        CheckUpkeepAlerts();
     }
     public class BoolToVisibilityConverter : IValueConverter
     {
@@ -5871,6 +5911,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AnnounceSuspiciousShops = val;
         TrackingService.AnnounceSmartAlerts = val;
         TrackingService.AnnounceTradeAlerts = val;
+        TrackingService.AnnounceUpkeepLow = val;
         if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
         TrackingService.HotkeyTriggerChatAlertsEnabled = val;
         if (HotkeyTriggersMenuItem != null)
@@ -5897,7 +5938,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
                !TrackingService.AnnounceTracking &&
                !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
-               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts &&
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts && !TrackingService.AnnounceUpkeepLow &&
                (_vm.Selected == null || !_vm.Selected.AlertCustomTimer) &&
                (_vm.Selected == null || !_vm.Selected.DiscordWebhookChatAlertsEnabled);
     }
@@ -5949,6 +5990,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": TrackingService.AnnouncePlayerRespawnTeam = val; break;
                 case "NewShops": TrackingService.AnnounceNewShops = val; break;
                 case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
+                case "UpkeepLow": TrackingService.AnnounceUpkeepLow = val; break;
                 case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
                 case "DiscordWebhook": 
                     if (!_vm.IsCloudConnected)
@@ -6114,6 +6156,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             TrackingService.AnnounceSuspiciousShops,
             TrackingService.AnnounceSmartAlerts,
             TrackingService.AnnounceTradeAlerts,
+            TrackingService.AnnounceUpkeepLow,
             _vm.Selected?.AlertCustomTimer == true,
             _vm.Selected?.DiscordWebhookChatAlertsEnabled == true
         }.Count(enabled => enabled);
@@ -6209,6 +6252,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
                 case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
                 case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+                case "UpkeepLow": isSelected = TrackingService.AnnounceUpkeepLow; break;
                 case "CustomTimer": isSelected = _vm.Selected?.AlertCustomTimer ?? false; break;
                 case "DiscordWebhook": isSelected = _vm.Selected?.DiscordWebhookChatAlertsEnabled ?? false; break;
             }
