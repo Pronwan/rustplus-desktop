@@ -25,12 +25,21 @@ docker compose exec -T rustplus-web sh -c '
   backup="/tmp/rustplus-web-backup-$$.db"
   trap '"'"'rm -f "$backup"'"'"' EXIT
   sqlite3 "$DATABASE_PATH" ".backup $backup"
+  integrity="$(sqlite3 "$backup" "PRAGMA integrity_check;")"
+  if [ "$integrity" != "ok" ]; then
+    echo "Error: SQLite integrity check failed: $integrity" >&2
+    exit 1
+  fi
   files="keys"
   [ ! -f /data/fcm-credentials.protected ] || files="$files fcm-credentials.protected"
   [ ! -f /data/fcm-persistent-ids.protected ] || files="$files fcm-persistent-ids.protected"
   tar -czf - -C /tmp "$(basename "$backup")" -C /data $files
 ' > "$tmp_archive"
+if [ ! -s "$tmp_archive" ] || ! gzip -t "$tmp_archive" || ! tar -tzf "$tmp_archive" >/dev/null; then
+  echo "Error: generated backup archive failed validation; original destination was not changed." >&2
+  exit 1
+fi
 mv "$tmp_archive" "$archive"
 trap - EXIT
-echo "Backup created: $archive"
+echo "Backup created and verified: $archive"
 echo "Treat this archive as sensitive: it contains credentials and data-protection keys."
