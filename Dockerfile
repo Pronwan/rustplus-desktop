@@ -17,7 +17,7 @@ RUN dotnet publish Web/RustPlusWeb.csproj -c Release -o /app/publish --no-restor
 # Runtime image has no SDK or frontend toolchain.
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
+RUN apt-get update && apt-get install -y --no-install-recommends curl sqlite3 \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /data/keys \
     && chown -R app:app /app /data
@@ -29,6 +29,6 @@ ENV DATA_PROTECTION_KEYS_PATH=/data/keys
 ENV FCM_CREDENTIALS_PATH=/data/fcm-credentials.protected
 ENV FCM_PERSISTENT_IDS_PATH=/data/fcm-persistent-ids.protected
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl --fail --silent http://127.0.0.1:8080/api/health || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl --fail --silent http://127.0.0.1:8080/api/health/ready || exit 1
 USER app
 ENTRYPOINT ["dotnet", "RustPlusWeb.dll"]

@@ -133,8 +133,30 @@ app.MapGet("/api/health", () => Results.Ok(new
 {
     status = "ok",
     service = "rustplus-web",
-    version = "phase-1-foundation"
+    version = "web-port"
 }));
+
+// Readiness includes the persistent store, unlike liveness. Do not expose exception
+// details or connection strings through this unauthenticated operational endpoint.
+app.MapGet("/api/health/ready", async (AppDbContext db, CancellationToken cancellationToken) =>
+{
+    try
+    {
+        if (!await db.Database.CanConnectAsync(cancellationToken))
+            return Results.Problem("The service is not ready.", statusCode: StatusCodes.Status503ServiceUnavailable);
+
+        await db.Database.ExecuteSqlRawAsync("SELECT 1;", cancellationToken);
+        return Results.Ok(new { status = "ready", service = "rustplus-web" });
+    }
+    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+    {
+        throw;
+    }
+    catch (Exception)
+    {
+        return Results.Problem("The service is not ready.", statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
 
 app.MapPost("/api/auth/register", async Task<IResult> (
     RegisterRequest request,
