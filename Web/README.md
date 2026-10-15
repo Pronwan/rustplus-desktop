@@ -77,3 +77,5 @@ Storage-monitor details are rendered defensively because Rust+ may omit inventor
 - To restore, stop the web service first, preserve a copy of the current data volume, extract the archive into the configured persistent data directory, and verify ownership/permissions before restarting. Restore the database and `keys/` together; restoring the database without its original key ring may invalidate sessions and prevent decryption of stored Rust+ credentials. Test restore procedures before relying on backups.
 
 The backup helper requires Docker Compose and a running `rustplus-web` service. The container includes `sqlite3` specifically for consistent online backups.
+
+- Authentication endpoints are rate limited to 10 attempts per minute per client IP. FCM credential configuration uploads are limited to 3 attempts per minute per client IP; excess requests receive HTTP 429. These limits complement account lockout and should be revisited if the app is deployed behind a reverse proxy, where trusted forwarded-IP handling must be configured carefully.

@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
@@ -68,6 +70,30 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+    options.AddPolicy("fcm-configuration", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+});
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<RustPlusConnectionManager>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<RustPlusConnectionManager>());
@@ -124,6 +150,8 @@ app.Use(async (context, next) =>
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -201,7 +229,7 @@ app.MapPost("/api/auth/register", async Task<IResult> (
 
     await signInManager.SignInAsync(user, isPersistent: request.RememberMe);
     return Results.Ok(await ToUserResponseAsync(user, userManager));
-}).AllowAnonymous();
+}).AllowAnonymous().RequireRateLimiting("auth");
 
 app.MapPost("/api/auth/login", async Task<IResult> (
     LoginRequest request,
@@ -225,7 +253,7 @@ app.MapPost("/api/auth/login", async Task<IResult> (
         return Results.Unauthorized();
 
     return Results.Ok(await ToUserResponseAsync(user, userManager));
-}).AllowAnonymous();
+}).AllowAnonymous().RequireRateLimiting("auth");
 
 app.MapGet("/api/alarms", async Task<IResult> (
     int? limit,
@@ -661,7 +689,7 @@ app.MapPost("/api/admin/fcm-credentials", async Task<IResult> (
     {
         return Results.Problem("Credentials were saved, but the FCM listener could not connect. Check the file and server network, then retry.", statusCode: 503);
     }
-}).RequireAuthorization(policy => policy.RequireRole("Admin"));
+}).RequireAuthorization(policy => policy.RequireRole("Admin")).RequireRateLimiting("fcm-configuration");
 
 app.MapPost("/api/paired-servers/{id:guid}/connection", async Task<IResult> (
     Guid id,

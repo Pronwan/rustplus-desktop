@@ -88,6 +88,34 @@ public sealed class AuthAndProfilesTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task RegistrationRateLimitRejectsExcessiveAttemptsFromOneAddress()
+    {
+        using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        for (var attempt = 0; attempt < 10; attempt++)
+        {
+            var response = await client.PostAsJsonAsync("/api/auth/register", new
+            {
+                email = $"person{attempt}@test.local",
+                displayName = "Test User",
+                password = "ValidPassword!234",
+                inviteCode = "wrong-invite"
+            });
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        var limited = await client.PostAsJsonAsync("/api/auth/register", new
+        {
+            email = "lastperson@test.local",
+            displayName = "Test User",
+            password = "ValidPassword!234",
+            inviteCode = "wrong-invite"
+        });
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, limited.StatusCode);
+    }
+
+    [Fact]
     public async Task RecentSmartAlarmHistoryRequiresAuthenticationAndHonorsLimit()
     {
         using var anonymous = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
