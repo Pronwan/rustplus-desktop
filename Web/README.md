@@ -15,7 +15,7 @@ This is the first isolated web-service foundation for the self-hosted port. It d
 - Live snapshot endpoint for supported server info, map image/monuments, and team data.
 - Smart switch, alarm, and storage-monitor pairing metadata; authenticated smart-switch toggle commands with view-only role protection.
 - Admin-only role assignment UI and API, plus protection against demoting the final administrator.
-- 2D map/team-position snapshots that auto-refresh every 30 seconds while open and are cached per server for 30 seconds; a shared smart-alarm and expired-timer history persisted to SQLite (capped at 2,000 events), and durable server-scoped event timers; optional browser desktop notifications for incoming smart alarms and expired timers.
+- 2D map/team-position snapshots that auto-refresh every 30 seconds while open and are cached per server for 30 seconds; a shared smart-alarm and expired-timer history persisted to SQLite (capped at 2,000 events), and durable server-scoped event timers; optional browser desktop notifications for incoming smart alarms and expired timers. The dashboard shows SignalR connection health, retries failed initial connections every five seconds, and refreshes server data and saved alert history after reconnecting.
 - React frontend served from the same origin, avoiding a separate CORS surface.
 - SQLite data and ASP.NET Data Protection keys persisted in the Docker volume.
 
