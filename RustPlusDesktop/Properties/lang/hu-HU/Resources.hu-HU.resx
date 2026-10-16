@@ -3626,6 +3626,9 @@ Kérjük, először párosítsa ezt a szervert.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Egyébként:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NINCS</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>OUTPOST</value>
   </data>

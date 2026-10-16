@@ -3626,6 +3626,9 @@ Nejprve prosím spárujte tento server.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Jinak:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>ŽÁDNÁ</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ZÁKLADNA</value>
   </data>

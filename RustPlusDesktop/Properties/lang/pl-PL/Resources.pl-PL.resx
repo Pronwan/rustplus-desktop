@@ -3626,6 +3626,9 @@ Najpierw sparuj ten serwer.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>W przeciwnym razie:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>BRAK</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>PUNKT</value>
   </data>

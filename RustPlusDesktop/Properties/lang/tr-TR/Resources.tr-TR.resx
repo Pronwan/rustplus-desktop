@@ -3626,6 +3626,9 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Aksi takdirde:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>YOK</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ileri karakol</value>
   </data>

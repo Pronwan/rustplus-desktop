@@ -3626,6 +3626,9 @@ Koppel asseblief eers hierdie bediener.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Andersins:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>GEEN</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>BUITEPOS</value>
   </data>

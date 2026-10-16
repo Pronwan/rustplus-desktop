@@ -3626,6 +3626,9 @@ Vänligen para ihop denna server först.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Annars:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>INGEN</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>UTPOST</value>
   </data>

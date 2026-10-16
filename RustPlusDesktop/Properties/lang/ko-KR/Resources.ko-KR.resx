@@ -3626,6 +3626,9 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiOtherwise" xml:space="preserve">
     <value>그렇지 않은 경우:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>없음</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>전초기지</value>
   </data>

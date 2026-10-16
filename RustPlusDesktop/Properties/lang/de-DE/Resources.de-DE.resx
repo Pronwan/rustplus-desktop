@@ -3734,6 +3734,9 @@ Bitte koppeln Sie diesen Server zuerst.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Ansonsten:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>KEINE</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>Außenposten</value>
   </data>

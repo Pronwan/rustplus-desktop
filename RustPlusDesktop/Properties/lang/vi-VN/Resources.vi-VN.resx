@@ -3626,6 +3626,9 @@ Vui lòng ghép nối máy chủ này trước.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Mặt khác:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>KHÔNG</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>TIỀN NGOÀI</value>
   </data>

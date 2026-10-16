@@ -3626,6 +3626,9 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="UiOtherwise" xml:space="preserve">
     <value>иначе:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NIŠTA</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ОУТПОСТ</value>
   </data>

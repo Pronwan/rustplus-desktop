@@ -3644,6 +3644,9 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="UiOtherwise" xml:space="preserve">
     <value>否则：</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>无</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>前哨站</value>
   </data>

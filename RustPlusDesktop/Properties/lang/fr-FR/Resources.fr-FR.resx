@@ -3644,6 +3644,9 @@ Veuillez d'abord associer ce serveur.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Sinon :</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>AUCUNE</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>AVANT-POSTE</value>
   </data>

@@ -3644,6 +3644,9 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiOtherwise" xml:space="preserve">
     <value>В противном случае:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>НЕТ</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>АВПОСТ</value>
   </data>

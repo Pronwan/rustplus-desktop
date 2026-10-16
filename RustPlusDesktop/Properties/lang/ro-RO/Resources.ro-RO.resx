@@ -3626,6 +3626,9 @@ Vă rugăm mai întâi să asociați acest server.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>În caz contrar:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NICIUNA</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>AVANTPOST</value>
   </data>

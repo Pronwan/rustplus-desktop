@@ -3626,6 +3626,9 @@ Per favore associa prima questo server.</value>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Altrimenti:</value>
   </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NESSUNA</value>
+  </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>AVAMPOSTO</value>
   </data>
