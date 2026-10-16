@@ -11,16 +11,20 @@ internal sealed class RustPlusTransport : IRustTransport
     private bool disposed;
     private readonly RustRequestGate requests = new();
     private readonly RustPlusDeviceClient devices;
+    private readonly TaskCompletionSource disconnected = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public Task Disconnected => disconnected.Task;
     public IDeviceClient Devices => devices;
 
     public RustPlusTransport(RustPlusConnection connection)
     {
         api = new RustPlus(connection, new RustPlusSocketOptions { RequestTimeout = TimeSpan.FromSeconds(6) });
         devices = new RustPlusDeviceClient(api, requests);
+        api.Disconnected += OnDisconnected;
         companionSocket = connection.ServerId is not null;
     }
 
     public ServerStatus InitialStatus { get; private set; } = null!;
+    private void OnDisconnected(object? sender, EventArgs e) => disconnected.TrySetResult();
 
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
@@ -47,8 +51,14 @@ internal sealed class RustPlusTransport : IRustTransport
                 await requests.WaitAsync(timeout.Token).ConfigureAwait(false);
                 var time = await api.GetTimeAsync(timeout.Token).WaitAsync(timeout.Token).ConfigureAwait(false);
                 if (time.IsSuccess && time.Data is not null)
-                    status = status with { GameHours = time.Data.Time, Sunrise = time.Data.Sunrise, Sunset = time.Data.Sunset,
-                        DayLengthMinutes = time.Data.DayLengthMinutes, TimeScale = time.Data.TimeScale };
+                    status = status with
+                    {
+                        GameHours = time.Data.Time,
+                        Sunrise = time.Data.Sunrise,
+                        Sunset = time.Data.Sunset,
+                        DayLengthMinutes = time.Data.DayLengthMinutes,
+                        TimeScale = time.Data.TimeScale
+                    };
             }
             catch (Exception) when (!cancellationToken.IsCancellationRequested) { }
             cancellationToken.ThrowIfCancellationRequested();
@@ -65,6 +75,8 @@ internal sealed class RustPlusTransport : IRustTransport
     {
         if (disposed) return;
         disposed = true;
+        api.Disconnected -= OnDisconnected;
+        disconnected.TrySetResult();
         devices.Dispose();
         try { await api.DisconnectAsync(true).WaitAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false); }
         catch (Exception) { /* Teardown must still release the socket after a failed disconnect. */ }

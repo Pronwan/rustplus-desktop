@@ -13,18 +13,33 @@ namespace RustPlusDesk.CrossPlatform.Tests;
 public sealed class ConnectionRoutingTests
 {
     [TestMethod]
+    public async Task TransportDisposal_CompletesItsDisconnectionSignal_WithoutOpeningANetworkConnection()
+    {
+        var transport = new RustPlusTransport(new("localhost", 28082, 76561198000000001, 1234));
+        Assert.IsFalse(transport.Disconnected.IsCompleted);
+        await transport.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(4));
+        Assert.IsTrue(transport.Disconnected.IsCompletedSuccessfully);
+        await transport.DisposeAsync();
+    }
+
+    [TestMethod]
     public async Task EditedAddressProbe_BypassesSocketChecksNestedDevicesAndDisposesWithoutSaving()
     {
         using var fixture = new ProfileFixture();
         string before = await File.ReadAllTextAsync(fixture.Path);
         var profile = (await new LegacyServerCatalog().LoadAsync(fixture.Path))[0] with
-        { Devices = [new(0, "Group", DeviceKind.Group) { Children =
-            [new(1, "Switch", DeviceKind.Switch), new(2, "Storage", DeviceKind.StorageMonitor), new(1, "Alias", DeviceKind.Switch)] }] };
+        {
+            Devices = [new(0, "Group", DeviceKind.Group) { Children =
+            [new(1, "Switch", DeviceKind.Switch), new(2, "Storage", DeviceKind.StorageMonitor), new(1, "Alias", DeviceKind.Switch)] }]
+        };
         var routes = new List<TestTransport>();
         var factory = new RustPlusSessionFactory(route =>
         {
-            var transport = new TestTransport(route) { Devices = new TestDeviceClient
-                { Read = (device, _) => Task.FromResult(new DeviceSnapshot(device.EntityId, IsMissing: device.EntityId == 2)) } };
+            var transport = new TestTransport(route)
+            {
+                Devices = new TestDeviceClient
+                { Read = (device, _) => Task.FromResult(new DeviceSnapshot(device.EntityId, IsMissing: device.EntityId == 2)) }
+            };
             routes.Add(transport);
             return transport;
         });
@@ -125,11 +140,14 @@ public sealed class ConnectionRoutingTests
         var factory = new RustPlusSessionFactory(route =>
         {
             attempts++;
-            return transport = new TestTransport(route) { Initialize = ct =>
+            return transport = new TestTransport(route)
+            {
+                Initialize = ct =>
             {
                 started.SetResult();
                 return Task.Delay(Timeout.Infinite, ct);
-            }};
+            }
+            };
         });
         var connecting = factory.ConnectAsync(fixture.Path, await fixture.KeyAsync(), cancellation.Token);
         await started.Task.WaitAsync(TimeSpan.FromSeconds(5));
@@ -184,6 +202,7 @@ public sealed class ConnectionRoutingTests
         public Exception? Error { get; init; }
         public Func<CancellationToken, Task>? Initialize { get; init; }
         public ServerStatus InitialStatus { get; } = new("Verified server", 50, 200, 3, 14);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public Task InitializeAsync(CancellationToken cancellationToken) => Initialize?.Invoke(cancellationToken)
             ?? (Error is null ? Task.CompletedTask : Task.FromException(Error));
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken) => Task.FromResult(InitialStatus);

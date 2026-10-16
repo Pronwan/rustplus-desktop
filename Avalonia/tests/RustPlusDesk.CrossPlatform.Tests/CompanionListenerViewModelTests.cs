@@ -202,6 +202,7 @@ public sealed class CompanionListenerViewModelTests
     {
         public RustPlusDesk.Core.Devices.IDeviceClient Devices { get; } = new TestDeviceClient();
         public ServerStatus InitialStatus { get; } = new("Paired", 1, 100, 0);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public bool Disposed { get; private set; }
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken) => Task.FromResult(InitialStatus);
         public ValueTask DisposeAsync() { Disposed = true; return ValueTask.CompletedTask; }

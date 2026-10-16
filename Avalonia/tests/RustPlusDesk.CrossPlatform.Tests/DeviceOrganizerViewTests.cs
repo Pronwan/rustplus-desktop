@@ -21,6 +21,10 @@ public sealed class DeviceOrganizerViewTests
     public async Task Organizer_UsesTypedBindingsAndWorkingButtons_AtMinimumWindowSize()
     {
         using var file = new DeviceProfileEditorTests.Fixture();
+        var source = await file.JsonAsync();
+        source[0]!["Devices"]!.AsArray().Add(new System.Text.Json.Nodes.JsonObject
+        { ["EntityId"] = 99, ["Kind"] = "SmartAlarm", ["Name"] = "Alarm" });
+        await File.WriteAllTextAsync(file.Path, source.ToJsonString());
         await using var session = HeadlessUnitTestSession.StartNew(typeof(TestAppBuilder));
         await session.Dispatch(async () =>
         {
@@ -65,11 +69,18 @@ public sealed class DeviceOrganizerViewTests
                 var moveDown = view.GetVisualDescendants().OfType<Button>().Single(button => button.Command == editor.MoveDownCommand);
                 var scroll = moveDown.GetVisualAncestors().OfType<ScrollViewer>().First();
                 Assert.IsTrue(moveDown.TranslatePoint(default, scroll)!.Value.Y + moveDown.Bounds.Height <= scroll.Bounds.Height);
+                tree.SelectedItem = editor.Devices[2];
+                using (var alarm = window.CaptureRenderedFrame()) Assert.IsNotNull(alarm);
+                var title = view.GetVisualDescendants().OfType<TextBox>().Single(text => AutomationProperties.GetName(text) == "In-game alarm title");
+                Assert.IsTrue(title.IsEffectivelyVisible);
+                title.Text = "Fixture raid";
+                await editor.SaveAlarmTitleCommand.ExecuteAsync(null);
                 var close = view.GetVisualDescendants().OfType<Button>().Single(button => button.Command == editor.CloseCommand);
                 close.Command!.Execute(null);
                 await organizing.WaitAsync(TimeSpan.FromSeconds(4));
                 Assert.IsFalse(model.HasOverlay);
                 Assert.AreEqual("Workshop", model.SelectedServer!.Devices[0].Children[0].Name);
+                Assert.AreEqual("Fixture raid", model.SelectedServer.Devices[2].InGameAlarmTitle);
             }
             finally { await model.ShutdownAsync(); window.Close(); }
             return true;

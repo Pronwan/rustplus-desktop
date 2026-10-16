@@ -105,6 +105,7 @@ public sealed class PairingMatcherTests
         public IDeviceClient Device { get; init; } = new TestDeviceClient();
         public IDeviceClient Devices => Device;
         public ServerStatus InitialStatus { get; } = new("Fixture", 1, 100, 0);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public bool Disposed { get; private set; }
         public Func<CancellationToken, Task>? Initialize { get; init; }
         public Task InitializeAsync(CancellationToken cancellationToken) => Initialize?.Invoke(cancellationToken) ?? Task.CompletedTask;

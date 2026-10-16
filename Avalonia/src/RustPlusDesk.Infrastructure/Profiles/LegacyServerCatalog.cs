@@ -58,7 +58,7 @@ public sealed class LegacyServerCatalog : IServerCatalog
                 : !string.IsNullOrWhiteSpace(device.Name) ? device.Name : device.Kind ?? "Device";
             string key = prefix + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
             return new PairedDevice(device.EntityId, name, type)
-            { DeviceKey = key, Alias = device.Alias, Children = MapDevices(device.Children, key + "/") };
+            { DeviceKey = key, Alias = device.Alias, InGameAlarmTitle = device.InGameAlarmTitle, Children = MapDevices(device.Children, key + "/") };
         }).ToArray();
     }
 
@@ -77,6 +77,7 @@ public sealed class LegacyServerCatalog : IServerCatalog
         public uint EntityId { get; init; }
         public string? Name { get; init; }
         public string? Alias { get; init; }
+        public string? InGameAlarmTitle { get; init; }
         public string? Kind { get; init; }
         public bool IsGroup { get; init; }
         public List<LegacyDevice?>? Children { get; init; }

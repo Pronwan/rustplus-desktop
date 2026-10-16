@@ -9,6 +9,7 @@ public sealed record DeviceEditResult(ServerSummary Server, string DeviceKey);
 public interface IDeviceProfileEditor
 {
     Task<DeviceEditResult> RenameAsync(string path, ServerSummary original, string deviceKey, string alias, CancellationToken cancellationToken);
+    Task<DeviceEditResult> SaveAlarmTitleAsync(string path, ServerSummary original, string deviceKey, string title, CancellationToken cancellationToken);
     Task<DeviceEditResult> GroupAsync(string path, ServerSummary original, string deviceKey, string name, CancellationToken cancellationToken);
     Task<DeviceEditResult> MoveAsync(string path, ServerSummary original, string deviceKey, string? parentKey, int? index, CancellationToken cancellationToken);
 }

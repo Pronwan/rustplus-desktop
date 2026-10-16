@@ -81,6 +81,7 @@ public sealed partial class ConnectionViewModel(IServerSessionFactory factory) :
                     Phase = ConnectionPhase.Connected;
                     StatusMessage = "Connected";
                     using var connectedCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    var disconnectWatch = CancelOnDisconnectAsync(session.Disconnected, connectedCancellation);
                     var clockUpdates = UpdateClockAsync(connectedCancellation.Token);
                     var deviceUpdates = target.Devices.Count > 0
                         ? Devices.RunAsync(session.Devices, connectedCancellation.Token) : Task.CompletedTask;
@@ -88,15 +89,18 @@ public sealed partial class ConnectionViewModel(IServerSessionFactory factory) :
                     {
                         while (true)
                         {
-                            await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
-                            var status = await session.ReadStatusAsync(cancellationToken);
-                            cancellationToken.ThrowIfCancellationRequested();
+                            await Task.Delay(TimeSpan.FromSeconds(3), connectedCancellation.Token);
+                            var status = await session.ReadStatusAsync(connectedCancellation.Token).WaitAsync(connectedCancellation.Token);
+                            connectedCancellation.Token.ThrowIfCancellationRequested();
                             ApplyStatus(status);
                         }
                     }
+                    catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && session.Disconnected.IsCompletedSuccessfully)
+                    { throw new ServerConnectionException(ConnectionFailure.Unreachable); }
                     finally
                     {
                         connectedCancellation.Cancel();
+                        await disconnectWatch;
                         try { await clockUpdates; }
                         catch (OperationCanceledException) when (connectedCancellation.IsCancellationRequested) { }
                         await deviceUpdates;
@@ -146,6 +150,16 @@ public sealed partial class ConnectionViewModel(IServerSessionFactory factory) :
                 StatusMessage = "Disconnected";
             }
         }
+    }
+
+    private static async Task CancelOnDisconnectAsync(Task disconnected, CancellationTokenSource lifetime)
+    {
+        try
+        {
+            await disconnected.WaitAsync(lifetime.Token).ConfigureAwait(false);
+            lifetime.Cancel();
+        }
+        catch (OperationCanceledException) when (lifetime.IsCancellationRequested) { }
     }
 
     [RelayCommand(CanExecute = nameof(CanDisconnect))]

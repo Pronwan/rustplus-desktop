@@ -147,6 +147,35 @@ public sealed class ConnectionViewModelTests
     }
 
     [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task SocketDisconnect_InterruptsPollingAndPendingRead_AndLateStatusCannotReplaceRecovery(bool duringRead)
+    {
+        var reading = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var pending = new TaskCompletionSource<ServerStatus>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var first = new TestSession { Read = _ => { reading.TrySetResult(); return pending.Task; } };
+        var recovered = new TestSession { InitialStatus = new("Recovered", 99, 200, 0) };
+        int attempts = 0;
+        var model = CreateModel(new TestFactory((_, _, _) => Task.FromResult<IServerSession>(++attempts == 1 ? first : recovered)));
+        Task running = model.ConnectCommand.ExecuteAsync(null);
+        try
+        {
+            if (duringRead) await reading.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            first.Disconnection.TrySetResult();
+            await WaitForPhaseAsync(model, ConnectionPhase.Reconnecting).WaitAsync(TimeSpan.FromSeconds(2));
+            Assert.IsTrue(first.Disposed);
+            Assert.AreEqual("—", model.Population);
+            await WaitForPhaseAsync(model, ConnectionPhase.Connected);
+            pending.TrySetResult(new("Stale server", 1, 2, 0));
+            Assert.AreEqual("Recovered", model.ServerName);
+            Assert.AreEqual(2, attempts);
+        }
+        finally { pending.TrySetResult(new("Stale server", 1, 2, 0)); await model.StopAsync(); }
+        await running;
+        Assert.IsTrue(recovered.Disposed);
+    }
+
+    [TestMethod]
     public async Task ConnectAsync_DeniedAfterLoss_StopsRecoveryAndRequestsRePair()
     {
         var first = new TestSession { ReadError = new ServerConnectionException(ConnectionFailure.Unreachable) };
@@ -268,6 +297,8 @@ public sealed class ConnectionViewModelTests
 
     private sealed class TestSession : IServerSession
     {
+        public TaskCompletionSource Disconnection { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public Task Disconnected => Disconnection.Task;
         public RustPlusDesk.Core.Devices.IDeviceClient Devices { get; init; } = new TestDeviceClient();
         public ServerStatus InitialStatus { get; init; } = new("Live server", 42, 200, 3, 14.5);
         public Exception? ReadError { get; init; }
@@ -275,7 +306,7 @@ public sealed class ConnectionViewModelTests
         public bool Disposed { get; private set; }
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken)
             => Read?.Invoke(cancellationToken) ?? (ReadError is null ? Task.FromResult(InitialStatus) : Task.FromException<ServerStatus>(ReadError));
-        public ValueTask DisposeAsync() { Disposed = true; return ValueTask.CompletedTask; }
+        public ValueTask DisposeAsync() { Disposed = true; Disconnection.TrySetResult(); return ValueTask.CompletedTask; }
     }
 
     private sealed class TestCatalog : IServerCatalog

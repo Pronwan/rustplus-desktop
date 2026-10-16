@@ -11,5 +11,7 @@ public interface IServerSession : IAsyncDisposable
 {
     Devices.IDeviceClient Devices { get; }
     ServerStatus InitialStatus { get; }
+    /// <summary>Completes when this socket reports disconnection; scoped to this session only.</summary>
+    Task Disconnected { get; }
     Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken);
 }

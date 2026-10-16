@@ -21,18 +21,24 @@ public sealed partial class DeviceOrganizerViewModel : ObservableObject
     public IReadOnlyList<PairedDevice> Devices => current.Devices;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RenameCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveAlarmTitleCommand))]
+    [NotifyPropertyChangedFor(nameof(IsAlarm))]
     [NotifyCanExecuteChangedFor(nameof(GroupCommand))]
     [NotifyCanExecuteChangedFor(nameof(MoveCommand))]
     [NotifyCanExecuteChangedFor(nameof(MoveUpCommand))]
     [NotifyCanExecuteChangedFor(nameof(MoveDownCommand))]
     private PairedDevice? selected;
     [ObservableProperty] private string alias = "";
+    [ObservableProperty] private string alarmTitle = "";
+    public bool IsAlarm => Selected?.Kind == DeviceKind.Alarm;
+    private bool CanEditAlarm => CanEdit && IsAlarm;
     [ObservableProperty] private string groupName = "Group";
     [ObservableProperty] private IReadOnlyList<DeviceGroupChoice> destinations = [];
     [ObservableProperty] private DeviceGroupChoice? destination;
     [ObservableProperty] private string message = "Each action saves locally. Cloud synchronization is not available in this preview.";
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RenameCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveAlarmTitleCommand))]
     [NotifyCanExecuteChangedFor(nameof(GroupCommand))]
     [NotifyCanExecuteChangedFor(nameof(MoveCommand))]
     [NotifyCanExecuteChangedFor(nameof(MoveUpCommand))]
@@ -56,6 +62,7 @@ public sealed partial class DeviceOrganizerViewModel : ObservableObject
     partial void OnSelectedChanged(PairedDevice? value)
     {
         Alias = value?.Alias ?? "";
+        AlarmTitle = value?.InGameAlarmTitle ?? "";
         var choices = new List<DeviceGroupChoice> { new("All devices", null) };
         void Add(IEnumerable<PairedDevice> items, string prefix)
         {
@@ -74,6 +81,8 @@ public sealed partial class DeviceOrganizerViewModel : ObservableObject
 
     [RelayCommand(CanExecute = nameof(CanEdit))]
     private Task RenameAsync(CancellationToken ct) => SaveAsync((server, key) => editor.RenameAsync(path, server, key, Alias, ct));
+    [RelayCommand(CanExecute = nameof(CanEditAlarm))]
+    private Task SaveAlarmTitleAsync(CancellationToken ct) => SaveAsync((server, key) => editor.SaveAlarmTitleAsync(path, server, key, AlarmTitle, ct));
     [RelayCommand(CanExecute = nameof(CanEdit))]
     private Task GroupAsync(CancellationToken ct) => SaveAsync((server, key) => editor.GroupAsync(path, server, key, GroupName, ct));
     [RelayCommand(CanExecute = nameof(CanEdit))]
@@ -121,5 +130,5 @@ public sealed partial class DeviceOrganizerViewModel : ObservableObject
         foreach (var command in Commands) if (command.ExecutionTask is { } task) await task;
     }
 
-    private IAsyncRelayCommand[] Commands => [RenameCommand, GroupCommand, MoveCommand, MoveUpCommand, MoveDownCommand];
+    private IAsyncRelayCommand[] Commands => [RenameCommand, SaveAlarmTitleCommand, GroupCommand, MoveCommand, MoveUpCommand, MoveDownCommand];
 }

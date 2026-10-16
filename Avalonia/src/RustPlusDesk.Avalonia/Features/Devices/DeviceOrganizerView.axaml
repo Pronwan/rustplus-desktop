@@ -21,6 +21,11 @@
             <TextBlock Text="Display name" />
             <TextBox Text="{Binding Alias}" PlaceholderText="Blank restores the original name" AutomationProperties.Name="Device display name" />
             <Button Content="_Rename" Command="{Binding RenameCommand}" />
+            <StackPanel IsVisible="{Binding IsAlarm}" Spacing="6">
+              <TextBlock Text="In-game alarm title" />
+              <TextBox Text="{Binding AlarmTitle}" AutomationProperties.Name="In-game alarm title" />
+              <Button Content="Save _alarm title" Command="{Binding SaveAlarmTitleCommand}" />
+            </StackPanel>
             <TextBlock Text="New group name" />
             <TextBox Text="{Binding GroupName}" AutomationProperties.Name="New device group name" />
             <Button Content="_Group selected item" Command="{Binding GroupCommand}" />

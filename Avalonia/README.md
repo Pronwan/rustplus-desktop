@@ -24,7 +24,9 @@ The preview displays server names, hosts, and ports. It does not display or reta
 Select a server and press **Connect** to authenticate and display live population, queue, in-game time,
 and day/night countdown. **Disconnect**, selecting another server, refreshing profiles, or closing the
 window stops the session and polling. A dropped connection retries with the existing app's 2–60 second
-exponential backoff. Re-pair and companion-login failures show distinct recovery instructions.
+exponential backoff. Socket disconnection interrupts polling and pending status reads immediately;
+old-session callbacks cannot stop a replacement session. Re-pair and companion-login failures show
+distinct recovery instructions.
 
 The companion route uses the existing `rustplusjs-config.json` next to the chosen profiles file,
 when available, followed by the direct route. **Account → Sign in with Steam** opens the native web
@@ -56,6 +58,8 @@ Storage uses the bundled Rust item names, including quantity, blueprint and upke
 Use **Organize devices…** to rename devices/groups, wrap a selected subtree in a new group, move it
 between groups or the top level, and move it up/down among siblings. Each action saves locally with
 revision protection and a private backup. Clearing an alias restores the original device name.
+Smart alarms also expose their saved in-game title; blank clears it. This stores local identification
+metadata and preserves existing settings; cloud synchronization remains pending.
 Unknown settings and empty-group metadata stay intact; an active connection reloads its tree when the
 organizer closes. Cloud synchronization, drag gestures, device deletion/import/transfer, custom icons,
 automation and alarm audio remain pending.

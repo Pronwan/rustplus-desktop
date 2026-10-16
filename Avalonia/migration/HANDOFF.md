@@ -27,9 +27,9 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 ## Verified current source
 
 - Debug/Release builds: zero warnings/errors. `8e1df49` has 139 tests, `9fd4ee6` has 171,
-  `a8cf2a4` has 188. The subsequent recycler slice has 195 passing MSTest cases in the repo and isolation.
-- Source-only external copy with separate package cache: 195 tests pass, zero warnings.
-- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed for the recycler slice.
+  `a8cf2a4` has 188, `61d2eab` has 195. Socket teardown/alarm-title source now has 199 passing cases in the repo.
+- Source-only external copy with separate package cache: 199 tests pass, zero warnings.
+- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
 - Two Python reference-capture tests passed in the earlier slice; its code has not changed since.
 - External copy location is recorded locally in ignored `artifacts/isolation-path.txt`; its source copy
@@ -67,6 +67,11 @@ keeps quantities/filter state on close/reopen and leaves the server sidebar avai
 icons decode in tests; there is no image downloader. See RECYCLER.md for source/hash evidence and gaps.
 Original navigation integration, tutorials, localization and native visual acceptance remain required.
 
+Socket disconnects now complete an owned session signal. The connection feature cancels/awaits its
+watcher and clock/device/status work before reconnecting; pending reads and late old replies cannot
+replace recovered state. The SDK event subscription is removed on disposal. Smart-alarm titles can
+also be edited/cleared locally, with device-kind validation and revision-protected storage.
+
 ## Exact next steps
 
 1. Validate real Steam/Facepunch return-URL callbacks on Windows. The native window crash is fixed;
@@ -94,7 +99,7 @@ Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dea
 The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
 2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
 no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`, startup/health
-as `9fd4ee6`, local device organization as `a8cf2a4`; the recycler forms the next slice. Inspect Git
-status/log for its checkpoint. At 97%, stop
+as `9fd4ee6`, local device organization as `a8cf2a4`, recycler as `61d2eab`; socket teardown/alarm-title
+source forms the next slice. Inspect Git status/log for its checkpoint. At 97%, stop
 implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
 unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.

@@ -115,6 +115,25 @@ public sealed class DeviceProfileEditorTests
         Assert.AreEqual(1, Directory.GetFiles(file.Directory).Length);
     }
 
+    [TestMethod]
+    public async Task AlarmTitle_ValidatesDeviceKind_TrimsAndClears_WithoutChangingOtherFields()
+    {
+        using var file = new Fixture();
+        var originalJson = await file.JsonAsync();
+        originalJson[0]!["Devices"]!.AsArray().Add(new JsonObject
+        { ["EntityId"] = 99, ["Kind"] = "Smart Alarm", ["Name"] = "Alarm", ["FutureSetting"] = true });
+        await File.WriteAllTextAsync(file.Path, originalJson.ToJsonString());
+        var editor = new LegacyDeviceProfileEditor();
+        var original = await file.ServerAsync();
+        await Assert.ThrowsExceptionAsync<ArgumentException>(() => editor.SaveAlarmTitleAsync(file.Path, original, "0/0", "Bad target", CancellationToken.None));
+        var saved = await editor.SaveAlarmTitleAsync(file.Path, original, "2", " Base under attack ", CancellationToken.None);
+        Assert.AreEqual("Base under attack", saved.Server.Devices[2].InGameAlarmTitle);
+        originalJson[0]!["Devices"]![2]!["InGameAlarmTitle"] = "Base under attack";
+        Assert.IsTrue(JsonNode.DeepEquals(originalJson, await file.JsonAsync()));
+        saved = await editor.SaveAlarmTitleAsync(file.Path, saved.Server, "2", " ", CancellationToken.None);
+        Assert.IsNull(saved.Server.Devices[2].InGameAlarmTitle);
+    }
+
     internal sealed class Fixture : IDisposable
     {
         public string Directory { get; } = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "rustplus-device-editor-" + Guid.NewGuid().ToString("N"));

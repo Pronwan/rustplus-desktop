@@ -35,6 +35,9 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   Every failed attempt is disposed. The retired `/game` relay is never used.
 - Manual connect/disconnect, live population/queue/time, observed day/night clock, paused time,
   independent one-second clock updates, and 2–60 second exponential recovery after a dropped session.
+- Socket-disconnect signals immediately cancel the selected session's polling, status reads, device
+  work and clock before disposal/recovery. Each watcher is canceled/awaited during teardown and cannot
+  affect a replacement session. Poll failures remain a fallback; live-server acceptance is pending.
 - Re-pair, companion sign-in, invalid credentials and unavailable profiles have distinct safe messages.
 - Switching server, refreshing the source and application shutdown cancel the old session and await
   its cleanup. Late connection/status completions cannot overwrite the newly selected server.
@@ -79,6 +82,8 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   entity IDs do not rename the wrong alias. Whole JSON nodes and empty-group metadata are preserved.
   Closing/shutdown awaits writes; changed files are rejected. Closing after a save reloads the selected
   tree and reconnects an active session. This does not implement cloud sync, drag gestures or deletion cleanup.
+- Smart-alarm in-game titles can be edited/cleared in the organizer. The writer validates the saved
+  device kind, trims blank titles to null and preserves unknown settings. Cloud title synchronization is pending.
 - Offline recycler workspace with all 776 reference inputs, 796 bundled input/output icons, catalog
   precedence, guaranteed/chance comparisons, tick-based processing times, search/categories, paging,
   fill/clear, numeric and click/wheel/Shift input. Reopening retains quantities/filters. Full-width
@@ -92,7 +97,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | Saved-server list | Browsing, selection, pairing, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, original context menus and complete sidebar design |
 | Server-clock calibration | Wired to live samples, independent display ticks and pause state | Native/live-server acceptance, localized countdown formatting and full original status layout |
 | Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, startup delivery checks, one-shot renewal, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance and ambiguous-match resolution UI |
-| Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
+| Rust+ connection/reconnect | Authenticated status session, fallback, immediate socket-disconnect handling, cancellation and recovery | Native/live-server acceptance; soft/full modes and remaining feature subscriptions |
 | Live map/markers/overlays | Not ported | Separate coordinate/state logic from rendering; choose portable map/helper hosting |
 | Smart devices/automation/timers | Confirmed switches, nested group commands, alarm/storage state, subscriptions, local alias/group/move/reorder editor | Live-server acceptance, drag gestures, empty-group cleanup, cloud sync, add/delete/import/transfer, custom icons, automation, timers, alarm notifications/audio and original layout |
 | Chat/team/clan/cloud | Not ported | Port protocol/services, moderation/history, synchronization and presentation |
@@ -142,12 +147,12 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 3. Port original server context menus and deletion together with its cloud cleanup; preserve all related data and consent flows.
 4. Build the original rail/sidebar/workspace arrangement using Fluent components; preserve navigation
    order and density instead of adding placeholder buttons for unported features.
-5. Validate actual server communication on Windows/Linux/macOS and integrate push-disconnect events.
+5. Validate actual server communication and the implemented socket-disconnect handling on Windows/Linux/macOS.
 6. Continue every candidate in the parity checklist, including tools, dialogs and embedded web features.
 
 ## Local verification
 
-- Windows: all **195 .NET test cases** cover the current source, including device organization and recycling;
+- Windows: all **199 .NET test cases** cover the current source, including organization, recycling and socket teardown;
   build and isolated-copy results are recorded in HANDOFF.md at each checkpoint.
 - Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
   for native control host` because the executable lacked a supported-OS manifest. Added the official
@@ -177,7 +182,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
   code/web candidates and generated-tree exclusions.
 - Isolation: a source-only copy outside the repository restored against a fresh, separate package
   cache, including the local protocol package and FluentAvaloniaUI. The current source passed all
-  **195 .NET tests** there with zero warnings, including pairing, startup/renewal, device organization and recycler regressions.
+  **199 .NET tests** there with zero warnings, including pairing, startup/renewal, device organization, recycler and disconnection regressions.
 - Self-contained Release publishes succeeded for `win-x64`, `linux-x64`, and `osx-arm64` on the Windows host.
   These are compiler/package checks; Linux/macOS executables were **not run**.
 - `git diff --exit-code` confirmed no tracked changes to the reference application or root build/config files.
@@ -187,8 +192,8 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 Connection tests use synthetic credentials and fake transports. No personal profile/token contents
 were printed, changed, copied into this folder, or used to contact a real server during verification.
-Recovery currently detects loss through status polling; the reference app's immediate disconnected-event
-integration remains on the parity backlog. The full migration and visual parity are still unfinished.
+Recovery now uses the socket's disconnect signal as well as status polling. Actual server acceptance
+of that behavior remains pending. The full migration and visual parity are still unfinished.
 
 The account modal, listener and sign-out workflows have automated coverage, but real Steam completion,
 FCM delivery, remote sign-out and automatic token refresh are not accepted yet. The public Facepunch login

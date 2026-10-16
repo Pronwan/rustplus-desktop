@@ -260,6 +260,7 @@ public sealed class ShellTests
         };
         public bool Disposed { get; private set; }
         public ServerStatus InitialStatus { get; } = new("EU Vanilla", 42, 200, 3, 14.5);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public Task<IServerSession> ConnectAsync(string profilesPath, string profileKey, CancellationToken cancellationToken)
             => Task.FromResult<IServerSession>(this);
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken) => Task.FromResult(InitialStatus);

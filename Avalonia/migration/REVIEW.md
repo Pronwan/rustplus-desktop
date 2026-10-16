@@ -4,7 +4,7 @@ Development preview verified; the full migration remains unfinished. Overall sel
 
 | Axis | Score | Evidence and next improvement |
 | --- | --- | --- |
-| Accuracy | 4 | 195 automated cases pass in the repo and source-only copy; current native Windows browser smoke and three target publishes pass. Tests cover arrival correlation, repair, nested organization, recycler math/gestures/state and all 796 required icons. Actual Steam/FCM and native Linux/macOS behavior still need acceptance. |
+| Accuracy | 4 | 199 automated cases pass, including immediate socket loss during a pending read, teardown and alarm-title writes. Native Windows browser smoke and three target publishes pass; all 796 recycler icons decode. Actual Steam/FCM and native Linux/macOS behavior still need acceptance. |
 | Completeness | 3 | Pairing, re-pair, push ownership, sign-out, startup checks, renewal, local device organization and recycler workflows are implemented. Original navigation, drag gestures, cloud sync/deletion dependencies, ambiguous-match resolution, notification-center parity and most other shipped features remain on STATUS.md. Complete those before release. |
 | Clarity | 4 | Core exposes safe contracts; SDK credentials and mutations remain in Infrastructure. Keep the distinction between the temporary text feed and the full notification center explicit. |
 | Actionability | 4 | README includes build/run and account workflows; tests use disposable fixtures. Live validation requires the user's Steam consent and a paired Rust server. |

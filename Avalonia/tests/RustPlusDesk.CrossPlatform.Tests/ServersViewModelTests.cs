@@ -50,13 +50,16 @@ public sealed class ServersViewModelTests
     {
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         bool stopped = false;
-        var services = new ServerEditorViewModelTests.EditorServices { Probe = async ct =>
+        var services = new ServerEditorViewModelTests.EditorServices
+        {
+            Probe = async ct =>
         {
             started.TrySetResult();
             try { await Task.Delay(Timeout.Infinite, ct); }
             finally { stopped = true; }
             return new(0, 0);
-        }};
+        }
+        };
         var model = new ServersViewModel(new TestCatalog(), new TestPicker(), "original.json", new UnusedSessionFactory(), services, services);
         await model.RefreshCommand.ExecuteAsync(null);
         var editing = model.EditCommand.ExecuteAsync(null);
@@ -176,6 +179,7 @@ public sealed class ServersViewModelTests
         public bool Disposed { get; private set; }
         public RustPlusDesk.Core.Devices.IDeviceClient Devices { get; } = new TestDeviceClient();
         public ServerStatus InitialStatus { get; } = new("Renamed", 1, 100, 0);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public Task<IServerSession> ConnectAsync(string profilesPath, string profileKey, CancellationToken cancellationToken)
         { Key = profileKey; return Task.FromResult<IServerSession>(this); }
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken) => Task.FromResult(InitialStatus);

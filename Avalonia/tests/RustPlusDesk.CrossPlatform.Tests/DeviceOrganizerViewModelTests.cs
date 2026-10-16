@@ -148,6 +148,7 @@ public sealed class DeviceOrganizerViewModelTests
     {
         public IDeviceClient Devices { get; } = new TestDeviceClient();
         public ServerStatus InitialStatus { get; } = new("Fixture", 1, 100, 0);
+        public Task Disconnected { get; } = new TaskCompletionSource().Task;
         public bool Disposed { get; private set; }
         public Task<ServerStatus> ReadStatusAsync(CancellationToken cancellationToken) => Task.FromResult(InitialStatus);
         public ValueTask DisposeAsync() { Disposed = true; return ValueTask.CompletedTask; }
@@ -172,6 +173,7 @@ public sealed class DeviceOrganizerViewModelTests
             throw new AssertFailedException("Test must cancel the pending writer.");
         }
         public Task<DeviceEditResult> GroupAsync(string path, ServerSummary original, string deviceKey, string name, CancellationToken ct) => throw new AssertFailedException();
+        public Task<DeviceEditResult> SaveAlarmTitleAsync(string path, ServerSummary original, string deviceKey, string title, CancellationToken ct) => throw new AssertFailedException();
         public Task<DeviceEditResult> MoveAsync(string path, ServerSummary original, string deviceKey, string? parentKey, int? index, CancellationToken ct) => throw new AssertFailedException();
     }
 }

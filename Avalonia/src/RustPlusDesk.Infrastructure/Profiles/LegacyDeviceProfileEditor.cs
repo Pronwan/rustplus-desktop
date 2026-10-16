@@ -15,6 +15,16 @@ public sealed class LegacyDeviceProfileEditor : IDeviceProfileEditor
             return selected.Node;
         }, cancellationToken);
 
+    public Task<DeviceEditResult> SaveAlarmTitleAsync(string path, ServerSummary original, string deviceKey, string title, CancellationToken cancellationToken)
+        => EditAsync(path, original, deviceKey, (root, selected) =>
+        {
+            string? kind = selected.Node["Kind"]?.GetValue<string>()?.Replace(" ", "", StringComparison.Ordinal);
+            if (selected.Node["IsGroup"]?.GetValue<bool>() == true || !string.Equals(kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Choose a smart alarm.");
+            selected.Node["InGameAlarmTitle"] = string.IsNullOrWhiteSpace(title) ? null : title.Trim();
+            return selected.Node;
+        }, cancellationToken);
+
     public Task<DeviceEditResult> GroupAsync(string path, ServerSummary original, string deviceKey, string name, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
