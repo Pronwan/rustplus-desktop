@@ -5843,13 +5843,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     /// <summary>Paddle checkout lives here; every "upgrade" button in the app leads to it.</summary>
     internal const string PricingUrl = "https://rustplusdesktop.cloud/pricing";
 
+    /// <summary>Premium users already have everything; their button reads "Support Development".</summary>
+    private const string SupportDevelopmentUrl = "https://www.patreon.com/cw/Pronwan";
+
     internal void OpenSupporterPage()
     {
         try
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = PricingUrl,
+                FileName = _vm.IsPremium ? SupportDevelopmentUrl : PricingUrl,
                 UseShellExecute = true   // öffnet im Standard-Browser
             });
         }
