@@ -1,23 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    // Radial-gradient blobs drawn on the Overlay for the death heatmap; tracked so
-    // they can be cleared and redrawn. They live on the transformed Overlay, so
-    // they pan/zoom with the map without needing a redraw.
-    private readonly List<FrameworkElement> _deathHeatEls = new();
+    // One density image for the death heatmap (see DeathHeatmapRaster), tracked so it can be
+    // cleared and redrawn. It lives on the transformed Overlay, so it pans/zooms with the map
+    // without needing a redraw.
+    private Image? _deathHeatImage;
     private bool _showDeathHeatmap;
 
-    // Influence radius of one death, in world units. Overlapping blobs blend so
-    // dense areas glow hotter.
+    // Influence radius of one death, in world units.
     private const double DeathHeatWorldRadius = 90.0;
 
     private void ChkDeathHeatmap_Checked(object sender, RoutedEventArgs e)
@@ -31,61 +28,45 @@ public partial class MainWindow
 
     private void ClearDeathHeatmap()
     {
-        if (Overlay != null)
-        {
-            foreach (var el in _deathHeatEls)
-                RemoveFromMapLayers(el);
-        }
-
-        _deathHeatEls.Clear();
+        if (_deathHeatImage != null && Overlay != null)
+            RemoveFromMapLayers(_deathHeatImage);
+        _deathHeatImage = null;
     }
 
     public void RedrawDeathHeatmap()
     {
         ClearDeathHeatmap();
 
-        if (!_showDeathHeatmap || Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
+        // The Deep Sea view maps a different box onto the image; main-world deaths do not belong there.
+        if (!_showDeathHeatmap || Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0 || _isShowingDeepSeaMap)
             return;
 
-        var positions = Services.Deaths.DeathLogStore.LoadPositions(GetServerKey());
-        if (positions.Count == 0)
+        // The log keeps every death ever seen on this server, across wipes and therefore across
+        // maps. Only this wipe's deaths say anything about this map.
+        var wipeStart = (_vm?.Selected?.WipeTime ?? _vm?.Selected?.RustMapsWipeTime)?.ToUniversalTime();
+        long? sinceUnix = wipeStart is { } start ? new DateTimeOffset(start).ToUnixTimeSeconds() : null;
+        var positions = Services.Deaths.DeathLogStore.LoadPositions(GetServerKey(), sinceUnix);
+
+        var bitmap = Services.Deaths.DeathHeatmapRaster.Render(positions, _worldSizeS, DeathHeatWorldRadius);
+        if (bitmap == null)
             return;
 
-        // World radius -> pixels at the base map scale.
-        var origin = WorldToImagePx(0, 0);
-        var edge = WorldToImagePx(DeathHeatWorldRadius, 0);
-        double radiusPx = Math.Abs(edge.X - origin.X);
-        if (radiusPx <= 0)
-            radiusPx = 30;
-        double diameter = radiusPx * 2;
-
-        var brush = new RadialGradientBrush
+        var northWest = WorldToImagePx(0, _worldSizeS);
+        var southEast = WorldToImagePx(_worldSizeS, 0);
+        var image = new Image
         {
-            GradientStops =
-            {
-                new GradientStop(Color.FromArgb(150, 255, 60, 0), 0.0),
-                new GradientStop(Color.FromArgb(70, 255, 130, 0), 0.55),
-                new GradientStop(Color.FromArgb(0, 255, 170, 0), 1.0),
-            },
+            Source = bitmap,
+            Width = Math.Abs(southEast.X - northWest.X),
+            Height = Math.Abs(southEast.Y - northWest.Y),
+            Stretch = Stretch.Fill,
+            IsHitTestVisible = false,
         };
-        brush.Freeze();
-
-        foreach (var (x, y) in positions)
-        {
-            var px = WorldToImagePx(x, y);
-            var ellipse = new Ellipse
-            {
-                Width = diameter,
-                Height = diameter,
-                Fill = brush,
-                IsHitTestVisible = false,
-            };
-            Canvas.SetLeft(ellipse, px.X - radiusPx);
-            Canvas.SetTop(ellipse, px.Y - radiusPx);
-            // Above the map/grid, below markers and death pins.
-            Panel.SetZIndex(ellipse, 50);
-            IconLayer.Children.Add(ellipse);
-            _deathHeatEls.Add(ellipse);
-        }
+        RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Linear);
+        Canvas.SetLeft(image, Math.Min(northWest.X, southEast.X));
+        Canvas.SetTop(image, Math.Min(northWest.Y, southEast.Y));
+        // Above the map/grid, below markers and death pins.
+        Panel.SetZIndex(image, 50);
+        IconLayer.Children.Add(image);
+        _deathHeatImage = image;
     }
 }
