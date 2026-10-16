@@ -7,9 +7,20 @@
 - Preserve every shipped feature and nearly the same design. Windows uses FluentAvaloniaUI 3.1.0;
   Avalonia is 12.1.4 on .NET 10. Linux/macOS native appearance remains unfinished.
 - Read `PROMPT.md` and `STATUS.md` before continuing. The migration is a preview, not production ready.
-- Verified preview and crash fix are committed in `1cb470b` on `beta`. A following documentation
-  commit records this handoff. Push target is `origin` (JawadYzbk/rustplus-desktop), never upstream `remote`.
-  Check `git log`/remote state before cloud continuation. Only `Avalonia/` is included; `.serena/` stays untracked.
+- Latest verified source checkpoint: **`d4bba03a` on `beta`**. A following documentation-only commit
+  records this handoff. Push target is `origin` (JawadYzbk/rustplus-desktop), never upstream `remote`.
+  Check `git log`/remote state before continuation. Only `Avalonia/` is included; unrelated `.serena/`
+  and root `rustplus.proto` stay untracked and unchanged.
+
+## Resumed source checkpoints
+
+| Commit | Verified source |
+| --- | --- |
+| `8e1df49b` | Pairing listener, private/revision-safe storage and confirmed sign-out; 139 tests |
+| `9fd4ee6d` | Saved-account startup, delivery correlation and one-shot renewal; 171 tests |
+| `a8cf2a48` | Local device aliases/groups/movement/order; 188 tests |
+| `61d2eab5` | Offline recycler workspace, 776 inputs and 796 original icons; 195 tests |
+| `d4bba03a` | Immediate socket-loss recovery and local alarm-title edits; 199 tests |
 
 ## Latest resolved bug
 
@@ -27,7 +38,7 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 ## Verified current source
 
 - Debug/Release builds: zero warnings/errors. `8e1df49` has 139 tests, `9fd4ee6` has 171,
-  `a8cf2a4` has 188, `61d2eab` has 195. Socket teardown/alarm-title source now has 199 passing cases in the repo.
+  `a8cf2a4` has 188, `61d2eab` has 195. `d4bba03a` has 199 passing cases in the repository and isolation.
 - Source-only external copy with separate package cache: 199 tests pass, zero warnings.
 - Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
@@ -79,8 +90,13 @@ also be edited/cleared locally, with device-kind validation and revision-protect
 2. Validate the implemented startup delivery self-test/one-shot registration repair with real FCM.
    Pairing, reconnect, ID persistence, direct re-pair probes and sign-out are implemented; do not redo them.
    Re-sign-in/renewal creates a new registration without deleting earlier ones. Add explicit ambiguous-match resolution.
-3. Continue device import/transfer/automation, drag gestures, cloud sync and deletion cleanup; original server menus/cloud-aware deletion,
-   and the original sidebar/workspace layout. The full required backlog is in STATUS.md/reference checklist.
+3. Continue cloud identity/consent and device snapshot/sharing contracts before device import/transfer.
+   Reference `Views/MainWindow/Devices/MainWindow.Devices.cs`, `Services/Data/DeviceDataModule.cs`,
+   `Models/SharingModels.cs` and `DeviceImportWindow`: the existing Export button toggles consent-based
+   cloud sync; Import uses team identities/cloud snapshots with local-overlay and wipe-aware fallback.
+   Do not replace that shipped workflow with invented standalone JSON-file export/import.
+   Continue drag gestures, deletion/hotkey/automation cleanup, server menus and the original sidebar/
+   workspace layout. The full backlog is in STATUS.md/reference checklist.
 4. Run native Windows/Linux/macOS acceptance, including permissions, browser prerequisites and appearance.
 5. Keep source upload-ready without parent-repo/private-submodule references. Exclude bin/obj/artifacts.
 
@@ -99,7 +115,8 @@ Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dea
 The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
 2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
 no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`, startup/health
-as `9fd4ee6`, local device organization as `a8cf2a4`, recycler as `61d2eab`; socket teardown/alarm-title
-source forms the next slice. Inspect Git status/log for its checkpoint. At 97%, stop
+as `9fd4ee6`, local device organization as `a8cf2a4`, recycler as `61d2eab`, socket teardown/alarm-title
+as `d4bba03a`. Inspect Git status/log for the documentation checkpoint. Latest checkpoint usage reading
+was 95%; new feature implementation stopped while finishing verified saves. At 97%, stop
 implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
 unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.
