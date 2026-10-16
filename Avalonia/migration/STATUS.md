@@ -79,12 +79,17 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   entity IDs do not rename the wrong alias. Whole JSON nodes and empty-group metadata are preserved.
   Closing/shutdown awaits writes; changed files are rejected. Closing after a save reloads the selected
   tree and reconnects an active session. This does not implement cloud sync, drag gestures or deletion cleanup.
+- Offline recycler workspace with all 776 reference inputs, 796 bundled input/output icons, catalog
+  precedence, guaranteed/chance comparisons, tick-based processing times, search/categories, paging,
+  fill/clear, numeric and click/wheel/Shift input. Reopening retains quantities/filters. Full-width
+  workspace tabs retain the server sidebar. Remaining navigation/localization/tutorial/visual acceptance
+  is recorded in RECYCLER.md; long quantities/times no longer wrap 32-bit counts or 24-hour clocks.
 
 ## Feature parity
 
 | Feature | Avalonia state | Remaining work |
 | --- | --- | --- |
-| Saved-server list | Browsing, selection, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, new pairing, original context menus and complete sidebar design |
+| Saved-server list | Browsing, selection, pairing, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, original context menus and complete sidebar design |
 | Server-clock calibration | Wired to live samples, independent display ticks and pause state | Native/live-server acceptance, localized countdown formatting and full original status layout |
 | Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, startup delivery checks, one-shot renewal, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance and ambiguous-match resolution UI |
 | Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
@@ -97,7 +102,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | Tray/hotkeys/audio/speech/capture | Not ported | Platform capability audit and adapters with truthful availability |
 | Installer/updater | Not ported | Native packaging, signing, updater, permissions and upgrade-path validation |
 | Raid calculator | Not ported | Preserve catalog, per-target methods, smart mixes, resource shopping list, persisted plans, clipboard and responsive layout |
-| Recycler calculator | Not ported | Preserve item catalog, quantity/yield calculations, output comparisons and icons |
+| Recycler calculator | Offline catalog, calculations, quantity shortcuts, filters/paging, comparisons, icons and stateful workspace | Original navigation integration, tutorial targets, localization and native visual/accessibility acceptance |
 | Shop search/trades | Not ported | Preserve filters, vending offers, alerts, shopping/profit workflows and map links |
 | Map drawing/routes/layers/3D | Not ported | Preserve editing, grouping, import/export, keycards, no-build zones, monument overlays and helper integration |
 | Command dock/minimap/popouts | Not ported | Preserve tiles/templates/configuration, overlays, floating windows and appearance settings |
@@ -142,7 +147,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 ## Local verification
 
-- Windows: all **188 .NET test cases** cover the current source, including local device organization;
+- Windows: all **195 .NET test cases** cover the current source, including device organization and recycling;
   build and isolated-copy results are recorded in HANDOFF.md at each checkpoint.
 - Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
   for native control host` because the executable lacked a supported-OS manifest. Added the official
@@ -172,7 +177,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
   code/web candidates and generated-tree exclusions.
 - Isolation: a source-only copy outside the repository restored against a fresh, separate package
   cache, including the local protocol package and FluentAvaloniaUI. The current source passed all
-  **139 .NET tests** there with zero warnings, including duplicate-redelivery and token-rotation regressions.
+  **195 .NET tests** there with zero warnings, including pairing, startup/renewal, device organization and recycler regressions.
 - Self-contained Release publishes succeeded for `win-x64`, `linux-x64`, and `osx-arm64` on the Windows host.
   These are compiler/package checks; Linux/macOS executables were **not run**.
 - `git diff --exit-code` confirmed no tracked changes to the reference application or root build/config files.

@@ -11,6 +11,7 @@ using RustPlusDesk.Avalonia.Shell;
 using RustPlusDesk.Infrastructure.Profiles;
 using RustPlusDesk.Infrastructure.Connections;
 using RustPlusDesk.Infrastructure.Accounts;
+using RustPlusDesk.Infrastructure.Items;
 
 namespace RustPlusDesk.Avalonia;
 
@@ -45,7 +46,7 @@ public sealed partial class App : Application
             var pushHealth = new CompanionPushHealth(accountHttp, accounts);
             var servers = new ServersViewModel(new LegacyServerCatalog(),
                 new ProfileFilePicker(window), LegacyServerCatalog.DefaultPath, sessions, new LegacyServerProfileEditor(), sessions, accounts, new CompanionListener(pushHealth), pushHealth,
-                new LegacyDeviceProfileEditor());
+                new LegacyDeviceProfileEditor(), new BundledRecyclerCatalog());
             desktop.Exit += (_, _) => accountHttp.Dispose();
             window.DataContext = servers;
             window.Opened += async (_, _) => await servers.InitializeCommand.ExecuteAsync(null);

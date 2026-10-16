@@ -47,6 +47,10 @@ and upstream attribution when copying or distributing it.
 - `packages-local/RustPlusApi.2.0.0-beta.9.socket.1.nupkg` is copied unchanged from the reference
   repository's local feed. It is MIT-licensed (HandyS11 / Clergue Valentin); see `packages-local/RustPlusApi.LICENSE`.
   SHA-256: `DBEAE2BF1241D6F77C2EF10493FC274306393ED2910923C178DC0F60822343BF`.
+- The recycler calculation/workflows follow `Views/MainWindow/Map/RecyclerOverlay.xaml(.cs)`.
+  `Assets/Data/recycler-items.json` and `Assets/Data/Recycling-Data.json` are copied unchanged into
+  Infrastructure. The 796 required item icons are copied unchanged from `Assets/icons/items` into the
+  desktop host and keyed by short name. `migration/RECYCLER.md` records source hashes and coverage.
 - `migration/reference/manifest.json` records hashes and UI metadata from the reference source tree;
   it includes checked-in/locally present source candidates and is not proof of feature reachability.
 

@@ -26,10 +26,10 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 
 ## Verified current source
 
-- Debug/Release builds: zero warnings/errors. `8e1df49` has 139 tests; startup/health checkpoint
-  `9fd4ee6` has 171. The subsequent device-organization slice has 188 passing MSTest cases in isolation.
-- Source-only external copy with separate package cache: 188 tests pass, zero warnings.
-- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed at `9fd4ee6`.
+- Debug/Release builds: zero warnings/errors. `8e1df49` has 139 tests, `9fd4ee6` has 171,
+  `a8cf2a4` has 188. The subsequent recycler slice has 195 passing MSTest cases in the repo and isolation.
+- Source-only external copy with separate package cache: 195 tests pass, zero warnings.
+- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed for the recycler slice.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
 - Two Python reference-capture tests passed in the earlier slice; its code has not changed since.
 - External copy location is recorded locally in ignored `artifacts/isolation-path.txt`; its source copy
@@ -61,6 +61,12 @@ whole JSON nodes and empty groups, rejects stale writes, awaits cancellation and
 Keyboard buttons are implemented; drag gestures, empty-group cleanup, deletion dependencies, device
 import/transfer and cloud synchronization are still pending. Do not label full device editing complete.
 
+Recycler: offline reference catalog with 776 inputs/796 bundled icons, isolated calculation, quantities,
+filters/paging, fill/clear, pointer/Shift shortcuts and wild/outpost yields/times. It is a workspace tab,
+keeps quantities/filter state on close/reopen and leaves the server sidebar available. All required
+icons decode in tests; there is no image downloader. See RECYCLER.md for source/hash evidence and gaps.
+Original navigation integration, tutorials, localization and native visual acceptance remain required.
+
 ## Exact next steps
 
 1. Validate real Steam/Facepunch return-URL callbacks on Windows. The native window crash is fixed;
@@ -88,6 +94,7 @@ Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dea
 The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
 2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
 no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`, startup/health
-as `9fd4ee6`; device organization forms the next slice. Inspect Git status/log for its checkpoint. At 97%, stop
+as `9fd4ee6`, local device organization as `a8cf2a4`; the recycler forms the next slice. Inspect Git
+status/log for its checkpoint. At 97%, stop
 implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
 unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.

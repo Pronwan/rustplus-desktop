@@ -5,5 +5,7 @@
     <ProjectReference Include="../RustPlusDesk.Core/RustPlusDesk.Core.csproj" />
     <InternalsVisibleTo Include="RustPlusDesk.CrossPlatform.Tests" />
     <EmbeddedResource Include="Assets/rust-item-list.json" LogicalName="RustPlusDesk.Infrastructure.Items.json" />
+    <EmbeddedResource Include="Assets/recycler-items.json" LogicalName="RustPlusDesk.Infrastructure.RecyclerItems.json" />
+    <EmbeddedResource Include="Assets/Recycling-Data.json" LogicalName="RustPlusDesk.Infrastructure.RecyclingData.json" />
   </ItemGroup>
 </Project>

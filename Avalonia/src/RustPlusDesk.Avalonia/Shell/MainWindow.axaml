@@ -3,11 +3,13 @@
         xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
         xmlns:devices="using:RustPlusDesk.Avalonia.Features.Devices"
         xmlns:accounts="using:RustPlusDesk.Avalonia.Features.Accounts"
+        xmlns:recycling="using:RustPlusDesk.Avalonia.Features.Recycling"
         x:Class="RustPlusDesk.Avalonia.Shell.MainWindow"
         x:DataType="servers:ServersViewModel"
         Title="Rust+ Desktop — Cross-platform preview"
         Icon="/Assets/app.ico" Width="1750" Height="814" MinWidth="1000" MinHeight="700"
         WindowDecorations="Full">
+  <Window.KeyBindings><KeyBinding Gesture="Escape" Command="{Binding CloseRecyclerCommand}" /></Window.KeyBindings>
   <Grid RowDefinitions="Auto,*,Auto" Margin="24" RowSpacing="20">
     <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding !HasOverlay}">
       <StackPanel Spacing="4">
@@ -25,10 +27,26 @@
     <Grid Grid.Row="1" ColumnDefinitions="350,Auto,*" ColumnSpacing="16">
       <servers:ServersView IsEnabled="{Binding !HasOverlay}" />
       <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource CardBorder}" ResizeDirection="Columns" />
-      <devices:DevicesView Grid.Column="2" DataContext="{Binding Connection.Devices}" IsEnabled="{Binding !$parent[Window].((servers:ServersViewModel)DataContext).HasOverlay}" />
+      <TabControl Grid.Column="2" SelectedIndex="{Binding WorkspaceIndex, Mode=TwoWay}" IsEnabled="{Binding !HasOverlay}">
+        <TabItem Header="Devices"><devices:DevicesView DataContext="{Binding Connection.Devices}" /></TabItem>
+        <TabItem Header="Recycler" IsVisible="{Binding HasRecyclerTool}">
+          <Border Classes="card" Padding="16">
+            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Recycling calculator" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Content="_Close" Command="{Binding CloseRecyclerCommand}" />
+              </Grid>
+              <recycling:RecyclerView Grid.Row="1" DataContext="{Binding Recycler}" />
+            </Grid>
+          </Border>
+        </TabItem>
+      </TabControl>
     </Grid>
-    <TextBlock Grid.Row="2" Classes="muted" TextWrapping="Wrap"
-               Text="Migration preview: servers, live status and paired device control. Additional workflows are still being migrated." />
+    <StackPanel Grid.Row="2" Spacing="4">
+      <TextBlock Text="{Binding ToolMessage}" Classes="muted" TextWrapping="Wrap" />
+      <TextBlock Classes="muted" TextWrapping="Wrap"
+                 Text="Migration preview: additional workflows are still being migrated." />
+    </StackPanel>
     <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding HasEditor}">
       <servers:ServerEditorView DataContext="{Binding Editor}" />
     </Border>

@@ -9,12 +9,15 @@ using RustPlusDesk.Core.Accounts;
 using RustPlusDesk.Avalonia.Features.Accounts;
 using RustPlusDesk.Core.Devices;
 using RustPlusDesk.Avalonia.Features.Devices;
+using RustPlusDesk.Core.Recycling;
+using RustPlusDesk.Avalonia.Features.Recycling;
 
 namespace RustPlusDesk.Avalonia.Features.Servers;
 
 public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFilePicker picker, string initialPath, IServerSessionFactory sessionFactory,
     IServerProfileEditor? profileEditor = null, IServerConnectionTester? connectionTester = null, ICompanionAccountService? accountService = null,
-    ICompanionListener? companionListener = null, ICompanionPushHealth? pushHealth = null, IDeviceProfileEditor? deviceEditor = null)
+    ICompanionListener? companionListener = null, ICompanionPushHealth? pushHealth = null, IDeviceProfileEditor? deviceEditor = null,
+    IRecyclerCatalog? recyclerCatalog = null)
     : ObservableObject
 {
     public ConnectionViewModel Connection { get; } = new(sessionFactory);
@@ -51,6 +54,33 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     public bool HasDeviceEditor => deviceEditor is not null;
     public bool HasEditor => Editor is not null;
     public bool HasOverlay => HasEditor || HasOrganizer || IsAccountOpen;
+    public bool HasRecyclerTool => recyclerCatalog is not null;
+    [ObservableProperty]
+    private RecyclerViewModel? recycler;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsRecyclerSelected))]
+    [NotifyCanExecuteChangedFor(nameof(CloseRecyclerCommand))]
+    private int workspaceIndex;
+    public bool IsRecyclerSelected => WorkspaceIndex == 1;
+    [ObservableProperty] private string toolMessage = "";
+
+    partial void OnWorkspaceIndexChanged(int value)
+    {
+        if (value != 1 || Recycler is not null) return;
+        try
+        {
+            if (recyclerCatalog is null) { WorkspaceIndex = 0; return; }
+            Recycler = new(recyclerCatalog.Load());
+            ToolMessage = "";
+        }
+        catch (Exception)
+        {
+            WorkspaceIndex = 0;
+            ToolMessage = "Unable to load the bundled recycling catalog. Check or reinstall this preview.";
+        }
+    }
+    [RelayCommand(CanExecute = nameof(IsRecyclerSelected))]
+    private void CloseRecycler() => WorkspaceIndex = 0;
 
     [RelayCommand]
     private void OpenAccount()

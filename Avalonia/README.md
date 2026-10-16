@@ -72,6 +72,11 @@ matches survive address changes. Legacy matches use direct device verification o
 fallback; ambiguous/conflicting matches are reported and kept unchanged. Alarm/chat metadata can backfill
 missing Facepunch server IDs without replacing pairing credentials or custom server descriptions.
 
+The **Recycler** workspace works offline with the original 776-item catalog and 796 bundled icons.
+Search/filter items, enter quantities or use click/scroll shortcuts (Shift changes by 10), compare wild
+and outpost guaranteed/chance yields and processing times, and use **Fill stacks** or **Clear all**.
+Quantities survive filtering and closing/reopening the workspace. See [port evidence](migration/RECYCLER.md).
+
 ## Structure
 
 ```text
@@ -81,6 +86,7 @@ src/
     Connections/                Session contract, status snapshots and classified failures
     Devices/                    Portable definitions, snapshots and confirmed-control contract
     Time/                       Existing, tested server-clock calibration
+    Recycling/                  Portable yield/timing calculation and catalog contracts
     Accounts/                   Account status and sign-in/browser contracts
   RustPlusDesk.Infrastructure/   File-system and external-service implementations
     Profiles/                   Read-only legacy JSON adapter
@@ -94,6 +100,7 @@ src/
     Features/Connections/       Owned session, cancellation, recovery, live clock and status view
     Features/Devices/           Groups, confirmed switch control, alarms and storage presentation
     Features/Accounts/          Account dialog, push feed, confirmation and owned cancellation
+    Features/Recycling/         Recycler workspace, filtering, quantities and comparison presentation
     Shared/Controls/            Reusable status panel
     Styles/                     Shared visual tokens and component styles
     Services/                   Native file-picker and authentication browser adapters
