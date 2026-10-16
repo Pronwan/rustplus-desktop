@@ -1,5 +1,27 @@
 # Avalonia migration handoff — 2026-10-16
 
+## Latest continuation — requested layout
+
+- Source checkpoint **`6cc3f083`** adds Jawad's supplied responsive layout inside `Avalonia/` only.
+  It follows the prior verified `d4bba03a`/documentation `d6069990` checkpoints and preserves intervening
+  unrelated WPF commits. Other work is active in the original app; never stage, revert or include it.
+- Read `LAYOUT.md` and `reference/layout-reference.png` before further view work. Preserve the rail,
+  server/device panel, map workspace, bottom activity panel and status bar. Devices no longer occupy
+  the main tab. Recycler opens from the rail and preserves its state; Escape closes it.
+- **202 tests pass**, Debug/Release compile without warnings, all three self-contained publishes
+  succeed. The external source-only copy passed 202 tests, then seven UI tests after final styling.
+  UI renders exercise 1000×700, 1380×1000 and 2560×1440, collapse/reopen, keyboard sidebar resizing,
+  shrinking to minimum size and long device names in light mode. Native/DPI acceptance remains pending.
+- Side panel width responds between 300 and 480 pixels; pointer divider/Left/Right keys resize it.
+  The map area is explicitly pending; its Connect/Disconnect uses the real existing commands.
+  The activity panel is the existing safe pairing feed, not a complete replacement for legacy logs.
+- `CLOUD-CONTRACT.md` preserves the completed cloud investigation and exact next checks. No cloud
+  identity/consent/sharing implementation was added in this layout slice. Continue that workflow next,
+  then sharing/import and the required remaining features. Actual Steam/FCM acceptance still needs
+  user credentials/consent and a paired server; do not claim it from fake transport tests.
+
+The older sections below describe the prior source checkpoint; retain their behavioral constraints.
+
 ## Workspace and authorization
 
 - Repository: `D:\Development\rustplus-desktop`, branch `beta`; baseline `e1bf6594`.
