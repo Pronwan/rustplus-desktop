@@ -139,7 +139,9 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 - Self-contained Release publishes succeeded for `win-x64`, `linux-x64`, and `osx-arm64` on the Windows host.
   These are compiler/package checks; Linux/macOS executables were **not run**.
 - `git diff --exit-code` confirmed no tracked changes to the reference application or root build/config files.
-- No upload, remote push, release, installer, or native-platform acceptance run was performed.
+- Checkpoint source commit `1cb470b` contains the verified preview and sign-in window fix; its intended
+  push destination is Jawad's fork `origin/beta`. See HANDOFF.md. No release, installer, standalone upload,
+  or native Linux/macOS acceptance run was performed.
 
 Connection tests use synthetic credentials and fake transports. No personal profile/token contents
 were printed, changed, copied into this folder, or used to contact a real server during verification.

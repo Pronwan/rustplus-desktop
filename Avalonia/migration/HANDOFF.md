@@ -7,8 +7,9 @@
 - Preserve every shipped feature and nearly the same design. Windows uses FluentAvaloniaUI 3.1.0;
   Avalonia is 12.1.4 on .NET 10. Linux/macOS native appearance remains unfinished.
 - Read `PROMPT.md` and `STATUS.md` before continuing. The migration is a preview, not production ready.
-- At this checkpoint the migration is untracked/uncommitted; no migration commit or push exists yet.
-  `git diff --exit-code` passed for tracked reference files. Do not mistake that for committed migration work.
+- Verified preview and crash fix are committed in `1cb470b` on `beta`. A following documentation
+  commit records this handoff. Push target is `origin` (JawadYzbk/rustplus-desktop), never upstream `remote`.
+  Check `git log`/remote state before cloud continuation. Only `Avalonia/` is included; `.serena/` stays untracked.
 
 ## Latest resolved bug
 
@@ -67,7 +68,8 @@ Use graph discovery first (project `D-Development-rustplus-desktop`, Tier 2), th
 Recent auth files had unavailable/stale graph coverage; exact source and runnable checks were used.
 Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dead-code audit is claimed.
 
-Latest account usage was 96% of the five-hour window, reset reported at 2026-10-16 17:21:05 Asia/Beirut.
-At 97%, stop implementation and follow the user's commit/push checkpoint rule. Do not include unrelated
-changes. No cloud transfer or scheduled resume has been configured. Cloud work must first have access to
-this source; local uncommitted files are not automatically available while this PC is off.
+Account usage reached 97% of the five-hour window; implementation stopped per the checkpoint rule.
+Reset was reported at 2026-10-16 17:21:05 Asia/Beirut. No cloud transfer or scheduled resume has been
+configured. To continue remotely, create/select a Codex Cloud environment for Jawad's fork, use `beta`,
+and read this handoff before changing only `Avalonia/`. Cloud/local tasks share usage. The reset does not
+itself configure a wake-up; a supported schedule or a new message is needed to trigger continuation.
