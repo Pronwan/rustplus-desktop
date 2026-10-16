@@ -281,6 +281,8 @@ namespace RustPlusDesk.Services.Deaths
         {
             "monument" => "monument",
             "base" => "base",
+            "water" => "water",
+            "deep_sea" => "deep_sea",
             _ => "open",
         };
 
@@ -288,6 +290,8 @@ namespace RustPlusDesk.Services.Deaths
         {
             "monument" => "Monument",
             "base" => "Base",
+            "water" => "Water",
+            "deep_sea" => "Deep Sea",
             _ => "Open",
         };
 

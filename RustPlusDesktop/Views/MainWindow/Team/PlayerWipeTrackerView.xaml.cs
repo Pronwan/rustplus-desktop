@@ -351,7 +351,7 @@ public partial class PlayerWipeTrackerView : UserControl
                 State = segment.State.ToString(),
                 Location = segment.LocationName is not null
                     ? (segment.LocationType == TrackerLocationType.Monument ? RustPlusDesk.Services.MonumentFormatter.Beautify(segment.LocationName) : segment.LocationName)
-                    : segment.LocationType.ToString(),
+                    : segment.LocationType.Label(),
             }).ToArray();
         VisitsList.ItemsSource = summary.MonumentVisits
             .OrderByDescending(visit => visit.StartUtc)
@@ -476,7 +476,7 @@ public partial class PlayerWipeTrackerView : UserControl
             Canvas.SetTop(marker, point.Y - marker.Height / 2);
             Panel.SetZIndex(marker, 4);
             ReplayCanvas.Children.Add(marker);
-            ReplayStateText.Text = $"{visible[^1].State} · {visible[^1].LocationName ?? visible[^1].LocationType.ToString()}";
+            ReplayStateText.Text = $"{visible[^1].State} · {visible[^1].LocationName ?? visible[^1].LocationType.Label()}";
             ReplayTimeText.Text = $"{visible[^1].TimestampUtc.ToLocalTime():g} · {visible.Length}/{_points.Count}";
         }
     }
@@ -724,7 +724,7 @@ public partial class PlayerWipeTrackerView : UserControl
                     Width = runEnd - runStart,
                     Height = barHeight,
                     Fill = new SolidColorBrush(StateColor(runState)),
-                    ToolTip = $"{StateLabel(runState)} · {where?.LocationName ?? where?.LocationType.ToString() ?? string.Empty}\n" +
+                    ToolTip = $"{StateLabel(runState)} · {where?.LocationName ?? where?.LocationType.Label() ?? string.Empty}\n" +
                               $"{startUtc.ToLocalTime():g} → {endUtc.ToLocalTime():g}  ({Format(TimeSpan.FromSeconds(seconds))})",
                 };
                 if (runState == PlayerActivityState.Unknown)
@@ -1239,7 +1239,7 @@ public partial class PlayerWipeTrackerView : UserControl
                 point.X.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture),
                 point.Y.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture),
                 Csv(point.State.ToString().ToLowerInvariant()),
-                Csv(point.LocationType.ToString().ToLowerInvariant()),
+                Csv(point.LocationType.Wire()),
                 Csv(point.LocationName),
                 Csv(point.Grid),
                 Csv(point.Event),

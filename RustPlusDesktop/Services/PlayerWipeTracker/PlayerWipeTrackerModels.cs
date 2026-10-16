@@ -20,6 +20,20 @@ public enum TrackerLocationType
     Base,
     Open,
     Unknown,
+    // Appended, never inserted: the record file stores these as numbers.
+    Water,
+    DeepSea,
+}
+
+public static class TrackerLocationTypeText
+{
+    /// <summary>For people: "Deep Sea" rather than the identifier.</summary>
+    public static string Label(this TrackerLocationType type)
+        => type == TrackerLocationType.DeepSea ? "Deep Sea" : type.ToString();
+
+    /// <summary>The backend's and the export's spelling; ToString() would give "deepsea".</summary>
+    public static string Wire(this TrackerLocationType type)
+        => type == TrackerLocationType.DeepSea ? "deep_sea" : type.ToString().ToLowerInvariant();
 }
 
 public sealed record PlayerObservation(

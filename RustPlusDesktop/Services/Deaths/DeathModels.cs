@@ -13,7 +13,7 @@ namespace RustPlusDesk.Services.Deaths
         double? X,
         double? Y,
         string? Grid,
-        string LocationType,   // "monument" | "base" | "open"
+        string LocationType,   // "monument" | "base" | "water" | "deep_sea" | "open"
         string? LocationName);
 
     /// <summary>A circular zone on the map used to classify a death location.</summary>

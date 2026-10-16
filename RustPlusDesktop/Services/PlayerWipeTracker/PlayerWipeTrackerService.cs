@@ -511,6 +511,8 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
             "monument" => TrackerLocationType.Monument,
             "base" => TrackerLocationType.Base,
             "open" => TrackerLocationType.Open,
+            "water" => TrackerLocationType.Water,
+            "deep_sea" => TrackerLocationType.DeepSea,
             _ => TrackerLocationType.Unknown,
         };
 
@@ -675,7 +677,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 X = observation.X,
                 Y = observation.Y,
                 State = state.ToString().ToLowerInvariant(),
-                LocationType = observation.LocationType.ToString().ToLowerInvariant(),
+                LocationType = observation.LocationType.Wire(),
                 LocationName = observation.LocationName,
                 Grid = observation.Grid,
                 Event = eventName,

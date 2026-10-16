@@ -162,7 +162,7 @@ public partial class MainWindow
         _playerWipeTracker.CloudBackupEnabled = Services.TrackingService.PlayerWipeTrackerCloudBackupEnabled;
 
         var classifier = new Services.Deaths.DeathLocationClassifier(
-            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y));
+            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y), IsWaterAt);
         var timestamp = DateTime.UtcNow;
         foreach (var member in team.Members)
         {
@@ -190,6 +190,8 @@ public partial class MainWindow
                     "monument" => TrackerLocationType.Monument,
                     "base" => TrackerLocationType.Base,
                     "open" => TrackerLocationType.Open,
+                    "water" => TrackerLocationType.Water,
+                    "deep_sea" => TrackerLocationType.DeepSea,
                     _ => TrackerLocationType.Unknown,
                 },
                 location.Item2,

@@ -14,9 +14,13 @@
         <SolidColorBrush x:Key="MonumentBrush" Color="#FF7A38" />
         <SolidColorBrush x:Key="BaseBrush" Color="#4ADE80" />
         <SolidColorBrush x:Key="OpenBrush" Color="#94A3B8" />
+        <SolidColorBrush x:Key="WaterBrush" Color="#38BDF8" />
+        <SolidColorBrush x:Key="DeepSeaBrush" Color="#818CF8" />
         <SolidColorBrush x:Key="MonumentBg" Color="#22FF7A38" />
         <SolidColorBrush x:Key="BaseBg" Color="#224ADE80" />
         <SolidColorBrush x:Key="OpenBg" Color="#2294A3B8" />
+        <SolidColorBrush x:Key="WaterBg" Color="#2238BDF8" />
+        <SolidColorBrush x:Key="DeepSeaBg" Color="#22818CF8" />
 
         <!-- Typography & Cell Styles -->
         <Style x:Key="ColHeader" TargetType="TextBlock">
@@ -50,6 +54,12 @@
                 <DataTrigger Binding="{Binding Type}" Value="base">
                     <Setter Property="Fill" Value="{StaticResource BaseBrush}" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="water">
+                    <Setter Property="Fill" Value="{StaticResource WaterBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="deep_sea">
+                    <Setter Property="Fill" Value="{StaticResource DeepSeaBrush}" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -69,6 +79,14 @@
                 <DataTrigger Binding="{Binding Type}" Value="base">
                     <Setter Property="Background" Value="{StaticResource BaseBg}" />
                     <Setter Property="BorderBrush" Value="{StaticResource BaseBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="water">
+                    <Setter Property="Background" Value="{StaticResource WaterBg}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource WaterBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="deep_sea">
+                    <Setter Property="Background" Value="{StaticResource DeepSeaBg}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource DeepSeaBrush}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -132,6 +150,8 @@
                                 <ComboBoxItem Content="All places" Tag="all" IsSelected="True" />
                                 <ComboBoxItem Content="Monument" Tag="monument" />
                                 <ComboBoxItem Content="Base" Tag="base" />
+                                <ComboBoxItem Content="Water" Tag="water" />
+                                <ComboBoxItem Content="Deep Sea" Tag="deep_sea" />
                                 <ComboBoxItem Content="Open" Tag="open" />
                             </ComboBox>
 
