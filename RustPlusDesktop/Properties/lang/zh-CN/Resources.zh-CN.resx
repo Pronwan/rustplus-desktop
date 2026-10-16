@@ -2264,11 +2264,11 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>成为支持者</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>在 </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>在此获取 Premium：</value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> 上支持我们 - 将 Patreon 与 Discord 链接以实现自动角色检测。</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - 通过 Paddle 安全付款；Premium 会自动在你的账户上解锁。</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>通过 </value>

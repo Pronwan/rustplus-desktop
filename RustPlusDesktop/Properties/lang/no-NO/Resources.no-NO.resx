@@ -2315,11 +2315,11 @@ Er du sikker på at du vil fortsette?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Bli supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Støtt oss videre</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Få Premium på </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Koble Patreon til Discord for automatisk supporterrolle og app-deteksjon.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - sikker betaling via Paddle; Premium låses opp automatisk på kontoen din.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tips via</value>

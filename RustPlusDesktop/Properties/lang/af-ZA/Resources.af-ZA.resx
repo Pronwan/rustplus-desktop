@@ -2315,11 +2315,11 @@ Is jy seker jy wil voortgaan?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Word 'n Ondersteuner</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Ondersteun ons op</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Kry Premium op </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Koppel Patreon met Discord vir outomatiese ondersteuningsrol en app-opsporing.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - veilige betaling via Paddle; Premium word outomaties op jou rekening ontsluit.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Wenk via</value>

@@ -2246,11 +2246,11 @@
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>كن داعمًا</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>ادعمنا على </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>احصل على Premium عبر </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - اربط Patreon بـ Discord للكشف التلقائي عن الدور.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - دفع آمن عبر Paddle؛ يتم تفعيل Premium على حسابك تلقائيًا.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>بقشيش عبر </value>

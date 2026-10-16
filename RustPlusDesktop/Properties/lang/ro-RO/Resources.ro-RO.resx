@@ -2315,11 +2315,11 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Deveniți un susținător</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Sprijină-ne mai departe</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Obține Premium pe </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Conectați Patreon cu Discord pentru detectarea automată a rolului de susținător și a aplicației.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - plată sigură prin Paddle; Premium se activează automat în contul tău.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Sfat prin</value>

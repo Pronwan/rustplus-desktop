@@ -5840,13 +5840,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
     private void BtnSupport_Click(object sender, RoutedEventArgs e) => OpenSupporterPage();
 
+    /// <summary>Paddle checkout lives here; every "upgrade" button in the app leads to it.</summary>
+    internal const string PricingUrl = "https://rustplusdesktop.cloud/pricing";
+
     internal void OpenSupporterPage()
     {
         try
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = "https://www.patreon.com/cw/Pronwan",
+                FileName = PricingUrl,
                 UseShellExecute = true   // öffnet im Standard-Browser
             });
         }

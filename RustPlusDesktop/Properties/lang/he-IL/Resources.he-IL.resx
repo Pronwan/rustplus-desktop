@@ -2360,11 +2360,11 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>הפוך לתומך</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>תמכו בנו</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>קבלו Premium ב-</value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- קשר את Patreon עם Discord לזיהוי אוטומטי של תפקידי תומך ואפליקציה.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - תשלום מאובטח דרך Paddle; ה-Premium נפתח בחשבון שלכם אוטומטית.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>טיפ דרך</value>

@@ -2315,11 +2315,11 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Legyél Támogató</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Támogass minket</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Szerezd meg a Premiumot itt: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Kapcsolja össze a Patreont a Discord-dal az automatikus támogatói szerep és az alkalmazás észleléséhez.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - biztonságos fizetés a Paddle-on keresztül; a Premium automatikusan aktiválódik a fiókodon.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tipp keresztül</value>

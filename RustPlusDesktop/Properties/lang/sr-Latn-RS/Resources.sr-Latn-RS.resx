@@ -2315,11 +2315,11 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Постаните присталица</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Подржите нас даље</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Nabavite Premium na </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Повежите Патреон са Дисцорд-ом за аутоматско откривање улоге подршке и апликација.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - bezbedno plaćanje preko Paddle-a; Premium se automatski otključava na vašem nalogu.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Савет преко</value>

@@ -2264,11 +2264,11 @@ Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Devenez un Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Soutenez-nous sur </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Obtenez Premium sur </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Liez Patreon à Discord pour la détection automatique du rôle.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - paiement sécurisé via Paddle ; Premium est activé automatiquement sur votre compte.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Pourboire via </value>

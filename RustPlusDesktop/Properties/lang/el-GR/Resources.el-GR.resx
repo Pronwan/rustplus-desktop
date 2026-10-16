@@ -2315,11 +2315,11 @@ Open Releases page?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Γίνε Υποστηρικτής</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Υποστηρίξτε μας</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Αποκτήστε Premium στο </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Συνδέστε το Patreon με το Discord για αυτόματη ανίχνευση ρόλων υποστήριξης και εφαρμογής.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - ασφαλής πληρωμή μέσω Paddle· το Premium ενεργοποιείται αυτόματα στον λογαριασμό σας.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Συμβουλή μέσω</value>

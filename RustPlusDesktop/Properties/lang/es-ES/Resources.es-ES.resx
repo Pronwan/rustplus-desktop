@@ -2054,11 +2054,11 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Conviértete en un Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Apóyanos en </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Consigue Premium en </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Vincula Patreon con Discord para la detección automática del rol.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - pago seguro con Paddle; Premium se activa automáticamente en tu cuenta.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Propina a través de </value>

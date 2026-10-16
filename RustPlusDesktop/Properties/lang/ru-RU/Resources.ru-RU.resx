@@ -2677,11 +2677,11 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Стать сторонником</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Поддержите нас на</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Оформите Premium на </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Свяжите Patreon с Discord для автоматической роли сторонника и обнаружения приложений.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - безопасная оплата через Paddle; Premium активируется в вашем аккаунте автоматически.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Совет через</value>

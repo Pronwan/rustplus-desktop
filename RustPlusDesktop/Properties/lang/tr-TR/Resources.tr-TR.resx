@@ -2315,11 +2315,11 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Destekçi Olun</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Bizi destekleyin</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium'u şu adresten alın: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Otomatik Destekçi rolü ve Uygulama tespiti için Patreon'u Discord'a bağlayın.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle ile güvenli ödeme; Premium hesabınızda otomatik olarak açılır.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>İpucu yoluyla</value>

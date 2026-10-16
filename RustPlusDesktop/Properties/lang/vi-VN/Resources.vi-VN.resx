@@ -2315,11 +2315,11 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Trở thành người ủng hộ</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Hỗ trợ chúng tôi trên</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Nâng cấp Premium tại </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Liên kết Patreon với Discord để tự động phát hiện vai trò Người hỗ trợ &amp; Ứng dụng.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - thanh toán an toàn qua Paddle; Premium tự động mở khóa trên tài khoản của bạn.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Mẹo qua</value>

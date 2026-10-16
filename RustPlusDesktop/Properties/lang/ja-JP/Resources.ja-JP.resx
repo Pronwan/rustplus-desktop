@@ -2315,11 +2315,11 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>サポーターになる</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>サポートしてください</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium の購入はこちら: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Patreon を Discord にリンクすると、サポーターの役割とアプリが自動的に検出されます。</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle による安全な決済。Premium はアカウントで自動的に有効になります。</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>チップ経由</value>

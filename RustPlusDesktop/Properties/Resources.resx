@@ -2399,11 +2399,11 @@ Are you sure you want to continue?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Become a Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Support us on </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Get Premium on </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Link Patreon with Discord for automatic Supporter role &amp; App detection.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - secure checkout via Paddle; Premium unlocks on your account automatically.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip via </value>

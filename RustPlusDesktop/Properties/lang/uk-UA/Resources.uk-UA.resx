@@ -2315,11 +2315,11 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Станьте прихильником</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Підтримайте нас на</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Оформіть Premium на </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Пов’яжіть Patreon із Discord для автоматичного визначення ролі підтримки та додатків.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - безпечна оплата через Paddle; Premium активується у вашому акаунті автоматично.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Підказка через</value>

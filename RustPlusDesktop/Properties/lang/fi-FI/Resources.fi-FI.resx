@@ -2315,11 +2315,11 @@ Haluatko varmasti jatkaa?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Ryhdy tukijaksi</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Tue meitä</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Hanki Premium osoitteesta </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Yhdistä Patreon Discordiin automaattista tukijan roolia ja sovellusten havaitsemista varten.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - turvallinen maksu Paddlen kautta; Premium avautuu tilillesi automaattisesti.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Vihje kautta</value>

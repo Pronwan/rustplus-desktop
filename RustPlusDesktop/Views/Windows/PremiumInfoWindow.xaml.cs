@@ -5,8 +5,6 @@ namespace RustPlusDesk.Views.Windows
 {
     public partial class PremiumInfoWindow : Wpf.Ui.Controls.FluentWindow
     {
-        private const string PatreonUrl = "https://www.patreon.com/cw/Pronwan/membership";
-
         public PremiumInfoResult Result { get; private set; } = PremiumInfoResult.StayFree;
 
         public PremiumInfoWindow(string message)
@@ -30,7 +28,7 @@ namespace RustPlusDesk.Views.Windows
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = PatreonUrl,
+                    FileName = RustPlusDesk.Views.MainWindow.PricingUrl,
                     UseShellExecute = true
                 });
             }

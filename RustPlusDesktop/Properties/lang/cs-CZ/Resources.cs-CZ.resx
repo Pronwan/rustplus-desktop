@@ -2315,11 +2315,11 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Staňte se podporovatelem</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Podpořte nás</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Získejte Premium na </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Propojte Patreon s Discordem pro automatickou roli podporovatele a detekci aplikací.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - bezpečná platba přes Paddle; Premium se na vašem účtu odemkne automaticky.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip přes</value>

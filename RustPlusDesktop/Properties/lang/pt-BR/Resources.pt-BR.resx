@@ -2315,11 +2315,11 @@ Tem certeza de que deseja continuar?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Torne-se um apoiador</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Apoie-nos em</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Assine o Premium em </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Vincule o Patreon ao Discord para função automática de apoiador e detecção de aplicativos.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - pagamento seguro via Paddle; o Premium é liberado na sua conta automaticamente.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Dica via</value>

@@ -2324,11 +2324,11 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Werde ein Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Unterstütze uns auf </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Hol dir Premium auf </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Verknüpfe Patreon mit Discord für automatische Rollen-Erkennung.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - sichere Bezahlung über Paddle; Premium wird automatisch für dein Konto freigeschaltet.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Trinkgeld via </value>

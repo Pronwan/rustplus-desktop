@@ -2315,11 +2315,11 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>서포터가 되어보세요</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>우리를 지원하세요</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium 구매: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- 자동 서포터 역할 및 앱 감지를 위해 Patreon을 Discord와 연결하세요.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle을 통한 안전한 결제, Premium은 계정에서 자동으로 활성화됩니다.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>팁을 통해</value>

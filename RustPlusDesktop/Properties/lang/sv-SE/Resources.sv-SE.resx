@@ -2315,11 +2315,11 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Bli supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Stöd oss ​​vidare</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Skaffa Premium på </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Länka Patreon med Discord för automatisk supporterroll och appidentifiering.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - säker betalning via Paddle; Premium låses upp automatiskt på ditt konto.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tipsa via</value>
