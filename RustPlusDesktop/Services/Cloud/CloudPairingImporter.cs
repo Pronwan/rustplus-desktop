@@ -129,6 +129,16 @@ namespace RustPlusDesk.Services.Cloud
                     updated++;
                 }
 
+                // Facepunch's server id, which the companion socket needs. Filled when the app
+                // has none (a pairing it never saw, or one paired before ids were kept); never
+                // overwrites one the app already learned from a push.
+                var facepunchId = Str(entry, "facepunch_id");
+                if (string.IsNullOrWhiteSpace(existing.ServerId) && Guid.TryParse(facepunchId, out var parsedId))
+                {
+                    existing.ServerId = parsedId.ToString("D");
+                    updated++;
+                }
+
                 devicesAdded += MergeDevices(existing, entry);
                 MergeChatCommands(existing, entry);
             }

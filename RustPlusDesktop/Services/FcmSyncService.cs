@@ -146,6 +146,10 @@ namespace RustPlusDesk.Services
                                         name = p.Name,
                                         player_token = p.PlayerToken,
                                         steam_id = steamId,
+                                        // Facepunch's server id, so the platform can use the companion
+                                        // socket with this pairing. Kept on this pairing only: the
+                                        // platform trusts the shared value only from Facepunch's pushes.
+                                        facepunch_id = string.IsNullOrWhiteSpace(p.ServerId) ? null : p.ServerId,
                                     });
                                 }
                             }
