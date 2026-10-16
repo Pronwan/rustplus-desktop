@@ -9,6 +9,7 @@ namespace RustPlusDesk.Models
         public string AttackerName { get; set; } = string.Empty;
         public string? Ip { get; set; } = null;
         public int? Port { get; set; } = null;
+        public string? ImageUrl { get; set; } = null;
 
         public OfflineDeathNotification() { }
 

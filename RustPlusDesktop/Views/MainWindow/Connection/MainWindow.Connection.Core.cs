@@ -480,6 +480,28 @@ public partial class MainWindow
         }
     }
 
+    /// <summary>
+    /// Gives this server's notification rows that have no picture the server's own logo
+    /// (its banner if it has none), the image Rust+ itself shows for the server.
+    /// </summary>
+    private async Task BackfillNotificationImagesAsync(string? host, int port)
+    {
+        if (string.IsNullOrWhiteSpace(host)) return;
+        try
+        {
+            var info = await _rust.GetServerInfoAsync();
+            var url = !string.IsNullOrWhiteSpace(info?.LogoImage) ? info!.LogoImage : info?.HeaderImage;
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                NotificationCenterService.BackfillServerImage(host, port, url!);
+            }
+        }
+        catch
+        {
+            // A missing picture is cosmetic; the rows keep their icon tile.
+        }
+    }
+
     internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
         _ownCloudRestoreReady = false;
@@ -732,6 +754,9 @@ public partial class MainWindow
 
             _ = StartServerEventTrackingAsync();
             _ = Services.Social.SocialApi.UpdateActiveListingServerAsync(connectedProfile.Name);
+
+            // Notification rows saved before pushes kept their picture show this server's logo.
+            _ = BackfillNotificationImagesAsync(connectedProfile.Host, connectedProfile.Port);
 
 
 

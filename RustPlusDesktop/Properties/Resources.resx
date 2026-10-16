@@ -8539,4 +8539,25 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CsChipNoToken" xml:space="preserve">
     <value>No token</value>
   </data>
+  <data name="RelTimeJustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="RelTimeMinute" xml:space="preserve">
+    <value>{0} minute ago</value>
+  </data>
+  <data name="RelTimeMinutes" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="RelTimeHour" xml:space="preserve">
+    <value>{0} hour ago</value>
+  </data>
+  <data name="RelTimeHours" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="RelTimeDay" xml:space="preserve">
+    <value>{0} day ago</value>
+  </data>
+  <data name="RelTimeDays" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
 </root>

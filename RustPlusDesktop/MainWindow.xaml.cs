@@ -2923,7 +2923,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             EntityId = n.EntityId,
             Timestamp = eventTime,
-            FcmNotificationId = n.FcmNotificationId
+            FcmNotificationId = n.FcmNotificationId,
+            ImageUrl = n.ImageUrl
         };
         NotificationCenterService.AddNotification(notif);
 
@@ -3219,17 +3220,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AddOfflineDeath(d);
 
         // Add to Notification Center
+        // Worded as the Rust+ app and the live map word it: who killed you as the title,
+        // where as the line under it.
         var notif = new RustPlusNotification(
             type: "Death",
-            title: "Offline Death",
-            message: $"You were killed by {d.AttackerName} on {d.ServerName}",
+            title: $"You were killed by {d.AttackerName}",
+            message: d.ServerName,
             serverIp: d.Ip,
             serverPort: d.Port,
             serverName: d.ServerName
         )
         {
             AttackerName = d.AttackerName,
-            Timestamp = d.Timestamp
+            Timestamp = d.Timestamp,
+            ImageUrl = d.ImageUrl
         };
         NotificationCenterService.AddNotification(notif);
 
@@ -4116,12 +4120,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _ = Dispatcher.InvokeAsync(async () =>
         {
             // Add to Notification Center!
-            var pairedMsg = e.EntityId.HasValue 
-                ? $"Paired device: {e.EntityName ?? "Smart Device"} (ID: {e.EntityId.Value}, Type: {e.EntityType ?? "Unknown"})"
-                : $"Paired server: {e.ServerName ?? e.Host}:{e.Port}";
+            // The thing that was paired is the title, as on the live map; the line under it
+            // says what happened.
+            var pairedTitle = e.EntityId.HasValue
+                ? e.EntityName ?? "Smart Device"
+                : e.ServerName ?? $"{e.Host}:{e.Port}";
+            var pairedMsg = e.EntityId.HasValue
+                ? $"{e.EntityType ?? "Device"} paired (ID {e.EntityId.Value})"
+                : "Server paired.";
             var notif = new RustPlusNotification(
                 type: "Pairing",
-                title: "Pairing Successful",
+                title: pairedTitle,
                 message: pairedMsg,
                 serverIp: e.Host,
                 serverPort: e.Port,
@@ -4130,7 +4139,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 EntityId = e.EntityId,
                 EntityName = e.EntityName,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                ImageUrl = e.ImageUrl
             };
             NotificationCenterService.AddNotification(notif);
 

@@ -62,6 +62,7 @@ namespace RustPlusDesk.Services
 
                         foreach (var notif in validNotifications)
                         {
+                            Reword(notif);
                             Notifications.Add(notif);
                         }
                     }
@@ -102,6 +103,13 @@ namespace RustPlusDesk.Services
                 {
                     return; // Muted!
                 }
+            }
+
+            // Rows without a picture of their own (WebSocket alarms, oil rig timers) borrow the
+            // one the same server's last push carried, so every row of a server looks the same.
+            if (string.IsNullOrEmpty(notification.ImageUrl))
+            {
+                notification.ImageUrl = ImageForServer(notification.ServerIp, notification.ServerPort);
             }
 
             lock (LockObj)
@@ -155,6 +163,68 @@ namespace RustPlusDesk.Services
             }
 
             NotificationAdded?.Invoke(null, notification);
+        }
+
+        /// <summary>
+        /// Fills in the picture on this server's rows that have none. Each changed row is put
+        /// back into the collection so the list redraws it; the model raises no change events.
+        /// </summary>
+        public static void BackfillServerImage(string ip, int port, string imageUrl)
+        {
+            EnsureLoaded();
+            System.Windows.Application.Current?.Dispatcher?.Invoke(() =>
+            {
+                bool changed = false;
+                lock (LockObj)
+                {
+                    for (int i = 0; i < Notifications.Count; i++)
+                    {
+                        var n = Notifications[i];
+                        if (n.ServerIp != ip || n.ServerPort != port || !string.IsNullOrEmpty(n.ImageUrl)) continue;
+                        n.ImageUrl = imageUrl;
+                        Notifications[i] = n;
+                        changed = true;
+                    }
+                }
+                if (changed) SaveHistory();
+            });
+        }
+
+        private static string? ImageForServer(string? ip, int? port)
+        {
+            if (string.IsNullOrEmpty(ip)) return null;
+            lock (LockObj)
+            {
+                return Notifications.FirstOrDefault(n =>
+                    n.ServerIp == ip && n.ServerPort == port && !string.IsNullOrEmpty(n.ImageUrl))?.ImageUrl;
+            }
+        }
+
+        /// <summary>
+        /// Brings rows saved before the live-map look to its wording: the killer or the paired
+        /// thing as the title, the server as the line under it. Only the two old fixed titles
+        /// are touched, so anything else is left exactly as it was received.
+        /// </summary>
+        private static void Reword(RustPlusNotification n)
+        {
+            if (n.Type == "Death" && n.Title == "Offline Death" && !string.IsNullOrWhiteSpace(n.AttackerName))
+            {
+                n.Title = $"You were killed by {n.AttackerName}";
+                if (!string.IsNullOrWhiteSpace(n.ServerName)) n.Message = n.ServerName;
+            }
+            else if (n.Type == "Pairing" && n.Title == "Pairing Successful")
+            {
+                if (n.EntityId.HasValue)
+                {
+                    n.Title = n.EntityName ?? "Smart Device";
+                    n.Message = $"Device paired (ID {n.EntityId.Value})";
+                }
+                else if (!string.IsNullOrWhiteSpace(n.ServerName))
+                {
+                    n.Title = n.ServerName;
+                    n.Message = "Server paired.";
+                }
+            }
         }
 
         public static void MarkAsRead(string id)
