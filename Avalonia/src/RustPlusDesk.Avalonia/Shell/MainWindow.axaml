@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
+        xmlns:devices="using:RustPlusDesk.Avalonia.Features.Devices"
+        xmlns:accounts="using:RustPlusDesk.Avalonia.Features.Accounts"
+        x:Class="RustPlusDesk.Avalonia.Shell.MainWindow"
+        x:DataType="servers:ServersViewModel"
+        Title="Rust+ Desktop — Cross-platform preview"
+        Icon="/Assets/app.ico" Width="1750" Height="814" MinWidth="1000" MinHeight="700"
+        WindowDecorations="Full">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="24" RowSpacing="20">
+    <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding !HasOverlay}">
+      <StackPanel Spacing="4">
+        <TextBlock Text="RUST+ DESKTOP" Classes="brand" />
+        <TextBlock Text="Your Rust companion" Classes="muted" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <Button Content="_Account" Command="{Binding OpenAccountCommand}" IsVisible="{Binding HasAccount}" />
+        <Border Classes="badge"><TextBlock Text="Cross-platform preview" /></Border>
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="350,Auto,*" ColumnSpacing="16">
+      <servers:ServersView IsEnabled="{Binding !HasOverlay}" />
+      <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource CardBorder}" ResizeDirection="Columns" />
+      <devices:DevicesView Grid.Column="2" DataContext="{Binding Connection.Devices}" IsEnabled="{Binding !$parent[Window].((servers:ServersViewModel)DataContext).HasOverlay}" />
+    </Grid>
+    <TextBlock Grid.Row="2" Classes="muted" TextWrapping="Wrap"
+               Text="Migration preview: servers, live status and paired device control. Additional workflows are still being migrated." />
+    <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding HasEditor}">
+      <servers:ServerEditorView DataContext="{Binding Editor}" />
+    </Border>
+    <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding IsAccountOpen}">
+      <Border Classes="card" Width="520" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Spacing="16" KeyboardNavigation.TabNavigation="Cycle">
+          <accounts:CompanionAccountView DataContext="{Binding Account}" IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).IsAccountOpen}" />
+          <Button Content="_Close" Command="{Binding CloseAccountCommand}" HorizontalAlignment="Right" />
+        </StackPanel>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

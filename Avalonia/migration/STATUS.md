@@ -1,0 +1,152 @@
+# Migration status
+
+Started 2026-10-16 from `beta` at `e1bf6594`. This is the first independently buildable migration slice.
+All migration source lives inside `Avalonia/`. The existing Windows app remains unchanged.
+
+**Acceptance scope:** every shipped feature must be available in Avalonia, with nearly the same design.
+The initial saved-server preview is groundwork, not fulfillment of that scope. No feature may be
+dropped or replaced by a reduced workflow without Jawad's explicit instruction.
+
+## Implemented
+
+- Independent solution, .NET 10 SDK/build settings, public NuGet sources, local branding, license, and provenance.
+- Portable Core with the unchanged server-clock algorithm and its five existing calibration tests.
+- Infrastructure adapter for reading legacy `profiles.json`: server names, hosts, ports, default port,
+  blank-name fallback, host/port validation, cancellation, and no writes.
+- Avalonia shell, feature view model using CommunityToolkit.Mvvm, compiled bindings, shared styles,
+  shared status control, native profile-file picker, refresh, loading/empty/error states.
+- Async command coordination prevents simultaneous refresh/file-picker loads. Errors do not echo JSON or secrets.
+- Tests for legacy data compatibility, file preservation, invalid data, credentials excluded from
+  display models, cancellation, state notifications, picker cancellation, and command concurrency.
+- Standalone workflow definition for Windows/Linux/macOS builds, tests, and preview artifact generation.
+  It becomes active only when this folder is a repository root; no workflow runs or releases are claimed here.
+- Existing application palette and Fluent accent ported from source; complete screen visual parity is pending.
+- Source snapshot of 5,988 source candidates (including embedded web/vendor sources), 83 XAML candidates,
+  and 963 action-bearing elements. See `reference/UI-CHECKLIST.md` and `reference/manifest.json`.
+  This captures source candidates, not exhaustive runtime reachability or all code-only features.
+- Updated appearance requirement: Windows 11 Fluent on Windows, and current-OS design conventions elsewhere.
+  Windows now uses **FluentAvaloniaUI 3.1.0**, with WinUI-style controls, system font/accent, on **Avalonia 12.1.4**.
+  Linux/macOS retain a built-in Fluent base with separate palette/proportion files; native visual parity is pending.
+  System light/dark mode and native window decorations are enabled. No forced dark-only theme remains.
+- Server selection uses a stable hash of the legacy profile identity; account IDs and pairing tokens
+  are not placed in display models. Connection/probe credential reads and lossless profile writes stay in Infrastructure.
+- Authenticated Rust+ transport using the reference app's exact local companion-socket package.
+  Companion socket is tried first when server ID/login are available, followed by direct fallback.
+  Every failed attempt is disposed. The retired `/game` relay is never used.
+- Manual connect/disconnect, live population/queue/time, observed day/night clock, paused time,
+  independent one-second clock updates, and 2–60 second exponential recovery after a dropped session.
+- Re-pair, companion sign-in, invalid credentials and unavailable profiles have distinct safe messages.
+- Switching server, refreshing the source and application shutdown cancel the old session and await
+  its cleanup. Late connection/status completions cannot overwrite the newly selected server.
+- Paired-device trees preserve aliases, original kind spellings and nested groups without trusting saved live state.
+  Confirmed switch ON/OFF, deduplicated nested group commands, partial-failure reporting, alarm state and storage
+  snapshots are implemented. Server selection/disconnection cancels work and clears old state. Broadcasts trigger
+  authoritative reads rather than treating partial storage broadcasts as empty containers; 30-second refresh backs them up.
+- Storage shows packaged item names, quantities, blueprint flags, capacity and upkeep. Missing upkeep dates remain
+  unknown. A per-session gate paces status/device requests to 25/second. Device failures never request a server re-pair.
+- Server editing preserves all unknown JSON fields, credentials, nested devices and other profiles. Writes check
+  the loaded file revision, validate identity uniqueness, flush a temporary file and atomically replace with an exact
+  backup. In-place writers are excluded while saving; unrelated atomic-renaming applications still require coordination.
+  Edited-address probes bypass companion sockets because those ignore host/port, check nested devices and dispose.
+  Changed endpoints reload/reselect and reconnect; canceled edits do not save. Shutdown awaits active probes.
+
+## Feature parity
+
+| Feature | Avalonia state | Remaining work |
+| --- | --- | --- |
+| Saved-server list | Browsing, selection, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, new pairing, original context menus and complete sidebar design |
+| Server-clock calibration | Wired to live samples, independent display ticks and pause state | Native/live-server acceptance, localized countdown formatting and full original status layout |
+| Pairing/auth/accounts | Existing login reads plus native-browser sign-in, server token verification, FCM device registration and private config writes | Live Steam/Facepunch acceptance, pairing listener, sign-out, device/account management and refresh parity |
+| Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
+| Live map/markers/overlays | Not ported | Separate coordinate/state logic from rendering; choose portable map/helper hosting |
+| Smart devices/automation/timers | Confirmed switches, nested group commands, alarm state, authoritative storage reads and subscriptions | Live-server acceptance, add/edit/delete/import/transfer/reorder devices, custom icons, automation, timers, alarm notifications/audio and full original layout |
+| Chat/team/clan/cloud | Not ported | Port protocol/services, moderation/history, synchronization and presentation |
+| Cameras | Not ported | Validate camera SDK/runtime, stream decoding and portable rendering |
+| Genetics Lab/web tools | Not ported | Decide and verify portable web hosting/bridge rather than copying WebView2 |
+| Settings/localization/backups | Not ported | Portable settings models, resources, storage, lossless schema migration |
+| Tray/hotkeys/audio/speech/capture | Not ported | Platform capability audit and adapters with truthful availability |
+| Installer/updater | Not ported | Native packaging, signing, updater, permissions and upgrade-path validation |
+| Raid calculator | Not ported | Preserve catalog, per-target methods, smart mixes, resource shopping list, persisted plans, clipboard and responsive layout |
+| Recycler calculator | Not ported | Preserve item catalog, quantity/yield calculations, output comparisons and icons |
+| Shop search/trades | Not ported | Preserve filters, vending offers, alerts, shopping/profit workflows and map links |
+| Map drawing/routes/layers/3D | Not ported | Preserve editing, grouping, import/export, keycards, no-build zones, monument overlays and helper integration |
+| Command dock/minimap/popouts | Not ported | Preserve tiles/templates/configuration, overlays, floating windows and appearance settings |
+| Death markers/stats/wipe tracker | Not ported | Preserve history, heatmaps, archives, marker configuration and cloud synchronization |
+| AI companion | Not ported | Preserve answers/history, provider/model selection, chat commands and account settings |
+| Notifications/custom alerts | Not ported | Preserve inbox, unread state, popup paging, sounds, channel settings and integrations |
+| Community/LFG/support/admin | Not ported | Preserve profiles, moderation/reporting, tickets/attachments, account/team administration |
+| Tutorials/achievements/help | Not ported | Preserve guided targets, progress, content, patch notes, galleries and consent dialogs |
+| Traffic monitor/debug/logs | Not ported | Preserve statistics, filtering, monitoring and diagnostics without leaking credentials |
+
+## Evidence and limitations
+
+The existing Windows baseline suite passed **135 tests** before migration changes. Its build emitted
+existing ImageSharp vulnerability warnings. That dependency has not been copied into this preview.
+
+Structural discovery used the repository graph at Tier 2, then direct-source checks. Coverage metadata
+was unavailable/stale for relevant files after switching branches; exact source and build/test results
+were used for the chosen slice. No exhaustive unused-code or feature inventory is claimed.
+
+The copied server clock still uses its existing phase-average approximation and one-boundary
+extrapolation. This change preserves behavior; longer extrapolation is not newly validated.
+
+No feature has been removed from the reference app. Its old clock/tests remain there because the user
+requested an independent folder. This is intentional source reuse during migration, not a second
+implementation inside the new solution. Broad dead-code cleanup awaits feature-by-feature evidence.
+
+Native Linux/macOS UI, GTK/KDE/AppKit palette/font/menu integration, file-dialog, filesystem-permission, and distribution behavior require native
+runs. Self-contained publish output alone does not prove those checks. Localization, high-contrast
+themes, and full keyboard/screen-reader acceptance are still pending.
+
+## Next implementation slice
+
+1. Validate live Steam/Facepunch sign-in callbacks, then port pairing listener and complete account management;
+   preserve consent, token refresh, sign-out and re-pair workflows behind platform-neutral contracts.
+2. Continue device editing, groups, import/transfer, notifications and automation using the verified session/device boundary.
+3. Port original server context menus and deletion together with its cloud cleanup; preserve all related data and consent flows.
+4. Build the original rail/sidebar/workspace arrangement using Fluent components; preserve navigation
+   order and density instead of adding placeholder buttons for unported features.
+5. Validate actual server communication on Windows/Linux/macOS and integrate push-disconnect events.
+6. Continue every candidate in the parity checklist, including tools, dialogs and embedded web features.
+
+## Local verification
+
+- Windows: Debug and Release solution builds and all **99 .NET tests pass with zero warnings** for the current slice.
+- Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
+  for native control host` because the executable lacked a supported-OS manifest. Added the official
+  Avalonia compatibility declaration to the app host. The same production browser now passes local redirect
+  and cancellation checks in a real Windows desktop process. Headless UI tests alone cannot catch this.
+- Account tests cover callback origin/nonce validation, duplicate/error fields, signed/JWT claim shapes,
+  Pascal-case HTTP fields, cancellation, verification before registration, registration rollback on save
+  conflict, unknown-field preservation, current-user-only Windows ACLs and safe account status/error models.
+- Tests cover companion/direct route selection, denial classification (including numeric-ID false
+  positives), login-required failures, credential validation, token rotation, cancellation/disposal,
+  connection loss/recovery, terminal failure during recovery, stale completion after switching, shutdown,
+  missing/paused time and clock progress while status I/O is pending.
+- Tests also cover SDK device confirmation, missing-entity classification, broadcast coalescing/unsubscription,
+  empty/unknown storage, bundled item names, group deduplication, partial failures, stale commands, profile
+  backup/unknown-field preservation, edit conflicts, identity validation, endpoint probes and editor shutdown.
+- UI tests render the shell, shared status, server/device trees and simulated connected state
+  at the reference 1750×814 and 1000×700. They verify bindings, selection cleanup, theme selection and toolbar bounds.
+  The editor renders with all three platform style files in both light/dark modes; foreground updates are asserted.
+  These are Windows-host renders, not native Linux/macOS acceptance or proof of native appearance.
+  Images are emitted under the test output directory. Rendered server values are fixtures, not a live server.
+- Reference-capture tool: **2 Python tests pass**, covering event/command capture, source immutability,
+  code/web candidates and generated-tree exclusions.
+- Isolation: a source-only copy outside the repository restored against a fresh, separate package
+  cache, including the local protocol package and FluentAvaloniaUI. The current source passed all
+  **99 .NET tests** there with zero warnings, including runtime XAML loading and light/dark editor renders.
+- Self-contained Release publishes succeeded for `win-x64`, `linux-x64`, and `osx-arm64` on the Windows host.
+  These are compiler/package checks; Linux/macOS executables were **not run**.
+- `git diff --exit-code` confirmed no tracked changes to the reference application or root build/config files.
+- No upload, remote push, release, installer, or native-platform acceptance run was performed.
+
+Connection tests use synthetic credentials and fake transports. No personal profile/token contents
+were printed, changed, copied into this folder, or used to contact a real server during verification.
+Recovery currently detects loss through status polling; the reference app's immediate disconnected-event
+integration remains on the parity backlog. The full migration and visual parity are still unfinished.
+
+The account modal is functional, but real Steam/Facepunch return-URL behavior, FCM delivery and token
+refresh are not accepted yet. No push listener or sign-out is implemented; successful re-sign-in creates a
+new device registration and does not revoke earlier registrations. Credentials are never placed in UI
+models or logs. Native Linux/macOS sign-in is untested. Do not treat this preview as production-ready.

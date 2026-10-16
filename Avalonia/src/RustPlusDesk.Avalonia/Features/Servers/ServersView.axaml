@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RustPlusDesk.Avalonia.Features.Servers"
+             xmlns:models="clr-namespace:RustPlusDesk.Core.Servers;assembly=RustPlusDesk.Core"
+             xmlns:shared="using:RustPlusDesk.Avalonia.Shared.Controls"
+             xmlns:connections="using:RustPlusDesk.Avalonia.Features.Connections"
+             x:Class="RustPlusDesk.Avalonia.Features.Servers.ServersView"
+             x:DataType="vm:ServersViewModel">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="12">
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+      <StackPanel Spacing="4">
+        <TextBlock Text="Servers" FontSize="22" FontWeight="SemiBold" />
+        <TextBlock Text="Your saved servers, in one place." Classes="muted" />
+      </StackPanel>
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+        <Button Content="_Refresh" Command="{Binding RefreshCommand}" />
+        <Button Content="_Open profiles…" Classes="accent" Command="{Binding OpenFileCommand}" />
+        <Button Content="_Edit…" Command="{Binding EditCommand}" />
+      </StackPanel>
+    </Grid>
+    <TextBlock Grid.Row="1" Text="{Binding SourcePath}" Classes="muted" TextWrapping="Wrap"
+               AutomationProperties.Name="Profiles file location" />
+    <ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsBusy}"
+                 AutomationProperties.Name="Loading saved servers" />
+    <Grid Grid.Row="3" IsVisible="{Binding HasServers}">
+      <connections:ConnectionStatusView DataContext="{Binding Connection}" />
+    </Grid>
+    <shared:StatusPanel Grid.Row="4" Title="{Binding StatusTitle}" Message="{Binding StatusMessage}"
+                        IsVisible="{Binding ShowStatus}" VerticalAlignment="Center" />
+    <ListBox Grid.Row="4" ItemsSource="{Binding Servers}" SelectedItem="{Binding SelectedServer, Mode=TwoWay}" IsVisible="{Binding HasServers}"
+             AutomationProperties.Name="Saved servers" Background="Transparent"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="models:ServerSummary">
+          <Border Classes="card" Margin="0,0,0,6" Padding="10" HorizontalAlignment="Stretch">
+            <StackPanel Spacing="5">
+              <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Host}" FontSize="12" Classes="muted" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Port, StringFormat='Port {0}'}" FontSize="12" Classes="muted" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

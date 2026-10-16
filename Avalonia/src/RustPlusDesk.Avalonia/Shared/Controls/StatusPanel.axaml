@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shared="using:RustPlusDesk.Avalonia.Shared.Controls"
+             x:Class="RustPlusDesk.Avalonia.Shared.Controls.StatusPanel"
+             x:DataType="shared:StatusPanel" x:Name="Root">
+  <Border Classes="card" Padding="32">
+    <StackPanel Spacing="12">
+      <TextBlock Text="{Binding Title, ElementName=Root}" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding Message, ElementName=Root}" Classes="muted" TextWrapping="Wrap" />
+    </StackPanel>
+  </Border>
+</UserControl>
