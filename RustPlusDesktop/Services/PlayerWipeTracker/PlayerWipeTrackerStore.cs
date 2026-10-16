@@ -12,7 +12,11 @@ using System.Threading.Tasks;
 
 namespace RustPlusDesk.Services.PlayerWipeTracker;
 
-/// <summary>Append-only JSON-lines storage isolated by server, wipe, and player.</summary>
+/// <summary>
+/// Append-only storage isolated by server, wipe, and player: one compact binary file per player
+/// (see <see cref="TrackerRecordFile"/>). Older JSON-lines files are converted, and thinned, the
+/// first time they are touched or by the background sweep shortly after start.
+/// </summary>
 public sealed class PlayerWipeTrackerStore : IAsyncDisposable
 {
     private const int QueueCapacity = 2048;
@@ -30,23 +34,37 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         Converters = { new JsonStringEnumConverter() },
     };
 
-    private sealed record WriteItem(string Path, string Line) : QueueItem;
+    private sealed record WriteItem(string Path, ulong SteamId, PlayerObservation Observation) : QueueItem;
     private sealed record FlushItem(TaskCompletionSource<bool> Completion) : QueueItem;
     private sealed record StopItem(TaskCompletionSource<bool> Completion) : QueueItem;
     private abstract record QueueItem;
+
+    /// <summary>
+    /// Per-file lock and the string table needed to append to it. The table is rebuilt from the
+    /// file on first use and then kept, so an append never has to read the history again.
+    /// </summary>
+    private sealed class FileEntry
+    {
+        public readonly object Gate = new();
+        public TrackerRecordFile? State;
+    }
+
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, FileEntry> _files = new(StringComparer.OrdinalIgnoreCase);
+
+    private const string RecordExtension = ".pwt";
+    private const string LegacyExtension = ".jsonl";
 
     public PlayerWipeTrackerStore(string rootDirectory)
     {
         _root = Path.GetFullPath(rootDirectory);
         Directory.CreateDirectory(_root);
         _writer = Task.Run(WriteLoopAsync);
+        _ = Task.Run(MigrateLegacyFilesAsync);
     }
 
     public bool Append(string serverKey, string wipeKey, ulong steamId, TrackerPersistedObservation item)
     {
-        var path = FilePath(serverKey, wipeKey, steamId);
-        var line = JsonSerializer.Serialize(item, _json);
-        var queued = new WriteItem(path, line);
+        var queued = new WriteItem(FilePath(serverKey, wipeKey, steamId), steamId, item.Observation);
         if (_queue.Writer.TryWrite(queued))
             return true;
 
@@ -62,39 +80,219 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         TrackerPersistedObservation item,
         CancellationToken cancellationToken = default)
     {
-        var path = FilePath(serverKey, wipeKey, steamId);
-        var line = JsonSerializer.Serialize(item, _json);
-        await _queue.Writer.WriteAsync(new WriteItem(path, line), cancellationToken).ConfigureAwait(false);
+        await _queue.Writer.WriteAsync(new WriteItem(FilePath(serverKey, wipeKey, steamId), steamId, item.Observation), cancellationToken).ConfigureAwait(false);
     }
 
     public IReadOnlyList<TrackerPersistedObservation> Load(string serverKey, string wipeKey, ulong steamId)
     {
         var path = FilePath(serverKey, wipeKey, steamId);
-        if (!File.Exists(path))
-            return Array.Empty<TrackerPersistedObservation>();
+        var entry = Entry(path);
+        var observations = new List<PlayerObservation>();
+        lock (entry.Gate)
+        {
+            if (!MigrateLegacy(path, steamId, entry))
+            {
+                // Could not convert (locked, disk full): read the old file as it is.
+                observations.AddRange(ReadLegacy(LegacyPath(path)));
+            }
 
-        var result = new List<TrackerPersistedObservation>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var line in File.ReadLines(path))
+            if (File.Exists(path))
+            {
+                var bytes = ReadAllBytesShared(path);
+                var state = TrackerRecordFile.Parse(bytes, steamId, observations);
+                if (state is not null)
+                    entry.State = state;
+            }
+        }
+
+        return Distinct(observations)
+            .Select(observation => new TrackerPersistedObservation(1, "observation", observation))
+            .ToArray();
+    }
+
+    /// <summary>
+    /// Time order with exact repeats dropped. A cloud restore of a wipe that is already on disk
+    /// appends the same observations again; they are identical by session and timestamp.
+    /// </summary>
+    private static List<PlayerObservation> Distinct(List<PlayerObservation> observations)
+    {
+        var seen = new HashSet<(string, long)>();
+        var result = new List<PlayerObservation>(observations.Count);
+        foreach (var observation in observations)
+        {
+            if (seen.Add((observation.SessionId, observation.TimestampUtc.Ticks)))
+                result.Add(observation);
+        }
+
+        // Stable, so observations sharing a timestamp keep the order they were written in.
+        var ordered = result.OrderBy(observation => observation.TimestampUtc).ToList();
+        return ordered;
+    }
+
+    private FileEntry Entry(string path) => _files.GetOrAdd(path, _ => new FileEntry());
+
+    private static byte[] ReadAllBytesShared(string path)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        var bytes = new byte[stream.Length];
+        stream.ReadExactly(bytes);
+        return bytes;
+    }
+
+    /// <summary>The string table and readable length of a file, read once and then kept.</summary>
+    private TrackerRecordFile? EnsureState(string path, ulong steamId, FileEntry entry)
+    {
+        if (entry.State is not null)
+            return entry.State;
+        if (!File.Exists(path))
+            return null;
+        entry.State = TrackerRecordFile.Parse(ReadAllBytesShared(path), steamId, sink: null);
+        return entry.State;
+    }
+
+    private void AppendRecord(string path, ulong steamId, PlayerObservation observation)
+    {
+        var entry = Entry(path);
+        lock (entry.Gate)
+        {
+            MigrateLegacy(path, steamId, entry);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+
+            var state = EnsureState(path, steamId, entry);
+            if (state is null && File.Exists(path))
+            {
+                // Not ours (or a header torn by a crash on the very first write). Keep the bytes
+                // aside instead of appending records nobody could read back.
+                File.Move(path, path + ".unreadable", overwrite: true);
+            }
+
+            try
+            {
+                using var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+                if (state is null)
+                {
+                    state = TrackerRecordFile.CreateNew(observation.TimestampUtc);
+                    stream.SetLength(0);
+                    stream.Write(TrackerRecordFile.Header(state.BaseTicks));
+                    entry.State = state;
+                }
+                else if (stream.Length != state.ValidLength)
+                {
+                    // A record cut short by a crash would swallow everything after it.
+                    stream.SetLength(state.ValidLength);
+                }
+
+                stream.Seek(0, SeekOrigin.End);
+                var bytes = state.Encode(observation);
+                stream.Write(bytes);
+                state.Appended(bytes.Length);
+            }
+            catch
+            {
+                // The table may now name strings the file never received; rebuild it from disk.
+                entry.State = null;
+                throw;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Converts a player's JSON-lines history into the record format, thinned the way the
+    /// engine now stores live data. Returns false only when a legacy file exists but could not
+    /// be converted.
+    ///
+    /// Thinning is what reclaims the space: the old writer stored almost every five-second poll,
+    /// so a stationary or offline hour cost 720 records where one per heartbeat says the same.
+    /// Anything already in the record file (from a cloud restore, say) is merged in, so the
+    /// conversion never loses observations whichever order the two were written in.
+    /// </summary>
+    private bool MigrateLegacy(string path, ulong steamId, FileEntry entry)
+    {
+        var legacyPath = LegacyPath(path);
+        if (!File.Exists(legacyPath))
+            return true;
+
+        var temporary = path + ".tmp";
+        try
+        {
+            var observations = ReadLegacy(legacyPath);
+            if (File.Exists(path))
+                TrackerRecordFile.Parse(ReadAllBytesShared(path), steamId, observations);
+
+            var kept = PlayerWipeTrackerEngine.Compact(Distinct(observations));
+            var state = TrackerRecordFile.CreateNew(kept.Count > 0 ? kept[0].TimestampUtc : DateTime.UtcNow);
+            using (var stream = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                stream.Write(TrackerRecordFile.Header(state.BaseTicks));
+                foreach (var observation in kept)
+                {
+                    var bytes = state.Encode(observation);
+                    stream.Write(bytes);
+                    state.Appended(bytes.Length);
+                }
+            }
+
+            File.Move(temporary, path, overwrite: true);
+            File.Delete(legacyPath);
+            entry.State = state;
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            try { File.Delete(temporary); } catch { }
+            return false;
+        }
+    }
+
+    private List<PlayerObservation> ReadLegacy(string legacyPath)
+    {
+        var result = new List<PlayerObservation>();
+        if (!File.Exists(legacyPath))
+            return result;
+
+        foreach (var line in File.ReadLines(legacyPath))
         {
             if (string.IsNullOrWhiteSpace(line))
                 continue;
             try
             {
                 var item = JsonSerializer.Deserialize<TrackerPersistedObservation>(line, _json);
-                if (item is null)
-                    continue;
-                var key = $"{item.Kind}|{item.Observation.SessionId}|{item.Observation.TimestampUtc:O}";
-                if (seen.Add(key))
-                    result.Add(item);
+                if (item?.Observation is not null && item.Kind == "observation")
+                    result.Add(item.Observation with { TimestampUtc = item.Observation.TimestampUtc.ToUniversalTime() });
             }
             catch (JsonException)
             {
                 // One malformed JSONL line must not hide the remaining history.
             }
         }
+        return result;
+    }
 
-        return result.OrderBy(x => x.Observation.TimestampUtc).ToArray();
+    /// <summary>
+    /// Converts every remaining JSON-lines history in the background, so the disk space comes
+    /// back without each wipe having to be opened first. Waits a little so it does not compete
+    /// with start-up, and goes one file at a time.
+    /// </summary>
+    private async Task MigrateLegacyFilesAsync()
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(20), _shutdown.Token).ConfigureAwait(false);
+            foreach (var legacyPath in Directory.EnumerateFiles(_root, "*" + LegacyExtension, SearchOption.AllDirectories).ToArray())
+            {
+                if (_shutdown.IsCancellationRequested)
+                    return;
+                if (!ulong.TryParse(Path.GetFileNameWithoutExtension(legacyPath), NumberStyles.None, CultureInfo.InvariantCulture, out var steamId))
+                    continue;
+                var path = Path.ChangeExtension(legacyPath, RecordExtension);
+                var entry = Entry(path);
+                lock (entry.Gate)
+                    MigrateLegacy(path, steamId, entry);
+                await Task.Yield();
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { }
     }
 
     public async Task FlushAsync(CancellationToken cancellationToken = default)
@@ -177,7 +375,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         var directory = Path.Combine(_root, Safe(serverKey), Safe(wipeKey));
         if (!Directory.Exists(directory))
             return Array.Empty<ulong>();
-        return Directory.EnumerateFiles(directory, "*.jsonl", SearchOption.TopDirectoryOnly)
+        return PlayerFiles(directory)
             .Select(path => Path.GetFileNameWithoutExtension(path))
             .Where(value => ulong.TryParse(value, out _))
             .Select(ulong.Parse)
@@ -220,12 +418,12 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             foreach (var wipeDir in Directory.EnumerateDirectories(serverDir))
             {
                 var wipeKey = Path.GetFileName(wipeDir);
-                var jsonlFiles = Directory.EnumerateFiles(wipeDir, "*.jsonl")
-                    .Where(f => new FileInfo(f).Length > 0)
+                var playerFiles = PlayerFiles(wipeDir)
+                    .Where(f => new FileInfo(f).Length > TrackerRecordFile.HeaderLength)
                     .ToArray();
 
                 // Only show folders that have actual wipe tracking records
-                if (jsonlFiles.Length == 0)
+                if (playerFiles.Length == 0)
                     continue;
 
                 var meta = LoadWipeMetadata(serverKey, wipeKey);
@@ -245,9 +443,9 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
                 }
 
                 var wipeStarted = meta?.WipeStartedAtUtc;
-                var playerCount = jsonlFiles.Length;
+                var playerCount = playerFiles.Select(Path.GetFileNameWithoutExtension).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                 var totalBytes = Directory.EnumerateFiles(wipeDir, "*").Sum(f => new FileInfo(f).Length);
-                var lastObserved = jsonlFiles.Max(f => new FileInfo(f).LastWriteTimeUtc);
+                var lastObserved = playerFiles.Max(f => new FileInfo(f).LastWriteTimeUtc);
 
                 results.Add(new StoredWipeSummary(
                     serverKey,
@@ -305,16 +503,30 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
     public void DeleteWipe(string serverKey, string wipeKey)
     {
         var directory = Path.Combine(_root, Safe(serverKey), Safe(wipeKey));
+        ForgetFiles(directory);
         if (Directory.Exists(directory))
             Directory.Delete(directory, recursive: true);
     }
 
     public void DeleteAll()
     {
+        ForgetFiles(_root);
         if (Directory.Exists(_root))
             Directory.Delete(_root, recursive: true);
         Directory.CreateDirectory(_root);
     }
+
+    private void ForgetFiles(string directory)
+    {
+        var prefix = Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        foreach (var path in _files.Keys.Where(path => path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToArray())
+            _files.TryRemove(path, out _);
+    }
+
+    /// <summary>Player history files in one wipe folder, in either format.</summary>
+    private static IEnumerable<string> PlayerFiles(string directory)
+        => Directory.EnumerateFiles(directory, "*" + RecordExtension, SearchOption.TopDirectoryOnly)
+            .Concat(Directory.EnumerateFiles(directory, "*" + LegacyExtension, SearchOption.TopDirectoryOnly));
 
     private async Task WriteLoopAsync()
     {
@@ -325,8 +537,14 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
                 switch (item)
                 {
                     case WriteItem write:
-                        Directory.CreateDirectory(Path.GetDirectoryName(write.Path)!);
-                        await File.AppendAllTextAsync(write.Path, write.Line + Environment.NewLine, _shutdown.Token).ConfigureAwait(false);
+                        try
+                        {
+                            AppendRecord(write.Path, write.SteamId, write.Observation);
+                        }
+                        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                        {
+                            // One failed write must not stop the loop for every later one.
+                        }
                         break;
                     case FlushItem flush:
                         flush.Completion.TrySetResult(true);
@@ -342,7 +560,9 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
     }
 
     private string FilePath(string serverKey, string wipeKey, ulong steamId)
-        => Path.Combine(WipeDirectory(serverKey, wipeKey), $"{steamId}.jsonl");
+        => Path.Combine(WipeDirectory(serverKey, wipeKey), $"{steamId}{RecordExtension}");
+
+    private static string LegacyPath(string path) => Path.ChangeExtension(path, LegacyExtension);
 
     /// <summary>
     /// One day's observations, without reading the days before it.
@@ -354,7 +574,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
     /// callers keep it and hand it back, and the read starts there.
     ///
     /// <paramref name="fromOffset"/> means "everything before this byte is already dealt with".
-    /// The returned NextOffset points just past the last complete line read, so a caller that
+    /// The returned NextOffset points just past the last complete record read, so a caller that
     /// consumed everything can hand it back next time and read only what was appended since.
     /// A stale or impossible offset costs a larger read, never a missed observation.
     /// </summary>
@@ -366,73 +586,41 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
         long fromOffset)
     {
         var path = FilePath(serverKey, wipeKey, steamId);
-        if (!File.Exists(path))
-            return (Array.Empty<TrackerPersistedObservation>(), 0);
-
+        var entry = Entry(path);
         try
         {
-            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-            // A hint past the end means the file was reset underneath us; start over rather than
-            // silently reading nothing.
-            var start = fromOffset > 0 && fromOffset <= stream.Length ? fromOffset : 0;
-            stream.Seek(start, SeekOrigin.Begin);
-
-            var remaining = (int)(stream.Length - start);
-            if (remaining <= 0)
-                return (Array.Empty<TrackerPersistedObservation>(), start);
-
-            var buffer = new byte[remaining];
-            stream.ReadExactly(buffer, 0, remaining);
-
-            var items = new List<TrackerPersistedObservation>();
-            var seen = new HashSet<string>(StringComparer.Ordinal);
-            // Only complete lines count: the writer may be halfway through appending one.
-            long next = start;
-            var lineStart = 0;
-
-            for (var i = 0; i <= buffer.Length; i++)
+            lock (entry.Gate)
             {
-                // 0x0A cannot occur inside a UTF-8 multi-byte sequence, so splitting on the raw
-                // byte is safe and keeps the offsets exact.
-                if (i == buffer.Length)
-                    break;
-                if (buffer[i] != (byte)'\n')
-                    continue;
+                MigrateLegacy(path, steamId, entry);
+                var state = EnsureState(path, steamId, entry);
+                if (state is null)
+                    return (Array.Empty<TrackerPersistedObservation>(), 0);
 
-                var length = i - lineStart;
-                if (length > 0)
+                // A hint outside the readable part means the file was rebuilt underneath it;
+                // start over rather than silently reading nothing.
+                var start = fromOffset >= TrackerRecordFile.HeaderLength && fromOffset <= state.ValidLength
+                    ? fromOffset
+                    : TrackerRecordFile.HeaderLength;
+                var remaining = (int)(state.ValidLength - start);
+                if (remaining <= 0)
+                    return (Array.Empty<TrackerPersistedObservation>(), start);
+
+                var buffer = new byte[remaining];
+                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    var line = Encoding.UTF8.GetString(buffer, lineStart, length).Trim();
-                    if (line.Length > 0)
-                    {
-                        try
-                        {
-                            var item = JsonSerializer.Deserialize<TrackerPersistedObservation>(line, _json);
-                            if (item is not null)
-                            {
-                                var itemDay = DateOnly.FromDateTime(item.Observation.TimestampUtc.ToUniversalTime());
-                                if (itemDay == day)
-                                {
-                                    var key = $"{item.Kind}|{item.Observation.SessionId}|{item.Observation.TimestampUtc:O}";
-                                    if (seen.Add(key))
-                                        items.Add(item);
-                                }
-                            }
-                        }
-                        catch (JsonException)
-                        {
-                            // One malformed line must not hide the rest of the day.
-                        }
-                    }
+                    stream.Seek(start, SeekOrigin.Begin);
+                    stream.ReadExactly(buffer, 0, remaining);
                 }
 
-                lineStart = i + 1;
-                next = start + lineStart;
+                var observations = new List<PlayerObservation>();
+                var consumed = state.Read(buffer, steamId, observations);
+                var items = Distinct(observations
+                        .Where(observation => DateOnly.FromDateTime(observation.TimestampUtc) == day)
+                        .ToList())
+                    .Select(observation => new TrackerPersistedObservation(1, "observation", observation))
+                    .ToArray();
+                return (items, start + consumed);
             }
-
-            items.Sort((a, b) => a.Observation.TimestampUtc.CompareTo(b.Observation.TimestampUtc));
-            return (items, next);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -460,14 +648,16 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             var path = CloudCursorFile(serverKey, wipeKey, steamId, day);
             if (!File.Exists(path)) return (null, 0);
 
-            // "<iso>|<offset>". Older files hold the timestamp alone; they read back with a zero
-            // offset, which costs one full scan and then writes the current form.
+            // "<iso>|b<offset>". Older files hold the timestamp alone, or a byte offset into the
+            // JSON-lines file that no longer exists; both read back with a zero offset, which
+            // costs one full scan and then writes the current form.
             var parts = File.ReadAllText(path).Trim().Split('|');
             var timestamp = DateTime.TryParse(parts[0], CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind, out var value)
                 ? value.ToUniversalTime()
                 : (DateTime?)null;
-            var offset = parts.Length > 1 && long.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
+            var offset = parts.Length > 1 && parts[1].StartsWith(RecordOffsetPrefix, StringComparison.Ordinal) &&
+                long.TryParse(parts[1].AsSpan(RecordOffsetPrefix.Length), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
                 ? parsed
                 : 0;
             return (timestamp, offset);
@@ -486,7 +676,7 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             File.WriteAllText(path,
                 lastObservedUtc.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture)
-                + "|" + dayStartOffset.ToString(CultureInfo.InvariantCulture));
+                + "|" + RecordOffsetPrefix + dayStartOffset.ToString(CultureInfo.InvariantCulture));
         }
         catch
         {
@@ -494,6 +684,9 @@ public sealed class PlayerWipeTrackerStore : IAsyncDisposable
             // by timestamp, so re-sending what it already has changes nothing.
         }
     }
+
+    /// <summary>Marks an offset into the record file, as opposed to one into the old JSON lines.</summary>
+    private const string RecordOffsetPrefix = "b";
 
     private string CloudCursorFile(string serverKey, string wipeKey, ulong steamId, DateOnly day)
         => Path.Combine(WipeDirectory(serverKey, wipeKey), $".cloud_cursor_{steamId}_{day:yyyyMMdd}");

@@ -10,13 +10,24 @@ using System.Threading.Tasks;
 
 namespace RustPlusDesk.Services.PlayerWipeTracker;
 
-/// <summary>Coordinates the existing team snapshots, pure engines, and local JSONL storage.</summary>
+/// <summary>Coordinates the existing team snapshots, pure engines, and local record storage.</summary>
 public sealed class PlayerWipeTrackerService : IAsyncDisposable
 {
     private readonly PlayerWipeTrackerStore _store;
     private readonly PlayerWipeTrackerCapabilityService _capabilities;
     private readonly PlayerWipeTrackerCloudClient _cloudClient = new();
     private readonly Dictionary<ulong, PlayerWipeTrackerEngine> _engines = new();
+
+    /// <summary>
+    /// Every stored observation of the loaded wipe, per player, kept next to its engine.
+    ///
+    /// The views used to read the player's whole file back off disk for each panel — the
+    /// summary, the insights, the player list, the comparison — and again on every live refresh.
+    /// On a long wipe that was the twenty seconds it took to open the tracker. The file is only
+    /// ever appended to by this service, so the copy in memory stays exact by appending to it
+    /// whatever is written.
+    /// </summary>
+    private readonly Dictionary<ulong, List<PlayerObservation>> _observations = new();
     private string? _serverKey;
     private string? _wipeKey;
     private string? _sessionId;
@@ -132,6 +143,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         }
 
         _engines.Clear();
+        _observations.Clear();
         foreach (var steamId in _store.LoadPlayerIds(serverKey, _wipeKey))
         {
             if (_capabilities.Current.CanTrackPlayer(steamId, ownSteamId))
@@ -146,6 +158,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         _wipeStartedAtUtc = wipeStartedAtUtc?.ToUniversalTime();
         _sessionId = null;
         _engines.Clear();
+        _observations.Clear();
         foreach (var steamId in _store.LoadPlayerIds(serverKey, _wipeKey))
         {
             if (_capabilities.Current.CanTrackPlayer(steamId, _ownSteamId))
@@ -172,8 +185,9 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         if (!engine.Observe(observation with { SessionId = _sessionId }))
             return;
 
-        _store.Append(_serverKey, _wipeKey, observation.SteamId,
-            new TrackerPersistedObservation(1, "observation", observation with { SessionId = _sessionId }));
+        if (engine.TakePendingTail() is { } tail)
+            Persist(observation.SteamId, tail);
+        Persist(observation.SteamId, observation with { SessionId = _sessionId });
 
         if (CloudBackupEnabled && _capabilities.Current.CanUseCloudSync)
             _ = QueueCloudDayAsync(observation.SteamId, observation.TimestampUtc, observation.Name);
@@ -185,16 +199,19 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         foreach (var (steamId, engine) in _engines)
         {
             var last = engine.LastObservation;
+            // The last poll marks where the session really ended; without it a reload would end
+            // it at the last heartbeat, up to a minute early.
+            if (engine.UnpersistedLast is { } unpersisted)
+                Persist(steamId, unpersisted);
             engine.EndSession(timestamp);
-            if (_serverKey is not null && _wipeKey is not null && last is not null && timestamp > last.TimestampUtc)
+            if (last is not null && timestamp > last.TimestampUtc)
             {
-                _store.Append(_serverKey, _wipeKey, steamId,
-                    new TrackerPersistedObservation(1, "observation", last with
-                    {
-                        TimestampUtc = timestamp,
-                        IsConnected = false,
-                        SnapshotValid = false,
-                    }));
+                Persist(steamId, last with
+                {
+                    TimestampUtc = timestamp,
+                    IsConnected = false,
+                    SnapshotValid = false,
+                });
             }
         }
         _sessionId = null;
@@ -221,14 +238,44 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public IReadOnlyList<PlayerObservation> GetObservations(ulong steamId)
         => _serverKey is null || _wipeKey is null
             ? Array.Empty<PlayerObservation>()
-            : _store.Load(_serverKey, _wipeKey, steamId)
-                .Where(item => item.Kind == "observation")
-                .Select(item => item.Observation)
-                .OrderBy(item => item.TimestampUtc)
-                .ToArray();
+            : CachedObservations(steamId).ToArray();
 
     public string GetPlayerName(ulong steamId)
-        => GetObservations(steamId).LastOrDefault()?.Name ?? steamId.ToString(CultureInfo.InvariantCulture);
+    {
+        if (_serverKey is null || _wipeKey is null)
+            return steamId.ToString(CultureInfo.InvariantCulture);
+        var observations = CachedObservations(steamId);
+        return observations.Count > 0 ? observations[^1].Name : steamId.ToString(CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>The loaded wipe's observations for one player, read from disk only the first time.</summary>
+    private List<PlayerObservation> CachedObservations(ulong steamId)
+    {
+        if (_observations.TryGetValue(steamId, out var cached))
+            return cached;
+        cached = _store.Load(_serverKey!, _wipeKey!, steamId)
+            .Where(item => item.Kind == "observation")
+            .Select(item => item.Observation)
+            .ToList();
+        _observations[steamId] = cached;
+        return cached;
+    }
+
+    private void Persist(ulong steamId, PlayerObservation observation)
+    {
+        if (_serverKey is null || _wipeKey is null)
+            return;
+        _store.Append(_serverKey, _wipeKey, steamId, new TrackerPersistedObservation(1, "observation", observation));
+
+        // Only extend a copy that already exists; one not read yet will come from disk complete.
+        if (_observations.TryGetValue(steamId, out var cached))
+        {
+            if (cached.Count == 0 || cached[^1].TimestampUtc <= observation.TimestampUtc)
+                cached.Add(observation);
+            else
+                _observations.Remove(steamId);
+        }
+    }
 
     public async Task<IReadOnlyList<CloudArchiveSummary>> GetCloudArchivesAsync(CancellationToken cancellationToken = default)
     {
@@ -324,6 +371,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         {
             foreach (var steamId in restoredSteamIds)
             {
+                _observations.Remove(steamId);
                 if (_capabilities.Current.CanTrackPlayer(steamId, _ownSteamId))
                     _engines[steamId] = LoadEngine(steamId);
             }
@@ -383,8 +431,9 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         var engine = new PlayerWipeTrackerEngine();
         if (_serverKey is null || _wipeKey is null)
             return engine;
-        foreach (var item in _store.Load(_serverKey, _wipeKey, steamId).Where(x => x.Kind == "observation"))
-            engine.Observe(item.Observation);
+        _observations.Remove(steamId);
+        foreach (var observation in CachedObservations(steamId))
+            engine.Replay(observation);
         return engine;
     }
 
@@ -397,7 +446,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
         var sessionId = day.Payload.ObservationSessions.FirstOrDefault(session => !string.IsNullOrWhiteSpace(session))
             ?? $"cloud:{archive.Id}:{day.Day}";
         var playerName = string.IsNullOrWhiteSpace(day.PlayerName) ? steamId.ToString(CultureInfo.InvariantCulture) : day.PlayerName!;
-        var imported = 0;
+        var observations = new List<PlayerObservation>(day.Payload.Observations.Count);
         foreach (var point in day.Payload.Observations)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -426,16 +475,23 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 null,
                 null);
 
+            observations.Add(observation);
+        }
+
+        // Backups made before the heartbeat fix hold nearly every five-second poll. Thinning them
+        // on the way in keeps a restored wipe as small as one recorded today.
+        var kept = PlayerWipeTrackerEngine.Compact(observations.OrderBy(item => item.TimestampUtc));
+        foreach (var observation in kept)
+        {
             await _store.AppendAsync(
                 archive.ServerKey,
                 archive.WipeKey,
                 steamId,
                 new TrackerPersistedObservation(1, "observation", observation),
                 cancellationToken).ConfigureAwait(false);
-            imported++;
         }
 
-        return imported;
+        return kept.Count;
     }
 
     private static PlayerActivityState ParseState(string? value)
@@ -607,7 +663,7 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
                 : Math.Sqrt(Math.Pow(previous.X.Value - observation.X.Value, 2) + Math.Pow(previous.Y.Value - observation.Y.Value, 2));
             var continuity = previous is not null && previous.SessionId == observation.SessionId &&
                 observation.TimestampUtc > previous.TimestampUtc &&
-                (observation.TimestampUtc - previous.TimestampUtc).TotalSeconds <= PlayerWipeTrackerEngine.MaxContinuityGapSeconds &&
+                (observation.TimestampUtc - previous.TimestampUtc).TotalSeconds <= PlayerWipeTrackerEngine.MaxRecordGapSeconds &&
                 previous.IsConnected && previous.SnapshotValid && observation.IsConnected && observation.SnapshotValid;
             var state = !continuity && previous is not null ? PlayerActivityState.Unknown :
                 PlayerWipeTrackerEngine.Classify(observation, displacement);
