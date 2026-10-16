@@ -5810,4 +5810,22 @@ Meer informatie vindt u op de officiële website van de server:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recyclingcalculator</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Servers herstellen vanuit de cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Haalt de servers die dit account heeft gekoppeld terug uit de cloud. Servers die al in de lijst staan, blijven ongewijzigd.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Meld je eerst aan bij je cloudaccount om je servers te herstellen.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} server(s) hersteld en {1} vernieuwd.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Je serverlijst komt al overeen met de cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kan de cloud niet bereiken. Je serverlijst is ongewijzigd.</value>
+  </data>
 </root>

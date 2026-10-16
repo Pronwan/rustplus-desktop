@@ -8013,4 +8013,22 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Effacer les réglages globaux et l'opacité, la taille du texte et la couleur propres à chaque tuile ? Les tuiles restent où elles sont.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurer les serveurs depuis le cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Récupère depuis le cloud les serveurs associés à ce compte. Les serveurs déjà présents dans la liste restent inchangés.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Connecte-toi d'abord à ton compte cloud pour restaurer tes serveurs.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} serveur(s) restauré(s) et {1} mis à jour.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Ta liste de serveurs correspond déjà au cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Impossible de joindre le cloud. Ta liste de serveurs est inchangée.</value>
+  </data>
 </root>

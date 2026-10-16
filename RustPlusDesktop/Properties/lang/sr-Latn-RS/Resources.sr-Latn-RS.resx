@@ -5804,4 +5804,22 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Калкулатор рециклаже</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Vrati servere iz oblaka</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Vraća iz oblaka servere koje je ovaj nalog uparilo. Serveri koji su već na listi ostaju nepromenjeni.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Prvo se prijavi na svoj nalog u oblaku da bi vratio servere.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Vraćeno servera: {0}, osveženo: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tvoja lista servera se već poklapa sa oblakom.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Oblak nije dostupan. Lista servera je nepromenjena.</value>
+  </data>
 </root>

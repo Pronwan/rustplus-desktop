@@ -5804,4 +5804,22 @@ Open Releases page?</value>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Υπολογιστής ανακύκλωσης</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Επαναφορά διακομιστών από το cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Επαναφέρει από το cloud τους διακομιστές που έχει συνδέσει αυτός ο λογαριασμός. Οι διακομιστές που υπάρχουν ήδη στη λίστα παραμένουν ως έχουν.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Συνδεθείτε πρώτα στον λογαριασμό cloud για να επαναφέρετε τους διακομιστές σας.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Επαναφέρθηκαν {0} διακομιστές και ανανεώθηκαν {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Η λίστα διακομιστών σας ταιριάζει ήδη με το cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η σύνδεση με το cloud. Η λίστα διακομιστών σας δεν άλλαξε.</value>
+  </data>
 </root>

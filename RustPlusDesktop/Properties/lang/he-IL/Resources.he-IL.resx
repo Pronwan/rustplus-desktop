@@ -5804,4 +5804,22 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>מחשבון מיחזור</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>שחזור שרתים מהענן</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>מחזיר מהענן את השרתים שחשבון זה צימד. שרתים שכבר ברשימה נשארים כפי שהם.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>יש להתחבר תחילה לחשבון הענן כדי לשחזר את השרתים.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>שוחזרו {0} שרתים ו-{1} עודכנו.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>רשימת השרתים שלך כבר תואמת לענן.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>לא ניתן להגיע לענן. רשימת השרתים לא השתנתה.</value>
+  </data>
 </root>

@@ -6514,4 +6514,22 @@ You can find more information on the server's official website:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recycling Calculator</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restore servers from cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bring back the servers this account has paired, from the cloud. Servers already in the list are kept as they are.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Sign in to your cloud account first to restore your servers.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Restored {0} server(s) and refreshed {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Your server list already matches the cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Could not reach the cloud. Your server list is unchanged.</value>
+  </data>
 </root>

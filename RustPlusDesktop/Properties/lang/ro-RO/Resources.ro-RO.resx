@@ -5804,4 +5804,22 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculator de reciclare</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurează serverele din cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Readuce din cloud serverele asociate acestui cont. Serverele aflate deja în listă rămân neschimbate.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Conectează-te mai întâi la contul cloud pentru a-ți restaura serverele.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Au fost restaurate {0} servere și reîmprospătate {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Lista ta de servere corespunde deja cu cloudul.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Cloudul nu a putut fi accesat. Lista de servere a rămas neschimbată.</value>
+  </data>
 </root>

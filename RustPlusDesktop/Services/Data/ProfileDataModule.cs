@@ -15,8 +15,21 @@ namespace RustPlusDesk.Services.Data
             File.WriteAllText(DataManager.ProfilesPath, json);
         }
 
+        private static bool? _missingAtFirstLoad;
+
+        /// <summary>
+        /// The profiles file did not exist when this run first read it.
+        ///
+        /// Told apart from an empty list on purpose: a file holding no servers is a user
+        /// who removed them all, while no file at all is a deleted profile folder or a
+        /// fresh install, the two cases where pulling the servers back from the cloud is
+        /// what the user wants. Taken on the first read, before any save recreates it.
+        /// </summary>
+        public static bool ProfilesFileWasMissing => _missingAtFirstLoad == true;
+
         public static List<ServerProfile> LoadProfiles()
         {
+            _missingAtFirstLoad ??= !File.Exists(DataManager.ProfilesPath);
             if (!File.Exists(DataManager.ProfilesPath)) return new List<ServerProfile>();
             try
             {

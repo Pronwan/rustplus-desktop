@@ -1601,15 +1601,39 @@ public partial class MainWindow : WpfUi.FluentWindow
     {
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
 
-        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
-        // can land on different threads.
-        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+        AttachCloudPairingAnnouncements();
 
-        _ = Task.Run(async () =>
+        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
+        // can land on different threads. A request that lands mid-import is kept for a
+        // second pass rather than dropped: the running one may already have read the
+        // platform before the pairing that triggered it was saved.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1)
+        {
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 1);
+            return;
+        }
+
+        // On the dispatcher rather than Task.Run: the merge goes into the bound server
+        // list, which is the copy every later save writes back. An import written only
+        // to the file was overwritten by the next save. Only the request awaits; the
+        // UI thread is not held while the platform answers.
+        _ = Dispatcher.InvokeAsync(async () =>
         {
             try
             {
-                var result = await Services.Cloud.CloudPairingImporter.ImportAsync();
+                // A missing profiles file was lost or never existed here. The cursor still
+                // remembers what a lost one held, so "only what changed" would bring nothing
+                // back. An empty file is not this case: that is someone who removed every
+                // server, and restoring them unasked would undo it. Kept pending until an
+                // import gets through, so a first launch offline still restores later.
+                if (Services.Data.ProfileDataModule.ProfilesFileWasMissing)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, true);
+
+                bool restore = Services.StorageService.LoadCache<bool>(CloudRestorePendingKey) && _vm.Servers.Count == 0;
+                var result = await ImportCloudPairingsIntoListAsync(full: restore);
+
+                if (result != null || _vm.Servers.Count > 0)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, false);
 
                 if (result is { ChangedAnything: true })
                 {
@@ -1625,8 +1649,120 @@ public partial class MainWindow : WpfUi.FluentWindow
             finally
             {
                 System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+
+                if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 0) == 1)
+                    TryImportCloudPairings();
             }
         });
+    }
+
+    private int _cloudPairingImportAgain;
+    private int _cloudPairingAnnouncementsAttached;
+
+    /// <summary>
+    /// Import as soon as the cloud announces a pairing, rather than at the next launch.
+    ///
+    /// The cloud's listener receives in-game pairings whether or not this app is running,
+    /// and says so on the account's private channel (devices_changed). Without this, a
+    /// server paired while the app is open but its own pairing listener is not running
+    /// only appeared after a restart.
+    /// </summary>
+    private void AttachCloudPairingAnnouncements()
+    {
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingAnnouncementsAttached, 1) == 1) return;
+
+        Services.Cloud.RealtimeClient.Shared.EventReceived += OnCloudPairingAnnouncement;
+
+        // The account channel is the social layer's subscription; asking again is a no-op
+        // once it runs, and makes sure it does when no social panel has started it yet.
+        Services.Social.SocialRealtime.EnsureStarted();
+    }
+
+    private void OnCloudPairingAnnouncement(string channel, string eventName, Newtonsoft.Json.Linq.JObject data)
+    {
+        if (eventName != "devices_changed") return;
+
+        // Teammates' changes arrive on shared channels too; only this account's pairings import.
+        var me = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
+        if (string.IsNullOrWhiteSpace(me) || data["user_id"]?.ToString() != me) return;
+
+        // The same event carries every switch flip and storage reading. A pairing is the
+        // one with no entity (a server) or one marked paired (a device); the rest would
+        // only cost an empty round trip each.
+        bool isPairing = data["entity_id"] == null
+            || (data["device_state"]?["paired"] as Newtonsoft.Json.Linq.JValue)?.Value is true;
+        if (!isPairing) return;
+
+        Dispatcher.BeginInvoke(new Action(TryImportCloudPairings));
+    }
+
+    /// <summary>Set while a lost profiles file is still waiting for its servers to come back.</summary>
+    private const string CloudRestorePendingKey = "cloud_pairings_restore_pending";
+
+    /// <summary>Merge the platform's pairings into the live server list and save it.</summary>
+    internal async Task<Services.Cloud.CloudPairingImporter.ImportResult?> ImportCloudPairingsIntoListAsync(bool full)
+    {
+        var result = await Services.Cloud.CloudPairingImporter.ImportIntoAsync(_vm.Servers, _vm.Save, full);
+
+        // Load() preselects the first server so the device list has something to show;
+        // a list that was empty until now needs the same.
+        if (result is { Added: > 0 } && _vm.Selected == null && _vm.Servers.Count > 0)
+            _vm.Selected = _vm.Servers[0];
+
+        return result;
+    }
+
+    /// <summary>
+    /// Bring back every server the account has paired, whatever the cursor says.
+    ///
+    /// For a profiles file that was deleted, reset, or never came across to this PC.
+    /// Servers already in the list keep their settings; only what a re-pair changes is
+    /// taken, same as the background import.
+    /// </summary>
+    private async void BtnRestoreCloudServers_Click(object sender, RoutedEventArgs e)
+    {
+        var title = Properties.Resources.GetString("RestoreServersFromCloud");
+
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
+        {
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersSignInFirst"), WpfUi.ControlAppearance.Caution);
+            return;
+        }
+
+        // Shares the background import's flag so the two never merge into the list at once.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+
+        BtnRestoreCloudServers.IsEnabled = false;
+        try
+        {
+            var result = await ImportCloudPairingsIntoListAsync(full: true);
+
+            if (result == null)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+            }
+            else if (!result.ChangedAnything)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersNothing"), WpfUi.ControlAppearance.Info);
+            }
+            else
+            {
+                SafeLog($"[Cloud pairings] Restore: {result.Added} server(s) added, {result.Updated} update(s), {result.DevicesAdded} device(s).");
+                ShowInfoSnackbar(title,
+                    string.Format(Properties.Resources.GetString("RestoreServersDone"), result.Added, result.Updated),
+                    WpfUi.ControlAppearance.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            SafeLog($"[Cloud pairings] Restore failed: {ex.Message}");
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+        }
+        finally
+        {
+            BtnRestoreCloudServers.IsEnabled = true;
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+        }
     }
 
     /// <summary>
@@ -4725,7 +4861,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try
             {
                 string steamIdStr = _mySteamId > 0 ? _mySteamId.ToString() : string.Empty;
-                if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    // The legacy route below only clears the overlay on the platform and leaves
+                    // the pairing live, so "Restore servers from cloud" brought deleted servers
+                    // back. This removes the pairing itself, and queues the delete when it
+                    // cannot be sent now.
+                    if (await Services.Cloud.CloudPairingImporter.ForgetServerAsync(prof.Host, prof.Port))
+                        AppendLog($"[Cloud] Removed server {prof.Name} ({prof.Host}:{prof.Port}) from the cloud.");
+                    else
+                        AppendLog($"[Cloud] Server {prof.Name} will be removed from the cloud on the next sync.");
+                }
+                else if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
                 {
                     bool cleaned = await Services.Auth.SupabaseCloudCleanupService.DeleteCloudDataForServerAsync(prof.Host, prof.Port, steamIdStr);
                     if (cleaned)

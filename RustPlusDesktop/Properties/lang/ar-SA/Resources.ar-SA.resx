@@ -7904,4 +7904,22 @@
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>هل تريد مسح الإعدادات العامة وكذلك العتامة وحجم النص واللون الخاصة بكل بطاقة؟ تبقى البطاقات في أماكنها.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>استعادة الخوادم من السحابة</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>يعيد الخوادم التي قرنها هذا الحساب من السحابة. تبقى الخوادم الموجودة في القائمة كما هي.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>سجّل الدخول إلى حسابك السحابي أولاً لاستعادة خوادمك.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>تمت استعادة {0} خادم وتحديث {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>قائمة خوادمك مطابقة للسحابة بالفعل.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>تعذر الوصول إلى السحابة. لم تتغير قائمة خوادمك.</value>
+  </data>
 </root>

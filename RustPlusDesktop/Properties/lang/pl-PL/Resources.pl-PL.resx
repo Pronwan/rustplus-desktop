@@ -5810,4 +5810,22 @@ Więcej informacji znajdziesz na oficjalnej stronie serwera:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Kalkulator recyklingu</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Przywróć serwery z chmury</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Przywraca z chmury serwery sparowane przez to konto. Serwery, które są już na liście, pozostają bez zmian.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Najpierw zaloguj się na konto w chmurze, aby przywrócić serwery.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Przywrócono serwery: {0}, odświeżono: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Twoja lista serwerów jest już zgodna z chmurą.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Nie udało się połączyć z chmurą. Lista serwerów nie zmieniła się.</value>
+  </data>
 </root>

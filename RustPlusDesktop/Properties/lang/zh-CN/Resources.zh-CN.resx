@@ -7764,4 +7764,22 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>清除全局设置以及每个磁贴自身的不透明度、文字大小和颜色？磁贴本身的位置保持不变。</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>从云端恢复服务器</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>从云端找回此账户配对过的服务器。列表中已有的服务器保持不变。</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>请先登录云账户再恢复服务器。</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>已恢复 {0} 个服务器，刷新 {1} 个。</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>你的服务器列表已与云端一致。</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>无法连接云端。服务器列表未更改。</value>
+  </data>
 </root>

@@ -8013,4 +8013,22 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Сбросить глобальные настройки и собственные прозрачность, размер текста и цвет каждой плитки? Сами плитки останутся на месте.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Восстановить серверы из облака</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Возвращает из облака серверы, привязанные к этой учётной записи. Серверы, которые уже есть в списке, остаются без изменений.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Сначала войдите в облачную учётную запись, чтобы восстановить серверы.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Восстановлено серверов: {0}, обновлено: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Ваш список серверов уже совпадает с облаком.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Не удалось связаться с облаком. Список серверов не изменён.</value>
+  </data>
 </root>

@@ -1141,6 +1141,21 @@
                                 </TextBlock.Style>
                             </TextBlock>
                         </Grid>
+
+                        <!--  The cloud keeps every pairing, so a lost or reset profiles file is recoverable from here.  -->
+                        <ui:Button
+                            x:Name="BtnRestoreCloudServers"
+                            Margin="0,6,0,0"
+                            Padding="8,3"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Secondary"
+                            Click="BtnRestoreCloudServers_Click"
+                            ToolTip="{DynamicResource RestoreServersFromCloudHint}">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="CloudArrowDown20" />
+                                <TextBlock FontSize="11" Text="{DynamicResource RestoreServersFromCloud}" />
+                            </StackPanel>
+                        </ui:Button>
                         </StackPanel>
 
                         <!--  Compact Connection Card  -->

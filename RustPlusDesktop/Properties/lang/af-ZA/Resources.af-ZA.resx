@@ -5804,4 +5804,22 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Herwinning sakrekenaar</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Herstel bedieners uit die wolk</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bring die bedieners wat hierdie rekening gekoppel het terug uit die wolk. Bedieners wat reeds in die lys is, bly soos hulle is.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Meld eers by jou wolkrekening aan om jou bedieners te herstel.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} bediener(s) herstel en {1} verfris.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Jou bedienerlys stem reeds ooreen met die wolk.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kon nie die wolk bereik nie. Jou bedienerlys is onveranderd.</value>
+  </data>
 </root>

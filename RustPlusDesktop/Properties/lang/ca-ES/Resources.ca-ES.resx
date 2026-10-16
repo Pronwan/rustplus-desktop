@@ -5804,4 +5804,22 @@ Podeu trobar més informació al lloc web oficial del servidor:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculadora de reciclatge</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaura els servidors des del núvol</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera del núvol els servidors que aquest compte ha vinculat. Els servidors que ja són a la llista es mantenen tal com estan.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Inicia la sessió al teu compte del núvol per restaurar els servidors.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>S'han restaurat {0} servidor(s) i s'han actualitzat {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>La teva llista de servidors ja coincideix amb el núvol.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>No s'ha pogut connectar amb el núvol. La llista de servidors no ha canviat.</value>
+  </data>
 </root>

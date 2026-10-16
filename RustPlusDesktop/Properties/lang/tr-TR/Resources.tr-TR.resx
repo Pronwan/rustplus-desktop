@@ -6989,4 +6989,22 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Genel ayarlar ve her kartın kendi saydamlığı, yazı boyutu ve rengi temizlensin mi? Kartların kendisi yerinde kalır.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Sunucuları buluttan geri yükle</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bu hesabın eşleştirdiği sunucuları buluttan geri getirir. Listede zaten bulunan sunucular olduğu gibi kalır.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Sunucularını geri yüklemek için önce bulut hesabına giriş yap.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} sunucu geri yüklendi, {1} güncellendi.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Sunucu listen zaten bulutla eşleşiyor.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Buluta ulaşılamadı. Sunucu listen değişmedi.</value>
+  </data>
 </root>

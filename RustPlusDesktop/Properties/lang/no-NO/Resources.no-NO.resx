@@ -5804,4 +5804,22 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Gjenvinningskalkulator</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Gjenopprett servere fra skyen</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Henter tilbake serverne denne kontoen har paret, fra skyen. Servere som allerede er i listen, beholdes som de er.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Logg inn på skykontoen din først for å gjenopprette serverne.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Gjenopprettet {0} server(e) og oppdaterte {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Serverlisten din samsvarer allerede med skyen.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Fikk ikke kontakt med skyen. Serverlisten din er uendret.</value>
+  </data>
 </root>

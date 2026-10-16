@@ -5804,4 +5804,22 @@ Více informací naleznete na oficiálních stránkách serveru:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recyklační kalkulačka</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Obnovit servery z cloudu</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Vrátí z cloudu servery, které tento účet spároval. Servery, které už jsou v seznamu, zůstanou beze změny.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Pro obnovení serverů se nejprve přihlas ke cloudovému účtu.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Obnoveno serverů: {0}, aktualizováno: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tvůj seznam serverů už odpovídá cloudu.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Cloud není dostupný. Seznam serverů zůstal beze změny.</value>
+  </data>
 </root>

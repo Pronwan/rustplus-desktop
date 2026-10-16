@@ -5804,4 +5804,22 @@ Du kan finde mere information på serverens officielle hjemmeside:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Genbrugsberegner</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Gendan servere fra skyen</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Henter de servere, denne konto har parret, tilbage fra skyen. Servere, der allerede er på listen, forbliver uændrede.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Log først ind på din skykonto for at gendanne dine servere.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} server(e) gendannet og {1} opdateret.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Din serverliste matcher allerede skyen.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kunne ikke nå skyen. Din serverliste er uændret.</value>
+  </data>
 </root>

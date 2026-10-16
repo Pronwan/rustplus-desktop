@@ -5810,4 +5810,22 @@ Você pode encontrar mais informações no site oficial do servidor:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculadora de reciclagem</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurar servidores da nuvem</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera da nuvem os servidores que esta conta pareou. Os servidores que já estão na lista continuam como estão.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Entre na sua conta da nuvem primeiro para restaurar seus servidores.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} servidor(es) restaurado(s) e {1} atualizado(s).</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Sua lista de servidores já corresponde à nuvem.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Não foi possível acessar a nuvem. Sua lista de servidores não foi alterada.</value>
+  </data>
 </root>

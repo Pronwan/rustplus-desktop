@@ -8013,4 +8013,22 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>¿Borrar los ajustes globales y la opacidad, el tamaño de texto y el color propios de cada panel? Los paneles se quedan donde están.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurar servidores desde la nube</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera de la nube los servidores que esta cuenta ha emparejado. Los servidores que ya están en la lista se mantienen igual.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Inicia sesión en tu cuenta de la nube para restaurar tus servidores.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Se restauraron {0} servidor(es) y se actualizaron {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tu lista de servidores ya coincide con la nube.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>No se pudo conectar con la nube. Tu lista de servidores no ha cambiado.</value>
+  </data>
 </root>

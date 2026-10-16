@@ -5897,4 +5897,22 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>リサイクル計算機</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>クラウドからサーバーを復元</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>このアカウントでペアリングしたサーバーをクラウドから復元します。既にリストにあるサーバーはそのまま残ります。</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>サーバーを復元するには、先にクラウドアカウントにサインインしてください。</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} 件のサーバーを復元し、{1} 件を更新しました。</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>サーバーリストは既にクラウドと一致しています。</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>クラウドに接続できませんでした。サーバーリストは変更されていません。</value>
+  </data>
 </root>

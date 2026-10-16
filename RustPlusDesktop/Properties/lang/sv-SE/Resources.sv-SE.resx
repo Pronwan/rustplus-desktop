@@ -5804,4 +5804,22 @@ Du kan hitta mer information på serverns officiella webbplats:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Återvinningsräknare</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Återställ servrar från molnet</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Hämtar tillbaka servrarna som det här kontot har parkopplat, från molnet. Servrar som redan finns i listan behålls som de är.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Logga först in på ditt molnkonto för att återställa dina servrar.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Återställde {0} server(ar) och uppdaterade {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Din serverlista stämmer redan med molnet.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kunde inte nå molnet. Din serverlista är oförändrad.</value>
+  </data>
 </root>

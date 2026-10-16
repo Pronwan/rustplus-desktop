@@ -8107,4 +8107,22 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Globale Einstellungen und die eigene Deckkraft, Textgröße und Farbe aller Kacheln zurücksetzen? Die Kacheln selbst bleiben, wo sie sind.</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Server aus der Cloud wiederherstellen</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Holt die Server, die dieses Konto gekoppelt hat, aus der Cloud zurück. Server in der Liste bleiben unverändert.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Melde dich zuerst bei deinem Cloud-Konto an, um deine Server wiederherzustellen.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} Server wiederhergestellt und {1} aktualisiert.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Deine Serverliste entspricht bereits der Cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Die Cloud ist nicht erreichbar. Deine Serverliste bleibt unverändert.</value>
+  </data>
 </root>

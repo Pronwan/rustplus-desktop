@@ -5804,4 +5804,22 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Kierrätyslaskin</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Palauta palvelimet pilvestä</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Tuo pilvestä takaisin palvelimet, jotka tämä tili on yhdistänyt. Listassa jo olevat palvelimet pysyvät ennallaan.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Kirjaudu ensin pilvitiliisi palauttaaksesi palvelimesi.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Palautettiin {0} palvelinta ja päivitettiin {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Palvelinluettelosi vastaa jo pilveä.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Pilveen ei saatu yhteyttä. Palvelinluettelosi on ennallaan.</value>
+  </data>
 </root>

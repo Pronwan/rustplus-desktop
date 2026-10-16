@@ -5804,4 +5804,22 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Калькулятор переробки</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Відновити сервери з хмари</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Повертає з хмари сервери, прив'язані до цього облікового запису. Сервери, які вже є у списку, залишаються без змін.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Спершу увійдіть у хмарний обліковий запис, щоб відновити сервери.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Відновлено серверів: {0}, оновлено: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Ваш список серверів уже збігається з хмарою.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Не вдалося зв'язатися з хмарою. Список серверів не змінено.</value>
+  </data>
 </root>

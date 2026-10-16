@@ -5804,4 +5804,22 @@ További információkat a szerver hivatalos honlapján talál:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Újrahasznosítási kalkulátor</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Szerverek visszaállítása a felhőből</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Visszahozza a felhőből a fiókhoz párosított szervereket. A listában már szereplő szerverek változatlanok maradnak.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>A szerverek visszaállításához előbb jelentkezz be a felhőfiókodba.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} szerver visszaállítva, {1} frissítve.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>A szerverlistád már megegyezik a felhővel.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>A felhő nem érhető el. A szerverlistád nem változott.</value>
+  </data>
 </root>

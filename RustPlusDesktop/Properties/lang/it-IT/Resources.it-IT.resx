@@ -5810,4 +5810,22 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calcolatore del riciclaggio</value>
   </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Ripristina server dal cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera dal cloud i server associati a questo account. I server già presenti nell'elenco restano invariati.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Accedi prima al tuo account cloud per ripristinare i server.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Ripristinati {0} server e aggiornati {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Il tuo elenco server corrisponde già al cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Impossibile raggiungere il cloud. L'elenco server non è cambiato.</value>
+  </data>
 </root>
