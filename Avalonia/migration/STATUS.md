@@ -49,6 +49,24 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   backup. In-place writers are excluded while saving; unrelated atomic-renaming applications still require coordination.
   Edited-address probes bypass companion sockets because those ignore host/port, check nested devices and dispose.
   Changed endpoints reload/reselect and reconnect; canceled edits do not save. Shutdown awaits active probes.
+- Account sign-in/status and current/all-device sign-out use platform-neutral contracts, a native browser,
+  explicit sign-out confirmation, safe errors and unknown-field-preserving private credential writes.
+  Remote success followed by a local conflict is reported as partial completion without overwriting newer data.
+- Owned FCM listener with 60-second heartbeat, three-minute inactivity watchdog, 3–60 second reconnect,
+  duplicate-ID suppression and the reference 20-second duplicate-pairing guard. Token rotation is never
+  suppressed. Current-device ID history is bounded to 1,000 entries, privately persisted and seeded from
+  the legacy ID file when needed. Old socket callbacks cannot affect a replacement session.
+- Incoming server/device pairings use a shared serialized profile writer, exact backups and private file
+  permissions. Stable server IDs, fresh pairing credentials, nested devices/groups/aliases and unknown fields
+  survive re-pairing. Legacy port/address changes use up to five direct entity probes per candidate and the
+  reference single-host fallback; ambiguous matches are reported without changing profiles.
+- Alarm/chat/server metadata backfills missing server IDs/descriptions without changing credentials or
+  replacing custom descriptions. Pairing refreshes reselect a moved server and reconnect an active session.
+- Account panel displays the newest 100 pairing/alarm/chat/offline-death pushes in memory, with normalized
+  sent time shown locally. Source changes, sign-in/out and shutdown await listener disposal; closing the
+  account panel keeps listening. Full notification-center persistence/audio/settings are still pending.
+- Device-name inference distinguishes `Smart Switch` from the standalone `TC` abbreviation; the old broad
+  substring match could misclassify a switch when numeric type information was missing.
 
 ## Feature parity
 
@@ -56,7 +74,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | --- | --- | --- |
 | Saved-server list | Browsing, selection, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, new pairing, original context menus and complete sidebar design |
 | Server-clock calibration | Wired to live samples, independent display ticks and pause state | Native/live-server acceptance, localized countdown formatting and full original status layout |
-| Pairing/auth/accounts | Existing login reads plus native-browser sign-in, server token verification, FCM device registration and private config writes | Live Steam/Facepunch acceptance, pairing listener, sign-out, device/account management and refresh parity |
+| Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance, startup health checks/registration repair and ambiguous-match resolution UI |
 | Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
 | Live map/markers/overlays | Not ported | Separate coordinate/state logic from rendering; choose portable map/helper hosting |
 | Smart devices/automation/timers | Confirmed switches, nested group commands, alarm state, authoritative storage reads and subscriptions | Live-server acceptance, add/edit/delete/import/transfer/reorder devices, custom icons, automation, timers, alarm notifications/audio and full original layout |
@@ -73,7 +91,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | Command dock/minimap/popouts | Not ported | Preserve tiles/templates/configuration, overlays, floating windows and appearance settings |
 | Death markers/stats/wipe tracker | Not ported | Preserve history, heatmaps, archives, marker configuration and cloud synchronization |
 | AI companion | Not ported | Preserve answers/history, provider/model selection, chat commands and account settings |
-| Notifications/custom alerts | Not ported | Preserve inbox, unread state, popup paging, sounds, channel settings and integrations |
+| Notifications/custom alerts | In-memory pairing/alarm/chat/death feed while listening, sent-time normalization and duplicate suppression | Durable inbox, unread state, popup paging, sounds, channel settings and integrations |
 | Community/LFG/support/admin | Not ported | Preserve profiles, moderation/reporting, tickets/attachments, account/team administration |
 | Tutorials/achievements/help | Not ported | Preserve guided targets, progress, content, patch notes, galleries and consent dialogs |
 | Traffic monitor/debug/logs | Not ported | Preserve statistics, filtering, monitoring and diagnostics without leaking credentials |
@@ -100,8 +118,8 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 ## Next implementation slice
 
-1. Validate live Steam/Facepunch sign-in callbacks, then port pairing listener and complete account management;
-   preserve consent, token refresh, sign-out and re-pair workflows behind platform-neutral contracts.
+1. Validate live Steam/Facepunch/FCM sign-in, pairing and sign-out on a native desktop with the user;
+   complete startup health checks, registration repair and ambiguous-match resolution without losing data.
 2. Continue device editing, groups, import/transfer, notifications and automation using the verified session/device boundary.
 3. Port original server context menus and deletion together with its cloud cleanup; preserve all related data and consent flows.
 4. Build the original rail/sidebar/workspace arrangement using Fluent components; preserve navigation
@@ -111,7 +129,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 ## Local verification
 
-- Windows: Debug and Release solution builds and all **99 .NET tests pass with zero warnings** for the current slice.
+- Windows: Debug and Release solution builds are clean; all **139 .NET tests pass with zero warnings** for the current slice.
 - Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
   for native control host` because the executable lacked a supported-OS manifest. Added the official
   Avalonia compatibility declaration to the app host. The same production browser now passes local redirect
@@ -119,6 +137,11 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 - Account tests cover callback origin/nonce validation, duplicate/error fields, signed/JWT claim shapes,
   Pascal-case HTTP fields, cancellation, verification before registration, registration rollback on save
   conflict, unknown-field preservation, current-user-only Windows ACLs and safe account status/error models.
+- New checks cover pairing identity/port changes, nested alias/automation preservation, concurrent writes,
+  no-op duplicates, rotated tokens, bounded sent IDs, coalesced disconnects, source-change/shutdown cleanup,
+  direct re-pair verification/cancellation, server-ID backfill, sign-out scope/confirmation, remote failures,
+  partial local cleanup, private backup permissions and notification-feed bounds. UI renders include pairing
+  controls, a fixture alarm and sign-out confirmation at the 1000×700 minimum size.
 - Tests cover companion/direct route selection, denial classification (including numeric-ID false
   positives), login-required failures, credential validation, token rotation, cancellation/disposal,
   connection loss/recovery, terminal failure during recovery, stale completion after switching, shutdown,
@@ -135,7 +158,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
   code/web candidates and generated-tree exclusions.
 - Isolation: a source-only copy outside the repository restored against a fresh, separate package
   cache, including the local protocol package and FluentAvaloniaUI. The current source passed all
-  **99 .NET tests** there with zero warnings, including runtime XAML loading and light/dark editor renders.
+  **139 .NET tests** there with zero warnings, including duplicate-redelivery and token-rotation regressions.
 - Self-contained Release publishes succeeded for `win-x64`, `linux-x64`, and `osx-arm64` on the Windows host.
   These are compiler/package checks; Linux/macOS executables were **not run**.
 - `git diff --exit-code` confirmed no tracked changes to the reference application or root build/config files.
@@ -148,7 +171,9 @@ were printed, changed, copied into this folder, or used to contact a real server
 Recovery currently detects loss through status polling; the reference app's immediate disconnected-event
 integration remains on the parity backlog. The full migration and visual parity are still unfinished.
 
-The account modal is functional, but real Steam/Facepunch return-URL behavior, FCM delivery and token
-refresh are not accepted yet. No push listener or sign-out is implemented; successful re-sign-in creates a
-new device registration and does not revoke earlier registrations. Credentials are never placed in UI
-models or logs. Native Linux/macOS sign-in is untested. Do not treat this preview as production-ready.
+The account modal, listener and sign-out workflows have automated coverage, but real Steam completion,
+FCM delivery, remote sign-out and automatic token refresh are not accepted yet. The public Facepunch login
+page preserves the supplied loopback callback in its form; no personal login was performed. Successful
+re-sign-in creates a new registration without revoking earlier registrations. The text feed is in-memory;
+notification-center persistence and audio remain pending. Credentials never enter UI models or logs.
+Native Linux/macOS sign-in is untested. Do not treat this preview as production-ready.

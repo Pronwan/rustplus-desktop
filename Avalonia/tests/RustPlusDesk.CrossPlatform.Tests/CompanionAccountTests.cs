@@ -167,6 +167,79 @@ public sealed class CompanionAccountTests
     private static string TokenFor(DateTimeOffset expiry) => Convert.ToBase64String(Encoding.UTF8.GetBytes(
         JsonSerializer.Serialize(new { steamId = Fixture.SteamId, exp = expiry.ToUnixTimeSeconds() }))) + ".fixture-signature";
 
+    [TestMethod]
+    [DataRow(CompanionSignOutScope.CurrentDevice, "/api/push/unregister", "DELETE")]
+    [DataRow(CompanionSignOutScope.AllDevices, "/api/auth/invalidate", "POST")]
+    public async Task SignOut_UsesExpectedRemoteScope_AndRemovesKnownCredentialsPreservingUnknownFields(CompanionSignOutScope scope, string endpoint, string method)
+    {
+        using var fixture = new Fixture();
+        await fixture.Service.SignInAsync(fixture.Path, CancellationToken.None);
+        var config = JsonNode.Parse(await File.ReadAllTextAsync(fixture.Path))!.AsObject();
+        config["future"] = true;
+        config["fcm_credentials"]!["gcm"]!["future"] = "preserve";
+        config["fcm_credentials"]!["fcm"]!["extra"] = 1;
+        await File.WriteAllTextAsync(fixture.Path, config.ToJsonString());
+        var result = await fixture.Service.SignOutAsync(fixture.Path, scope, CancellationToken.None);
+        Assert.AreEqual(CompanionSignOutResult.Completed, result);
+        Assert.AreEqual(endpoint, fixture.Requests[^1].Path);
+        Assert.AreEqual(method, fixture.Methods[^1]);
+        using var sent = JsonDocument.Parse(fixture.Requests[^1].Body);
+        Assert.AreEqual(fixture.Token, sent.RootElement.GetProperty("AuthToken").GetString());
+        if (scope == CompanionSignOutScope.CurrentDevice)
+            Assert.AreEqual(config["rustplus_device_id"]!.GetValue<string>(), sent.RootElement.GetProperty("DeviceId").GetString());
+        var saved = JsonNode.Parse(await File.ReadAllTextAsync(fixture.Path))!;
+        Assert.IsTrue(saved["future"]!.GetValue<bool>());
+        Assert.AreEqual("preserve", saved["fcm_credentials"]!["gcm"]!["future"]!.GetValue<string>());
+        Assert.AreEqual(1, saved["fcm_credentials"]!["fcm"]!["extra"]!.GetValue<int>());
+        foreach (string field in new[] { "rustplus_auth_token", "rustplus_device_id", "expo_push_token", "steam_id", "issue_date", "expiry_date" }) Assert.IsNull(saved[field]);
+        Assert.IsNull(saved["fcm_credentials"]!["gcm"]!["androidId"]);
+        Assert.IsNull(saved["fcm_credentials"]!["gcm"]!["securityToken"]);
+        Assert.IsNull(saved["fcm_credentials"]!["fcm"]!["token"]);
+    }
+
+    [TestMethod]
+    public async Task SignOut_RemoteFailureAndCancellation_PreserveOriginalConfiguration()
+    {
+        using var fixture = new Fixture();
+        await fixture.Service.SignInAsync(fixture.Path, CancellationToken.None);
+        string original = await File.ReadAllTextAsync(fixture.Path);
+        fixture.SignOutStatus = HttpStatusCode.ServiceUnavailable;
+        await Assert.ThrowsExceptionAsync<CompanionAccountException>(() => fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.CurrentDevice, CancellationToken.None));
+        Assert.AreEqual(original, await File.ReadAllTextAsync(fixture.Path));
+        fixture.NetworkError = true;
+        await Assert.ThrowsExceptionAsync<CompanionAccountException>(() => fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.AllDevices, CancellationToken.None));
+        Assert.AreEqual(original, await File.ReadAllTextAsync(fixture.Path));
+        using var cancel = new CancellationTokenSource();
+        cancel.Cancel();
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.CurrentDevice, cancel.Token));
+        Assert.AreEqual(original, await File.ReadAllTextAsync(fixture.Path));
+    }
+
+    [TestMethod]
+    public async Task SignOut_RemoteSuccessAndNewerLocalFile_ReportsPartialCompletionWithoutOverwriting()
+    {
+        using var fixture = new Fixture();
+        await fixture.Service.SignInAsync(fixture.Path, CancellationToken.None);
+        fixture.AfterSignOut = () => File.WriteAllText(fixture.Path, "{\"newer\":true}");
+        var result = await fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.AllDevices, CancellationToken.None);
+        Assert.AreEqual(CompanionSignOutResult.RemoteCompletedLocalCleanupFailed, result);
+        Assert.AreEqual("{\"newer\":true}", await File.ReadAllTextAsync(fixture.Path));
+    }
+
+    [TestMethod]
+    public async Task SignOut_MissingDeviceIdNeverInventsOne_AndRejectedTokenDoesNotClaimRemoteCompletion()
+    {
+        using var fixture = new Fixture();
+        await File.WriteAllTextAsync(fixture.Path, JsonSerializer.Serialize(new { rustplus_auth_token = fixture.Token }));
+        var error = await Assert.ThrowsExceptionAsync<CompanionAccountException>(() => fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.CurrentDevice, CancellationToken.None));
+        Assert.AreEqual(AccountFailure.MissingDeviceRegistration, error.Failure);
+        Assert.AreEqual(0, fixture.Requests.Count);
+        fixture.SignOutStatus = HttpStatusCode.Forbidden;
+        var result = await fixture.Service.SignOutAsync(fixture.Path, CompanionSignOutScope.AllDevices, CancellationToken.None);
+        Assert.AreEqual(CompanionSignOutResult.LocalOnly, result);
+        Assert.IsNull(JsonNode.Parse(await File.ReadAllTextAsync(fixture.Path))!["rustplus_auth_token"]);
+    }
+
     private sealed class Fixture : IDisposable
     {
         public const string SteamId = "76561198000000001";
@@ -175,10 +248,13 @@ public sealed class CompanionAccountTests
         public string Token { get; } = TokenFor(DateTimeOffset.UtcNow.AddDays(1));
         public HttpStatusCode Status { get; set; } = HttpStatusCode.OK;
         public HttpStatusCode RegisterStatus { get; set; } = HttpStatusCode.OK;
+        public HttpStatusCode SignOutStatus { get; set; } = HttpStatusCode.OK;
         public bool NetworkError { get; set; }
         public int PushAcquisitions { get; private set; }
         public Action? AfterRegister { get; set; }
+        public Action? AfterSignOut { get; set; }
         public List<(string Path, string Body)> Requests { get; } = [];
+        public List<string> Methods { get; } = [];
         public Browser Browser { get; } = new();
         private readonly HttpClient http;
         public CompanionAccountService Service { get; }
@@ -190,15 +266,22 @@ public sealed class CompanionAccountTests
                 if (NetworkError) throw new HttpRequestException("private request details");
                 string path = request.RequestUri!.AbsolutePath;
                 Requests.Add((path, await request.Content!.ReadAsStringAsync(ct)));
+                Methods.Add(request.Method.Method);
                 if (path == "/api/push/register") AfterRegister?.Invoke();
-                return new(path == "/api/channel/check" ? Status : path == "/api/push/register" ? RegisterStatus : HttpStatusCode.OK)
+                bool signOut = path is "/api/push/unregister" or "/api/auth/invalidate";
+                if (signOut) AfterSignOut?.Invoke();
+                return new(path == "/api/channel/check" ? Status : path == "/api/push/register" ? RegisterStatus : signOut ? SignOutStatus : HttpStatusCode.OK)
                 { Content = new StringContent(path == "/login/exchange" ? JsonSerializer.Serialize(new { token = Token }) : "{}") };
             }));
             Service = new(http, Browser, _ =>
             {
                 PushAcquisitions++;
-                return Task.FromResult(new Credentials { Gcm = new() { AndroidId = 42, SecurityToken = 43 },
-                    Fcm = new() { Token = "fixture-fcm" }, ExpoPushToken = "fixture-expo" });
+                return Task.FromResult(new Credentials
+                {
+                    Gcm = new() { AndroidId = 42, SecurityToken = 43 },
+                    Fcm = new() { Token = "fixture-fcm" },
+                    ExpoPushToken = "fixture-expo"
+                });
             });
         }
         public void Dispose() { http.Dispose(); System.IO.Directory.Delete(Directory, recursive: true); }

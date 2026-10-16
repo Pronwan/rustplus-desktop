@@ -32,6 +32,10 @@ and upstream attribution when copying or distributing it.
   and MIT-licensed `Avalonia.Controls.WebView` 12.1.1 for native browser authentication. No private
   authentication-provider source is copied. The Windows compatibility declaration follows the
   official Avalonia desktop template: <https://github.com/AvaloniaUI/avalonia-dotnet-templates>.
+- Push classification, sent-time normalization, pairing identity/device matching and re-pair verification
+  follow `Services/NativeFcmListener.cs`, `MainWindow.xaml.cs` and `Services/RustPlusConnectionVerifier.cs`.
+  They are reworked into a portable stream and shared schema-preserving storage. The same public MIT
+  `RustPlusApi.Fcm` dependency supplies the MCS transport; no private authentication provider is required.
 - `packages-local/RustPlusApi.2.0.0-beta.9.socket.1.nupkg` is copied unchanged from the reference
   repository's local feed. It is MIT-licensed (HandyS11 / Clergue Valentin); see `packages-local/RustPlusApi.LICENSE`.
   SHA-256: `DBEAE2BF1241D6F77C2EF10493FC274306393ED2910923C178DC0F60822343BF`.

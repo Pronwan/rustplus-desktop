@@ -30,7 +30,8 @@ public sealed class ShellTests
         await session.Dispatch(async () =>
         {
             var service = new CompanionAccountViewModelTests.Service();
-            var model = new ServersViewModel(new PreviewCatalog(), new UnusedPicker(), "profiles.json", new PreviewSessionFactory(), accountService: service);
+            var source = new CompanionListenerViewModelTests.Source();
+            var model = new ServersViewModel(new PreviewCatalog(), new UnusedPicker(), "profiles.json", new PreviewSessionFactory(), accountService: service, companionListener: source);
             var window = new MainWindow { DataContext = model, Width = 1000, Height = 700 };
             try
             {
@@ -38,23 +39,42 @@ public sealed class ShellTests
                 model.OpenAccountCommand.Execute(null);
                 Assert.IsTrue(model.HasOverlay);
                 Assert.IsFalse(model.RefreshCommand.CanExecute(null));
+                using var opened = window.CaptureRenderedFrame();
+                Assert.IsNotNull(opened);
                 var view = window.GetVisualDescendants().OfType<CompanionAccountView>().Single();
                 Assert.IsTrue(view.IsEffectivelyVisible);
                 Assert.IsNotNull(model.Account);
                 await model.Account.CheckCommand.ExecuteAsync(null);
+                Task listening = model.Listener!.StartCommand.ExecuteAsync(null);
+                await source.Started.Task;
+                source.Send(new(RustPlusDesk.Core.Accounts.CompanionUpdateKind.Alarm, "Fixture base alarm", "Motion detected") { ServerName = "EU Vanilla" });
+                await CompanionListenerViewModelTests.Eventually(() => model.Listener.Notifications.Count == 1);
                 using var frame = window.CaptureRenderedFrame();
                 Assert.IsNotNull(frame);
                 frame.Save(Path.Combine(AppContext.BaseDirectory, "ui-account.png"), PngBitmapEncoderOptions.Default);
                 Assert.IsTrue(window.GetVisualDescendants().OfType<TextBlock>().Any(text => text.Text == "Signed in to Rust+."));
-                foreach (var button in view.GetVisualDescendants().OfType<Button>().Where(button => button.IsEffectivelyVisible))
+                foreach (var button in window.GetVisualDescendants().OfType<Button>().Where(button => button.IsEffectivelyVisible))
                 {
                     var origin = button.TranslatePoint(default, window)!.Value;
                     Assert.IsTrue(origin.X >= 0 && origin.X + button.Bounds.Width <= window.ClientSize.Width);
+                    Assert.IsTrue(origin.Y >= 0 && origin.Y + button.Bounds.Height <= window.ClientSize.Height);
                 }
+                model.Account.RequestSignOutCommand.Execute(RustPlusDesk.Core.Accounts.CompanionSignOutScope.AllDevices);
+                using (var confirmation = window.CaptureRenderedFrame())
+                {
+                    Assert.IsNotNull(confirmation);
+                    confirmation.Save(Path.Combine(AppContext.BaseDirectory, "ui-account-signout.png"), PngBitmapEncoderOptions.Default);
+                }
+                Assert.IsTrue(model.Account.IsConfirmingSignOut);
+                Assert.AreEqual(0, service.SignOuts);
+                model.Account.KeepSignedInCommand.Execute(null);
                 await model.CloseAccountCommand.ExecuteAsync(null);
                 Assert.IsFalse(model.HasOverlay);
                 Assert.IsFalse(view.IsEffectivelyVisible);
                 Assert.IsTrue(model.RefreshCommand.CanExecute(null));
+                Assert.IsTrue(model.Listener.IsRunning);
+                await model.Listener.StopListeningAsync();
+                await listening;
             }
             finally { await model.ShutdownAsync(); window.Close(); }
             return true;
@@ -221,11 +241,14 @@ public sealed class ShellTests
 
     private sealed class PreviewSessionFactory : IServerSessionFactory, IServerSession
     {
-        public IDeviceClient Devices { get; } = new TestDeviceClient { Read = (device, _) => Task.FromResult(
+        public IDeviceClient Devices { get; } = new TestDeviceClient
+        {
+            Read = (device, _) => Task.FromResult(
             device.Kind == DeviceKind.StorageMonitor
                 ? new DeviceSnapshot(device.EntityId, Storage: new(24, true, DateTimeOffset.UtcNow.AddDays(3),
                     [new(-151838493, 1200, false) { Name = "Wood" }, new(69511070, 500, false) { Name = "Metal Fragments" }]))
-                : new DeviceSnapshot(device.EntityId, false)) };
+                : new DeviceSnapshot(device.EntityId, false))
+        };
         public bool Disposed { get; private set; }
         public ServerStatus InitialStatus { get; } = new("EU Vanilla", 42, 200, 3, 14.5);
         public Task<IServerSession> ConnectAsync(string profilesPath, string profileKey, CancellationToken cancellationToken)

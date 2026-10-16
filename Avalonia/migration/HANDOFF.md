@@ -26,13 +26,13 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 
 ## Verified current source
 
-- Debug/Release builds: zero warnings/errors. All 99 MSTest tests pass.
-- Source-only external copy with separate package cache: 99 tests pass, zero warnings.
+- Debug/Release builds: zero warnings/errors. All 139 MSTest tests pass after local auto-resume.
+- Source-only external copy with separate package cache: 139 tests pass, zero warnings.
 - Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
 - Two Python reference-capture tests passed in the earlier slice; its code has not changed since.
 - External copy location is recorded locally in ignored `artifacts/isolation-path.txt`; its source copy
-  includes the auth/crash fix but may precede final documentation and smoke-tool relocation.
+  includes current account/listener source; final documentation can be newer than that copy.
 - Rebuilt app: `src/RustPlusDesk.Avalonia/bin/Release/net10.0/RustPlusDesk.Avalonia.exe`.
 - Self-contained Windows app: `artifacts/publish/win-x64/RustPlusDesk.Avalonia.exe`.
 
@@ -42,15 +42,19 @@ Saved-server browsing/editing with revision protection/backups, socket/direct co
 live server clock/status, confirmed device/group switches, alarm/storage state and subscriptions;
 account modal with safe status, native browser sign-in, companion verification, FCM registration,
 schema-preserving private credential writes, cancellation and failed-save registration rollback.
+The resumed slice adds the FCM listener and recent push feed, server/device pairing and verified legacy
+re-pair, metadata backfill, shared private atomic profile writes, and confirmed current/global sign-out.
+Persistent IDs are scoped to the current push device and bounded to 1,000 entries; the in-memory feed
+keeps 100 entries. Sign-in/out and source changes await the listener and clear the previous account feed.
 Unknown JSON is preserved; tokens are excluded from presentation and logs.
 
 ## Exact next steps
 
 1. Validate real Steam/Facepunch return-URL callbacks on Windows. The native window crash is fixed;
    actual Steam authentication and FCM delivery have not been accepted. Do not claim complete sign-in parity.
-2. Port the original pairing/push listener, persistent IDs and reconnect, server/device pairing events,
-   then sign-out, device/account management and refresh/re-pair workflows. Never revoke earlier devices
-   accidentally; current successful re-sign-in creates a new registration without deleting older ones.
+2. Continue original startup push-health/self-test and automatic registration repair. Pairing, reconnect,
+   ID persistence, direct re-pair probes and sign-out are now implemented; do not redo them. Re-sign-in
+   creates a new registration without deleting earlier ones. Add explicit ambiguous-match resolution later.
 3. Continue device editing/import/transfer/automation, original server menus/cloud-aware deletion,
    and the original sidebar/workspace layout. The full required backlog is in STATUS.md/reference checklist.
 4. Run native Windows/Linux/macOS acceptance, including permissions, browser prerequisites and appearance.
@@ -68,8 +72,9 @@ Use graph discovery first (project `D-Development-rustplus-desktop`, Tier 2), th
 Recent auth files had unavailable/stale graph coverage; exact source and runnable checks were used.
 Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dead-code audit is claimed.
 
-Account usage reached 97% of the five-hour window; implementation stopped per the checkpoint rule.
-Reset was reported at 2026-10-16 17:21:05 Asia/Beirut. No cloud transfer or scheduled resume has been
-configured. To continue remotely, create/select a Codex Cloud environment for Jawad's fork, use `beta`,
-and read this handoff before changing only `Avalonia/`. Cloud/local tasks share usage. The reset does not
-itself configure a wake-up; a supported schedule or a new message is needed to trigger continuation.
+The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
+2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
+no cloud task was configured. Current source changes after `3c36abf` are the resumed account/pairing
+slice; inspect Git status/log for its checkpoint commit. Most recent usage check: 35%; at 97%, stop
+implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
+unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.

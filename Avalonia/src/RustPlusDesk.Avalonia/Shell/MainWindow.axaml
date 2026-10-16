@@ -15,6 +15,8 @@
         <TextBlock Text="Your Rust companion" Classes="muted" />
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <TextBlock Text="Pairing active" Classes="muted" VerticalAlignment="Center"
+                   IsVisible="{Binding Listener.IsRunning, FallbackValue=False}" />
         <Button Content="_Account" Command="{Binding OpenAccountCommand}" IsVisible="{Binding HasAccount}" />
         <Border Classes="badge"><TextBlock Text="Cross-platform preview" /></Border>
       </StackPanel>
@@ -31,10 +33,15 @@
     </Border>
     <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding IsAccountOpen}">
       <Border Classes="card" Width="520" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ScrollViewer MaxHeight="560" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Spacing="16" KeyboardNavigation.TabNavigation="Cycle">
           <accounts:CompanionAccountView DataContext="{Binding Account}" IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).IsAccountOpen}" />
+          <accounts:CompanionListenerView DataContext="{Binding Listener}"
+              IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).HasListener}"
+              IsEnabled="{Binding !$parent[Window].((servers:ServersViewModel)DataContext).Account.IsBusy}" />
           <Button Content="_Close" Command="{Binding CloseAccountCommand}" HorizontalAlignment="Right" />
         </StackPanel>
+        </ScrollViewer>
       </Border>
     </Border>
   </Grid>

@@ -43,7 +43,7 @@ public sealed partial class App : Application
             var accountHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             var accounts = new CompanionAccountService(accountHttp, new CompanionLoginBrowser(window));
             var servers = new ServersViewModel(new LegacyServerCatalog(),
-                new ProfileFilePicker(window), LegacyServerCatalog.DefaultPath, sessions, new LegacyServerProfileEditor(), sessions, accounts);
+                new ProfileFilePicker(window), LegacyServerCatalog.DefaultPath, sessions, new LegacyServerProfileEditor(), sessions, accounts, new CompanionListener());
             desktop.Exit += (_, _) => accountHttp.Dispose();
             window.DataContext = servers;
             window.Opened += async (_, _) => await servers.RefreshCommand.ExecuteAsync(null);

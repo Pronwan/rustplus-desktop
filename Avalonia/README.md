@@ -31,13 +31,23 @@ when available, followed by the direct route. **Account → Sign in with Steam**
 authentication dialog and verifies the companion token before registering a new push device and saving
 credentials beside the chosen profiles file. Canceling or failing sign-in preserves existing credentials.
 Successful writes preserve unknown configuration fields and restrict the credential file to the current user.
-New pairing, push listening, sign-out and complete account management remain pending. Live Steam/Facepunch
-sign-in acceptance still needs verification; automated checks use local callbacks and synthetic credentials.
+Use **Start listening** in Account, then pair a server or smart device from Rust. The listener saves
+pairings into the selected profiles file, preserves nested groups/settings, and refreshes the server list.
+It keeps running after the account panel closes; **Stop listening**, a profile-source change, sign-in,
+sign-out or app shutdown stops and awaits it. Temporary socket failures retry with 3–60 second backoff.
+Recent pairing, alarm, team-chat and offline-death pushes appear in the account panel with their sent time.
+This feed keeps the newest 100 entries in memory; the full notification center, sounds and durable inbox remain pending.
+
+**Sign out this device** unregisters its push registration. **Sign out all devices** invalidates the saved
+companion token across devices using it. Both require confirmation, stop owned sessions, preserve paired
+servers and unknown configuration fields, and report remote/local partial completion. Startup push-health
+checks and automatic registration repair remain pending. Live Steam/Facepunch/FCM acceptance still needs verification;
+automated checks use local callbacks, synthetic credentials and fake transports.
 
 Paired smart switches, nested groups, alarm state and storage contents load after connecting.
 ON/OFF commands wait for a confirmed state; failed or missing devices do not invalidate the server login.
 Storage uses the bundled Rust item names, including quantity, blueprint and upkeep information.
-Automation, device editing, alarm audio/notifications and the rest of the original device tools remain pending.
+Automation, device editing, alarm audio and the rest of the original device tools remain pending.
 
 Use **Edit…** for the selected server's name, host and companion port. The direct-address test uses its
 existing credentials and checks paired devices without saving. **Save changes** preserves unknown JSON
@@ -46,6 +56,10 @@ and atomically replaces that file. A changed source revision is rejected; refres
 Backups contain the same sensitive pairing data as the original and should remain in its protected folder.
 Keep other applications that write this file closed while saving; unrelated atomic-renaming writers cannot
 participate in the editor's file lock. Deletion remains pending with its original cloud-cleanup behavior.
+Incoming pairings share the editor's writer and create protected backups only when data changes. Server-ID
+matches survive address changes. Legacy matches use direct device verification or the original unique-host
+fallback; ambiguous/conflicting matches are reported and kept unchanged. Alarm/chat metadata can backfill
+missing Facepunch server IDs without replacing pairing credentials or custom server descriptions.
 
 ## Structure
 
@@ -62,12 +76,13 @@ src/
                                 Schema-preserving editor with backup/revision protection
     Connections/                Companion/direct routing, credential reads and Rust+ transport
     Items/                      Bundled item-name catalog
-    Accounts/                   Companion verification, FCM registration and private config writes
+    Accounts/                   Companion verification, registration, push sessions and sign-out
+    Storage/                    Shared private atomic writes with exact revision checks
   RustPlusDesk.Avalonia/         Desktop host and composition root
     Features/Servers/           Feature view and MVVM view model
     Features/Connections/       Owned session, cancellation, recovery, live clock and status view
     Features/Devices/           Groups, confirmed switch control, alarms and storage presentation
-    Features/Accounts/          Account dialog, exclusive commands and cancellation
+    Features/Accounts/          Account dialog, push feed, confirmation and owned cancellation
     Shared/Controls/            Reusable status panel
     Styles/                     Shared visual tokens and component styles
     Services/                   Native file-picker and authentication browser adapters

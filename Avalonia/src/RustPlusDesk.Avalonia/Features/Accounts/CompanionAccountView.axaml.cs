@@ -8,6 +8,7 @@ public sealed partial class CompanionAccountView : UserControl
     public CompanionAccountView()
     {
         InitializeComponent();
+        AttachedToVisualTree += (_, _) => Dispatcher.UIThread.Post(() => { if (IsEffectivelyVisible) CheckStatus.Focus(); });
         PropertyChanged += (_, args) =>
         {
             if (args.Property == IsVisibleProperty && IsVisible)

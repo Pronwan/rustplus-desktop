@@ -1,16 +1,28 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:RustPlusDesk.Avalonia.Features.Accounts"
+             xmlns:account="using:RustPlusDesk.Core.Accounts"
              x:Class="RustPlusDesk.Avalonia.Features.Accounts.CompanionAccountView" x:DataType="vm:CompanionAccountViewModel">
   <StackPanel Spacing="16">
     <TextBlock Text="Rust+ account" FontSize="22" FontWeight="SemiBold" />
     <TextBlock Text="Sign in through Steam and register this device for Rust+ pairing notifications." TextWrapping="Wrap" Classes="muted" />
     <TextBlock Text="{Binding Identity}" FontWeight="SemiBold" TextWrapping="Wrap" />
     <TextBlock Text="{Binding Message}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
-    <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" AutomationProperties.Name="Rust+ sign-in operation" />
+    <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" AutomationProperties.Name="Rust+ account operation" />
     <StackPanel Orientation="Horizontal" Spacing="8">
       <Button x:Name="CheckStatus" Content="_Check status" Command="{Binding CheckCommand}" />
       <Button Content="_Sign in with Steam" Command="{Binding SignInCommand}" Classes="accent" />
       <Button Content="_Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="8">
+      <Button Content="Sign out this _device" Command="{Binding RequestSignOutCommand}" CommandParameter="{x:Static account:CompanionSignOutScope.CurrentDevice}" />
+      <Button Content="Sign out _all devices" Command="{Binding RequestSignOutCommand}" CommandParameter="{x:Static account:CompanionSignOutScope.AllDevices}" />
+    </StackPanel>
+    <StackPanel Spacing="10" IsVisible="{Binding IsConfirmingSignOut}">
+      <TextBlock Text="{Binding SignOutExplanation}" TextWrapping="Wrap" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="_Confirm sign out" Command="{Binding ConfirmSignOutCommand}" />
+        <Button Content="_Keep signed in" Command="{Binding KeepSignedInCommand}" IsEnabled="{Binding !IsBusy}" />
+      </StackPanel>
     </StackPanel>
   </StackPanel>
 </UserControl>

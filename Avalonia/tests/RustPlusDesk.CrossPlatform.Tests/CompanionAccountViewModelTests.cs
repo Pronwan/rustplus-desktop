@@ -26,13 +26,16 @@ public sealed class CompanionAccountViewModelTests
     {
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         bool stopped = false;
-        var service = new Service { Check = async ct =>
+        var service = new Service
+        {
+            Check = async ct =>
         {
             started.TrySetResult();
             try { await Task.Delay(Timeout.Infinite, ct); }
             finally { stopped = true; }
             return new(AccountState.Active, "76561198000000001");
-        }};
+        }
+        };
         var model = new CompanionAccountViewModel(service, "old/profiles.json", () => Task.CompletedTask);
         var check = model.CheckCommand.ExecuteAsync(null);
         await started.Task;
@@ -77,6 +80,9 @@ public sealed class CompanionAccountViewModelTests
     {
         public string? Path { get; private set; }
         public int SignIns { get; private set; }
+        public int SignOuts { get; private set; }
+        public CompanionSignOutScope? Scope { get; private set; }
+        public CompanionSignOutResult SignOutResult { get; set; }
         public Exception? Error { get; set; }
         public Action? BeforeSignIn { get; init; }
         public Func<CancellationToken, Task<CompanionAccount>>? Check { get; init; }
@@ -90,5 +96,49 @@ public sealed class CompanionAccountViewModelTests
             return Error is { } error ? Task.FromException<CompanionAccount>(error)
                 : Task.FromResult(new CompanionAccount(AccountState.Active, "76561198000000001"));
         }
+        public Task<CompanionSignOutResult> SignOutAsync(string configPath, CompanionSignOutScope scope, CancellationToken cancellationToken)
+        {
+            Path = configPath; Scope = scope; SignOuts++; BeforeSignIn?.Invoke();
+            return Error is { } error ? Task.FromException<CompanionSignOutResult>(error) : Task.FromResult(SignOutResult);
+        }
+    }
+
+    [TestMethod]
+    public async Task SignOut_RequiresExplicitConfirmation_AndStopsOwnedSessionsBeforeRemoteCall()
+    {
+        bool stopped = false;
+        var service = new Service { BeforeSignIn = () => Assert.IsTrue(stopped) };
+        var model = new CompanionAccountViewModel(service, "profiles.json", () => { stopped = true; return Task.CompletedTask; });
+        await model.ConfirmSignOutCommand.ExecuteAsync(null);
+        Assert.AreEqual(0, service.SignOuts);
+        model.RequestSignOutCommand.Execute(CompanionSignOutScope.AllDevices);
+        Assert.IsTrue(model.IsConfirmingSignOut);
+        Assert.IsFalse(model.CheckCommand.CanExecute(null));
+        model.KeepSignedInCommand.Execute(null);
+        Assert.IsFalse(model.IsConfirmingSignOut);
+        Assert.AreEqual(0, service.SignOuts);
+        model.RequestSignOutCommand.Execute(CompanionSignOutScope.CurrentDevice);
+        await model.ConfirmSignOutCommand.ExecuteAsync(null);
+        Assert.AreEqual(CompanionSignOutScope.CurrentDevice, service.Scope);
+        Assert.AreEqual(AccountState.Missing, model.Account.State);
+        Assert.IsFalse(model.IsConfirmingSignOut);
+        Assert.IsTrue(model.CheckCommand.CanExecute(null));
+    }
+
+    [TestMethod]
+    public async Task SignOut_PartialCleanupAndNetworkFailure_HaveTruthfulSafeMessages()
+    {
+        var service = new Service { SignOutResult = CompanionSignOutResult.RemoteCompletedLocalCleanupFailed };
+        var model = new CompanionAccountViewModel(service, "profiles.json", () => Task.CompletedTask);
+        model.RequestSignOutCommand.Execute(CompanionSignOutScope.AllDevices);
+        await model.ConfirmSignOutCommand.ExecuteAsync(null);
+        Assert.AreEqual(AccountState.Unavailable, model.Account.State);
+        StringAssert.Contains(model.Message, "local file could not be updated");
+        service.Error = new IOException("private token and endpoint URL");
+        model.RequestSignOutCommand.Execute(CompanionSignOutScope.CurrentDevice);
+        await model.ConfirmSignOutCommand.ExecuteAsync(null);
+        Assert.IsFalse(model.Message.Contains("private", StringComparison.Ordinal));
+        Assert.IsFalse(model.IsBusy);
+        Assert.IsFalse(model.IsConfirmingSignOut);
     }
 }

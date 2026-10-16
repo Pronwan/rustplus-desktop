@@ -122,6 +122,50 @@ public sealed class CompanionAccountService : ICompanionAccountService
         catch (Exception) { throw new CompanionAccountException(AccountFailure.Unavailable); }
     }
 
+    public async Task<CompanionSignOutResult> SignOutAsync(string configPath, CompanionSignOutScope scope, CancellationToken cancellationToken)
+    {
+        if (!Enum.IsDefined(scope)) throw new ArgumentOutOfRangeException(nameof(scope));
+        try
+        {
+            var config = await CompanionConfigFile.ReadAsync(configPath, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (config.Original is null) return CompanionSignOutResult.LocalOnly;
+            string? token = config.Text("rustplus_auth_token");
+            bool remoteConfirmed = false;
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                string? device = config.Text("rustplus_device_id");
+                if (scope == CompanionSignOutScope.CurrentDevice && string.IsNullOrWhiteSpace(device))
+                    throw new CompanionAccountException(AccountFailure.MissingDeviceRegistration);
+                using var response = scope == CompanionSignOutScope.CurrentDevice
+                    ? await SendAsync(HttpMethod.Delete, "api/push/unregister", new { AuthToken = token, DeviceId = device }, cancellationToken).ConfigureAwait(false)
+                    : await SendAsync(HttpMethod.Post, "api/auth/invalidate", new { AuthToken = token }, cancellationToken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode && response.StatusCode is not (HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden))
+                    throw new CompanionAccountException(AccountFailure.Unavailable);
+                remoteConfirmed = response.IsSuccessStatusCode;
+            }
+            foreach (string field in new[] { "rustplus_auth_token", "rustplus_device_id", "expo_push_token", "steam_id", "issue_date", "expiry_date" })
+                config.Values.Remove(field);
+            if (config.Values["fcm_credentials"] is JsonObject fcm)
+            {
+                if (fcm["gcm"] is JsonObject gcm) { gcm.Remove("androidId"); gcm.Remove("securityToken"); }
+                if (fcm["fcm"] is JsonObject registration) registration.Remove("token");
+            }
+            try
+            {
+                // A confirmed remote action cannot be undone; finish local cleanup even if Cancel arrives now.
+                await config.SaveAsync(configPath, CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception) when (remoteConfirmed) { return CompanionSignOutResult.RemoteCompletedLocalCleanupFailed; }
+            return remoteConfirmed ? CompanionSignOutResult.Completed : CompanionSignOutResult.LocalOnly;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (CompanionAccountException) { throw; }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException)
+        { throw new CompanionAccountException(AccountFailure.InvalidConfiguration); }
+        catch (Exception) { throw new CompanionAccountException(AccountFailure.Unavailable); }
+    }
+
     private async Task<CompanionAccount> CheckTokenAsync(string token, CancellationToken cancellationToken)
     {
         var claims = CompanionToken.ReadClaims(token);

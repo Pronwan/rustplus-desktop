@@ -11,11 +11,17 @@ using RustPlusDesk.Avalonia.Features.Accounts;
 namespace RustPlusDesk.Avalonia.Features.Servers;
 
 public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFilePicker picker, string initialPath, IServerSessionFactory sessionFactory,
-    IServerProfileEditor? profileEditor = null, IServerConnectionTester? connectionTester = null, ICompanionAccountService? accountService = null)
+    IServerProfileEditor? profileEditor = null, IServerConnectionTester? connectionTester = null, ICompanionAccountService? accountService = null,
+    ICompanionListener? companionListener = null)
     : ObservableObject
 {
     public ConnectionViewModel Connection { get; } = new(sessionFactory);
     public CompanionAccountViewModel? Account { get; private set; }
+    public CompanionListenerViewModel? Listener { get; private set; }
+    public bool HasListener => Listener is not null;
+    private bool shuttingDown;
+    private bool pendingPairingRefresh;
+    private readonly Dictionary<string, string> pairedProfileKeys = [];
     public bool HasAccount => accountService is not null;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasOverlay))]
@@ -40,8 +46,14 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
         if (IsBusy || HasOverlay || accountService is null) return;
         if (Account is null)
         {
-            Account = new(accountService, SourcePath, Connection.StopAsync);
+            Account = new(accountService, SourcePath, BeforeSignInAsync);
             OnPropertyChanged(nameof(Account));
+        }
+        if (Listener is null && companionListener is not null)
+        {
+            Listener = new(companionListener, SourcePath, PairingSavedAsync);
+            OnPropertyChanged(nameof(Listener));
+            OnPropertyChanged(nameof(HasListener));
         }
         IsAccountOpen = true;
     }
@@ -51,6 +63,30 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     {
         if (Account is not null) await Account.StopAsync();
         IsAccountOpen = false;
+        await RefreshPairingsAsync();
+    }
+
+    private async Task BeforeSignInAsync()
+    {
+        if (Listener is not null) await Listener.SetSourceAsync(SourcePath);
+        await Connection.StopAsync();
+    }
+
+    private Task PairingSavedAsync(CompanionUpdate update)
+    {
+        pendingPairingRefresh = true;
+        if (update.ReplacesProfileKey is { } previous && update.ProfileKey is { } updated && previous != updated)
+            pairedProfileKeys[previous] = updated;
+        return RefreshPairingsAsync();
+    }
+
+    private async Task RefreshPairingsAsync()
+    {
+        if (!pendingPairingRefresh || IsBusy || HasOverlay || shuttingDown) return;
+        pendingPairingRefresh = false;
+        bool reconnect = Connection.IsConnected;
+        await RefreshCommand.ExecuteAsync(null);
+        if (reconnect && !shuttingDown && SelectedServer is not null) Connection.ConnectCommand.Execute(null);
     }
 
     partial void OnSelectedServerChanged(ServerSummary? value) => Connection.Select(SourcePath, value);
@@ -98,6 +134,7 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
             if (Editor is { } current) await current.StopAsync();
             Editor = null;
             IsBusy = false;
+            await RefreshPairingsAsync();
         }
     }
 
@@ -106,8 +143,21 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     {
         if (!CanLoad) return;
         IsBusy = true;
-        try { await LoadAsync(SourcePath, cancellationToken); }
-        finally { IsBusy = false; }
+        string? desiredSelection = SelectedServer?.ProfileKey;
+        try
+        {
+            do
+            {
+                pendingPairingRefresh = false;
+                await LoadAsync(SourcePath, cancellationToken);
+                for (int hop = 0; desiredSelection is not null && hop < pairedProfileKeys.Count; hop++)
+                    if (pairedProfileKeys.TryGetValue(desiredSelection, out string? updated)) desiredSelection = updated;
+                    else break;
+                if (desiredSelection is not null)
+                    SelectedServer = Servers.FirstOrDefault(server => server.ProfileKey == desiredSelection) ?? SelectedServer;
+            } while (pendingPairingRefresh && !shuttingDown && !cancellationToken.IsCancellationRequested);
+        }
+        finally { IsBusy = false; pairedProfileKeys.Clear(); }
     }
 
     [RelayCommand(CanExecute = nameof(CanLoad))]
@@ -118,7 +168,13 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
         try
         {
             var path = await picker.PickAsync();
-            if (path is not null) await LoadAsync(path, cancellationToken);
+            if (path is not null)
+            {
+                if (Listener is not null) await Listener.SetSourceAsync(path);
+                pendingPairingRefresh = false;
+                pairedProfileKeys.Clear();
+                await LoadAsync(path, cancellationToken);
+            }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
         {
@@ -171,10 +227,12 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
 
     public async Task ShutdownAsync()
     {
+        shuttingDown = true;
         RefreshCommand.Cancel();
         OpenFileCommand.Cancel();
         EditCommand.Cancel();
         if (Account is not null) await Account.StopAsync();
+        if (Listener is not null) await Listener.StopListeningAsync();
         await Connection.StopAsync();
         if (RefreshCommand.ExecutionTask is { } refresh) await refresh;
         if (OpenFileCommand.ExecutionTask is { } open) await open;

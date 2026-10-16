@@ -14,13 +14,29 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CheckCommand))]
     [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RequestSignOutCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ConfirmSignOutCommand))]
     private bool isBusy;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsConfirmingSignOut))]
+    [NotifyPropertyChangedFor(nameof(SignOutExplanation))]
+    [NotifyCanExecuteChangedFor(nameof(CheckCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SignInCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RequestSignOutCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ConfirmSignOutCommand))]
+    private CompanionSignOutScope? pendingSignOut;
+    public bool IsConfirmingSignOut => PendingSignOut.HasValue;
+    public string SignOutExplanation => PendingSignOut == CompanionSignOutScope.AllDevices
+        ? "Sign out across devices using this Rust+ sign-in? You will need to sign in again. Your paired servers stay saved."
+        : "Sign out this device and stop its Rust+ pairing notifications? Your paired servers stay saved.";
     public string Identity => string.IsNullOrEmpty(Account.SteamId) ? "Rust+ Companion" : $"Steam ID: {Account.SteamId}";
-    private bool CanRun => !IsBusy;
+    private bool CanRun => !IsBusy && !IsConfirmingSignOut;
+    private bool CanConfirmSignOut => !IsBusy && IsConfirmingSignOut;
 
     public async Task SetSourceAsync(string source)
     {
         await StopAsync();
+        PendingSignOut = null;
         configPath = ConfigPathFor(source);
         Account = new(AccountState.Missing);
         Message = "Check your Rust+ sign-in status or sign in with Steam.";
@@ -31,9 +47,55 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
     [RelayCommand(CanExecute = nameof(CanRun))]
     private Task SignInAsync(CancellationToken cancellationToken) => RunAsync(true, cancellationToken);
 
+    [RelayCommand(CanExecute = nameof(CanRun))]
+    private void RequestSignOut(CompanionSignOutScope scope)
+    {
+        if (CanRun && Enum.IsDefined(scope)) PendingSignOut = scope;
+    }
+
+    [RelayCommand]
+    private void KeepSignedIn() { if (!IsBusy) PendingSignOut = null; }
+
+    [RelayCommand(CanExecute = nameof(CanConfirmSignOut))]
+    private async Task ConfirmSignOutAsync(CancellationToken cancellationToken)
+    {
+        if (!CanConfirmSignOut || PendingSignOut is not { } scope) return;
+        IsBusy = true;
+        Message = "Signing out of Rust+…";
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(30));
+        try
+        {
+            await beforeSignIn();
+            timeout.Token.ThrowIfCancellationRequested();
+            var result = await service.SignOutAsync(configPath, scope, timeout.Token);
+            Account = new(result == CompanionSignOutResult.RemoteCompletedLocalCleanupFailed ? AccountState.Unavailable : AccountState.Missing);
+            Message = result switch
+            {
+                CompanionSignOutResult.Completed => scope == CompanionSignOutScope.AllDevices
+                    ? "Signed out across devices. Local sign-in removed." : "This device is signed out. Local sign-in removed.",
+                CompanionSignOutResult.LocalOnly => "Local sign-in removed. Facepunch did not confirm a remote sign-out; the saved token was missing or rejected.",
+                _ => "Facepunch sign-out succeeded, but the local file could not be updated. Check status before signing in again."
+            };
+        }
+        catch (OperationCanceledException) { Message = "Sign-out was canceled or timed out. Check status before trying again."; }
+        catch (CompanionAccountException ex)
+        {
+            Message = ex.Failure switch
+            {
+                AccountFailure.MissingDeviceRegistration => "The saved device ID is missing. Sign out across devices or check your sign-in file.",
+                AccountFailure.InvalidConfiguration => "The saved sign-in file is unreadable. Keep a copy before repairing it.",
+                AccountFailure.ChangedConfiguration => "The local sign-in file changed. Refresh status before signing out again.",
+                _ => "Unable to confirm sign-out. Check your connection and try again; saved sign-in was kept."
+            };
+        }
+        catch (Exception) { Message = "Unable to confirm sign-out. Check status before trying again."; }
+        finally { PendingSignOut = null; IsBusy = false; }
+    }
+
     private async Task RunAsync(bool signIn, CancellationToken cancellationToken)
     {
-        if (IsBusy) return;
+        if (!CanRun) return;
         IsBusy = true;
         Message = signIn ? "Complete Steam sign-in in the authentication window…" : "Checking Rust+ sign-in…";
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -78,8 +140,11 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
     {
         CheckCommand.Cancel();
         SignInCommand.Cancel();
+        ConfirmSignOutCommand.Cancel();
         if (CheckCommand.ExecutionTask is { } check) await check;
         if (SignInCommand.ExecutionTask is { } signIn) await signIn;
+        if (ConfirmSignOutCommand.ExecutionTask is { } signOut) await signOut;
+        PendingSignOut = null;
     }
 
     private static string ConfigPathFor(string source) => Path.Combine(Path.GetDirectoryName(Path.GetFullPath(source))!, "rustplusjs-config.json");

@@ -9,7 +9,11 @@ public interface ICompanionAccountService
 {
     Task<CompanionAccount> CheckAsync(string configPath, CancellationToken cancellationToken);
     Task<CompanionAccount> SignInAsync(string configPath, CancellationToken cancellationToken);
+    Task<CompanionSignOutResult> SignOutAsync(string configPath, CompanionSignOutScope scope, CancellationToken cancellationToken);
 }
+
+public enum CompanionSignOutScope { CurrentDevice, AllDevices }
+public enum CompanionSignOutResult { Completed, LocalOnly, RemoteCompletedLocalCleanupFailed }
 
 /// <summary>The native browser boundary; callback URLs are consumed by infrastructure, never view models.</summary>
 public interface ICompanionLoginBrowser
@@ -17,7 +21,7 @@ public interface ICompanionLoginBrowser
     Task<Uri?> AuthenticateAsync(Uri requestUri, Uri callbackUri, CancellationToken cancellationToken);
 }
 
-public enum AccountFailure { Rejected, Unavailable, InvalidConfiguration, ChangedConfiguration, PushRegistration }
+public enum AccountFailure { Rejected, Unavailable, InvalidConfiguration, ChangedConfiguration, PushRegistration, MissingDeviceRegistration }
 
 public sealed class CompanionAccountException(AccountFailure failure) : Exception(failure.ToString())
 {

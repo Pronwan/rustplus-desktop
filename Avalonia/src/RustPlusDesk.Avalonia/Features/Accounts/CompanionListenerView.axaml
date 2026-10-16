@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RustPlusDesk.Avalonia.Features.Accounts" xmlns:account="using:RustPlusDesk.Core.Accounts"
+             x:Class="RustPlusDesk.Avalonia.Features.Accounts.CompanionListenerView" x:DataType="vm:CompanionListenerViewModel">
+  <StackPanel Spacing="10">
+    <TextBlock Text="Pairing and notifications" FontSize="18" FontWeight="SemiBold" />
+    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+    <StackPanel Orientation="Horizontal" Spacing="10">
+      <Button Content="Start _listening" Command="{Binding StartCommand}" />
+      <Button Content="_Stop listening" Command="{Binding StopCommand}" />
+    </StackPanel>
+    <ScrollViewer MaxHeight="160" HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding Notifications}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="account:CompanionUpdate">
+            <StackPanel Spacing="2" Margin="0,6">
+              <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding ServerName}" Classes="muted" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding OccurredAt.LocalDateTime, StringFormat='{}{0:g}'}" Classes="muted" />
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </StackPanel>
+</UserControl>
