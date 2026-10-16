@@ -1799,6 +1799,12 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Elimină toate marcajele de moarte de pe harta serverului curent.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Elimini toate marcajele de moarte de pe harta acestui server?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Sunteți sigur că doriți să continuați?</value>
     <value>{0} zile</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcatori de echipă</value>
+    <value>Marcaje pe hartă</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modul de execuție</value>
@@ -3442,6 +3448,24 @@ Vă rugăm mai întâi să asociați acest server.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Straturi</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aspect</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Hartă termică a morților</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Necesită fișierul hărții analizat</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitate</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Dimensiune</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Afișează pe hartă</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lăsați gol pentru a permite tuturor pe server.</value>

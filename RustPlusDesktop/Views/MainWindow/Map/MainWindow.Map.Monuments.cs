@@ -30,36 +30,25 @@ public partial class MainWindow
         SliderLayerMonumentOpacity.Value = TrackingService.MapMonumentOpacity;
         SliderLayerGridOpacity.Value = TrackingService.MapGridOpacity;
         ChkLayerAutoLoadShops.IsChecked = TrackingService.AutoLoadShops;
+        NumLayerMaxSelfDeathMarkers.Value = TrackingService.MaxSelfDeathMarkers;
+        NumLayerMaxTeamDeathMarkers.Value = TrackingService.MaxTeamDeathMarkers;
 
         PnlLayerExtraMonumentFilters.Children.Clear();
         var types = GetKnownExtraMonumentTypes();
-        if (types.Count == 0)
+        // Nothing to filter is not worth a row in a compact flyout.
+        LayerExtraMonumentsSection.Visibility = types.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        if (types.Count > 0)
         {
-            PnlLayerExtraMonumentFilters.Children.Add(new TextBlock
-            {
-                Text = "No extra monument types detected.",
-                FontSize = 11,
-                FontStyle = FontStyles.Italic,
-                Foreground = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray,
-                Margin = new Thickness(2),
-                Width = 330
-            });
-        }
-        else
-        {
-            var dotStyle = TryFindResource("DotCheckBox") as Style;
             foreach (string name in types)
             {
                 var checkBox = new CheckBox
                 {
                     Content = name,
                     IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
-                    Margin = new Thickness(0, 2, 0, 2),
+                    Margin = new Thickness(0, 0, 0, 0),
                     Tag = name,
                     ToolTip = name,
-                    Width = 172,
-                    FontSize = 11.5,
-                    Style = dotStyle,
+                    Width = 174,   // two per row in the Layers flyout
                     HorizontalContentAlignment = HorizontalAlignment.Left
                 };
                 checkBox.Checked += LayerExtraMonumentFilter_Changed;
@@ -104,6 +93,23 @@ public partial class MainWindow
     {
         if (!IsLoaded || _loadingLayerControls) return;
         TrackingService.AutoLoadShops = ChkLayerAutoLoadShops.IsChecked == true;
+    }
+
+    private void NumLayerDeathMarkerCap_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _loadingLayerControls) return;
+
+        if (NumLayerMaxSelfDeathMarkers.Value is { } self)
+            TrackingService.MaxSelfDeathMarkers = (int)Math.Clamp(self, 1, 50);
+
+        if (NumLayerMaxTeamDeathMarkers.Value is { } team)
+            TrackingService.MaxTeamDeathMarkers = (int)Math.Clamp(team, 1, 50);
+    }
+
+    private void BtnLayerWipeDeathMarkers_Click(object sender, RoutedEventArgs e)
+    {
+        PopupLayers.IsOpen = false;
+        ConfirmAndClearDeathMarkers();
     }
 
     private void BtnOpenMonumentList_Click(object sender, RoutedEventArgs e)

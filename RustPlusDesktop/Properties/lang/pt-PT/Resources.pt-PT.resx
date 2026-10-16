@@ -1799,6 +1799,12 @@ Tem a certeza de que pretende continuar?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Remove todos os marcadores de morte do mapa do servidor atual.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Remover todos os marcadores de morte do mapa deste servidor?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Tem a certeza de que pretende continuar?</value>
     <value>{0} dias</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcadores de equipa</value>
+    <value>Marcadores do mapa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modo de execução</value>
@@ -3442,6 +3448,24 @@ Emparelhe este servidor primeiro.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Camadas</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aparência</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mapa de calor de mortes</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Requer o ficheiro do mapa analisado</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacidade</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostrar no mapa</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Deixe em branco para permitir todos no servidor.</value>

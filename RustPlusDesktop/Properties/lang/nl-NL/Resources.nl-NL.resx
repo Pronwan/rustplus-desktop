@@ -1799,6 +1799,12 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Verwijdert alle doodsmarkeringen van de kaart van de huidige server.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Alle doodsmarkeringen van de kaart van deze server verwijderen?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Weet je zeker dat je wilt doorgaan?</value>
     <value>{0} dagen</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Teammarkeringen</value>
+    <value>Kaartmarkeringen</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Uitvoeringsmodus</value>
@@ -3442,6 +3448,24 @@ Koppel deze server eerst.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Lagen</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Weergave</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Doden-heatmap</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Vereist het geanalyseerde kaartbestand</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Dekking</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Grootte</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Tonen op kaart</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Laat dit leeg om iedereen op de server toe te staan.</value>

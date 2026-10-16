@@ -1799,6 +1799,12 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Обриши све</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Uklanja sve oznake smrti sa mape trenutnog servera.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Ukloniti sve oznake smrti sa mape ovog servera?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Прихвати</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>{0} дана</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Маркери тима</value>
+    <value>Oznake na mapi</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим извршења</value>
@@ -3442,6 +3448,24 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Слојеви</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Izgled</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Toplotna mapa smrti</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Potreban je analizirani fajl mape</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Neprozirnost</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Veličina</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Prikaži na mapi</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Оставите празно да бисте омогућили свима на серверу.</value>

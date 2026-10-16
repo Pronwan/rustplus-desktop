@@ -518,7 +518,23 @@ public partial class MainWindow
         _vm?.Selected?.DeathMarkers.Where(m => _isShowingDeepSeaMap ? (m.X < -1000) : (m.X >= -1000))
         ?? Enumerable.Empty<Models.DeathMarkerData>();
 
-    private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e)
+    private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e) => ClearDeathMarkers();
+
+    /// <summary>The settings and Layers entry points: unlike the map's own wipe button, these ask first.</summary>
+    internal void ConfirmAndClearDeathMarkers()
+    {
+        var result = System.Windows.MessageBox.Show(
+            this,
+            Properties.Resources.GetString("WipeDeathMarkersConfirm") ?? "Remove every death marker from this server's map?",
+            Properties.Resources.GetString("WipeDeathMarkers") ?? "Wipe Death Markers",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (result == MessageBoxResult.Yes) ClearDeathMarkers();
+    }
+
+    /// <summary>Removes every death marker on the selected server's map.</summary>
+    internal void ClearDeathMarkers()
     {
         if (_vm?.Selected != null)
         {

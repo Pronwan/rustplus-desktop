@@ -1820,6 +1820,12 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Borrar todos</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Elimina todos los marcadores de muerte del mapa del servidor actual.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>¿Eliminar todos los marcadores de muerte del mapa de este servidor?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Aceptar</value>
   </data>
@@ -2456,7 +2462,7 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
     <value>Cerrar</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcadores de equipo</value>
+    <value>Marcadores del mapa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modo de ejecución</value>
@@ -3460,6 +3466,24 @@ Primero empareje este servidor.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>capas</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Apariencia</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mapa de calor de muertes</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Requiere el archivo del mapa analizado</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacidad</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostrar en el mapa</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Déjelo vacío para permitir que todos estén en el servidor.</value>

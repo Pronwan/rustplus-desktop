@@ -1847,6 +1847,12 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистить все</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Удаляет все метки смерти с карты текущего сервера.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Удалить все метки смерти с карты этого сервера?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Принять</value>
   </data>
@@ -2567,7 +2573,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Закрыть</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Командные маркеры</value>
+    <value>Метки на карте</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим выполнения</value>
@@ -3460,6 +3466,24 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Слои</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Внешний вид</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Тепловая карта смертей</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Нужен разобранный файл карты</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Непрозрачность</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Размер</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Показывать на карте</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Оставьте пустым, чтобы разрешить доступ всем на сервере.</value>

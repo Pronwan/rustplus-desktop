@@ -38,7 +38,7 @@ public partial class MainWindow
     /// </summary>
     private async void ChkCargoPath_Checked(object sender, RoutedEventArgs e)
     {
-        if (sender is CheckBox box && box.IsChecked == true && _cargoPathData == null)
+        if (sender is System.Windows.Controls.Primitives.ToggleButton box && box.IsChecked == true && _cargoPathData == null)
         {
             box.IsChecked = false;
 
@@ -61,7 +61,7 @@ public partial class MainWindow
         {
             ChkCargoPath.IsChecked = false;
             ChkCargoPath.Opacity = 0.45;
-            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
+            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
         }
 
         if (CargoPathLayer != null)
@@ -98,7 +98,7 @@ public partial class MainWindow
         {
             ChkCargoPath.Opacity = 0.45;
             ChkCargoPath.IsChecked = false;
-            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
+            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
         }
 
         // ONLY use data from parsing - strictly DO NOT fall back if parsed data is not present
@@ -148,7 +148,8 @@ public partial class MainWindow
             {
                 ChkCargoPath.Opacity = 1.0;
                 ChkCargoPath.IsChecked = true;
-                ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("CargoShip") ?? "Cargo Ship Path";
+                // No reason to show: the Layers panel prints this tooltip under the toggle.
+                ChkCargoPath.ToolTip = null;
             }
 
             RedrawCargoPath();
@@ -161,6 +162,7 @@ public partial class MainWindow
             {
                 ChkCargoPath.Opacity = 0.45;
                 ChkCargoPath.IsChecked = false;
+                ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
             }
             RedrawCargoPath();
         }

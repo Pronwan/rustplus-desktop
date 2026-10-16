@@ -1799,6 +1799,12 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Eltávolítja az összes halálozási jelölőt a jelenlegi szerver térképéről.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Eltávolítod az összes halálozási jelölőt a szerver térképéről?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Biztos, hogy folytatni szeretné?</value>
     <value>{0} nap</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Csapatjelzők</value>
+    <value>Térképjelölők</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Végrehajtási mód</value>
@@ -3442,6 +3448,24 @@ Kérjük, először párosítsa ezt a szervert.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Rétegek</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Megjelenés</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Halálozási hőtérkép</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>A feldolgozott térképfájl szükséges</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Átlátszatlanság</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Megjelenítés a térképen</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Hagyja üresen, hogy mindenki a szerveren legyen.</value>

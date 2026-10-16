@@ -1799,6 +1799,12 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>모든 데스 마커 삭제</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>현재 서버 지도에서 모든 사망 마커를 제거합니다.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>이 서버 지도에서 모든 사망 마커를 제거할까요?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>수락</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>{0}일</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>팀 마커</value>
+    <value>지도 마커</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>실행 모드</value>
@@ -3442,6 +3448,24 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>레이어</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>모양</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>사망 히트맵</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>분석된 지도 파일이 필요합니다</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>불투명도</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>크기</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>지도에 표시</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>서버의 모든 사람을 허용하려면 비워 두세요.</value>

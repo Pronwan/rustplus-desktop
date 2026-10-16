@@ -876,6 +876,16 @@
                             </StackPanel>
                         </Grid>
 
+                        <!--  The other half of the map's death-marker gear dialog.  -->
+                        <Grid MinHeight="36" Margin="28,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBlock Text="{DynamicResource WipeDeathMarkersHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0" />
+                            <ui:Button Grid.Column="1" Content="{DynamicResource WipeDeathMarkers}" Appearance="Danger" VerticalAlignment="Center" Click="BtnWipeDeathMarkers_Click" />
+                        </Grid>
+
                         <Border Style="{StaticResource SettingsRowDivider}" />
 
                         <!-- Streamer Mode -->

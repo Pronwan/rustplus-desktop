@@ -81,7 +81,7 @@ public partial class MainWindow
     private async void ChkKeycards_Checked(object sender, RoutedEventArgs e)
     {
         if (_keycardSites != null) Ach.Unlock(Ach.Keycards);
-        if (sender is System.Windows.Controls.CheckBox box && box.IsChecked == true && _keycardSites == null)
+        if (sender is System.Windows.Controls.Primitives.ToggleButton box && box.IsChecked == true && _keycardSites == null)
         {
             box.IsChecked = false;
 
@@ -238,7 +238,7 @@ public partial class MainWindow
         Apply(ChkKeycards, hasHolds);
         UpdateParseAllMonumentsButton();
 
-        void Apply(System.Windows.Controls.CheckBox? box, bool hasData)
+        void Apply(System.Windows.Controls.Primitives.ToggleButton? box, bool hasData)
         {
             if (box == null) return;
 

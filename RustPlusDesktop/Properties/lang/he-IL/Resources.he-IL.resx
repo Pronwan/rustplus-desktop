@@ -1799,6 +1799,12 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>מסיר את כל סימוני המוות ממפת השרת הנוכחי.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>להסיר את כל סימוני המוות ממפת השרת הזה?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1899,7 +1905,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>{0} ימים</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>סמני צוות</value>
+    <value>סימוני מפה</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>מצב ביצוע</value>
@@ -3442,6 +3448,24 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>שכבות</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>מראה</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>מפת חום של מוות</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>דורש את קובץ המפה המנותח</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>אטימות</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>גודל</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>הצג במפה</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>השאר ריק כדי לאפשר לכולם בשרת.</value>

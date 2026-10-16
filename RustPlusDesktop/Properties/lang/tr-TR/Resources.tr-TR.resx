@@ -1799,6 +1799,12 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Tümünü Sil</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Geçerli sunucunun haritasındaki tüm ölüm işaretlerini kaldırır.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Bu sunucunun haritasındaki tüm ölüm işaretleri kaldırılsın mı?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Kabul</value>
   </data>
@@ -1854,7 +1860,7 @@ Devam etmek istediğinizden emin misiniz?</value>
     <value>{0} gün</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Takım İşaretleyicileri</value>
+    <value>Harita İşaretleri</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Yürütme Modu</value>
@@ -3442,6 +3448,24 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Katmanlar</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Ölüm ısı haritası</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Çözümlenmiş harita dosyası gerekir</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Haritada göster</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Herkesin sunucuya girmesine izin vermek için boş bırakın.</value>

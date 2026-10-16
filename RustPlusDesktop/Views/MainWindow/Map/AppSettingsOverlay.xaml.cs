@@ -165,7 +165,7 @@ namespace RustPlusDesk.Views
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
                 Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
-                Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
+                Section("team-markers", "map", T("TeamMarkersSettings", "Map Markers"), "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
                 // Connected Services, in page order. The keywords keep the old section and card names
                 // ("Cloud Account & Sync", "Basic Discord Integration", ...) findable after the rename.
@@ -1008,6 +1008,9 @@ namespace RustPlusDesk.Views
             if (NumMaxTeamDeathMarkers.Value is { } team)
                 TrackingService.MaxTeamDeathMarkers = (int)Math.Clamp(team, 1, 50);
         }
+
+        private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e) =>
+            ParentWindow?.ConfirmAndClearDeathMarkers();
 
         private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)
         {

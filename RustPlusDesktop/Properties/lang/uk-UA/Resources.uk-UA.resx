@@ -1799,6 +1799,12 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистити все</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Видаляє всі мітки смерті з мапи поточного сервера.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Видалити всі мітки смерті з мапи цього сервера?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Прийняти</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>{0} днів</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Командні маркери</value>
+    <value>Мітки на мапі</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим виконання</value>
@@ -3442,6 +3448,24 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Шари</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Вигляд</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Теплова мапа смертей</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Потрібен розібраний файл мапи</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Непрозорість</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Розмір</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Показувати на мапі</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Залиште пустим, щоб дозволити всім на сервері.</value>

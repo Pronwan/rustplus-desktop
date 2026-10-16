@@ -1799,6 +1799,12 @@ Estàs segur que vols continuar?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Elimina tots els marcadors de mort del mapa del servidor actual.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Vols eliminar tots els marcadors de mort del mapa d'aquest servidor?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Estàs segur que vols continuar?</value>
     <value>{0} dies</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcadors d'equip</value>
+    <value>Marcadors del mapa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Mode d'execució</value>
@@ -3442,6 +3448,24 @@ Si us plau, emparellar aquest servidor primer.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Capes</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aparença</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mapa de calor de morts</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Cal el fitxer del mapa analitzat</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitat</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Mida</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostra al mapa</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Deixeu-lo en blanc per permetre que tothom estigui al servidor.</value>

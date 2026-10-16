@@ -1892,6 +1892,12 @@ Bist du sicher, dass du fortfahren möchtest?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Todesmarker löschen</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Entfernt alle Todesmarkierungen von der Karte des aktuellen Servers.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Alle Todesmarkierungen von der Karte dieses Servers entfernen?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Akzeptieren</value>
   </data>
@@ -2747,7 +2753,7 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Schließen</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Teammarker</value>
+    <value>Kartenmarkierungen</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Ausführungsmodus</value>
@@ -3535,6 +3541,24 @@ Bitte koppeln Sie diesen Server zuerst.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Schichten</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Todes-Heatmap</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Benötigt die analysierte Kartendatei</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Deckkraft</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Größe</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Auf der Karte anzeigen</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lassen Sie das Feld leer, um alle Benutzer auf dem Server zuzulassen.</value>

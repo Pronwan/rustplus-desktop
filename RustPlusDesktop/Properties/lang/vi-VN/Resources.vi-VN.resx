@@ -1799,6 +1799,12 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Xóa tất cả</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Xóa mọi điểm đánh dấu tử vong khỏi bản đồ của máy chủ hiện tại.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Xóa mọi điểm đánh dấu tử vong khỏi bản đồ của máy chủ này?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Chấp nhận</value>
   </data>
@@ -1854,7 +1860,7 @@ Bạn có chắc chắn muốn tiếp tục không?</value>
     <value>{0} ngày</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Điểm đánh dấu đội</value>
+    <value>Điểm đánh dấu bản đồ</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Chế độ thực thi</value>
@@ -3442,6 +3448,24 @@ Vui lòng ghép nối máy chủ này trước.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Lớp</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Giao diện</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Bản đồ nhiệt tử vong</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Cần tệp bản đồ đã phân tích</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Độ mờ đục</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Kích thước</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Hiển thị trên bản đồ</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Để trống để cho phép mọi người trên máy chủ.</value>

@@ -1817,6 +1817,12 @@
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>مسح الكل</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>يزيل كل علامات الموت من خريطة الخادم الحالي.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>إزالة كل علامات الموت من خريطة هذا الخادم؟</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>قبول</value>
   </data>
@@ -2654,7 +2660,7 @@
     <value>إغلاق</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>علامات الفريق</value>
+    <value>علامات الخريطة</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>وضع التنفيذ</value>
@@ -3457,6 +3463,24 @@
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>طبقات</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>خريطة حرارية للوفيات</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>يتطلب ملف الخريطة المحلَّل</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>العتامة</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>إظهار على الخريطة</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>اتركه فارغًا للسماح للجميع بالتواجد على الخادم.</value>

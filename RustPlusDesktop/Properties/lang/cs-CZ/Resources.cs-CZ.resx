@@ -1799,6 +1799,12 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Odstraní všechny značky smrti z mapy aktuálního serveru.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Odstranit všechny značky smrti z mapy tohoto serveru?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Jste si jisti, že chcete pokračovat?</value>
     <value>{0} dní</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Týmové značky</value>
+    <value>Značky na mapě</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Režim provedení</value>
@@ -3442,6 +3448,24 @@ Nejprve prosím spárujte tento server.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Vrstvy</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Vzhled</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Teplotní mapa úmrtí</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Vyžaduje zpracovaný soubor mapy</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Neprůhlednost</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Velikost</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Zobrazit na mapě</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Ponechte prázdné, chcete-li povolit všem na serveru.</value>

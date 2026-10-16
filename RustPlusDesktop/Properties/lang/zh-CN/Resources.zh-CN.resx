@@ -1847,6 +1847,12 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>清除所有</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>移除当前服务器地图上的所有死亡标记。</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>要移除此服务器地图上的所有死亡标记吗？</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>接受</value>
   </data>
@@ -2672,7 +2678,7 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>关闭</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>团队标记</value>
+    <value>地图标记</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>执行模式</value>
@@ -3460,6 +3466,24 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>层数</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>死亡热力图</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>需要已解析的地图文件</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>在地图上显示</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>留空以允许服务器上的每个人。</value>

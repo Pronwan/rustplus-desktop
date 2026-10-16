@@ -1799,6 +1799,12 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Rensa alla</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Tar bort alla dödsmarkörer från den aktuella serverns karta.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Ta bort alla dödsmarkörer från den här serverns karta?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Acceptera</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
     <value>{0} dagar</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Lagmarkörer</value>
+    <value>Kartmarkörer</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Utförandeläge</value>
@@ -3442,6 +3448,24 @@ Vänligen para ihop denna server först.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Lager</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Utseende</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Värmekarta över dödsfall</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Kräver den analyserade kartfilen</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitet</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Storlek</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Visa på kartan</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lämna tomt för att tillåta alla på servern.</value>

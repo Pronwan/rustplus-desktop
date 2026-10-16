@@ -1799,6 +1799,12 @@ Er du sikker på at du vil fortsette?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Fjerner alle dødsmarkører fra kartet til gjeldende server.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Fjerne alle dødsmarkører fra kartet til denne serveren?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Er du sikker på at du vil fortsette?</value>
     <value>{0} dager</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Lagmarkører</value>
+    <value>Kartmarkører</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Utførelsesmodus</value>
@@ -3442,6 +3448,24 @@ Vennligst par denne serveren først.</value>
   </data>
   <data name="UiLayers" xml:space="preserve">
     <value>Lag</value>
+  </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Utseende</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Dødsvarmekart</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Krever den analyserte kartfilen</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opasitet</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Størrelse</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Vis på kartet</value>
   </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>La stå tomt for å tillate alle på serveren.</value>
