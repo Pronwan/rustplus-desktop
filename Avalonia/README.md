@@ -53,7 +53,12 @@ automated checks use local callbacks, synthetic credentials and fake transports.
 Paired smart switches, nested groups, alarm state and storage contents load after connecting.
 ON/OFF commands wait for a confirmed state; failed or missing devices do not invalidate the server login.
 Storage uses the bundled Rust item names, including quantity, blueprint and upkeep information.
-Automation, device editing, alarm audio and the rest of the original device tools remain pending.
+Use **Organize devices…** to rename devices/groups, wrap a selected subtree in a new group, move it
+between groups or the top level, and move it up/down among siblings. Each action saves locally with
+revision protection and a private backup. Clearing an alias restores the original device name.
+Unknown settings and empty-group metadata stay intact; an active connection reloads its tree when the
+organizer closes. Cloud synchronization, drag gestures, device deletion/import/transfer, custom icons,
+automation and alarm audio remain pending.
 
 Use **Edit…** for the selected server's name, host and companion port. The direct-address test uses its
 existing credentials and checks paired devices without saving. **Save changes** preserves unknown JSON

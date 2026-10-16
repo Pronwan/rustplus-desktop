@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:RustPlusDesk.Avalonia.Features.Devices"
+             xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
              x:Class="RustPlusDesk.Avalonia.Features.Devices.DevicesView" x:DataType="vm:DevicesViewModel">
   <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16">
     <Grid ColumnDefinitions="*,Auto">
@@ -7,7 +8,11 @@
         <TextBlock Text="Devices" FontSize="24" FontWeight="SemiBold" />
         <TextBlock Text="{Binding Message}" Classes="muted" TextWrapping="Wrap" />
       </StackPanel>
-      <Button Grid.Column="1" Content="_Refresh devices" Command="{Binding RefreshCommand}" VerticalAlignment="Center" />
+      <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+        <Button Content="_Organize devices…" Command="{Binding $parent[Window].((servers:ServersViewModel)DataContext).OrganizeDevicesCommand}"
+                IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).HasDeviceEditor, FallbackValue=False}" />
+        <Button Content="_Refresh devices" Command="{Binding RefreshCommand}" />
+      </StackPanel>
     </Grid>
     <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="{Binding IsRefreshing}" AutomationProperties.Name="Refreshing devices" />
     <Grid Grid.Row="2">

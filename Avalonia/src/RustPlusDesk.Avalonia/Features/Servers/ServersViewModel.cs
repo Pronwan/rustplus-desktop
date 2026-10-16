@@ -7,12 +7,14 @@ using RustPlusDesk.Core.Connections;
 using RustPlusDesk.Avalonia.Features.Connections;
 using RustPlusDesk.Core.Accounts;
 using RustPlusDesk.Avalonia.Features.Accounts;
+using RustPlusDesk.Core.Devices;
+using RustPlusDesk.Avalonia.Features.Devices;
 
 namespace RustPlusDesk.Avalonia.Features.Servers;
 
 public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFilePicker picker, string initialPath, IServerSessionFactory sessionFactory,
     IServerProfileEditor? profileEditor = null, IServerConnectionTester? connectionTester = null, ICompanionAccountService? accountService = null,
-    ICompanionListener? companionListener = null, ICompanionPushHealth? pushHealth = null)
+    ICompanionListener? companionListener = null, ICompanionPushHealth? pushHealth = null, IDeviceProfileEditor? deviceEditor = null)
     : ObservableObject
 {
     public ConnectionViewModel Connection { get; } = new(sessionFactory);
@@ -30,17 +32,25 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
     [NotifyCanExecuteChangedFor(nameof(OpenFileCommand))]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OrganizeDevicesCommand))]
     private bool isAccountOpen;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OrganizeDevicesCommand))]
     private ServerSummary? selectedServer;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasEditor))]
     [NotifyPropertyChangedFor(nameof(HasOverlay))]
     private ServerEditorViewModel? editor;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasOrganizer))]
+    [NotifyPropertyChangedFor(nameof(HasOverlay))]
+    private DeviceOrganizerViewModel? organizer;
+    public bool HasOrganizer => Organizer is not null;
+    public bool HasDeviceEditor => deviceEditor is not null;
     public bool HasEditor => Editor is not null;
-    public bool HasOverlay => HasEditor || IsAccountOpen;
+    public bool HasOverlay => HasEditor || HasOrganizer || IsAccountOpen;
 
     [RelayCommand]
     private void OpenAccount()
@@ -143,6 +153,7 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
     [NotifyCanExecuteChangedFor(nameof(OpenFileCommand))]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OrganizeDevicesCommand))]
     private bool isBusy;
 
     [ObservableProperty] private string sourcePath = initialPath;
@@ -153,6 +164,33 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     public bool ShowStatus => !IsBusy && !HasServers;
     private bool CanLoad => !IsBusy && !HasOverlay;
     private bool CanEdit => CanLoad && SelectedServer is not null && profileEditor is not null && connectionTester is not null;
+    private bool CanOrganizeDevices => CanLoad && SelectedServer?.Devices.Count > 0 && deviceEditor is not null;
+
+    [RelayCommand(CanExecute = nameof(CanOrganizeDevices))]
+    private async Task OrganizeDevicesAsync(CancellationToken cancellationToken)
+    {
+        if (!CanOrganizeDevices || SelectedServer is not { } selected) return;
+        IsBusy = true;
+        try
+        {
+            Organizer = new(SourcePath, selected, deviceEditor!);
+            var saved = await Organizer.Completion.WaitAsync(cancellationToken);
+            if (saved is not null)
+            {
+                bool reconnect = Connection.IsConnected;
+                await LoadAsync(SourcePath, CancellationToken.None);
+                if (reconnect && !shuttingDown && SelectedServer is not null) Connection.ConnectCommand.Execute(null);
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+        finally
+        {
+            if (Organizer is { } current) await current.StopAsync();
+            Organizer = null;
+            IsBusy = false;
+            await RefreshPairingsAsync();
+        }
+    }
 
     [RelayCommand(CanExecute = nameof(CanEdit))]
     private async Task EditAsync(CancellationToken cancellationToken)
@@ -275,12 +313,14 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
         RefreshCommand.Cancel();
         OpenFileCommand.Cancel();
         EditCommand.Cancel();
+        OrganizeDevicesCommand.Cancel();
         if (Account is not null) await Account.StopAsync();
         if (Listener is not null) await Listener.StopListeningAsync();
         await Connection.StopAsync();
         if (RefreshCommand.ExecutionTask is { } refresh) await refresh;
         if (OpenFileCommand.ExecutionTask is { } open) await open;
         if (EditCommand.ExecutionTask is { } edit) await edit;
+        if (OrganizeDevicesCommand.ExecutionTask is { } organize) await organize;
         if (InitializeCommand.ExecutionTask is { } initialize) await initialize;
     }
 }

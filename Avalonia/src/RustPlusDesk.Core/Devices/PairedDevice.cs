@@ -5,6 +5,9 @@ public enum DeviceKind { Unknown, Switch, Alarm, StorageMonitor, Group }
 /// <summary>Paired device metadata, separate from transient server state and presentation.</summary>
 public sealed record PairedDevice(uint EntityId, string Name, DeviceKind Kind)
 {
+    /// <summary>Position in the saved tree; valid only with the containing server's source revision.</summary>
+    public string DeviceKey { get; init; } = "";
+    public string? Alias { get; init; }
     public IReadOnlyList<PairedDevice> Children { get; init; } = [];
 
     public IEnumerable<PairedDevice> DescendantsAndSelf()

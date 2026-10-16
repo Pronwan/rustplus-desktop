@@ -40,10 +40,10 @@ public sealed class LegacyServerCatalog : IServerCatalog
         return servers;
     }
 
-    private static IReadOnlyList<PairedDevice> MapDevices(List<LegacyDevice?>? devices)
+    private static IReadOnlyList<PairedDevice> MapDevices(List<LegacyDevice?>? devices, string prefix = "")
     {
         if (devices is null) return [];
-        return devices.Select(device =>
+        return devices.Select((device, index) =>
         {
             if (device is null) throw new JsonException("A paired device is invalid.");
             string kind = device.Kind?.Replace(" ", "", StringComparison.Ordinal) ?? "";
@@ -56,7 +56,9 @@ public sealed class LegacyServerCatalog : IServerCatalog
             };
             string name = !string.IsNullOrWhiteSpace(device.Alias) ? device.Alias
                 : !string.IsNullOrWhiteSpace(device.Name) ? device.Name : device.Kind ?? "Device";
-            return new PairedDevice(device.EntityId, name, type) { Children = MapDevices(device.Children) };
+            string key = prefix + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return new PairedDevice(device.EntityId, name, type)
+            { DeviceKey = key, Alias = device.Alias, Children = MapDevices(device.Children, key + "/") };
         }).ToArray();
     }
 

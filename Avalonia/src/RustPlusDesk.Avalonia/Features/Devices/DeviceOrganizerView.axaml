@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RustPlusDesk.Avalonia.Features.Devices"
+             xmlns:models="clr-namespace:RustPlusDesk.Core.Devices;assembly=RustPlusDesk.Core"
+             x:Class="RustPlusDesk.Avalonia.Features.Devices.DeviceOrganizerView" x:DataType="vm:DeviceOrganizerViewModel">
+  <UserControl.KeyBindings><KeyBinding Gesture="Escape" Command="{Binding CloseCommand}" /></UserControl.KeyBindings>
+  <Border Classes="card" Padding="24" Width="760" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid RowDefinitions="Auto,400,Auto,Auto" RowSpacing="16" KeyboardNavigation.TabNavigation="Cycle">
+      <TextBlock Text="Organize devices" FontSize="20" FontWeight="SemiBold" />
+      <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="20" IsEnabled="{Binding !IsBusy}">
+        <TreeView ItemsSource="{Binding Devices}" SelectedItem="{Binding Selected, Mode=TwoWay}"
+                  AutomationProperties.Name="Devices to organize" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="True" /></Style></TreeView.Styles>
+          <TreeView.DataTemplates>
+            <TreeDataTemplate DataType="models:PairedDevice" ItemsSource="{Binding Children}">
+              <TextBlock Text="{Binding Name}" TextWrapping="Wrap" />
+            </TreeDataTemplate>
+          </TreeView.DataTemplates>
+        </TreeView>
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Spacing="10">
+            <TextBlock Text="Display name" />
+            <TextBox Text="{Binding Alias}" PlaceholderText="Blank restores the original name" AutomationProperties.Name="Device display name" />
+            <Button Content="_Rename" Command="{Binding RenameCommand}" />
+            <TextBlock Text="New group name" />
+            <TextBox Text="{Binding GroupName}" AutomationProperties.Name="New device group name" />
+            <Button Content="_Group selected item" Command="{Binding GroupCommand}" />
+            <TextBlock Text="Move to" />
+            <ComboBox ItemsSource="{Binding Destinations}" SelectedItem="{Binding Destination, Mode=TwoWay}"
+                      HorizontalAlignment="Stretch" AutomationProperties.Name="Destination group">
+              <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:DeviceGroupChoice"><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Content="_Move to group" Command="{Binding MoveCommand}" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="Move _up" Command="{Binding MoveUpCommand}" />
+              <Button Content="Move _down" Command="{Binding MoveDownCommand}" />
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+      <StackPanel Grid.Row="2" Spacing="6">
+        <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" AutomationProperties.Name="Saving device organization" />
+        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Classes="muted" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+      <Button Grid.Row="3" Content="_Close" Command="{Binding CloseCommand}" HorizontalAlignment="Right" />
+    </Grid>
+  </Border>
+</UserControl>

@@ -74,6 +74,11 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   renewal with the saved token, listener restart and one retest. Inconclusive network/provider failures
   do not renew. Manual delivery checks/renewal and bounded cancellation use the same flow.
 - Account dialog keeps its Close action visible below the scrollable content at the minimum window size.
+- Local device/group organizer supports aliases, grouping a selected subtree, moving between groups/root,
+  and sibling ordering. Positional device keys are valid only with the full-file revision, so duplicate
+  entity IDs do not rename the wrong alias. Whole JSON nodes and empty-group metadata are preserved.
+  Closing/shutdown awaits writes; changed files are rejected. Closing after a save reloads the selected
+  tree and reconnects an active session. This does not implement cloud sync, drag gestures or deletion cleanup.
 
 ## Feature parity
 
@@ -84,7 +89,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, startup delivery checks, one-shot renewal, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance and ambiguous-match resolution UI |
 | Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
 | Live map/markers/overlays | Not ported | Separate coordinate/state logic from rendering; choose portable map/helper hosting |
-| Smart devices/automation/timers | Confirmed switches, nested group commands, alarm state, authoritative storage reads and subscriptions | Live-server acceptance, add/edit/delete/import/transfer/reorder devices, custom icons, automation, timers, alarm notifications/audio and full original layout |
+| Smart devices/automation/timers | Confirmed switches, nested group commands, alarm/storage state, subscriptions, local alias/group/move/reorder editor | Live-server acceptance, drag gestures, empty-group cleanup, cloud sync, add/delete/import/transfer, custom icons, automation, timers, alarm notifications/audio and original layout |
 | Chat/team/clan/cloud | Not ported | Port protocol/services, moderation/history, synchronization and presentation |
 | Cameras | Not ported | Validate camera SDK/runtime, stream decoding and portable rendering |
 | Genetics Lab/web tools | Not ported | Decide and verify portable web hosting/bridge rather than copying WebView2 |
@@ -127,7 +132,8 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 1. Validate live Steam/Facepunch/FCM sign-in, pairing and sign-out on a native desktop with the user;
    validate the implemented startup health checks/registration repair and add ambiguous-match resolution without losing data.
-2. Continue device editing, groups, import/transfer, notifications and automation using the verified session/device boundary.
+2. Continue device import/transfer, drag gestures, cloud synchronization/deletion cleanup, notifications
+   and automation using the verified session/device boundary. Local alias/group/move/reorder is implemented.
 3. Port original server context menus and deletion together with its cloud cleanup; preserve all related data and consent flows.
 4. Build the original rail/sidebar/workspace arrangement using Fluent components; preserve navigation
    order and density instead of adding placeholder buttons for unported features.
@@ -136,7 +142,8 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 ## Local verification
 
-- Windows: Debug and Release solution builds are clean; all **171 .NET tests pass with zero warnings** for the current slice.
+- Windows: all **188 .NET test cases** cover the current source, including local device organization;
+  build and isolated-copy results are recorded in HANDOFF.md at each checkpoint.
 - Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
   for native control host` because the executable lacked a supported-OS manifest. Added the official
   Avalonia compatibility declaration to the app host. The same production browser now passes local redirect

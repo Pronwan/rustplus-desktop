@@ -26,10 +26,10 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 
 ## Verified current source
 
-- Debug/Release builds: zero warnings/errors. The account/pairing checkpoint `8e1df49` has 139 tests;
-  the subsequent startup/health slice has 171 passing MSTest cases in the isolated source copy.
-- Source-only external copy with separate package cache: 171 tests pass, zero warnings.
-- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed.
+- Debug/Release builds: zero warnings/errors. `8e1df49` has 139 tests; startup/health checkpoint
+  `9fd4ee6` has 171. The subsequent device-organization slice has 188 passing MSTest cases in isolation.
+- Source-only external copy with separate package cache: 188 tests pass, zero warnings.
+- Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed at `9fd4ee6`.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
 - Two Python reference-capture tests passed in the earlier slice; its code has not changed since.
 - External copy location is recorded locally in ignored `artifacts/isolation-path.txt`; its source copy
@@ -55,6 +55,12 @@ remain inconclusive and do not renew; tickets alone never prove arrival. Rejecte
 user without opening Steam automatically. Source changes/shutdown cancel and await checks and renewal.
 Account content scrolls while its Close action stays visible. No real Steam or FCM acceptance is claimed.
 
+The device organizer adds local aliases, wrapping a selected subtree in a new group, movement between
+groups/root and sibling reordering. Device keys are positional and pinned to SourceRevision. It preserves
+whole JSON nodes and empty groups, rejects stale writes, awaits cancellation and reloads/reconnects on close.
+Keyboard buttons are implemented; drag gestures, empty-group cleanup, deletion dependencies, device
+import/transfer and cloud synchronization are still pending. Do not label full device editing complete.
+
 ## Exact next steps
 
 1. Validate real Steam/Facepunch return-URL callbacks on Windows. The native window crash is fixed;
@@ -62,7 +68,7 @@ Account content scrolls while its Close action stays visible. No real Steam or F
 2. Validate the implemented startup delivery self-test/one-shot registration repair with real FCM.
    Pairing, reconnect, ID persistence, direct re-pair probes and sign-out are implemented; do not redo them.
    Re-sign-in/renewal creates a new registration without deleting earlier ones. Add explicit ambiguous-match resolution.
-3. Continue device editing/import/transfer/automation, original server menus/cloud-aware deletion,
+3. Continue device import/transfer/automation, drag gestures, cloud sync and deletion cleanup; original server menus/cloud-aware deletion,
    and the original sidebar/workspace layout. The full required backlog is in STATUS.md/reference checklist.
 4. Run native Windows/Linux/macOS acceptance, including permissions, browser prerequisites and appearance.
 5. Keep source upload-ready without parent-repo/private-submodule references. Exclude bin/obj/artifacts.
@@ -81,7 +87,7 @@ Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dea
 
 The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
 2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
-no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`; subsequent
-startup/health changes form the next slice. Inspect Git status/log for its checkpoint commit. At 97%, stop
+no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`, startup/health
+as `9fd4ee6`; device organization forms the next slice. Inspect Git status/log for its checkpoint. At 97%, stop
 implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
 unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.

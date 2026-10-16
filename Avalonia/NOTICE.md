@@ -40,6 +40,10 @@ and upstream attribution when copying or distributing it.
   `Views/MainWindow/Connection/MainWindow.Connection.FcmHealth.cs`. Registration uses the public SDK
   with the saved companion token; no private repair-provider source is copied. Delivery is confirmed
   only by a correlated push arriving at the selected profile source's listener.
+- Local alias/group organization follows `Models/SmartDevice.cs` and `Views/MainWindow/Devices/MainWindow.Devices.cs`.
+  The portable writer moves original JSON nodes and pins positional keys to the source revision, retaining
+  unknown settings. Keyboard-accessible buttons are implemented; the original drag/drop gestures,
+  empty-group cleanup, deletion dependencies and cloud synchronization are not yet ported.
 - `packages-local/RustPlusApi.2.0.0-beta.9.socket.1.nupkg` is copied unchanged from the reference
   repository's local feed. It is MIT-licensed (HandyS11 / Clergue Valentin); see `packages-local/RustPlusApi.LICENSE`.
   SHA-256: `DBEAE2BF1241D6F77C2EF10493FC274306393ED2910923C178DC0F60822343BF`.
