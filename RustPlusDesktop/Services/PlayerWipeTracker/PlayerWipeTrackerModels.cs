@@ -110,7 +110,10 @@ public sealed record TrackerPoint(
     string? LocationName,
     string? Grid,
     string? Event,
-    string SessionId);
+    string SessionId,
+    // True when the player did not travel here from the previous point (death, respawn, Deep Sea,
+    // a gap); routes break here and the step is not counted as distance.
+    bool BreakBefore = false);
 
 public readonly record struct TrackerMapProjection(
     double ViewWidth,

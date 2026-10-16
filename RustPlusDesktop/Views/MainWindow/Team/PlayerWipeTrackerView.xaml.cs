@@ -39,6 +39,7 @@ public partial class PlayerWipeTrackerView : UserControl
     private bool _refreshing;
     private bool _showUnknown;
     private bool _showMonuments = true;
+    private DateTime _lastRefreshUtc = DateTime.MinValue;
     private Grid? _dragViewport;
     private TranslateTransform? _dragTranslate;
     private Point _dragStart;
@@ -100,6 +101,10 @@ public partial class PlayerWipeTrackerView : UserControl
         if (IsVisible)
         {
             _liveTimer.Start();
+            // Initialize() from the host has usually refreshed a moment ago; doing it all again
+            // doubled the time to open.
+            if (DateTime.UtcNow - _lastRefreshUtc < TimeSpan.FromSeconds(2))
+                return;
             PopulateWipeSelector();
             LiveTimer_Tick(this, EventArgs.Empty);
         }
@@ -180,11 +185,13 @@ public partial class PlayerWipeTrackerView : UserControl
 
             if (match is not null)
             {
+                // Only a real switch reloads: the stored map is a multi-megabyte PNG, and this runs
+                // every time the workspace is shown.
                 if (!string.Equals(match.Summary.WipeKey, _tracker.CurrentWipeKey, StringComparison.Ordinal))
                 {
                     _tracker.SwitchWipe(match.Summary.ServerKey, match.Summary.WipeKey, match.Summary.WipeStartedAtUtc);
+                    _loadedWipeKey = null;
                 }
-                _loadedWipeKey = null;
                 ReloadWipeContextFromService();
             }
         }
@@ -286,6 +293,7 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         if (_tracker is null)
             return;
+        _lastRefreshUtc = DateTime.UtcNow;
         ReloadWipeContextFromService();
         var capabilities = _tracker.Capabilities;
         PremiumBanner.Text = capabilities.CanUseAdvancedViews
@@ -645,25 +653,87 @@ public partial class PlayerWipeTrackerView : UserControl
         const double axisHeight = 16;
         var barHeight = height - axisHeight;
 
-        foreach (var segment in segments)
+        // A monthly wipe has tens of thousands of segments, most narrower than a pixel. One
+        // rectangle each, with its tooltip text built up front, was a large part of the time the
+        // tracker took to open. Instead each pixel column takes the state that filled most of it,
+        // and neighbouring columns of the same state become one rectangle: at most one per pixel.
+        var columns = Math.Max(1, (int)Math.Ceiling(width));
+        const int stateCount = (int)PlayerActivityState.Unknown + 1;
+        var filled = new double[columns * stateCount];
+        var longest = new int[columns];
+        var longestSeconds = new double[columns];
+        Array.Fill(longest, -1);
+        var secondsPerColumn = total / width;
+        for (var index = 0; index < segments.Length; index++)
         {
+            var segment = segments[index];
             if (!_showUnknown && segment.State == PlayerActivityState.Unknown)
                 continue;
-            var x = (segment.StartUtc - spanStart).TotalSeconds / total * width;
-            var w = Math.Max(1, (segment.EndUtc - segment.StartUtc).TotalSeconds / total * width);
-            var rect = new Rectangle
+            var from = (segment.StartUtc - spanStart).TotalSeconds / secondsPerColumn;
+            var to = (segment.EndUtc - spanStart).TotalSeconds / secondsPerColumn;
+            var first = Math.Clamp((int)Math.Floor(from), 0, columns - 1);
+            var last = Math.Clamp((int)Math.Ceiling(to) - 1, first, columns - 1);
+            for (var column = first; column <= last; column++)
             {
-                Width = w,
-                Height = barHeight,
-                Fill = new SolidColorBrush(StateColor(segment.State)),
-                ToolTip = $"{StateLabel(segment.State)} · {segment.LocationName ?? segment.LocationType.ToString()}\n" +
-                          $"{segment.StartUtc.ToLocalTime():g} → {segment.EndUtc.ToLocalTime():g}  ({Format(segment.EndUtc - segment.StartUtc)})",
-            };
-            if (segment.State == PlayerActivityState.Unknown)
-                rect.Opacity = 0.5;
-            Canvas.SetLeft(rect, x);
-            Canvas.SetTop(rect, 0);
-            ActivityRibbonCanvas.Children.Add(rect);
+                var overlap = Math.Min(to, column + 1) - Math.Max(from, column);
+                if (overlap <= 0)
+                    continue;
+                filled[column * stateCount + (int)segment.State] += overlap;
+                if (overlap > longestSeconds[column])
+                {
+                    longestSeconds[column] = overlap;
+                    longest[column] = index;
+                }
+            }
+        }
+
+        var dominant = new int[columns];
+        for (var column = 0; column < columns; column++)
+        {
+            dominant[column] = -1;
+            var best = 0d;
+            for (var state = 0; state < stateCount; state++)
+            {
+                if (filled[column * stateCount + state] > best)
+                {
+                    best = filled[column * stateCount + state];
+                    dominant[column] = state;
+                }
+            }
+        }
+
+        for (var runStart = 0; runStart < columns;)
+        {
+            var state = dominant[runStart];
+            var runEnd = runStart + 1;
+            while (runEnd < columns && dominant[runEnd] == state)
+                runEnd++;
+            if (state >= 0)
+            {
+                var runState = (PlayerActivityState)state;
+                var startUtc = spanStart.AddSeconds(runStart * secondsPerColumn);
+                var endUtc = spanStart.AddSeconds(Math.Min(total, runEnd * secondsPerColumn));
+                var where = Enumerable.Range(runStart, runEnd - runStart)
+                    .Select(column => longest[column])
+                    .Where(index => index >= 0 && segments[index].State == runState)
+                    .Select(index => segments[index])
+                    .MaxBy(segment => segment.EndUtc - segment.StartUtc);
+                var seconds = Enumerable.Range(runStart, runEnd - runStart).Sum(column => filled[column * stateCount + state]) * secondsPerColumn;
+                var rect = new Rectangle
+                {
+                    Width = runEnd - runStart,
+                    Height = barHeight,
+                    Fill = new SolidColorBrush(StateColor(runState)),
+                    ToolTip = $"{StateLabel(runState)} · {where?.LocationName ?? where?.LocationType.ToString() ?? string.Empty}\n" +
+                              $"{startUtc.ToLocalTime():g} → {endUtc.ToLocalTime():g}  ({Format(TimeSpan.FromSeconds(seconds))})",
+                };
+                if (runState == PlayerActivityState.Unknown)
+                    rect.Opacity = 0.5;
+                Canvas.SetLeft(rect, runStart);
+                Canvas.SetTop(rect, 0);
+                ActivityRibbonCanvas.Children.Add(rect);
+            }
+            runStart = runEnd;
         }
 
         DrawRibbonAxis(spanStart, spanEnd, width, barHeight, axisHeight);
@@ -1235,8 +1305,9 @@ public partial class PlayerWipeTrackerView : UserControl
 
     private static IReadOnlyList<TrackerPoint> ToPoints(IReadOnlyList<PlayerObservation> observations)
     {
-        var points = new List<TrackerPoint>();
+        var points = new List<TrackerPoint>(observations.Count);
         PlayerObservation? previous = null;
+        PlayerObservation? lastWithPosition = null;
         foreach (var observation in observations)
         {
             var state = PlayerWipeTrackerEngine.Classify(observation);
@@ -1249,6 +1320,8 @@ public partial class PlayerWipeTrackerView : UserControl
                 previous is not null && previous.Dead && !observation.Dead ? "respawn" : null;
             if (observation.X is not null && observation.Y is not null)
             {
+                var breakBefore = lastWithPosition is null || TrackerRouteContinuity.IsJump(lastWithPosition, observation);
+                lastWithPosition = observation;
                 points.Add(new TrackerPoint(
                     observation.TimestampUtc,
                     observation.X.Value,
@@ -1258,7 +1331,8 @@ public partial class PlayerWipeTrackerView : UserControl
                     observation.LocationName,
                     observation.Grid,
                     eventName,
-                    observation.SessionId));
+                    observation.SessionId,
+                    breakBefore));
             }
             previous = observation;
         }
@@ -1270,7 +1344,7 @@ public partial class PlayerWipeTrackerView : UserControl
         var distance = 0d;
         for (var i = 1; i < points.Count; i++)
         {
-            if (points[i].SessionId != points[i - 1].SessionId)
+            if (points[i].BreakBefore)
                 continue;
             distance += Math.Sqrt(Math.Pow(points[i].X - points[i - 1].X, 2) + Math.Pow(points[i].Y - points[i - 1].Y, 2));
         }
@@ -1413,17 +1487,27 @@ public partial class PlayerWipeTrackerView : UserControl
     {
         if (points.Count < 2)
             return;
+        // A wipe's worth of points is tens of thousands; most land within a pixel of the one before
+        // at this zoom and only cost layout time. Dropping those keeps the shape and the drawing
+        // cheap enough to redraw on every replay tick. Map zoom scales the canvas as a whole, so
+        // the half-pixel threshold still holds up to the 8x the viewport allows.
+        const double minStepPixels = 0.5;
         var batch = new List<Point>();
-        TrackerPoint? previous = null;
         foreach (var point in points)
         {
-            if (previous is not null && (point.SessionId != previous.SessionId || point.TimestampUtc - previous.TimestampUtc > TimeSpan.FromSeconds(PlayerWipeTrackerEngine.MaxContinuityGapSeconds)))
+            var mapped = mapPoint(point);
+            if (point.BreakBefore && batch.Count > 0)
             {
                 AddPolyline(canvas, batch, color, thickness, opacity, dashed);
                 batch.Clear();
             }
-            batch.Add(mapPoint(point));
-            previous = point;
+            if (batch.Count > 0)
+            {
+                var last = batch[^1];
+                if (Math.Abs(mapped.X - last.X) < minStepPixels && Math.Abs(mapped.Y - last.Y) < minStepPixels)
+                    continue;
+            }
+            batch.Add(mapped);
         }
         AddPolyline(canvas, batch, color, thickness, opacity, dashed);
     }
