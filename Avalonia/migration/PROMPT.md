@@ -25,6 +25,11 @@ reusable components, and explicit platform boundaries. Remove code only after pr
 
 ## Architectural constraints
 
+The user-supplied layout in `reference/layout-reference.png` is the visual arrangement to preserve.
+Follow `LAYOUT.md`: narrow left rail, server/connection/devices panel, large map workspace, bottom
+activity panel and thin status bar. Keep it responsive from the minimum window size through maximized
+and wide displays. Retain this arrangement while porting the remaining tools into the new native theme.
+
 1. Core contains domain models, business rules, and contracts. No UI, dispatcher, image-control,
    operating-system, storage, or SDK types may leak into it.
 2. Infrastructure implements file storage, Rust+ transport, cloud access, authentication integration,

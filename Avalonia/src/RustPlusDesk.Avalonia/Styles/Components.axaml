@@ -7,6 +7,7 @@
           <SolidColorBrush x:Key="AppBg">#0F1013</SolidColorBrush>
           <SolidColorBrush x:Key="Surface">#181B1F</SolidColorBrush>
           <SolidColorBrush x:Key="SurfaceAlt">#1F2229</SolidColorBrush>
+          <SolidColorBrush x:Key="MapBackground">#0B3948</SolidColorBrush>
           <SolidColorBrush x:Key="CardBorder">#28FFFFFF</SolidColorBrush>
           <SolidColorBrush x:Key="Accent">#60CDFF</SolidColorBrush>
           <SolidColorBrush x:Key="AccentDark">#1A4D6B</SolidColorBrush>
@@ -21,6 +22,7 @@
           <SolidColorBrush x:Key="AppBg">#F3F3F3</SolidColorBrush>
           <SolidColorBrush x:Key="Surface">#FFFFFF</SolidColorBrush>
           <SolidColorBrush x:Key="SurfaceAlt">#E9EDF2</SolidColorBrush>
+          <SolidColorBrush x:Key="MapBackground">#DCEFF3</SolidColorBrush>
           <SolidColorBrush x:Key="CardBorder">#26000000</SolidColorBrush>
           <SolidColorBrush x:Key="Accent">#006E99</SolidColorBrush>
           <SolidColorBrush x:Key="AccentDark">#CDEFFC</SolidColorBrush>
@@ -63,6 +65,18 @@
   </Style>
   <Style Selector="ListBoxItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="Button.rail">
+    <Setter Property="Width" Value="44" />
+    <Setter Property="Height" Value="44" />
+    <Setter Property="Padding" Value="10" />
+    <Setter Property="FontSize" Value="22" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Button.rail.selected">
+    <Setter Property="Background" Value="{DynamicResource AccentDark}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
   </Style>
   <Style Selector="Ellipse.connection-dot"><Setter Property="Fill" Value="{DynamicResource ConnectionDanger}" /></Style>
   <Style Selector="Ellipse.connection-dot.connected"><Setter Property="Fill" Value="{DynamicResource ConnectionSuccess}" /></Style>

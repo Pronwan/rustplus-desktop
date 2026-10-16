@@ -55,6 +55,10 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     public bool HasEditor => Editor is not null;
     public bool HasOverlay => HasEditor || HasOrganizer || IsAccountOpen;
     public bool HasRecyclerTool => recyclerCatalog is not null;
+    [ObservableProperty] private bool isSidebarOpen = true;
+    [RelayCommand] private void ToggleSidebar() => IsSidebarOpen = !IsSidebarOpen;
+    [RelayCommand] private void ShowDevices() { WorkspaceIndex = 0; IsSidebarOpen = true; }
+    [RelayCommand] private void OpenRecycler() { if (HasRecyclerTool) WorkspaceIndex = 1; }
     [ObservableProperty]
     private RecyclerViewModel? recycler;
     [ObservableProperty]

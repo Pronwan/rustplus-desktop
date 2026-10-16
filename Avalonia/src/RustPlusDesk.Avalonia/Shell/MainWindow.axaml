@@ -4,33 +4,40 @@
         xmlns:devices="using:RustPlusDesk.Avalonia.Features.Devices"
         xmlns:accounts="using:RustPlusDesk.Avalonia.Features.Accounts"
         xmlns:recycling="using:RustPlusDesk.Avalonia.Features.Recycling"
+        xmlns:shell="using:RustPlusDesk.Avalonia.Shell"
         x:Class="RustPlusDesk.Avalonia.Shell.MainWindow"
         x:DataType="servers:ServersViewModel"
         Title="Rust+ Desktop — Cross-platform preview"
-        Icon="/Assets/app.ico" Width="1750" Height="814" MinWidth="1000" MinHeight="700"
+        Icon="/Assets/app.ico" Width="1380" Height="950" MinWidth="1000" MinHeight="700"
         WindowDecorations="Full">
   <Window.KeyBindings><KeyBinding Gesture="Escape" Command="{Binding CloseRecyclerCommand}" /></Window.KeyBindings>
-  <Grid RowDefinitions="Auto,*,Auto" Margin="24" RowSpacing="20">
-    <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding !HasOverlay}">
-      <StackPanel Spacing="4">
-        <TextBlock Text="RUST+ DESKTOP" Classes="brand" />
-        <TextBlock Text="Your Rust companion" Classes="muted" />
+  <Grid RowDefinitions="42,*,26">
+    <Grid ColumnDefinitions="*,Auto" Margin="14,0" IsEnabled="{Binding !HasOverlay}">
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <Image Source="/Assets/app.ico" Width="20" Height="20" />
+        <TextBlock Text="RUST+ DESKTOP" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+        <TextBlock Text="Avalonia preview" FontSize="11" Classes="muted" VerticalAlignment="Center" />
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
         <TextBlock Text="Sign in for Rust+ pairing" Classes="muted" VerticalAlignment="Center" IsVisible="{Binding RequiresSignIn}" />
         <TextBlock Text="Pairing active" Classes="muted" VerticalAlignment="Center"
                    IsVisible="{Binding Listener.IsRunning, FallbackValue=False}" />
         <Button Content="_Account" Command="{Binding OpenAccountCommand}" IsVisible="{Binding HasAccount}" />
-        <Border Classes="badge"><TextBlock Text="Cross-platform preview" /></Border>
       </StackPanel>
     </Grid>
-    <Grid Grid.Row="1" ColumnDefinitions="350,Auto,*" ColumnSpacing="16">
-      <servers:ServersView IsEnabled="{Binding !HasOverlay}" />
-      <GridSplitter Grid.Column="1" Width="4" Background="{DynamicResource CardBorder}" ResizeDirection="Columns" />
-      <TabControl Grid.Column="2" SelectedIndex="{Binding WorkspaceIndex, Mode=TwoWay}" IsEnabled="{Binding !HasOverlay}">
-        <TabItem Header="Devices"><devices:DevicesView DataContext="{Binding Connection.Devices}" /></TabItem>
-        <TabItem Header="Recycler" IsVisible="{Binding HasRecyclerTool}">
-          <Border Classes="card" Padding="16">
+    <Grid Grid.Row="1" ColumnDefinitions="60,*" IsEnabled="{Binding !HasOverlay}">
+      <shell:NavigationRail />
+      <SplitView Grid.Column="1" x:Name="WorkspaceSplit" DisplayMode="Inline" IsPaneOpen="{Binding IsSidebarOpen, Mode=TwoWay}" OpenPaneLength="400">
+        <SplitView.Pane>
+          <Grid ColumnDefinitions="*,4">
+            <shell:ServerDevicePane />
+            <Thumb Grid.Column="1" DragDelta="ResizeSidebar" KeyDown="ResizeSidebarKeyDown" Focusable="True" Background="{DynamicResource CardBorder}"
+                   Cursor="SizeWestEast" AutomationProperties.Name="Resize server and device panel" />
+          </Grid>
+        </SplitView.Pane>
+        <Grid>
+          <shell:MapWorkspace x:Name="MapArea" IsVisible="{Binding !IsRecyclerSelected}" />
+          <Border Classes="card" CornerRadius="0" Padding="16" IsVisible="{Binding IsRecyclerSelected}">
             <Grid RowDefinitions="Auto,*" RowSpacing="12">
               <Grid ColumnDefinitions="*,Auto">
                 <TextBlock Text="Recycling calculator" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" />
@@ -39,14 +46,16 @@
               <recycling:RecyclerView Grid.Row="1" DataContext="{Binding Recycler}" />
             </Grid>
           </Border>
-        </TabItem>
-      </TabControl>
+        </Grid>
+      </SplitView>
     </Grid>
-    <StackPanel Grid.Row="2" Spacing="4">
-      <TextBlock Text="{Binding ToolMessage}" Classes="muted" TextWrapping="Wrap" />
-      <TextBlock Classes="muted" TextWrapping="Wrap"
-                 Text="Migration preview: additional workflows are still being migrated." />
-    </StackPanel>
+    <Border Grid.Row="2" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" Padding="10,3">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+        <TextBlock Text="{Binding Connection.StatusMessage}" FontSize="11" Classes="muted" TextTrimming="CharacterEllipsis" MaxWidth="300" />
+        <TextBlock Grid.Column="1" Text="{Binding ToolMessage}" FontSize="11" Classes="muted" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Column="2" Text="Migration preview" FontSize="11" Classes="muted" />
+      </Grid>
+    </Border>
     <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding HasEditor}">
       <servers:ServerEditorView DataContext="{Binding Editor}" />
     </Border>

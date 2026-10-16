@@ -23,6 +23,90 @@ namespace RustPlusDesk.CrossPlatform.Tests;
 [TestClass]
 public sealed class ShellTests
 {
+    [DataTestMethod]
+    [DataRow(1000, 700)]
+    [DataRow(1380, 1000)]
+    [DataRow(2560, 1440)]
+    public async Task ReferenceLayout_ResizesCollapsesAndKeepsNavigationAndDevicesAvailable(int width, int height)
+    {
+        await using var session = HeadlessUnitTestSession.StartNew(typeof(TestAppBuilder));
+        await session.Dispatch(async () =>
+        {
+            var model = new ServersViewModel(new PreviewCatalog(), new UnusedPicker(), "profiles.json", new PreviewSessionFactory(),
+                recyclerCatalog: new RustPlusDesk.Infrastructure.Items.BundledRecyclerCatalog());
+            var window = new MainWindow { DataContext = model, Width = width, Height = height, RequestedThemeVariant = ThemeVariant.Dark };
+            try
+            {
+                window.Show();
+                await model.RefreshCommand.ExecuteAsync(null);
+                using (var frame = window.CaptureRenderedFrame())
+                {
+                    Assert.IsNotNull(frame);
+                    frame.Save(Path.Combine(AppContext.BaseDirectory, $"ui-layout-{width}.png"), PngBitmapEncoderOptions.Default);
+                }
+                var pane = window.GetVisualDescendants().OfType<ServerDevicePane>().Single();
+                var map = window.GetVisualDescendants().OfType<MapWorkspace>().Single();
+                var rail = window.GetVisualDescendants().OfType<NavigationRail>().Single();
+                var split = window.FindControl<SplitView>("WorkspaceSplit")!;
+                Assert.IsTrue(pane.Bounds.Width >= 296 && pane.Bounds.Width <= 480);
+                Assert.IsTrue(map.Bounds.Width >= 600);
+                Assert.AreEqual(60, rail.Bounds.Width);
+                var paneOrigin = pane.TranslatePoint(default, window)!.Value;
+                var mapOrigin = map.TranslatePoint(default, window)!.Value;
+                Assert.IsTrue(mapOrigin.X >= paneOrigin.X + pane.Bounds.Width);
+                var activity = map.FindControl<Border>("ActivityPanel")!;
+                Assert.IsTrue(activity.Bounds.Height >= 90);
+                Assert.IsTrue(activity.TranslatePoint(default, window)!.Value.Y > mapOrigin.Y + 180);
+
+                var handle = window.GetVisualDescendants().OfType<global::Avalonia.Controls.Primitives.Thumb>()
+                    .Single(control => global::Avalonia.Automation.AutomationProperties.GetName(control) == "Resize server and device panel");
+                double before = split.OpenPaneLength;
+                handle.Focus();
+                window.KeyPress(global::Avalonia.Input.Key.Right, global::Avalonia.Input.RawInputModifiers.None,
+                    global::Avalonia.Input.PhysicalKey.ArrowRight, null);
+                window.KeyRelease(global::Avalonia.Input.Key.Right, global::Avalonia.Input.RawInputModifiers.None,
+                    global::Avalonia.Input.PhysicalKey.ArrowRight, null);
+                Assert.AreEqual(Math.Min(480, before + 16), split.OpenPaneLength, .01);
+
+                double originalMapWidth = map.Bounds.Width;
+                model.ToggleSidebarCommand.Execute(null);
+                using (var collapsed = window.CaptureRenderedFrame()) Assert.IsNotNull(collapsed);
+                Assert.IsFalse(split.IsPaneOpen);
+                Assert.IsTrue(map.Bounds.Width > originalMapWidth);
+                model.ShowDevicesCommand.Execute(null);
+                using (var reopened = window.CaptureRenderedFrame()) Assert.IsNotNull(reopened);
+                Assert.IsTrue(split.IsPaneOpen);
+                Assert.AreSame(pane, window.GetVisualDescendants().OfType<ServerDevicePane>().Single());
+                Assert.AreEqual(1, model.Connection.Devices.Devices.Count);
+
+                model.OpenRecyclerCommand.Execute(null);
+                using (var recycler = window.CaptureRenderedFrame()) Assert.IsNotNull(recycler);
+                Assert.IsTrue(model.IsRecyclerSelected);
+                Assert.IsTrue(pane.IsEffectivelyVisible);
+                model.ShowDevicesCommand.Execute(null);
+                Assert.IsFalse(model.IsRecyclerSelected);
+                Assert.IsTrue(model.IsSidebarOpen);
+                window.Width = 1000;
+                window.Height = 700;
+                using (var resized = window.CaptureRenderedFrame()) Assert.IsNotNull(resized);
+                Assert.IsTrue(split.OpenPaneLength >= 300 && split.OpenPaneLength <= 480);
+                Assert.IsTrue(map.Bounds.Width >= 460);
+                model.SelectedServer = new(new string('W', 160), "long.example.test", 28082)
+                { Devices = [new(1, new string('W', 160), DeviceKind.Switch)] };
+                window.RequestedThemeVariant = ThemeVariant.Light;
+                using (var longNames = window.CaptureRenderedFrame()) Assert.IsNotNull(longNames);
+                var deviceView = pane.GetVisualDescendants().OfType<RustPlusDesk.Avalonia.Features.Devices.DevicesView>().Single();
+                foreach (var button in deviceView.GetVisualDescendants().OfType<Button>().Where(control => control.Command is not null && control.IsEffectivelyVisible))
+                {
+                    var point = button.TranslatePoint(default, deviceView)!.Value;
+                    Assert.IsTrue(point.X >= 0 && point.X + button.Bounds.Width <= deviceView.Bounds.Width);
+                }
+            }
+            finally { await model.ShutdownAsync(); window.Close(); }
+            return true;
+        }, CancellationToken.None);
+    }
+
     [TestMethod]
     public async Task Account_UsesWorkingCommandsAndModalFocusScope_WithoutNativeLoginDuringTest()
     {
@@ -106,7 +190,10 @@ public sealed class ShellTests
                 Assert.AreEqual(WindowDecorations.Full, window.WindowDecorations);
                 Assert.IsFalse(window.IsExtendedIntoWindowDecorations);
                 using (var frame = window.CaptureRenderedFrame())
+                {
                     Assert.IsNotNull(frame);
+                    frame.Save(Path.Combine(AppContext.BaseDirectory, "ui-layout-empty.png"), PngBitmapEncoderOptions.Default);
+                }
 
                 var status = window.GetVisualDescendants().OfType<StatusPanel>().Single();
                 Assert.AreEqual("No saved servers yet", status.Title);
@@ -119,7 +206,7 @@ public sealed class ShellTests
                     frame.Save(Path.Combine(AppContext.BaseDirectory, "ui-preview.png"), PngBitmapEncoderOptions.Default);
                 }
                 Assert.IsFalse(status.IsEffectivelyVisible);
-                var list = window.GetVisualDescendants().OfType<ListBox>().Single();
+                var list = window.GetVisualDescendants().OfType<ComboBox>().Single(control => control.Name == "SavedServerSelector");
                 Assert.AreEqual(2, list.ItemCount);
                 Assert.IsTrue(window.GetVisualDescendants().OfType<TextBlock>().Any(t => t.Text == "EU Vanilla"));
 

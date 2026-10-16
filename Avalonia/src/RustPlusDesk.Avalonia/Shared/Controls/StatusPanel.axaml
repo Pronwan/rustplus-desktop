@@ -3,9 +3,15 @@
              xmlns:shared="using:RustPlusDesk.Avalonia.Shared.Controls"
              x:Class="RustPlusDesk.Avalonia.Shared.Controls.StatusPanel"
              x:DataType="shared:StatusPanel" x:Name="Root">
-  <Border Classes="card" Padding="32">
+  <UserControl.Styles>
+    <Style Selector="Border.status-card"><Setter Property="Padding" Value="32" /></Style>
+    <Style Selector="TextBlock.status-title"><Setter Property="FontSize" Value="24" /></Style>
+    <Style Selector="shared|StatusPanel.compact Border.status-card"><Setter Property="Padding" Value="12" /></Style>
+    <Style Selector="shared|StatusPanel.compact TextBlock.status-title"><Setter Property="FontSize" Value="14" /></Style>
+  </UserControl.Styles>
+  <Border Classes="card status-card">
     <StackPanel Spacing="12">
-      <TextBlock Text="{Binding Title, ElementName=Root}" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding Title, ElementName=Root}" Classes="status-title" FontWeight="SemiBold" TextWrapping="Wrap" />
       <TextBlock Text="{Binding Message, ElementName=Root}" Classes="muted" TextWrapping="Wrap" />
     </StackPanel>
   </Border>

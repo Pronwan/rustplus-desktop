@@ -1,13 +1,22 @@
 # Migration status
 
 Started 2026-10-16 from `beta` at `e1bf6594`. This is the first independently buildable migration slice.
-All migration source lives inside `Avalonia/`. The existing Windows app remains unchanged.
+All migration source lives inside `Avalonia/`. Migration edits do not modify the existing Windows app.
 
 **Acceptance scope:** every shipped feature must be available in Avalonia, with nearly the same design.
 The initial saved-server preview is groundwork, not fulfillment of that scope. No feature may be
 dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 
 ## Implemented
+
+- Reference-layout shell: compact header, 60px navigation rail, responsive/collapsible server and device
+  panel, reserved map area, resizable pairing activity panel and bottom status bar. See `LAYOUT.md` and
+  the supplied screenshot. Devices now remain beside the workspace; Recycler uses rail navigation.
+  Map rendering/tools, full logs, team/shop docks and other navigation/footer actions are still pending.
+  Layout regression renders cover 1000×700, 1380×1000 and 2560×1440, sidebar keyboard resizing and
+  collapse/reopen, Recycler navigation and long names in light mode. Current suite: **202 passing cases**.
+  Debug/Release compile cleanly and all three self-contained target publishes succeed. The source-only
+  external copy passed 202 cases; after the final style/scroll refinement its seven UI cases pass again.
 
 - Independent solution, .NET 10 SDK/build settings, public NuGet sources, local branding, license, and provenance.
 - Portable Core with the unchanged server-clock algorithm and its five existing calibration tests.

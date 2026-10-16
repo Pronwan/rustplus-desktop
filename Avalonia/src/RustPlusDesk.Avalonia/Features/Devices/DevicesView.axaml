@@ -2,18 +2,18 @@
              xmlns:vm="using:RustPlusDesk.Avalonia.Features.Devices"
              xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
              x:Class="RustPlusDesk.Avalonia.Features.Devices.DevicesView" x:DataType="vm:DevicesViewModel">
-  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="16">
-    <Grid ColumnDefinitions="*,Auto">
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+    <StackPanel Spacing="8">
       <StackPanel Spacing="4">
-        <TextBlock Text="Devices" FontSize="24" FontWeight="SemiBold" />
-        <TextBlock Text="{Binding Message}" Classes="muted" TextWrapping="Wrap" />
+        <TextBlock Text="Devices" FontSize="18" FontWeight="SemiBold" />
+        <TextBlock Text="{Binding Message}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
       </StackPanel>
-      <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
-        <Button Content="_Organize devices…" Command="{Binding $parent[Window].((servers:ServersViewModel)DataContext).OrganizeDevicesCommand}"
+      <WrapPanel>
+        <Button Content="_Organize…" Margin="0,0,6,4" Command="{Binding $parent[Window].((servers:ServersViewModel)DataContext).OrganizeDevicesCommand}"
                 IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).HasDeviceEditor, FallbackValue=False}" />
-        <Button Content="_Refresh devices" Command="{Binding RefreshCommand}" />
-      </StackPanel>
-    </Grid>
+        <Button Content="_Refresh devices" Command="{Binding RefreshCommand}" Margin="0,0,0,4" />
+      </WrapPanel>
+    </StackPanel>
     <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="{Binding IsRefreshing}" AutomationProperties.Name="Refreshing devices" />
     <Grid Grid.Row="2">
       <Border Classes="card" IsVisible="{Binding !HasDevices}" VerticalAlignment="Center">
@@ -28,17 +28,17 @@
           <TreeDataTemplate DataType="vm:DeviceRowViewModel" x:DataType="vm:DeviceRowViewModel" ItemsSource="{Binding Children}">
             <Border Classes="card" Margin="0,0,0,8" Padding="12">
               <StackPanel Spacing="8">
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="8">
                   <StackPanel Spacing="4">
                     <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
                     <TextBlock Text="{Binding KindLabel}" Classes="muted" FontSize="12" />
                     <TextBlock Text="{Binding StateLabel}" FontWeight="SemiBold" />
                   </StackPanel>
-                  <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" IsVisible="{Binding SupportsControl}" VerticalAlignment="Top">
+                  <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding SupportsControl}">
                     <Button Content="ON" Command="{Binding TurnOnCommand}" AutomationProperties.Name="Turn device on" />
                     <Button Content="OFF" Command="{Binding TurnOffCommand}" AutomationProperties.Name="Turn device off" />
                   </StackPanel>
-                </Grid>
+                </StackPanel>
                 <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" AutomationProperties.Name="Waiting for device confirmation" />
                 <TextBlock Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextWrapping="Wrap" Classes="muted" />
                 <StackPanel IsVisible="{Binding IsStorage}" Spacing="6">

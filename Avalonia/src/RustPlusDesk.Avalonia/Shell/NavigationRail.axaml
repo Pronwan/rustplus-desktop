@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RustPlusDesk.Avalonia.Features.Servers"
+             x:Class="RustPlusDesk.Avalonia.Shell.NavigationRail" x:DataType="vm:ServersViewModel">
+  <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,1,0">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="7,12">
+      <StackPanel Spacing="12">
+        <Button Classes="rail" Content="☰" Command="{Binding ToggleSidebarCommand}"
+                ToolTip.Tip="Show or hide server and device panel" AutomationProperties.Name="Toggle server and device panel" />
+        <Button Classes="rail" Classes.selected="{Binding !IsRecyclerSelected}" Command="{Binding ShowDevicesCommand}"
+                ToolTip.Tip="Devices" AutomationProperties.Name="Devices">
+          <Path Width="20" Height="20" Stretch="Uniform" Stroke="{DynamicResource TextPrimary}" StrokeThickness="1.5"
+                Data="M 4,0 L 4,5 M 0,5 L 8,5 8,13 0,13 Z M 4,13 L 4,20 M 16,0 L 16,10 M 12,10 L 20,10 20,17 12,17 Z M 16,17 L 16,20" />
+        </Button>
+        <Button Classes="rail" Classes.selected="{Binding IsRecyclerSelected}" Command="{Binding OpenRecyclerCommand}"
+                IsVisible="{Binding HasRecyclerTool}" ToolTip.Tip="Recycler" AutomationProperties.Name="Recycler">
+          <Path Width="22" Height="22" Stretch="Uniform" Stroke="{DynamicResource TextPrimary}" StrokeThickness="1.7"
+                Data="M 6,6 L 10,0 17,11 M 11,10 L 17,11 18,5 M 18,14 L 21,20 8,20 M 11,16 L 8,20 11,24 M 5,20 L 0,20 6,9 M 1,11 L 6,9 8,14" />
+        </Button>
+      </StackPanel>
+      <Button Grid.Row="2" Classes="rail" Command="{Binding OpenAccountCommand}" IsVisible="{Binding HasAccount}"
+              ToolTip.Tip="Account and pairing" AutomationProperties.Name="Account and pairing">
+        <Path Width="20" Height="20" Stretch="Uniform" Stroke="{DynamicResource TextPrimary}" StrokeThickness="1.5"
+              Data="M 10,1 A 4,4 0 1 1 10,9 A 4,4 0 1 1 10,1 M 2,20 L 2,17 C 2,10 18,10 18,17 L 18,20" />
+      </Button>
+    </Grid>
+  </Border>
+</UserControl>

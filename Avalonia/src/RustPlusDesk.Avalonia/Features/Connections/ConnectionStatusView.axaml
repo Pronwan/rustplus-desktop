@@ -17,10 +17,10 @@
           <Button Content="_Disconnect" Padding="10,4" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsActive}" />
         </StackPanel>
       </Grid>
-      <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="24" IsVisible="{Binding IsConnected}">
+      <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="8" IsVisible="{Binding IsConnected}">
         <StackPanel Spacing="4"><TextBlock Text="Players" Classes="muted" /><TextBlock Text="{Binding Population}" FontSize="18" /></StackPanel>
         <StackPanel Grid.Column="1" Spacing="4"><TextBlock Text="Queue" Classes="muted" /><TextBlock Text="{Binding Queue}" FontSize="18" /></StackPanel>
-        <StackPanel Grid.Column="2" Spacing="4"><TextBlock Text="Server time" Classes="muted" /><TextBlock Text="{Binding ServerTime}" FontSize="18" /><TextBlock Text="{Binding NextPhase}" Classes="muted" /></StackPanel>
+        <StackPanel Grid.Column="2" Spacing="4"><TextBlock Text="Server time" Classes="muted" /><TextBlock Text="{Binding ServerTime}" FontSize="18" /><TextBlock Text="{Binding NextPhase}" Classes="muted" FontSize="11" TextWrapping="Wrap" /></StackPanel>
       </Grid>
     </Grid>
   </Border>

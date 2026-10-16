@@ -6,6 +6,10 @@ The destination is **every shipped feature with nearly the same design**. No red
 general redesign is authorized. [The UI parity checklist](migration/reference/UI-CHECKLIST.md) tracks
 reference screens/components; `migration/STATUS.md` distinguishes working behavior from pending ports.
 
+The shell follows the supplied layout: left navigation rail, server/device panel, main map area,
+bottom activity panel and status bar. The side panel scales, resizes and collapses; Recycler opens
+from the rail. See [layout guidance](migration/LAYOUT.md). Live map rendering is still pending.
+
 ## Build and run
 
 Install the .NET 10 SDK. Run these commands **from this folder**:
