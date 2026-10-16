@@ -8335,4 +8335,208 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Clear the global settings and every tile's own opacity, text size and colour? The tiles themselves stay where they are.</value>
   </data>
+  <data name="CsCategoryDesc" xml:space="preserve">
+    <value>Your accounts, alerts while the app is closed, Discord, and smart home</value>
+  </data>
+  <data name="CsAccountsTitle" xml:space="preserve">
+    <value>Your accounts</value>
+  </data>
+  <data name="CsAccountsHint" xml:space="preserve">
+    <value>These are two separate accounts. Signing in or out of one never changes the other.</value>
+  </data>
+  <data name="CsCloudAccountTitle" xml:space="preserve">
+    <value>RustPlus Desktop account</value>
+  </data>
+  <data name="CsCloudAccountDesc" xml:space="preserve">
+    <value>Our own cloud account for sync, backups, global chat, and Supporter features. Not your Steam or Rust+ login.</value>
+  </data>
+  <data name="CsRustPlusAccountTitle" xml:space="preserve">
+    <value>Rust+ companion (Steam)</value>
+  </data>
+  <data name="CsRustPlusAccountDesc" xml:space="preserve">
+    <value>Facepunch's Rust+ pairing that connects you to servers, smart devices, and team chat. Run by Facepunch, not by RustPlus Desktop.</value>
+  </data>
+  <data name="CsRustPlusTokenFormat" xml:space="preserve">
+    <value>Pairing token: {0}</value>
+  </data>
+  <data name="CsRustPlusNotPaired" xml:space="preserve">
+    <value>Pair a server from the main window to start.</value>
+  </data>
+  <data name="CsSignedInDiscordFormat" xml:space="preserve">
+    <value>Signed in with Discord · {0} plan</value>
+  </data>
+  <data name="CsSignedInEmailFormat" xml:space="preserve">
+    <value>Signed in as {0} · {1} plan</value>
+  </data>
+  <data name="CsUsageOverlay" xml:space="preserve">
+    <value>Overlay</value>
+  </data>
+  <data name="CsUsageDevices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="CsUsageBases" xml:space="preserve">
+    <value>Bases</value>
+  </data>
+  <data name="CsCloudFeaturesTitle" xml:space="preserve">
+    <value>Cloud features</value>
+  </data>
+  <data name="CsCloudFeaturesHint" xml:space="preserve">
+    <value>These run on your RustPlus Desktop account.</value>
+  </data>
+  <data name="CsCloud247Desc" xml:space="preserve">
+    <value>Keeps the servers you choose watched in the cloud while your PC is off.</value>
+  </data>
+  <data name="CsCloud247Action" xml:space="preserve">
+    <value>Choose servers</value>
+  </data>
+  <data name="CsCompareFeaturesShort" xml:space="preserve">
+    <value>Compare plans</value>
+  </data>
+  <data name="CsGlobalChatTitle" xml:space="preserve">
+    <value>Global chat</value>
+  </data>
+  <data name="CsGlobalChatDesc" xml:space="preserve">
+    <value>The shared chat room for everyone using RustPlus Desktop.</value>
+  </data>
+  <data name="CsOfflineGroupTitle" xml:space="preserve">
+    <value>Alerts while the app is closed</value>
+  </data>
+  <data name="CsOfflineGroupHint" xml:space="preserve">
+    <value>The cloud forwards raid and death alerts even when RustPlus Desktop isn't running.</value>
+  </data>
+  <data name="CsOfflineAlertsTitle" xml:space="preserve">
+    <value>Offline raid and death alerts</value>
+  </data>
+  <data name="CsOfflineAlertsDesc" xml:space="preserve">
+    <value>Sent to a Discord channel or a smart-home webhook.</value>
+  </data>
+  <data name="CsOfflineStep1" xml:space="preserve">
+    <value>Connect your Rust+ alerts to the cloud</value>
+  </data>
+  <data name="CsOfflineStep2" xml:space="preserve">
+    <value>Choose where alerts go</value>
+  </data>
+  <data name="CsTelegramTitle" xml:space="preserve">
+    <value>Phone call on raid</value>
+  </data>
+  <data name="CsTelegramDesc" xml:space="preserve">
+    <value>Rings you with a Telegram voice call through CallMeBot.</value>
+  </data>
+  <data name="CsTelegramHint" xml:space="preserve">
+    <value>Uses the cloud connection from Offline raid and death alerts, step 1.</value>
+  </data>
+  <data name="CsDiscordGroupTitle" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="CsDiscordGroupHint" xml:space="preserve">
+    <value>Post this app's alerts to Discord, or run commands from your own Discord server.</value>
+  </data>
+  <data name="CsDiscordWebhookTitle" xml:space="preserve">
+    <value>Chat alerts to Discord</value>
+  </data>
+  <data name="CsDiscordWebhookDesc" xml:space="preserve">
+    <value>Posts the selected server's chat alerts to a channel through a webhook while the app runs.</value>
+  </data>
+  <data name="CsDiscordWebhookNoServer" xml:space="preserve">
+    <value>Select a server in the main window first. The webhook is saved per server.</value>
+  </data>
+  <data name="CsDiscordBotTitle" xml:space="preserve">
+    <value>Discord bot</value>
+  </data>
+  <data name="CsDiscordBotDesc" xml:space="preserve">
+    <value>Slash commands and alert channels in your own Discord server.</value>
+  </data>
+  <data name="CsBotStep1" xml:space="preserve">
+    <value>Invite the bot to your Discord server</value>
+  </data>
+  <data name="CsBotStep2" xml:space="preserve">
+    <value>Tell it which Discord server is yours</value>
+  </data>
+  <data name="CsSmartHomeGroupTitle" xml:space="preserve">
+    <value>Smart home</value>
+  </data>
+  <data name="CsSmartHomeGroupHint" xml:space="preserve">
+    <value>Control smart switches and react to alarms with voice assistants and home automation.</value>
+  </data>
+  <data name="CsAlexaTitle" xml:space="preserve">
+    <value>Amazon Alexa</value>
+  </data>
+  <data name="CsAlexaDesc" xml:space="preserve">
+    <value>Voice-control switches. Alarms show up as motion sensors.</value>
+  </data>
+  <data name="CsAlexaStep1Hint" xml:space="preserve">
+    <value>Enable the RustPlusDesktop skill in the Alexa app, then enter this PIN there.</value>
+  </data>
+  <data name="CsHomeAssistantTitle" xml:space="preserve">
+    <value>Home Assistant</value>
+  </data>
+  <data name="CsHomeAssistantDesc" xml:space="preserve">
+    <value>REST switches using a personal API token.</value>
+  </data>
+  <data name="CsWipeTrackerTitle" xml:space="preserve">
+    <value>Player Wipe Tracker</value>
+  </data>
+  <data name="CsWipeTrackerToggle" xml:space="preserve">
+    <value>Track team snapshots</value>
+  </data>
+  <data name="CsWipeTrackerBackupToggle" xml:space="preserve">
+    <value>Back up to the cloud daily</value>
+  </data>
+  <data name="CsUpgradeShort" xml:space="preserve">
+    <value>Upgrade</value>
+  </data>
+  <data name="CsLockSupporter" xml:space="preserve">
+    <value>Needs a Supporter plan.</value>
+  </data>
+  <data name="CsLockSignIn" xml:space="preserve">
+    <value>Sign in to your RustPlus Desktop account above. Needs a Supporter plan.</value>
+  </data>
+  <data name="CsChipSignIn" xml:space="preserve">
+    <value>Sign in first</value>
+  </data>
+  <data name="CsChipSupporter" xml:space="preserve">
+    <value>Supporter</value>
+  </data>
+  <data name="CsChipNotSetUp" xml:space="preserve">
+    <value>Not set up</value>
+  </data>
+  <data name="CsChipUnavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="CsChipNotSignedIn" xml:space="preserve">
+    <value>Not signed in</value>
+  </data>
+  <data name="CsChipPaired" xml:space="preserve">
+    <value>Paired</value>
+  </data>
+  <data name="CsChipNotPaired" xml:space="preserve">
+    <value>Not paired</value>
+  </data>
+  <data name="CsChipExperimental" xml:space="preserve">
+    <value>Experimental</value>
+  </data>
+  <data name="CsChipTickerOn" xml:space="preserve">
+    <value>Ticker on</value>
+  </data>
+  <data name="CsChipTickerOff" xml:space="preserve">
+    <value>Ticker hidden</value>
+  </data>
+  <data name="CsChipActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="CsChipNoDestination" xml:space="preserve">
+    <value>Add a destination</value>
+  </data>
+  <data name="CsChipNoServer" xml:space="preserve">
+    <value>No server</value>
+  </data>
+  <data name="CsChipLinked" xml:space="preserve">
+    <value>Linked</value>
+  </data>
+  <data name="CsChipTokenActive" xml:space="preserve">
+    <value>Token active</value>
+  </data>
+  <data name="CsChipNoToken" xml:space="preserve">
+    <value>No token</value>
+  </data>
 </root>

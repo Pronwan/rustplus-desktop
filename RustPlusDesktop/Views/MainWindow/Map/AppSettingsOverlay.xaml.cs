@@ -167,11 +167,18 @@ namespace RustPlusDesk.Views
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
                 Section("team-markers", "map", T("TeamMarkersSettings", "Team Markers"), "profile player direction arrows death markers streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
-                Section("cloud", "connected", "Cloud Account & Sync", "cloud account discord email supporter webhook fcm alexa smart home bot channels sync wipe tracker player backup", SectionCloud),
+                // Connected Services, in page order. The keywords keep the old section and card names
+                // ("Cloud Account & Sync", "Basic Discord Integration", ...) findable after the rename.
+                Section("cloud", "connected", T("CsCloudAccountTitle", "RustPlus Desktop account"), "cloud account sync discord email login sign in supporter tier plan usage limits overlay devices bases upgrade backend service", SectionCloud),
+                Section("steam", "connected", T("CsRustPlusAccountTitle", "Rust+ companion (Steam)"), "steam account rust+ companion pairing facepunch fcm token manage", SectionSteamAccount),
+                Section("cloud-features", "connected", T("CsCloudFeaturesTitle", "Cloud features"), "cloud 24/7 247 experimental compare features global chat ticker room", SectionCloudFeatures),
+                Section("offline-alerts", "connected", T("CsOfflineGroupTitle", "Alerts while the app is closed"), "offline cloud alerts discord webhook telegram calls callmebot phone call raid death fcm sync smart home ifttt", SectionOfflineAlerts),
+                Section("discord", "connected", T("CsDiscordGroupTitle", "Discord"), "basic discord integration webhook chat alerts tts advanced discord bot integration invite guild server id commands roles channels", SectionDiscord),
+                Section("smart-home", "connected", T("CsSmartHomeGroupTitle", "Smart home"), "alexa smart home amazon pin home assistant token rest switch configuration yaml", SectionSmartHome),
+                Section("wipe-tracker", "connected", T("CsWipeTrackerTitle", "Player Wipe Tracker"), "player wipe tracker team snapshots cloud backup", SectionWipeTracker),
                 Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
                 Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
                 Section("ai-companion", "ai-companion", T("AiCompanionTitle", "AI Companion"), "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
-                Section("steam", "connected", T("SteamAccount", "Steam Account"), "steam account companion pairing manage", SectionSteamAccount),
                 Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
                 Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
             };
@@ -416,6 +423,9 @@ namespace RustPlusDesk.Views
 
             var section = _settingsSections.First(candidate => candidate.Id == selected.Id);
             ScrollToSettingsElement(section.Element);
+
+            // Clear the pick so tapping the same chip again scrolls back to it.
+            SettingsSectionList.SelectedItem = null;
         }
 
         private void ScrollToSettingsElement(FrameworkElement target, bool focus = false)
@@ -462,7 +472,7 @@ namespace RustPlusDesk.Views
         {
             "alerts" => ("Alerts", "Notifications, sounds, and offline death alerts"),
             "map" => ("Map", "Performance, markers, and 3D map data"),
-            "connected" => ("Connected Services", "Cloud, integrations, chat, and account connections"),
+            "connected" => ("Connected Services", T("CsCategoryDesc", "Your accounts, alerts while the app is closed, Discord, and smart home")),
             "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
             "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
             "ai-companion" => (T("AiCompanionTitle", "AI Companion"), T("AiCompanionCategoryDesc", "Voice and text companion, provider, hotkey, and appearance")),
@@ -763,20 +773,7 @@ namespace RustPlusDesk.Views
             {
                 TxtDiscordBtnLabel.Text = T("AuthDiscordDisconnectButton", "Disconnect Discord");
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Caution;
-
-                int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
-                string maxOverlay = maxBytes == int.MaxValue ? "unlimited" : $"{maxBytes / 1024} KB";
-                int maxDevices = Services.Auth.SupabaseAuthManager.GetMaxDevices();
-                string maxDevs = maxDevices == int.MaxValue ? "unlimited" : maxDevices.ToString();
-                int maxBases = Services.Auth.SupabaseAuthManager.GetMaxBases();
-                string maxBs = maxBases == int.MaxValue ? "unlimited" : maxBases.ToString();
-
-                int currentOverlayKb = ParentWindow != null ? Math.Max(1, (int)Math.Ceiling(ParentWindow.GetCurrentOverlaySizeBytes() / 1024.0)) : 0;
-                int currentDevices = ParentWindow != null ? ParentWindow.GetCurrentDevicesCount() : 0;
-                int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
-
-                string baseText = string.Format(T("AuthDiscordConnectedFormat", "Discord connected - Tier: {0}"), Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
-                TxtAuthStatus.Text = string.Format(Properties.Resources.GetString("FormatCloudLimits"), baseText, currentOverlayKb, maxOverlay, currentDevices, maxDevs, currentBases, maxBs);
+                TxtAuthStatus.Text = string.Format(T("CsSignedInDiscordFormat", "Signed in with Discord · {0} plan"), FormatTier());
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
@@ -785,20 +782,7 @@ namespace RustPlusDesk.Views
                 var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
                 TxtDiscordBtnLabel.Text = RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptDiscordButton");
                 BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
-
-                int maxBytes = Services.Auth.SupabaseAuthManager.GetMaxOverlayBytes();
-                string maxOverlay = maxBytes == int.MaxValue ? "unlimited" : $"{maxBytes / 1024} KB";
-                int maxDevices = Services.Auth.SupabaseAuthManager.GetMaxDevices();
-                string maxDevs = maxDevices == int.MaxValue ? "unlimited" : maxDevices.ToString();
-                int maxBases = Services.Auth.SupabaseAuthManager.GetMaxBases();
-                string maxBs = maxBases == int.MaxValue ? "unlimited" : maxBases.ToString();
-
-                int currentOverlayKb = ParentWindow != null ? Math.Max(1, (int)Math.Ceiling(ParentWindow.GetCurrentOverlaySizeBytes() / 1024.0)) : 0;
-                int currentDevices = ParentWindow != null ? ParentWindow.GetCurrentDevicesCount() : 0;
-                int currentBases = ParentWindow != null ? ParentWindow.GetCurrentBaseCount() : 0;
-
-                string baseText = string.Format(T("AuthEmailConnectedFormat", "Email connected: {0} - Tier: {1}"), email, Services.Auth.SupabaseAuthManager.CurrentTier.ToUpper());
-                TxtAuthStatus.Text = string.Format(Properties.Resources.GetString("FormatCloudLimits"), baseText, currentOverlayKb, maxOverlay, currentDevices, maxDevs, currentBases, maxBs);
+                TxtAuthStatus.Text = string.Format(T("CsSignedInEmailFormat", "Signed in as {0} · {1} plan"), email, FormatTier());
                 TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
                     System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
             }
@@ -811,8 +795,8 @@ namespace RustPlusDesk.Views
                     System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
             }
 
-            BrdSupporterSettings.IsEnabled = connected && isPremium;
-            BrdSupporterSettings.Opacity = (connected && isPremium) ? 1.0 : 0.5;
+            ApplyCloudUsage(connected);
+            ApplySupporterGate(connected, isPremium);
             BtnEmailConnect.Content = isEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiManageEmailAccount") : RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptEmailButton");
 
             if (connected && isPremium)
@@ -1353,6 +1337,7 @@ namespace RustPlusDesk.Views
             {
                 ParentWindow.SyncAlertMenuItems();
             }
+            RefreshServiceChips();
         }
 
         private void BtnClearSettingsWebhook_Click(object sender, RoutedEventArgs e)
@@ -1363,6 +1348,7 @@ namespace RustPlusDesk.Views
                 vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
                 ParentWindow.SyncAlertMenuItems();
             }
+            RefreshServiceChips();
         }
 
         private void BtnDiscordWebhookHelp_Click(object sender, RoutedEventArgs e)
@@ -1465,6 +1451,7 @@ namespace RustPlusDesk.Views
                 if (!EnsureOfflineIntegrationsConsent()) return;
 
                 bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                RefreshServiceChips();
                 if (success)
                 {
                     if (btn != null)
@@ -1497,6 +1484,7 @@ namespace RustPlusDesk.Views
                     RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, false);
 
                 bool success = await RustPlusDesk.Services.FcmSyncService.RevokeFcmCredentialsAsync();
+                RefreshServiceChips();
                 if (success)
                 {
                     BtnSyncFcm.Content = RustPlusDesk.Properties.Resources.GetString("UiSyncCloudConnection");
@@ -1730,6 +1718,12 @@ namespace RustPlusDesk.Views
                 var list = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordBotSettingsModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 var guildSetting = list?.FirstOrDefault();
 
+                Dispatcher.Invoke(() =>
+                {
+                    _discordBotGuildId = guildSetting?.GuildId;
+                    RefreshServiceChips();
+                });
+
                 if (guildSetting != null)
                 {
                     Dispatcher.Invoke(() =>
@@ -1950,6 +1944,7 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             TrackingService.DiscordWebhookUrl = TxtDiscordWebhookUrl.Text;
+            RefreshServiceChips();
             TriggerBackgroundFcmSync();
         }
 
@@ -1964,6 +1959,7 @@ namespace RustPlusDesk.Views
         {
             if (!_isSettingsInitialized) return;
             TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+            RefreshServiceChips();
             TriggerBackgroundFcmSync();
         }
 
@@ -2008,6 +2004,7 @@ namespace RustPlusDesk.Views
             TxtGeneratedTelegramUrl.Visibility = Visibility.Visible;
             BtnTestTelegramUrl.Visibility = Visibility.Visible;
             BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
+            RefreshServiceChips();
 
             // Trigger FCM Sync directly to save
             if (!EnsureOfflineIntegrationsConsent()) return;
@@ -2062,6 +2059,7 @@ namespace RustPlusDesk.Views
             TxtGeneratedTelegramUrl.Visibility = Visibility.Collapsed;
             BtnTestTelegramUrl.Visibility = Visibility.Collapsed;
             BtnRevokeTelegramUrl.Visibility = Visibility.Collapsed;
+            RefreshServiceChips();
 
             await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
         }
@@ -2109,6 +2107,9 @@ namespace RustPlusDesk.Views
 
                     activeServerKey = response?.ActiveServerKey;
                 }
+
+                _alexaActiveServerKey = activeServerKey;
+                RefreshServiceChips();
 
                 if (!string.IsNullOrEmpty(activeServerKey))
                 {
@@ -2285,6 +2286,9 @@ namespace RustPlusDesk.Views
                         _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
                     }
 
+                    _alexaActiveServerKey = serverKey;
+                    RefreshServiceChips();
+
                     var msgBox = new Wpf.Ui.Controls.MessageBox
                     {
                         Title = Properties.Resources.GetString("CodeUiSuccess"),
@@ -2331,6 +2335,8 @@ namespace RustPlusDesk.Views
                 }
 
                 CmbAlexaServer.SelectedItem = null;
+                _alexaActiveServerKey = null;
+                RefreshServiceChips();
                 ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), WpfUi.ControlAppearance.Success);
             }
             catch (Exception ex)
@@ -2371,6 +2377,7 @@ namespace RustPlusDesk.Views
             BtnCopyHaToken.IsEnabled = hasToken;
             BtnGenerateHaToken.Content = hasToken ? "Regenerate Token" : "Generate Token";
             TxtHaSnippet.Text = BuildHaSnippet(token);
+            RefreshServiceChips();
         }
 
         private static string BuildHaSnippet(string? token)
@@ -2506,6 +2513,7 @@ namespace RustPlusDesk.Views
             ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
                 BtnGenerateHaToken, BtnRevokeHa);
             ApplyFeatureFlag("cloud_247", TxtCloud247StatusNote, BtnCloud247);
+            RefreshServiceChips();
         }
 
         private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)
