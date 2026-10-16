@@ -31,7 +31,8 @@ when available, followed by the direct route. **Account → Sign in with Steam**
 authentication dialog and verifies the companion token before registering a new push device and saving
 credentials beside the chosen profiles file. Canceling or failing sign-in preserves existing credentials.
 Successful writes preserve unknown configuration fields and restrict the credential file to the current user.
-Use **Start listening** in Account, then pair a server or smart device from Rust. The listener saves
+Saved accounts start the listener automatically at startup and after successful sign-in. Use
+**Start listening** in Account to restart it manually, then pair a server or smart device from Rust. The listener saves
 pairings into the selected profiles file, preserves nested groups/settings, and refreshes the server list.
 It keeps running after the account panel closes; **Stop listening**, a profile-source change, sign-in,
 sign-out or app shutdown stops and awaits it. Temporary socket failures retry with 3–60 second backoff.
@@ -40,8 +41,13 @@ This feed keeps the newest 100 entries in memory; the full notification center, 
 
 **Sign out this device** unregisters its push registration. **Sign out all devices** invalidates the saved
 companion token across devices using it. Both require confirmation, stop owned sessions, preserve paired
-servers and unknown configuration fields, and report remote/local partial completion. Startup push-health
-checks and automatic registration repair remain pending. Live Steam/Facepunch/FCM acceptance still needs verification;
+servers and unknown configuration fields, and report remote/local partial completion.
+The listener tests delivery once per source after startup. Only an actual test push received by this
+listener proves delivery; an Expo ticket alone does not. A rejected push token or a test accepted but
+not received within 20 seconds triggers one registration renewal and one retest using the saved sign-in.
+Network/provider failures remain inconclusive and do not trigger renewal. **Check push delivery** and
+**Renew pairing** are also available manually. Rejected or missing sign-in shows a prompt; startup never
+opens Steam authentication automatically. Live Steam/Facepunch/FCM acceptance still needs verification;
 automated checks use local callbacks, synthetic credentials and fake transports.
 
 Paired smart switches, nested groups, alarm state and storage contents load after connecting.
@@ -154,4 +160,5 @@ See [the migration prompt](migration/PROMPT.md) and [current status](migration/S
 - [Compiled bindings](https://docs.avaloniaui.net/docs/data-binding/compiled-bindings)
 - [Native file dialogs](https://docs.avaloniaui.net/docs/services/file-dialogs)
 - [Headless UI testing](https://docs.avaloniaui.net/docs/testing/setting-up-the-headless-platform)
+- [Expo push tickets, receipts and delivery errors](https://docs.expo.dev/push-notifications/sending-notifications/)
 - [.NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)

@@ -36,6 +36,10 @@ and upstream attribution when copying or distributing it.
   follow `Services/NativeFcmListener.cs`, `MainWindow.xaml.cs` and `Services/RustPlusConnectionVerifier.cs`.
   They are reworked into a portable stream and shared schema-preserving storage. The same public MIT
   `RustPlusApi.Fcm` dependency supplies the MCS transport; no private authentication provider is required.
+- Push self-test and one-shot renewal preserve the workflows in `Services/FcmSelfTestService.cs` and
+  `Views/MainWindow/Connection/MainWindow.Connection.FcmHealth.cs`. Registration uses the public SDK
+  with the saved companion token; no private repair-provider source is copied. Delivery is confirmed
+  only by a correlated push arriving at the selected profile source's listener.
 - `packages-local/RustPlusApi.2.0.0-beta.9.socket.1.nupkg` is copied unchanged from the reference
   repository's local feed. It is MIT-licensed (HandyS11 / Clergue Valentin); see `packages-local/RustPlusApi.LICENSE`.
   SHA-256: `DBEAE2BF1241D6F77C2EF10493FC274306393ED2910923C178DC0F60822343BF`.

@@ -8,6 +8,12 @@
       <Button Content="Start _listening" Command="{Binding StartCommand}" />
       <Button Content="_Stop listening" Command="{Binding StopCommand}" />
     </StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="10">
+      <Button Content="Check _push delivery" Command="{Binding CheckDeliveryCommand}" IsVisible="{Binding HasHealth}" />
+      <Button Content="_Renew pairing" Command="{Binding RenewCommand}" IsVisible="{Binding HasRenewal}" />
+    </StackPanel>
+    <TextBlock Text="{Binding HealthMessage}" IsVisible="{Binding HasHealth}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+    <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsChecking}" AutomationProperties.Name="Push delivery check or renewal" />
     <ScrollViewer MaxHeight="160" HorizontalScrollBarVisibility="Disabled">
       <ItemsControl ItemsSource="{Binding Notifications}">
         <ItemsControl.ItemTemplate>

@@ -180,6 +180,34 @@ public sealed class CompanionListenerTests
         Assert.IsTrue(await stream.MoveNextAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(4)));
         return stream.Current;
     }
+
+    [TestMethod]
+    public async Task HealthProbe_IsConsumedBeforePairingOrNotificationPresentation()
+    {
+        using var files = Configured();
+        await File.WriteAllTextAsync(files.Config, "{\"expo_push_token\":\"fixture-expo\",\"fcm_credentials\":{\"gcm\":{\"androidId\":42,\"securityToken\":84}}}");
+        Connection? connection = null;
+        using var http = new HttpClient(new ProbeHandler(async (request, ct) =>
+        {
+            using var json = JsonDocument.Parse(await request.Content!.ReadAsStringAsync(ct));
+            string title = json.RootElement.GetProperty("title").GetString()!;
+            connection!.Send(new FcmMessage { PersistentId = "probe-id", Data = new MessageData { ChannelId = "rpd-selftest", Title = title, Body = new Body() } });
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent("{\"data\":{\"status\":\"ok\",\"id\":\"fixture-ticket\"}}") };
+        }));
+        var health = new CompanionPushHealth(http, new CompanionPushHealthTests.AccountService(() => AccountState.Active),
+            async (arrival, ct) => { await arrival.WaitAsync(TimeSpan.FromSeconds(3), ct); return true; });
+        var listener = new CompanionListener((credentials, ids, receive) => connection = new Connection(ids, receive), Task.Delay, health);
+        using var stop = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        await using var stream = listener.ListenAsync(files.Profiles, stop.Token).GetAsyncEnumerator();
+        await Next(stream); await Next(stream);
+        Assert.AreEqual(PushHealthOutcome.Healthy, (await health.CheckAsync(files.Profiles, stop.Token)).Outcome);
+        Assert.IsFalse(File.Exists(files.Profiles));
+        connection!.Send(Message("actual-chat", "chat"));
+        Assert.AreEqual(CompanionUpdateKind.Chat, (await Next(stream)).Kind);
+    }
+
+    private sealed class ProbeHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send) : HttpMessageHandler
+    { protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct) => send(request, ct); }
     private static FcmMessage Message(string id, string channel) => new()
     { PersistentId = id, SentAt = DateTime.UtcNow, Data = new MessageData { ChannelId = channel, Title = "Fixture", Message = id, Body = PairingWriterTests.Pairing } };
     private static PairingFiles Configured()

@@ -9,6 +9,7 @@ public interface ICompanionAccountService
 {
     Task<CompanionAccount> CheckAsync(string configPath, CancellationToken cancellationToken);
     Task<CompanionAccount> SignInAsync(string configPath, CancellationToken cancellationToken);
+    Task<CompanionAccount> RenewPushAsync(string configPath, CancellationToken cancellationToken);
     Task<CompanionSignOutResult> SignOutAsync(string configPath, CompanionSignOutScope scope, CancellationToken cancellationToken);
 }
 

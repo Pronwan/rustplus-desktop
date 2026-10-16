@@ -31,7 +31,7 @@ public sealed class ShellTests
         {
             var service = new CompanionAccountViewModelTests.Service();
             var source = new CompanionListenerViewModelTests.Source();
-            var model = new ServersViewModel(new PreviewCatalog(), new UnusedPicker(), "profiles.json", new PreviewSessionFactory(), accountService: service, companionListener: source);
+            var model = new ServersViewModel(new PreviewCatalog(), new UnusedPicker(), "profiles.json", new PreviewSessionFactory(), accountService: service, companionListener: source, pushHealth: new PreviewHealth());
             var window = new MainWindow { DataContext = model, Width = 1000, Height = 700 };
             try
             {
@@ -47,6 +47,9 @@ public sealed class ShellTests
                 await model.Account.CheckCommand.ExecuteAsync(null);
                 Task listening = model.Listener!.StartCommand.ExecuteAsync(null);
                 await source.Started.Task;
+                source.Send(new(RustPlusDesk.Core.Accounts.CompanionUpdateKind.Listening, "Rust+", "Listening"));
+                await CompanionListenerViewModelTests.Eventually(() => model.Listener.IsChecking);
+                await model.Listener.CheckDeliveryCommand.ExecutionTask!.WaitAsync(TimeSpan.FromSeconds(12));
                 source.Send(new(RustPlusDesk.Core.Accounts.CompanionUpdateKind.Alarm, "Fixture base alarm", "Motion detected") { ServerName = "EU Vanilla" });
                 await CompanionListenerViewModelTests.Eventually(() => model.Listener.Notifications.Count == 1);
                 using var frame = window.CaptureRenderedFrame();
@@ -237,6 +240,12 @@ public sealed class ShellTests
     private sealed class UnusedPicker : IProfileFilePicker
     {
         public Task<string?> PickAsync() => throw new AssertFailedException("The file picker should not run in this test.");
+    }
+
+    private sealed class PreviewHealth : RustPlusDesk.Core.Accounts.ICompanionPushHealth
+    {
+        public Task<RustPlusDesk.Core.Accounts.PushHealthReport> CheckAsync(string path, CancellationToken ct)
+            => Task.FromResult(new RustPlusDesk.Core.Accounts.PushHealthReport(RustPlusDesk.Core.Accounts.PushHealthOutcome.Healthy, "Push delivery verified by fixture."));
     }
 
     private sealed class PreviewSessionFactory : IServerSessionFactory, IServerSession

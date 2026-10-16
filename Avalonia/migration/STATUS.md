@@ -67,6 +67,13 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
   account panel keeps listening. Full notification-center persistence/audio/settings are still pending.
 - Device-name inference distinguishes `Smart Switch` from the standalone `TC` abbreviation; the old broad
   substring match could misclassify a switch when numeric type information was missing.
+- Saved-account startup and successful sign-in start the listener without opening Steam automatically.
+  Missing/rejected credentials prompt sign-in. Startup/source changes/shutdown cancel and await old work.
+- Push delivery checks correlate a random test title with the selected source's listener. Ticket/receipt
+  acknowledgements alone never prove delivery. A rejected token or accepted-but-missing test permits one
+  renewal with the saved token, listener restart and one retest. Inconclusive network/provider failures
+  do not renew. Manual delivery checks/renewal and bounded cancellation use the same flow.
+- Account dialog keeps its Close action visible below the scrollable content at the minimum window size.
 
 ## Feature parity
 
@@ -74,7 +81,7 @@ dropped or replaced by a reduced workflow without Jawad's explicit instruction.
 | --- | --- | --- |
 | Saved-server list | Browsing, selection, name/address/port editing, direct-address/device probe and backed-up schema-preserving writes | Deletion with cloud cleanup, transfers, new pairing, original context menus and complete sidebar design |
 | Server-clock calibration | Wired to live samples, independent display ticks and pause state | Native/live-server acceptance, localized countdown formatting and full original status layout |
-| Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance, startup health checks/registration repair and ambiguous-match resolution UI |
+| Pairing/auth/accounts | Native-browser sign-in/status, FCM registration/listener, startup delivery checks, one-shot renewal, server/device pairing and re-pair, private writes, confirmed device/global sign-out | Live Steam/Facepunch/FCM acceptance and ambiguous-match resolution UI |
 | Rust+ connection/reconnect | Basic authenticated status session, fallback, cancellation and recovery implemented | Native/live-server acceptance; push-disconnect integration, soft/full modes and feature subscriptions |
 | Live map/markers/overlays | Not ported | Separate coordinate/state logic from rendering; choose portable map/helper hosting |
 | Smart devices/automation/timers | Confirmed switches, nested group commands, alarm state, authoritative storage reads and subscriptions | Live-server acceptance, add/edit/delete/import/transfer/reorder devices, custom icons, automation, timers, alarm notifications/audio and full original layout |
@@ -119,7 +126,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 ## Next implementation slice
 
 1. Validate live Steam/Facepunch/FCM sign-in, pairing and sign-out on a native desktop with the user;
-   complete startup health checks, registration repair and ambiguous-match resolution without losing data.
+   validate the implemented startup health checks/registration repair and add ambiguous-match resolution without losing data.
 2. Continue device editing, groups, import/transfer, notifications and automation using the verified session/device boundary.
 3. Port original server context menus and deletion together with its cloud cleanup; preserve all related data and consent flows.
 4. Build the original rail/sidebar/workspace arrangement using Fluent components; preserve navigation
@@ -129,7 +136,7 @@ themes, and full keyboard/screen-reader acceptance are still pending.
 
 ## Local verification
 
-- Windows: Debug and Release solution builds are clean; all **139 .NET tests pass with zero warnings** for the current slice.
+- Windows: Debug and Release solution builds are clean; all **171 .NET tests pass with zero warnings** for the current slice.
 - Native browser crash reproduced using a local callback: Windows threw `Unable to create child window
   for native control host` because the executable lacked a supported-OS manifest. Added the official
   Avalonia compatibility declaration to the app host. The same production browser now passes local redirect

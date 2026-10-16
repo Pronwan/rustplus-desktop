@@ -71,49 +71,7 @@ public sealed class CompanionAccountService : ICompanionAccountService
             if (account.State != AccountState.Active)
                 throw new CompanionAccountException(account.State is AccountState.Rejected or AccountState.Expired ? AccountFailure.Rejected : AccountFailure.Unavailable);
 
-            var push = await acquirePush(cancellationToken).ConfigureAwait(false);
-            if (push.Gcm is null || push.Gcm.AndroidId == 0 || push.Gcm.SecurityToken == 0
-                || string.IsNullOrWhiteSpace(push.Fcm?.Token) || string.IsNullOrWhiteSpace(push.ExpoPushToken))
-                throw new CompanionAccountException(AccountFailure.PushRegistration);
-            // A new registration can be rolled back without touching the previously configured device.
-            string deviceId = "rustplus-" + Guid.NewGuid();
-            bool committed = false;
-            try
-            {
-                await new RustCompanionClient(http).RegisterAsync(token, push.ExpoPushToken, deviceId, cancellationToken).ConfigureAwait(false);
-                config.Values["rustplus_auth_token"] = token;
-                config.Values["rustplus_device_id"] = deviceId;
-                config.Values["expo_push_token"] = push.ExpoPushToken;
-                var fcm = config.Values["fcm_credentials"] as JsonObject ?? new();
-                var gcm = fcm["gcm"] as JsonObject ?? new();
-                var registration = fcm["fcm"] as JsonObject ?? new();
-                gcm["androidId"] = push.Gcm.AndroidId.ToString(CultureInfo.InvariantCulture);
-                gcm["securityToken"] = push.Gcm.SecurityToken.ToString(CultureInfo.InvariantCulture);
-                registration["token"] = push.Fcm!.Token;
-                if (fcm["gcm"] is not JsonObject) fcm["gcm"] = gcm;
-                if (fcm["fcm"] is not JsonObject) fcm["fcm"] = registration;
-                if (config.Values["fcm_credentials"] is not JsonObject) config.Values["fcm_credentials"] = fcm;
-                if (!string.IsNullOrEmpty(account.SteamId)) config.Values["steam_id"] = account.SteamId;
-                else config.Values.Remove("steam_id");
-                config.Values["issue_date"] = DateTimeOffset.UtcNow.ToString("O");
-                config.Values["expiry_date"] = DateTimeOffset.UtcNow.AddDays(15).ToString("O");
-                await config.SaveAsync(configPath, cancellationToken).ConfigureAwait(false);
-                committed = true;
-                return account;
-            }
-            finally
-            {
-                if (!committed)
-                {
-                    using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                    try
-                    {
-                        using var response = await SendAsync(HttpMethod.Delete, "api/push/unregister",
-                            new { AuthToken = token, DeviceId = deviceId }, cleanup.Token).ConfigureAwait(false);
-                    }
-                    catch (Exception) { /* Local credentials remain unchanged if remote rollback is unavailable. */ }
-                }
-            }
+            return await RegisterPushAsync(configPath, config, token, account, cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) { throw; }
         catch (CompanionAccountException) { throw; }
@@ -164,6 +122,75 @@ public sealed class CompanionAccountService : ICompanionAccountService
         catch (Exception ex) when (ex is JsonException or InvalidOperationException)
         { throw new CompanionAccountException(AccountFailure.InvalidConfiguration); }
         catch (Exception) { throw new CompanionAccountException(AccountFailure.Unavailable); }
+    }
+
+    public async Task<CompanionAccount> RenewPushAsync(string configPath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var config = await CompanionConfigFile.ReadAsync(configPath, cancellationToken).ConfigureAwait(false);
+            string? token = config.Text("rustplus_auth_token");
+            if (string.IsNullOrWhiteSpace(token)) throw new CompanionAccountException(AccountFailure.Rejected);
+            var account = await CheckTokenAsync(token, cancellationToken).ConfigureAwait(false);
+            if (account.State != AccountState.Active)
+                throw new CompanionAccountException(account.State is AccountState.Rejected or AccountState.Expired ? AccountFailure.Rejected : AccountFailure.Unavailable);
+            return await RegisterPushAsync(configPath, config, token, account, cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (CompanionAccountException) { throw; }
+        catch (HttpRequestException ex) when (ex.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+        { throw new CompanionAccountException(AccountFailure.Rejected); }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException)
+        { throw new CompanionAccountException(AccountFailure.InvalidConfiguration); }
+        catch (Exception) { throw new CompanionAccountException(AccountFailure.Unavailable); }
+    }
+
+    private async Task<CompanionAccount> RegisterPushAsync(string configPath, CompanionConfigFile config, string token,
+        CompanionAccount account, CancellationToken cancellationToken)
+    {
+        var push = await acquirePush(cancellationToken).ConfigureAwait(false);
+        if (push.Gcm is null || push.Gcm.AndroidId == 0 || push.Gcm.SecurityToken == 0
+            || string.IsNullOrWhiteSpace(push.Fcm?.Token) || string.IsNullOrWhiteSpace(push.ExpoPushToken))
+            throw new CompanionAccountException(AccountFailure.PushRegistration);
+        // A new registration can be rolled back without touching the previously configured device.
+        string deviceId = "rustplus-" + Guid.NewGuid();
+        bool committed = false;
+        try
+        {
+            await new RustCompanionClient(http).RegisterAsync(token, push.ExpoPushToken, deviceId, cancellationToken).ConfigureAwait(false);
+            config.Values["rustplus_auth_token"] = token;
+            config.Values["rustplus_device_id"] = deviceId;
+            config.Values["expo_push_token"] = push.ExpoPushToken;
+            var fcm = config.Values["fcm_credentials"] as JsonObject ?? new();
+            var gcm = fcm["gcm"] as JsonObject ?? new();
+            var registration = fcm["fcm"] as JsonObject ?? new();
+            gcm["androidId"] = push.Gcm.AndroidId.ToString(CultureInfo.InvariantCulture);
+            gcm["securityToken"] = push.Gcm.SecurityToken.ToString(CultureInfo.InvariantCulture);
+            registration["token"] = push.Fcm!.Token;
+            if (fcm["gcm"] is not JsonObject) fcm["gcm"] = gcm;
+            if (fcm["fcm"] is not JsonObject) fcm["fcm"] = registration;
+            if (config.Values["fcm_credentials"] is not JsonObject) config.Values["fcm_credentials"] = fcm;
+            if (!string.IsNullOrEmpty(account.SteamId)) config.Values["steam_id"] = account.SteamId;
+            else config.Values.Remove("steam_id");
+            config.Values["issue_date"] = DateTimeOffset.UtcNow.ToString("O");
+            config.Values["expiry_date"] = DateTimeOffset.UtcNow.AddDays(15).ToString("O");
+            await config.SaveAsync(configPath, cancellationToken).ConfigureAwait(false);
+            committed = true;
+            return account;
+        }
+        finally
+        {
+            if (!committed)
+            {
+                using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                try
+                {
+                    using var response = await SendAsync(HttpMethod.Delete, "api/push/unregister",
+                        new { AuthToken = token, DeviceId = deviceId }, cleanup.Token).ConfigureAwait(false);
+                }
+                catch (Exception) { /* Local credentials remain unchanged if remote rollback is unavailable. */ }
+            }
+        }
     }
 
     private async Task<CompanionAccount> CheckTokenAsync(string token, CancellationToken cancellationToken)

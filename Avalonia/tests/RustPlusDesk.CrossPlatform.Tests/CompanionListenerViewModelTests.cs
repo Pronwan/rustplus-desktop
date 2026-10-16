@@ -56,6 +56,23 @@ public sealed class CompanionListenerViewModelTests
     }
 
     [TestMethod]
+    [DataRow(CompanionListenerFailure.MissingCredentials)]
+    [DataRow(CompanionListenerFailure.InvalidCredentials)]
+    public async Task InvalidPushCredentials_RequestSignIn_WithoutOpeningBrowser(CompanionListenerFailure failure)
+    {
+        var source = new Source();
+        var model = new CompanionListenerViewModel(source, "profiles.json", _ => Task.CompletedTask);
+        Task running = model.StartCommand.ExecuteAsync(null);
+        await source.Started.Task;
+        source.Fail(new CompanionListenerException(failure));
+        await running.WaitAsync(TimeSpan.FromSeconds(4));
+        Assert.IsTrue(model.RequiresSignIn);
+        Assert.IsFalse(model.IsRunning);
+        await model.SetSourceAsync("other/profiles.json");
+        Assert.IsFalse(model.RequiresSignIn);
+    }
+
+    [TestMethod]
     public async Task AccountClose_KeepsListening_AndRefreshesSavedPairings_ThenSignInStopsListener()
     {
         var source = new Source();
@@ -76,7 +93,8 @@ public sealed class CompanionListenerViewModelTests
         model.OpenAccountCommand.Execute(null);
         await model.Account!.SignInCommand.ExecuteAsync(null);
         await running.WaitAsync(TimeSpan.FromSeconds(4));
-        Assert.IsFalse(model.Listener.IsRunning);
+        Assert.IsTrue(model.Listener.IsRunning, "Successful sign-in starts a fresh listener using its new credentials.");
+        Assert.AreEqual(2, source.Starts);
         Assert.AreEqual(AccountState.Active, model.Account.Account.State);
         await model.ShutdownAsync();
     }

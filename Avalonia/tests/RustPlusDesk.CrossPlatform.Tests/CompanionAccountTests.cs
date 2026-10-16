@@ -168,6 +168,36 @@ public sealed class CompanionAccountTests
         JsonSerializer.Serialize(new { steamId = Fixture.SteamId, exp = expiry.ToUnixTimeSeconds() }))) + ".fixture-signature";
 
     [TestMethod]
+    public async Task Renewal_VerifiesSavedToken_AndUsesSharedRegistrationWithoutOpeningBrowser()
+    {
+        using var fixture = new Fixture();
+        await File.WriteAllTextAsync(fixture.Path, JsonSerializer.Serialize(new { rustplus_auth_token = fixture.Token, future = true }));
+        var result = await fixture.Service.RenewPushAsync(fixture.Path, CancellationToken.None);
+        Assert.AreEqual(AccountState.Active, result.State);
+        Assert.IsNull(fixture.Browser.Request);
+        CollectionAssert.AreEqual(new[] { "/api/channel/check", "/api/push/register" }, fixture.Requests.Select(request => request.Path).ToArray());
+        Assert.IsTrue(JsonNode.Parse(await File.ReadAllTextAsync(fixture.Path))!["future"]!.GetValue<bool>());
+    }
+
+    [TestMethod]
+    public async Task Renewal_RejectedTokenNeverAcquiresNewCredentials_AndConflictKeepsOriginalRegistration()
+    {
+        using var fixture = new Fixture();
+        await File.WriteAllTextAsync(fixture.Path, JsonSerializer.Serialize(new { rustplus_auth_token = fixture.Token }));
+        fixture.Status = HttpStatusCode.Forbidden;
+        var error = await Assert.ThrowsExceptionAsync<CompanionAccountException>(() => fixture.Service.RenewPushAsync(fixture.Path, CancellationToken.None));
+        Assert.AreEqual(AccountFailure.Rejected, error.Failure);
+        Assert.AreEqual(0, fixture.PushAcquisitions);
+        fixture.Status = HttpStatusCode.OK;
+        fixture.AfterRegister = () => File.WriteAllText(fixture.Path, "{\"newer\":true}");
+        error = await Assert.ThrowsExceptionAsync<CompanionAccountException>(() => fixture.Service.RenewPushAsync(fixture.Path, CancellationToken.None));
+        Assert.AreEqual(AccountFailure.ChangedConfiguration, error.Failure);
+        Assert.IsNull(fixture.Browser.Request);
+        Assert.AreEqual("{\"newer\":true}", await File.ReadAllTextAsync(fixture.Path));
+        Assert.AreEqual("/api/push/unregister", fixture.Requests[^1].Path);
+    }
+
+    [TestMethod]
     [DataRow(CompanionSignOutScope.CurrentDevice, "/api/push/unregister", "DELETE")]
     [DataRow(CompanionSignOutScope.AllDevices, "/api/auth/invalidate", "POST")]
     public async Task SignOut_UsesExpectedRemoteScope_AndRemovesKnownCredentialsPreservingUnknownFields(CompanionSignOutScope scope, string endpoint, string method)

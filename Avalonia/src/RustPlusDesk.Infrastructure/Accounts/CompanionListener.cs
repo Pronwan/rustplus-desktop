@@ -17,9 +17,11 @@ public sealed class CompanionListener : ICompanionListener
 {
     private readonly Func<Credentials, List<string>, Action<FcmMessage>, IFcmConnection> create;
     private readonly Func<TimeSpan, CancellationToken, Task> delay;
+    private readonly CompanionPushHealth? health;
     public CompanionListener() : this((credentials, ids, receive) => new FcmConnection(credentials, ids, receive), Task.Delay) { }
-    internal CompanionListener(Func<Credentials, List<string>, Action<FcmMessage>, IFcmConnection> create, Func<TimeSpan, CancellationToken, Task> delay)
-    { this.create = create; this.delay = delay; }
+    public CompanionListener(CompanionPushHealth health) : this((credentials, ids, receive) => new FcmConnection(credentials, ids, receive), Task.Delay, health) { }
+    internal CompanionListener(Func<Credentials, List<string>, Action<FcmMessage>, IFcmConnection> create, Func<TimeSpan, CancellationToken, Task> delay, CompanionPushHealth? health = null)
+    { this.create = create; this.delay = delay; this.health = health; }
 
     public async IAsyncEnumerable<CompanionUpdate> ListenAsync(string profilesPath, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
@@ -106,6 +108,13 @@ public sealed class CompanionListener : ICompanionListener
             {
                 if (!string.IsNullOrEmpty(message.PersistentId) && processed.Contains(message.PersistentId)) continue;
                 if (message.Data is null) continue;
+                if (health?.TryConsume(path, message.Data.Title) == true)
+                {
+                    try { await remember(message.PersistentId).ConfigureAwait(false); }
+                    catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
+                    catch (Exception) { throw new CompanionListenerException(CompanionListenerFailure.StorageUnavailable); }
+                    continue;
+                }
                 var update = CompanionPushParser.Parse(message, DateTimeOffset.UtcNow);
                 try
                 {

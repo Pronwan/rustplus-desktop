@@ -12,14 +12,16 @@ namespace RustPlusDesk.Avalonia.Features.Servers;
 
 public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFilePicker picker, string initialPath, IServerSessionFactory sessionFactory,
     IServerProfileEditor? profileEditor = null, IServerConnectionTester? connectionTester = null, ICompanionAccountService? accountService = null,
-    ICompanionListener? companionListener = null)
+    ICompanionListener? companionListener = null, ICompanionPushHealth? pushHealth = null)
     : ObservableObject
 {
     public ConnectionViewModel Connection { get; } = new(sessionFactory);
     public CompanionAccountViewModel? Account { get; private set; }
     public CompanionListenerViewModel? Listener { get; private set; }
     public bool HasListener => Listener is not null;
+    public bool RequiresSignIn => Account?.RequiresSignIn == true || Listener?.RequiresSignIn == true;
     private bool shuttingDown;
+    private bool initialized;
     private bool pendingPairingRefresh;
     private readonly Dictionary<string, string> pairedProfileKeys = [];
     public bool HasAccount => accountService is not null;
@@ -44,18 +46,59 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     private void OpenAccount()
     {
         if (IsBusy || HasOverlay || accountService is null) return;
+        EnsureAccountServices();
+        IsAccountOpen = true;
+    }
+
+    private void EnsureAccountServices()
+    {
+        if (accountService is null) return;
         if (Account is null)
         {
-            Account = new(accountService, SourcePath, BeforeSignInAsync);
+            Account = new(accountService, SourcePath, BeforeSignInAsync, StartListenerAsync);
+            Account.PropertyChanged += (_, args) =>
+            { if (args.PropertyName == nameof(CompanionAccountViewModel.RequiresSignIn)) OnPropertyChanged(nameof(RequiresSignIn)); };
             OnPropertyChanged(nameof(Account));
+            OnPropertyChanged(nameof(RequiresSignIn));
         }
         if (Listener is null && companionListener is not null)
         {
-            Listener = new(companionListener, SourcePath, PairingSavedAsync);
+            Listener = new(companionListener, SourcePath, PairingSavedAsync, pushHealth,
+                (source, ct) => accountService.RenewPushAsync(CompanionAccountViewModel.ConfigPathFor(source), ct));
+            Listener.PropertyChanged += (_, args) =>
+            { if (args.PropertyName == nameof(CompanionListenerViewModel.RequiresSignIn)) OnPropertyChanged(nameof(RequiresSignIn)); };
             OnPropertyChanged(nameof(Listener));
             OnPropertyChanged(nameof(HasListener));
+            OnPropertyChanged(nameof(RequiresSignIn));
         }
-        IsAccountOpen = true;
+    }
+
+    [RelayCommand]
+    private async Task InitializeAsync(CancellationToken cancellationToken)
+    {
+        if (initialized || shuttingDown) return;
+        initialized = true;
+        try
+        {
+            await RefreshCommand.ExecuteAsync(null);
+            cancellationToken.ThrowIfCancellationRequested();
+            EnsureAccountServices();
+            if (Account is null || Listener is null) return;
+            string initialSource = SourcePath;
+            using var cancel = cancellationToken.Register(() => Account.CheckCommand.Cancel());
+            await Account.CheckCommand.ExecuteAsync(null);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!shuttingDown && SourcePath == initialSource && Account.Account.State is not
+                (AccountState.Missing or AccountState.Expired or AccountState.Rejected or AccountState.Invalid))
+                await StartListenerAsync();
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+    }
+
+    private Task StartListenerAsync()
+    {
+        if (!shuttingDown && Listener is { IsRunning: false, IsChecking: false }) Listener.StartCommand.Execute(null);
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -228,6 +271,7 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
     public async Task ShutdownAsync()
     {
         shuttingDown = true;
+        InitializeCommand.Cancel();
         RefreshCommand.Cancel();
         OpenFileCommand.Cancel();
         EditCommand.Cancel();
@@ -237,5 +281,6 @@ public sealed partial class ServersViewModel(IServerCatalog catalog, IProfileFil
         if (RefreshCommand.ExecutionTask is { } refresh) await refresh;
         if (OpenFileCommand.ExecutionTask is { } open) await open;
         if (EditCommand.ExecutionTask is { } edit) await edit;
+        if (InitializeCommand.ExecutionTask is { } initialize) await initialize;
     }
 }

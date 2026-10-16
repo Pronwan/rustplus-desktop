@@ -26,8 +26,9 @@ The checks never used personal credentials or contacted Steam/Facepunch.
 
 ## Verified current source
 
-- Debug/Release builds: zero warnings/errors. All 139 MSTest tests pass after local auto-resume.
-- Source-only external copy with separate package cache: 139 tests pass, zero warnings.
+- Debug/Release builds: zero warnings/errors. The account/pairing checkpoint `8e1df49` has 139 tests;
+  the subsequent startup/health slice has 171 passing MSTest cases in the isolated source copy.
+- Source-only external copy with separate package cache: 171 tests pass, zero warnings.
 - Self-contained Release publishes on Windows: win-x64, linux-x64, osx-arm64 succeed.
 - Native Windows browser callback and cancellation smoke passes. Native Linux/macOS executables untested.
 - Two Python reference-capture tests passed in the earlier slice; its code has not changed since.
@@ -48,13 +49,19 @@ Persistent IDs are scoped to the current push device and bounded to 1,000 entrie
 keeps 100 entries. Sign-in/out and source changes await the listener and clear the previous account feed.
 Unknown JSON is preserved; tokens are excluded from presentation and logs.
 
+The next verified slice adds saved-account startup, successful-sign-in listener restart, random-nonce
+push delivery checks, one-shot saved-token registration renewal and a retest. Provider/network errors
+remain inconclusive and do not renew; tickets alone never prove arrival. Rejected sign-in prompts the
+user without opening Steam automatically. Source changes/shutdown cancel and await checks and renewal.
+Account content scrolls while its Close action stays visible. No real Steam or FCM acceptance is claimed.
+
 ## Exact next steps
 
 1. Validate real Steam/Facepunch return-URL callbacks on Windows. The native window crash is fixed;
    actual Steam authentication and FCM delivery have not been accepted. Do not claim complete sign-in parity.
-2. Continue original startup push-health/self-test and automatic registration repair. Pairing, reconnect,
-   ID persistence, direct re-pair probes and sign-out are now implemented; do not redo them. Re-sign-in
-   creates a new registration without deleting earlier ones. Add explicit ambiguous-match resolution later.
+2. Validate the implemented startup delivery self-test/one-shot registration repair with real FCM.
+   Pairing, reconnect, ID persistence, direct re-pair probes and sign-out are implemented; do not redo them.
+   Re-sign-in/renewal creates a new registration without deleting earlier ones. Add explicit ambiguous-match resolution.
 3. Continue device editing/import/transfer/automation, original server menus/cloud-aware deletion,
    and the original sidebar/workspace layout. The full required backlog is in STATUS.md/reference checklist.
 4. Run native Windows/Linux/macOS acceptance, including permissions, browser prerequisites and appearance.
@@ -74,7 +81,7 @@ Local SDK reference `D:\Development\RustPlusApi` is unindexed. No exhaustive dea
 
 The one-time local automation `resume-avalonia-migration-after-usage-reset` ran at 17:25 Beirut on
 2026-10-16. Usage reset to 0% and implementation resumed. The PC must remain awake with Codex open;
-no cloud task was configured. Current source changes after `3c36abf` are the resumed account/pairing
-slice; inspect Git status/log for its checkpoint commit. Most recent usage check: 35%; at 97%, stop
+no cloud task was configured. The resumed account/pairing slice is committed as `8e1df49`; subsequent
+startup/health changes form the next slice. Inspect Git status/log for its checkpoint commit. At 97%, stop
 implementation, commit/push completed verified work to origin/beta and update this handoff. Leave
 unrelated `.serena/` and `rustplus.proto` unchanged. The full production-readiness goal remains unfinished.

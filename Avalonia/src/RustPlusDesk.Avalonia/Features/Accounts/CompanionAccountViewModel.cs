@@ -4,11 +4,13 @@ using RustPlusDesk.Core.Accounts;
 
 namespace RustPlusDesk.Avalonia.Features.Accounts;
 
-public sealed partial class CompanionAccountViewModel(ICompanionAccountService service, string profilesPath, Func<Task> beforeSignIn) : ObservableObject
+public sealed partial class CompanionAccountViewModel(ICompanionAccountService service, string profilesPath, Func<Task> beforeSignIn,
+    Func<Task>? afterSignIn = null) : ObservableObject
 {
     private string configPath = ConfigPathFor(profilesPath);
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Identity))]
+    [NotifyPropertyChangedFor(nameof(RequiresSignIn))]
     private CompanionAccount account = new(AccountState.Missing);
     [ObservableProperty] private string message = "Check your Rust+ sign-in status or sign in with Steam.";
     [ObservableProperty]
@@ -30,6 +32,7 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
         ? "Sign out across devices using this Rust+ sign-in? You will need to sign in again. Your paired servers stay saved."
         : "Sign out this device and stop its Rust+ pairing notifications? Your paired servers stay saved.";
     public string Identity => string.IsNullOrEmpty(Account.SteamId) ? "Rust+ Companion" : $"Steam ID: {Account.SteamId}";
+    public bool RequiresSignIn => Account.State is AccountState.Missing or AccountState.Expired or AccountState.Rejected;
     private bool CanRun => !IsBusy && !IsConfirmingSignOut;
     private bool CanConfirmSignOut => !IsBusy && IsConfirmingSignOut;
 
@@ -117,6 +120,8 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
                 AccountState.Invalid => "The saved sign-in file is unreadable. Keep a copy before repairing it.",
                 _ => "Sign-in status is unavailable. Check your connection and file permissions."
             };
+            if (signIn && result.State == AccountState.Active && afterSignIn is not null && !cancellationToken.IsCancellationRequested)
+                await afterSignIn();
         }
         catch (OperationCanceledException) { Message = timeout.IsCancellationRequested && !cancellationToken.IsCancellationRequested ? "Sign-in operation timed out." : "Sign-in operation canceled."; }
         catch (CompanionAccountException ex)
@@ -147,5 +152,5 @@ public sealed partial class CompanionAccountViewModel(ICompanionAccountService s
         PendingSignOut = null;
     }
 
-    private static string ConfigPathFor(string source) => Path.Combine(Path.GetDirectoryName(Path.GetFullPath(source))!, "rustplusjs-config.json");
+    internal static string ConfigPathFor(string source) => Path.Combine(Path.GetDirectoryName(Path.GetFullPath(source))!, "rustplusjs-config.json");
 }

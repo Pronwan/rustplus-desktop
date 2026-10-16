@@ -42,11 +42,12 @@ public sealed partial class App : Application
             var sessions = new RustPlusSessionFactory();
             var accountHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             var accounts = new CompanionAccountService(accountHttp, new CompanionLoginBrowser(window));
+            var pushHealth = new CompanionPushHealth(accountHttp, accounts);
             var servers = new ServersViewModel(new LegacyServerCatalog(),
-                new ProfileFilePicker(window), LegacyServerCatalog.DefaultPath, sessions, new LegacyServerProfileEditor(), sessions, accounts, new CompanionListener());
+                new ProfileFilePicker(window), LegacyServerCatalog.DefaultPath, sessions, new LegacyServerProfileEditor(), sessions, accounts, new CompanionListener(pushHealth), pushHealth);
             desktop.Exit += (_, _) => accountHttp.Dispose();
             window.DataContext = servers;
-            window.Opened += async (_, _) => await servers.RefreshCommand.ExecuteAsync(null);
+            window.Opened += async (_, _) => await servers.InitializeCommand.ExecuteAsync(null);
             bool closing = false, shutdownComplete = false;
             window.Closing += async (_, e) =>
             {

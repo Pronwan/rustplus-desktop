@@ -101,6 +101,8 @@ public sealed class CompanionAccountViewModelTests
             Path = configPath; Scope = scope; SignOuts++; BeforeSignIn?.Invoke();
             return Error is { } error ? Task.FromException<CompanionSignOutResult>(error) : Task.FromResult(SignOutResult);
         }
+        public Task<CompanionAccount> RenewPushAsync(string configPath, CancellationToken cancellationToken)
+            => Task.FromResult(new CompanionAccount(AccountState.Active, "76561198000000001"));
     }
 
     [TestMethod]
