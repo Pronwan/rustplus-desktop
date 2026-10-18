@@ -359,6 +359,20 @@ public static class Map3DLocalBuildService
         return texturePath;
     }
 
+    /// <summary>
+    /// Renders the 2D image of <paramref name="mapFile"/> into the profile's 3D map folder,
+    /// for offline maps that came without an image. Reuses an earlier render.
+    /// Returns the image path, or null when MapParser could not produce one.
+    /// </summary>
+    public static async Task<string?> RenderMapImageAsync(ServerProfile profile, string mapFile, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        string folder = GetPreparedFolderPath(profile, profile.RustMapsMapId);
+        Directory.CreateDirectory(folder);
+        if (await EnsureRenderedTextureAsync(null, mapFile, folder, ct).ConfigureAwait(false) == null) return null;
+        return Path.Combine(folder, RenderedTextureFileName);
+    }
+
     private static void ClearRenderedTexture(string folder)
     {
         foreach (var name in new[] { "map_texture.png", RenderedTextureFileName })

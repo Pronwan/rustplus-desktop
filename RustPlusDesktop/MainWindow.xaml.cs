@@ -3893,6 +3893,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 
                 AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
                 ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
             }
         }
         catch (Exception ex)
@@ -4106,6 +4107,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
                 ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
                 this.Activate();
                 return;
             }

@@ -523,7 +523,59 @@ namespace RustPlusDesk.Views
 
             string parseSource = result.ReusedCachedData ? "reused cached parse" : $"parsed {result.AttemptCount} candidate(s)";
             AppendLog($"{logPrefix} {result.StatusMessage} ({parseSource}, {result.Elapsed.TotalMilliseconds:F0} ms) Folder: {result.FolderPath}");
+
+            if (result.ParserReady) await EnsureOfflineMapImageAsync(profile);
             return result;
+        }
+
+        /// <summary>
+        /// Gives an offline map a 2D image when it was imported without one, by rendering
+        /// it from the map file with MapParser. Live servers keep their own map image.
+        /// </summary>
+        internal async Task EnsureOfflineMapImageAsync(ServerProfile profile)
+        {
+            bool isOfflineOnly = profile.Port == 0 || profile.PlayerToken == "offline";
+            string? mapFile = profile.LocalMapFilePath;
+            if (!isOfflineOnly || string.IsNullOrEmpty(mapFile) || !File.Exists(mapFile)) return;
+            if (!string.IsNullOrEmpty(profile.LocalMapImagePath) && File.Exists(profile.LocalMapImagePath)) return;
+
+            AppendLog($"[Offline Map] Rendering the map image for {profile.Name}...");
+            string? imagePath;
+            try
+            {
+                imagePath = await Task.Run(() => Map3DLocalBuildService.RenderMapImageAsync(profile, mapFile));
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not render the map image: {ex.Message}");
+                return;
+            }
+
+            if (imagePath == null)
+            {
+                AppendLog("[Offline Map] MapParser did not produce a map image.");
+                return;
+            }
+
+            profile.LocalMapImagePath = imagePath;
+            _vm.Save();
+            AppendLog($"[Offline Map] Map image ready: {imagePath}");
+
+            if (_vm.Selected != profile || _isMap3DActive) return;
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(imagePath);
+                bitmap.EndInit();
+                ShowMapBasic(bitmap);
+                TryRestoreWorldSizeFromCachedMapData(profile, bitmap);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Failed to show the map image: {ex.Message}");
+            }
         }
 
         /// <summary>
