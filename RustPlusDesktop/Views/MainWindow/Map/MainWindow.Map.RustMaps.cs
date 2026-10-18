@@ -509,7 +509,7 @@ namespace RustPlusDesk.Views
                 _vm.Save();
 
                 result = await Map3DLocalBuildService.PrepareAsync(
-                    profile, texture, profile.RustMapsMapId, references, effectiveWorldSize, picker.FileName);
+                    profile, texture, profile.RustMapsMapId, references, effectiveWorldSize, picker.FileName, forceReparse: true);
             }
 
             if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
@@ -521,7 +521,8 @@ namespace RustPlusDesk.Views
                 }
             }
 
-            AppendLog($"{logPrefix} {result.StatusMessage} Folder: {result.FolderPath}");
+            string parseSource = result.ReusedCachedData ? "reused cached parse" : $"parsed {result.AttemptCount} candidate(s)";
+            AppendLog($"{logPrefix} {result.StatusMessage} ({parseSource}, {result.Elapsed.TotalMilliseconds:F0} ms) Folder: {result.FolderPath}");
             return result;
         }
 
