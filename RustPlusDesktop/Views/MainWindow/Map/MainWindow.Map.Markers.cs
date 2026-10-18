@@ -275,6 +275,8 @@ public partial class MainWindow
         try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".json")); } catch { }
     }
 
+    private bool _isGeneratedMapActive;
+
     private bool IsCustomMapActive()
     {
         var profile = _vm?.Selected;
@@ -283,6 +285,7 @@ public partial class MainWindow
 
     private double GetCurrentMapPaddingWorld()
     {
+        if (_isGeneratedMapActive) return 0.0;
         return IsCustomMapActive() ? 1000.0 : 2000.0;
     }
 
@@ -382,6 +385,57 @@ public partial class MainWindow
     }
     // ──────────────────────────────────────────────────────────────────────────────────────────
 
+    private async Task TryAutoPrepareGeneratedMapAsync(Models.ServerProfile profile, int worldSize, IReadOnlyList<(double X, double Y, string Name)> monuments)
+    {
+        try
+        {
+            var references = monuments
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                .Take(12)
+                .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                .ToList();
+
+            var result = await Map3DLocalBuildService.PrepareAsync(
+                profile,
+                currentMapTexture: null,
+                rustMapsMapId: profile.RustMapsMapId,
+                referenceMonuments: references,
+                worldSize: worldSize,
+                explicitMapPath: !string.IsNullOrEmpty(profile.LocalMapFilePath) ? profile.LocalMapFilePath : null);
+
+            if (result.ParserReady && !string.IsNullOrEmpty(result.MapTexturePath) && System.IO.File.Exists(result.MapTexturePath))
+            {
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(result.MapTexturePath));
+                bi.EndInit();
+                bi.Freeze();
+
+                _isGeneratedMapActive = true;
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    ShowMapBasic(bi);
+                    SetupMapScene(bi);
+                    double wDip = bi.PixelWidth * (96.0 / bi.DpiX);
+                    double hDip = bi.PixelHeight * (96.0 / bi.DpiY);
+                    _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
+                    RedrawGrid();
+                    RefreshAllOverlayScales();
+                    RefreshMonumentOverlayPositions();
+                    RedrawDeathPins();
+                    RedrawDeathHeatmap();
+                    await LoadParsedMapDataAsync(result.FolderPath);
+                });
+                AppendLog($"[map-render] Automatic map discovery & HD rendering complete. Main map updated ({bi.PixelWidth}x{bi.PixelHeight}).");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[map-render] Auto map discovery: {ex.Message}");
+        }
+    }
+
     public async Task ReloadMapAsync()
     {
         await LoadMapAsync();
@@ -420,6 +474,12 @@ public partial class MainWindow
             DeleteMapCache(cacheKey);
             DeleteCustomMapCache(cacheKey);
             cached = null;
+            _isGeneratedMapActive = false;
+
+            if (_vm?.Selected != null)
+            {
+                Map3DLocalBuildService.InvalidateServerCache(_vm.Selected, _vm.Selected.RustMapsMapId);
+            }
 
             // A wipe makes the old deaths meaningless — flush the log (local + the
             // team's cloud rows) and reset detection so nothing carries over.
@@ -491,6 +551,52 @@ public partial class MainWindow
                     WipeTime = map.WipeTime,
                     Monuments = map.Monuments
                 };
+            }
+        }
+
+        // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
+        if (_vm?.Selected != null)
+        {
+            string preparedFolder = Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);
+            string generatedTexPath = System.IO.Path.Combine(preparedFolder, "map_texture.png");
+            if (System.IO.File.Exists(generatedTexPath))
+            {
+                try
+                {
+                    var bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(generatedTexPath));
+                    bi.EndInit();
+                    bi.Freeze();
+
+                    AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
+                    _isGeneratedMapActive = true;
+                    map = new RustPlusClientReal.MapWithMonuments
+                    {
+                        Bitmap = bi,
+                        PixelWidth = bi.PixelWidth,
+                        PixelHeight = bi.PixelHeight,
+                        WorldSize = map.WorldSize,
+                        WipeTime = map.WipeTime,
+                        Monuments = map.Monuments
+                    };
+
+                    _ = Dispatcher.InvokeAsync(async () => await LoadParsedMapDataAsync(preparedFolder));
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[map-render] Note: could not load generated map texture: {ex.Message}");
+                }
+            }
+            else if (!IsCustomMapActive())
+            {
+                var capturedMonuments = map.Monuments;
+                int capturedWorldSize = map.WorldSize;
+                _ = Task.Run(async () =>
+                {
+                    await TryAutoPrepareGeneratedMapAsync(_vm.Selected, capturedWorldSize, capturedMonuments);
+                });
             }
         }
 

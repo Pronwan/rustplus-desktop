@@ -24,6 +24,7 @@ public partial class MainWindow
     private class CargoPathData
     {
         public List<Point> Waypoints { get; set; } = new();
+        public List<List<Point>> Branches { get; set; } = new();
         public Point MarkerPosition { get; set; }
         public List<CargoPathHarborInfo> Harbors { get; set; } = new();
     }
@@ -130,7 +131,7 @@ public partial class MainWindow
             // The route comes only from the map's CargoPath layer, surfaced by the
             // parser as cargoPaths / cargoPathNodes. There is deliberately no
             // generated fallback: a guessed route drawn over real map data is fiction.
-            var nodes = ReadAuthoredCargoNodes(root);
+            var (nodes, branches) = ReadAuthoredCargoRoutes(root);
             if (nodes == null || nodes.Count < 3)
             {
                 RedrawCargoPath();
@@ -140,6 +141,7 @@ public partial class MainWindow
             _cargoPathData = new CargoPathData
             {
                 Waypoints = nodes,
+                Branches = branches,
                 MarkerPosition = PickCargoMarker(nodes),
                 Harbors = ReadCargoHarbors(root)
             };
@@ -169,11 +171,10 @@ public partial class MainWindow
     }
 
     /// <summary>
-    /// Reads the authored route the map carries in its CargoPath layer. Prefers the
-    /// grouped cargoPaths array (longest route wins) and falls back to the flat
-    /// cargoPathNodes list. Returns null when the map has no such layer.
+    /// Reads the routes the map carries in its CargoPath layer (or procedurally generated paths).
+    /// Path 0 is the main ocean patrol loop; subsequent paths are harbor docking approaches.
     /// </summary>
-    private static List<Point>? ReadAuthoredCargoNodes(JsonElement root)
+    private static (List<Point>? mainLoop, List<List<Point>> branches) ReadAuthoredCargoRoutes(JsonElement root)
     {
         static List<Point> ReadNodes(JsonElement arr)
         {
@@ -185,23 +186,37 @@ public partial class MainWindow
             return list;
         }
 
-        List<Point>? longest = null;
+        var branches = new List<List<Point>>();
+        List<Point>? mainLoop = null;
+
         if (root.TryGetProperty("cargoPaths", out var pathsEl) && pathsEl.ValueKind == JsonValueKind.Array)
         {
+            bool first = true;
             foreach (var pEl in pathsEl.EnumerateArray())
             {
                 if (!pEl.TryGetProperty("nodes", out var nodesEl) || nodesEl.ValueKind != JsonValueKind.Array) continue;
-                var candidate = ReadNodes(nodesEl);
-                if (longest == null || candidate.Count > longest.Count) longest = candidate;
+                var pts = ReadNodes(nodesEl);
+                if (pts.Count < 2) continue;
+
+                if (first)
+                {
+                    mainLoop = pts;
+                    first = false;
+                }
+                else
+                {
+                    branches.Add(pts);
+                }
             }
         }
-        if ((longest == null || longest.Count < 3) &&
+
+        if ((mainLoop == null || mainLoop.Count < 3) &&
             root.TryGetProperty("cargoPathNodes", out var flatEl) && flatEl.ValueKind == JsonValueKind.Array)
         {
-            longest = ReadNodes(flatEl);
+            mainLoop = ReadNodes(flatEl);
         }
 
-        return longest != null && longest.Count >= 3 ? longest : null;
+        return (mainLoop != null && mainLoop.Count >= 3 ? mainLoop : null, branches);
     }
 
     /// <summary>
@@ -272,6 +287,22 @@ public partial class MainWindow
             {
                 var pt = CenteredRustToImagePx(waypoints[i].X, waypoints[i].Y);
                 ctx.LineTo(pt, isStroked: true, isSmoothJoin: true);
+            }
+
+            // Draw harbor docking approach branches
+            if (_cargoPathData.Branches != null)
+            {
+                foreach (var branch in _cargoPathData.Branches)
+                {
+                    if (branch == null || branch.Count < 2) continue;
+                    var bFirst = CenteredRustToImagePx(branch[0].X, branch[0].Y);
+                    ctx.BeginFigure(bFirst, isFilled: false, isClosed: false);
+                    for (int b = 1; b < branch.Count; b++)
+                    {
+                        var bPt = CenteredRustToImagePx(branch[b].X, branch[b].Y);
+                        ctx.LineTo(bPt, isStroked: true, isSmoothJoin: true);
+                    }
+                }
             }
         }
         geometry.Freeze();

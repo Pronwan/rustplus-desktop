@@ -720,6 +720,44 @@ namespace RustPlusDesk.Views
             // Freshly parsed data is the reason someone waited for the parse, so the
             // keycard layers come up shown rather than needing another two clicks.
             EnableKeycardLayersAfterParse();
+
+            // Apply high-resolution generated Facepunch map image to the main app map view
+            string texPath = Path.Combine(folderPath, "map_texture.png");
+            if (File.Exists(texPath))
+            {
+                try
+                {
+                    var bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.StreamSource = new MemoryStream(File.ReadAllBytes(texPath));
+                    bi.EndInit();
+                    bi.Freeze();
+
+                    _isGeneratedMapActive = true;
+                    Dispatcher.Invoke(() =>
+                    {
+                        ShowMapBasic(bi);
+                        SetupMapScene(bi);
+                        double wDip = bi.PixelWidth * (96.0 / bi.DpiX);
+                        double hDip = bi.PixelHeight * (96.0 / bi.DpiY);
+                        if (_worldSizeS > 0)
+                        {
+                            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
+                        }
+                        RedrawGrid();
+                        RefreshAllOverlayScales();
+                        RefreshMonumentOverlayPositions();
+                        RedrawDeathPins();
+                        RedrawDeathHeatmap();
+                    });
+                    AppendLog($"[map-render] Applied high-resolution generated map image to main app map view ({bi.PixelWidth}x{bi.PixelHeight}).");
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[map-render] Note: could not apply generated map texture: {ex.Message}");
+                }
+            }
         }
 
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
@@ -1268,15 +1306,19 @@ namespace RustPlusDesk.Views
             if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
                 int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
 
+            // Our generated Facepunch map_texture.png has 0m padding (covers 0..worldSize exactly).
+            // Only the legacy low-res companion app texture has 2000m padding.
+            double padWorld = hasTexture ? 0.0 : 2000.0;
+
             if (parsedWorldSize > 0 && imageWidth > 0 && imageHeight > 0)
             {
                 // Recompute the world rect directly from the map's own size field so the UV
                 // is always correct, regardless of whether _worldSizeS was available.
-                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize);
+                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize, padWorld);
             }
 
-            node["mapTexturePaddingWorld"] = 2000;
-            node["mapTextureAutoAlign"] = true;
+            node["mapTexturePaddingWorld"] = padWorld;
+            node["mapTextureAutoAlign"] = padWorld > 0;
             if (imageWidth > 0 && imageHeight > 0 && worldRectPx.Width > 0 && worldRectPx.Height > 0)
             {
                 node["mapTextureUv"] = new JsonObject

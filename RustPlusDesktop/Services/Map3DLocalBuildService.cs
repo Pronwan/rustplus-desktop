@@ -89,15 +89,6 @@ public static class Map3DLocalBuildService
         string folder = Path.Combine(DataManager.AppDir, "3DMaps", serverKey);
         Directory.CreateDirectory(folder);
 
-        if (currentMapTexture == null)
-        {
-            string oldTexture = Path.Combine(folder, "map_texture.png");
-            if (File.Exists(oldTexture))
-            {
-                try { File.Delete(oldTexture); } catch { }
-            }
-        }
-
         string? texturePath = null;
         string? pendingTexturePath = null;
         string? textureSha256 = null;
@@ -113,9 +104,9 @@ public static class Map3DLocalBuildService
         string manifestPath = Path.Combine(folder, "map3d_manifest.json");
         if (explicitMapPath == null && TryLoadReusableResult(folder, manifestPath, rustMapsMapId, textureSha256, out var cached))
         {
-            if (pendingTexturePath != null)
+            texturePath = Path.Combine(folder, "map_texture.png");
+            if (!File.Exists(texturePath) && pendingTexturePath != null)
             {
-                texturePath = Path.Combine(folder, "map_texture.png");
                 File.Copy(pendingTexturePath, texturePath, overwrite: true);
             }
 
@@ -178,7 +169,11 @@ public static class Map3DLocalBuildService
                 {
                     selectedMap = candidate;
                     CopyParserOutput(candidateOutput, folder);
-                    texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    texturePath = Path.Combine(folder, "map_texture.png");
+                    if (!File.Exists(texturePath))
+                    {
+                        texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    }
                     break;
                 }
             }
@@ -190,7 +185,11 @@ public static class Map3DLocalBuildService
                 {
                     selectedMap = explicitMapPath;
                     CopyParserOutput(candidateOutput, folder);
-                    texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    texturePath = Path.Combine(folder, "map_texture.png");
+                    if (!File.Exists(texturePath))
+                    {
+                        texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    }
                 }
             }
 
@@ -203,6 +202,10 @@ public static class Map3DLocalBuildService
                         : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
         }
 
+        if (texturePath == null && File.Exists(Path.Combine(folder, "map_texture.png")))
+        {
+            texturePath = Path.Combine(folder, "map_texture.png");
+        }
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
 
         if (selectedMap != null)
@@ -719,7 +722,7 @@ public static class Map3DLocalBuildService
 
     private static void CopyParserOutput(string fromDir, string toDir)
     {
-        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json" })
+        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json", "map_texture.png" })
         {
             string from = Path.Combine(fromDir, name);
             if (File.Exists(from)) File.Copy(from, Path.Combine(toDir, name), overwrite: true);
@@ -753,7 +756,22 @@ public static class Map3DLocalBuildService
         Directory.CreateDirectory(Path.Combine(DataManager.AppDir, "3DMaps"));
 
         return (deletedFiles, deletedDirectories);
-    }    public static string GetPreparedFolderPath(ServerProfile profile, string? rustMapsMapId)
+    }
+
+    public static void InvalidateServerCache(ServerProfile profile, string? rustMapsMapId)
+    {
+        try
+        {
+            string folder = GetPreparedFolderPath(profile, rustMapsMapId);
+            if (Directory.Exists(folder))
+            {
+                Directory.Delete(folder, true);
+            }
+        }
+        catch { }
+    }
+
+    public static string GetPreparedFolderPath(ServerProfile profile, string? rustMapsMapId)
     {
         return Path.Combine(DataManager.AppDir, "3DMaps", BuildServerKey(profile, rustMapsMapId));
     }

@@ -102,6 +102,7 @@ env
 # Local build secrets
 build_secrets*.zip
 .gemini/
+.serena/
 Corel Auto-Preserve/
 
 # Genetics Lab (build assets only; static images & resources stay tracked)

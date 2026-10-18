@@ -10,6 +10,8 @@ public partial class MainWindow
 {
     private const double MAP_DEFAULT_ZOOM = 1.18;
     private const double MAP_FOCUS_ZOOM   = 6.0;
+    private const double MAP_MIN_ZOOM     = 0.64; // Allows 2 more zoom out levels below 1.0 (1.0 -> 0.8 -> 0.64)
+    private const double MAP_MAX_ZOOM     = 20.0;
  
     private Point _panLastHost;
 
@@ -55,9 +57,9 @@ public partial class MainWindow
         var m = MapTransform.Matrix;
         double newScale = m.M11 * factor;
         
-        // Clamp zoom level between 1.0 and 20.0
-        if (newScale < 1.0) factor = 1.0 / m.M11;
-        if (newScale > 20.0) factor = 20.0 / m.M11;
+        // Clamp zoom level between MAP_MIN_ZOOM and MAP_MAX_ZOOM
+        if (newScale < MAP_MIN_ZOOM) factor = MAP_MIN_ZOOM / m.M11;
+        if (newScale > MAP_MAX_ZOOM) factor = MAP_MAX_ZOOM / m.M11;
 
         m.ScaleAt(factor, factor, pivot.X, pivot.Y);
         MapTransform.Matrix = m;
@@ -79,7 +81,7 @@ public partial class MainWindow
         var m = MapTransform.Matrix;
         double currentScale = m.M11;
         double targetScale = currentScale * factor;
-        targetScale = Math.Max(1.0, Math.Min(20.0, targetScale));
+        targetScale = Math.Max(MAP_MIN_ZOOM, Math.Min(MAP_MAX_ZOOM, targetScale));
 
         _zoomAnimationTarget = targetScale;
         _zoomAnimationPivot = hostPos;
@@ -144,12 +146,12 @@ public partial class MainWindow
             return new Point(u, v);
         }
 
+        if (double.IsNaN(x) || double.IsNaN(y) || double.IsInfinity(x) || double.IsInfinity(y))
+            return new Point(0, 0);
+
         double padWorld = GetCurrentMapPaddingWorld();
         double totalWorld = _worldSizeS + padWorld;
         double halfPad = padWorld * 0.5;
-
-        double xxNormal = Math.Clamp(x, -halfPad, _worldSizeS + halfPad);
-        double yyNormal = Math.Clamp(y, -halfPad, _worldSizeS + halfPad);
 
         double fullSidePx = _worldRectPx.Width * (totalWorld / _worldSizeS);
 
@@ -158,8 +160,8 @@ public partial class MainWindow
         double fullOx = (imgWNormal - fullSidePx) / 2.0;
         double fullOy = (imgHNormal - fullSidePx) / 2.0;
 
-        double uNormal = fullOx + ((xxNormal + halfPad) / totalWorld) * fullSidePx;
-        double vNormal = fullOy + (((_worldSizeS - yyNormal) + halfPad) / totalWorld) * fullSidePx;
+        double uNormal = fullOx + ((x + halfPad) / totalWorld) * fullSidePx;
+        double vNormal = fullOy + (((_worldSizeS - y) + halfPad) / totalWorld) * fullSidePx;
 
         return new Point(uNormal, vNormal);
     }
