@@ -4887,6 +4887,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
             }
+
+            var remaining = _vm.Servers.ToList();
+            int removedLocal = await Task.Run(() => Services.Data.ServerLocalDataCleanup.DeleteFor(prof, remaining));
+            AppendLog($"Removed {removedLocal} local file(s) and folder(s) stored for {prof.Name}.");
         }
 
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
