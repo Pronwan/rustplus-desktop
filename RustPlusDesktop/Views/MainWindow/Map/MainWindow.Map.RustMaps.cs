@@ -1927,64 +1927,10 @@ namespace RustPlusDesk.Views
                     if (string.IsNullOrEmpty(b64)) return;
 
                     byte[] rawData = Convert.FromBase64String(b64);
-                    int width = 512;
-                    int height = 512;
-                    if (rawData.Length != width * height) return;
-
-                    int[] pixels = new int[width * height];
-                    float[] blurred = new float[width * height];
-                    int radius = 3; // 7x7 blur
-
-                    for (int y = 0; y < height; y++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            float sum = 0;
-                            int count = 0;
-                            for (int dy = -radius; dy <= radius; dy++)
-                            {
-                                int ny = y + dy;
-                                if (ny < 0 || ny >= height) continue;
-                                for (int dx = -radius; dx <= radius; dx++)
-                                {
-                                    int nx = x + dx;
-                                    if (nx < 0 || nx >= width) continue;
-                                    sum += rawData[ny * width + nx];
-                                    count++;
-                                }
-                            }
-                            blurred[y * width + x] = sum / count;
-                        }
-                    }
-
-                    for (int y = 0; y < height; y++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            int destI = y * width + x;
-                            float original = rawData[destI];
-                            float val = Math.Max(blurred[destI], original);
-
-                            if (val <= 2)
-                            {
-                                pixels[destI] = 0;
-                                continue;
-                            }
-
-                            float t = Math.Min(1.0f, val / 255f);
-                            byte a = (byte)(t * 180 + 75);
-                            byte r = (byte)Math.Min(255, 255 * (t * 2));
-                            byte g = (byte)Math.Min(255, 255 * (2 - t * 2));
-                            byte b = 0;
-
-                            // Pre-multiply alpha for Pbgra32
-                            r = (byte)((r * a) / 255);
-                            g = (byte)((g * a) / 255);
-                            b = (byte)((b * a) / 255);
-
-                            pixels[destI] = (a << 24) | (r << 16) | (g << 8) | b;
-                        }
-                    }
+                    int width = ResourceHeatmapRaster.Size;
+                    int height = ResourceHeatmapRaster.Size;
+                    int[]? pixels = await Task.Run(() => ResourceHeatmapRaster.Colorize(rawData));
+                    if (pixels == null) return;
 
                     // Apply the scale and margin
                     var ptTopLeft = WorldToImagePx(0, _worldSizeS);
