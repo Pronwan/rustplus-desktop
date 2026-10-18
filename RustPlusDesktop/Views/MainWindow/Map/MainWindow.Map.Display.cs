@@ -267,6 +267,14 @@ public partial class MainWindow
         NoBuildLayer?.Children.Clear();
         CargoPathLayer?.Children.Clear();
 
+        // Monuments belong to the map being left. Without this the next map merges its
+        // own monuments and extras on top of the previous server's.
+        foreach (var kv in _monEls) RemoveFromMapLayers(kv.Value);
+        _monEls.Clear();
+        _monData.Clear();
+        _lastExtraMonuments = null;
+        _extraMonumentNames.Clear();
+
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;
 

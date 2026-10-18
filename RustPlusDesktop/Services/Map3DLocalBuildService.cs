@@ -330,8 +330,9 @@ public static class Map3DLocalBuildService
     }
 
     // MapParser writes its render to both map_texture.png and map_render_full.png. The live 2D
-    // map can replace map_texture.png, so the full render is what says the image was generated.
-    private const string RenderedTextureFileName = "map_render_full.png";
+    // map can replace map_texture.png, so the full render is what says the image was generated,
+    // and it is the one the 2D map may lay out edge to edge (no ocean margin).
+    public const string RenderedTextureFileName = "map_render_full.png";
 
     /// <summary>
     /// Makes map_texture.png the image MapParser rendered from <paramref name="mapFile"/>,

@@ -385,78 +385,6 @@ public partial class MainWindow
     }
     // ──────────────────────────────────────────────────────────────────────────────────────────
 
-    private async Task TryAutoPrepareGeneratedMapAsync(Models.ServerProfile profile, int worldSize, IReadOnlyList<(double X, double Y, string Name)> monuments)
-    {
-        try
-        {
-            var references = monuments
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name) &&
-                            !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
-                            !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
-                            !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
-                .Take(25)
-                .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                .ToList();
-
-            if (references.Count < 3)
-            {
-                references = monuments
-                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                    .Take(25)
-                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                    .ToList();
-            }
-
-            var result = await Map3DLocalBuildService.PrepareAsync(
-                profile,
-                currentMapTexture: null,
-                rustMapsMapId: profile.RustMapsMapId,
-                referenceMonuments: references,
-                worldSize: worldSize,
-                explicitMapPath: !string.IsNullOrEmpty(profile.LocalMapFilePath) && System.IO.File.Exists(profile.LocalMapFilePath) ? profile.LocalMapFilePath : null);
-
-            if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
-            {
-                if (profile.LocalMapFilePath != result.MapFilePath)
-                {
-                    profile.LocalMapFilePath = result.MapFilePath;
-                    _vm.Save();
-                }
-            }
-
-            if (result.ParserReady && !string.IsNullOrEmpty(result.MapTexturePath) && System.IO.File.Exists(result.MapTexturePath))
-            {
-                var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(result.MapTexturePath));
-                bi.EndInit();
-                bi.Freeze();
-
-                _isGeneratedMapActive = true;
-                await Dispatcher.InvokeAsync(async () =>
-                {
-                    ShowMapBasic(bi);
-                    SetupMapScene(bi);
-                    double wDip = bi.PixelWidth * (96.0 / bi.DpiX);
-                    double hDip = bi.PixelHeight * (96.0 / bi.DpiY);
-                    _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
-                    RedrawGrid();
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                    RedrawDeathPins();
-                    RedrawDeathHeatmap();
-                    await LoadParsedMapDataAsync(result.FolderPath);
-                });
-                AppendLog($"[map-render] Automatic map discovery & HD rendering complete. Main map updated ({bi.PixelWidth}x{bi.PixelHeight}).");
-            }
-        }
-        catch (Exception ex)
-        {
-            AppendLog($"[map-render] Auto map discovery: {ex.Message}");
-        }
-    }
-
     public async Task ReloadMapAsync()
     {
         await LoadMapAsync();
@@ -579,7 +507,9 @@ public partial class MainWindow
         if (_vm?.Selected != null)
         {
             string preparedFolder = Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);
-            string generatedTexPath = System.IO.Path.Combine(preparedFolder, "map_texture.png");
+            // Only MapParser's own render is laid out without the ocean margin; map_texture.png
+            // can hold the server's image, which would put every overlay at the wrong scale.
+            string generatedTexPath = System.IO.Path.Combine(preparedFolder, Map3DLocalBuildService.RenderedTextureFileName);
             if (System.IO.File.Exists(generatedTexPath))
             {
                 try
@@ -603,22 +533,19 @@ public partial class MainWindow
                         Monuments = map.Monuments
                     };
 
-                    _ = Dispatcher.InvokeAsync(async () => await LoadParsedMapDataAsync(preparedFolder));
+                    var preparedProfile = _vm.Selected;
+                    _ = Dispatcher.InvokeAsync(async () =>
+                    {
+                        if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder);
+                    });
                 }
                 catch (Exception ex)
                 {
                     AppendLog($"[map-render] Note: could not load generated map texture: {ex.Message}");
                 }
             }
-            else if (!IsCustomMapActive())
-            {
-                var capturedMonuments = map.Monuments;
-                int capturedWorldSize = map.WorldSize;
-                _ = Task.Run(async () =>
-                {
-                    await TryAutoPrepareGeneratedMapAsync(_vm.Selected, capturedWorldSize, capturedMonuments);
-                });
-            }
+            // Without a render the server's own image is used. Parsing scans the game's map
+            // files, so it only runs when the user asks for it (3D map, Parse, or an import).
         }
 
         await Dispatcher.InvokeAsync(() =>

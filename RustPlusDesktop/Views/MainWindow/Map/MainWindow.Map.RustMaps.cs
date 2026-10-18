@@ -534,9 +534,8 @@ namespace RustPlusDesk.Views
         /// </summary>
         internal async Task EnsureOfflineMapImageAsync(ServerProfile profile)
         {
-            bool isOfflineOnly = profile.Port == 0 || profile.PlayerToken == "offline";
             string? mapFile = profile.LocalMapFilePath;
-            if (!isOfflineOnly || string.IsNullOrEmpty(mapFile) || !File.Exists(mapFile)) return;
+            if (!IsOfflineOnlyProfile(profile) ||string.IsNullOrEmpty(mapFile) || !File.Exists(mapFile)) return;
             if (!string.IsNullOrEmpty(profile.LocalMapImagePath) && File.Exists(profile.LocalMapImagePath)) return;
 
             AppendLog($"[Offline Map] Rendering the map image for {profile.Name}...");
@@ -562,6 +561,31 @@ namespace RustPlusDesk.Views
             AppendLog($"[Offline Map] Map image ready: {imagePath}");
 
             if (_vm.Selected != profile || _isMap3DActive) return;
+            await ShowOfflineMapAsync(profile);
+        }
+
+        private static bool IsOfflineOnlyProfile(ServerProfile profile)
+            => profile.Port == 0 || profile.PlayerToken == "offline";
+
+        /// <summary>
+        /// MapParser's render covers exactly the world, edge to edge, unlike a server's map
+        /// image which has an ocean margin around it. Only map_render_full.png is trusted:
+        /// map_texture.png may hold the server's image instead.
+        /// </summary>
+        private static bool IsParserRenderedImage(string imagePath)
+            => Path.GetFileName(imagePath).Equals(Map3DLocalBuildService.RenderedTextureFileName, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Shows a map that has no server behind it: its image, laid out at the right scale,
+        /// and the monuments the Rust+ API would have sent, rebuilt from the parsed map file.
+        /// </summary>
+        internal async Task ShowOfflineMapAsync(ServerProfile profile)
+        {
+            ResetMapDisplay();
+
+            string? imagePath = profile.LocalMapImagePath;
+            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath)) return;
+
             try
             {
                 var bitmap = new BitmapImage();
@@ -569,12 +593,61 @@ namespace RustPlusDesk.Views
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.UriSource = new Uri(imagePath);
                 bitmap.EndInit();
+                bitmap.Freeze();
+
                 ShowMapBasic(bitmap);
+                _isGeneratedMapActive = IsParserRenderedImage(imagePath);
+
+                // Restores the world size from map_data.json and lays the world out on the image.
                 TryRestoreWorldSizeFromCachedMapData(profile, bitmap);
+
+                string folder = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+                string mapDataPath = Path.Combine(folder, "map_data.json");
+                if (_isGeneratedMapActive && !File.Exists(mapDataPath))
+                {
+                    // Rendered before any full parse: the render is one pixel per world unit.
+                    _worldSizeS = bitmap.PixelWidth;
+                    _worldRectPx = ComputeWorldRectFromWorldSize(
+                        bitmap.PixelWidth * (96.0 / bitmap.DpiX), bitmap.PixelHeight * (96.0 / bitmap.DpiY),
+                        _worldSizeS, GetCurrentMapPaddingWorld());
+                }
+
+                await LoadOfflineMainMonumentsAsync(profile, folder);
+                MergeCachedExtraMonumentsForCurrentMap();
+                BuildMonumentOverlays();
+
+                RedrawGrid();
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+                RedrawDeathPins();
+                RedrawDeathHeatmap();
             }
             catch (Exception ex)
             {
-                AppendLog($"[Offline Map] Failed to show the map image: {ex.Message}");
+                AppendLog($"[Offline Map] Failed to load local map image: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Fills the main monuments for an offline map from its parsed map file, since there
+        /// is no server to send them. Leaves them untouched when the map was not parsed yet.
+        /// </summary>
+        private async Task LoadOfflineMainMonumentsAsync(ServerProfile profile, string folder)
+        {
+            string mapDataPath = Path.Combine(folder, "map_data.json");
+            if (!File.Exists(mapDataPath)) return;
+
+            try
+            {
+                var monuments = await Task.Run(() => OfflineMonumentBuilder.BuildFromMapDataFile(mapDataPath));
+                if (!ReferenceEquals(_vm.Selected, profile)) return;
+
+                _monData = monuments.ToList();
+                AppendLog($"[Offline Map] Loaded {monuments.Count} monuments from the parsed map.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not read monuments from the parsed map: {ex.Message}");
             }
         }
 
@@ -795,6 +868,10 @@ namespace RustPlusDesk.Views
         private async Task LoadParsedMapDataAsync(string folderPath)
         {
             _currentMapFolderPath = folderPath;
+            if (_vm?.Selected is { } offlineProfile && IsOfflineOnlyProfile(offlineProfile))
+            {
+                await LoadOfflineMainMonumentsAsync(offlineProfile, folderPath);
+            }
             GenerateAndLoadExtraMonumentsForCurrentMap(folderPath);
             await GenerateBuildingBlockedZonesForCurrentMap(folderPath);
             LoadBuildingBlockedZonesForCurrentMap(folderPath);
@@ -806,7 +883,7 @@ namespace RustPlusDesk.Views
             EnableKeycardLayersAfterParse();
 
             // Apply high-resolution generated Facepunch map image to the main app map view
-            string texPath = Path.Combine(folderPath, "map_texture.png");
+            string texPath = Path.Combine(folderPath, Map3DLocalBuildService.RenderedTextureFileName);
             if (File.Exists(texPath))
             {
                 try

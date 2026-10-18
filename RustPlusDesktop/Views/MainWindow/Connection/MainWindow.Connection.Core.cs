@@ -264,7 +264,11 @@ public partial class MainWindow
             bool isOfflineOnly = prof.Port == 0 || prof.PlayerToken == "offline";
             bool hasLocalMap = !string.IsNullOrEmpty(prof.LocalMapFilePath);
 
-            if (hasLocalMap)
+            if (hasLocalMap && isOfflineOnly)
+            {
+                await ShowOfflineMapAsync(prof);
+            }
+            else if (hasLocalMap)
             {
                 if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
                 {
