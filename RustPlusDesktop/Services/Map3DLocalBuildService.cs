@@ -141,13 +141,14 @@ public static class Map3DLocalBuildService
         }
         else
         {
+            bool multipleCandidates = explicitMapPath == null;
             foreach (var candidate in candidates)
             {
                 ct.ThrowIfCancellationRequested();
                 string candidateOutput = Path.Combine(folder, "parser_attempts", SanitizeFileName(Path.GetFileNameWithoutExtension(candidate)));
                 Directory.CreateDirectory(candidateOutput);
 
-                var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct).ConfigureAwait(false);
+                var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct, skipImage: multipleCandidates).ConfigureAwait(false);
                 var score = parse.Success
                     ? ScoreParsedMap(Path.Combine(candidateOutput, "map_resolved.json"), referenceMonuments, worldSize)
                     : default;
@@ -169,6 +170,11 @@ public static class Map3DLocalBuildService
                 {
                     selectedMap = candidate;
                     CopyParserOutput(candidateOutput, folder);
+                    if (multipleCandidates)
+                    {
+                        // Render offline map texture only for the confirmed winning map directly into target folder
+                        await RunParserAsync(parserPath, selectedMap, folder, ct, extraArg: "--image-only").ConfigureAwait(false);
+                    }
                     texturePath = Path.Combine(folder, "map_texture.png");
                     if (!File.Exists(texturePath))
                     {
@@ -207,6 +213,15 @@ public static class Map3DLocalBuildService
             texturePath = Path.Combine(folder, "map_texture.png");
         }
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
+
+        if (texturePath != null && File.Exists(texturePath))
+        {
+            try
+            {
+                textureSha256 = await ComputeFileSha256Async(texturePath, ct).ConfigureAwait(false);
+            }
+            catch { }
+        }
 
         if (selectedMap != null)
         {
@@ -274,17 +289,23 @@ public static class Map3DLocalBuildService
             string? selectedMap = root.TryGetProperty("SelectedMapFile", out var selectedEl) ? selectedEl.GetString() : null;
 
             if (!string.Equals(manifestMapId ?? string.Empty, rustMapsMapId ?? string.Empty, StringComparison.OrdinalIgnoreCase)) return false;
-            if (!string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal)) return false;
-            if (string.IsNullOrWhiteSpace(selectedMap) || !File.Exists(selectedMap)) return false;
 
-            string? manifestTextureFile = root.TryGetProperty("MapTexture", out var texFileEl) ? texFileEl.GetString() : null;
-            if (!string.IsNullOrEmpty(manifestTextureFile))
+            if (!string.IsNullOrWhiteSpace(selectedMap) && File.Exists(selectedMap))
             {
-                if (!File.Exists(Path.Combine(folder, manifestTextureFile))) return false;
+                string targetTexture = Path.Combine(folder, "map_texture.png");
+                if (File.Exists(targetTexture) || string.IsNullOrEmpty(textureSha256) || string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal))
+                {
+                    cached = new CachedMap3DManifest(selectedMap);
+                    return true;
+                }
+            }
+            else if (!string.IsNullOrEmpty(textureSha256) && string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal))
+            {
+                cached = new CachedMap3DManifest(selectedMap ?? string.Empty);
+                return true;
             }
 
-            cached = new CachedMap3DManifest(selectedMap);
-            return true;
+            return false;
         }
         catch
         {
@@ -569,7 +590,13 @@ public static class Map3DLocalBuildService
         catch { }
     }
 
-    private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(string parserPath, string mapPath, string outputDir, CancellationToken ct)
+    private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(
+        string parserPath,
+        string mapPath,
+        string outputDir,
+        CancellationToken ct,
+        bool skipImage = false,
+        string? extraArg = null)
     {
         var psi = new ProcessStartInfo
         {
@@ -583,6 +610,8 @@ public static class Map3DLocalBuildService
         psi.ArgumentList.Add(mapPath);
         psi.ArgumentList.Add("--output-dir");
         psi.ArgumentList.Add(outputDir);
+        if (skipImage) psi.ArgumentList.Add("--skip-image");
+        if (!string.IsNullOrEmpty(extraArg)) psi.ArgumentList.Add(extraArg);
 
         using var process = Process.Start(psi);
         if (process == null) return (false, -1, "Failed to start parser.");
@@ -600,13 +629,34 @@ public static class Map3DLocalBuildService
         string logContent = $"--- STDOUT ---\n{stdout}\n\n--- STDERR ---\n{stderr}\n\nExitCode: {process.ExitCode}";
         try { await File.WriteAllTextAsync(logPath, logContent, ct).ConfigureAwait(false); } catch { }
 
-        bool success = process.ExitCode == 0 && File.Exists(Path.Combine(outputDir, "map_resolved.json"));
+        bool success = process.ExitCode == 0 && (
+            File.Exists(Path.Combine(outputDir, "map_resolved.json")) ||
+            (string.Equals(extraArg, "--image-only", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(outputDir, "map_texture.png")))
+        );
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
     }
 
     public static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
-        if (refs == null || refs.Count == 0 || worldSize <= 0 || !File.Exists(resolvedPath)) return default;
+        if (refs == null || refs.Count == 0 || !File.Exists(resolvedPath)) return default;
+
+        int candidateWorldSize = worldSize;
+        try
+        {
+            string dir = Path.GetDirectoryName(resolvedPath) ?? string.Empty;
+            string mapDataPath = Path.Combine(dir, "map_data.json");
+            if (File.Exists(mapDataPath))
+            {
+                using var mdoc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
+                if (mdoc.RootElement.TryGetProperty("size", out var sizeEl) && sizeEl.TryGetInt32(out int s) && s > 0)
+                {
+                    candidateWorldSize = s;
+                }
+            }
+        }
+        catch { }
+
+        if (candidateWorldSize <= 0) return default;
 
         using var doc = JsonDocument.Parse(File.ReadAllText(resolvedPath));
         var parsed = new List<ParsedPoint>();
@@ -624,16 +674,16 @@ public static class Map3DLocalBuildService
 
         var refList = refs
             .Where(r => !string.IsNullOrWhiteSpace(r.Name))
-            .Take(12)
+            .Take(25)
             .Select(r => new Map3DReferenceMonument(r.X, r.Y, NormalizeName(r.Name)))
             .ToList();
 
         return new[]
             {
-                ScoreTransform(refList, parsed, worldSize, 0),
-                ScoreTransform(refList, parsed, worldSize, 1),
-                ScoreTransform(refList, parsed, worldSize, 2),
-                ScoreTransform(refList, parsed, worldSize, 3)
+                ScoreTransform(refList, parsed, candidateWorldSize, 0),
+                ScoreTransform(refList, parsed, candidateWorldSize, 1),
+                ScoreTransform(refList, parsed, candidateWorldSize, 2),
+                ScoreTransform(refList, parsed, candidateWorldSize, 3)
             }
             .OrderByDescending(s => s.MatchedCount)
             .ThenBy(s => s.TotalDistance)
@@ -702,6 +752,24 @@ public static class Map3DLocalBuildService
     {
         if (string.IsNullOrWhiteSpace(a) || string.IsNullOrWhiteSpace(b)) return false;
         if (a.Contains(b, StringComparison.OrdinalIgnoreCase) || b.Contains(a, StringComparison.OrdinalIgnoreCase)) return true;
+
+        string aClean = Regex.Replace(a, @"[\s_\-\.]", "");
+        string bClean = Regex.Replace(b, @"[\s_\-\.]", "");
+        if (aClean.Length >= 4 && bClean.Length >= 4)
+        {
+            if (aClean.Contains(bClean, StringComparison.OrdinalIgnoreCase) || bClean.Contains(aClean, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        if ((aClean.Contains("dome") || aClean.Contains("sphere")) && (bClean.Contains("dome") || bClean.Contains("sphere")))
+            return true;
+        if ((aClean.Contains("launch") || aClean.Contains("launchsite")) && (bClean.Contains("launch") || bClean.Contains("launchsite")))
+            return true;
+        if ((aClean.Contains("ferry") || aClean.Contains("ferryterminal")) && (bClean.Contains("ferry") || bClean.Contains("ferryterminal")))
+            return true;
+        if ((aClean.Contains("train") || aClean.Contains("trainyard")) && (bClean.Contains("train") || bClean.Contains("trainyard")))
+            return true;
+
         var aw = a.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(w => w.Length >= 4).ToList();
         var bw = b.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(w => w.Length >= 4).ToList();
         return aw.Any(w => bw.Contains(w));

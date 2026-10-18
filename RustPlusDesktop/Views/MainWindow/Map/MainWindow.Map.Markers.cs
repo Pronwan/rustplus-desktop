@@ -390,10 +390,22 @@ public partial class MainWindow
         try
         {
             var references = monuments
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                .Take(12)
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name) &&
+                            !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
+                .Take(25)
                 .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                 .ToList();
+
+            if (references.Count < 3)
+            {
+                references = monuments
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                    .Take(25)
+                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                    .ToList();
+            }
 
             var result = await Map3DLocalBuildService.PrepareAsync(
                 profile,
@@ -401,7 +413,16 @@ public partial class MainWindow
                 rustMapsMapId: profile.RustMapsMapId,
                 referenceMonuments: references,
                 worldSize: worldSize,
-                explicitMapPath: !string.IsNullOrEmpty(profile.LocalMapFilePath) ? profile.LocalMapFilePath : null);
+                explicitMapPath: !string.IsNullOrEmpty(profile.LocalMapFilePath) && System.IO.File.Exists(profile.LocalMapFilePath) ? profile.LocalMapFilePath : null);
+
+            if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
+            {
+                if (profile.LocalMapFilePath != result.MapFilePath)
+                {
+                    profile.LocalMapFilePath = result.MapFilePath;
+                    _vm.Save();
+                }
+            }
 
             if (result.ParserReady && !string.IsNullOrEmpty(result.MapTexturePath) && System.IO.File.Exists(result.MapTexturePath))
             {

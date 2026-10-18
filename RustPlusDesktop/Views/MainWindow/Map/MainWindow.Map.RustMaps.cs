@@ -458,15 +458,34 @@ namespace RustPlusDesk.Views
                 texture = ImgMap.Source as BitmapSource;
             }
 
-            var references = (_monData ?? new List<(double X, double Y, string Name)>())
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                .Take(12)
+            int effectiveWorldSize = _worldSizeS > 0 ? _worldSizeS : (serverCached?.WorldSize ?? 0);
+
+            var monList = _monData ?? new List<(double X, double Y, string Name)>();
+            var references = monList
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name) &&
+                            !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
+                .Take(25)
                 .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                 .ToList();
 
+            if (references.Count < 3)
+            {
+                references = monList
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                    .Take(25)
+                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                    .ToList();
+            }
+
+            string? knownMapPath = !string.IsNullOrEmpty(profile.LocalMapFilePath) && File.Exists(profile.LocalMapFilePath)
+                ? profile.LocalMapFilePath
+                : null;
+
             var result = await Map3DLocalBuildService.PrepareAsync(
-                profile, texture, profile.RustMapsMapId, references, _worldSizeS,
-                isPlaceholder ? profile.LocalMapFilePath : null);
+                profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
+                knownMapPath);
 
             if (result.NeedsManualMapSelection)
             {
@@ -486,8 +505,20 @@ namespace RustPlusDesk.Views
                     return null;
                 }
 
+                profile.LocalMapFilePath = picker.FileName;
+                _vm.Save();
+
                 result = await Map3DLocalBuildService.PrepareAsync(
-                    profile, texture, profile.RustMapsMapId, references, _worldSizeS, picker.FileName);
+                    profile, texture, profile.RustMapsMapId, references, effectiveWorldSize, picker.FileName);
+            }
+
+            if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
+            {
+                if (profile.LocalMapFilePath != result.MapFilePath)
+                {
+                    profile.LocalMapFilePath = result.MapFilePath;
+                    _vm.Save();
+                }
             }
 
             AppendLog($"{logPrefix} {result.StatusMessage} Folder: {result.FolderPath}");
