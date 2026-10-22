@@ -202,7 +202,7 @@ public partial class MainWindow
 
         // Sort monuments alphabetically by their beautified name
         var sortedMons = _monData
-            .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+            .Where(m => !string.IsNullOrWhiteSpace(m.Name) && !string.IsNullOrWhiteSpace(Beautify(m.Name)))
             .OrderBy(m => Beautify(m.Name))
             .ToList();
 
@@ -246,7 +246,7 @@ public partial class MainWindow
             FrameworkElement iconEl;
             string canonKey = Canon(key);
             
-            if (canonKey.Contains("train tunnel"))
+            if (MonumentFormatter.IsTrainTunnel(mon.Name) || canonKey.Contains("train tunnel"))
             {
                 // Custom Train Icon
                 var img = new Image

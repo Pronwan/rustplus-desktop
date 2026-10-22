@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,6 +11,86 @@ namespace RustPlusDesk.Services;
 /// </summary>
 public static class MonumentFormatter
 {
+    /// <summary>
+    /// Official monument translations (1:1 with the reference client dictionary).
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, string> OfficialMonumentNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["harbor_display_name"] = "Harbor",
+        ["harbor_2_display_name"] = "Harbor",
+        ["airfield_display_name"] = "Airfield",
+        ["excavator"] = "Giant Excavator Pit",
+        ["junkyard_display_name"] = "Junkyard",
+        ["launchsite"] = "Launch Site",
+        ["military_tunnels_display_name"] = "Military Tunnel",
+        ["power_plant_display_name"] = "Power Plant",
+        ["train_yard_display_name"] = "Train Yard",
+        ["water_treatment_plant_display_name"] = "Water Treatment Plant",
+        ["lighthouse_display_name"] = "Lighthouse",
+        ["bandit_camp"] = "Bandit Camp",
+        ["outpost"] = "Outpost",
+        ["sewer_display_name"] = "Sewer Branch",
+        ["large_oil_rig"] = "Large Oil Rig",
+        ["oil_rig_small"] = "Oil Rig",
+        ["gas_station"] = "Oxum's Gas Station",
+        ["mining_quarry_sulfur_display_name"] = "Sulfur Quarry",
+        ["mining_quarry_stone_display_name"] = "Stone Quarry",
+        ["mining_quarry_hqm_display_name"] = "HQM Quarry",
+        ["satellite_dish_display_name"] = "Satellite Dish",
+        ["dome_monument_name"] = "The Dome",
+        ["supermarket"] = "Abandoned Supermarket",
+        ["mining_outpost_display_name"] = "Mining Outpost",
+        ["swamp_c"] = "Abandoned Cabins",
+        ["water_well_a_display_name"] = "Water Well",
+        ["water_well_b_display_name"] = "Water Well",
+        ["water_well_c_display_name"] = "Water Well",
+        ["water_well_d_display_name"] = "Water Well",
+        ["water_well_e_display_name"] = "Water Well",
+        ["large_fishing_village_display_name"] = "Large Fishing Village",
+        ["fishing_village_display_name"] = "Fishing Village",
+        ["stables_a"] = "Ranch",
+        ["stables_b"] = "Large Barn",
+        ["train_tunnel_display_name"] = "Train Tunnel",
+        ["train_tunnel_link_display_name"] = "Train Tunnel",
+        ["underwater_lab"] = "Underwater Labs",
+        ["AbandonedMilitaryBase"] = "Abandoned Military Base",
+        ["arctic_base_a"] = "Arctic Research Base",
+        ["missile_silo_monument"] = "Missile Silo",
+        ["ferryterminal"] = "Ferry Terminal",
+        ["radtown"] = "Radtown",
+        ["jungle_ziggurat"] = "Jungle Ziggurat",
+        ["hapis_convoy_display_name"] = "Convoy",
+        ["hapis_listening_station"] = "Listening Station",
+        ["hapis_sitea_display_name"] = "Site A",
+        ["hapis_siteb_display_name"] = "Site B",
+        ["hapis_eastlighthouse_display_name"] = "Eastern Lighthouse",
+        ["hapis_westlighthouse_display_name"] = "Western Lighthouse",
+        ["hapis_abandboat_display_name"] = "Abandoned Boat",
+        ["hapis_collapsed_tunnel"] = "Collapsed Tunnel",
+        ["hapis_junkpile"] = "Junkyard",
+        ["mining_quarry_display_name"] = "Mining Quarry",
+        ["hapis_quarry"] = "Pumping Station",
+        ["hapis_loadingdock_display_name"] = "Loading Dock",
+        ["hapis_ventingshaft_display_name"] = "Venting Shaft",
+        ["hapis_tugboatbeached_display_name"] = "Beached Tugboat",
+        ["hapis_refinery_refresh"] = "Refinery",
+        ["Hapis_outpost_b3"] = "Outpost B3",
+    };
+
+    /// <summary>Identifies train tunnel tokens that render as icon discs rather than text labels.</summary>
+    public static bool IsTrainTunnel(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return false;
+        var token = Regex.Replace(raw.Trim(), @"^monument\.", "", RegexOptions.IgnoreCase);
+        if (token.Equals("train_tunnel_display_name", StringComparison.OrdinalIgnoreCase) ||
+            token.Equals("train_tunnel_link_display_name", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        var key = raw.ToLowerInvariant();
+        return key.Contains("train tunnel") || key.Contains("tunnel entrance");
+    }
+
     public static string Beautify(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -17,11 +98,25 @@ public static class MonumentFormatter
 
         var s = raw.Trim();
 
-        // 1. Strip prefab path hierarchy if present
-        s = s.Replace('\\', '/');
-        var lastSlash = s.LastIndexOf('/');
-        if (lastSlash >= 0)
-            s = s[(lastSlash + 1)..];
+        // 0. Filter internal engine scene noise objects (matching reference client 606.js:L756)
+        if (s.Equals("DungeonBase", StringComparison.OrdinalIgnoreCase) ||
+            s.Equals("Monument", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+
+        // Direct token lookup (with or without 'monument.' prefix)
+        var directToken = Regex.Replace(s, @"^monument\.", "", RegexOptions.IgnoreCase);
+        if (OfficialMonumentNames.TryGetValue(directToken, out var officialName))
+            return officialName;
+
+        // Strip prefab path hierarchy if present: e.g. assets/bundled/prefabs/autospawn/monument/...
+        var lastSlash = directToken.LastIndexOfAny(new[] { '/', '\\' });
+        var prefabToken = lastSlash >= 0 ? directToken[(lastSlash + 1)..] : directToken;
+        prefabToken = Regex.Replace(prefabToken, @"\.prefab$", "", RegexOptions.IgnoreCase);
+
+        if (OfficialMonumentNames.TryGetValue(prefabToken, out var officialPrefabName))
+            return officialPrefabName;
 
         var lower = s.ToLowerInvariant();
 

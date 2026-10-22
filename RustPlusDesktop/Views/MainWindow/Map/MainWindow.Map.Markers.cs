@@ -107,17 +107,19 @@ public partial class MainWindow
 
         foreach (var m in _monData)
         {
+            var nice = Beautify(m.Name);
+            if (string.IsNullOrWhiteSpace(nice)) continue;
+
             var key = NormalizeMonName(m.Name, out var variant);
 
             var p = WorldToImagePx(m.X, m.Y);
-            var nice = Beautify(m.Name);
             var tt = string.IsNullOrEmpty(variant) ? nice : $"{nice} ({variant})";
 
             var fe = MakeMonIcon(key, tt, 28);
             fe.Tag = m;
 
             IconLayer.Children.Add(fe);
-            bool isTrain = key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
+            bool isTrain = MonumentFormatter.IsTrainTunnel(m.Name) || key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
             Panel.SetZIndex(fe, isTrain ? 700 : 900);
             _monEls[key + "@" + p.X.ToString("0") + "," + p.Y.ToString("0")] = fe;
 

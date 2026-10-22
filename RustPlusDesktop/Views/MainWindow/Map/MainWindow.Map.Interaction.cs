@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +15,9 @@ public partial class MainWindow
     private const double MAP_MAX_ZOOM     = 20.0;
  
     private Point _panLastHost;
+    private readonly Queue<(Point pos, DateTime time)> _panHistory = new();
+    private bool _isFlinging = false;
+    private bool _isSpringingBack = false;
 
     // Host (Maus) -> Scene-VOR-MapTransform (Pivot-Koordinaten fuer ScaleAt)
     private Point HostToScenePreTransform(Point hostPt)
@@ -78,10 +82,8 @@ public partial class MainWindow
     {
         if (_scene == null) return;
 
-        var m = MapTransform.Matrix;
-        double currentScale = m.M11;
-        double targetScale = currentScale * factor;
-        targetScale = Math.Max(MAP_MIN_ZOOM, Math.Min(MAP_MAX_ZOOM, targetScale));
+        double baseScale = (_isZooming && _zoomAnimationTarget > 0) ? _zoomAnimationTarget : MapTransform.Matrix.M11;
+        double targetScale = Math.Clamp(baseScale * factor, MAP_MIN_ZOOM, MAP_MAX_ZOOM);
 
         _zoomAnimationTarget = targetScale;
         _zoomAnimationPivot = hostPos;
@@ -89,30 +91,203 @@ public partial class MainWindow
         if (_isZooming) return;
         _isZooming = true;
 
-        while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
+        try
         {
-            var curM = MapTransform.Matrix;
-            double curS = curM.M11;
-            double diff = _zoomAnimationTarget - curS;
-            
-            // Move 25% of the way each frame for smooth easing
-            double stepScale = curS + diff * 0.25;
-            double stepFactor = stepScale / curS;
+            while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
+            {
+                var curM = MapTransform.Matrix;
+                double curS = curM.M11;
+                double diff = _zoomAnimationTarget - curS;
+                
+                // Continuous 22% interpolation per frame for organic easing
+                double stepScale = curS + diff * 0.22;
+                double stepFactor = stepScale / curS;
 
-            ZoomAtHostPosition(_zoomAnimationPivot, stepFactor);
-            await Task.Delay(16);
+                ZoomAtHostPosition(_zoomAnimationPivot, stepFactor);
+                await Task.Delay(16);
+                
+                if (_scene == null || !_isZooming) break;
+            }
             
-            // If the map was reloaded or scene cleared, stop
-            if (_scene == null || !_isZooming) break;
+            // Final snap to target
+            if (_scene != null && Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 1e-4)
+            {
+                ZoomAtHostPosition(_zoomAnimationPivot, _zoomAnimationTarget / MapTransform.Matrix.M11);
+            }
         }
-        
-        // Final snap to target
-        if (_scene != null && Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0)
+        catch { }
+        finally
         {
-            ZoomAtHostPosition(_zoomAnimationPivot, _zoomAnimationTarget / MapTransform.Matrix.M11);
+            _isZooming = false;
+            SpringBackToBoundsAnimated();
+        }
+    }
+
+    /// <summary>
+    /// Computes the allowed matrix offset bounds so the map stays comfortably anchored inside the host viewport.
+    /// </summary>
+    private (double minOffsetX, double maxOffsetX, double minOffsetY, double maxOffsetY) GetAllowedMatrixOffsetBounds()
+    {
+        if (_scene == null || WebViewHost == null) return (0, 0, 0, 0);
+
+        var (s, offX, offY) = GetViewboxScaleAndOffset();
+        double hostW = Math.Max(1, WebViewHost.ActualWidth);
+        double hostH = Math.Max(1, WebViewHost.ActualHeight);
+
+        double contentW = _scene.ActualWidth > 0 ? _scene.ActualWidth : (_scene.Width > 0 ? _scene.Width : 2048);
+        double contentH = _scene.ActualHeight > 0 ? _scene.ActualHeight : (_scene.Height > 0 ? _scene.Height : 2048);
+
+        var m = MapTransform.Matrix;
+        double curScaleX = Math.Max(0.1, m.M11);
+        double curScaleY = Math.Max(0.1, m.M22);
+
+        double scaledWHost = s * curScaleX * contentW;
+        double scaledHHost = s * curScaleY * contentH;
+
+        double minLeftHost, maxLeftHost;
+        if (scaledWHost <= hostW)
+        {
+            double centerLeft = (hostW - scaledWHost) * 0.5;
+            minLeftHost = centerLeft;
+            maxLeftHost = centerLeft;
+        }
+        else
+        {
+            minLeftHost = hostW - scaledWHost;
+            maxLeftHost = 0;
         }
 
-        _isZooming = false;
+        double minTopHost, maxTopHost;
+        if (scaledHHost <= hostH)
+        {
+            double centerTop = (hostH - scaledHHost) * 0.5;
+            minTopHost = centerTop;
+            maxTopHost = centerTop;
+        }
+        else
+        {
+            minTopHost = hostH - scaledHHost;
+            maxTopHost = 0;
+        }
+
+        double minOffsetX = (minLeftHost - offX) / s;
+        double maxOffsetX = (maxLeftHost - offX) / s;
+        double minOffsetY = (minTopHost - offY) / s;
+        double maxOffsetY = (maxTopHost - offY) / s;
+
+        return (minOffsetX, maxOffsetX, minOffsetY, maxOffsetY);
+    }
+
+    /// <summary>
+    /// Glides the map smoothly following mouse release velocity with friction damping and boundary resistance.
+    /// </summary>
+    private async void StartKineticFling(Vector startVel)
+    {
+        if (_scene == null || _isPanning || _isAnimatingMap) return;
+        _isFlinging = true;
+        var vel = startVel;
+        var lastTime = DateTime.UtcNow;
+
+        try
+        {
+            while (_isFlinging && !_isPanning && !_isAnimatingMap && vel.Length > 12)
+            {
+                await Task.Delay(16);
+                if (!_isFlinging || _isPanning || _isAnimatingMap || _scene == null) break;
+
+                var now = DateTime.UtcNow;
+                double dt = (now - lastTime).TotalSeconds;
+                lastTime = now;
+                if (dt <= 0 || dt > 0.1) dt = 0.016;
+
+                var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+                var curM = MapTransform.Matrix;
+
+                bool outOfBoundsX = curM.OffsetX < minX || curM.OffsetX > maxX;
+                bool outOfBoundsY = curM.OffsetY < minY || curM.OffsetY > maxY;
+
+                if (outOfBoundsX || outOfBoundsY)
+                {
+                    vel *= Math.Pow(0.0001, dt);
+                    if (vel.Length < 35)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    vel *= Math.Pow(0.006, dt);
+                }
+
+                var dHost = vel * dt;
+                var dScene = HostDeltaToSceneDelta(dHost);
+
+                var m = MapTransform.Matrix;
+                m.Translate(dScene.X, dScene.Y);
+                MapTransform.Matrix = m;
+                CenterMiniMapOnPlayer();
+            }
+        }
+        catch { }
+        finally
+        {
+            _isFlinging = false;
+            SpringBackToBoundsAnimated();
+        }
+    }
+
+    /// <summary>
+    /// Smoothly springs back to within allowed matrix offset bounds when outside (elastic rebound).
+    /// </summary>
+    private async void SpringBackToBoundsAnimated()
+    {
+        if (_scene == null || _isPanning || _isAnimatingMap || _isSpringingBack) return;
+
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var curM = MapTransform.Matrix;
+
+        double targetX = Math.Clamp(curM.OffsetX, minX, maxX);
+        double targetY = Math.Clamp(curM.OffsetY, minY, maxY);
+
+        double diffX = targetX - curM.OffsetX;
+        double diffY = targetY - curM.OffsetY;
+
+        if (Math.Abs(diffX) < 0.5 && Math.Abs(diffY) < 0.5)
+            return;
+
+        _isSpringingBack = true;
+        try
+        {
+            for (int i = 0; i < 24; i++)
+            {
+                if (_isPanning || _isAnimatingMap || _scene == null) break;
+
+                var m = MapTransform.Matrix;
+                double dX = (targetX - m.OffsetX) * 0.22;
+                double dY = (targetY - m.OffsetY) * 0.22;
+
+                if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
+                {
+                    m.OffsetX = targetX;
+                    m.OffsetY = targetY;
+                    MapTransform.Matrix = m;
+                    CenterMiniMapOnPlayer();
+                    break;
+                }
+
+                m.OffsetX += dX;
+                m.OffsetY += dY;
+                MapTransform.Matrix = m;
+                CenterMiniMapOnPlayer();
+
+                await Task.Delay(16);
+            }
+        }
+        catch { }
+        finally
+        {
+            _isSpringingBack = false;
+        }
     }
 
     private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -196,13 +371,19 @@ public partial class MainWindow
             && !(_overlayToolsVisible && TryHandleOverlayRightClick(mapPos));
         // Space held turns left-drag into a temporary hand.
         bool spacePan = e.ChangedButton == MouseButton.Left && _spacePanHeld;
+        // Standard left-click drag pans the map when drawing tools are not in an active shape mode.
+        bool leftPan = e.ChangedButton == MouseButton.Left && (!_overlayToolsVisible || _currentTool == OverlayToolMode.None);
 
-        if (e.ChangedButton == MouseButton.Middle || rightPansAfterDelete || spacePan)
+        if (e.ChangedButton == MouseButton.Middle || rightPansAfterDelete || spacePan || leftPan)
         {
             StopTracking(); // Stop tracking on pan
             HidePanHint();  // they found it — the first-run tip has done its job
             _isPanning = true;
+            _isFlinging = false;
+            _isSpringingBack = false;
             _panLastHost = hostPos;
+            _panHistory.Clear();
+            _panHistory.Enqueue((hostPos, DateTime.UtcNow));
             WebViewHost.CaptureMouse();
             e.Handled = true;
             return;
@@ -334,12 +515,31 @@ public partial class MainWindow
         // Panning always wins, even while a tool is armed.
         if (_isPanning)
         {
+            var now = DateTime.UtcNow;
+            _panHistory.Enqueue((hostPos, now));
+            while (_panHistory.Count > 0 && (now - _panHistory.Peek().time).TotalMilliseconds > 120)
+            {
+                _panHistory.Dequeue();
+            }
+
             var dHost = hostPos - _panLastHost;
             _panLastHost = hostPos;
 
             var dScene = HostDeltaToSceneDelta(dHost);
 
+            // Elastic rubber-band resistance when pulling outside bounds
+            var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
             var m = MapTransform.Matrix;
+
+            if ((m.OffsetX < minX && dScene.X < 0) || (m.OffsetX > maxX && dScene.X > 0))
+            {
+                dScene.X *= 0.35;
+            }
+            if ((m.OffsetY < minY && dScene.Y < 0) || (m.OffsetY > maxY && dScene.Y > 0))
+            {
+                dScene.Y *= 0.35;
+            }
+
             m.Translate(dScene.X, dScene.Y);
             MapTransform.Matrix = m;
             CenterMiniMapOnPlayer();
@@ -361,11 +561,35 @@ public partial class MainWindow
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
-        // End a pan started by middle, right, or space+left.
+        // End a pan started by left, middle, right, or space+left.
         if (_isPanning)
         {
             _isPanning = false;
             WebViewHost.ReleaseMouseCapture();
+
+            Vector releaseVelocity = new Vector(0, 0);
+            if (_panHistory.Count >= 2)
+            {
+                var oldest = _panHistory.Peek();
+                var newest = (hostPos, DateTime.UtcNow);
+                double dt = (newest.Item2 - oldest.time).TotalSeconds;
+                if (dt > 0.015 && dt < 0.25)
+                {
+                    var dH = newest.hostPos - oldest.pos;
+                    releaseVelocity = dH / dt; // Host px/s
+                }
+            }
+            _panHistory.Clear();
+
+            if (releaseVelocity.Length > 80)
+            {
+                StartKineticFling(releaseVelocity);
+            }
+            else
+            {
+                SpringBackToBoundsAnimated();
+            }
+
             e.Handled = true;
             return;
         }
