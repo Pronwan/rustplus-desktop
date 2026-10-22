@@ -74,7 +74,9 @@ function recipe(
  *
  * Every tea line is Basic (4 berries) -> Advanced (4 Basic) -> Pure (4 Advanced), made at a
  * Mixing Table or Cooking Workbench without a blueprint. Every tea also gives +30 hydration.
- * Recipes and effects verified against the game data on 2026-10-12.
+ * Recipes and effects verified against the game data on 2026-10-12; the Advanced and Pure
+ * Max Health, Ore, Wood, Scrap and Harvesting values are the reduced ones from the upcoming
+ * tea rebalance.
  * ------------------------------------------------------------------ */
 
 interface TeaLine {
@@ -93,27 +95,27 @@ const TEA_LINES: TeaLine[] = [
   {
     type: 'Max Health',
     berries: [['Red Berry', 3], ['Yellow Berry', 1]],
-    effects: ['+5% max health for 20 minutes', '+12.5% max health for 20 minutes', '+20% max health for 20 minutes']
+    effects: ['+5% max health for 20 minutes', '+10% max health for 20 minutes', '+15% max health for 20 minutes']
   },
   {
     type: 'Ore',
     berries: [['Yellow Berry', 2], ['Blue Berry', 2]],
-    effects: ['+20% ore yield for 30 minutes', '+35% ore yield for 30 minutes', '+50% ore yield for 30 minutes']
+    effects: ['+20% ore yield for 30 minutes', '+30% ore yield for 30 minutes', '+40% ore yield for 30 minutes']
   },
   {
     type: 'Wood',
     berries: [['Red Berry', 2], ['Blue Berry', 2]],
-    effects: ['+50% wood yield for 30 minutes', '+100% wood yield for 30 minutes', '+200% wood yield for 30 minutes']
+    effects: ['+50% wood yield for 30 minutes', '+100% wood yield for 30 minutes', '+150% wood yield for 30 minutes']
   },
   {
     type: 'Scrap',
     berries: [['Yellow Berry', 2], ['White Berry', 2]],
-    effects: ['+100% scrap yield for 30 minutes', '+225% scrap yield for 45 minutes', '+350% scrap yield for 1 hour']
+    effects: ['+100% scrap yield for 30 minutes', '+200% scrap yield for 45 minutes', '+300% scrap yield for 1 hour']
   },
   {
     type: 'Harvesting',
     berries: [['Green Berry', 3], ['Yellow Berry', 1]],
-    effects: ['+35% harvesting yield for 20 minutes', '+50% harvesting yield for 20 minutes', '+65% harvesting yield for 20 minutes']
+    effects: ['+35% harvesting yield for 20 minutes', '+45% harvesting yield for 20 minutes', '+55% harvesting yield for 20 minutes']
   },
   {
     type: 'Anti-Rad',
@@ -175,11 +177,11 @@ interface EnrichedTea {
 
 const ENRICHED_TEAS: EnrichedTea[] = [
   { type: 'Healing', milky: '+10 HP, then heals 112 HP over time', creamy: '+18 HP, then heals 97 HP over time' },
-  { type: 'Max Health', milky: '+20% max health for 30 minutes', creamy: '+26% max health for 16 minutes' },
-  { type: 'Ore', milky: '+50% ore yield for 45 minutes', creamy: '+65% ore yield for 24 minutes' },
-  { type: 'Wood', milky: '+200% wood yield for 45 minutes', creamy: '+260% wood yield for 24 minutes' },
-  { type: 'Scrap', milky: '+350% scrap yield for 1h 30m', creamy: '+450% scrap yield for 48 minutes' },
-  { type: 'Harvesting', milky: '+65% harvesting yield for 30 minutes', creamy: '+85% harvesting yield for 16 minutes' },
+  { type: 'Max Health', milky: '+15% max health for 30 minutes', creamy: '+20% max health for 16 minutes' },
+  { type: 'Ore', milky: '+40% ore yield for 45 minutes', creamy: '+50% ore yield for 24 minutes' },
+  { type: 'Wood', milky: '+150% wood yield for 45 minutes', creamy: '+200% wood yield for 24 minutes' },
+  { type: 'Scrap', milky: '+300% scrap yield for 1h 30m', creamy: '+400% scrap yield for 48 minutes' },
+  { type: 'Harvesting', milky: '+55% harvesting yield for 30 minutes', creamy: '+65% harvesting yield for 16 minutes' },
   { type: 'Anti-Rad', milky: '+45% radiation resistance for 45 minutes', creamy: '+60% radiation resistance for 24 minutes' },
   { type: 'Cooling', milky: '+20° cooling, max core temperature +40°, for 1h 30m', creamy: '+26° cooling, max core temperature +40°, for 48 minutes' },
   { type: 'Warming', milky: '+15° warming, min core temperature 0°, for 1h 30m', creamy: '+19.5° warming, min core temperature 0°, for 48 minutes' }
