@@ -3,30 +3,33 @@ using System;
 namespace RustPlusDesk.Services;
 
 /// <summary>
-/// Colours a parsed resource heatmap (512x512 bytes from map_data.json) for drawing over
-/// the map. Each heatmap is scaled to its own range, since some only hold small values
-/// (wood sits near 20 of 255 across every forest), and weak values fade to transparent so
-/// the blurred edges do not wash the whole map in colour. The ramp runs yellow, orange,
-/// red: no green, which would vanish against grass.
+/// Colours a parsed resource heatmap (square bytes from map_data.json: the 512 grid, or the
+/// parser's full-resolution 2048 layer) for drawing over the map. Each heatmap is scaled to
+/// its own range, since some only hold small values (wood sits near 20 of 255 across every
+/// forest), and values under half of that fade to transparent, so only the places where a
+/// spawn is dense are coloured instead of every cell it can appear in. The ramp runs
+/// yellow, orange, red: no green, which would vanish against grass.
 /// </summary>
 public static class ResourceHeatmapRaster
 {
     public const int Size = 512;
-    private const int BlurRadius = 3; // 7x7 box blur
-    private const float FadeStart = 0.12f;
-    private const float FadeEnd = 0.55f;
+    // Values below half the reference stay clear; 0.12 tinted most of the map.
+    private const float FadeStart = 0.5f;
+    private const float FadeEnd = 0.9f;
     private const byte MaxAlpha = 210;
 
-    /// <summary>Returns premultiplied BGRA pixels (Pbgra32), or null when the data is not 512x512.</summary>
-    public static int[]? Colorize(byte[] raw)
+    /// <summary>Returns premultiplied BGRA pixels (Pbgra32), or null when the data is not size x size.</summary>
+    public static int[]? Colorize(byte[] raw, int size = Size)
     {
-        if (raw == null || raw.Length != Size * Size) return null;
+        if (raw == null || size <= 0 || raw.Length != size * size) return null;
 
         float reference = ReferenceLevel(raw);
-        var pixels = new int[Size * Size];
+        var pixels = new int[size * size];
         if (reference <= 0) return pixels;
 
-        float[] blurred = BoxBlur(raw);
+        // Soften cell edges over a few metres: 7x7 cells on the 512 grid (~8 m cells), 3x3 on
+        // the full-resolution layer (~2 m cells).
+        float[] blurred = BoxBlur(raw, size, size >= 1024 ? 1 : 3);
         for (int i = 0; i < pixels.Length; i++)
         {
             float value = Math.Max(blurred[i], raw[i]);
@@ -90,30 +93,68 @@ public static class ResourceHeatmapRaster
         return k * k * (3 - 2 * k);
     }
 
-    private static float[] BoxBlur(byte[] raw)
+    // Separable box blur: horizontal averages, then vertical averages of those.
+    private static float[] BoxBlur(byte[] raw, int size, int radius)
     {
-        var blurred = new float[Size * Size];
-        for (int y = 0; y < Size; y++)
+        var horizontal = new float[size * size];
+        for (int y = 0; y < size; y++)
         {
-            for (int x = 0; x < Size; x++)
+            int row = y * size;
+            for (int x = 0; x < size; x++)
             {
                 float sum = 0;
                 int count = 0;
-                for (int dy = -BlurRadius; dy <= BlurRadius; dy++)
+                for (int nx = Math.Max(0, x - radius); nx <= Math.Min(size - 1, x + radius); nx++)
                 {
-                    int ny = y + dy;
-                    if (ny < 0 || ny >= Size) continue;
-                    for (int dx = -BlurRadius; dx <= BlurRadius; dx++)
-                    {
-                        int nx = x + dx;
-                        if (nx < 0 || nx >= Size) continue;
-                        sum += raw[ny * Size + nx];
-                        count++;
-                    }
+                    sum += raw[row + nx];
+                    count++;
                 }
-                blurred[y * Size + x] = sum / count;
+                horizontal[row + x] = sum / count;
+            }
+        }
+
+        var blurred = new float[size * size];
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                float sum = 0;
+                int count = 0;
+                for (int ny = Math.Max(0, y - radius); ny <= Math.Min(size - 1, y + radius); ny++)
+                {
+                    sum += horizontal[ny * size + x];
+                    count++;
+                }
+                blurred[y * size + x] = sum / count;
             }
         }
         return blurred;
+    }
+
+    /// <summary>
+    /// One heatmap category from map_data.json: the parser's full-resolution layer (deflated,
+    /// ~2 m cells) when present, else the 512 grid. Null when the category is missing.
+    /// </summary>
+    public static (byte[] Data, int Size)? Read(System.Text.Json.JsonElement root, string category)
+    {
+        if (root.TryGetProperty("cellHeatmapsB64", out var fine) && fine.ValueKind == System.Text.Json.JsonValueKind.Object &&
+            fine.TryGetProperty(category, out var fineEl) && fineEl.GetString() is { Length: > 0 } fineB64 &&
+            root.TryGetProperty("cellLayerResolution", out var resEl) && resEl.TryGetInt32(out int fineSize) && fineSize > 0)
+        {
+            using var input = new System.IO.MemoryStream(Convert.FromBase64String(fineB64));
+            using var deflate = new System.IO.Compression.DeflateStream(input, System.IO.Compression.CompressionMode.Decompress);
+            using var output = new System.IO.MemoryStream();
+            deflate.CopyTo(output);
+            byte[] data = output.ToArray();
+            if (data.Length == fineSize * fineSize) return (data, fineSize);
+        }
+
+        if (root.TryGetProperty("heatmaps", out var grid) && grid.ValueKind == System.Text.Json.JsonValueKind.Object &&
+            grid.TryGetProperty(category, out var gridEl) && gridEl.GetString() is { Length: > 0 } gridB64)
+        {
+            byte[] data = Convert.FromBase64String(gridB64);
+            if (data.Length == Size * Size) return (data, Size);
+        }
+        return null;
     }
 }

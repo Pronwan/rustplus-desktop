@@ -1920,16 +1920,12 @@ namespace RustPlusDesk.Views
                 using var fs = new System.IO.FileStream(dataPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
                 using var doc = await System.Text.Json.JsonDocument.ParseAsync(fs);
 
-                if (doc.RootElement.TryGetProperty("heatmaps", out var heatmapsEl) &&
-                    heatmapsEl.TryGetProperty(category, out var b64El))
+                // The full-resolution heatmap (~2 m cells) when the parser wrote one, else the 512 grid.
+                if (ResourceHeatmapRaster.Read(doc.RootElement, category) is { } heatmap)
                 {
-                    string b64 = b64El.GetString() ?? "";
-                    if (string.IsNullOrEmpty(b64)) return;
-
-                    byte[] rawData = Convert.FromBase64String(b64);
-                    int width = ResourceHeatmapRaster.Size;
-                    int height = ResourceHeatmapRaster.Size;
-                    int[]? pixels = await Task.Run(() => ResourceHeatmapRaster.Colorize(rawData));
+                    int width = heatmap.Size;
+                    int height = heatmap.Size;
+                    int[]? pixels = await Task.Run(() => ResourceHeatmapRaster.Colorize(heatmap.Data, heatmap.Size));
                     if (pixels == null) return;
 
                     // Apply the scale and margin

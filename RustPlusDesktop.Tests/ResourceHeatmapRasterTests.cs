@@ -63,6 +63,38 @@ public class ResourceHeatmapRasterTests
     }
 
     [TestMethod]
+    public void WeakAreas_StayClear_SoTheMapIsNotWashedInColour()
+    {
+        // A dense half at the heatmap's top value beside a wide half at a third of it.
+        var raw = new byte[N * N];
+        for (int y = 0; y < N; y++)
+            for (int x = 0; x < N / 2; x++)
+                raw[y * N + x] = 40;
+        for (int y = 0; y < N; y++)
+            for (int x = N / 2; x < N; x++)
+                raw[y * N + x] = 120;
+
+        var pixels = ResourceHeatmapRaster.Colorize(raw)!;
+        Assert.AreEqual(0, Alpha(pixels[256 * N + 100]), "A third of the reference should not be coloured.");
+        Assert.IsTrue(Alpha(pixels[256 * N + 400]) > 150);
+    }
+
+    [TestMethod]
+    public void FullResolutionHeatmap_IsColouredAtItsOwnSize()
+    {
+        const int size = 2048;
+        var raw = new byte[size * size];
+        for (int y = 1000; y < 1010; y++)
+            for (int x = 1000; x < 1010; x++)
+                raw[y * size + x] = 200;
+
+        var pixels = ResourceHeatmapRaster.Colorize(raw, size)!;
+        Assert.AreEqual(size * size, pixels.Length);
+        Assert.IsTrue(Alpha(pixels[1005 * size + 1005]) > 150);
+        Assert.AreEqual(0, Alpha(pixels[10 * size + 10]));
+    }
+
+    [TestMethod]
     public void ReferenceLevel_IgnoresAFewExtremeCells()
     {
         var raw = new byte[N * N];
