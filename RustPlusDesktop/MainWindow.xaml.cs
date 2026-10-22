@@ -564,10 +564,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.MouseDown += WebViewHost_MouseDown;
         WebViewHost.MouseMove += WebViewHost_MouseMove;
         WebViewHost.MouseUp += WebViewHost_MouseUp;
+        WebViewHost.MouseEnter += (s, e) => ApplyToolCursor();
 
         WebViewHost.KeyDown += WebViewHost_KeyDown;
         WebViewHost.KeyUp += WebViewHost_KeyUp;
         WebViewHost.Focusable = true;
+        ApplyToolCursor();
         DataContext = _vm;
         _vm.Load();
 

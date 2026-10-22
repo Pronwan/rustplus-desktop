@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views;
 
@@ -444,6 +445,7 @@ public partial class MainWindow
 
     private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
     {
+        if (!IsMapLoaded) return;
         StopAllMapAnimations();
         WebViewHost.Focus();
         var hostPos = e.GetPosition(WebViewHost);
@@ -467,7 +469,7 @@ public partial class MainWindow
             _panHistory.Clear();
             _panHistory.Enqueue((hostPos, DateTime.UtcNow));
             WebViewHost.CaptureMouse();
-            WebViewHost.Cursor = e.ChangedButton == MouseButton.Middle ? Cursors.ScrollAll : Cursors.SizeAll;
+            WebViewHost.Cursor = MapCursors.Grabbing;
             e.Handled = true;
             return;
         }
@@ -508,6 +510,7 @@ public partial class MainWindow
         // Hold Space for a temporary hand — left-drag pans without dropping the active tool.
         if (e.Key == Key.Space && !_spacePanHeld)
         {
+            if (!IsMapLoaded) return;
             _spacePanHeld = true;
             ApplyToolCursor();
             e.Handled = true;
@@ -554,7 +557,7 @@ public partial class MainWindow
             }
         }
 
-        if (_scene == null) return;
+        if (_scene == null || !IsMapLoaded) return;
 
         bool zoomIn = e.Key == Key.Add || e.Key == Key.OemPlus;
         bool zoomOut = e.Key == Key.Subtract || e.Key == Key.OemMinus;
@@ -592,6 +595,15 @@ public partial class MainWindow
 
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
+        if (!IsMapLoaded)
+        {
+            if (WebViewHost != null && WebViewHost.Cursor != Cursors.Arrow)
+            {
+                WebViewHost.Cursor = Cursors.Arrow;
+            }
+            return;
+        }
+
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 
@@ -600,13 +612,9 @@ public partial class MainWindow
         {
             StopAllMapAnimations();
 
-            if (e.MiddleButton == MouseButtonState.Pressed)
+            if (WebViewHost.Cursor != MapCursors.Grabbing)
             {
-                if (WebViewHost.Cursor != Cursors.ScrollAll) WebViewHost.Cursor = Cursors.ScrollAll;
-            }
-            else
-            {
-                if (WebViewHost.Cursor != Cursors.SizeAll) WebViewHost.Cursor = Cursors.SizeAll;
+                WebViewHost.Cursor = MapCursors.Grabbing;
             }
 
             var now = DateTime.UtcNow;

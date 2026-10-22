@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using RustPlusDesk.Services;
 
 namespace RustPlusDesk.Views;
 
@@ -114,21 +115,28 @@ public partial class MainWindow
 
     // --- cursor feedback ---
 
-    /// <summary>Cursor reflects the active mode: pan cursor while dragging, hand while space-panning, cross while a draw tool is armed, arrow otherwise.</summary>
+    /// <summary>Cursor reflects the active mode: normal pointer if map is not loaded, native grabbing while panning, native grab while inside canvas in navigation mode, cross while a draw tool is armed.</summary>
     private void ApplyToolCursor()
     {
         if (WebViewHost == null) return;
+
+        if (!IsMapLoaded)
+        {
+            WebViewHost.Cursor = Cursors.Arrow;
+            return;
+        }
+
         if (_isPanning)
         {
-            WebViewHost.Cursor = Cursors.SizeAll;
+            WebViewHost.Cursor = MapCursors.Grabbing;
             return;
         }
         if (_spacePanHeld)
         {
-            WebViewHost.Cursor = Cursors.Hand;
+            WebViewHost.Cursor = MapCursors.Grab;
             return;
         }
         bool drawing = _overlayToolsVisible && _currentTool != OverlayToolMode.None;
-        WebViewHost.Cursor = drawing ? Cursors.Cross : Cursors.Arrow;
+        WebViewHost.Cursor = drawing ? Cursors.Cross : MapCursors.Grab;
     }
 }

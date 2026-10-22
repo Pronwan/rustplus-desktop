@@ -7245,7 +7245,8 @@
                         <Border
                             x:Name="MapPlaceholder"
                             Panel.ZIndex="50"
-                            Background="#0B3A4A">
+                            Background="#0B3A4A"
+                            Cursor="Arrow">
                             <Border
                                 Padding="24"
                                 HorizontalAlignment="Center"

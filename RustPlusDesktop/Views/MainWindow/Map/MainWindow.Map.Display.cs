@@ -295,6 +295,7 @@ public partial class MainWindow
 
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
         if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;
+        ApplyToolCursor();
 
         if (_miniMap != null)
         {
@@ -303,6 +304,11 @@ public partial class MainWindow
 
         }
     }
+
+    /// <summary>
+    /// Indicates whether a map is currently loaded and active in the viewport.
+    /// </summary>
+    private bool IsMapLoaded => _mapBaseBmp != null && (MapPlaceholder == null || MapPlaceholder.Visibility != Visibility.Visible);
 
     private void ShowMapBasic(BitmapSource bmp)
     {
@@ -315,6 +321,7 @@ public partial class MainWindow
         SetupMapScene(bmp);
         RedrawGrid();
         Dispatcher.BeginInvoke(new System.Action(SaveCurrentPlayerWipeMap), System.Windows.Threading.DispatcherPriority.Background);
+        ApplyToolCursor();
     }
 
     public void ApplyMapPerformanceSettings()
