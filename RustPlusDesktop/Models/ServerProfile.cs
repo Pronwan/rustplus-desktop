@@ -194,6 +194,7 @@ public class ServerProfile : INotifyPropertyChanged
             _devices = value ?? new();
             _devices.CollectionChanged += Devices_CollectionChanged;
             NotifySmartSwitchesChanged();
+            NotifyMissingDevicesChanged();
             OnProp();
         }
     }
@@ -202,6 +203,33 @@ public class ServerProfile : INotifyPropertyChanged
     {
         NotifySmartSwitchesChanged();
         NotifyFlatDevicesChanged();
+        NotifyMissingDevicesChanged();
+    }
+
+    private static bool HasAnyMissing(IEnumerable<SmartDevice> devices)
+    {
+        foreach (var d in devices)
+        {
+            if (d.IsMissing) return true;
+            if (d.Children != null && d.Children.Count > 0 && HasAnyMissing(d.Children)) return true;
+        }
+        return false;
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasMissingDevices => _devices != null && _devices.Count > 0 && HasAnyMissing(_devices);
+
+    public void NotifyMissingDevicesChanged()
+    {
+        OnProp(nameof(HasMissingDevices));
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasParsed3DMap => Services.Data.ServerLocalDataCleanup.HasParsed3DMapFor(this);
+
+    public void Notify3DMapStateChanged()
+    {
+        OnProp(nameof(HasParsed3DMap));
     }
 
     public void GroupDevices(System.Collections.Generic.IEnumerable<SmartDevice> toRemove, SmartDevice newGroup)
@@ -218,6 +246,7 @@ public class ServerProfile : INotifyPropertyChanged
         
         if (_devices != null) _devices.CollectionChanged += Devices_CollectionChanged;
         NotifySmartSwitchesChanged();
+        NotifyMissingDevicesChanged();
         OnProp(nameof(Devices));
     }
     public ObservableCollection<string> CameraIds { get; set; } = new();

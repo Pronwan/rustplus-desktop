@@ -22,6 +22,7 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
+using WpfUi = Wpf.Ui.Controls;
 
 namespace RustPlusDesk.Views;
 
@@ -626,40 +627,149 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private async void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
-        if (ListDevices.SelectedItem is SmartDevice dev)
+        if (ListDevices.SelectedItem is SmartDevice dev && dev.IsMissing)
         {
-            if (_vm.Selected?.Devices != null)
+            await DeleteSingleDeviceAsync(dev);
+        }
+        else if (_vm.Selected?.HasMissingDevices == true)
+        {
+            await DeleteAllMissingDevicesAsync();
+        }
+    }
+
+    private async void BtnDeleteAllMissingDevices_Click(object sender, RoutedEventArgs e)
+    {
+        await DeleteAllMissingDevicesAsync();
+    }
+
+    private async void Device_DeleteMissing_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev && dev.IsMissing)
+        {
+            await DeleteSingleDeviceAsync(dev);
+        }
+        else if (ListDevices.SelectedItem is SmartDevice selectedDev && selectedDev.IsMissing)
+        {
+            await DeleteSingleDeviceAsync(selectedDev);
+        }
+    }
+
+    private async void Device_DeleteAllMissing_Click(object sender, RoutedEventArgs e)
+    {
+        await DeleteAllMissingDevicesAsync();
+    }
+
+    private void ListDevicesContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is ContextMenu menu)
+        {
+            bool hasMissing = _vm?.Selected?.HasMissingDevices == true;
+            foreach (var mi in menu.Items.OfType<MenuItem>())
             {
-                RemoveDeviceAndChildrenFromHotkeys(dev);
-                RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
-                RemoveOwnedOilRigRulesForDevice(dev);
-                // Drop the chat-command mapping that pointed at this entity, before Save() below
-                // persists the profile - otherwise a stale binding survives until the next visit
-                // to the Chat Commands settings.
-                _vm.Selected.SyncChatCommands();
-                _vm.Selected.NotifyFlatDevicesChanged();
-                _vm.NotifyDevicesChanged();
-                _vm.Save();
-                AppendLog($"Device #{dev.EntityId} removed.");
-
-                // Sync the local disk overlay JSON as well
-                SaveOwnOverlayToJson();
-
-                // Immediately upload new state to Cloud
-                if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
+                if (mi.Name == "MenuListDeleteAllMissing")
                 {
-                    try
-                    {
-                        await UploadDevicesSnapshotForCurrentServerAsync(explicitWipe: true);
-                        AppendLog("[dev/sync] Pushed updated device list to cloud.");
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog("[dev/sync] Error: " + ex.Message);
-                    }
+                    mi.Visibility = hasMissing ? Visibility.Visible : Visibility.Collapsed;
                 }
             }
+            if (!hasMissing)
+            {
+                menu.IsOpen = false;
+            }
         }
+    }
+
+    private static List<SmartDevice> CollectMissingDevices(IEnumerable<SmartDevice> source)
+    {
+        var list = new List<SmartDevice>();
+        foreach (var d in source)
+        {
+            if (d.IsMissing) list.Add(d);
+            if (d.Children != null && d.Children.Count > 0)
+            {
+                list.AddRange(CollectMissingDevices(d.Children));
+            }
+        }
+        return list;
+    }
+
+    private async Task DeleteSingleDeviceAsync(SmartDevice dev)
+    {
+        if (_vm.Selected?.Devices == null || dev == null) return;
+
+        RemoveDeviceAndChildrenFromHotkeys(dev);
+        RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+        RemoveOwnedOilRigRulesForDevice(dev);
+        CleanupEmptyGroups(_vm.Selected.Devices);
+
+        _vm.Selected.SyncChatCommands();
+        _vm.Selected.NotifyFlatDevicesChanged();
+        _vm.Selected.NotifyMissingDevicesChanged();
+        _vm.NotifyDevicesChanged();
+        _vm.Save();
+        AppendLog($"Device #{dev.EntityId} removed.");
+
+        SaveOwnOverlayToJson();
+
+        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
+        {
+            try
+            {
+                await UploadDevicesSnapshotForCurrentServerAsync(explicitWipe: true);
+                AppendLog("[dev/sync] Pushed updated device list to cloud.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[dev/sync] Error: " + ex.Message);
+            }
+        }
+    }
+
+    private async Task DeleteAllMissingDevicesAsync()
+    {
+        if (_vm.Selected?.Devices == null) return;
+
+        var missing = CollectMissingDevices(_vm.Selected.Devices);
+        if (missing.Count == 0) return;
+
+        var confirm = MessageBox.Show(
+            $"Are you sure you want to delete {missing.Count} missing device(s) from '{_vm.Selected.Name}'?",
+            "Delete Missing Devices",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        foreach (var dev in missing)
+        {
+            RemoveDeviceAndChildrenFromHotkeys(dev);
+            RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
+            RemoveOwnedOilRigRulesForDevice(dev);
+        }
+        CleanupEmptyGroups(_vm.Selected.Devices);
+
+        _vm.Selected.SyncChatCommands();
+        _vm.Selected.NotifyFlatDevicesChanged();
+        _vm.Selected.NotifyMissingDevicesChanged();
+        _vm.NotifyDevicesChanged();
+        _vm.Save();
+        AppendLog($"Deleted {missing.Count} missing device(s) from {_vm.Selected.Name}.");
+
+        SaveOwnOverlayToJson();
+
+        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
+        {
+            try
+            {
+                await UploadDevicesSnapshotForCurrentServerAsync(explicitWipe: true);
+                AppendLog("[dev/sync] Pushed updated device list to cloud.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[dev/sync] Error: " + ex.Message);
+            }
+        }
+
+        ShowInfoSnackbar("Devices", $"Removed {missing.Count} missing device(s).", WpfUi.ControlAppearance.Success);
     }
 
     private void RemoveDeviceAndChildrenFromHotkeys(SmartDevice dev)
@@ -1291,12 +1401,36 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
 
         MenuItem? menuSmall = null;
         MenuItem? menuLarge = null;
+        MenuItem? menuDeleteMissing = null;
+        MenuItem? menuDeleteAllMissing = null;
+        Separator? sepMissing = null;
 
-        foreach (var item in menu.Items.OfType<MenuItem>())
+        foreach (var item in menu.Items)
         {
-            if (item.Name == "MenuSetSmallOilRig") menuSmall = item;
-            else if (item.Name == "MenuSetLargeOilRig") menuLarge = item;
+            if (item is MenuItem mi)
+            {
+                if (mi.Name == "MenuSetSmallOilRig") menuSmall = mi;
+                else if (mi.Name == "MenuSetLargeOilRig") menuLarge = mi;
+                else if (mi.Name == "MenuDeleteMissingDevice") menuDeleteMissing = mi;
+                else if (mi.Name == "MenuDeleteAllMissingDevices") menuDeleteAllMissing = mi;
+            }
+            else if (item is Separator sep && sep.Name == "SepMissingDevices")
+            {
+                sepMissing = sep;
+            }
         }
+
+        bool hasAnyMissing = _vm?.Selected?.HasMissingDevices == true;
+        bool isThisMissing = dev.IsMissing;
+
+        if (menuDeleteMissing != null)
+            menuDeleteMissing.Visibility = isThisMissing ? Visibility.Visible : Visibility.Collapsed;
+
+        if (menuDeleteAllMissing != null)
+            menuDeleteAllMissing.Visibility = hasAnyMissing ? Visibility.Visible : Visibility.Collapsed;
+
+        if (sepMissing != null)
+            sepMissing.Visibility = (isThisMissing || hasAnyMissing) ? Visibility.Visible : Visibility.Collapsed;
 
         if (!isAlarm)
         {

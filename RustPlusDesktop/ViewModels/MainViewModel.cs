@@ -727,7 +727,10 @@ public class MainViewModel : INotifyPropertyChanged
 
     // HILFSMETHODE: UI anstupsen, wenn Devices in-place aktualisiert wurden
     public void NotifyDevicesChanged()
-        => OnPropertyChanged(nameof(CurrentDevices));
+    {
+        Selected?.NotifyMissingDevicesChanged();
+        OnPropertyChanged(nameof(CurrentDevices));
+    }
 
     public void NotifyHotkeysChanged()
         => OnPropertyChanged(nameof(CurrentHotkeys));

@@ -75,7 +75,77 @@ public static class ServerLocalDataCleanup
         return removed;
     }
 
-    private static bool ManifestIsForServer(string manifestPath, string host, int port)
+    /// <summary>
+    /// Checks whether any parsed 3D map workspace, manifest, or map data exists on disk for this server profile.
+    /// </summary>
+    public static bool HasParsed3DMapFor(ServerProfile profile)
+    {
+        if (profile == null) return false;
+
+        string ownFolder = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+        if (Directory.Exists(ownFolder))
+        {
+            if (File.Exists(Path.Combine(ownFolder, "map_data.json")) ||
+                File.Exists(Path.Combine(ownFolder, "map3d_manifest.json")) ||
+                File.Exists(Path.Combine(ownFolder, "map_texture.png")))
+            {
+                return true;
+            }
+        }
+
+        string mapsRoot = Path.Combine(DataManager.AppDir, "3DMaps");
+        if (Directory.Exists(mapsRoot) && !string.IsNullOrWhiteSpace(profile.Host))
+        {
+            try
+            {
+                foreach (string folder in Directory.EnumerateDirectories(mapsRoot))
+                {
+                    if (ManifestIsForServer(Path.Combine(folder, "map3d_manifest.json"), profile.Host, profile.Port))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Clears and deletes all parsed 3D map data folders and cached manifests for this server profile.
+    /// </summary>
+    public static int Clear3DMapDataFor(ServerProfile profile)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        int removed = 0;
+
+        string ownFolder = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+        if (!string.IsNullOrWhiteSpace(ownFolder) && Directory.Exists(ownFolder))
+        {
+            removed += DeleteDirectory(ownFolder);
+        }
+
+        string mapsRoot = Path.Combine(DataManager.AppDir, "3DMaps");
+        if (Directory.Exists(mapsRoot) && !string.IsNullOrWhiteSpace(profile.Host))
+        {
+            try
+            {
+                foreach (string folder in Directory.EnumerateDirectories(mapsRoot))
+                {
+                    if (ManifestIsForServer(Path.Combine(folder, "map3d_manifest.json"), profile.Host, profile.Port))
+                    {
+                        removed += DeleteDirectory(folder);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        return removed;
+    }
+
+    internal static bool ManifestIsForServer(string manifestPath, string host, int port)
     {
         if (!File.Exists(manifestPath)) return false;
         try

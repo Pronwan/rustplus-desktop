@@ -4899,6 +4899,64 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _serverToDelete = null;
     }
 
+    private void ServerContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is ContextMenu menu)
+        {
+            var prof = (menu.PlacementTarget as FrameworkElement)?.DataContext as ServerProfile;
+            bool hasParsed = prof != null && Services.Data.ServerLocalDataCleanup.HasParsed3DMapFor(prof);
+            prof?.Notify3DMapStateChanged();
+
+            foreach (var item in menu.Items.OfType<MenuItem>())
+            {
+                if (item.Name == "MenuClear3DMap")
+                {
+                    item.Visibility = hasParsed ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+        }
+    }
+
+    private void Server_Clear3DMap_Click(object sender, RoutedEventArgs e)
+    {
+        ServerProfile? prof = null;
+        if (sender is MenuItem menuItem)
+        {
+            prof = menuItem.Tag as ServerProfile ?? (menuItem.DataContext as ServerProfile);
+        }
+
+        prof ??= _vm.Selected;
+        if (prof == null) return;
+
+        var confirm = MessageBox.Show(
+            $"Are you sure you want to clear 3D map data for '{prof.Name}'?",
+            "Clear 3D Map Data",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        try
+        {
+            if (_isMap3DActive && _vm.Selected == prof)
+            {
+                CloseMap3DView();
+            }
+
+            _lastExtraMonuments = null;
+            int removed = Services.Data.ServerLocalDataCleanup.Clear3DMapDataFor(prof);
+            prof.Notify3DMapStateChanged();
+            UpdateRustMapsUi();
+
+            AppendLog($"[3D Map] Cleared {removed} 3D map data folder(s)/files for {prof.Name}.");
+            ShowInfoSnackbar("3D Map", $"Cleared 3D map data for '{prof.Name}'.", WpfUi.ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[3D Map] Error clearing 3D map data for {prof.Name}: {ex.Message}");
+            MessageBox.Show($"Failed to clear 3D map data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {

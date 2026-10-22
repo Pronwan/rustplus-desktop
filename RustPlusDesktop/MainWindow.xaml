@@ -1063,6 +1063,7 @@
                                     <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
                                     <ContextMenu
                                         x:Key="ServerCtx"
+                                        Opened="ServerContextMenu_Opened"
                                         Style="{StaticResource DarkContextMenu}">
                                         <MenuItem
                                             Click="Server_EditConnection_Click"
@@ -1105,6 +1106,25 @@
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding PlacementTarget.DataContext.LocalMapFilePath, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource LocalNotNull}}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
+                                        <MenuItem
+                                            x:Name="MenuClear3DMap"
+                                            Click="Server_Clear3DMap_Click"
+                                            Header="Clear 3D map data..."
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                            </MenuItem.Icon>
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource DarkMenuItem}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding PlacementTarget.DataContext.HasParsed3DMap, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -1967,8 +1987,18 @@
                                 Click="BtnDeleteDevice_Click"
                                 Icon="{ui:SymbolIcon Symbol=Delete24}"
                                 Foreground="IndianRed"
-                                IsEnabled="{Binding ElementName=ListDevices, Path=SelectedItem.IsMissing, Converter={StaticResource NotNull}}"
-                                ToolTip="{DynamicResource DeleteMissingOnly}" />
+                                IsEnabled="{Binding Selected.HasMissingDevices}"
+                                ToolTip="{DynamicResource DeleteMissingOnly}">
+                                <ui:Button.ContextMenu>
+                                    <ContextMenu Style="{StaticResource DarkContextMenu}">
+                                        <MenuItem Click="BtnDeleteAllMissingDevices_Click" Header="Delete all missing devices" Foreground="IndianRed">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </ui:Button.ContextMenu>
+                            </ui:Button>
                             </Grid>
                         </Border>
 
@@ -2031,6 +2061,16 @@
                                         SelectedItemChanged="ListDevices_SelectedItemChanged"
                                         VirtualizingPanel.IsVirtualizing="False"
                                         VirtualizingPanel.ScrollUnit="Pixel">
+
+                                        <TreeView.ContextMenu>
+                                            <ContextMenu Opened="ListDevicesContextMenu_Opened" Style="{StaticResource DarkContextMenu}">
+                                                <MenuItem x:Name="MenuListDeleteAllMissing" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="IndianRed">
+                                                    <MenuItem.Icon>
+                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </TreeView.ContextMenu>
 
                                         <TreeView.ItemContainerStyle>
                                             <Style TargetType="TreeViewItem">
@@ -2158,6 +2198,17 @@
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </MenuItem.Style>
+                                                                </MenuItem>
+                                                                <Separator x:Name="SepMissingDevices" Style="{StaticResource DarkSeparator}" Visibility="Collapsed" />
+                                                                <MenuItem x:Name="MenuDeleteMissingDevice" Click="Device_DeleteMissing_Click" Header="{DynamicResource UiDeleteMissingDevice}" Foreground="IndianRed" Visibility="Collapsed">
+                                                                    <MenuItem.Icon>
+                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                                <MenuItem x:Name="MenuDeleteAllMissingDevices" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="IndianRed" Visibility="Collapsed">
+                                                                    <MenuItem.Icon>
+                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                                    </MenuItem.Icon>
                                                                 </MenuItem>
                                                             </ContextMenu>
                                                         </Border.ContextMenu>

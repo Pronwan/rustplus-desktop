@@ -99,4 +99,42 @@ public class ServerLocalDataCleanupTests
         Assert.AreEqual(0, ServerLocalDataCleanup.DeleteFor("9.9.9.9", 1, keepServerData: false, null,
             Path.Combine(_root, "nothing"), Path.Combine(_root, "nothing-local")));
     }
+
+    [TestMethod]
+    public void ManifestIsForServer_MatchesHostAndPort()
+    {
+        string manifestPath = Path.Combine(AppDir, "3DMaps", "1.2.3.4_28082_wipe_a", "map3d_manifest.json");
+        Assert.IsTrue(ServerLocalDataCleanup.ManifestIsForServer(manifestPath, "1.2.3.4", 28082));
+        Assert.IsFalse(ServerLocalDataCleanup.ManifestIsForServer(manifestPath, "1.2.3.4", 280821));
+        Assert.IsFalse(ServerLocalDataCleanup.ManifestIsForServer(manifestPath, "5.6.7.8", 28082));
+    }
+
+    [TestMethod]
+    public void HasMissingDevices_DetectsMissingInRootAndChildren()
+    {
+        var profile = new RustPlusDesk.Models.ServerProfile();
+        Assert.IsFalse(profile.HasMissingDevices);
+
+        var dev1 = new RustPlusDesk.Models.SmartDevice { EntityId = 1, IsMissing = false };
+        profile.Devices.Add(dev1);
+        Assert.IsFalse(profile.HasMissingDevices);
+
+        var group = new RustPlusDesk.Models.SmartDevice { IsGroup = true };
+        var dev2 = new RustPlusDesk.Models.SmartDevice { EntityId = 2, IsMissing = false };
+        group.Children = new System.Collections.ObjectModel.ObservableCollection<RustPlusDesk.Models.SmartDevice> { dev2 };
+        profile.Devices.Add(group);
+        Assert.IsFalse(profile.HasMissingDevices);
+
+        dev2.IsMissing = true;
+        profile.NotifyMissingDevicesChanged();
+        Assert.IsTrue(profile.HasMissingDevices);
+
+        dev2.IsMissing = false;
+        profile.NotifyMissingDevicesChanged();
+        Assert.IsFalse(profile.HasMissingDevices);
+
+        dev1.IsMissing = true;
+        profile.NotifyMissingDevicesChanged();
+        Assert.IsTrue(profile.HasMissingDevices);
+    }
 }
