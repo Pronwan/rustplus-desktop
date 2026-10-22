@@ -114,10 +114,15 @@ public partial class MainWindow
 
     // --- cursor feedback ---
 
-    /// <summary>Cursor reflects the active mode: hand while space-panning, cross while a draw tool is armed, arrow otherwise.</summary>
+    /// <summary>Cursor reflects the active mode: pan cursor while dragging, hand while space-panning, cross while a draw tool is armed, arrow otherwise.</summary>
     private void ApplyToolCursor()
     {
         if (WebViewHost == null) return;
+        if (_isPanning)
+        {
+            WebViewHost.Cursor = Cursors.SizeAll;
+            return;
+        }
         if (_spacePanHeld)
         {
             WebViewHost.Cursor = Cursors.Hand;
