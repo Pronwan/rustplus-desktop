@@ -75,45 +75,72 @@ public partial class MainWindow
     }
 
     private double _zoomAnimationTarget = -1;
-    private Point _zoomAnimationPivot;
+    private Point _zoomAnimationHostPivot;
+    private Point _zoomAnimationScenePivot;
     private bool _isZooming = false;
 
     private async void ZoomAtHostPositionAnimated(Point hostPos, double factor)
     {
         if (_scene == null) return;
 
-        double baseScale = (_isZooming && _zoomAnimationTarget > 0) ? _zoomAnimationTarget : MapTransform.Matrix.M11;
+        double curScale = MapTransform.Matrix.M11;
+        double baseScale = (_isZooming && _zoomAnimationTarget > 0) ? _zoomAnimationTarget : curScale;
         double targetScale = Math.Clamp(baseScale * factor, MAP_MIN_ZOOM, MAP_MAX_ZOOM);
 
         _zoomAnimationTarget = targetScale;
-        _zoomAnimationPivot = hostPos;
+        _zoomAnimationHostPivot = hostPos;
+        _zoomAnimationScenePivot = HostToScenePreTransform(hostPos);
 
         if (_isZooming) return;
         _isZooming = true;
+
+        var lastTime = DateTime.UtcNow;
+        int frame = 0;
 
         try
         {
             while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
             {
+                await Task.Delay(14);
+                if (_scene == null || !_isZooming) break;
+
+                var now = DateTime.UtcNow;
+                double dt = Math.Min(0.05, Math.Max(0.001, (now - lastTime).TotalSeconds));
+                lastTime = now;
+
+                var (s, offX, offY) = GetViewboxScaleAndOffset();
                 var curM = MapTransform.Matrix;
                 double curS = curM.M11;
-                double diff = _zoomAnimationTarget - curS;
-                
-                // Continuous 22% interpolation per frame for organic easing
-                double stepScale = curS + diff * 0.22;
-                double stepFactor = stepScale / curS;
 
-                ZoomAtHostPosition(_zoomAnimationPivot, stepFactor);
-                await Task.Delay(16);
-                
-                if (_scene == null || !_isZooming) break;
+                // Continuous exponential approach curve
+                double easeFactor = 1.0 - Math.Pow(0.00008, dt);
+                double nextScale = curS + (_zoomAnimationTarget - curS) * easeFactor;
+
+                if (Math.Abs(_zoomAnimationTarget - nextScale) < 0.001)
+                {
+                    nextScale = _zoomAnimationTarget;
+                }
+
+                // Perfectly anchor the scene pivot under the cursor with zero jitter
+                curM.M11 = nextScale;
+                curM.M22 = nextScale;
+                curM.OffsetX = (_zoomAnimationHostPivot.X - offX) / s - nextScale * _zoomAnimationScenePivot.X;
+                curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
+                MapTransform.Matrix = curM;
+
+                frame++;
+                if (frame % 3 == 0)
+                {
+                    RefreshAllOverlayScales();
+                    RefreshMonumentOverlayPositions();
+                }
             }
-            
-            // Final snap to target
-            if (_scene != null && Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 1e-4)
-            {
-                ZoomAtHostPosition(_zoomAnimationPivot, _zoomAnimationTarget / MapTransform.Matrix.M11);
-            }
+
+            // Settle final layout
+            RefreshAllOverlayScales();
+            RefreshMonumentOverlayPositions();
+            RefreshUserOverlayIcons();
+            CenterMiniMapOnPlayer();
         }
         catch { }
         finally
@@ -124,7 +151,8 @@ public partial class MainWindow
     }
 
     /// <summary>
-    /// Computes the allowed matrix offset bounds so the map stays comfortably anchored inside the host viewport.
+    /// Computes the allowed matrix offset bounds with generous ocean padding so the map can be
+    /// navigated freely at all zoom levels while keeping elastic boundary physics active.
     /// </summary>
     private (double minOffsetX, double maxOffsetX, double minOffsetY, double maxOffsetY) GetAllowedMatrixOffsetBounds()
     {
@@ -144,30 +172,34 @@ public partial class MainWindow
         double scaledWHost = s * curScaleX * contentW;
         double scaledHHost = s * curScaleY * contentH;
 
+        // Generous breathing room: allow panning freely across the map, deep sea, and offshore ocean
+        double padX = Math.Max(hostW * 0.75, scaledWHost * 0.45);
+        double padY = Math.Max(hostH * 0.75, scaledHHost * 0.45);
+
         double minLeftHost, maxLeftHost;
         if (scaledWHost <= hostW)
         {
             double centerLeft = (hostW - scaledWHost) * 0.5;
-            minLeftHost = centerLeft;
-            maxLeftHost = centerLeft;
+            minLeftHost = centerLeft - padX * 0.75;
+            maxLeftHost = centerLeft + padX * 0.75;
         }
         else
         {
-            minLeftHost = hostW - scaledWHost;
-            maxLeftHost = 0;
+            minLeftHost = hostW - scaledWHost - padX;
+            maxLeftHost = padX;
         }
 
         double minTopHost, maxTopHost;
         if (scaledHHost <= hostH)
         {
             double centerTop = (hostH - scaledHHost) * 0.5;
-            minTopHost = centerTop;
-            maxTopHost = centerTop;
+            minTopHost = centerTop - padY * 0.75;
+            maxTopHost = centerTop + padY * 0.75;
         }
         else
         {
-            minTopHost = hostH - scaledHHost;
-            maxTopHost = 0;
+            minTopHost = hostH - scaledHHost - padY;
+            maxTopHost = padY;
         }
 
         double minOffsetX = (minLeftHost - offX) / s;
@@ -252,7 +284,7 @@ public partial class MainWindow
         double diffX = targetX - curM.OffsetX;
         double diffY = targetY - curM.OffsetY;
 
-        if (Math.Abs(diffX) < 0.5 && Math.Abs(diffY) < 0.5)
+        if (Math.Abs(diffX) < 1.0 && Math.Abs(diffY) < 1.0)
             return;
 
         _isSpringingBack = true;
@@ -263,8 +295,8 @@ public partial class MainWindow
                 if (_isPanning || _isAnimatingMap || _scene == null) break;
 
                 var m = MapTransform.Matrix;
-                double dX = (targetX - m.OffsetX) * 0.22;
-                double dY = (targetY - m.OffsetY) * 0.22;
+                double dX = (targetX - m.OffsetX) * 0.18;
+                double dY = (targetY - m.OffsetY) * 0.18;
 
                 if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
                 {
@@ -294,7 +326,9 @@ public partial class MainWindow
     {
         if (_scene == null) return;
 
-        double zoom = e.Delta > 0 ? 1.25 : (1.0 / 1.25);
+        // Smooth continuous exponential zoom scaling based on wheel ticks
+        double steps = e.Delta / 120.0;
+        double zoom = Math.Pow(1.22, steps);
         var hostPos = e.GetPosition(WebViewHost);
 
         if (e.Delta < 0) StopTracking(); // Only stop tracking on zoom OUT
