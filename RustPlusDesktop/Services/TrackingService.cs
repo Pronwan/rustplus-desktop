@@ -185,7 +185,8 @@ public class TrackingSettings
     public bool HotkeyTriggerChatAlertsEnabled { get; set; } = true;
     public string LastCrosshairStyle { get; set; } = "GreenDot";
     public string LastCustomCrosshairId { get; set; } = string.Empty;
-    public double HeatmapMinDensity { get; set; } = ResourceHeatmapRaster.DefaultMinDensity;
+    // Shows a little more than the raster's own 50% default, so sparse spawn areas are visible out of the box.
+    public double HeatmapMinDensity { get; set; } = 0.25;
     public double DeathHeatmapMinDensity { get; set; } = Deaths.DeathHeatmapRaster.DefaultMinShare;
     public bool OfflineDeathAlertsEnabled { get; set; } = true;
     public string OfflineDeathSoundPath { get; set; } = string.Empty;

@@ -7975,11 +7975,11 @@
                                                                     <RowDefinition Height="Auto" />
                                                                 </Grid.RowDefinitions>
                                                                 <TextBlock Grid.Column="0" Text="{DynamicResource UiHeatmapDensity}" FontSize="11" FontWeight="SemiBold" Foreground="#C8D0DC" VerticalAlignment="Center" Margin="0,0,10,0" />
-                                                                <Slider x:Name="SliderHeatmapDensity" Grid.Column="1" Minimum="0.05" Maximum="0.9" Value="0.5"
+                                                                <Slider x:Name="SliderHeatmapDensity" Grid.Column="1" Minimum="0.05" Maximum="0.9" Value="0.25"
                                                                         SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" IsSnapToTickEnabled="True"
                                                                         VerticalAlignment="Center" ValueChanged="SliderHeatmapDensity_ValueChanged"
                                                                         AutomationProperties.Name="{DynamicResource UiHeatmapDensity}" />
-                                                                <TextBlock x:Name="TxtHeatmapDensityValue" Grid.Column="2" Text="50%" FontSize="11" FontWeight="SemiBold"
+                                                                <TextBlock x:Name="TxtHeatmapDensityValue" Grid.Column="2" Text="25%" FontSize="11" FontWeight="SemiBold"
                                                                            Foreground="{DynamicResource WarnOrangeBrush}" VerticalAlignment="Center" MinWidth="34" TextAlignment="Right" Margin="10,0,0,0" />
                                                                 <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{DynamicResource UiHeatmapDensityHint}" FontSize="10" Foreground="#8A94A6" TextWrapping="Wrap" Margin="0,2,0,0" />
                                                             </Grid>
