@@ -128,9 +128,9 @@
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock Text="{DynamicResource BecomeSupporterTitle}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource Accent}" Margin="0,0,0,5"/>
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
-                            <Run Text="{DynamicResource SupportViaPatreon}"/>
-                            <Hyperlink NavigateUri="https://www.patreon.com/cw/Pronwan/membership" RequestNavigate="Hyperlink_RequestNavigate">Patreon</Hyperlink>
-                            <Run Text="{DynamicResource SupportViaPatreonDesc}"/>
+                            <Run Text="{DynamicResource UpgradeViaPricing}"/>
+                            <Hyperlink NavigateUri="https://rustplusdesktop.cloud/pricing" RequestNavigate="Hyperlink_RequestNavigate">rustplusdesktop.cloud/pricing</Hyperlink>
+                            <Run Text="{DynamicResource UpgradeViaPricingDesc}"/>
                         </TextBlock>
                         <TextBlock TextWrapping="Wrap">
                             <Run Text="{DynamicResource SupportViaSE}"/>

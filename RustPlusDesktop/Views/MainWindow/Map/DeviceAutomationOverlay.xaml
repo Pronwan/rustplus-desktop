@@ -176,9 +176,10 @@
                                             <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
                                         </ComboBox>
                                         <TextBlock Text="{DynamicResource UiOtherwise}" VerticalAlignment="Center" Margin="0,0,5,6"/>
-                                        <ComboBox Width="80" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedState, Mode=TwoWay}" SelectedValuePath="Tag">
-                                            <ComboBoxItem Content="{DynamicResource On}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                            <ComboBoxItem Content="{DynamicResource Off}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        <ComboBox MinWidth="110" Margin="0,0,0,6" SelectedValue="{Binding UnmatchedChoice, Mode=TwoWay}" SelectedValuePath="Tag">
+                                            <ComboBoxItem Content="{DynamicResource On}" Tag="On"/>
+                                            <ComboBoxItem Content="{DynamicResource Off}" Tag="Off"/>
+                                            <ComboBoxItem Content="{DynamicResource UiAutomationNone}" Tag="None"/>
                                         </ComboBox>
                                     </WrapPanel>
                                 </StackPanel>

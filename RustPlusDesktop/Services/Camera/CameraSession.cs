@@ -72,10 +72,9 @@ namespace RustPlusDesk.Services.Camera
         /// Throws if the connection or subscription fails (the connection is cleaned up in that case).
         /// </summary>
         public static async Task<CameraSession> StartAsync(
-            string host, int port, ulong playerId, int playerToken, bool useProxy,
-            string cameraId, CancellationToken ct = default)
+            RustPlusConnection connection, string cameraId, CancellationToken ct = default)
         {
-            var api = new RustPlus(new RustPlusConnection(host, port, playerId, playerToken, useProxy));
+            var api = new RustPlus(connection);
             try
             {
                 await api.ConnectAsync(ct).ConfigureAwait(false);

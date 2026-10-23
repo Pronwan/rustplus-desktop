@@ -29,6 +29,7 @@ public sealed class Map3DLocalBuildResult
     public int CandidateCount { get; init; }
     public int AttemptCount { get; init; }
     public bool NeedsManualMapSelection { get; init; }
+    public TimeSpan Elapsed { get; init; }
     public string StatusMessage { get; init; } = string.Empty;
 }
 
@@ -65,6 +66,7 @@ public static class Map3DLocalBuildService
         IReadOnlyList<Map3DReferenceMonument>? referenceMonuments = null,
         int worldSize = 0,
         string? explicitMapPath = null,
+        bool forceReparse = false,
         CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(profile);
@@ -89,15 +91,6 @@ public static class Map3DLocalBuildService
         string folder = Path.Combine(DataManager.AppDir, "3DMaps", serverKey);
         Directory.CreateDirectory(folder);
 
-        if (currentMapTexture == null)
-        {
-            string oldTexture = Path.Combine(folder, "map_texture.png");
-            if (File.Exists(oldTexture))
-            {
-                try { File.Delete(oldTexture); } catch { }
-            }
-        }
-
         string? texturePath = null;
         string? pendingTexturePath = null;
         string? textureSha256 = null;
@@ -111,9 +104,15 @@ public static class Map3DLocalBuildService
         }
 
         string manifestPath = Path.Combine(folder, "map3d_manifest.json");
-        if (explicitMapPath == null && TryLoadReusableResult(folder, manifestPath, rustMapsMapId, textureSha256, out var cached))
+        // The folder is already keyed by server, RustMaps id and wipe time, so a complete
+        // parse in it is reused. A known map path (saved after the first parse, or an offline
+        // or copied map) only has to match the cached one; forceReparse is for a file the
+        // user just picked by hand.
+        var parseStopwatch = Stopwatch.StartNew();
+        if (!forceReparse && TryLoadReusableResult(folder, manifestPath, explicitMapPath, out var cached))
         {
-            if (pendingTexturePath != null)
+            texturePath = await EnsureRenderedTextureAsync(null, cached.SelectedMapFile, folder, ct).ConfigureAwait(false);
+            if (texturePath == null && pendingTexturePath != null)
             {
                 texturePath = Path.Combine(folder, "map_texture.png");
                 File.Copy(pendingTexturePath, texturePath, overwrite: true);
@@ -130,6 +129,7 @@ public static class Map3DLocalBuildService
                 CandidateCount = 0,
                 AttemptCount = 0,
                 NeedsManualMapSelection = false,
+                Elapsed = parseStopwatch.Elapsed,
                 StatusMessage = Properties.Resources.GetString("Existing3DMapReused")
             };
         }
@@ -150,13 +150,14 @@ public static class Map3DLocalBuildService
         }
         else
         {
+            bool multipleCandidates = explicitMapPath == null;
             foreach (var candidate in candidates)
             {
                 ct.ThrowIfCancellationRequested();
                 string candidateOutput = Path.Combine(folder, "parser_attempts", SanitizeFileName(Path.GetFileNameWithoutExtension(candidate)));
                 Directory.CreateDirectory(candidateOutput);
 
-                var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct).ConfigureAwait(false);
+                var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct, skipImage: multipleCandidates).ConfigureAwait(false);
                 var score = parse.Success
                     ? ScoreParsedMap(Path.Combine(candidateOutput, "map_resolved.json"), referenceMonuments, worldSize)
                     : default;
@@ -177,8 +178,11 @@ public static class Map3DLocalBuildService
                 if (parse.Success && IsGoodMatch(score, referenceMonuments))
                 {
                     selectedMap = candidate;
+                    ClearRenderedTexture(folder);
                     CopyParserOutput(candidateOutput, folder);
-                    texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    // Candidates are probed with --skip-image, so only the winning map is rendered.
+                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap, folder, ct).ConfigureAwait(false)
+                        ?? PromotePendingTexture(pendingTexturePath, folder);
                     break;
                 }
             }
@@ -189,8 +193,10 @@ public static class Map3DLocalBuildService
                 if (File.Exists(Path.Combine(candidateOutput, "map_resolved.json")))
                 {
                     selectedMap = explicitMapPath;
+                    ClearRenderedTexture(folder);
                     CopyParserOutput(candidateOutput, folder);
-                    texturePath = PromotePendingTexture(pendingTexturePath, folder);
+                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap, folder, ct).ConfigureAwait(false)
+                        ?? PromotePendingTexture(pendingTexturePath, folder);
                 }
             }
 
@@ -203,7 +209,20 @@ public static class Map3DLocalBuildService
                         : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
         }
 
+        if (texturePath == null && File.Exists(Path.Combine(folder, "map_texture.png")))
+        {
+            texturePath = Path.Combine(folder, "map_texture.png");
+        }
         if (selectedMap != null && texturePath == null) texturePath = PromotePendingTexture(pendingTexturePath, folder);
+
+        if (texturePath != null && File.Exists(texturePath))
+        {
+            try
+            {
+                textureSha256 = await ComputeFileSha256Async(texturePath, ct).ConfigureAwait(false);
+            }
+            catch { }
+        }
 
         if (selectedMap != null)
         {
@@ -215,6 +234,7 @@ public static class Map3DLocalBuildService
             catch { }
         }
 
+        FileInfo? selectedMapInfo = selectedMap != null ? new FileInfo(selectedMap) : null;
         var manifest = new
         {
             profile.Name,
@@ -225,6 +245,8 @@ public static class Map3DLocalBuildService
             MapTexture = texturePath == null ? null : Path.GetFileName(texturePath),
             MapTextureSha256 = textureSha256,
             SelectedMapFile = selectedMap,
+            SelectedMapFileLength = selectedMapInfo?.Exists == true ? selectedMapInfo.Length : (long?)null,
+            SelectedMapFileLastWriteUtc = selectedMapInfo?.Exists == true ? selectedMapInfo.LastWriteTimeUtc : (DateTime?)null,
             ParserExecutable = parserPath,
             BestMatch = new { bestScore.MatchedCount, bestScore.TotalDistance },
             Attempts = attempts,
@@ -251,41 +273,112 @@ public static class Map3DLocalBuildService
             CandidateCount = candidates.Count,
             AttemptCount = attempts.Count,
             NeedsManualMapSelection = selectedMap == null,
+            Elapsed = parseStopwatch.Elapsed,
             StatusMessage = status
         };
     }
 
-    private static bool TryLoadReusableResult(string folder, string manifestPath, string? rustMapsMapId, string? textureSha256, out CachedMap3DManifest cached)
+    /// <summary>
+    /// Decides whether the parse output already in <paramref name="folder"/> can be reused.
+    /// The folder name carries the server, RustMaps id and wipe time, so this only checks that
+    /// the parse finished and that its map file is still the same one on disk. The map
+    /// texture is not part of it: the viewer copes without one and it is refreshed on reuse.
+    /// </summary>
+    internal static bool TryLoadReusableResult(string folder, string manifestPath, string? expectedMapPath, out CachedMap3DManifest cached)
     {
         cached = default;
         string mapDataPath = Path.Combine(folder, "map_data.json");
         string mapResolvedPath = Path.Combine(folder, "map_resolved.json");
-        if (!File.Exists(manifestPath) || !File.Exists(mapDataPath) || !File.Exists(mapResolvedPath)) return false;
+        if (!File.Exists(manifestPath) || !IsNonEmptyFile(mapDataPath) || !IsNonEmptyFile(mapResolvedPath)) return false;
 
         try
         {
             using var doc = JsonDocument.Parse(File.ReadAllText(manifestPath));
             var root = doc.RootElement;
-            string? manifestMapId = root.TryGetProperty("RustMapsMapId", out var mapIdEl) ? mapIdEl.GetString() : null;
-            string? manifestTextureHash = root.TryGetProperty("MapTextureSha256", out var hashEl) ? hashEl.GetString() : null;
-            string? selectedMap = root.TryGetProperty("SelectedMapFile", out var selectedEl) ? selectedEl.GetString() : null;
+            string? manifestTextureHash = root.TryGetProperty("MapTextureSha256", out var hashEl) && hashEl.ValueKind == JsonValueKind.String ? hashEl.GetString() : null;
+            string? selectedMap = root.TryGetProperty("SelectedMapFile", out var selectedEl) && selectedEl.ValueKind == JsonValueKind.String ? selectedEl.GetString() : null;
 
-            if (!string.Equals(manifestMapId ?? string.Empty, rustMapsMapId ?? string.Empty, StringComparison.OrdinalIgnoreCase)) return false;
-            if (!string.Equals(manifestTextureHash ?? string.Empty, textureSha256 ?? string.Empty, StringComparison.Ordinal)) return false;
             if (string.IsNullOrWhiteSpace(selectedMap) || !File.Exists(selectedMap)) return false;
+            if (expectedMapPath != null && !PathsEqual(selectedMap, expectedMapPath)) return false;
 
-            string? manifestTextureFile = root.TryGetProperty("MapTexture", out var texFileEl) ? texFileEl.GetString() : null;
-            if (!string.IsNullOrEmpty(manifestTextureFile))
-            {
-                if (!File.Exists(Path.Combine(folder, manifestTextureFile))) return false;
-            }
+            // Older manifests have no file stamp; trust them rather than parse again.
+            var mapInfo = new FileInfo(selectedMap);
+            if (root.TryGetProperty("SelectedMapFileLength", out var lengthEl) && lengthEl.ValueKind == JsonValueKind.Number
+                && lengthEl.GetInt64() != mapInfo.Length) return false;
+            if (root.TryGetProperty("SelectedMapFileLastWriteUtc", out var writeEl) && writeEl.ValueKind == JsonValueKind.String
+                && writeEl.TryGetDateTime(out var lastWrite) && lastWrite.ToUniversalTime() != mapInfo.LastWriteTimeUtc) return false;
 
-            cached = new CachedMap3DManifest(selectedMap);
+            cached = new CachedMap3DManifest(selectedMap, manifestTextureHash);
             return true;
         }
         catch
         {
             return false;
+        }
+    }
+
+    private static bool IsNonEmptyFile(string path)
+    {
+        var info = new FileInfo(path);
+        return info.Exists && info.Length > 0;
+    }
+
+    private static bool PathsEqual(string a, string b)
+    {
+        try { return string.Equals(Path.GetFullPath(a), Path.GetFullPath(b), StringComparison.OrdinalIgnoreCase); }
+        catch { return string.Equals(a, b, StringComparison.OrdinalIgnoreCase); }
+    }
+
+    // MapParser writes its render to both map_texture.png and map_render_full.png. The live 2D
+    // map can replace map_texture.png, so the full render is what says the image was generated,
+    // and it is the one the 2D map may lay out edge to edge (no ocean margin).
+    public const string RenderedTextureFileName = "map_render_full.png";
+
+    /// <summary>
+    /// Makes map_texture.png the image MapParser rendered from <paramref name="mapFile"/>,
+    /// running the parser with --image-only when no render exists yet. Returns null when
+    /// the image could not be produced, so the caller can fall back to the live map.
+    /// </summary>
+    private static async Task<string?> EnsureRenderedTextureAsync(string? parserPath, string mapFile, string folder, CancellationToken ct)
+    {
+        string renderedPath = Path.Combine(folder, RenderedTextureFileName);
+        string texturePath = Path.Combine(folder, "map_texture.png");
+
+        if (!File.Exists(renderedPath))
+        {
+            parserPath ??= ResolveParserExecutable();
+            if (parserPath == null || !File.Exists(mapFile)) return null;
+            await RunParserAsync(parserPath, mapFile, folder, ct, extraArg: "--image-only").ConfigureAwait(false);
+            if (!File.Exists(renderedPath)) return null;
+        }
+
+        if (!File.Exists(texturePath) || new FileInfo(texturePath).Length != new FileInfo(renderedPath).Length)
+        {
+            File.Copy(renderedPath, texturePath, overwrite: true);
+        }
+
+        return texturePath;
+    }
+
+    /// <summary>
+    /// Renders the 2D image of <paramref name="mapFile"/> into the profile's 3D map folder,
+    /// for offline maps that came without an image. Reuses an earlier render.
+    /// Returns the image path, or null when MapParser could not produce one.
+    /// </summary>
+    public static async Task<string?> RenderMapImageAsync(ServerProfile profile, string mapFile, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        string folder = GetPreparedFolderPath(profile, profile.RustMapsMapId);
+        Directory.CreateDirectory(folder);
+        if (await EnsureRenderedTextureAsync(null, mapFile, folder, ct).ConfigureAwait(false) == null) return null;
+        return Path.Combine(folder, RenderedTextureFileName);
+    }
+
+    private static void ClearRenderedTexture(string folder)
+    {
+        foreach (var name in new[] { "map_texture.png", RenderedTextureFileName })
+        {
+            try { File.Delete(Path.Combine(folder, name)); } catch { }
         }
     }
 
@@ -566,7 +659,13 @@ public static class Map3DLocalBuildService
         catch { }
     }
 
-    private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(string parserPath, string mapPath, string outputDir, CancellationToken ct)
+    private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(
+        string parserPath,
+        string mapPath,
+        string outputDir,
+        CancellationToken ct,
+        bool skipImage = false,
+        string? extraArg = null)
     {
         var psi = new ProcessStartInfo
         {
@@ -580,6 +679,8 @@ public static class Map3DLocalBuildService
         psi.ArgumentList.Add(mapPath);
         psi.ArgumentList.Add("--output-dir");
         psi.ArgumentList.Add(outputDir);
+        if (skipImage) psi.ArgumentList.Add("--skip-image");
+        if (!string.IsNullOrEmpty(extraArg)) psi.ArgumentList.Add(extraArg);
 
         using var process = Process.Start(psi);
         if (process == null) return (false, -1, "Failed to start parser.");
@@ -597,13 +698,66 @@ public static class Map3DLocalBuildService
         string logContent = $"--- STDOUT ---\n{stdout}\n\n--- STDERR ---\n{stderr}\n\nExitCode: {process.ExitCode}";
         try { await File.WriteAllTextAsync(logPath, logContent, ct).ConfigureAwait(false); } catch { }
 
-        bool success = process.ExitCode == 0 && File.Exists(Path.Combine(outputDir, "map_resolved.json"));
+        bool success = process.ExitCode == 0 && (
+            File.Exists(Path.Combine(outputDir, "map_resolved.json")) ||
+            (string.Equals(extraArg, "--image-only", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(outputDir, "map_texture.png")))
+        );
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
+    }
+
+    /// <summary>
+    /// Adds the heatmap categories an existing map_data.json is missing (it was parsed before
+    /// they existed), from the terrain layers it already holds: no map file and no full parse,
+    /// about a second. A cached parse is otherwise reused as-is, so a re-parse would not add them.
+    /// </summary>
+    public static async Task<bool> AddMissingHeatmapsAsync(string mapDataPath, CancellationToken ct = default)
+    {
+        string? parserPath = ResolveParserExecutable();
+        if (parserPath == null || !File.Exists(mapDataPath)) return false;
+
+        var psi = new ProcessStartInfo
+        {
+            FileName = parserPath,
+            WorkingDirectory = Path.GetDirectoryName(parserPath) ?? AppContext.BaseDirectory,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true
+        };
+        psi.ArgumentList.Add("--add-heatmaps");
+        psi.ArgumentList.Add(mapDataPath);
+
+        using var process = Process.Start(psi);
+        if (process == null) return false;
+
+        var stderrTask = process.StandardError.ReadToEndAsync(ct);
+        var stdoutTask = process.StandardOutput.ReadToEndAsync(ct);
+        await Task.WhenAll(stderrTask, stdoutTask).ConfigureAwait(false);
+        await process.WaitForExitAsync(ct).ConfigureAwait(false);
+        return process.ExitCode == 0;
     }
 
     public static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
-        if (refs == null || refs.Count == 0 || worldSize <= 0 || !File.Exists(resolvedPath)) return default;
+        if (refs == null || refs.Count == 0 || !File.Exists(resolvedPath)) return default;
+
+        int candidateWorldSize = worldSize;
+        try
+        {
+            string dir = Path.GetDirectoryName(resolvedPath) ?? string.Empty;
+            string mapDataPath = Path.Combine(dir, "map_data.json");
+            if (File.Exists(mapDataPath))
+            {
+                using var mdoc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
+                if (mdoc.RootElement.TryGetProperty("size", out var sizeEl) && sizeEl.TryGetInt32(out int s) && s > 0)
+                {
+                    candidateWorldSize = s;
+                }
+            }
+        }
+        catch { }
+
+        if (candidateWorldSize <= 0) return default;
 
         using var doc = JsonDocument.Parse(File.ReadAllText(resolvedPath));
         var parsed = new List<ParsedPoint>();
@@ -621,16 +775,16 @@ public static class Map3DLocalBuildService
 
         var refList = refs
             .Where(r => !string.IsNullOrWhiteSpace(r.Name))
-            .Take(12)
+            .Take(25)
             .Select(r => new Map3DReferenceMonument(r.X, r.Y, NormalizeName(r.Name)))
             .ToList();
 
         return new[]
             {
-                ScoreTransform(refList, parsed, worldSize, 0),
-                ScoreTransform(refList, parsed, worldSize, 1),
-                ScoreTransform(refList, parsed, worldSize, 2),
-                ScoreTransform(refList, parsed, worldSize, 3)
+                ScoreTransform(refList, parsed, candidateWorldSize, 0),
+                ScoreTransform(refList, parsed, candidateWorldSize, 1),
+                ScoreTransform(refList, parsed, candidateWorldSize, 2),
+                ScoreTransform(refList, parsed, candidateWorldSize, 3)
             }
             .OrderByDescending(s => s.MatchedCount)
             .ThenBy(s => s.TotalDistance)
@@ -699,6 +853,24 @@ public static class Map3DLocalBuildService
     {
         if (string.IsNullOrWhiteSpace(a) || string.IsNullOrWhiteSpace(b)) return false;
         if (a.Contains(b, StringComparison.OrdinalIgnoreCase) || b.Contains(a, StringComparison.OrdinalIgnoreCase)) return true;
+
+        string aClean = Regex.Replace(a, @"[\s_\-\.]", "");
+        string bClean = Regex.Replace(b, @"[\s_\-\.]", "");
+        if (aClean.Length >= 4 && bClean.Length >= 4)
+        {
+            if (aClean.Contains(bClean, StringComparison.OrdinalIgnoreCase) || bClean.Contains(aClean, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        if ((aClean.Contains("dome") || aClean.Contains("sphere")) && (bClean.Contains("dome") || bClean.Contains("sphere")))
+            return true;
+        if ((aClean.Contains("launch") || aClean.Contains("launchsite")) && (bClean.Contains("launch") || bClean.Contains("launchsite")))
+            return true;
+        if ((aClean.Contains("ferry") || aClean.Contains("ferryterminal")) && (bClean.Contains("ferry") || bClean.Contains("ferryterminal")))
+            return true;
+        if ((aClean.Contains("train") || aClean.Contains("trainyard")) && (bClean.Contains("train") || bClean.Contains("trainyard")))
+            return true;
+
         var aw = a.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(w => w.Length >= 4).ToList();
         var bw = b.Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(w => w.Length >= 4).ToList();
         return aw.Any(w => bw.Contains(w));
@@ -719,7 +891,7 @@ public static class Map3DLocalBuildService
 
     private static void CopyParserOutput(string fromDir, string toDir)
     {
-        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json" })
+        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json", "map_texture.png", RenderedTextureFileName })
         {
             string from = Path.Combine(fromDir, name);
             if (File.Exists(from)) File.Copy(from, Path.Combine(toDir, name), overwrite: true);
@@ -753,7 +925,22 @@ public static class Map3DLocalBuildService
         Directory.CreateDirectory(Path.Combine(DataManager.AppDir, "3DMaps"));
 
         return (deletedFiles, deletedDirectories);
-    }    public static string GetPreparedFolderPath(ServerProfile profile, string? rustMapsMapId)
+    }
+
+    public static void InvalidateServerCache(ServerProfile profile, string? rustMapsMapId)
+    {
+        try
+        {
+            string folder = GetPreparedFolderPath(profile, rustMapsMapId);
+            if (Directory.Exists(folder))
+            {
+                Directory.Delete(folder, true);
+            }
+        }
+        catch { }
+    }
+
+    public static string GetPreparedFolderPath(ServerProfile profile, string? rustMapsMapId)
     {
         return Path.Combine(DataManager.AppDir, "3DMaps", BuildServerKey(profile, rustMapsMapId));
     }
@@ -793,7 +980,7 @@ public static class Map3DLocalBuildService
     }
 
     private readonly record struct ParsedPoint(double X, double Y, string Name);
-    private readonly record struct CachedMap3DManifest(string SelectedMapFile);
+    internal readonly record struct CachedMap3DManifest(string SelectedMapFile, string? TextureSha256);
     public readonly record struct MapMatchScore(int MatchedCount, double TotalDistance)
     {
         public bool IsBetterThan(MapMatchScore other)

@@ -55,6 +55,7 @@ public partial class MainWindow
         CargoPathLayer.Width = wDip;
         CargoPathLayer.Height = hDip;
         CargoPathLayer.IsHitTestVisible = true;
+        CargoPathLayer.ClipToBounds = false;
 
         KeycardLayer.Width = wDip;
         KeycardLayer.Height = hDip;
@@ -81,6 +82,8 @@ public partial class MainWindow
         _scene ??= new Grid();
         _scene.Width = wDip + padPx * 2;
         _scene.Height = hDip + padPx * 2;
+        _scene.Background = new SolidColorBrush(Color.FromRgb(11, 58, 74));
+        _scene.ClipToBounds = false;
 
         (ImgMap.Parent as Panel)?.Children.Remove(ImgMap);
         (ImgHeatmap.Parent as Panel)?.Children.Remove(ImgHeatmap);
@@ -127,6 +130,7 @@ public partial class MainWindow
             WebViewHost.Children.Add(_mapView);
             Panel.SetZIndex(_mapView, 0);
         }
+        _mapView.ClipToBounds = false;
         _mapView.Child = _scene;
         ApplyMapPerformanceSettings();
 
@@ -255,12 +259,21 @@ public partial class MainWindow
     private void ResetMapDisplay()
     {
         _mapBaseBmp = null;
+        _isGeneratedMapActive = false;
 
         ImgMap.Source = null;
         ImgHeatmap.Source = null;
         GridLayer.Children.Clear();
         NoBuildLayer?.Children.Clear();
         CargoPathLayer?.Children.Clear();
+
+        // Monuments belong to the map being left. Without this the next map merges its
+        // own monuments and extras on top of the previous server's.
+        foreach (var kv in _monEls) RemoveFromMapLayers(kv.Value);
+        _monEls.Clear();
+        _monData.Clear();
+        _lastExtraMonuments = null;
+        _extraMonumentNames.Clear();
 
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;
@@ -282,6 +295,7 @@ public partial class MainWindow
 
         if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
         if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;
+        ApplyToolCursor();
 
         if (_miniMap != null)
         {
@@ -290,6 +304,11 @@ public partial class MainWindow
 
         }
     }
+
+    /// <summary>
+    /// Indicates whether a map is currently loaded and active in the viewport.
+    /// </summary>
+    private bool IsMapLoaded => _mapBaseBmp != null && (MapPlaceholder == null || MapPlaceholder.Visibility != Visibility.Visible);
 
     private void ShowMapBasic(BitmapSource bmp)
     {
@@ -302,6 +321,7 @@ public partial class MainWindow
         SetupMapScene(bmp);
         RedrawGrid();
         Dispatcher.BeginInvoke(new System.Action(SaveCurrentPlayerWipeMap), System.Windows.Threading.DispatcherPriority.Background);
+        ApplyToolCursor();
     }
 
     public void ApplyMapPerformanceSettings()

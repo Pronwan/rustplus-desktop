@@ -383,7 +383,7 @@ namespace RustPlusDesk.Services
                     var deathAt = EventTimeOf(message);
                     OfflineDeathReceived?.Invoke(this,
                         new OfflineDeathNotification(deathAt, server, attacker,
-                            NullIfEmpty(body?.Ip), NonZero(body?.Port)));
+                            NullIfEmpty(body?.Ip), NonZero(body?.Port)) { ImageUrl = ImageOf(body) });
                     _log($"[fcm-native] Offline Death | {server} | {attacker} " +
                          $"| died {deathAt:dd.MM. HH:mm:ss}");
                     return;
@@ -411,7 +411,8 @@ namespace RustPlusDesk.Services
                             NonZero(body?.Port),
                             title,
                             NullIfEmpty(message.PersistentId),
-                            alarmAt));
+                            alarmAt,
+                            ImageOf(body)));
                         _log($"[fcm-native] Alarm | {body?.Name ?? "-"} | {device} | \"{msg}\" " +
                              $"| sent {alarmAt:HH:mm:ss} ({(int)(DateTime.Now - alarmAt).TotalSeconds}s ago)");
                         break;
@@ -429,15 +430,18 @@ namespace RustPlusDesk.Services
                         break;
                 }
 
-                // Server description can ride along on any message that carries a Body.Desc.
-                if (!string.IsNullOrWhiteSpace(body?.Desc))
+                // Server description and Facepunch's server id ride along on any message that
+                // carries a Body, so alarms and deaths can fill them in for servers paired
+                // before we kept them.
+                if (body is not null && (!string.IsNullOrWhiteSpace(body.Desc) || ServerIdOf(body.Id) is not null))
                 {
                     ServerInfoReceived?.Invoke(this, new PairingPayload
                     {
-                        Host = body!.Ip ?? string.Empty,
+                        Host = body.Ip ?? string.Empty,
                         Port = body.Port,
+                        ServerId = ServerIdOf(body.Id),
                         ServerName = body.Name,
-                        ServerDescription = body.Desc!.Trim(),
+                        ServerDescription = NullIfEmpty(body.Desc)?.Trim(),
                     });
                 }
             }
@@ -464,8 +468,10 @@ namespace RustPlusDesk.Services
             {
                 Host = body.Ip,
                 Port = body.Port,
+                ServerId = ServerIdOf(body.Id),
                 ServerName = string.IsNullOrWhiteSpace(body.Name) ? null : body.Name,
                 ServerDescription = string.IsNullOrWhiteSpace(body.Desc) ? null : body.Desc,
+                ImageUrl = ImageOf(body),
                 SteamId64 = body.PlayerId.ToString(CultureInfo.InvariantCulture),
                 PlayerToken = body.PlayerToken,
                 EntityId = (uint?)body.EntityId,
@@ -557,6 +563,10 @@ namespace RustPlusDesk.Services
         }
 
         private static string? NullIfEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
+
+        /// <summary>The picture Rust+ shows with a push: the server's logo, else its banner.</summary>
+        private static string? ImageOf(Body? body) => NullIfEmpty(body?.Logo) ?? NullIfEmpty(body?.Img);
+        private static string? ServerIdOf(Guid id) => id == Guid.Empty ? null : id.ToString("D");
         private static int? NonZero(int? p) => p is > 0 ? p : null;
 
         /// <summary>

@@ -1799,6 +1799,12 @@ Er du sikker på, at du vil fortsætte?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Fjerner alle dødsmarkører fra den aktuelle servers kort.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Fjern alle dødsmarkører fra denne servers kort?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Er du sikker på, at du vil fortsætte?</value>
     <value>{0} dage</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Holdmarkører</value>
+    <value>Kortmarkører</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Udførelsestilstand</value>
@@ -2315,11 +2321,11 @@ Er du sikker på, at du vil fortsætte?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Bliv Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Støt os videre</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Få Premium på </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Forbind Patreon med Discord for automatisk supporterrolle og app-detektion.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - sikker betaling via Paddle; Premium låses automatisk op på din konto.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip via</value>
@@ -3443,6 +3449,24 @@ Venligst parre denne server først.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Lag</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Udseende</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Dødsvarmekort</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Kræver den analyserede kortfil</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitet</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Størrelse</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Vis på kort</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lad være tom for at tillade alle på serveren.</value>
   </data>
@@ -3625,6 +3649,9 @@ Venligst parre denne server først.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Ellers:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>INGEN</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>UDPOST</value>
@@ -5776,5 +5803,23 @@ Du kan finde mere information på serverens officielle hjemmeside:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Genbrugsberegner</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Gendan servere fra skyen</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Henter de servere, denne konto har parret, tilbage fra skyen. Servere, der allerede er på listen, forbliver uændrede.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Log først ind på din skykonto for at gendanne dine servere.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} server(e) gendannet og {1} opdateret.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Din serverliste matcher allerede skyen.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kunne ikke nå skyen. Din serverliste er uændret.</value>
   </data>
 </root>

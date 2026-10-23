@@ -1799,6 +1799,12 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Elimină toate marcajele de moarte de pe harta serverului curent.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Elimini toate marcajele de moarte de pe harta acestui server?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Sunteți sigur că doriți să continuați?</value>
     <value>{0} zile</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcatori de echipă</value>
+    <value>Marcaje pe hartă</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modul de execuție</value>
@@ -2315,11 +2321,11 @@ Sunteți sigur că doriți să continuați?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Deveniți un susținător</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Sprijină-ne mai departe</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Obține Premium pe </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Conectați Patreon cu Discord pentru detectarea automată a rolului de susținător și a aplicației.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - plată sigură prin Paddle; Premium se activează automat în contul tău.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Sfat prin</value>
@@ -3443,6 +3449,24 @@ Vă rugăm mai întâi să asociați acest server.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Straturi</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aspect</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Hartă termică a morților</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Necesită fișierul hărții analizat</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitate</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Dimensiune</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Afișează pe hartă</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lăsați gol pentru a permite tuturor pe server.</value>
   </data>
@@ -3625,6 +3649,9 @@ Vă rugăm mai întâi să asociați acest server.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>În caz contrar:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NICIUNA</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>AVANTPOST</value>
@@ -5776,5 +5803,23 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculator de reciclare</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurează serverele din cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Readuce din cloud serverele asociate acestui cont. Serverele aflate deja în listă rămân neschimbate.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Conectează-te mai întâi la contul cloud pentru a-ți restaura serverele.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Au fost restaurate {0} servere și reîmprospătate {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Lista ta de servere corespunde deja cu cloudul.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Cloudul nu a putut fi accesat. Lista de servere a rămas neschimbată.</value>
   </data>
 </root>

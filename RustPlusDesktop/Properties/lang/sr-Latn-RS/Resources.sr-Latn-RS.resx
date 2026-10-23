@@ -1799,6 +1799,12 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Обриши све</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Uklanja sve oznake smrti sa mape trenutnog servera.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Ukloniti sve oznake smrti sa mape ovog servera?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Прихвати</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>{0} дана</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Маркери тима</value>
+    <value>Oznake na mapi</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим извршења</value>
@@ -2315,11 +2321,11 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Постаните присталица</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Подржите нас даље</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Nabavite Premium na </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Повежите Патреон са Дисцорд-ом за аутоматско откривање улоге подршке и апликација.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - bezbedno plaćanje preko Paddle-a; Premium se automatski otključava na vašem nalogu.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Савет преко</value>
@@ -3443,6 +3449,24 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   <data name="UiLayers" xml:space="preserve">
     <value>Слојеви</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Izgled</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Toplotna mapa smrti</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Potreban je analizirani fajl mape</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Neprozirnost</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Veličina</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Prikaži na mapi</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Оставите празно да бисте омогућили свима на серверу.</value>
   </data>
@@ -3625,6 +3649,9 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>иначе:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NIŠTA</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ОУТПОСТ</value>
@@ -5776,5 +5803,23 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Калкулатор рециклаже</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Vrati servere iz oblaka</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Vraća iz oblaka servere koje je ovaj nalog uparilo. Serveri koji su već na listi ostaju nepromenjeni.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Prvo se prijavi na svoj nalog u oblaku da bi vratio servere.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Vraćeno servera: {0}, osveženo: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tvoja lista servera se već poklapa sa oblakom.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Oblak nije dostupan. Lista servera je nepromenjena.</value>
   </data>
 </root>

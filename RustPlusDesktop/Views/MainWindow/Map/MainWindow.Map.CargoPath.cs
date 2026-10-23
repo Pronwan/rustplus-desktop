@@ -24,6 +24,7 @@ public partial class MainWindow
     private class CargoPathData
     {
         public List<Point> Waypoints { get; set; } = new();
+        public List<List<Point>> Branches { get; set; } = new();
         public Point MarkerPosition { get; set; }
         public List<CargoPathHarborInfo> Harbors { get; set; } = new();
     }
@@ -38,7 +39,7 @@ public partial class MainWindow
     /// </summary>
     private async void ChkCargoPath_Checked(object sender, RoutedEventArgs e)
     {
-        if (sender is CheckBox box && box.IsChecked == true && _cargoPathData == null)
+        if (sender is System.Windows.Controls.Primitives.ToggleButton box && box.IsChecked == true && _cargoPathData == null)
         {
             box.IsChecked = false;
 
@@ -61,7 +62,7 @@ public partial class MainWindow
         {
             ChkCargoPath.IsChecked = false;
             ChkCargoPath.Opacity = 0.45;
-            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
+            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
         }
 
         if (CargoPathLayer != null)
@@ -82,8 +83,9 @@ public partial class MainWindow
                 return;
             }
 
-            string folder = RustPlusDesk.Services.Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);
-            LoadCargoPathForCurrentMap(folder);
+            var profile = _vm.Selected;
+            string folder = RustPlusDesk.Services.Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+            _ = LoadCargoPathWhenReadyAsync(profile, folder);
         }
         catch
         {
@@ -91,14 +93,26 @@ public partial class MainWindow
         }
     }
 
-    private void LoadCargoPathForCurrentMap(string? folderPath)
+    // Reads the map data off the UI thread, then applies it unless the server changed meanwhile.
+    private async System.Threading.Tasks.Task LoadCargoPathWhenReadyAsync(RustPlusDesk.Models.ServerProfile profile, string folder)
+    {
+        var root = await RustPlusDesk.Services.Map.ParsedMapDataCache.LoadAsync(folder);
+        await Dispatcher.InvokeAsync(() =>
+        {
+            if (!ReferenceEquals(_vm?.Selected, profile)) return;
+            LoadCargoPathForCurrentMap(root.HasValue ? folder : null, root);
+        });
+    }
+
+    // mapRoot: the parsed map's overlay data when the caller already has it (see ParsedMapDataCache).
+    private void LoadCargoPathForCurrentMap(string? folderPath, JsonElement? mapRoot = null)
     {
         _cargoPathData = null;
         if (ChkCargoPath != null)
         {
             ChkCargoPath.Opacity = 0.45;
             ChkCargoPath.IsChecked = false;
-            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
+            ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
         }
 
         // ONLY use data from parsing - strictly DO NOT fall back if parsed data is not present
@@ -117,8 +131,11 @@ public partial class MainWindow
 
         try
         {
-            using var doc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
-            var root = doc.RootElement;
+            if ((mapRoot ?? RustPlusDesk.Services.Map.ParsedMapDataCache.Load(folderPath)) is not { } root)
+            {
+                RedrawCargoPath();
+                return;
+            }
 
             double parsedWorldSize = root.TryGetProperty("size", out var sizeEl) ? sizeEl.GetDouble() : _worldSizeS;
             if (parsedWorldSize <= 0)
@@ -130,7 +147,7 @@ public partial class MainWindow
             // The route comes only from the map's CargoPath layer, surfaced by the
             // parser as cargoPaths / cargoPathNodes. There is deliberately no
             // generated fallback: a guessed route drawn over real map data is fiction.
-            var nodes = ReadAuthoredCargoNodes(root);
+            var (nodes, branches) = ReadAuthoredCargoRoutes(root);
             if (nodes == null || nodes.Count < 3)
             {
                 RedrawCargoPath();
@@ -140,6 +157,7 @@ public partial class MainWindow
             _cargoPathData = new CargoPathData
             {
                 Waypoints = nodes,
+                Branches = branches,
                 MarkerPosition = PickCargoMarker(nodes),
                 Harbors = ReadCargoHarbors(root)
             };
@@ -148,7 +166,8 @@ public partial class MainWindow
             {
                 ChkCargoPath.Opacity = 1.0;
                 ChkCargoPath.IsChecked = true;
-                ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("CargoShip") ?? "Cargo Ship Path";
+                // No reason to show: the Layers panel prints this tooltip under the toggle.
+                ChkCargoPath.ToolTip = null;
             }
 
             RedrawCargoPath();
@@ -161,17 +180,17 @@ public partial class MainWindow
             {
                 ChkCargoPath.Opacity = 0.45;
                 ChkCargoPath.IsChecked = false;
+                ChkCargoPath.ToolTip = RustPlusDesk.Properties.Resources.GetString("UiLayersNeedsParsedMap");
             }
             RedrawCargoPath();
         }
     }
 
     /// <summary>
-    /// Reads the authored route the map carries in its CargoPath layer. Prefers the
-    /// grouped cargoPaths array (longest route wins) and falls back to the flat
-    /// cargoPathNodes list. Returns null when the map has no such layer.
+    /// Reads the routes the map carries in its CargoPath layer (or procedurally generated paths).
+    /// Path 0 is the main ocean patrol loop; subsequent paths are harbor docking approaches.
     /// </summary>
-    private static List<Point>? ReadAuthoredCargoNodes(JsonElement root)
+    private static (List<Point>? mainLoop, List<List<Point>> branches) ReadAuthoredCargoRoutes(JsonElement root)
     {
         static List<Point> ReadNodes(JsonElement arr)
         {
@@ -183,23 +202,37 @@ public partial class MainWindow
             return list;
         }
 
-        List<Point>? longest = null;
+        var branches = new List<List<Point>>();
+        List<Point>? mainLoop = null;
+
         if (root.TryGetProperty("cargoPaths", out var pathsEl) && pathsEl.ValueKind == JsonValueKind.Array)
         {
+            bool first = true;
             foreach (var pEl in pathsEl.EnumerateArray())
             {
                 if (!pEl.TryGetProperty("nodes", out var nodesEl) || nodesEl.ValueKind != JsonValueKind.Array) continue;
-                var candidate = ReadNodes(nodesEl);
-                if (longest == null || candidate.Count > longest.Count) longest = candidate;
+                var pts = ReadNodes(nodesEl);
+                if (pts.Count < 2) continue;
+
+                if (first)
+                {
+                    mainLoop = pts;
+                    first = false;
+                }
+                else
+                {
+                    branches.Add(pts);
+                }
             }
         }
-        if ((longest == null || longest.Count < 3) &&
+
+        if ((mainLoop == null || mainLoop.Count < 3) &&
             root.TryGetProperty("cargoPathNodes", out var flatEl) && flatEl.ValueKind == JsonValueKind.Array)
         {
-            longest = ReadNodes(flatEl);
+            mainLoop = ReadNodes(flatEl);
         }
 
-        return longest != null && longest.Count >= 3 ? longest : null;
+        return (mainLoop != null && mainLoop.Count >= 3 ? mainLoop : null, branches);
     }
 
     /// <summary>
@@ -270,6 +303,22 @@ public partial class MainWindow
             {
                 var pt = CenteredRustToImagePx(waypoints[i].X, waypoints[i].Y);
                 ctx.LineTo(pt, isStroked: true, isSmoothJoin: true);
+            }
+
+            // Draw harbor docking approach branches
+            if (_cargoPathData.Branches != null)
+            {
+                foreach (var branch in _cargoPathData.Branches)
+                {
+                    if (branch == null || branch.Count < 2) continue;
+                    var bFirst = CenteredRustToImagePx(branch[0].X, branch[0].Y);
+                    ctx.BeginFigure(bFirst, isFilled: false, isClosed: false);
+                    for (int b = 1; b < branch.Count; b++)
+                    {
+                        var bPt = CenteredRustToImagePx(branch[b].X, branch[b].Y);
+                        ctx.LineTo(bPt, isStroked: true, isSmoothJoin: true);
+                    }
+                }
             }
         }
         geometry.Freeze();

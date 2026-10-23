@@ -1799,6 +1799,12 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>מסיר את כל סימוני המוות ממפת השרת הנוכחי.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>להסיר את כל סימוני המוות ממפת השרת הזה?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1899,7 +1905,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>{0} ימים</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>סמני צוות</value>
+    <value>סימוני מפה</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>מצב ביצוע</value>
@@ -2360,11 +2366,11 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>הפוך לתומך</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>תמכו בנו</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>קבלו Premium ב-</value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- קשר את Patreon עם Discord לזיהוי אוטומטי של תפקידי תומך ואפליקציה.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - תשלום מאובטח דרך Paddle; ה-Premium נפתח בחשבון שלכם אוטומטית.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>טיפ דרך</value>
@@ -3443,6 +3449,24 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   <data name="UiLayers" xml:space="preserve">
     <value>שכבות</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>מראה</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>מפת חום של מוות</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>דורש את קובץ המפה המנותח</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>אטימות</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>גודל</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>הצג במפה</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>השאר ריק כדי לאפשר לכולם בשרת.</value>
   </data>
@@ -3625,6 +3649,9 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>אחרת:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>ללא</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>מאחז</value>
@@ -5776,5 +5803,23 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>מחשבון מיחזור</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>שחזור שרתים מהענן</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>מחזיר מהענן את השרתים שחשבון זה צימד. שרתים שכבר ברשימה נשארים כפי שהם.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>יש להתחבר תחילה לחשבון הענן כדי לשחזר את השרתים.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>שוחזרו {0} שרתים ו-{1} עודכנו.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>רשימת השרתים שלך כבר תואמת לענן.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>לא ניתן להגיע לענן. רשימת השרתים לא השתנתה.</value>
   </data>
 </root>

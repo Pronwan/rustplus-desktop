@@ -1799,6 +1799,12 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Rensa alla</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Tar bort alla dödsmarkörer från den aktuella serverns karta.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Ta bort alla dödsmarkörer från den här serverns karta?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Acceptera</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
     <value>{0} dagar</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Lagmarkörer</value>
+    <value>Kartmarkörer</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Utförandeläge</value>
@@ -2315,11 +2321,11 @@ Rust+ Desktop registrerar din lokala app hos FCM sa att den kan ta emot samma Ru
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Bli supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Stöd oss ​​vidare</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Skaffa Premium på </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Länka Patreon med Discord för automatisk supporterroll och appidentifiering.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - säker betalning via Paddle; Premium låses upp automatiskt på ditt konto.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tipsa via</value>
@@ -3443,6 +3449,24 @@ Vänligen para ihop denna server först.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Lager</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Utseende</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Värmekarta över dödsfall</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Kräver den analyserade kartfilen</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacitet</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Storlek</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Visa på kartan</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lämna tomt för att tillåta alla på servern.</value>
   </data>
@@ -3625,6 +3649,9 @@ Vänligen para ihop denna server först.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Annars:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>INGEN</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>UTPOST</value>
@@ -5776,5 +5803,23 @@ Du kan hitta mer information på serverns officiella webbplats:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Återvinningsräknare</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Återställ servrar från molnet</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Hämtar tillbaka servrarna som det här kontot har parkopplat, från molnet. Servrar som redan finns i listan behålls som de är.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Logga först in på ditt molnkonto för att återställa dina servrar.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Återställde {0} server(ar) och uppdaterade {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Din serverlista stämmer redan med molnet.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kunde inte nå molnet. Din serverlista är oförändrad.</value>
   </data>
 </root>

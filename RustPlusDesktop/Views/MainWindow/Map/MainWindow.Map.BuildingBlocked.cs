@@ -194,15 +194,13 @@ public partial class MainWindow
         return $"{fallback}\n{owner.Name}\n{owner.Type} / {owner.Prefab}";
     }
 
-    private async System.Threading.Tasks.Task GenerateBuildingBlockedZonesForCurrentMap(string? folderPath)
+    // mapRoot / resolvedRoot are read once, off the UI thread, by LoadParsedMapDataAsync; the
+    // zone maths over every prefab runs off it too.
+    private async System.Threading.Tasks.Task GenerateBuildingBlockedZonesForCurrentMap(string? folderPath, JsonElement mapRoot, JsonElement? resolvedRoot)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
-        string mapDataPath = System.IO.Path.Combine(folderPath, "map_data.json");
-        if (!File.Exists(mapDataPath)) return;
         string outputPath = System.IO.Path.Combine(folderPath, "building_blocked.json");
 
-        JsonDocument? doc = null;
-        JsonDocument? resolvedDoc = null;
         try
         {
             var uri = new Uri("pack://application:,,,/Assets/Data/monument_bounds.json");
@@ -213,20 +211,16 @@ public partial class MainWindow
             var boundsDb = JsonSerializer.Deserialize<Dictionary<string, BoundsDBEntry>>(dbJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (boundsDb == null) return;
 
-            doc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
-            if (!doc.RootElement.TryGetProperty("prefabs", out var prefabs) || prefabs.ValueKind != JsonValueKind.Array) return;
+            if (!mapRoot.TryGetProperty("prefabs", out var prefabs) || prefabs.ValueKind != JsonValueKind.Array) return;
 
+            await System.Threading.Tasks.Task.Run(() =>
+            {
             var allPrefabs = new List<JsonElement>();
             foreach (var p in prefabs.EnumerateArray()) allPrefabs.Add(p);
 
-            string resolvedPath = System.IO.Path.Combine(folderPath, "map_resolved.json");
-            if (File.Exists(resolvedPath))
+            if (resolvedRoot is { ValueKind: JsonValueKind.Array } resolved)
             {
-                resolvedDoc = JsonDocument.Parse(File.ReadAllText(resolvedPath));
-                if (resolvedDoc.RootElement.ValueKind == JsonValueKind.Array)
-                {
-                    foreach (var p in resolvedDoc.RootElement.EnumerateArray()) allPrefabs.Add(p);
-                }
+                foreach (var p in resolved.EnumerateArray()) allPrefabs.Add(p);
             }
 
             var finalSpheres = new List<BuildingBlockedSphere>();
@@ -287,16 +281,12 @@ public partial class MainWindow
             finalBoxes = DedupeBuildingBlockedBoxes(finalBoxes);
             var resultData = new BuildingBlockedData { Spheres = finalSpheres, Boxes = finalBoxes };
             var outputJson = JsonSerializer.Serialize(resultData, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(outputPath, outputJson);
+            File.WriteAllText(outputPath, outputJson);
+            });
         }
         catch (Exception ex)
         {
             AppendLog($"[3D Map] Failed to generate building_blocked.json: {ex.Message}");
-        }
-        finally
-        {
-            doc?.Dispose();
-            resolvedDoc?.Dispose();
         }
     }
 

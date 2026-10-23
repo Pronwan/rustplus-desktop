@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.9.socket.1" />
+    <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.9" />
+    <ProjectReference Include="../RustPlusDesk.Core/RustPlusDesk.Core.csproj" />
+    <InternalsVisibleTo Include="RustPlusDesk.CrossPlatform.Tests" />
+    <EmbeddedResource Include="Assets/rust-item-list.json" LogicalName="RustPlusDesk.Infrastructure.Items.json" />
+    <EmbeddedResource Include="Assets/recycler-items.json" LogicalName="RustPlusDesk.Infrastructure.RecyclerItems.json" />
+    <EmbeddedResource Include="Assets/Recycling-Data.json" LogicalName="RustPlusDesk.Infrastructure.RecyclingData.json" />
+  </ItemGroup>
+</Project>

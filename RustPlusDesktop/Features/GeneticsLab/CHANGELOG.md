@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.17.0](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.17.0) (2026-10-13)
+
+### 🚀 Features
+
+* feat: app tutorial, offered once and open any time ([998a007](https://github.com/JawadYzbk/rust-genetics-lab/commit/998a00731bccc316a2a7b768a7a7764ca8a05b66))
+
+**Full Changelog**: https://github.com/JawadYzbk/rust-genetics-lab/compare/v1.16.1...v1.17.0
+All notable changes to this project will be documented in this file.
+
 ## [1.16.1](https://github.com/JawadYzbk/rust-genetics-lab/releases/tag/v1.16.1) (2026-10-13)
 
 ### 🐛 Bug Fixes

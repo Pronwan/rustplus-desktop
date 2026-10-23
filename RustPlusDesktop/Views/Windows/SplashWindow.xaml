@@ -8,8 +8,7 @@
         Background="Transparent"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        ShowInTaskbar="False"
-        Topmost="True">
+        ShowInTaskbar="True">
 
     <Window.Resources>
         <!-- Brand accent -->

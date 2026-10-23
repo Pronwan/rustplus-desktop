@@ -1799,6 +1799,12 @@ Open Releases page?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Αφαιρεί όλους τους δείκτες θανάτου από τον χάρτη του τρέχοντος διακομιστή.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Να αφαιρεθούν όλοι οι δείκτες θανάτου από τον χάρτη αυτού του διακομιστή;</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Open Releases page?</value>
     <value>{0} ημέρες</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Δείκτες ομάδας</value>
+    <value>Δείκτες χάρτη</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Λειτουργία εκτέλεσης</value>
@@ -2315,11 +2321,11 @@ Open Releases page?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Γίνε Υποστηρικτής</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Υποστηρίξτε μας</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Αποκτήστε Premium στο </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Συνδέστε το Patreon με το Discord για αυτόματη ανίχνευση ρόλων υποστήριξης και εφαρμογής.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - ασφαλής πληρωμή μέσω Paddle· το Premium ενεργοποιείται αυτόματα στον λογαριασμό σας.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Συμβουλή μέσω</value>
@@ -3443,6 +3449,24 @@ Open Releases page?</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Επίπεδα</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Εμφάνιση</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Θερμικός χάρτης θανάτων</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Απαιτεί το αναλυμένο αρχείο χάρτη</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Αδιαφάνεια</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Μέγεθος</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Εμφάνιση στον χάρτη</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Αφήστε κενό για να επιτρέψετε σε όλους τους χρήστες του διακομιστή.</value>
   </data>
@@ -3625,6 +3649,9 @@ Open Releases page?</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Διαφορετικά:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>ΚΑΜΙΑ</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ΦΟΡΤΠΟΣΤ</value>
@@ -5776,5 +5803,23 @@ Open Releases page?</value>
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Υπολογιστής ανακύκλωσης</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Επαναφορά διακομιστών από το cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Επαναφέρει από το cloud τους διακομιστές που έχει συνδέσει αυτός ο λογαριασμός. Οι διακομιστές που υπάρχουν ήδη στη λίστα παραμένουν ως έχουν.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Συνδεθείτε πρώτα στον λογαριασμό cloud για να επαναφέρετε τους διακομιστές σας.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Επαναφέρθηκαν {0} διακομιστές και ανανεώθηκαν {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Η λίστα διακομιστών σας ταιριάζει ήδη με το cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η σύνδεση με το cloud. Η λίστα διακομιστών σας δεν άλλαξε.</value>
   </data>
 </root>

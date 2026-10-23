@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/TestResults/
+artifacts/
+*.log
+.DS_Store
+__pycache__/
+!packages-local/*.nupkg

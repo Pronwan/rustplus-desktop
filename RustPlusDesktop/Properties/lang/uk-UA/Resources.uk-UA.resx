@@ -1799,6 +1799,12 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистити все</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Видаляє всі мітки смерті з мапи поточного сервера.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Видалити всі мітки смерті з мапи цього сервера?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Прийняти</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>{0} днів</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Командні маркери</value>
+    <value>Мітки на мапі</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим виконання</value>
@@ -2315,11 +2321,11 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Станьте прихильником</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Підтримайте нас на</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Оформіть Premium на </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Пов’яжіть Patreon із Discord для автоматичного визначення ролі підтримки та додатків.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - безпечна оплата через Paddle; Premium активується у вашому акаунті автоматично.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Підказка через</value>
@@ -3443,6 +3449,24 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   <data name="UiLayers" xml:space="preserve">
     <value>Шари</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Вигляд</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Теплова мапа смертей</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Потрібен розібраний файл мапи</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Непрозорість</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Розмір</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Показувати на мапі</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Залиште пустим, щоб дозволити всім на сервері.</value>
   </data>
@@ -3625,6 +3649,9 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>В іншому випадку:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>НЕМАЄ</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ФОРПОСТ</value>
@@ -5776,5 +5803,23 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Калькулятор переробки</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Відновити сервери з хмари</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Повертає з хмари сервери, прив'язані до цього облікового запису. Сервери, які вже є у списку, залишаються без змін.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Спершу увійдіть у хмарний обліковий запис, щоб відновити сервери.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Відновлено серверів: {0}, оновлено: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Ваш список серверів уже збігається з хмарою.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Не вдалося зв'язатися з хмарою. Список серверів не змінено.</value>
   </data>
 </root>

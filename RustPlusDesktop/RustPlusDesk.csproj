@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>10.2.0</Version>
+		<Version>10.3.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -345,7 +345,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.9" />
+    <!-- Fork build from packages-local/ (JawadYzbk/RustPlusApi, feat/companion-socket): adds the
+         /socket/{ServerId} route now that Facepunch removed direct app-port connections. Back to the
+         upstream package once that support is released there. -->
+    <PackageReference Include="RustPlusApi" Version="2.0.0-beta.9.socket.1" />
     <PackageReference Include="RustPlusApi.Camera" Version="2.0.0-beta.9" />
     <PackageReference Include="RustPlusApi.Fcm.Registration" Version="2.0.0-beta.9" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
@@ -754,6 +757,7 @@
     <Resource Include="Assets\icons\map-markers\ore.png" />
     <Resource Include="Assets\Data\rust_items.json" />
     <Resource Include="Assets\Data\monument_bounds.json" />
+    <Resource Include="Assets\Data\monument_metadata.json" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-1.png" />
     <Resource Include="Assets\Images\5.3.0\ChatCommandsUI-2.png" />
     <Resource Include="Assets\Images\5.3.0\NewLanguageSelector.png" />

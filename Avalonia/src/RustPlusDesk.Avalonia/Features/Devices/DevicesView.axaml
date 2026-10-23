@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:RustPlusDesk.Avalonia.Features.Devices"
+             xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
+             x:Class="RustPlusDesk.Avalonia.Features.Devices.DevicesView" x:DataType="vm:DevicesViewModel">
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+    <StackPanel Spacing="8">
+      <StackPanel Spacing="4">
+        <TextBlock Text="Devices" FontSize="18" FontWeight="SemiBold" />
+        <TextBlock Text="{Binding Message}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+      </StackPanel>
+      <WrapPanel>
+        <Button Content="_Organize…" Margin="0,0,6,4" Command="{Binding $parent[Window].((servers:ServersViewModel)DataContext).OrganizeDevicesCommand}"
+                IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).HasDeviceEditor, FallbackValue=False}" />
+        <Button Content="_Refresh devices" Command="{Binding RefreshCommand}" Margin="0,0,0,4" />
+      </WrapPanel>
+    </StackPanel>
+    <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="{Binding IsRefreshing}" AutomationProperties.Name="Refreshing devices" />
+    <Grid Grid.Row="2">
+      <Border Classes="card" IsVisible="{Binding !HasDevices}" VerticalAlignment="Center">
+        <TextBlock Text="No devices paired for this server." TextWrapping="Wrap" Classes="muted" />
+      </Border>
+      <TreeView ItemsSource="{Binding Devices}" IsVisible="{Binding HasDevices}" Background="Transparent"
+                AutomationProperties.Name="Paired smart devices" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <TreeView.Styles>
+          <Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="True" /></Style>
+        </TreeView.Styles>
+        <TreeView.DataTemplates>
+          <TreeDataTemplate DataType="vm:DeviceRowViewModel" x:DataType="vm:DeviceRowViewModel" ItemsSource="{Binding Children}">
+            <Border Classes="card" Margin="0,0,0,8" Padding="12">
+              <StackPanel Spacing="8">
+                <StackPanel Spacing="8">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding KindLabel}" Classes="muted" FontSize="12" />
+                    <TextBlock Text="{Binding StateLabel}" FontWeight="SemiBold" />
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding SupportsControl}">
+                    <Button Content="ON" Command="{Binding TurnOnCommand}" AutomationProperties.Name="Turn device on" />
+                    <Button Content="OFF" Command="{Binding TurnOffCommand}" AutomationProperties.Name="Turn device off" />
+                  </StackPanel>
+                </StackPanel>
+                <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" AutomationProperties.Name="Waiting for device confirmation" />
+                <TextBlock Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextWrapping="Wrap" Classes="muted" />
+                <StackPanel IsVisible="{Binding IsStorage}" Spacing="6">
+                  <TextBlock Text="{Binding StorageCaption}" Classes="muted" TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:StorageItemViewModel">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" Margin="0,3">
+                          <TextBlock Text="{Binding Name}" TextWrapping="Wrap" />
+                          <TextBlock Grid.Column="1" Text="Blueprint" IsVisible="{Binding IsBlueprint}" Classes="muted" />
+                          <TextBlock Grid.Column="2" Text="{Binding Quantity}" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </TreeDataTemplate>
+        </TreeView.DataTemplates>
+      </TreeView>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -71,6 +71,17 @@ public class ServerProfile : INotifyPropertyChanged
     }
     public string? BattleMetricsId { get; set; } = null;
 
+    /// <summary>
+    /// Facepunch's id for this server, a GUID carried as "id" in every pairing push.
+    ///
+    /// Facepunch is removing direct connections to a server's app.port and the old
+    /// companion /game/{ip}/{port} relay already answers 418, so the one route left is
+    /// companion-rust.facepunch.com/socket/{ServerId}. It cannot be derived from host and
+    /// port — not even getInfo reports it — so it has to be kept from the pairing that
+    /// delivered it. Empty on servers paired before it was captured.
+    /// </summary>
+    public string? ServerId { get; set; } = null;
+
     // Stable identity used to remember the last selected server across restarts.
     // PlayerToken is deliberately excluded so a re-pair on the same server still matches.
     public string MatchKey => $"{Host}:{Port}|{SteamId64}";
@@ -183,6 +194,7 @@ public class ServerProfile : INotifyPropertyChanged
             _devices = value ?? new();
             _devices.CollectionChanged += Devices_CollectionChanged;
             NotifySmartSwitchesChanged();
+            NotifyMissingDevicesChanged();
             OnProp();
         }
     }
@@ -191,6 +203,33 @@ public class ServerProfile : INotifyPropertyChanged
     {
         NotifySmartSwitchesChanged();
         NotifyFlatDevicesChanged();
+        NotifyMissingDevicesChanged();
+    }
+
+    private static bool HasAnyMissing(IEnumerable<SmartDevice> devices)
+    {
+        foreach (var d in devices)
+        {
+            if (d.IsMissing) return true;
+            if (d.Children != null && d.Children.Count > 0 && HasAnyMissing(d.Children)) return true;
+        }
+        return false;
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasMissingDevices => _devices != null && _devices.Count > 0 && HasAnyMissing(_devices);
+
+    public void NotifyMissingDevicesChanged()
+    {
+        OnProp(nameof(HasMissingDevices));
+    }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool HasParsed3DMap => Services.Data.ServerLocalDataCleanup.HasParsed3DMapFor(this);
+
+    public void Notify3DMapStateChanged()
+    {
+        OnProp(nameof(HasParsed3DMap));
     }
 
     public void GroupDevices(System.Collections.Generic.IEnumerable<SmartDevice> toRemove, SmartDevice newGroup)
@@ -207,6 +246,7 @@ public class ServerProfile : INotifyPropertyChanged
         
         if (_devices != null) _devices.CollectionChanged += Devices_CollectionChanged;
         NotifySmartSwitchesChanged();
+        NotifyMissingDevicesChanged();
         OnProp(nameof(Devices));
     }
     public ObservableCollection<string> CameraIds { get; set; } = new();

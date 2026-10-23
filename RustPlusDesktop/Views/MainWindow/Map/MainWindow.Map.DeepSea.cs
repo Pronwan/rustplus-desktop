@@ -206,6 +206,7 @@ public partial class MainWindow
 
             // 7. Redraw death markers for the current map view
             RedrawDeathPins();
+            RedrawDeathHeatmap();
         });
     }
 

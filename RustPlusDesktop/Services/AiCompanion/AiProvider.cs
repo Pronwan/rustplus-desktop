@@ -131,6 +131,31 @@ namespace RustPlusDesk.Services.AiCompanion
         };
 
         /// <summary>
+        /// Where credit is added, for the providers that refuse every request without it.
+        /// Empty for Gemini, whose free allowance needs no card at all.
+        /// </summary>
+        public static string BillingUrl(string provider) => provider switch
+        {
+            OpenAi => "https://platform.openai.com/settings/organization/billing/overview",
+            Anthropic => "https://console.anthropic.com/settings/billing",
+            OpenRouter => "https://openrouter.ai/settings/credits",
+            _ => "",
+        };
+
+        /// <summary>How a key from this provider starts, for the hint under the paste field.</summary>
+        public static string KeyPrefix(string provider) => provider switch
+        {
+            OpenAi => "sk-",
+            Anthropic => "sk-ant-",
+            Gemini => "AIza",
+            OpenRouter => "sk-or-v1-",
+            _ => "",
+        };
+
+        /// <summary>Whether the provider has a no-card allowance a new user can start on.</summary>
+        public static bool HasFreeTier(string provider) => provider is Gemini or OpenRouter;
+
+        /// <summary>
         /// A quick shape check before a key is stored, so an obvious paste error is caught here
         /// rather than as an authentication failure in the middle of a raid.
         /// </summary>

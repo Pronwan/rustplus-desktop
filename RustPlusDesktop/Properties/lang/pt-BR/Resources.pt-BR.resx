@@ -1799,6 +1799,12 @@ Tem certeza de que deseja continuar?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Remove todos os marcadores de morte do mapa do servidor atual.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Remover todos os marcadores de morte do mapa deste servidor?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Tem certeza de que deseja continuar?</value>
     <value>{0} dias</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcadores de equipe</value>
+    <value>Marcadores do mapa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modo de execução</value>
@@ -2315,11 +2321,11 @@ Tem certeza de que deseja continuar?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Torne-se um apoiador</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Apoie-nos em</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Assine o Premium em </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Vincule o Patreon ao Discord para função automática de apoiador e detecção de aplicativos.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - pagamento seguro via Paddle; o Premium é liberado na sua conta automaticamente.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Dica via</value>
@@ -3443,6 +3449,24 @@ Emparelhe este servidor primeiro.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Camadas</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aparência</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mapa de calor de mortes</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Requer o arquivo do mapa analisado</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacidade</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostrar no mapa</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Deixe em branco para permitir todos no servidor.</value>
   </data>
@@ -3625,6 +3649,9 @@ Emparelhe este servidor primeiro.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Caso contrário:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NENHUMA</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>POSTO AVANÇADO</value>
@@ -5782,5 +5809,23 @@ Você pode encontrar mais informações no site oficial do servidor:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calculadora de reciclagem</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurar servidores da nuvem</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera da nuvem os servidores que esta conta pareou. Os servidores que já estão na lista continuam como estão.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Entre na sua conta da nuvem primeiro para restaurar seus servidores.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} servidor(es) restaurado(s) e {1} atualizado(s).</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Sua lista de servidores já corresponde à nuvem.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Não foi possível acessar a nuvem. Sua lista de servidores não foi alterada.</value>
   </data>
 </root>

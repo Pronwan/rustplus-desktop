@@ -90,11 +90,15 @@ namespace RustPlusDesk.Services.Deaths
             public string? location_name { get; set; }
         }
 
-        /// <summary>World positions of every logged death for a server, for the heatmap.</summary>
-        public static List<(double X, double Y)> LoadPositions(string? serverKey)
+        /// <summary>
+        /// World positions of logged deaths for a server, for the heatmap; only those at or after
+        /// <paramref name="sinceUnixSeconds"/> when given, since the log spans every wipe.
+        /// </summary>
+        public static List<(double X, double Y)> LoadPositions(string? serverKey, long? sinceUnixSeconds = null)
         {
             return ReadEntries(serverKey)
                 .Where(e => e.x.HasValue && e.y.HasValue)
+                .Where(e => sinceUnixSeconds is null || e.died_at >= sinceUnixSeconds.Value)
                 .Select(e => (e.x!.Value, e.y!.Value))
                 .ToList();
         }
@@ -277,6 +281,8 @@ namespace RustPlusDesk.Services.Deaths
         {
             "monument" => "monument",
             "base" => "base",
+            "water" => "water",
+            "deep_sea" => "deep_sea",
             _ => "open",
         };
 
@@ -284,6 +290,8 @@ namespace RustPlusDesk.Services.Deaths
         {
             "monument" => "Monument",
             "base" => "Base",
+            "water" => "Water",
+            "deep_sea" => "Deep Sea",
             _ => "Open",
         };
 

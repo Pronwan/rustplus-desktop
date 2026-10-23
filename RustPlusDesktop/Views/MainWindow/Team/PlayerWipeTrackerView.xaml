@@ -45,6 +45,11 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <!-- A long wipe has thousands of timeline rows; only the visible ones get containers. -->
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+            <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
+            <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ListViewItem">

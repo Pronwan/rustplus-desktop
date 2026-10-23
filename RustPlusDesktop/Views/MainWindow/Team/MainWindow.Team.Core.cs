@@ -406,7 +406,7 @@ public partial class MainWindow
 
         // Monuments + bases both compare in world space; grid reuses the app's math.
         var classifier = new RustPlusDesk.Services.Deaths.DeathLocationClassifier(
-            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y));
+            BuildMonumentZones(), (x, y) => ResolveBaseAt(team, x, y), (x, y) => GetGridLabel(x, y), IsWaterAt);
 
         var deaths = _deathTracker.Observe(team, classifier);
         foreach (var death in deaths)

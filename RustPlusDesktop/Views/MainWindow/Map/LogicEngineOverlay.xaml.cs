@@ -212,6 +212,11 @@ namespace RustPlusDesk.Views
             };
 
             _vm.Selected.LogicRules.Add(newRule);
+
+            // The template is created enabled; with the engine left off it would stay silent once the
+            // alarm is picked, and look broken the first time a rig is hacked.
+            _vm.Selected.IsLogicEngineActive = true;
+
             Ach.Unlock(Ach.LogicRule);
             RefreshListBindings();
             _vm.Save();

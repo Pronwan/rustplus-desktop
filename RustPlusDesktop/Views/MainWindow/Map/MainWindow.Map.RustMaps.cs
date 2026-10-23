@@ -50,8 +50,9 @@ namespace RustPlusDesk.Views
                 string mapDataPath = System.IO.Path.Combine(folder, "map_data.json");
                 if (!System.IO.File.Exists(mapDataPath)) return;
 
-                using var doc = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(mapDataPath));
-                if (!doc.RootElement.TryGetProperty("size", out var sizeEl)) return;
+                // Cached: the overlays loaded next read the same parse.
+                if (Services.Map.ParsedMapDataCache.Load(folder) is not { } root) return;
+                if (!root.TryGetProperty("size", out var sizeEl)) return;
                 int parsedSize = sizeEl.GetInt32();
                 if (parsedSize <= 0) return;
 
@@ -458,15 +459,34 @@ namespace RustPlusDesk.Views
                 texture = ImgMap.Source as BitmapSource;
             }
 
-            var references = (_monData ?? new List<(double X, double Y, string Name)>())
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                .Take(12)
+            int effectiveWorldSize = _worldSizeS > 0 ? _worldSizeS : (serverCached?.WorldSize ?? 0);
+
+            var monList = _monData ?? new List<(double X, double Y, string Name)>();
+            var references = monList
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name) &&
+                            !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
+                            !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
+                .Take(25)
                 .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
                 .ToList();
 
+            if (references.Count < 3)
+            {
+                references = monList
+                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                    .Take(25)
+                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+                    .ToList();
+            }
+
+            string? knownMapPath = !string.IsNullOrEmpty(profile.LocalMapFilePath) && File.Exists(profile.LocalMapFilePath)
+                ? profile.LocalMapFilePath
+                : null;
+
             var result = await Map3DLocalBuildService.PrepareAsync(
-                profile, texture, profile.RustMapsMapId, references, _worldSizeS,
-                isPlaceholder ? profile.LocalMapFilePath : null);
+                profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
+                knownMapPath);
 
             if (result.NeedsManualMapSelection)
             {
@@ -486,12 +506,150 @@ namespace RustPlusDesk.Views
                     return null;
                 }
 
+                profile.LocalMapFilePath = picker.FileName;
+                _vm.Save();
+
                 result = await Map3DLocalBuildService.PrepareAsync(
-                    profile, texture, profile.RustMapsMapId, references, _worldSizeS, picker.FileName);
+                    profile, texture, profile.RustMapsMapId, references, effectiveWorldSize, picker.FileName, forceReparse: true);
             }
 
-            AppendLog($"{logPrefix} {result.StatusMessage} Folder: {result.FolderPath}");
+            if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
+            {
+                if (profile.LocalMapFilePath != result.MapFilePath)
+                {
+                    profile.LocalMapFilePath = result.MapFilePath;
+                    _vm.Save();
+                }
+            }
+
+            string parseSource = result.ReusedCachedData ? "reused cached parse" : $"parsed {result.AttemptCount} candidate(s)";
+            AppendLog($"{logPrefix} {result.StatusMessage} ({parseSource}, {result.Elapsed.TotalMilliseconds:F0} ms) Folder: {result.FolderPath}");
+
+            if (result.ParserReady) await EnsureOfflineMapImageAsync(profile);
             return result;
+        }
+
+        /// <summary>
+        /// Gives an offline map a 2D image when it was imported without one, by rendering
+        /// it from the map file with MapParser. Live servers keep their own map image.
+        /// </summary>
+        internal async Task EnsureOfflineMapImageAsync(ServerProfile profile)
+        {
+            string? mapFile = profile.LocalMapFilePath;
+            if (!IsOfflineOnlyProfile(profile) ||string.IsNullOrEmpty(mapFile) || !File.Exists(mapFile)) return;
+            if (!string.IsNullOrEmpty(profile.LocalMapImagePath) && File.Exists(profile.LocalMapImagePath)) return;
+
+            AppendLog($"[Offline Map] Rendering the map image for {profile.Name}...");
+            string? imagePath;
+            try
+            {
+                imagePath = await Task.Run(() => Map3DLocalBuildService.RenderMapImageAsync(profile, mapFile));
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not render the map image: {ex.Message}");
+                return;
+            }
+
+            if (imagePath == null)
+            {
+                AppendLog("[Offline Map] MapParser did not produce a map image.");
+                return;
+            }
+
+            profile.LocalMapImagePath = imagePath;
+            _vm.Save();
+            AppendLog($"[Offline Map] Map image ready: {imagePath}");
+
+            if (_vm.Selected != profile || _isMap3DActive) return;
+            await ShowOfflineMapAsync(profile);
+        }
+
+        private static bool IsOfflineOnlyProfile(ServerProfile profile)
+            => profile.Port == 0 || profile.PlayerToken == "offline";
+
+        /// <summary>
+        /// MapParser's render covers exactly the world, edge to edge, unlike a server's map
+        /// image which has an ocean margin around it. Only map_render_full.png is trusted:
+        /// map_texture.png may hold the server's image instead.
+        /// </summary>
+        private static bool IsParserRenderedImage(string imagePath)
+            => Path.GetFileName(imagePath).Equals(Map3DLocalBuildService.RenderedTextureFileName, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Shows a map that has no server behind it: its image, laid out at the right scale,
+        /// and the monuments the Rust+ API would have sent, rebuilt from the parsed map file.
+        /// </summary>
+        internal async Task ShowOfflineMapAsync(ServerProfile profile)
+        {
+            ResetMapDisplay();
+
+            string? imagePath = profile.LocalMapImagePath;
+            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath)) return;
+
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(imagePath);
+                bitmap.EndInit();
+                bitmap.Freeze();
+
+                ShowMapBasic(bitmap);
+                _isGeneratedMapActive = IsParserRenderedImage(imagePath);
+
+                // Restores the world size from map_data.json and lays the world out on the image.
+                TryRestoreWorldSizeFromCachedMapData(profile, bitmap);
+
+                string folder = Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+                string mapDataPath = Path.Combine(folder, "map_data.json");
+                if (_isGeneratedMapActive && !File.Exists(mapDataPath))
+                {
+                    // Rendered before any full parse: the render is one pixel per world unit.
+                    _worldSizeS = bitmap.PixelWidth;
+                    _worldRectPx = ComputeWorldRectFromWorldSize(
+                        bitmap.PixelWidth * (96.0 / bitmap.DpiX), bitmap.PixelHeight * (96.0 / bitmap.DpiY),
+                        _worldSizeS, GetCurrentMapPaddingWorld());
+                }
+
+                await LoadOfflineMainMonumentsAsync(profile, folder);
+                MergeCachedExtraMonumentsForCurrentMap();
+                BuildMonumentOverlays();
+
+                RedrawGrid();
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+                RedrawDeathPins();
+                RedrawDeathHeatmap();
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Failed to load local map image: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Fills the main monuments for an offline map from its parsed map file, since there
+        /// is no server to send them. Leaves them untouched when the map was not parsed yet.
+        /// </summary>
+        private async Task LoadOfflineMainMonumentsAsync(ServerProfile profile, string folder)
+        {
+            string mapDataPath = Path.Combine(folder, "map_data.json");
+            if (!File.Exists(mapDataPath)) return;
+
+            try
+            {
+                var monuments = await Task.Run(() => OfflineMonumentBuilder.BuildFromMapDataFile(mapDataPath));
+                if (!ReferenceEquals(_vm.Selected, profile)) return;
+
+                _monData = monuments.ToList();
+                AppendLog($"[Offline Map] Loaded {monuments.Count} monuments from the parsed map.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Offline Map] Could not read monuments from the parsed map: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -708,18 +866,79 @@ namespace RustPlusDesk.Views
         /// path was only ever loaded by the 3D path, and the keycard layers by
         /// neither, so both stayed greyed out however the map had been parsed.
         /// </summary>
-        private async Task LoadParsedMapDataAsync(string folderPath)
+        /// <param name="applyRenderedImage">
+        /// False when the caller already shows the rendered map image (server connect), so the
+        /// ~25 MB render is not decoded and laid out a second time.
+        /// </param>
+        private async Task LoadParsedMapDataAsync(string folderPath, bool applyRenderedImage = true)
         {
             _currentMapFolderPath = folderPath;
-            GenerateAndLoadExtraMonumentsForCurrentMap(folderPath);
-            await GenerateBuildingBlockedZonesForCurrentMap(folderPath);
+            if (_vm?.Selected is { } offlineProfile && IsOfflineOnlyProfile(offlineProfile))
+            {
+                await LoadOfflineMainMonumentsAsync(offlineProfile, folderPath);
+            }
+
+            // map_data.json runs to ~90 MB and every overlay below reads from it: read it
+            // (and map_resolved.json) once, off the UI thread, instead of once per overlay on it.
+            var mapRoot = await Services.Map.ParsedMapDataCache.LoadAsync(folderPath);
+            using var resolvedDoc = await Services.Map.ParsedMapDataCache.ParseFileAsync(Path.Combine(folderPath, "map_resolved.json"));
+            JsonElement? resolvedRoot = resolvedDoc?.RootElement;
+
+            if (mapRoot is { } root)
+            {
+                GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedRoot);
+                await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedRoot);
+            }
             LoadBuildingBlockedZonesForCurrentMap(folderPath);
-            LoadCargoPathForCurrentMap(folderPath);
-            LoadKeycardSitesForCurrentMap(folderPath);
+            LoadCargoPathForCurrentMap(mapRoot.HasValue ? folderPath : null, mapRoot);
+            LoadKeycardSitesForCurrentMap(mapRoot.HasValue ? folderPath : null, mapRoot);
 
             // Freshly parsed data is the reason someone waited for the parse, so the
             // keycard layers come up shown rather than needing another two clicks.
             EnableKeycardLayersAfterParse();
+
+            // Apply high-resolution generated Facepunch map image to the main app map view
+            string texPath = Path.Combine(folderPath, Map3DLocalBuildService.RenderedTextureFileName);
+            if (applyRenderedImage && File.Exists(texPath))
+            {
+                try
+                {
+                    // Decoding the render takes a second or more; keep it off the UI thread.
+                    var bi = await Task.Run(() =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.StreamSource = new MemoryStream(File.ReadAllBytes(texPath));
+                        image.EndInit();
+                        image.Freeze();
+                        return image;
+                    });
+
+                    _isGeneratedMapActive = true;
+                    Dispatcher.Invoke(() =>
+                    {
+                        ShowMapBasic(bi);
+                        SetupMapScene(bi);
+                        double wDip = bi.PixelWidth * (96.0 / bi.DpiX);
+                        double hDip = bi.PixelHeight * (96.0 / bi.DpiY);
+                        if (_worldSizeS > 0)
+                        {
+                            _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
+                        }
+                        RedrawGrid();
+                        RefreshAllOverlayScales();
+                        RefreshMonumentOverlayPositions();
+                        RedrawDeathPins();
+                        RedrawDeathHeatmap();
+                    });
+                    AppendLog($"[map-render] Applied high-resolution generated map image to main app map view ({bi.PixelWidth}x{bi.PixelHeight}).");
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[map-render] Note: could not apply generated map texture: {ex.Message}");
+                }
+            }
         }
 
         private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
@@ -1268,15 +1487,19 @@ namespace RustPlusDesk.Views
             if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
                 int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
 
+            // Our generated Facepunch map_texture.png has 0m padding (covers 0..worldSize exactly).
+            // Only the legacy low-res companion app texture has 2000m padding.
+            double padWorld = hasTexture ? 0.0 : 2000.0;
+
             if (parsedWorldSize > 0 && imageWidth > 0 && imageHeight > 0)
             {
                 // Recompute the world rect directly from the map's own size field so the UV
                 // is always correct, regardless of whether _worldSizeS was available.
-                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize);
+                worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize, padWorld);
             }
 
-            node["mapTexturePaddingWorld"] = 2000;
-            node["mapTextureAutoAlign"] = true;
+            node["mapTexturePaddingWorld"] = padWorld;
+            node["mapTextureAutoAlign"] = padWorld > 0;
             if (imageWidth > 0 && imageHeight > 0 && worldRectPx.Width > 0 && worldRectPx.Height > 0)
             {
                 node["mapTextureUv"] = new JsonObject
@@ -1556,6 +1779,8 @@ namespace RustPlusDesk.Views
                 }
             }
 
+            ApplyHalloweenEventGate();
+            SyncHeatmapDensitySlider();
             HeatmapPopup.IsOpen = true;
             UpdateBentoActiveStates();
         }
@@ -1572,11 +1797,13 @@ namespace RustPlusDesk.Views
             { "modularcar", "Modular Cars" }, { "horse", "Horses" },
             { "pedalbike", "Bicycles" }, { "hab", "Hot Air Balloons" },
             { "flowers", "Flowers" },
+            { "halloween_portal", "Halloween Portals" }, { "scarecrow", "Scarecrows" },
+            { "murderer", "Murderers" }, { "zombie", "Zombies" },
         };
 
         private void UpdateBentoActiveStates()
         {
-            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers", "halloween_portal", "scarecrow", "murderer", "zombie" };
             foreach (var cat in allCategories)
             {
                 var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
@@ -1605,6 +1832,16 @@ namespace RustPlusDesk.Views
             var glow = FindName("HeatmapActiveGlow") as System.Windows.Controls.Border;
             if (glow != null)
                 glow.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            // The map toolbar button names the layer that is on, so the colour on the
+            // map is never a mystery once the popup is closed.
+            var activeVisibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            HeatmapActiveOutline.Visibility = activeVisibility;
+            TxtHeatmapActiveName.Visibility = activeVisibility;
+            TxtHeatmapActiveName.Text = hasActive ? $"· {HeatmapLabels[_currentActiveHeatmap!]}" : "";
+            BtnToggleHeatmap.ToolTip = hasActive
+                ? $"Active: {HeatmapLabels[_currentActiveHeatmap!]} (from {Math.Round(TrackingService.HeatmapMinDensity * 100)}% density)"
+                : null;
         }
 
         private void HeatmapSearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -1614,7 +1851,7 @@ namespace RustPlusDesk.Views
 
             string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
 
-            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower", "halloween_portal", "scarecrow", "murderer", "zombie" };
 
             foreach (var cat in allCategories)
             {
@@ -1653,13 +1890,7 @@ namespace RustPlusDesk.Views
 
                 if (heatmapType == "clear")
                 {
-                    ImgHeatmap.Source = null;
-                    if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
-                    {
-                        var data = new { type = "CLEAR_HEATMAP" };
-                        string json = JsonSerializer.Serialize(data);
-                        _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
-                    }
+                    ClearActiveHeatmap();
                     return;
                 }
 
@@ -1667,10 +1898,29 @@ namespace RustPlusDesk.Views
                 {
                     try
                     {
+                        // The viewer loaded map_data.json before newer layers were added to it,
+                        // so hand those over directly (512 grid; the fine layers it already has).
+                        string? heatmapB64 = null;
+                        if (HalloweenHeatmapCategories.Contains(heatmapType) && _vm.Selected is { } viewerProfile)
+                        {
+                            string viewerDataPath = Path.Combine(
+                                Map3DLocalBuildService.GetPreparedFolderPath(viewerProfile, viewerProfile.RustMapsMapId), "map_data.json");
+                            if (File.Exists(viewerDataPath))
+                            {
+                                var raster = await ReadHeatmapRasterAsync(viewerDataPath, heatmapType);
+                                if (raster == null && await AddMissingHeatmapsAsync(viewerDataPath))
+                                    raster = await ReadHeatmapRasterAsync(viewerDataPath, heatmapType);
+                                if (raster is { Size: ResourceHeatmapRaster.Size } grid)
+                                    heatmapB64 = Convert.ToBase64String(grid.Data);
+                            }
+                        }
+
                         var data = new
                         {
                             type = "SHOW_HEATMAP",
-                            category = heatmapType
+                            category = heatmapType,
+                            minDensity = TrackingService.HeatmapMinDensity,
+                            heatmapB64
                         };
 
                         string json = JsonSerializer.Serialize(data);
@@ -1688,8 +1938,9 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task DrawHeatmapOn2DMapAsync(string category)
+        private async Task DrawHeatmapOn2DMapAsync(string category, bool allowReparse = true)
         {
+            bool missingCategory = false;
             var profile = _vm.Selected;
             if (profile == null) return;
 
@@ -1714,101 +1965,36 @@ namespace RustPlusDesk.Views
 
             try
             {
-                using var fs = new System.IO.FileStream(dataPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
-                using var doc = await System.Text.Json.JsonDocument.ParseAsync(fs);
-
-                if (doc.RootElement.TryGetProperty("heatmaps", out var heatmapsEl) &&
-                    heatmapsEl.TryGetProperty(category, out var b64El))
+                // The full-resolution heatmap (~2 m cells) when the parser wrote one, else the 512 grid.
+                if (await ReadHeatmapRasterAsync(dataPath, category) is { } heatmap)
                 {
-                    string b64 = b64El.GetString() ?? "";
-                    if (string.IsNullOrEmpty(b64)) return;
-
-                    byte[] rawData = Convert.FromBase64String(b64);
-                    int width = 512;
-                    int height = 512;
-                    if (rawData.Length != width * height) return;
-
-                    int[] pixels = new int[width * height];
-                    float[] blurred = new float[width * height];
-                    int radius = 3; // 7x7 blur
-
-                    for (int y = 0; y < height; y++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            float sum = 0;
-                            int count = 0;
-                            for (int dy = -radius; dy <= radius; dy++)
-                            {
-                                int ny = y + dy;
-                                if (ny < 0 || ny >= height) continue;
-                                for (int dx = -radius; dx <= radius; dx++)
-                                {
-                                    int nx = x + dx;
-                                    if (nx < 0 || nx >= width) continue;
-                                    sum += rawData[ny * width + nx];
-                                    count++;
-                                }
-                            }
-                            blurred[y * width + x] = sum / count;
-                        }
-                    }
-
-                    for (int y = 0; y < height; y++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            int destI = y * width + x;
-                            float original = rawData[destI];
-                            float val = Math.Max(blurred[destI], original);
-
-                            if (val <= 2)
-                            {
-                                pixels[destI] = 0;
-                                continue;
-                            }
-
-                            float t = Math.Min(1.0f, val / 255f);
-                            byte a = (byte)(t * 180 + 75);
-                            byte r = (byte)Math.Min(255, 255 * (t * 2));
-                            byte g = (byte)Math.Min(255, 255 * (2 - t * 2));
-                            byte b = 0;
-
-                            // Pre-multiply alpha for Pbgra32
-                            r = (byte)((r * a) / 255);
-                            g = (byte)((g * a) / 255);
-                            b = (byte)((b * a) / 255);
-
-                            pixels[destI] = (a << 24) | (r << 16) | (g << 8) | b;
-                        }
-                    }
-
-                    // Apply the scale and margin
-                    var ptTopLeft = WorldToImagePx(0, _worldSizeS);
-                    var ptBotRight = WorldToImagePx(_worldSizeS, 0);
-                    if (ptBotRight.X > ptTopLeft.X && ptBotRight.Y > ptTopLeft.Y)
-                    {
-                        ImgHeatmap.Width = ptBotRight.X - ptTopLeft.X;
-                        ImgHeatmap.Height = ptBotRight.Y - ptTopLeft.Y;
-                        ImgHeatmap.Margin = new Thickness(ptTopLeft.X, ptTopLeft.Y, 0, 0);
-                    }
-
-                    var writeableBmp = new System.Windows.Media.Imaging.WriteableBitmap(
-                        width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32, null);
-
-                    writeableBmp.WritePixels(new System.Windows.Int32Rect(0, 0, width, height), pixels, width * 4, 0);
-
-                    ImgHeatmap.Source = writeableBmp;
+                    await RenderHeatmapRasterAsync(heatmap.Data, heatmap.Size);
                 }
                 else
                 {
                     AppendLog($"[Heatmap] Category '{category}' not found in map data.");
+                    missingCategory = true;
                 }
             }
             catch (Exception ex)
             {
                 AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
             }
+
+            // A map parsed before this layer existed lacks it. A re-parse would reuse the
+            // cached result, so build just the missing layers from the parsed terrain instead.
+            if (missingCategory && allowReparse && await AddMissingHeatmapsAsync(dataPath))
+            {
+                await DrawHeatmapOn2DMapAsync(category, allowReparse: false);
+            }
+        }
+
+        private async Task<bool> AddMissingHeatmapsAsync(string dataPath)
+        {
+            AppendLog("[Heatmap] Adding the layers this map was parsed without...");
+            bool ok = await Map3DLocalBuildService.AddMissingHeatmapsAsync(dataPath);
+            AppendLog(ok ? "[Heatmap] Missing layers added." : "[Heatmap] Could not add the missing layers.");
+            return ok;
         }
 
         public void CheckAndExecutePendingMapCopy(ServerProfile connectedProfile)

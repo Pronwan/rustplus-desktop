@@ -1799,6 +1799,12 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Tümünü Sil</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Geçerli sunucunun haritasındaki tüm ölüm işaretlerini kaldırır.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Bu sunucunun haritasındaki tüm ölüm işaretleri kaldırılsın mı?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Kabul</value>
   </data>
@@ -1854,7 +1860,7 @@ Devam etmek istediğinizden emin misiniz?</value>
     <value>{0} gün</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Takım İşaretleyicileri</value>
+    <value>Harita İşaretleri</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Yürütme Modu</value>
@@ -2315,11 +2321,11 @@ Devam etmek istediğinizden emin misiniz?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Destekçi Olun</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Bizi destekleyin</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium'u şu adresten alın: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Otomatik Destekçi rolü ve Uygulama tespiti için Patreon'u Discord'a bağlayın.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle ile güvenli ödeme; Premium hesabınızda otomatik olarak açılır.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>İpucu yoluyla</value>
@@ -3443,6 +3449,24 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Katmanlar</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Ölüm ısı haritası</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Çözümlenmiş harita dosyası gerekir</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Haritada göster</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Herkesin sunucuya girmesine izin vermek için boş bırakın.</value>
   </data>
@@ -3625,6 +3649,9 @@ Lütfen önce bu sunucuyu eşleştirin.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Aksi takdirde:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>YOK</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ileri karakol</value>
@@ -6961,5 +6988,23 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   </data>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Genel ayarlar ve her kartın kendi saydamlığı, yazı boyutu ve rengi temizlensin mi? Kartların kendisi yerinde kalır.</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Sunucuları buluttan geri yükle</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bu hesabın eşleştirdiği sunucuları buluttan geri getirir. Listede zaten bulunan sunucular olduğu gibi kalır.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Sunucularını geri yüklemek için önce bulut hesabına giriş yap.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} sunucu geri yüklendi, {1} güncellendi.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Sunucu listen zaten bulutla eşleşiyor.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Buluta ulaşılamadı. Sunucu listen değişmedi.</value>
   </data>
 </root>

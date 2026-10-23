@@ -23,6 +23,7 @@ public partial class AppSettingsOverlay
         if (ChkGlobalChatTicker == null) return;
 
         Controls.Chat.GlobalChatTicker.SetHidden(ChkGlobalChatTicker.IsChecked != true);
+        RefreshServiceChips();
 
         // Applied now rather than on next launch: a setting that needs a restart to take effect
         // reads as one that did not work.

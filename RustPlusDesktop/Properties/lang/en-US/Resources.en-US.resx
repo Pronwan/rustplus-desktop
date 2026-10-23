@@ -1859,6 +1859,12 @@ Are you sure you want to continue?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Removes every death marker from the current server's map.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Remove every death marker from this server's map?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -2165,11 +2171,11 @@ Are you sure you want to continue?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Become a Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Support us on </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Get Premium on </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Link Patreon with Discord for automatic Supporter role &amp; App detection.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - secure checkout via Paddle; Premium unlocks on your account automatically.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip via </value>
@@ -2579,7 +2585,7 @@ Are you sure you want to continue?</value>
     <value>Close</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Team Markers</value>
+    <value>Map Markers</value>
   </data>
   <data name="KeepActive" xml:space="preserve">
     <value>No, keep active</value>
@@ -3503,6 +3509,24 @@ Please pair this server first.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Layers</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Death heatmap</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Needs the parsed map file</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Show on map</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Leave empty to allow everyone on the server.</value>
   </data>
@@ -3703,6 +3727,9 @@ Please pair this server first.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Otherwise:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NONE</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>OUTPOST</value>
@@ -6486,5 +6513,23 @@ You can find more information on the server's official website:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recycling Calculator</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restore servers from cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bring back the servers this account has paired, from the cloud. Servers already in the list are kept as they are.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Sign in to your cloud account first to restore your servers.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Restored {0} server(s) and refreshed {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Your server list already matches the cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Could not reach the cloud. Your server list is unchanged.</value>
   </data>
 </root>

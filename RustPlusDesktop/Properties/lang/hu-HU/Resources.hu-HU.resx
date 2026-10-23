@@ -1799,6 +1799,12 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Eltávolítja az összes halálozási jelölőt a jelenlegi szerver térképéről.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Eltávolítod az összes halálozási jelölőt a szerver térképéről?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Biztos, hogy folytatni szeretné?</value>
     <value>{0} nap</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Csapatjelzők</value>
+    <value>Térképjelölők</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Végrehajtási mód</value>
@@ -2315,11 +2321,11 @@ Biztos, hogy folytatni szeretné?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Legyél Támogató</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Támogass minket</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Szerezd meg a Premiumot itt: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Kapcsolja össze a Patreont a Discord-dal az automatikus támogatói szerep és az alkalmazás észleléséhez.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - biztonságos fizetés a Paddle-on keresztül; a Premium automatikusan aktiválódik a fiókodon.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tipp keresztül</value>
@@ -3443,6 +3449,24 @@ Kérjük, először párosítsa ezt a szervert.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Rétegek</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Megjelenés</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Halálozási hőtérkép</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>A feldolgozott térképfájl szükséges</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Átlátszatlanság</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Méret</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Megjelenítés a térképen</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Hagyja üresen, hogy mindenki a szerveren legyen.</value>
   </data>
@@ -3625,6 +3649,9 @@ Kérjük, először párosítsa ezt a szervert.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Egyébként:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NINCS</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>OUTPOST</value>
@@ -5776,5 +5803,23 @@ További információkat a szerver hivatalos honlapján talál:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Újrahasznosítási kalkulátor</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Szerverek visszaállítása a felhőből</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Visszahozza a felhőből a fiókhoz párosított szervereket. A listában már szereplő szerverek változatlanok maradnak.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>A szerverek visszaállításához előbb jelentkezz be a felhőfiókodba.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} szerver visszaállítva, {1} frissítve.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>A szerverlistád már megegyezik a felhővel.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>A felhő nem érhető el. A szerverlistád nem változott.</value>
   </data>
 </root>

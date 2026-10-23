@@ -284,6 +284,9 @@ public partial class TransferDevicesDialog : FluentWindow
         if (deleteSource)
         {
             _vm.Servers.Remove(_source);
+            var source = _source;
+            var remaining = _vm.Servers.ToList();
+            _ = Task.Run(() => RustPlusDesk.Services.Data.ServerLocalDataCleanup.DeleteFor(source, remaining));
         }
 
         _vm.Save();

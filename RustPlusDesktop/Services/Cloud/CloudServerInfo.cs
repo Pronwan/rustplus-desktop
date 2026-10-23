@@ -81,6 +81,9 @@ namespace RustPlusDesk.Services.Cloud
             }
         }
 
+        /// <summary>Let a server that was removed register its pairing again if it is re-added.</summary>
+        public static void ForgetPaired(string serverKey) => Paired.TryRemove(serverKey, out _);
+
         /// <summary>Forget what has been reported, e.g. after signing out.</summary>
         public static void Reset()
         {

@@ -1799,6 +1799,12 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>現在のサーバーのマップから死亡マーカーをすべて削除します。</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>このサーバーのマップから死亡マーカーをすべて削除しますか？</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
     <value>{0} 日</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>チームマーカー</value>
+    <value>マップマーカー</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>実行モード</value>
@@ -2315,11 +2321,11 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>サポーターになる</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>サポートしてください</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium の購入はこちら: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Patreon を Discord にリンクすると、サポーターの役割とアプリが自動的に検出されます。</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle による安全な決済。Premium はアカウントで自動的に有効になります。</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>チップ経由</value>
@@ -3443,6 +3449,24 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   <data name="UiLayers" xml:space="preserve">
     <value>レイヤー</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>外観</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>死亡ヒートマップ</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>解析済みのマップファイルが必要です</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>サイズ</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>マップに表示</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>サーバー上の全員を許可するには、空のままにします。</value>
   </data>
@@ -3625,6 +3649,9 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>それ以外の場合:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>なし</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>前哨基地</value>
@@ -5869,5 +5896,23 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>リサイクル計算機</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>クラウドからサーバーを復元</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>このアカウントでペアリングしたサーバーをクラウドから復元します。既にリストにあるサーバーはそのまま残ります。</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>サーバーを復元するには、先にクラウドアカウントにサインインしてください。</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} 件のサーバーを復元し、{1} 件を更新しました。</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>サーバーリストは既にクラウドと一致しています。</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>クラウドに接続できませんでした。サーバーリストは変更されていません。</value>
   </data>
 </root>

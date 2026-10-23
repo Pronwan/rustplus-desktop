@@ -516,6 +516,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         StartSessionTracking();
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
+        StartHalloweenEventGate();
         ApplySettings();
         LoadPersistentAlerts();
         RefreshEventDock();
@@ -564,10 +565,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         WebViewHost.MouseDown += WebViewHost_MouseDown;
         WebViewHost.MouseMove += WebViewHost_MouseMove;
         WebViewHost.MouseUp += WebViewHost_MouseUp;
+        WebViewHost.MouseEnter += (s, e) => ApplyToolCursor();
 
         WebViewHost.KeyDown += WebViewHost_KeyDown;
         WebViewHost.KeyUp += WebViewHost_KeyUp;
         WebViewHost.Focusable = true;
+        ApplyToolCursor();
         DataContext = _vm;
         _vm.Load();
 
@@ -635,7 +638,19 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
 
             StartPairingSilent(true);
-            
+
+            // Servers paired before we kept Facepunch's server id can't use the companion socket
+            // yet; look their ids up once per launch so they move off direct connections.
+            var serversWithoutId = _vm.Servers.Where(s => string.IsNullOrWhiteSpace(s.ServerId)).ToList();
+            if (serversWithoutId.Count > 0)
+            {
+                _ = Task.Run(async () =>
+                {
+                    var filled = await ServerIdBackfill.RunAsync(serversWithoutId, msg => Dispatcher.BeginInvoke(() => AppendLog(msg)));
+                    if (filled > 0) await Dispatcher.InvokeAsync(() => _vm.Save());
+                });
+            }
+
             // Auto-connect if enabled and not already connected
             if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
             {
@@ -1589,15 +1604,39 @@ public partial class MainWindow : WpfUi.FluentWindow
     {
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
 
-        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
-        // can land on different threads.
-        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+        AttachCloudPairingAnnouncements();
 
-        _ = Task.Run(async () =>
+        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
+        // can land on different threads. A request that lands mid-import is kept for a
+        // second pass rather than dropped: the running one may already have read the
+        // platform before the pairing that triggered it was saved.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1)
+        {
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 1);
+            return;
+        }
+
+        // On the dispatcher rather than Task.Run: the merge goes into the bound server
+        // list, which is the copy every later save writes back. An import written only
+        // to the file was overwritten by the next save. Only the request awaits; the
+        // UI thread is not held while the platform answers.
+        _ = Dispatcher.InvokeAsync(async () =>
         {
             try
             {
-                var result = await Services.Cloud.CloudPairingImporter.ImportAsync();
+                // A missing profiles file was lost or never existed here. The cursor still
+                // remembers what a lost one held, so "only what changed" would bring nothing
+                // back. An empty file is not this case: that is someone who removed every
+                // server, and restoring them unasked would undo it. Kept pending until an
+                // import gets through, so a first launch offline still restores later.
+                if (Services.Data.ProfileDataModule.ProfilesFileWasMissing)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, true);
+
+                bool restore = Services.StorageService.LoadCache<bool>(CloudRestorePendingKey) && _vm.Servers.Count == 0;
+                var result = await ImportCloudPairingsIntoListAsync(full: restore);
+
+                if (result != null || _vm.Servers.Count > 0)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, false);
 
                 if (result is { ChangedAnything: true })
                 {
@@ -1613,8 +1652,120 @@ public partial class MainWindow : WpfUi.FluentWindow
             finally
             {
                 System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+
+                if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 0) == 1)
+                    TryImportCloudPairings();
             }
         });
+    }
+
+    private int _cloudPairingImportAgain;
+    private int _cloudPairingAnnouncementsAttached;
+
+    /// <summary>
+    /// Import as soon as the cloud announces a pairing, rather than at the next launch.
+    ///
+    /// The cloud's listener receives in-game pairings whether or not this app is running,
+    /// and says so on the account's private channel (devices_changed). Without this, a
+    /// server paired while the app is open but its own pairing listener is not running
+    /// only appeared after a restart.
+    /// </summary>
+    private void AttachCloudPairingAnnouncements()
+    {
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingAnnouncementsAttached, 1) == 1) return;
+
+        Services.Cloud.RealtimeClient.Shared.EventReceived += OnCloudPairingAnnouncement;
+
+        // The account channel is the social layer's subscription; asking again is a no-op
+        // once it runs, and makes sure it does when no social panel has started it yet.
+        Services.Social.SocialRealtime.EnsureStarted();
+    }
+
+    private void OnCloudPairingAnnouncement(string channel, string eventName, Newtonsoft.Json.Linq.JObject data)
+    {
+        if (eventName != "devices_changed") return;
+
+        // Teammates' changes arrive on shared channels too; only this account's pairings import.
+        var me = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
+        if (string.IsNullOrWhiteSpace(me) || data["user_id"]?.ToString() != me) return;
+
+        // The same event carries every switch flip and storage reading. A pairing is the
+        // one with no entity (a server) or one marked paired (a device); the rest would
+        // only cost an empty round trip each.
+        bool isPairing = data["entity_id"] == null
+            || (data["device_state"]?["paired"] as Newtonsoft.Json.Linq.JValue)?.Value is true;
+        if (!isPairing) return;
+
+        Dispatcher.BeginInvoke(new Action(TryImportCloudPairings));
+    }
+
+    /// <summary>Set while a lost profiles file is still waiting for its servers to come back.</summary>
+    private const string CloudRestorePendingKey = "cloud_pairings_restore_pending";
+
+    /// <summary>Merge the platform's pairings into the live server list and save it.</summary>
+    internal async Task<Services.Cloud.CloudPairingImporter.ImportResult?> ImportCloudPairingsIntoListAsync(bool full)
+    {
+        var result = await Services.Cloud.CloudPairingImporter.ImportIntoAsync(_vm.Servers, _vm.Save, full);
+
+        // Load() preselects the first server so the device list has something to show;
+        // a list that was empty until now needs the same.
+        if (result is { Added: > 0 } && _vm.Selected == null && _vm.Servers.Count > 0)
+            _vm.Selected = _vm.Servers[0];
+
+        return result;
+    }
+
+    /// <summary>
+    /// Bring back every server the account has paired, whatever the cursor says.
+    ///
+    /// For a profiles file that was deleted, reset, or never came across to this PC.
+    /// Servers already in the list keep their settings; only what a re-pair changes is
+    /// taken, same as the background import.
+    /// </summary>
+    private async void BtnRestoreCloudServers_Click(object sender, RoutedEventArgs e)
+    {
+        var title = Properties.Resources.GetString("RestoreServersFromCloud");
+
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
+        {
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersSignInFirst"), WpfUi.ControlAppearance.Caution);
+            return;
+        }
+
+        // Shares the background import's flag so the two never merge into the list at once.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+
+        BtnRestoreCloudServers.IsEnabled = false;
+        try
+        {
+            var result = await ImportCloudPairingsIntoListAsync(full: true);
+
+            if (result == null)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+            }
+            else if (!result.ChangedAnything)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersNothing"), WpfUi.ControlAppearance.Info);
+            }
+            else
+            {
+                SafeLog($"[Cloud pairings] Restore: {result.Added} server(s) added, {result.Updated} update(s), {result.DevicesAdded} device(s).");
+                ShowInfoSnackbar(title,
+                    string.Format(Properties.Resources.GetString("RestoreServersDone"), result.Added, result.Updated),
+                    WpfUi.ControlAppearance.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            SafeLog($"[Cloud pairings] Restore failed: {ex.Message}");
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+        }
+        finally
+        {
+            BtnRestoreCloudServers.IsEnabled = true;
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+        }
     }
 
     /// <summary>
@@ -2911,7 +3062,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             EntityId = n.EntityId,
             Timestamp = eventTime,
-            FcmNotificationId = n.FcmNotificationId
+            FcmNotificationId = n.FcmNotificationId,
+            ImageUrl = n.ImageUrl
         };
         NotificationCenterService.AddNotification(notif);
 
@@ -3207,17 +3359,20 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TrackingService.AddOfflineDeath(d);
 
         // Add to Notification Center
+        // Worded as the Rust+ app and the live map word it: who killed you as the title,
+        // where as the line under it.
         var notif = new RustPlusNotification(
             type: "Death",
-            title: "Offline Death",
-            message: $"You were killed by {d.AttackerName} on {d.ServerName}",
+            title: $"You were killed by {d.AttackerName}",
+            message: d.ServerName,
             serverIp: d.Ip,
             serverPort: d.Port,
             serverName: d.ServerName
         )
         {
             AttackerName = d.AttackerName,
-            Timestamp = d.Timestamp
+            Timestamp = d.Timestamp,
+            ImageUrl = d.ImageUrl
         };
         NotificationCenterService.AddNotification(notif);
 
@@ -3741,6 +3896,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 
                 AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
                 ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
             }
         }
         catch (Exception ex)
@@ -3954,6 +4110,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
                 AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
                 ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
                 this.Activate();
                 return;
             }
@@ -4041,7 +4198,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
     private void CaptureFcmServerDescription(PairingPayload info)
     {
-        if (string.IsNullOrWhiteSpace(info.ServerDescription)) return;
+        if (string.IsNullOrWhiteSpace(info.ServerDescription) && string.IsNullOrWhiteSpace(info.ServerId)) return;
 
         var profile = !string.IsNullOrWhiteSpace(info.Host)
             ? _vm.Servers.FirstOrDefault(server =>
@@ -4052,10 +4209,23 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             ? _vm.Servers.FirstOrDefault(server => server.Name.Equals(info.ServerName, StringComparison.OrdinalIgnoreCase))
             : null;
 
-        if (profile == null || !string.IsNullOrWhiteSpace(profile.Description)) return;
-        profile.Description = info.ServerDescription.Trim();
-        _vm.Save();
-        AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+        if (profile == null) return;
+
+        bool changed = false;
+        if (string.IsNullOrWhiteSpace(profile.Description) && !string.IsNullOrWhiteSpace(info.ServerDescription))
+        {
+            profile.Description = info.ServerDescription.Trim();
+            changed = true;
+            AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+        }
+        // Only matched by host and port here, so fill a missing id but never overwrite one.
+        if (string.IsNullOrWhiteSpace(profile.ServerId) && !string.IsNullOrWhiteSpace(info.ServerId))
+        {
+            profile.ServerId = info.ServerId;
+            changed = true;
+            AppendLog($"[FCM] Saved server id for '{profile.Name}'.");
+        }
+        if (changed) _vm.Save();
     }
 
     private void Pairing_Paired(object? sender, PairingPayload e)
@@ -4091,12 +4261,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _ = Dispatcher.InvokeAsync(async () =>
         {
             // Add to Notification Center!
-            var pairedMsg = e.EntityId.HasValue 
-                ? $"Paired device: {e.EntityName ?? "Smart Device"} (ID: {e.EntityId.Value}, Type: {e.EntityType ?? "Unknown"})"
-                : $"Paired server: {e.ServerName ?? e.Host}:{e.Port}";
+            // The thing that was paired is the title, as on the live map; the line under it
+            // says what happened.
+            var pairedTitle = e.EntityId.HasValue
+                ? e.EntityName ?? "Smart Device"
+                : e.ServerName ?? $"{e.Host}:{e.Port}";
+            var pairedMsg = e.EntityId.HasValue
+                ? $"{e.EntityType ?? "Device"} paired (ID {e.EntityId.Value})"
+                : "Server paired.";
             var notif = new RustPlusNotification(
                 type: "Pairing",
-                title: "Pairing Successful",
+                title: pairedTitle,
                 message: pairedMsg,
                 serverIp: e.Host,
                 serverPort: e.Port,
@@ -4105,7 +4280,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 EntityId = e.EntityId,
                 EntityName = e.EntityName,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                ImageUrl = e.ImageUrl
             };
             NotificationCenterService.AddNotification(notif);
 
@@ -4151,10 +4327,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 SetSidebarExpanded(_isSidebarPinnedExpanded);
             }
 
-            var prof = _vm.Servers.FirstOrDefault(s =>
-                s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
-                s.Port == keyPort &&
-                s.SteamId64 == keySteam);
+            // Facepunch's server id is the one identity that survives an address or port
+            // change, so it wins over host:port whenever both sides have it.
+            var prof = (!string.IsNullOrWhiteSpace(e.ServerId)
+                    ? _vm.Servers.FirstOrDefault(s =>
+                        string.Equals(s.ServerId, e.ServerId, StringComparison.OrdinalIgnoreCase) &&
+                        s.SteamId64 == keySteam)
+                    : null)
+                ?? _vm.Servers.FirstOrDefault(s =>
+                    s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
+                    s.Port == keyPort &&
+                    s.SteamId64 == keySteam);
 
             var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
 
@@ -4242,6 +4425,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     prof.Port = keyPort;
                     prof.PlayerToken = e.PlayerToken;
                     prof.SteamId64 = keySteam;
+                    if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
                     if (!string.IsNullOrWhiteSpace(e.ServerName)) prof.Name = e.ServerName;
                     prof.IsAccessDenied = false;
                     prof.Devices ??= new ObservableCollection<SmartDevice>();
@@ -4254,6 +4438,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         Name = serverName,
                         Host = e.Host ?? string.Empty,
                         Port = e.Port,
+                        ServerId = e.ServerId,
                         SteamId64 = keySteam,
                         PlayerToken = e.PlayerToken,
                         IsAccessDenied = false,
@@ -4267,10 +4452,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             else
             {
                 prof.Name = serverName;
+                // Matched by id, the address is the part that may have moved.
+                if (!string.IsNullOrWhiteSpace(keyHost)) prof.Host = keyHost;
+                if (keyPort > 0) prof.Port = keyPort;
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
+                if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
                 prof.IsAccessDenied = false;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
+                _vm.Save();
                 AppendLog($"[pairing] Pairing updated -> {prof.Name}");
             }
 
@@ -4676,7 +4866,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             try
             {
                 string steamIdStr = _mySteamId > 0 ? _mySteamId.ToString() : string.Empty;
-                if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    // The legacy route below only clears the overlay on the platform and leaves
+                    // the pairing live, so "Restore servers from cloud" brought deleted servers
+                    // back. This removes the pairing itself, and queues the delete when it
+                    // cannot be sent now.
+                    if (await Services.Cloud.CloudPairingImporter.ForgetServerAsync(prof.Host, prof.Port))
+                        AppendLog($"[Cloud] Removed server {prof.Name} ({prof.Host}:{prof.Port}) from the cloud.");
+                    else
+                        AppendLog($"[Cloud] Server {prof.Name} will be removed from the cloud on the next sync.");
+                }
+                else if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
                 {
                     bool cleaned = await Services.Auth.SupabaseCloudCleanupService.DeleteCloudDataForServerAsync(prof.Host, prof.Port, steamIdStr);
                     if (cleaned)
@@ -4689,12 +4890,74 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
             }
+
+            var remaining = _vm.Servers.ToList();
+            int removedLocal = await Task.Run(() => Services.Data.ServerLocalDataCleanup.DeleteFor(prof, remaining));
+            AppendLog($"Removed {removedLocal} local file(s) and folder(s) stored for {prof.Name}.");
         }
 
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
         _serverToDelete = null;
     }
 
+    private void ServerContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is ContextMenu menu)
+        {
+            var prof = (menu.PlacementTarget as FrameworkElement)?.DataContext as ServerProfile;
+            bool hasParsed = prof != null && Services.Data.ServerLocalDataCleanup.HasParsed3DMapFor(prof);
+            prof?.Notify3DMapStateChanged();
+
+            foreach (var item in menu.Items.OfType<MenuItem>())
+            {
+                if (item.Name == "MenuClear3DMap")
+                {
+                    item.Visibility = hasParsed ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+        }
+    }
+
+    private void Server_Clear3DMap_Click(object sender, RoutedEventArgs e)
+    {
+        ServerProfile? prof = null;
+        if (sender is MenuItem menuItem)
+        {
+            prof = menuItem.Tag as ServerProfile ?? (menuItem.DataContext as ServerProfile);
+        }
+
+        prof ??= _vm.Selected;
+        if (prof == null) return;
+
+        var confirm = MessageBox.Show(
+            $"Are you sure you want to clear 3D map data for '{prof.Name}'?",
+            "Clear 3D Map Data",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        try
+        {
+            if (_isMap3DActive && _vm.Selected == prof)
+            {
+                CloseMap3DView();
+            }
+
+            _lastExtraMonuments = null;
+            int removed = Services.Data.ServerLocalDataCleanup.Clear3DMapDataFor(prof);
+            prof.Notify3DMapStateChanged();
+            UpdateRustMapsUi();
+
+            AppendLog($"[3D Map] Cleared {removed} 3D map data folder(s)/files for {prof.Name}.");
+            ShowInfoSnackbar("3D Map", $"Cleared 3D map data for '{prof.Name}'.", WpfUi.ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[3D Map] Error clearing 3D map data for {prof.Name}: {ex.Message}");
+            MessageBox.Show($"Failed to clear 3D map data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {
@@ -5791,13 +6054,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
     private void BtnSupport_Click(object sender, RoutedEventArgs e) => OpenSupporterPage();
 
+    /// <summary>Paddle checkout lives here; every "upgrade" button in the app leads to it.</summary>
+    internal const string PricingUrl = "https://rustplusdesktop.cloud/pricing";
+
+    /// <summary>Premium users already have everything; their button reads "Support Development".</summary>
+    private const string SupportDevelopmentUrl = "https://www.patreon.com/cw/Pronwan";
+
     internal void OpenSupporterPage()
     {
         try
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = "https://www.patreon.com/cw/Pronwan",
+                FileName = _vm.IsPremium ? SupportDevelopmentUrl : PricingUrl,
                 UseShellExecute = true   // öffnet im Standard-Browser
             });
         }

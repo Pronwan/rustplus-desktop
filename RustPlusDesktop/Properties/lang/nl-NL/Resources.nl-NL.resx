@@ -1799,6 +1799,12 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Verwijdert alle doodsmarkeringen van de kaart van de huidige server.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Alle doodsmarkeringen van de kaart van deze server verwijderen?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Weet je zeker dat je wilt doorgaan?</value>
     <value>{0} dagen</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Teammarkeringen</value>
+    <value>Kaartmarkeringen</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Uitvoeringsmodus</value>
@@ -2315,11 +2321,11 @@ Weet je zeker dat je wilt doorgaan?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Word supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Steun ons verder</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Haal Premium op </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Koppel Patreon met Discord voor automatische Supporter-rol en app-detectie.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - veilig afrekenen via Paddle; Premium wordt automatisch op je account ontgrendeld.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip via</value>
@@ -3443,6 +3449,24 @@ Koppel deze server eerst.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Lagen</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Weergave</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Doden-heatmap</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Vereist het geanalyseerde kaartbestand</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Dekking</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Grootte</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Tonen op kaart</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Laat dit leeg om iedereen op de server toe te staan.</value>
   </data>
@@ -3625,6 +3649,9 @@ Koppel deze server eerst.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Anders:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>GEEN</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>BUITENPOST</value>
@@ -5782,5 +5809,23 @@ Meer informatie vindt u op de officiële website van de server:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recyclingcalculator</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Servers herstellen vanuit de cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Haalt de servers die dit account heeft gekoppeld terug uit de cloud. Servers die al in de lijst staan, blijven ongewijzigd.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Meld je eerst aan bij je cloudaccount om je servers te herstellen.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} server(s) hersteld en {1} vernieuwd.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Je serverlijst komt al overeen met de cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kan de cloud niet bereiken. Je serverlijst is ongewijzigd.</value>
   </data>
 </root>

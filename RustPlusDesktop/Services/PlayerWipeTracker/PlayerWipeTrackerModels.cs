@@ -20,6 +20,20 @@ public enum TrackerLocationType
     Base,
     Open,
     Unknown,
+    // Appended, never inserted: the record file stores these as numbers.
+    Water,
+    DeepSea,
+}
+
+public static class TrackerLocationTypeText
+{
+    /// <summary>For people: "Deep Sea" rather than the identifier.</summary>
+    public static string Label(this TrackerLocationType type)
+        => type == TrackerLocationType.DeepSea ? "Deep Sea" : type.ToString();
+
+    /// <summary>The backend's and the export's spelling; ToString() would give "deepsea".</summary>
+    public static string Wire(this TrackerLocationType type)
+        => type == TrackerLocationType.DeepSea ? "deep_sea" : type.ToString().ToLowerInvariant();
 }
 
 public sealed record PlayerObservation(
@@ -110,7 +124,10 @@ public sealed record TrackerPoint(
     string? LocationName,
     string? Grid,
     string? Event,
-    string SessionId);
+    string SessionId,
+    // True when the player did not travel here from the previous point (death, respawn, Deep Sea,
+    // a gap); routes break here and the step is not counted as distance.
+    bool BreakBefore = false);
 
 public readonly record struct TrackerMapProjection(
     double ViewWidth,

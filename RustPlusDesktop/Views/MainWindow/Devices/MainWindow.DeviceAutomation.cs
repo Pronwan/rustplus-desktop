@@ -107,7 +107,10 @@ public partial class MainWindow
                     || target.IsMissing
                     || !string.Equals(target.Kind?.Replace(" ", ""), "SmartSwitch", StringComparison.OrdinalIgnoreCase))
                     continue;
-                decisions.Add((rule, target, matched ? rule.MatchedState : rule.UnmatchedState));
+                // "None" for the unmatched case: the rule only acts while its condition holds.
+                bool? state = matched ? rule.MatchedState : rule.UnmatchedState;
+                if (state is not bool desired) continue;
+                decisions.Add((rule, target, desired));
             }
 
             foreach (var targetGroup in decisions.GroupBy(decision => decision.Target.EntityId))

@@ -18,6 +18,7 @@ namespace RustPlusDesk.Models;
         int? Port = null,
         string? Title = null,
         string? FcmNotificationId = null,
-        DateTime? EventTime = null
+        DateTime? EventTime = null,
+        string? ImageUrl = null
     );
 

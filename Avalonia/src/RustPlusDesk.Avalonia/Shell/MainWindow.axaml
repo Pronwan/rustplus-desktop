@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:servers="using:RustPlusDesk.Avalonia.Features.Servers"
+        xmlns:devices="using:RustPlusDesk.Avalonia.Features.Devices"
+        xmlns:accounts="using:RustPlusDesk.Avalonia.Features.Accounts"
+        xmlns:recycling="using:RustPlusDesk.Avalonia.Features.Recycling"
+        xmlns:shell="using:RustPlusDesk.Avalonia.Shell"
+        x:Class="RustPlusDesk.Avalonia.Shell.MainWindow"
+        x:DataType="servers:ServersViewModel"
+        Title="Rust+ Desktop — Cross-platform preview"
+        Icon="/Assets/app.ico" Width="1380" Height="950" MinWidth="1000" MinHeight="700"
+        WindowDecorations="Full">
+  <Window.KeyBindings><KeyBinding Gesture="Escape" Command="{Binding CloseRecyclerCommand}" /></Window.KeyBindings>
+  <Grid RowDefinitions="42,*,26">
+    <Grid ColumnDefinitions="*,Auto" Margin="14,0" IsEnabled="{Binding !HasOverlay}">
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <Image Source="/Assets/app.ico" Width="20" Height="20" />
+        <TextBlock Text="RUST+ DESKTOP" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+        <TextBlock Text="Avalonia preview" FontSize="11" Classes="muted" VerticalAlignment="Center" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <TextBlock Text="Sign in for Rust+ pairing" Classes="muted" VerticalAlignment="Center" IsVisible="{Binding RequiresSignIn}" />
+        <TextBlock Text="Pairing active" Classes="muted" VerticalAlignment="Center"
+                   IsVisible="{Binding Listener.IsRunning, FallbackValue=False}" />
+        <Button Content="_Account" Command="{Binding OpenAccountCommand}" IsVisible="{Binding HasAccount}" />
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="60,*" IsEnabled="{Binding !HasOverlay}">
+      <shell:NavigationRail />
+      <SplitView Grid.Column="1" x:Name="WorkspaceSplit" DisplayMode="Inline" IsPaneOpen="{Binding IsSidebarOpen, Mode=TwoWay}" OpenPaneLength="400">
+        <SplitView.Pane>
+          <Grid ColumnDefinitions="*,4">
+            <shell:ServerDevicePane />
+            <Thumb Grid.Column="1" DragDelta="ResizeSidebar" KeyDown="ResizeSidebarKeyDown" Focusable="True" Background="{DynamicResource CardBorder}"
+                   Cursor="SizeWestEast" AutomationProperties.Name="Resize server and device panel" />
+          </Grid>
+        </SplitView.Pane>
+        <Grid>
+          <shell:MapWorkspace x:Name="MapArea" IsVisible="{Binding !IsRecyclerSelected}" />
+          <Border Classes="card" CornerRadius="0" Padding="16" IsVisible="{Binding IsRecyclerSelected}">
+            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Recycling calculator" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Content="_Close" Command="{Binding CloseRecyclerCommand}" />
+              </Grid>
+              <recycling:RecyclerView Grid.Row="1" DataContext="{Binding Recycler}" />
+            </Grid>
+          </Border>
+        </Grid>
+      </SplitView>
+    </Grid>
+    <Border Grid.Row="2" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" Padding="10,3">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+        <TextBlock Text="{Binding Connection.StatusMessage}" FontSize="11" Classes="muted" TextTrimming="CharacterEllipsis" MaxWidth="300" />
+        <TextBlock Grid.Column="1" Text="{Binding ToolMessage}" FontSize="11" Classes="muted" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Column="2" Text="Migration preview" FontSize="11" Classes="muted" />
+      </Grid>
+    </Border>
+    <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding HasEditor}">
+      <servers:ServerEditorView DataContext="{Binding Editor}" />
+    </Border>
+    <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding HasOrganizer}">
+      <devices:DeviceOrganizerView DataContext="{Binding Organizer}" />
+    </Border>
+    <Border Grid.RowSpan="3" Background="#B0000000" IsVisible="{Binding IsAccountOpen}">
+      <Border Classes="card" Width="520" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid RowDefinitions="Auto,Auto" RowSpacing="16" KeyboardNavigation.TabNavigation="Cycle">
+        <ScrollViewer MaxHeight="500" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="16">
+          <accounts:CompanionAccountView DataContext="{Binding Account}" IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).IsAccountOpen}" />
+          <accounts:CompanionListenerView DataContext="{Binding Listener}"
+              IsVisible="{Binding $parent[Window].((servers:ServersViewModel)DataContext).HasListener}"
+              IsEnabled="{Binding !$parent[Window].((servers:ServersViewModel)DataContext).Account.IsBusy}" />
+        </StackPanel>
+        </ScrollViewer>
+          <Button Grid.Row="1" Content="_Close" Command="{Binding CloseAccountCommand}" HorizontalAlignment="Right" />
+        </Grid>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

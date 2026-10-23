@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v10.2.0 UPDATE -->
+                            <!-- v10.3.0 UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v10_2_0"
+                            <Border x:Name="Card_v10_3_0"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -229,6 +229,71 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
+                                            <TextBlock Text="v10.3.0 | Halloween Heatmaps, High-Res Generated Maps &amp; Smoother Map Controls"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Halloween Event Heatmaps:</Run>
+                                        While the Halloween event runs, a Halloween section appears in the heatmap menu with the areas where portals, scarecrows, murderers and zombies can spawn. Portals turn up at random spots each time, so the map shows everywhere one can appear. The section switches itself on and off with the event.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Heatmap Density Slider &amp; Active Layer:</Run>
+                                        A "Show from" slider sets how sparse an area can be and still get colour, from only the densest spawns down to every place a spawn can appear; the death heatmap gets the same slider and a count of the deaths it shows. The map's Heatmaps button names the layer that is on, every heatmap is scaled to its own range at full map resolution, and the menu shows every layer without scrolling.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; High-Resolution Generated Maps:</Run>
+                                        The app parses the server's map file itself and renders a high-resolution map image from it, used on the 2D map at its real scale and for imported offline maps, which now show their monuments too. A parsed map is reused for the whole wipe, layers added in later versions are filled in for an already-parsed map in about a second, and loading a parsed map no longer freezes the window.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; 3D Map Terrain, Rivers &amp; Power Lines:</Run>
+                                        Biomes, water and heatmaps use the map's full-resolution terrain layers (about 2 m per pixel). Cliff walls are textured from the side with ground blending onto rock tops, road edges are smoother, rivers end at their real banks, power lines run on Facepunch's high-voltage pylons, poles and wires along the roads, and the cargo ship route follows the map's own path into each harbour. Each server's 3D map data can be cleared on its own.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Smoother Map Controls:</Run>
+                                        Zoom glides smoothly toward the cursor, a flick keeps the map moving with momentum, panning reaches further past the edges with extra zoom-out levels, grab cursors show while dragging, and monuments use their 58 official names.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Facepunch Companion Socket:</Run>
+                                        Servers are reached through Facepunch's companion socket, the route that keeps working as Facepunch removes direct connections to a server's Rust+ port, with server ids kept in sync with the RustDesk platform.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; AI Companion Setup Wizard:</Run>
+                                        A guided setup walks you through choosing a provider, with step-by-step instructions for getting an API key from each one.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Servers, Devices &amp; Settings:</Run>
+                                        Restore your saved servers from the cloud, remove devices that no longer exist on the server, see Rust+ notifications styled like the live map's bell, and find integrations in a Connected Services page organised around what each one does.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Deaths, Wipe Tracker &amp; Layers:</Run>
+                                        Deaths in water and the Deep Sea are tracked as their own locations, long wipes are stored compactly and open fast, and the Layers flyout is reorganised with the death-marker settings inside it.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Automation, Premium &amp; Genetics Lab:</Run>
+                                        Automations can choose NONE as the Otherwise action to leave a switch alone, adding the oil rig trigger turns the Logic Engine on, upgrade buttons open the pricing page while Patreon stays the Support Development link, and the Genetics Lab uses the rebalanced Advanced and Pure tea values.
+                                    </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fixes:</Run>
+                                        The loading screen no longer stays on top of other windows, the wipe tracker no longer draws teleports as route lines, the death heatmap stays readable on long wipes, and deleting a server also removes its local data.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v10.2.0 UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v10_2_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="v10.2.0 | Smart Server Migration, Widget Overlay Settings &amp; Hold-to-Peek Map"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                                         </StackPanel>

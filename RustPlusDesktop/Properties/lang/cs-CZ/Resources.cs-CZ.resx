@@ -1799,6 +1799,12 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Odstraní všechny značky smrti z mapy aktuálního serveru.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Odstranit všechny značky smrti z mapy tohoto serveru?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Jste si jisti, že chcete pokračovat?</value>
     <value>{0} dní</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Týmové značky</value>
+    <value>Značky na mapě</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Režim provedení</value>
@@ -2315,11 +2321,11 @@ Jste si jisti, že chcete pokračovat?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Staňte se podporovatelem</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Podpořte nás</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Získejte Premium na </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Propojte Patreon s Discordem pro automatickou roli podporovatele a detekci aplikací.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - bezpečná platba přes Paddle; Premium se na vašem účtu odemkne automaticky.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Tip přes</value>
@@ -3443,6 +3449,24 @@ Nejprve prosím spárujte tento server.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Vrstvy</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Vzhled</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Teplotní mapa úmrtí</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Vyžaduje zpracovaný soubor mapy</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Neprůhlednost</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Velikost</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Zobrazit na mapě</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Ponechte prázdné, chcete-li povolit všem na serveru.</value>
   </data>
@@ -3625,6 +3649,9 @@ Nejprve prosím spárujte tento server.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Jinak:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>ŽÁDNÁ</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>ZÁKLADNA</value>
@@ -5776,5 +5803,23 @@ Více informací naleznete na oficiálních stránkách serveru:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Recyklační kalkulačka</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Obnovit servery z cloudu</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Vrátí z cloudu servery, které tento účet spároval. Servery, které už jsou v seznamu, zůstanou beze změny.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Pro obnovení serverů se nejprve přihlas ke cloudovému účtu.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Obnoveno serverů: {0}, aktualizováno: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tvůj seznam serverů už odpovídá cloudu.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Cloud není dostupný. Seznam serverů zůstal beze změny.</value>
   </data>
 </root>

@@ -39,7 +39,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     private int _port;
     private ulong _steamId;
     private int _playerToken;
-    private bool _useProxyCurrent;
+    // The route the last successful connect took, reused by camera sessions.
+    private RustPlusConnection? _connectionCurrent;
     private const int RequestTimeoutMs = 2500;
     public RustPlusClientReal(Action<string> log) => _log = log;
     public event Action<uint, bool, string?>? DeviceStateEvent;
@@ -785,57 +786,18 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             System.Reflection.BindingFlags.IgnoreCase
         )?.GetValue(o);
 
-    // Liefert Host/Port/PlayerId/Token – zuerst aus deinen Feldern, dann via Reflection vom _api
-    private void GetConnForCamera(out string host, out int port, out string playerId, out string token)
-    {
-        host = _host ?? "";
-        port = _port;
-        playerId = (_steamId != 0 ? _steamId.ToString(System.Globalization.CultureInfo.InvariantCulture) : "");
-        token = (_playerToken != 0 ? _playerToken.ToString(System.Globalization.CultureInfo.InvariantCulture) : "");
-
-        // falls etwas fehlt, versuche vom _api zu lesen
-        if (_api != null && (string.IsNullOrWhiteSpace(host) || port <= 0 ||
-                             string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token)))
-        {
-            host = string.IsNullOrWhiteSpace(host)
-                     ? (RProp(_api, "Address") as string) ?? (RProp(_api, "Host") as string) ?? (RProp(_api, "Ip") as string) ?? host
-                     : host;
-
-            if (port <= 0)
-            {
-                try { port = Convert.ToInt32(RProp(_api, "Port") ?? 0); } catch { /* ignore */ }
-            }
-
-            playerId = string.IsNullOrWhiteSpace(playerId)
-                     ? (RProp(_api, "PlayerId") as string) ?? (RProp(_api, "SteamId") as string) ?? playerId
-                     : playerId;
-
-            token = string.IsNullOrWhiteSpace(token)
-                     ? (RProp(_api, "PlayerToken") as string) ?? (RProp(_api, "Token") as string) ?? token
-                     : token;
-        }
-    }
-
     /// <summary>
-    /// Opens a dedicated live camera session on its own connection (reusing the current server
-    /// credentials and proxy setting). Each session owns one connection because the server allows a
+    /// Opens a dedicated live camera session on its own connection (reusing the route and credentials
+    /// of the current connection). Each session owns one connection because the server allows a
     /// single camera subscription per connection — this is what lets several cameras stream at once.
     /// </summary>
     public async Task<RustPlusDesk.Services.Camera.CameraSession> CreateCameraSessionAsync(string cameraId, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(cameraId)) throw new ArgumentException("cameraId required", nameof(cameraId));
-        if (_api is null) throw new InvalidOperationException("Not connected.");
-
-        GetConnForCamera(out var host, out var port, out var playerId, out var token);
-        if (string.IsNullOrWhiteSpace(host) || port <= 0)
-            throw new InvalidOperationException("No server connection details available for camera.");
-        if (!ulong.TryParse(playerId, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var steamId))
-            throw new InvalidOperationException("Invalid player id for camera connection.");
-        if (!int.TryParse(token, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var playerToken))
-            throw new InvalidOperationException("Invalid player token for camera connection.");
+        if (_api is null || _connectionCurrent is null) throw new InvalidOperationException("Not connected.");
 
         return await RustPlusDesk.Services.Camera.CameraSession
-            .StartAsync(host, port, steamId, playerToken, _useProxyCurrent, cameraId, ct)
+            .StartAsync(_connectionCurrent, cameraId, ct)
             .ConfigureAwait(false);
     }
 
@@ -4503,9 +4465,9 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         lock (_subscribed) _subscribed.Clear();
         _eventsHooked = false;
 
-        async Task<(bool ok, string? err, bool isDenied)> TryAsync(bool useProxy)
+        async Task<(bool ok, string? err, bool isDenied)> TryAsync(RustPlusConnection connection, string route)
         {
-            _api = new RustPlus(new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken, useProxy));
+            _api = new RustPlus(connection);
 
             bool connectDenied = false;
 
@@ -4545,11 +4507,14 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 var info = infoTask.Result;
                 if (info?.IsSuccess == true)
                 {
-                    _log($"Authenticated – {(useProxy ? "via Facepunch proxy" : "direct")}.");
+                    _log($"Authenticated – {route}.");
                     return (true, null, false);
                 }
                 var errStr = info?.Error?.Message ?? "No response / error";
-                bool isDenied = connectDenied || IsAccessDeniedError(errStr);
+                // A rejected player token comes back from getInfo as "not_found". Only here:
+                // the same error from an entity request just means that entity is gone.
+                bool isDenied = connectDenied || IsAccessDeniedError(errStr)
+                    || string.Equals(errStr.Trim(), "not_found", StringComparison.OrdinalIgnoreCase);
                 return (false, errStr, isDenied);
             }
             catch (Exception ex)
@@ -4559,34 +4524,50 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             }
         }
 
-        var first = profile.UseFacepunchProxy;
-
-        var (ok1, err1, isDenied1) = await TryAsync(first);
-        if (ok1)
+        // Facepunch's companion socket first, then the server's app port. Direct connections are
+        // being removed server by server, so the socket is the route that keeps working; it needs
+        // the server's id from a pairing push plus the companion login token. Direct stays as the
+        // fallback for servers paired before we kept the id, while servers still accept it. The old
+        // /game/{ip}/{port} relay is never tried: it answers 418 for every server, which used to be
+        // misread as "player token rejected" and flag healthy servers for re-pairing.
+        var routes = new List<(RustPlusConnection connection, string name)>();
+        var authToken = RustCompanionAuthService.ReadCurrentToken();
+        if (Guid.TryParse(profile.ServerId, out var serverId) && !string.IsNullOrWhiteSpace(authToken))
         {
-            _useProxyCurrent = first;
-            HookEventsIfNeeded();
-            return;
+            routes.Add((new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken)
+            {
+                ServerId = serverId,
+                AuthToken = authToken,
+            }, "via companion socket"));
+        }
+        routes.Add((new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken), "direct"));
+
+        bool isDenied = false;
+        foreach (var (connection, name) in routes)
+        {
+            var (ok, err, denied) = await TryAsync(connection, name);
+            if (ok)
+            {
+                _connectionCurrent = connection;
+                HookEventsIfNeeded();
+                return;
+            }
+
+            isDenied |= denied;
+            // 403 at the socket handshake is the companion login, not the player token.
+            var hint = connection.ServerId is not null && (err?.Contains("'403'", StringComparison.Ordinal) ?? false)
+                ? " (Rust+ companion login rejected — sign in again)"
+                : "";
+            _log($"GetInfo ({name}): {err}{hint}");
         }
 
-        var (ok2, err2, isDenied2) = await TryAsync(!first);
-        if (ok2)
+        if (isDenied)
         {
-            _useProxyCurrent = !first;
-            HookEventsIfNeeded();
-            return;
+            _log("[connect] Rust+ Access Denied: Player token rejected. Server needs re-pairing from in-game.");
+            throw new RustPlusAccessDeniedException("Rust+ Access Denied: Player token rejected. Server needs re-pairing from in-game.");
         }
 
-        _log($"GetInfo (Path 1: {(first ? "Proxy" : "Direct")}): {err1}");
-        _log($"GetInfo (Path 2: {(!first ? "Proxy" : "Direct")}): {err2}");
-
-        if (isDenied1 || isDenied2)
-        {
-            _log("[connect] Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
-            throw new RustPlusAccessDeniedException("Rust+ Access Denied (418): Player token rejected. Server needs re-pairing from in-game.");
-        }
-
-        throw new InvalidOperationException("Rust+ is unreachable (direct & proxy).");
+        throw new InvalidOperationException("Rust+ is unreachable.");
     }
 
     public static bool IsAccessDeniedError(Exception? ex)

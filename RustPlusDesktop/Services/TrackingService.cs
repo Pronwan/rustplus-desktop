@@ -185,6 +185,9 @@ public class TrackingSettings
     public bool HotkeyTriggerChatAlertsEnabled { get; set; } = true;
     public string LastCrosshairStyle { get; set; } = "GreenDot";
     public string LastCustomCrosshairId { get; set; } = string.Empty;
+    // Shows a little more than the raster's own 50% default, so sparse spawn areas are visible out of the box.
+    public double HeatmapMinDensity { get; set; } = 0.25;
+    public double DeathHeatmapMinDensity { get; set; } = Deaths.DeathHeatmapRaster.DefaultMinShare;
     public bool OfflineDeathAlertsEnabled { get; set; } = true;
     public string OfflineDeathSoundPath { get; set; } = string.Empty;
     public bool OfflineDeathSoundLoopEnabled { get; set; } = false;
@@ -709,6 +712,13 @@ public static class TrackingService
         }
     }
 
+    /// <summary>Share of a heatmap's full heat where colour starts (the popup's density slider).</summary>
+    public static double HeatmapMinDensity
+    {
+        get => _settings.HeatmapMinDensity;
+        set { _settings.HeatmapMinDensity = value; SaveDB(); }
+    }
+
     public static double SidebarWidth
     {
         get => _settings.SidebarWidth;
@@ -1087,6 +1097,13 @@ public static class TrackingService
     {
         get => _settings.MapShowDeathHeatmap;
         set { _settings.MapShowDeathHeatmap = value; SaveDB(); }
+    }
+
+    /// <summary>Share of the hottest spot below which the death heatmap stays clear (its density slider).</summary>
+    public static double DeathHeatmapMinDensity
+    {
+        get => _settings.DeathHeatmapMinDensity;
+        set { _settings.DeathHeatmapMinDensity = value; SaveDB(); }
     }
     public static int MaxSelfDeathMarkers
     {

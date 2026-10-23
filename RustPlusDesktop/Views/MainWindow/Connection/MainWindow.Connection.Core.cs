@@ -264,7 +264,11 @@ public partial class MainWindow
             bool isOfflineOnly = prof.Port == 0 || prof.PlayerToken == "offline";
             bool hasLocalMap = !string.IsNullOrEmpty(prof.LocalMapFilePath);
 
-            if (hasLocalMap)
+            if (hasLocalMap && isOfflineOnly)
+            {
+                await ShowOfflineMapAsync(prof);
+            }
+            else if (hasLocalMap)
             {
                 if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
                 {
@@ -477,6 +481,28 @@ public partial class MainWindow
             }
 
             try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
+        }
+    }
+
+    /// <summary>
+    /// Gives this server's notification rows that have no picture the server's own logo
+    /// (its banner if it has none), the image Rust+ itself shows for the server.
+    /// </summary>
+    private async Task BackfillNotificationImagesAsync(string? host, int port)
+    {
+        if (string.IsNullOrWhiteSpace(host)) return;
+        try
+        {
+            var info = await _rust.GetServerInfoAsync();
+            var url = !string.IsNullOrWhiteSpace(info?.LogoImage) ? info!.LogoImage : info?.HeaderImage;
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                NotificationCenterService.BackfillServerImage(host, port, url!);
+            }
+        }
+        catch
+        {
+            // A missing picture is cosmetic; the rows keep their icon tile.
         }
     }
 
@@ -732,6 +758,9 @@ public partial class MainWindow
 
             _ = StartServerEventTrackingAsync();
             _ = Services.Social.SocialApi.UpdateActiveListingServerAsync(connectedProfile.Name);
+
+            // Notification rows saved before pushes kept their picture show this server's logo.
+            _ = BackfillNotificationImagesAsync(connectedProfile.Host, connectedProfile.Port);
 
 
 

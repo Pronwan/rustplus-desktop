@@ -19,7 +19,7 @@ public sealed class DeviceAutomationRule : INotifyPropertyChanged
     private string _endTime = "08:00";
     private uint _targetEntityId;
     private bool _matchedState;
-    private bool _unmatchedState = true;
+    private bool? _unmatchedState = true;
 
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get => _name; set => Set(ref _name, value); }
@@ -34,7 +34,28 @@ public sealed class DeviceAutomationRule : INotifyPropertyChanged
     public string EndTime { get => _endTime; set => Set(ref _endTime, value); }
     public uint TargetEntityId { get => _targetEntityId; set => Set(ref _targetEntityId, value); }
     public bool MatchedState { get => _matchedState; set => Set(ref _matchedState, value); }
-    public bool UnmatchedState { get => _unmatchedState; set => Set(ref _unmatchedState, value); }
+    /// <summary>State to set when the condition does not match; null leaves the switch alone.</summary>
+    // Written even when null: a dropped "None" would load back as the default On.
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public bool? UnmatchedState
+    {
+        get => _unmatchedState;
+        set
+        {
+            if (_unmatchedState == value) return;
+            _unmatchedState = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnmatchedState)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnmatchedChoice)));
+        }
+    }
+
+    /// <summary>"On", "Off" or "None" for the editor's combo box, which cannot select a null tag.</summary>
+    [JsonIgnore]
+    public string UnmatchedChoice
+    {
+        get => _unmatchedState switch { true => "On", false => "Off", null => "None" };
+        set => UnmatchedState = value switch { "On" => true, "Off" => false, _ => null };
+    }
 
     [JsonIgnore] public bool? LastAppliedState { get; set; }
 

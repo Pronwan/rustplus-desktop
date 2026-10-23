@@ -45,25 +45,11 @@ public static class RustPlusConnectionVerifier
         }
 
         using var cts = new CancellationTokenSource(timeout);
-        var ct = cts.Token;
 
-        // Try direct first, then proxy if requested or on failure
-        var result = await TryConnectAndVerifyInternalAsync(host, port, steamId, playerToken, entityIdsToCheck, useProxy, ct);
-        if (!result.Reachable && !useProxy)
-        {
-            try
-            {
-                using var proxyCts = new CancellationTokenSource(timeout);
-                var proxyResult = await TryConnectAndVerifyInternalAsync(host, port, steamId, playerToken, entityIdsToCheck, true, proxyCts.Token);
-                if (proxyResult.Reachable) return proxyResult;
-            }
-            catch
-            {
-                // return original result
-            }
-        }
-
-        return result;
+        // Direct only. The companion /game/{ip}/{port} relay answers 418 for every server now,
+        // so falling back to it can only turn an unreachable server into a false denial.
+        // useProxy is kept for callers but no longer changes the route.
+        return await TryConnectAndVerifyInternalAsync(host, port, steamId, playerToken, entityIdsToCheck, false, cts.Token);
     }
 
     private static async Task<VerificationResult> TryConnectAndVerifyInternalAsync(

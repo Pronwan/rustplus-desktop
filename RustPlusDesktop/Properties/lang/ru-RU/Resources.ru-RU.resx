@@ -1847,6 +1847,12 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Очистить все</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Удаляет все метки смерти с карты текущего сервера.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Удалить все метки смерти с карты этого сервера?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Принять</value>
   </data>
@@ -2567,7 +2573,7 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Закрыть</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Командные маркеры</value>
+    <value>Метки на карте</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Режим выполнения</value>
@@ -2677,11 +2683,11 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Стать сторонником</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Поддержите нас на</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Оформите Premium на </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Свяжите Patreon с Discord для автоматической роли сторонника и обнаружения приложений.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - безопасная оплата через Paddle; Premium активируется в вашем аккаунте автоматически.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Совет через</value>
@@ -3461,6 +3467,24 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiLayers" xml:space="preserve">
     <value>Слои</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Внешний вид</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Тепловая карта смертей</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Нужен разобранный файл карты</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Непрозрачность</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Размер</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Показывать на карте</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Оставьте пустым, чтобы разрешить доступ всем на сервере.</value>
   </data>
@@ -3643,6 +3667,9 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>В противном случае:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>НЕТ</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>АВПОСТ</value>
@@ -7985,5 +8012,23 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>Сбросить глобальные настройки и собственные прозрачность, размер текста и цвет каждой плитки? Сами плитки останутся на месте.</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Восстановить серверы из облака</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Возвращает из облака серверы, привязанные к этой учётной записи. Серверы, которые уже есть в списке, остаются без изменений.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Сначала войдите в облачную учётную запись, чтобы восстановить серверы.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Восстановлено серверов: {0}, обновлено: {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Ваш список серверов уже совпадает с облаком.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Не удалось связаться с облаком. Список серверов не изменён.</value>
   </data>
 </root>

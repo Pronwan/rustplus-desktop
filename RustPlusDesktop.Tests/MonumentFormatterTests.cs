@@ -71,4 +71,34 @@ public class MonumentFormatterTests
         Assert.AreEqual("Custom Event Area", MonumentFormatter.Beautify("custom_event_area_display_name"));
         Assert.AreEqual("Canyon", MonumentFormatter.Beautify("canyon"));
     }
+
+    [TestMethod]
+    public void Beautify_FiltersEngineNoisePrefabs()
+    {
+        Assert.AreEqual(string.Empty, MonumentFormatter.Beautify("DungeonBase"));
+        Assert.AreEqual(string.Empty, MonumentFormatter.Beautify("dungeonbase"));
+        Assert.AreEqual(string.Empty, MonumentFormatter.Beautify("Monument"));
+        Assert.AreEqual(string.Empty, MonumentFormatter.Beautify("monument"));
+    }
+
+    [TestMethod]
+    public void Beautify_OfficialDictionaryEntries_AreMatchedDirectly()
+    {
+        Assert.AreEqual("Abandoned Cabins", MonumentFormatter.Beautify("swamp_c"));
+        Assert.AreEqual("Abandoned Cabins", MonumentFormatter.Beautify("monument.swamp_c"));
+        Assert.AreEqual("Convoy", MonumentFormatter.Beautify("hapis_convoy_display_name"));
+        Assert.AreEqual("The Dome", MonumentFormatter.Beautify("dome_monument_name"));
+        Assert.AreEqual("Giant Excavator Pit", MonumentFormatter.Beautify("excavator"));
+        Assert.AreEqual("Beached Tugboat", MonumentFormatter.Beautify("hapis_tugboatbeached_display_name"));
+    }
+
+    [TestMethod]
+    public void IsTrainTunnel_DetectsOfficialTokens()
+    {
+        Assert.IsTrue(MonumentFormatter.IsTrainTunnel("train_tunnel_display_name"));
+        Assert.IsTrue(MonumentFormatter.IsTrainTunnel("train_tunnel_link_display_name"));
+        Assert.IsTrue(MonumentFormatter.IsTrainTunnel("monument.train_tunnel_display_name"));
+        Assert.IsFalse(MonumentFormatter.IsTrainTunnel("launchsite"));
+        Assert.IsFalse(MonumentFormatter.IsTrainTunnel(null));
+    }
 }

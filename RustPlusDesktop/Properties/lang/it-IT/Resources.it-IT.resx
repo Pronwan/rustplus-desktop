@@ -1799,6 +1799,12 @@ Siete sicuri di voler continuare?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Rimuove tutti gli indicatori di morte dalla mappa del server attuale.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Rimuovere tutti gli indicatori di morte dalla mappa di questo server?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Siete sicuri di voler continuare?</value>
     <value>{0} giorni</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcatori di squadra</value>
+    <value>Indicatori mappa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modalità di esecuzione</value>
@@ -2315,11 +2321,11 @@ Siete sicuri di voler continuare?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Diventa Sostenitore</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Sostienici su</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Ottieni Premium su </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Collega Patreon a Discord per il rilevamento automatico del ruolo di Sostenitore e dell'app.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - pagamento sicuro tramite Paddle; Premium si attiva automaticamente sul tuo account.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Suggerimento tramite</value>
@@ -3443,6 +3449,24 @@ Per favore associa prima questo server.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Strati</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Aspetto</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mappa di calore delle morti</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Richiede il file della mappa analizzato</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacità</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Dimensione</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostra sulla mappa</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Lascia vuoto per consentire a tutti di accedere al server.</value>
   </data>
@@ -3625,6 +3649,9 @@ Per favore associa prima questo server.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Altrimenti:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NESSUNA</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>AVAMPOSTO</value>
@@ -5782,5 +5809,23 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Calcolatore del riciclaggio</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Ripristina server dal cloud</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera dal cloud i server associati a questo account. I server già presenti nell'elenco restano invariati.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Accedi prima al tuo account cloud per ripristinare i server.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Ripristinati {0} server e aggiornati {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Il tuo elenco server corrisponde già al cloud.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Impossibile raggiungere il cloud. L'elenco server non è cambiato.</value>
   </data>
 </root>

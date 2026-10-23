@@ -83,7 +83,11 @@ namespace RustPlusDesk.Views.Windows
             _globalFeatureEnabled = CloudFeatureFlags.IsEnabled("cloud_247");
             _globalFeatureNote = CloudFeatureFlags.Note("cloud_247");
 
-            var imported = await CloudPairingImporter.ImportAsync();
+            // Through the main window when it is open: it holds the live server list and
+            // saves that list back, so an import written only to the file would be lost.
+            var imported = Application.Current?.MainWindow is MainWindow main
+                ? await main.ImportCloudPairingsIntoListAsync(full: false)
+                : await CloudPairingImporter.ImportAsync();
             var overview = await CloudSessionsApi.GetOverviewAsync();
 
             if (overview == null)

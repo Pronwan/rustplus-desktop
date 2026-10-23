@@ -1820,6 +1820,12 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Borrar todos</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Elimina todos los marcadores de muerte del mapa del servidor actual.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>¿Eliminar todos los marcadores de muerte del mapa de este servidor?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Aceptar</value>
   </data>
@@ -2054,11 +2060,11 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Conviértete en un Supporter</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Apóyanos en </value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Consigue Premium en </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value> - Vincula Patreon con Discord para la detección automática del rol.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - pago seguro con Paddle; Premium se activa automáticamente en tu cuenta.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Propina a través de </value>
@@ -2456,7 +2462,7 @@ Rust+ Desktop registra tu aplicacion local con FCM para que pueda recibir esas m
     <value>Cerrar</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Marcadores de equipo</value>
+    <value>Marcadores del mapa</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Modo de ejecución</value>
@@ -3461,6 +3467,24 @@ Primero empareje este servidor.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>capas</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Apariencia</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Mapa de calor de muertes</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Requiere el archivo del mapa analizado</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Opacidad</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Mostrar en el mapa</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Déjelo vacío para permitir que todos estén en el servidor.</value>
   </data>
@@ -3643,6 +3667,9 @@ Primero empareje este servidor.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>De lo contrario:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>NINGUNA</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>PUESTO DE AVANZADA</value>
@@ -7985,5 +8012,23 @@ Cierra esta vista previa cuando el panel te guste.</value>
   </data>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>¿Borrar los ajustes globales y la opacidad, el tamaño de texto y el color propios de cada panel? Los paneles se quedan donde están.</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Restaurar servidores desde la nube</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Recupera de la nube los servidores que esta cuenta ha emparejado. Los servidores que ya están en la lista se mantienen igual.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Inicia sesión en tu cuenta de la nube para restaurar tus servidores.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>Se restauraron {0} servidor(es) y se actualizaron {1}.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Tu lista de servidores ya coincide con la nube.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>No se pudo conectar con la nube. Tu lista de servidores no ha cambiado.</value>
   </data>
 </root>

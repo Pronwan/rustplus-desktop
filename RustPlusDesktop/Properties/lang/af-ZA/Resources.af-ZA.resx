@@ -1799,6 +1799,12 @@ Is jy seker jy wil voortgaan?</value>
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>Wipe Death Markers</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>Verwyder alle doodsmerkers van die huidige bediener se kaart.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>Verwyder alle doodsmerkers van hierdie bediener se kaart?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
@@ -1854,7 +1860,7 @@ Is jy seker jy wil voortgaan?</value>
     <value>{0} dae</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>Spanmerkers</value>
+    <value>Kaartmerkers</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>Uitvoeringsmodus</value>
@@ -2315,11 +2321,11 @@ Is jy seker jy wil voortgaan?</value>
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>Word 'n Ondersteuner</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>Ondersteun ons op</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Kry Premium op </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- Koppel Patreon met Discord vir outomatiese ondersteuningsrol en app-opsporing.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - veilige betaling via Paddle; Premium word outomaties op jou rekening ontsluit.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>Wenk via</value>
@@ -3443,6 +3449,24 @@ Koppel asseblief eers hierdie bediener.</value>
   <data name="UiLayers" xml:space="preserve">
     <value>Lae</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>Voorkoms</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>Doodshittekaart</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>Benodig die ontlede kaartlêer</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>Deursigtigheid</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>Grootte</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>Wys op kaart</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>Laat leeg om almal op die bediener toe te laat.</value>
   </data>
@@ -3625,6 +3649,9 @@ Koppel asseblief eers hierdie bediener.</value>
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>Andersins:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>GEEN</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>BUITEPOS</value>
@@ -5776,5 +5803,23 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   </data>
   <data name="RecyclingCalculatorName" xml:space="preserve">
     <value>Herwinning sakrekenaar</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>Herstel bedieners uit die wolk</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>Bring die bedieners wat hierdie rekening gekoppel het terug uit die wolk. Bedieners wat reeds in die lys is, bly soos hulle is.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>Meld eers by jou wolkrekening aan om jou bedieners te herstel.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>{0} bediener(s) herstel en {1} verfris.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>Jou bedienerlys stem reeds ooreen met die wolk.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>Kon nie die wolk bereik nie. Jou bedienerlys is onveranderd.</value>
   </data>
 </root>

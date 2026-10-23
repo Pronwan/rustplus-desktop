@@ -107,17 +107,19 @@ public partial class MainWindow
 
         foreach (var m in _monData)
         {
+            var nice = Beautify(m.Name);
+            if (string.IsNullOrWhiteSpace(nice)) continue;
+
             var key = NormalizeMonName(m.Name, out var variant);
 
             var p = WorldToImagePx(m.X, m.Y);
-            var nice = Beautify(m.Name);
             var tt = string.IsNullOrEmpty(variant) ? nice : $"{nice} ({variant})";
 
             var fe = MakeMonIcon(key, tt, 28);
             fe.Tag = m;
 
             IconLayer.Children.Add(fe);
-            bool isTrain = key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
+            bool isTrain = MonumentFormatter.IsTrainTunnel(m.Name) || key.Contains("train tunnel", StringComparison.OrdinalIgnoreCase);
             Panel.SetZIndex(fe, isTrain ? 700 : 900);
             _monEls[key + "@" + p.X.ToString("0") + "," + p.Y.ToString("0")] = fe;
 
@@ -275,6 +277,8 @@ public partial class MainWindow
         try { System.IO.File.Delete(System.IO.Path.Combine(s_mapCacheDir, key + ".json")); } catch { }
     }
 
+    private bool _isGeneratedMapActive;
+
     private bool IsCustomMapActive()
     {
         var profile = _vm?.Selected;
@@ -283,6 +287,7 @@ public partial class MainWindow
 
     private double GetCurrentMapPaddingWorld()
     {
+        if (_isGeneratedMapActive) return 0.0;
         return IsCustomMapActive() ? 1000.0 : 2000.0;
     }
 
@@ -420,6 +425,12 @@ public partial class MainWindow
             DeleteMapCache(cacheKey);
             DeleteCustomMapCache(cacheKey);
             cached = null;
+            _isGeneratedMapActive = false;
+
+            if (_vm?.Selected != null)
+            {
+                Map3DLocalBuildService.InvalidateServerCache(_vm.Selected, _vm.Selected.RustMapsMapId);
+            }
 
             // A wipe makes the old deaths meaningless — flush the log (local + the
             // team's cloud rows) and reset detection so nothing carries over.
@@ -492,6 +503,57 @@ public partial class MainWindow
                     Monuments = map.Monuments
                 };
             }
+        }
+
+        // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
+        if (_vm?.Selected != null)
+        {
+            string preparedFolder = Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);
+            // Only MapParser's own render is laid out without the ocean margin; map_texture.png
+            // can hold the server's image, which would put every overlay at the wrong scale.
+            string generatedTexPath = System.IO.Path.Combine(preparedFolder, Map3DLocalBuildService.RenderedTextureFileName);
+            if (System.IO.File.Exists(generatedTexPath))
+            {
+                try
+                {
+                    // The render runs to ~25 MB; decoding it on the UI thread froze the window.
+                    var bi = await Task.Run(() =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(generatedTexPath));
+                        image.EndInit();
+                        image.Freeze();
+                        return image;
+                    });
+
+                    AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
+                    _isGeneratedMapActive = true;
+                    map = new RustPlusClientReal.MapWithMonuments
+                    {
+                        Bitmap = bi,
+                        PixelWidth = bi.PixelWidth,
+                        PixelHeight = bi.PixelHeight,
+                        WorldSize = map.WorldSize,
+                        WipeTime = map.WipeTime,
+                        Monuments = map.Monuments
+                    };
+
+                    var preparedProfile = _vm.Selected;
+                    _ = Dispatcher.InvokeAsync(async () =>
+                    {
+                        // The render is already the image shown below; only the overlays are needed.
+                        if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[map-render] Note: could not load generated map texture: {ex.Message}");
+                }
+            }
+            // Without a render the server's own image is used. Parsing scans the game's map
+            // files, so it only runs when the user asks for it (3D map, Parse, or an import).
         }
 
         await Dispatcher.InvokeAsync(() =>

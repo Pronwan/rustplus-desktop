@@ -81,7 +81,7 @@ public partial class MainWindow
     private async void ChkKeycards_Checked(object sender, RoutedEventArgs e)
     {
         if (_keycardSites != null) Ach.Unlock(Ach.Keycards);
-        if (sender is System.Windows.Controls.CheckBox box && box.IsChecked == true && _keycardSites == null)
+        if (sender is System.Windows.Controls.Primitives.ToggleButton box && box.IsChecked == true && _keycardSites == null)
         {
             box.IsChecked = false;
 
@@ -132,9 +132,10 @@ public partial class MainWindow
                 return;
             }
 
+            var profile = _vm.Selected;
             string folder = Services.Map3DLocalBuildService.GetPreparedFolderPath(
-                _vm.Selected, _vm.Selected.RustMapsMapId);
-            LoadKeycardSitesForCurrentMap(folder);
+                profile, profile.RustMapsMapId);
+            _ = LoadKeycardSitesWhenReadyAsync(profile, folder);
         }
         catch (Exception ex)
         {
@@ -146,22 +147,20 @@ public partial class MainWindow
     /// Reads keycardSites out of a parsed map. It is absent until the map file has
     /// been parsed, which is what leaves both toggles disabled.
     /// </summary>
-    private void LoadKeycardSitesForCurrentMap(string? folderPath)
+    // mapRoot: the parsed map's overlay data when the caller already has it (see ParsedMapDataCache).
+    private void LoadKeycardSitesForCurrentMap(string? folderPath, JsonElement? mapRoot = null)
     {
         _keycardSites = null;
 
         try
         {
-            string? path = string.IsNullOrWhiteSpace(folderPath)
+            JsonElement? root = mapRoot ?? (string.IsNullOrWhiteSpace(folderPath)
                 ? null
-                : Path.Combine(folderPath, "map_data.json");
+                : Services.Map.ParsedMapDataCache.Load(folderPath));
 
-            if (path != null && File.Exists(path))
+            if (root is { } doc)
             {
-                using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var doc = JsonDocument.Parse(fs);
-
-                if (doc.RootElement.TryGetProperty("keycardSites", out var arr) &&
+                if (doc.TryGetProperty("keycardSites", out var arr) &&
                     arr.ValueKind == JsonValueKind.Array)
                 {
                     var sites = new List<KeycardSite>();
@@ -209,6 +208,17 @@ public partial class MainWindow
         RedrawKeycards();
     }
 
+    // Reads the map data off the UI thread, then applies it unless the server changed meanwhile.
+    private async System.Threading.Tasks.Task LoadKeycardSitesWhenReadyAsync(Models.ServerProfile profile, string folder)
+    {
+        var root = await Services.Map.ParsedMapDataCache.LoadAsync(folder);
+        await Dispatcher.InvokeAsync(() =>
+        {
+            if (!ReferenceEquals(_vm?.Selected, profile)) return;
+            LoadKeycardSitesForCurrentMap(root.HasValue ? folder : null, root);
+        });
+    }
+
     private static List<string> ReadStringList(JsonElement el, string property)
     {
         var list = new List<string>();
@@ -238,7 +248,7 @@ public partial class MainWindow
         Apply(ChkKeycards, hasHolds);
         UpdateParseAllMonumentsButton();
 
-        void Apply(System.Windows.Controls.CheckBox? box, bool hasData)
+        void Apply(System.Windows.Controls.Primitives.ToggleButton? box, bool hasData)
         {
             if (box == null) return;
 

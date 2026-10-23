@@ -23,6 +23,10 @@ namespace RustPlusDesk.Models
         // FCM message id used for persistent de-duplication across listener restarts
         public string? FcmNotificationId { get; set; }
 
+        // The picture the Rust+ push carries (server logo, else its banner), shown on the row
+        // the way the Rust+ app and the live map show it.
+        public string? ImageUrl { get; set; }
+
         public RustPlusNotification() { }
 
         public RustPlusNotification(string type, string title, string message, string? serverIp = null, int? serverPort = null, string? serverName = null)

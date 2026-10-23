@@ -1799,6 +1799,12 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="WipeDeathMarkers" xml:space="preserve">
     <value>모든 데스 마커 삭제</value>
   </data>
+  <data name="WipeDeathMarkersHint" xml:space="preserve">
+    <value>현재 서버 지도에서 모든 사망 마커를 제거합니다.</value>
+  </data>
+  <data name="WipeDeathMarkersConfirm" xml:space="preserve">
+    <value>이 서버 지도에서 모든 사망 마커를 제거할까요?</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>수락</value>
   </data>
@@ -1854,7 +1860,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>{0}일</value>
   </data>
   <data name="TeamMarkersSettings" xml:space="preserve">
-    <value>팀 마커</value>
+    <value>지도 마커</value>
   </data>
   <data name="HotkeyExecutionMode" xml:space="preserve">
     <value>실행 모드</value>
@@ -2315,11 +2321,11 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="BecomeSupporterTitle" xml:space="preserve">
     <value>서포터가 되어보세요</value>
   </data>
-  <data name="SupportViaPatreon" xml:space="preserve">
-    <value>우리를 지원하세요</value>
+  <data name="UpgradeViaPricing" xml:space="preserve">
+    <value>Premium 구매: </value>
   </data>
-  <data name="SupportViaPatreonDesc" xml:space="preserve">
-    <value>- 자동 서포터 역할 및 앱 감지를 위해 Patreon을 Discord와 연결하세요.</value>
+  <data name="UpgradeViaPricingDesc" xml:space="preserve">
+    <value> - Paddle을 통한 안전한 결제, Premium은 계정에서 자동으로 활성화됩니다.</value>
   </data>
   <data name="SupportViaSE" xml:space="preserve">
     <value>팁을 통해</value>
@@ -3443,6 +3449,24 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiLayers" xml:space="preserve">
     <value>레이어</value>
   </data>
+  <data name="UiLayersAppearance" xml:space="preserve">
+    <value>모양</value>
+  </data>
+  <data name="UiLayersDeathHeatmap" xml:space="preserve">
+    <value>사망 히트맵</value>
+  </data>
+  <data name="UiLayersNeedsParsedMap" xml:space="preserve">
+    <value>분석된 지도 파일이 필요합니다</value>
+  </data>
+  <data name="UiLayersOpacity" xml:space="preserve">
+    <value>불투명도</value>
+  </data>
+  <data name="UiLayersSize" xml:space="preserve">
+    <value>크기</value>
+  </data>
+  <data name="UiLayersShowOnMap" xml:space="preserve">
+    <value>지도에 표시</value>
+  </data>
   <data name="UiLeaveEmptyToAllowEveryoneOnTheServer" xml:space="preserve">
     <value>서버의 모든 사람을 허용하려면 비워 두세요.</value>
   </data>
@@ -3625,6 +3649,9 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="UiOtherwise" xml:space="preserve">
     <value>그렇지 않은 경우:</value>
+  </data>
+  <data name="UiAutomationNone" xml:space="preserve">
+    <value>없음</value>
   </data>
   <data name="UiOUTPOST" xml:space="preserve">
     <value>전초기지</value>
@@ -7906,5 +7933,23 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>전역 설정과 각 타일의 불투명도·글자 크기·색을 모두 지울까요? 타일 자체는 그대로 남습니다.</value>
+  </data>
+  <data name="RestoreServersFromCloud" xml:space="preserve">
+    <value>클라우드에서 서버 복원</value>
+  </data>
+  <data name="RestoreServersFromCloudHint" xml:space="preserve">
+    <value>이 계정이 페어링한 서버를 클라우드에서 다시 가져옵니다. 목록에 이미 있는 서버는 그대로 유지됩니다.</value>
+  </data>
+  <data name="RestoreServersSignInFirst" xml:space="preserve">
+    <value>서버를 복원하려면 먼저 클라우드 계정에 로그인하세요.</value>
+  </data>
+  <data name="RestoreServersDone" xml:space="preserve">
+    <value>서버 {0}개를 복원하고 {1}개를 새로 고쳤습니다.</value>
+  </data>
+  <data name="RestoreServersNothing" xml:space="preserve">
+    <value>서버 목록이 이미 클라우드와 일치합니다.</value>
+  </data>
+  <data name="RestoreServersFailed" xml:space="preserve">
+    <value>클라우드에 연결할 수 없습니다. 서버 목록은 변경되지 않았습니다.</value>
   </data>
 </root>

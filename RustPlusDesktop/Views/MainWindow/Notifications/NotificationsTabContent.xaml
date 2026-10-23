@@ -156,55 +156,89 @@
                 </Style.Triggers>
             </Style>
 
-            <!-- The type tile: a soft tint of the status colour with the glyph in
-                 the full colour, rather than the old 6px bar. Unmatched types fall
-                 through to the neutral setters instead of rendering an empty box. -->
-            <Style x:Key="TypeTile" TargetType="Border">
-                <Setter Property="Width" Value="32" />
-                <Setter Property="Height" Value="32" />
-                <Setter Property="CornerRadius" Value="8" />
+            <conv:RelativeTimeConverter x:Key="RelativeTime" />
+            <conv:UrlToImageConverter x:Key="UrlToImage" />
+            <conv:NotificationServerTagVisibilityConverter x:Key="ServerTagVis" />
+
+            <!-- Fluent has no skull; this is the one the Death Stats tab already uses. -->
+            <Geometry x:Key="SkullGeometry">M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19H11V22H13V19H15V22H17V18.46C19.47,16.81 21,14.03 21,11A9,9 0 0,0 12,2M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11M12,14L13.5,17H10.5L12,14Z</Geometry>
+
+            <!--
+                Rows follow the live map's Rust+ bell (rust-notifications-bell.tsx), which follows
+                the Rust+ app: the picture the push carried, a round kind badge on its corner,
+                the title in bold with a relative time beside it, and the message under it.
+                The kind colours are the live map's, so a death is the same red in both places.
+            -->
+            <Style x:Key="KindBadge" TargetType="Border">
+                <Setter Property="Width" Value="20" />
+                <Setter Property="Height" Value="20" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Margin" Value="-6,-6,0,0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Top" />
-                <Setter Property="Background" Value="{DynamicResource WhiteA14}" />
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="BorderBrush" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                <Setter Property="Background" Value="#6B6B6B" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Type}" Value="Alarm">
-                        <Setter Property="Background" Value="{DynamicResource DangerTintBrush}" />
-                    </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="Death">
-                        <Setter Property="Background" Value="{DynamicResource WarnTintBrush}" />
+                        <Setter Property="Background" Value="#C9382C" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Type}" Value="Chat">
-                        <Setter Property="Background" Value="{DynamicResource InfoTintBrush}" />
+                    <DataTrigger Binding="{Binding Type}" Value="Alarm">
+                        <Setter Property="Background" Value="#D9822B" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="OilRigAlarm">
+                        <Setter Property="Background" Value="#D9822B" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="Pairing">
-                        <Setter Property="Background" Value="{DynamicResource SuccessTintBrush}" />
+                        <Setter Property="Background" Value="#7FA63A" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="Chat">
+                        <Setter Property="Background" Value="#3F7FBF" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="TypeGlyph" TargetType="ui:SymbolIcon">
-                <Setter Property="FontSize" Value="18" />
+            <!-- The kind glyph, used small on the badge and large on the picture's fallback tile. -->
+            <Style x:Key="KindGlyph" TargetType="ui:SymbolIcon">
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="Symbol" Value="Info24" />
-                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                <Setter Property="Symbol" Value="Alert24" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Type}" Value="Alarm">
-                        <Setter Property="Symbol" Value="Warning24" />
-                        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
-                    </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="Death">
-                        <Setter Property="Symbol" Value="HeartPulse24" />
-                        <Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" />
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="Alarm">
+                        <Setter Property="Symbol" Value="AlertUrgent24" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="OilRigAlarm">
+                        <Setter Property="Symbol" Value="AlertUrgent24" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="Pairing">
+                        <Setter Property="Symbol" Value="Link24" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="Chat">
                         <Setter Property="Symbol" Value="Chat24" />
-                        <Setter Property="Foreground" Value="{DynamicResource InfoBlueBrush}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Type}" Value="Pairing">
-                        <Setter Property="Symbol" Value="BluetoothConnected24" />
-                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
                     </DataTrigger>
                 </Style.Triggers>
+            </Style>
+            <Style x:Key="KindSkull" TargetType="Path">
+                <Setter Property="Data" Value="{StaticResource SkullGeometry}" />
+                <Setter Property="Stretch" Value="Uniform" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Type}" Value="Death">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Two lines at most, then an ellipsis, as the live map clamps them. -->
+            <Style x:Key="TwoLineClamp" TargetType="TextBlock">
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
             </Style>
         </Grid.Resources>
 
@@ -346,137 +380,168 @@
 
                 <ui:ListView.ItemTemplate>
                     <DataTemplate>
-                        <!-- CardControl is a ButtonBase, so the whole row is the
-                             click target that marks it read, and hover, pressed and
-                             focus visuals come from Fluent instead of triggers. Its
-                             Icon and Content slots are left empty: the row needs to
-                             stack vertically at panel width, which the Header can
-                             do on its own. -->
+                        <!-- CardControl is a ButtonBase, so the whole row is the click target
+                             that marks it read, with Fluent's hover, pressed and focus visuals. -->
                         <ui:CardControl
                             Margin="0,0,0,6"
-                            Padding="12,10"
+                            Padding="10"
                             Click="Notification_Click"
                             Tag="{Binding}">
                             <ui:CardControl.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
 
-                                    <!-- Unread marker: the WinUI selection pill. -->
-                                    <Border
-                                        Grid.RowSpan="3"
-                                        Grid.Column="0"
-                                        Width="3"
-                                        Margin="0,2,10,2"
-                                        VerticalAlignment="Stretch"
-                                        Background="{DynamicResource Accent}"
-                                        CornerRadius="1.5"
-                                        Visibility="{Binding IsRead, Converter={StaticResource VisInv}}" />
-
-                                    <Border Grid.RowSpan="3" Grid.Column="1" Style="{StaticResource TypeTile}">
-                                        <ui:SymbolIcon Style="{StaticResource TypeGlyph}" />
-                                    </Border>
-
-                                    <!-- Title, then timestamp or row commands -->
-                                    <Grid Grid.Row="0" Grid.Column="2" Margin="10,0,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <ui:TextBlock
-                                            VerticalAlignment="Center"
-                                            FontTypography="BodyStrong"
-                                            Text="{Binding Title}"
-                                            TextWrapping="Wrap" />
-
-                                        <!-- MinWidth holds the slot steady so the title
-                                             does not shift as the two swap. -->
-                                        <Grid
-                                            Grid.Column="1"
-                                            MinWidth="76"
-                                            Margin="8,0,0,0"
-                                            VerticalAlignment="Center">
-                                            <Grid Style="{StaticResource RowTimestampSlot}">
-                                                <ui:TextBlock
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Center"
-                                                    Appearance="Secondary"
-                                                    FontTypography="Caption"
-                                                    Text="{Binding Timestamp, StringFormat='{}{0:MM/dd HH:mm}'}" />
+                                    <!-- Picture: the push's image over a tile with the kind glyph,
+                                         so a missing or broken image still shows what the row is. -->
+                                    <Grid Width="56" Height="56" VerticalAlignment="Top">
+                                        <Border Background="{DynamicResource WhiteA14}" CornerRadius="3">
+                                            <Grid>
+                                                <ui:SymbolIcon FontSize="24" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Style="{StaticResource KindGlyph}" />
+                                                <Path Width="24" Height="24" Fill="{DynamicResource TextFillColorTertiaryBrush}" Style="{StaticResource KindSkull}" />
                                             </Grid>
-                                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                                <ui:Button
-                                                    AutomationProperties.Name="{DynamicResource UiMuteNotificationsFromThisServer}"
-                                                    Click="BtnMuteServer_Click"
-                                                    Style="{StaticResource MuteServerButton}"
-                                                    Tag="{Binding}"
-                                                    ToolTip="{DynamicResource UiMuteNotificationsFromThisServer}">
-                                                    <ui:SymbolIcon
-                                                        FontSize="14"
-                                                        Foreground="{DynamicResource DangerBrush}"
-                                                        Symbol="SpeakerMute24" />
-                                                </ui:Button>
-                                                <ui:Button
-                                                    AutomationProperties.Name="{DynamicResource Delete}"
-                                                    Click="BtnDelete_Click"
-                                                    Style="{StaticResource RowCommandButton}"
-                                                    Tag="{Binding Id}"
-                                                    ToolTip="{DynamicResource Delete}">
-                                                    <ui:SymbolIcon
-                                                        FontSize="14"
-                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                        Symbol="Delete24" />
-                                                </ui:Button>
-                                            </StackPanel>
-                                        </Grid>
+                                        </Border>
+                                        <Image
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding ImageUrl, Converter={StaticResource UrlToImage}}"
+                                            Stretch="UniformToFill">
+                                            <Image.Clip>
+                                                <RectangleGeometry RadiusX="3" RadiusY="3" Rect="0,0,56,56" />
+                                            </Image.Clip>
+                                        </Image>
+                                        <Border Style="{StaticResource KindBadge}">
+                                            <Grid>
+                                                <ui:SymbolIcon FontSize="11" Foreground="White" Style="{StaticResource KindGlyph}" />
+                                                <Path Width="10" Height="10" Fill="White" Style="{StaticResource KindSkull}" />
+                                            </Grid>
+                                        </Border>
                                     </Grid>
 
-                                    <ui:TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="2"
-                                        Margin="10,3,0,0"
-                                        Appearance="Secondary"
-                                        FontTypography="Caption"
-                                        Text="{Binding Message}"
-                                        TextWrapping="Wrap" />
+                                    <Grid Grid.Column="1" Margin="12,0,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
 
-                                    <!-- Footer: the server tag, and nothing but — a row
-                                         without one collapses instead of leaving a band. -->
-                                    <Grid Grid.Row="2" Grid.Column="2">
-                                        <ui:Button
-                                            Margin="10,6,0,0"
-                                            Click="BtnServerTag_Click"
-                                            Style="{StaticResource NotificationServerButton}"
-                                            Tag="{Binding}">
-                                            <Grid>
-                                                <ui:TextBlock
-                                                    Appearance="Secondary"
-                                                    FontTypography="Caption"
-                                                    Foreground="{DynamicResource Accent}"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource VisInv}}">
-                                                    <ui:TextBlock.Text>
-                                                        <PriorityBinding>
-                                                            <Binding Path="ServerName" />
-                                                            <Binding Path="ServerIp" />
-                                                        </PriorityBinding>
-                                                    </ui:TextBlock.Text>
-                                                </ui:TextBlock>
-                                                <ui:TextBlock
-                                                    Appearance="Secondary"
-                                                    FontTypography="Caption"
-                                                    Text="{DynamicResource UiSERVERHIDDEN}"
-                                                    Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
+                                        <!-- Title, then the relative time, or the row commands on hover -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                MaxHeight="38"
+                                                FontSize="15"
+                                                FontWeight="Bold"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                LineHeight="19"
+                                                Style="{StaticResource TwoLineClamp}"
+                                                Text="{Binding Title}" />
+
+                                            <!-- MinWidth holds the slot steady so the title does
+                                                 not shift as time and commands swap. -->
+                                            <Grid
+                                                Grid.Column="1"
+                                                MinWidth="60"
+                                                Margin="8,1,0,0"
+                                                VerticalAlignment="Top">
+                                                <Grid Style="{StaticResource RowTimestampSlot}">
+                                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                                        <!-- Unread: the accent dot the account bell uses. -->
+                                                        <Ellipse
+                                                            Width="7"
+                                                            Height="7"
+                                                            Margin="0,0,6,0"
+                                                            VerticalAlignment="Center"
+                                                            Fill="{DynamicResource Accent}"
+                                                            Visibility="{Binding IsRead, Converter={StaticResource VisInv}}" />
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            FontSize="12"
+                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                            ToolTip="{Binding Timestamp, StringFormat='{}{0:g}'}">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource RelativeTime}">
+                                                                    <Binding Path="Timestamp" />
+                                                                    <Binding Path="Now" Source="{x:Static conv:MinuteClock.Instance}" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <StackPanel
+                                                    Margin="0,-5,-6,-5"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal">
+                                                    <ui:Button
+                                                        AutomationProperties.Name="{DynamicResource UiMuteNotificationsFromThisServer}"
+                                                        Click="BtnMuteServer_Click"
+                                                        Style="{StaticResource MuteServerButton}"
+                                                        Tag="{Binding}"
+                                                        ToolTip="{DynamicResource UiMuteNotificationsFromThisServer}">
+                                                        <ui:SymbolIcon
+                                                            FontSize="14"
+                                                            Foreground="{DynamicResource DangerBrush}"
+                                                            Symbol="SpeakerMute24" />
+                                                    </ui:Button>
+                                                    <ui:Button
+                                                        AutomationProperties.Name="{DynamicResource Delete}"
+                                                        Click="BtnDelete_Click"
+                                                        Style="{StaticResource RowCommandButton}"
+                                                        Tag="{Binding Id}"
+                                                        ToolTip="{DynamicResource Delete}">
+                                                        <ui:SymbolIcon
+                                                            FontSize="14"
+                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                            Symbol="Delete24" />
+                                                    </ui:Button>
+                                                </StackPanel>
                                             </Grid>
-                                        </ui:Button>
+                                        </Grid>
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            MaxHeight="36"
+                                            Margin="0,4,0,0"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            LineHeight="18"
+                                            Style="{StaticResource TwoLineClamp}"
+                                            Text="{Binding Message}" />
+
+                                        <!-- Server tag: only when the server is not already the
+                                             title or the message, so a death does not name it twice. -->
+                                        <Grid Grid.Row="2" Visibility="{Binding Converter={StaticResource ServerTagVis}}">
+                                            <ui:Button
+                                                Margin="-8,4,0,-4"
+                                                Click="BtnServerTag_Click"
+                                                Style="{StaticResource NotificationServerButton}"
+                                                Tag="{Binding}">
+                                                <Grid>
+                                                    <ui:TextBlock
+                                                        Appearance="Secondary"
+                                                        FontTypography="Caption"
+                                                        Foreground="{DynamicResource Accent}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource VisInv}}">
+                                                        <ui:TextBlock.Text>
+                                                            <PriorityBinding>
+                                                                <Binding Path="ServerName" />
+                                                                <Binding Path="ServerIp" />
+                                                            </PriorityBinding>
+                                                        </ui:TextBlock.Text>
+                                                    </ui:TextBlock>
+                                                    <ui:TextBlock
+                                                        Appearance="Secondary"
+                                                        FontTypography="Caption"
+                                                        Text="{DynamicResource UiSERVERHIDDEN}"
+                                                        Visibility="{Binding IsStreamerMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Vis}}" />
+                                                </Grid>
+                                            </ui:Button>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </ui:CardControl.Header>
