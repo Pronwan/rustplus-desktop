@@ -516,12 +516,17 @@ public partial class MainWindow
             {
                 try
                 {
-                    var bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(generatedTexPath));
-                    bi.EndInit();
-                    bi.Freeze();
+                    // The render runs to ~25 MB; decoding it on the UI thread froze the window.
+                    var bi = await Task.Run(() =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(generatedTexPath));
+                        image.EndInit();
+                        image.Freeze();
+                        return image;
+                    });
 
                     AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
                     _isGeneratedMapActive = true;
@@ -538,7 +543,8 @@ public partial class MainWindow
                     var preparedProfile = _vm.Selected;
                     _ = Dispatcher.InvokeAsync(async () =>
                     {
-                        if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder);
+                        // The render is already the image shown below; only the overlays are needed.
+                        if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
                     });
                 }
                 catch (Exception ex)

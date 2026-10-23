@@ -50,8 +50,9 @@ namespace RustPlusDesk.Views
                 string mapDataPath = System.IO.Path.Combine(folder, "map_data.json");
                 if (!System.IO.File.Exists(mapDataPath)) return;
 
-                using var doc = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(mapDataPath));
-                if (!doc.RootElement.TryGetProperty("size", out var sizeEl)) return;
+                // Cached: the overlays loaded next read the same parse.
+                if (Services.Map.ParsedMapDataCache.Load(folder) is not { } root) return;
+                if (!root.TryGetProperty("size", out var sizeEl)) return;
                 int parsedSize = sizeEl.GetInt32();
                 if (parsedSize <= 0) return;
 
@@ -865,18 +866,32 @@ namespace RustPlusDesk.Views
         /// path was only ever loaded by the 3D path, and the keycard layers by
         /// neither, so both stayed greyed out however the map had been parsed.
         /// </summary>
-        private async Task LoadParsedMapDataAsync(string folderPath)
+        /// <param name="applyRenderedImage">
+        /// False when the caller already shows the rendered map image (server connect), so the
+        /// ~25 MB render is not decoded and laid out a second time.
+        /// </param>
+        private async Task LoadParsedMapDataAsync(string folderPath, bool applyRenderedImage = true)
         {
             _currentMapFolderPath = folderPath;
             if (_vm?.Selected is { } offlineProfile && IsOfflineOnlyProfile(offlineProfile))
             {
                 await LoadOfflineMainMonumentsAsync(offlineProfile, folderPath);
             }
-            GenerateAndLoadExtraMonumentsForCurrentMap(folderPath);
-            await GenerateBuildingBlockedZonesForCurrentMap(folderPath);
+
+            // map_data.json runs to ~90 MB and every overlay below reads from it: read it
+            // (and map_resolved.json) once, off the UI thread, instead of once per overlay on it.
+            var mapRoot = await Services.Map.ParsedMapDataCache.LoadAsync(folderPath);
+            using var resolvedDoc = await Services.Map.ParsedMapDataCache.ParseFileAsync(Path.Combine(folderPath, "map_resolved.json"));
+            JsonElement? resolvedRoot = resolvedDoc?.RootElement;
+
+            if (mapRoot is { } root)
+            {
+                GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedRoot);
+                await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedRoot);
+            }
             LoadBuildingBlockedZonesForCurrentMap(folderPath);
-            LoadCargoPathForCurrentMap(folderPath);
-            LoadKeycardSitesForCurrentMap(folderPath);
+            LoadCargoPathForCurrentMap(mapRoot.HasValue ? folderPath : null, mapRoot);
+            LoadKeycardSitesForCurrentMap(mapRoot.HasValue ? folderPath : null, mapRoot);
 
             // Freshly parsed data is the reason someone waited for the parse, so the
             // keycard layers come up shown rather than needing another two clicks.
@@ -884,16 +899,21 @@ namespace RustPlusDesk.Views
 
             // Apply high-resolution generated Facepunch map image to the main app map view
             string texPath = Path.Combine(folderPath, Map3DLocalBuildService.RenderedTextureFileName);
-            if (File.Exists(texPath))
+            if (applyRenderedImage && File.Exists(texPath))
             {
                 try
                 {
-                    var bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.StreamSource = new MemoryStream(File.ReadAllBytes(texPath));
-                    bi.EndInit();
-                    bi.Freeze();
+                    // Decoding the render takes a second or more; keep it off the UI thread.
+                    var bi = await Task.Run(() =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.StreamSource = new MemoryStream(File.ReadAllBytes(texPath));
+                        image.EndInit();
+                        image.Freeze();
+                        return image;
+                    });
 
                     _isGeneratedMapActive = true;
                     Dispatcher.Invoke(() =>

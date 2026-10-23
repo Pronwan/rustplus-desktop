@@ -64,16 +64,13 @@ public partial class MainWindow
         });
     }
 
-    private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath)
+    // mapRoot / resolvedRoot are read once, off the UI thread, by LoadParsedMapDataAsync.
+    private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath, JsonElement mapRoot, JsonElement? resolvedRoot)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
         try
         {
-            string mapDataPath = Path.Combine(folderPath, "map_data.json");
-            if (!File.Exists(mapDataPath)) return;
-
-            using var doc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
-            var root = doc.RootElement;
+            var root = mapRoot;
             double half = root.TryGetProperty("size", out var sizeEl) ? sizeEl.GetDouble() * 0.5 : _worldSizeS * 0.5;
             var extras = new List<ExtraMonument>();
 
@@ -103,13 +100,11 @@ public partial class MainWindow
 
             // Fallback: scan map_resolved.json for extra monuments missed by map_data.json
             // (handles maps processed by older Program.cs versions that didn't include oasis in isOfInterest)
-            string resolvedPath = Path.Combine(folderPath, "map_resolved.json");
-            if (File.Exists(resolvedPath))
+            if (resolvedRoot is { } resolved)
             {
-                using var resolvedDoc = JsonDocument.Parse(File.ReadAllText(resolvedPath));
-                if (resolvedDoc.RootElement.ValueKind == JsonValueKind.Array)
+                if (resolved.ValueKind == JsonValueKind.Array)
                 {
-                    foreach (var el in resolvedDoc.RootElement.EnumerateArray())
+                    foreach (var el in resolved.EnumerateArray())
                     {
                         string c = ReadString(el, "c").ToLowerInvariant();
                         string i = ReadString(el, "i").ToLowerInvariant();

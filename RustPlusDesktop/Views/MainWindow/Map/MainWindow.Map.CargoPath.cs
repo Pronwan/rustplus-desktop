@@ -83,8 +83,9 @@ public partial class MainWindow
                 return;
             }
 
-            string folder = RustPlusDesk.Services.Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);
-            LoadCargoPathForCurrentMap(folder);
+            var profile = _vm.Selected;
+            string folder = RustPlusDesk.Services.Map3DLocalBuildService.GetPreparedFolderPath(profile, profile.RustMapsMapId);
+            _ = LoadCargoPathWhenReadyAsync(profile, folder);
         }
         catch
         {
@@ -92,7 +93,19 @@ public partial class MainWindow
         }
     }
 
-    private void LoadCargoPathForCurrentMap(string? folderPath)
+    // Reads the map data off the UI thread, then applies it unless the server changed meanwhile.
+    private async System.Threading.Tasks.Task LoadCargoPathWhenReadyAsync(RustPlusDesk.Models.ServerProfile profile, string folder)
+    {
+        var root = await RustPlusDesk.Services.Map.ParsedMapDataCache.LoadAsync(folder);
+        await Dispatcher.InvokeAsync(() =>
+        {
+            if (!ReferenceEquals(_vm?.Selected, profile)) return;
+            LoadCargoPathForCurrentMap(root.HasValue ? folder : null, root);
+        });
+    }
+
+    // mapRoot: the parsed map's overlay data when the caller already has it (see ParsedMapDataCache).
+    private void LoadCargoPathForCurrentMap(string? folderPath, JsonElement? mapRoot = null)
     {
         _cargoPathData = null;
         if (ChkCargoPath != null)
@@ -118,8 +131,11 @@ public partial class MainWindow
 
         try
         {
-            using var doc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
-            var root = doc.RootElement;
+            if ((mapRoot ?? RustPlusDesk.Services.Map.ParsedMapDataCache.Load(folderPath)) is not { } root)
+            {
+                RedrawCargoPath();
+                return;
+            }
 
             double parsedWorldSize = root.TryGetProperty("size", out var sizeEl) ? sizeEl.GetDouble() : _worldSizeS;
             if (parsedWorldSize <= 0)
