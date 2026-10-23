@@ -8,6 +8,19 @@ namespace RustPlusDesktop.Tests;
 public sealed class MiniMapPlacementTests
 {
     [TestMethod]
+    public void SettingsGear_StaysReachableAcrossTransparentCorners_AndWhilePopupIsOpen()
+    {
+        var size = new Size(260, 260);
+        // Outside the circular map, but on the route to its top-right settings button.
+        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(235, 10), size));
+        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, true, false, new Point(240, 20), size));
+        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, true, new Point(300, 30), size));
+        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(true, false, false, new Point(-20, -20), size));
+        Assert.IsFalse(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(300, 30), size));
+        Assert.IsFalse(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(-1, 30), size));
+    }
+
+    [TestMethod]
     [DataRow(1920, 0, 1920, 1080, 3560, 20)]
     [DataRow(-2560, 0, 2560, 1440, -280, 20)]
     [DataRow(0, -1440, 2560, 1440, 2280, -1420)]

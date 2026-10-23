@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Input;
+using System.Windows.Threading;
 using RustPlusDesk.Services;
 
 namespace RustPlusDesk;
@@ -22,40 +24,64 @@ public partial class MiniMapWindow
         InitMiniMapButtons();
     }
 
+    private DispatcherTimer? _miniMapButtonHideTimer;
+
     internal void InitMiniMapButtons()
     {
+        ShowMapButtons(false);
         MouseEnter += (_, _) => UpdateMiniMapButtons();
         MouseLeave += (_, _) => UpdateMiniMapButtons();
-        MouseMove += (_, _) =>
-        {
-            if (BtnMapClose?.Visibility != Visibility.Visible && (IsMouseOver || MapContainer?.IsMouseOver == true))
-                UpdateMiniMapButtons();
-        };
 
         if (MapContainer != null)
         {
             MapContainer.MouseEnter += (_, _) => UpdateMiniMapButtons();
             MapContainer.MouseLeave += (_, _) => UpdateMiniMapButtons();
         }
-
+        SettingsPopup.Opened += (_, _) => UpdateMiniMapButtons();
+        SettingsPopup.Closed += (_, _) => UpdateMiniMapButtons();
+        Closed += (_, _) => _miniMapButtonHideTimer?.Stop();
         Loaded += (_, _) => UpdateMiniMapButtons();
     }
+
+    internal static bool KeepMiniMapButtonsVisible(bool unlocked, bool hovered, bool settingsOpen, Point pointer, Size size)
+        => unlocked || hovered || settingsOpen || new Rect(new Point(), size).Contains(pointer);
+
+    private bool MiniMapButtonsWanted()
+        => KeepMiniMapButtonsVisible(!IsDockLocked(), IsMouseOver || MapContainer?.IsMouseOver == true,
+            SettingsPopup.IsOpen, Mouse.GetPosition(this), new Size(ActualWidth, ActualHeight));
 
     internal void UpdateMiniMapButtons()
     {
         if (IsDeviceOverlay)
         {
-            if (BtnMapClose != null) BtnMapClose.Visibility = Visibility.Collapsed;
-            if (BtnMapSettings != null) BtnMapSettings.Visibility = Visibility.Collapsed;
+            ShowMapButtons(false);
             return;
         }
 
-        bool isUnlocked = !IsDockLocked();
-        bool isHovered = IsMouseOver || MapContainer?.IsMouseOver == true;
-        var visibility = (isUnlocked || isHovered) ? Visibility.Visible : Visibility.Collapsed;
+        bool active = !IsDockLocked() || IsMouseOver || MapContainer?.IsMouseOver == true || SettingsPopup.IsOpen;
+        if (active)
+        {
+            _miniMapButtonHideTimer?.Stop();
+            ShowMapButtons(true);
+            return;
+        }
 
-        if (BtnMapClose != null) BtnMapClose.Visibility = visibility;
-        if (BtnMapSettings != null) BtnMapSettings.Visibility = visibility;
+        if (MiniMapButtonsWanted()) ShowMapButtons(true);
+        // A round layered window loses mouse-over in its transparent corners, on the way to the gear.
+        _miniMapButtonHideTimer ??= CreateMiniMapButtonHideTimer();
+        if (!_miniMapButtonHideTimer.IsEnabled) _miniMapButtonHideTimer.Start();
+    }
+
+    private DispatcherTimer CreateMiniMapButtonHideTimer()
+    {
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+        timer.Tick += (_, _) =>
+        {
+            if (MiniMapButtonsWanted()) return;
+            timer.Stop();
+            ShowMapButtons(false);
+        };
+        return timer;
     }
 
     internal void OnDockLockChanged(bool locked)
