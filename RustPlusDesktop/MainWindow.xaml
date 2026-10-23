@@ -5464,74 +5464,140 @@
                         Background="{DynamicResource SurfaceAlt}"
                         BorderBrush="{DynamicResource CardBorder}"
                         BorderThickness="0,0,0,1">
-                        <Grid>
+                        <Grid x:Name="MapToolbarLayout" Loaded="MapToolbar_Loaded" SizeChanged="MapToolbar_SizeChanged">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <!--  Left Group: Map Filters  -->
-                            <StackPanel Orientation="Horizontal">
+                            <WrapPanel x:Name="MapToolbarFilters" Orientation="Horizontal">
                                 <Border
+                                    x:Name="MapQuickFilters"
                                     Margin="0,0,8,0"
                                     VerticalAlignment="Center"
                                     Background="#AA16181C"
                                     BorderBrush="#30FFFFFF"
                                     BorderThickness="1"
                                     CornerRadius="7">
-                                    <StackPanel Orientation="Horizontal">
+                                    <Border.Resources>
+                                        <Style x:Key="MapFilterToggle" TargetType="CheckBox" BasedOn="{StaticResource PillToggleButton}">
+                                            <Setter Property="MinHeight" Value="32" />
+                                        </Style>
+                                        <Style x:Key="MapFilterLabel" TargetType="TextBlock">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                        <Style x:Key="MapFilterIcon" TargetType="ui:SymbolIcon">
+                                            <Setter Property="Margin" Value="0,0,6,0" />
+                                            <Setter Property="FontSize" Value="16" />
+                                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=CheckBox}}" />
+                                        </Style>
+                                    </Border.Resources>
+                                    <WrapPanel Orientation="Horizontal">
                                         <CheckBox
                                             x:Name="ChkGrid"
                                             Checked="ChkGrid_Checked"
-                                            Content="{DynamicResource Grid}"
-                                            Style="{StaticResource PillToggleButton}"
+                                            ToolTip="{DynamicResource Grid}"
+                                            AutomationProperties.Name="{DynamicResource Grid}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="First"
-                                            Unchecked="ChkGrid_Checked" />
+                                            Unchecked="ChkGrid_Checked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Grid20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="{DynamicResource Grid}" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
                                         <CheckBox
                                             x:Name="ChkPlayers"
                                             Checked="ChkPlayers_Checked"
-                                            Content="{DynamicResource PlayersOnly}"
+                                            ToolTip="{DynamicResource PlayersOnly}"
+                                            AutomationProperties.Name="{DynamicResource PlayersOnly}"
                                             IsChecked="True"
-                                            Style="{StaticResource PillToggleButton}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="Middle"
-                                            Unchecked="ChkPlayers_Checked" />
+                                            Unchecked="ChkPlayers_Checked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="People20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="{DynamicResource PlayersOnly}" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
                                         <CheckBox
                                             x:Name="Monuments"
                                             Checked="Monuments_Checked"
-                                            Content="{DynamicResource Monuments}"
+                                            ToolTip="{DynamicResource Monuments}"
+                                            AutomationProperties.Name="{DynamicResource Monuments}"
                                             IsChecked="True"
-                                            Style="{StaticResource PillToggleButton}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="Middle"
-                                            Unchecked="Monuments_Unchecked" />
+                                            Unchecked="Monuments_Unchecked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Map20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="{DynamicResource Monuments}" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
                                         <CheckBox
                                             x:Name="ChkShops"
                                             Visibility="Collapsed"
                                             Checked="ChkShops_Checked"
-                                            Content="{DynamicResource Shops}"
-                                            Style="{StaticResource PillToggleButton}"
+                                            ToolTip="{DynamicResource Shops}"
+                                            AutomationProperties.Name="{DynamicResource Shops}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="Middle"
-                                            Unchecked="ChkShops_Checked" />
+                                            Unchecked="ChkShops_Checked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="BuildingShop20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="{DynamicResource Shops}" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
                                         <CheckBox
                                             x:Name="ChkDeathHeatmap"
                                             Checked="ChkDeathHeatmap_Checked"
-                                            Content="Deaths"
-                                            Style="{StaticResource PillToggleButton}"
+                                            ToolTip="{DynamicResource UiLayersDeathHeatmap}"
+                                            AutomationProperties.Name="{DynamicResource UiLayersDeathHeatmap}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="Middle"
-                                            Unchecked="ChkDeathHeatmap_Checked" />
+                                            Unchecked="ChkDeathHeatmap_Checked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="HeartBroken20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="Deaths" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
                                         <CheckBox
                                             x:Name="ChkNoBuildZones"
                                             IsEnabled="False"
                                             Checked="ChkNoBuildZones_Checked"
-                                            Content="{DynamicResource UiNoBuild}"
-                                            Style="{StaticResource PillToggleButton}"
+                                            AutomationProperties.Name="{DynamicResource UiNoBuild}"
+                                            Style="{StaticResource MapFilterToggle}"
                                             Tag="Last"
                                             ToolTip="{DynamicResource UiGenerateThe3DMapToEnableNoBuildZones}"
                                             ToolTipService.ShowOnDisabled="True"
-                                            Unchecked="ChkNoBuildZones_Checked" />
-                                    </StackPanel>
+                                            Unchecked="ChkNoBuildZones_Checked">
+                                            <CheckBox.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ui:SymbolIcon Symbol="Prohibited20" Style="{StaticResource MapFilterIcon}" />
+                                                    <TextBlock Text="{DynamicResource UiNoBuild}" Style="{StaticResource MapFilterLabel}" />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
+                                    </WrapPanel>
                                 </Border>
                                 <ui:Button
                                     x:Name="BtnLayers"
+                                    AutomationProperties.Name="{DynamicResource UiLayers}"
                                     tutorials:Tutorial.TargetId="Map.Layers"
                                     Margin="0,0,8,0"
                                     Padding="10,6"
@@ -5539,7 +5605,8 @@
                                     ToolTip="{DynamicResource UiDetailedMapLayerOptions}">
                                     <StackPanel Orientation="Horizontal">
                                         <ui:SymbolIcon Symbol="Filter20" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                        <TextBlock Text="{DynamicResource UiLayers}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="MapLayersLabel" Text="{DynamicResource UiLayers}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="MapActiveLayerCount" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" />
                                     </StackPanel>
                                 </ui:Button>
                                 <Popup
@@ -5643,11 +5710,37 @@
                                             </Style>
                                         </Border.Resources>
 
+                                        <ScrollViewer MaxHeight="480" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                         <StackPanel Margin="0,0,0,6">
                                             <TextBlock Margin="16,14,16,0" FontSize="14" FontWeight="SemiBold" Foreground="White" Text="{DynamicResource UiMapLayers}" />
 
                                             <!--  ── Show on map ─────────────────────────────────────────  -->
                                             <TextBlock Style="{StaticResource LayerHeader}" Text="{DynamicResource UiLayersShowOnMap}" />
+
+                                            <Grid Style="{StaticResource LayerItem}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource LayerName}" Text="{DynamicResource Grid}" />
+                                                <ui:ToggleSwitch Grid.Column="1" AutomationProperties.Name="{DynamicResource Grid}" IsChecked="{Binding IsChecked, ElementName=ChkGrid, Mode=TwoWay}" />
+                                            </Grid>
+                                            <Grid Style="{StaticResource LayerItem}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource LayerName}" Text="{DynamicResource PlayersOnly}" />
+                                                <ui:ToggleSwitch Grid.Column="1" AutomationProperties.Name="{DynamicResource PlayersOnly}" IsChecked="{Binding IsChecked, ElementName=ChkPlayers, Mode=TwoWay}" />
+                                            </Grid>
+                                            <Grid Style="{StaticResource LayerItem}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource LayerName}" Text="{DynamicResource Monuments}" />
+                                                <ui:ToggleSwitch Grid.Column="1" AutomationProperties.Name="{DynamicResource Monuments}" IsChecked="{Binding IsChecked, ElementName=Monuments, Mode=TwoWay}" />
+                                            </Grid>
 
                                             <!--  Death markers: mirrors the map bar's Death toggle both ways.  -->
                                             <Grid Style="{StaticResource LayerItem}">
@@ -5929,6 +6022,7 @@
                                                 </Grid>
                                             </ui:Button>
                                         </StackPanel>
+                                        </ScrollViewer>
                                     </Border>
                                 </Popup>
                                  <Border
@@ -6070,7 +6164,7 @@
                                              <ui:Button.Content>
                                                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                      <ui:SymbolIcon Symbol="Settings20" FontSize="14" Foreground="{DynamicResource TextPrimary}" />
-                                                     <ui:SymbolIcon Symbol="ChevronDown12" FontSize="10" Margin="4,1,0,0" Foreground="{DynamicResource TextSecondary}" />
+                                                     <ui:SymbolIcon Symbol="ChevronDown12" FontSize="10" Margin="4,1,0,0" Foreground="White" />
                                                  </StackPanel>
                                              </ui:Button.Content>
                                              <ui:Button.ContextMenu>
@@ -6851,10 +6945,11 @@
                                          FontWeight="SemiBold"
                                          TextWrapping="NoWrap" />
                                  </Border>
-                                    </StackPanel>
+                                    </WrapPanel>
 
                             <!-- Right Group: Map Actions (Right-Oriented) -->
-                            <StackPanel
+                            <WrapPanel
+                                x:Name="MapToolbarActions"
                                 Grid.Column="1"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
@@ -7227,7 +7322,7 @@
 
                             <!--  StackPanel with Heli Demo removed  -->
                             <StackPanel Margin="12,0,0,0" Orientation="Horizontal" />
-                            </StackPanel>
+                            </WrapPanel>
                         </Grid>
                     </Border>
 
