@@ -8787,7 +8787,7 @@
                             </Popup>
                         </StackPanel>
 
-                        <Canvas x:Name="GridLayer" IsHitTestVisible="False" />
+                        <views:MapGridVisual x:Name="GridLayer" IsHitTestVisible="False" />
                         <!--  No Build zones get their own canvas: they used to live on GridLayer, whose
                               wrapper opacity follows the Grid toggle, so turning the grid off hid them too.  -->
                         <Canvas x:Name="NoBuildLayer" IsHitTestVisible="False" />

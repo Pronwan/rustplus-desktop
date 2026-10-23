@@ -29,6 +29,7 @@ namespace RustPlusDesk
 
         // Basis-Ausschnitt vom MainWindow (wo der Spieler ist)
         private Rect _baseViewbox;
+        private readonly Views.MapGridVisual _gridVisual = new();
 
         // zusätzlicher User-Zoom nur für die Mini-Map
         private double _userZoom = 1.1;
@@ -176,7 +177,16 @@ namespace RustPlusDesk
         {
             BrushTexture.Visual = layers.Texture;
             BrushHeatmap.Visual = layers.Heatmap;
-            BrushGrid.Visual = layers.Grid;
+            if (layers.Grid is Views.MapGridVisual grid)
+            {
+                _gridVisual.SetDrawing(grid.Drawing);
+                BrushGrid.Visual = _gridVisual;
+            }
+            else
+            {
+                _gridVisual.SetDrawing(null);
+                BrushGrid.Visual = layers.Grid;
+            }
             BrushDrawings.Visual = layers.Drawings;
             BrushIcons.Visual = layers.Icons;
             BrushPlayers.Visual = layers.Players;
@@ -347,6 +357,9 @@ namespace RustPlusDesk
             double finalCy = cy - _panY;
 
             var vb = new Rect(finalCx - w / 2.0, finalCy - h / 2.0, w, h);
+
+            // Its own scale keeps grid text readable regardless of the main map's zoom.
+            _gridVisual.SetViewScale(_mapWidth / w, Services.TrackingService.MapUseAliasedEdgeMode);
 
             foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths, BrushNoBuild })
             {

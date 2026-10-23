@@ -79,7 +79,15 @@ public partial class MainWindow
                     // A better approach in WPF for off-screen rendering of an entire Canvas without affecting UI is using a VisualBrush 
                     // of the Canvas *itself* (not its transformed parent).
                     
-                    var gridBrush = new VisualBrush(GridLayer) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
+                    var exportGrid = new MapGridVisual();
+                    exportGrid.SetDrawing(GridLayer.Drawing);
+                    exportGrid.SetViewScale(scale, Services.TrackingService.MapUseAliasedEdgeMode);
+                    var gridBrush = new VisualBrush(exportGrid)
+                    {
+                        ViewboxUnits = BrushMappingMode.Absolute,
+                        Viewbox = new Rect(0, 0, mapW, mapH),
+                        Stretch = Stretch.Fill
+                    };
                     // No Build zones sit on their own canvas now, so they need their own brush here.
                     var noBuildBrush = new VisualBrush(NoBuildLayer) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
                     var overlayBrush = new VisualBrush(Overlay) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };

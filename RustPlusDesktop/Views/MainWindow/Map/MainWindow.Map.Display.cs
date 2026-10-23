@@ -263,7 +263,7 @@ public partial class MainWindow
 
         ImgMap.Source = null;
         ImgHeatmap.Source = null;
-        GridLayer.Children.Clear();
+        GridLayer.SetDrawing(null);
         NoBuildLayer?.Children.Clear();
         CargoPathLayer?.Children.Clear();
 

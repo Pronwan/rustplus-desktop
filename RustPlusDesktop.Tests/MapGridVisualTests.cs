@@ -1,0 +1,97 @@
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RustPlusDesk.Views;
+
+namespace RustPlusDesktop.Tests;
+
+[TestClass]
+public class MapGridVisualTests
+{
+    [STATestMethod]
+    public void Grid_PreservesCellBoundaries_Labels_AndOceanPadding()
+    {
+        foreach (double worldSize in new[] { 1000d, 3000, 4250, 4500, 6000 })
+        {
+            int cells = MainWindow.GridCellCount(worldSize);
+            double cell = MainWindow.GridCellSize(worldSize);
+            Assert.AreEqual(worldSize, cell * cells, 1e-8);
+            var bounds = new Rect(100, 125, worldSize * 0.8, worldSize * 0.8);
+            var drawing = new MapGridDrawing(bounds, new Size(bounds.Right + 100, bounds.Bottom + 125), cells, false);
+            Assert.IsTrue(drawing.Lines.IsFrozen);
+            Assert.AreEqual(cells * cells, drawing.Labels.Length);
+            for (int col = 0; col < cells; col++)
+            for (int row = 0; row < cells; row++)
+            {
+                var (origin, glyph) = drawing.Labels[col * cells + row];
+                Assert.AreEqual(bounds.Left + col * cell * 0.8, origin.X, 1e-8);
+                Assert.AreEqual(bounds.Top + row * cell * 0.8, origin.Y, 1e-8);
+                Assert.IsTrue(glyph.IsFrozen);
+            }
+            var lines = PathGeometry.CreateFromGeometry(drawing.Lines).Figures;
+            Assert.IsTrue(lines.Any(line => Math.Abs(line.StartPoint.X - bounds.Left) < 1e-8));
+            Assert.IsTrue(lines.Any(line => Math.Abs(line.StartPoint.X - bounds.Right) < 1e-8));
+        }
+        Assert.AreEqual(29, MainWindow.GridCellCount(4250));
+        Assert.AreEqual("A", MainWindow.ColumnLabel(0));
+        Assert.AreEqual("Z", MainWindow.ColumnLabel(25));
+        Assert.AreEqual("AA", MainWindow.ColumnLabel(26));
+        Assert.AreEqual("AC", MainWindow.ColumnLabel(28));
+    }
+
+    [STATestMethod]
+    public void Grid_ReusesVectorsDuringFollow_AndKeepsEachViewIndependent()
+    {
+        var data = new MapGridDrawing(new Rect(40, 40, 580, 580), new Size(660, 660), 29, false);
+        var main = new MapGridVisual();
+        var mini = new MapGridVisual();
+        main.SetDrawing(data);
+        mini.SetDrawing(data);
+        Assert.AreEqual(2, VisualTreeHelper.GetChildrenCount(main));
+        Assert.IsTrue(main.SetViewScale(3, false));
+        var mainLines = ((DrawingVisual)VisualTreeHelper.GetChild(main, 0)).Drawing;
+        for (int frame = 0; frame < 120; frame++)
+            Assert.IsFalse(main.SetViewScale(3, false), "Unchanged zoom must not redraw during follow/polling.");
+        Assert.IsTrue(mini.SetViewScale(0.5, false));
+        Assert.AreSame(data, mini.Drawing);
+        Assert.AreEqual(mainLines.Bounds, ((DrawingVisual)VisualTreeHelper.GetChild(main, 0)).Drawing.Bounds);
+        var labels = (DrawingVisual)VisualTreeHelper.GetChild(main, 1);
+        Assert.IsFalse(labels.Drawing.Bounds.IsEmpty);
+        Assert.IsTrue(((DrawingVisual)VisualTreeHelper.GetChild(mini, 1)).Drawing == null,
+            "Overview labels should hide when cells are too small to read.");
+        Assert.IsTrue(main.SetViewScale(3, true));
+        Assert.IsFalse(main.SetViewScale(double.NaN, false));
+        main.SetDrawing(null);
+        Assert.IsNull(main.Drawing);
+        Assert.IsNull(((DrawingVisual)VisualTreeHelper.GetChild(main, 0)).Drawing);
+    }
+
+    [STATestMethod]
+    public void DeepSea_AndFullMapBrush_RenderWithoutLayoutControls()
+    {
+        double side = MainWindow.DeepSeaCells * MainWindow.DeepSeaCellSize;
+        var bounds = new Rect(20, 30, 540, 540);
+        var data = new MapGridDrawing(bounds, new Size(600, 600), MainWindow.DeepSeaCells, true);
+        Assert.AreEqual(27 * 27, data.Labels.Length);
+        Assert.AreEqual(4001.4, side, 1e-8);
+        Assert.AreEqual(56, PathGeometry.CreateFromGeometry(data.Lines).Figures.Count);
+        var view = new MapGridVisual();
+        view.SetDrawing(data);
+        view.SetViewScale(0.5, false);
+        view.Measure(new Size(600, 600));
+        view.Arrange(new Rect(0, 0, 600, 600));
+        var export = new DrawingVisual();
+        using (var context = export.RenderOpen())
+            context.DrawRectangle(new VisualBrush(view)
+            {
+                ViewboxUnits = BrushMappingMode.Absolute,
+                Viewbox = new Rect(0, 0, 600, 600), Stretch = Stretch.Fill
+            }, null, new Rect(0, 0, 300, 300));
+        var bitmap = new RenderTargetBitmap(300, 300, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(export);
+        var pixels = new byte[300 * 300 * 4];
+        bitmap.CopyPixels(pixels, 300 * 4, 0);
+        Assert.IsTrue(pixels.Where((_, index) => index % 4 == 3).Any(alpha => alpha != 0));
+    }
+}
