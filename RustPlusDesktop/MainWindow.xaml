@@ -7381,8 +7381,11 @@
                         <Border
                             x:Name="MapPlaceholder"
                             Panel.ZIndex="50"
-                            Background="#0B3A4A"
                             Cursor="Arrow">
+                            <Border.Background>
+                                <ImageBrush ImageSource="pack://application:,,,/Assets/Images/map-connect-backdrop.png"
+                                            Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Center" />
+                            </Border.Background>
                             <Border
                                 Padding="24"
                                 HorizontalAlignment="Center"
