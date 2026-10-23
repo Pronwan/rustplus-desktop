@@ -506,6 +506,8 @@
     <Resource Include="Assets\Fonts\PermanentMarker.ttf" />
     <None Remove="Assets\Images\map-connect-backdrop.png" />
     <Resource Include="Assets\Images\map-connect-backdrop.png" />
+    <None Remove="Assets\Images\loading_screen.png" />
+    <Resource Include="Assets\Images\loading_screen.png" />
     <Resource Include="Assets\icons\arcticresearch.png" />
     <Resource Include="Assets\icons\banditcamp.png" />
     <Resource Include="Assets\icons\barn.png" />

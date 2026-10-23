@@ -1,41 +1,84 @@
 <UserControl
     x:Class="RustPlusDesk.Views.BusyOverlay"
+    x:Name="LoadingView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
-    <Grid
-        Panel.ZIndex="9999"
-        Background="#AA000000"
-        IsHitTestVisible="True"
-        Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
-        <Border
-            Width="340"
-            Padding="24"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="{DynamicResource Surface}"
-            BorderBrush="{DynamicResource CardBorder}"
-            BorderThickness="1"
-            CornerRadius="12">
-            <StackPanel>
-                <ui:ProgressRing
-                    Width="48"
-                    Height="48"
-                    Margin="0,0,0,20"
-                    IsIndeterminate="True" />
-                <TextBlock
-                    FontSize="16"
-                    FontWeight="SemiBold"
-                    Foreground="{DynamicResource TextPrimary}"
-                    Text="{Binding BusyText}"
-                    TextAlignment="Center" />
-                <TextBlock
-                    Margin="0,8,0,0"
-                    FontSize="12"
-                    Foreground="{DynamicResource TextSubtle}"
-                    Text="{DynamicResource MayTakeAMoment}"
-                    TextAlignment="Center" />
-            </StackPanel>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="#11191F" ClipToBounds="True">
+        <Image Source="pack://application:,,,/Assets/Images/loading_screen.png"
+               Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+        <Border IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#00082D3B" Offset="0.60" />
+                    <GradientStop Color="#EB082D3B" Offset="0.82" />
+                    <GradientStop Color="#FF11191F" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <StackPanel Margin="28,0,28,44" MaxWidth="420"
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Viewbox Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="3" Margin="0,4,14,4" CornerRadius="1.5" Background="#F45135" />
+                    <Image Source="pack://application:,,,/Assets/logo-light-mode.png"
+                           Width="44" Height="44" Margin="0,0,12,0"
+                           RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock Text="Rust+ Desktop" FontSize="36" FontWeight="SemiBold" Foreground="#F2F5F7" />
+                </StackPanel>
+            </Viewbox>
+            <TextBlock x:Name="StatusText" Margin="17,10,0,16" FontSize="14"
+                       Foreground="#F2F5F7" TextWrapping="Wrap"
+                       AutomationProperties.LiveSetting="Polite"
+                       Text="{Binding Status, ElementName=LoadingView}" />
+            <ProgressBar x:Name="LoadingProgress" Height="4" MinWidth="80" IsIndeterminate="True"
+                         AutomationProperties.Name="Loading">
+                <ProgressBar.Template>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border Background="#33F2F5F7" CornerRadius="2">
+                            <Viewbox Stretch="Fill">
+                                <Canvas Width="420" Height="4" ClipToBounds="True">
+                                    <Border x:Name="Sweep" Width="100" Height="4" CornerRadius="2" Background="#F45135">
+                                        <Border.RenderTransform>
+                                            <TranslateTransform X="160" />
+                                        </Border.RenderTransform>
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#F45135" BlurRadius="8" ShadowDepth="0" Opacity="0.45" />
+                                        </Border.Effect>
+                                    </Border>
+                                </Canvas>
+                            </Viewbox>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsVisible, RelativeSource={RelativeSource Self}}" Value="True" />
+                                    <Condition Binding="{Binding Source={x:Static SystemParameters.ClientAreaAnimation}}" Value="True" />
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="LoadingSweep">
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation Storyboard.TargetName="Sweep"
+                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-100" To="420" Duration="0:0:1.6">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <SineEase EasingMode="EaseInOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiDataTrigger.EnterActions>
+                                <MultiDataTrigger.ExitActions>
+                                    <RemoveStoryboard BeginStoryboardName="LoadingSweep" />
+                                </MultiDataTrigger.ExitActions>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ProgressBar.Template>
+            </ProgressBar>
+        </StackPanel>
+        <Border Margin="12" Padding="9,4" CornerRadius="9" Background="#CC11191F"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock x:Name="VersionText" Foreground="#F2F5F7" FontSize="11" />
         </Border>
     </Grid>
 </UserControl>
