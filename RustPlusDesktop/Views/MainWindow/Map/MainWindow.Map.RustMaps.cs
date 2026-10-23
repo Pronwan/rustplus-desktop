@@ -1878,11 +1878,29 @@ namespace RustPlusDesk.Views
                 {
                     try
                     {
+                        // The viewer loaded map_data.json before newer layers were added to it,
+                        // so hand those over directly (512 grid; the fine layers it already has).
+                        string? heatmapB64 = null;
+                        if (HalloweenHeatmapCategories.Contains(heatmapType) && _vm.Selected is { } viewerProfile)
+                        {
+                            string viewerDataPath = Path.Combine(
+                                Map3DLocalBuildService.GetPreparedFolderPath(viewerProfile, viewerProfile.RustMapsMapId), "map_data.json");
+                            if (File.Exists(viewerDataPath))
+                            {
+                                var raster = await ReadHeatmapRasterAsync(viewerDataPath, heatmapType);
+                                if (raster == null && await AddMissingHeatmapsAsync(viewerDataPath))
+                                    raster = await ReadHeatmapRasterAsync(viewerDataPath, heatmapType);
+                                if (raster is { Size: ResourceHeatmapRaster.Size } grid)
+                                    heatmapB64 = Convert.ToBase64String(grid.Data);
+                            }
+                        }
+
                         var data = new
                         {
                             type = "SHOW_HEATMAP",
                             category = heatmapType,
-                            minDensity = TrackingService.HeatmapMinDensity
+                            minDensity = TrackingService.HeatmapMinDensity,
+                            heatmapB64
                         };
 
                         string json = JsonSerializer.Serialize(data);
@@ -1943,13 +1961,20 @@ namespace RustPlusDesk.Views
                 AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
             }
 
-            // Maps parsed before the Halloween layers existed lack them; a re-parse
-            // (the parser cache version moved on) adds them.
-            if (missingCategory && allowReparse && HalloweenHeatmapCategories.Contains(category)
-                && await OfferMapParseForHeatmapAsync(profile))
+            // A map parsed before this layer existed lacks it. A re-parse would reuse the
+            // cached result, so build just the missing layers from the parsed terrain instead.
+            if (missingCategory && allowReparse && await AddMissingHeatmapsAsync(dataPath))
             {
                 await DrawHeatmapOn2DMapAsync(category, allowReparse: false);
             }
+        }
+
+        private async Task<bool> AddMissingHeatmapsAsync(string dataPath)
+        {
+            AppendLog("[Heatmap] Adding the layers this map was parsed without...");
+            bool ok = await Map3DLocalBuildService.AddMissingHeatmapsAsync(dataPath);
+            AppendLog(ok ? "[Heatmap] Missing layers added." : "[Heatmap] Could not add the missing layers.");
+            return ok;
         }
 
         public void CheckAndExecutePendingMapCopy(ServerProfile connectedProfile)

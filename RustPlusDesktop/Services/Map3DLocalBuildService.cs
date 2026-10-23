@@ -705,6 +705,38 @@ public static class Map3DLocalBuildService
         return (success, process.ExitCode, string.IsNullOrWhiteSpace(stderr) ? null : stderr.Trim());
     }
 
+    /// <summary>
+    /// Adds the heatmap categories an existing map_data.json is missing (it was parsed before
+    /// they existed), from the terrain layers it already holds: no map file and no full parse,
+    /// about a second. A cached parse is otherwise reused as-is, so a re-parse would not add them.
+    /// </summary>
+    public static async Task<bool> AddMissingHeatmapsAsync(string mapDataPath, CancellationToken ct = default)
+    {
+        string? parserPath = ResolveParserExecutable();
+        if (parserPath == null || !File.Exists(mapDataPath)) return false;
+
+        var psi = new ProcessStartInfo
+        {
+            FileName = parserPath,
+            WorkingDirectory = Path.GetDirectoryName(parserPath) ?? AppContext.BaseDirectory,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true
+        };
+        psi.ArgumentList.Add("--add-heatmaps");
+        psi.ArgumentList.Add(mapDataPath);
+
+        using var process = Process.Start(psi);
+        if (process == null) return false;
+
+        var stderrTask = process.StandardError.ReadToEndAsync(ct);
+        var stdoutTask = process.StandardOutput.ReadToEndAsync(ct);
+        await Task.WhenAll(stderrTask, stdoutTask).ConfigureAwait(false);
+        await process.WaitForExitAsync(ct).ConfigureAwait(false);
+        return process.ExitCode == 0;
+    }
+
     public static MapMatchScore ScoreParsedMap(string resolvedPath, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
         if (refs == null || refs.Count == 0 || !File.Exists(resolvedPath)) return default;
