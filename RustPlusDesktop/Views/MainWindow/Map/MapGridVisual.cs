@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace RustPlusDesk.Views;
 
@@ -54,8 +55,15 @@ internal sealed class MapGridDrawing
         {
             var text = new FormattedText($"{MainWindow.ColumnLabel(col)}{row}", CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight, typeface, 12, brush, 1);
+            // Labels stay screen-sized: rasterize their text once rather than on every zoom frame.
+            var visual = new DrawingVisual();
+            using (var context = visual.RenderOpen()) context.DrawText(text, new Point());
+            var bitmap = new RenderTargetBitmap((int)Math.Ceiling(text.WidthIncludingTrailingWhitespace * 3),
+                (int)Math.Ceiling(text.Height * 3), 288, 288, PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+            bitmap.Freeze();
             var glyph = new DrawingGroup();
-            using (var context = glyph.Open()) context.DrawText(text, new Point());
+            using (var context = glyph.Open()) context.DrawImage(bitmap, new Rect(0, 0, bitmap.Width, bitmap.Height));
             glyph.Freeze();
             Labels[col * cells + row] = (new Point(bounds.Left + col * dx, bounds.Top + row * dy), glyph);
         }

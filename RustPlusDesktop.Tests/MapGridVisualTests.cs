@@ -29,6 +29,9 @@ public class MapGridVisualTests
                 Assert.AreEqual(bounds.Left + col * cell * 0.8, origin.X, 1e-8);
                 Assert.AreEqual(bounds.Top + row * cell * 0.8, origin.Y, 1e-8);
                 Assert.IsTrue(glyph.IsFrozen);
+                Assert.IsInstanceOfType<ImageDrawing>(glyph.Children.Single());
+                Assert.IsTrue(((BitmapSource)((ImageDrawing)glyph.Children.Single()).ImageSource).IsFrozen,
+                    "Zoom must reuse pre-rendered label pixels instead of rasterizing glyphs again.");
             }
             var lines = PathGeometry.CreateFromGeometry(drawing.Lines).Figures;
             Assert.IsTrue(lines.Any(line => Math.Abs(line.StartPoint.X - bounds.Left) < 1e-8));
