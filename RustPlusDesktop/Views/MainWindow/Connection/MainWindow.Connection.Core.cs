@@ -672,7 +672,7 @@ public partial class MainWindow
             if (showBusy)
             {
                 _vm.IsBusy = false;
-                _vm.BusyText = "";
+                _vm.BusyText = "Loading map and team…";
                 _vm.IsInitializing = true;
             }
 
@@ -720,7 +720,7 @@ public partial class MainWindow
 
             await mapTask;
             if (showBusy)
-                _vm!.IsConnectionLoading = false;
+                _vm!.BusyText = "Synchronizing server data…";
 
             await Task.WhenAll(initTasks);
             
@@ -743,6 +743,8 @@ public partial class MainWindow
             if (showBusy)
             {
                 _vm!.IsInitializing = false;
+                _vm.IsConnectionLoading = false;
+                _vm.BusyText = "";
             }
             var connectedProfile = _vm!.Selected;
             if (connectedProfile == null)

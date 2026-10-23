@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Markup;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RustPlusDesk.Views;
 
@@ -23,7 +25,7 @@ public class LoadingScreenTests
 
         foreach (var size in new[] { new Size(640, 360), new Size(320, 480), new Size(160, 500) })
         {
-            view.Status = "Synchronizing server dataâ€¦";
+            view.Status = "Synchronizing server data…";
             view.Measure(size);
             view.Arrange(new Rect(size));
             view.UpdateLayout();
@@ -42,4 +44,32 @@ public class LoadingScreenTests
         }
     }
 
+    [STATestMethod]
+    public void ServerConnection_ReplacesConnectCard_WithoutStartupArtwork()
+    {
+        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
+        var document = XDocument.Load(Path.Combine(root, "RustPlusDesktop/MainWindow.xaml"));
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+        var loader = new XElement(document.Descendants().Single(element => (string?)element.Attribute(x + "Name") == "MapConnectionLoader"));
+        Assert.IsFalse(loader.Descendants(wpf + "Image").Any(), "Server connection must not show startup artwork.");
+        var placeholder = document.Descendants().Single(element => (string?)element.Attribute(x + "Name") == "MapPlaceholder");
+        var card = new XElement(wpf + "Border", new XElement(placeholder.Element(wpf + "Border")!.Element(wpf + "Border.Style")!));
+        card.SetAttributeValue(x + "Name", "ConnectCard");
+        var markup = new XElement(wpf + "Grid",
+            new XAttribute(XNamespace.Xmlns + "x", x.NamespaceName),
+            new XAttribute(XNamespace.Xmlns + "conv", "clr-namespace:RustPlusDesk.Converters;assembly=RustPlusDesk"),
+            new XElement(wpf + "Grid.Resources", new XElement(XName.Get("BoolToVisibilityConverter", "clr-namespace:RustPlusDesk.Converters;assembly=RustPlusDesk"), new XAttribute(x + "Key", "BoolToVisibility"))),
+            card, loader);
+        var host = (Grid)XamlReader.Parse(markup.ToString());
+        foreach (bool loading in new[] { false, true, false })
+        {
+            host.DataContext = new { IsConnectionLoading = loading, BusyText = "Connecting…" };
+            host.Measure(new Size(640, 480));
+            host.Arrange(new Rect(0, 0, 640, 480));
+            host.UpdateLayout();
+            Assert.AreEqual(loading ? Visibility.Collapsed : Visibility.Visible, host.Children[0].Visibility);
+            Assert.AreEqual(loading ? Visibility.Visible : Visibility.Collapsed, host.Children[1].Visibility);
+        }
+    }
 }
