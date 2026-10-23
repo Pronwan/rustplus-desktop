@@ -8298,6 +8298,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
             TrackingService.SidebarWidth = _expandedSidebarWidth;
+            UpdateSidebarLayoutMode();
         }
     }
 
@@ -8440,6 +8441,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        UpdateSidebarLayoutMode();
+
         if (isExpanded)
         {
             double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
@@ -8449,7 +8452,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             CompactSidebarRail.Visibility = Visibility.Visible;
             AnimateSidebarWidth(width, () =>
             {
-                if (_isSidebarExpanded)
+                if (_isSidebarExpanded && !_sidebarUsesDrawer)
                 {
                     ColSidebar.MinWidth = MinExpandedSidebarWidth;
                 }
@@ -8458,9 +8461,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        if (ColSidebar.ActualWidth >= MinExpandedSidebarWidth)
+        double currentWidth = GetCurrentSidebarWidth();
+        if (currentWidth >= MinExpandedSidebarWidth)
         {
-            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            _expandedSidebarWidth = Math.Clamp(currentWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
         }
 
         ColSidebar.MinWidth = CompactSidebarWidth;
@@ -8530,6 +8534,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private double GetCurrentSidebarWidth()
     {
+        if (_sidebarUsesDrawer && LeftPanelBorder is not null && !double.IsNaN(LeftPanelBorder.Width))
+            return LeftPanelBorder.Width;
+
         if (ColSidebar == null)
         {
             return CompactSidebarWidth;
@@ -8552,7 +8559,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (ColSidebar != null)
         {
-            ColSidebar.Width = new GridLength(Math.Clamp(width, CompactSidebarWidth, MaxExpandedSidebarWidth), GridUnitType.Pixel);
+            ApplySidebarLayout(Root, LeftPanelBorder, SidebarSplitter, CompactSidebarWidth,
+                Math.Clamp(width, CompactSidebarWidth, MaxExpandedSidebarWidth), _sidebarUsesDrawer);
         }
     }
 

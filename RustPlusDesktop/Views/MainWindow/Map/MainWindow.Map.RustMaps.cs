@@ -25,7 +25,7 @@ namespace RustPlusDesk.Views
         private bool _isRustMapsSearching;
         private bool _isMap3DPreparing;
         private bool _isMap3DActive;
-        private WebView2? _map3DWebView;
+        private WebView2CompositionControl? _map3DWebView;
         private static CoreWebView2Environment? _map3DWebViewEnvironment;
         private string? _currentMapFolderPath;
         private EventHandler<CoreWebView2WebResourceRequestedEventArgs>? _map3DResourceRequestHandler;
@@ -955,7 +955,8 @@ namespace RustPlusDesk.Views
                          $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
-            _map3DWebView = new WebView2
+            // Visual hosting lets the sidebar drawer render above the embedded map.
+            _map3DWebView = new WebView2CompositionControl
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch

@@ -20,7 +20,7 @@
     Title="{DynamicResource AppTitle}"
     Width="1750"
     Height="814"
-    MinWidth="1000"
+    MinWidth="800"
     MinHeight="700"
     Background="{DynamicResource AppBg}"
     ExtendsContentIntoTitleBar="True"
@@ -721,6 +721,8 @@
         <Grid
             x:Name="Root"
             Grid.Row="1"
+            Loaded="SidebarViewport_Loaded"
+            SizeChanged="SidebarViewport_SizeChanged"
             Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
@@ -729,7 +731,7 @@
                     MinWidth="64"
                     MaxWidth="480" />
                 <ColumnDefinition Width="6" />
-                <ColumnDefinition Width="*" MinWidth="400" />
+                <ColumnDefinition Width="*" MinWidth="160" />
             </Grid.ColumnDefinitions>
 
             <GridSplitter
@@ -5441,7 +5443,7 @@
             <!--  Rechte Spalte: Login/Status + WebViewHost  -->
             <Border
                 Grid.Column="2"
-                MinWidth="400"
+                MinWidth="160"
                 Padding="12"
                 Background="{DynamicResource Surface}"
                 BorderBrush="{DynamicResource CardBorder}"
