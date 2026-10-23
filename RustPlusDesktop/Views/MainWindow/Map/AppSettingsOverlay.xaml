@@ -1621,6 +1621,24 @@
                         <StackPanel>
                             <ui:TextBlock Text="{DynamicResource AiCompanionIntro}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14" />
 
+                            <!--  The way in for anyone who has never made an API key. Loud until a key
+                                  exists, then a quiet row for running it again.  -->
+                            <Border x:Name="AiSetupBanner" CornerRadius="8" BorderThickness="1" Padding="12,10" Margin="0,0,0,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon Symbol="Sparkle24" FontSize="20" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                        <ui:TextBlock x:Name="TxtAiSetupTitle" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+                                        <ui:TextBlock x:Name="TxtAiSetupBody" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <ui:Button x:Name="BtnAiSetupWizard" Grid.Column="2" Height="32" Padding="12,0" VerticalAlignment="Center" Click="BtnAiSetupWizard_Click" />
+                                </Grid>
+                            </Border>
+
                             <ui:TextBlock Text="{DynamicResource AiCompanionProvider}" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" Margin="0,0,0,4" />
                             <ComboBox x:Name="CmbAiProvider" MinHeight="32" Padding="8,4" Margin="0,0,0,4" SelectionChanged="CmbAiProvider_SelectionChanged" />
                             <ui:TextBlock x:Name="TxtAiProviderNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,14" Foreground="{DynamicResource TextSubtle}" />

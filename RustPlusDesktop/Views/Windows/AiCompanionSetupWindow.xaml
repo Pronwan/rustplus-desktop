@@ -1,0 +1,272 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.AiCompanionSetupWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="AI Companion setup"
+                 Width="860" Height="660"
+                 MinWidth="700" MinHeight="540"
+                 WindowStartupLocation="CenterOwner"
+                 ShowInTaskbar="False"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round"
+                 Background="{DynamicResource ApplicationBackgroundBrush}">
+
+    <ui:FluentWindow.Resources>
+        <Style x:Key="SetupHeading" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        </Style>
+        <Style x:Key="SetupSub" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,4,0,16" />
+            <Setter Property="LineHeight" Value="18" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
+        </Style>
+        <Style x:Key="SetupPanel" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14,12" />
+        </Style>
+        <Style x:Key="SetupNote" TargetType="Border">
+            <Setter Property="Background" Value="#1460CDFF" />
+            <Setter Property="BorderBrush" Value="#3360CDFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar x:Name="TitleBarMain" Grid.Row="0" Title="AI Companion setup" ShowMaximize="False" ShowMinimize="False" />
+
+        <Grid Grid.Row="1" Margin="16,4,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Where the user is and what is left. Built in code so the labels and the
+                  done/current/upcoming states come from one place.  -->
+            <Border Grid.Column="0" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1" CornerRadius="8" Padding="14,16" Margin="0,0,12,0">
+                <DockPanel LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+                        <ui:SymbolIcon Symbol="Sparkle24" FontSize="26" Foreground="{DynamicResource Accent}" HorizontalAlignment="Left" />
+                        <TextBlock x:Name="TxtRailTitle" FontSize="15" FontWeight="SemiBold" Margin="0,6,0,0"
+                                   Foreground="{DynamicResource TextPrimary}" />
+                        <TextBlock x:Name="TxtRailSubtitle" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                    </StackPanel>
+                    <StackPanel x:Name="StepRail" DockPanel.Dock="Top" />
+                    <TextBlock x:Name="TxtRailFoot" DockPanel.Dock="Bottom" FontSize="10" TextWrapping="Wrap" LineHeight="15"
+                               Foreground="{DynamicResource TextSubtle}" />
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource CardBorder}"
+                    BorderThickness="1" CornerRadius="8">
+                <ScrollViewer x:Name="ContentScroll" VerticalScrollBarVisibility="Auto" Padding="22,18">
+                    <Grid>
+
+                        <!-- ============ 1. Welcome + where recordings go ============ -->
+                        <StackPanel x:Name="StepWelcome">
+                            <TextBlock x:Name="TxtWelcomeTitle" Style="{StaticResource SetupHeading}" />
+                            <TextBlock x:Name="TxtWelcomeSub" Style="{StaticResource SetupSub}" />
+
+                            <StackPanel x:Name="WelcomeFeatures" Margin="0,0,0,10" />
+
+                            <Border Style="{StaticResource SetupPanel}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <ui:SymbolIcon Symbol="ShieldTask24" FontSize="18" Foreground="{DynamicResource SuccessBrush}" Margin="0,0,8,0" />
+                                        <TextBlock x:Name="TxtPrivacyTitle" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource TextPrimary}" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="TxtPrivacyBody" FontSize="11" TextWrapping="Wrap" LineHeight="17"
+                                               Foreground="{DynamicResource TextSubtle}" />
+                                    <CheckBox x:Name="ChkPolicy" Margin="0,12,0,0" Checked="OnPolicyToggled" Unchecked="OnPolicyToggled" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ============ 2. Provider ============ -->
+                        <StackPanel x:Name="StepProvider" Visibility="Collapsed">
+                            <TextBlock x:Name="TxtProviderTitle" Style="{StaticResource SetupHeading}" />
+                            <TextBlock x:Name="TxtProviderSub" Style="{StaticResource SetupSub}" />
+                            <StackPanel x:Name="ProviderCards" />
+                        </StackPanel>
+
+                        <!-- ============ 3. Get and paste the key ============ -->
+                        <StackPanel x:Name="StepKey" Visibility="Collapsed">
+                            <TextBlock x:Name="TxtKeyTitle" Style="{StaticResource SetupHeading}" />
+                            <TextBlock x:Name="TxtKeySub" Style="{StaticResource SetupSub}" />
+
+                            <Border Style="{StaticResource SetupPanel}">
+                                <StackPanel>
+                                    <StackPanel x:Name="GuideSteps" />
+                                    <WrapPanel Margin="0,6,0,0">
+                                        <ui:Button x:Name="BtnOpenKeyPage" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=Open24}"
+                                                   Height="34" Padding="14,0" Margin="0,0,8,6" Click="BtnOpenKeyPage_Click" />
+                                        <ui:Button x:Name="BtnOpenBilling" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Wallet24}"
+                                                   Height="34" Padding="14,0" Margin="0,0,8,6" Click="BtnOpenBilling_Click" />
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource SetupNote}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon Symbol="Info24" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Top"
+                                                   Foreground="{DynamicResource Accent}" />
+                                    <TextBlock x:Name="TxtCostNote" Grid.Column="1" FontSize="11" TextWrapping="Wrap" LineHeight="17"
+                                               Foreground="{DynamicResource TextPrimary}" />
+                                </Grid>
+                            </Border>
+
+                            <TextBlock x:Name="TxtPasteLabel" FontWeight="SemiBold" Margin="0,16,0,6" Foreground="{DynamicResource TextPrimary}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:PasswordBox x:Name="PwdKey" MinHeight="36" RevealButtonEnabled="True" PasswordChanged="PwdKey_PasswordChanged" />
+                                <ui:Button x:Name="BtnPasteKey" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=ClipboardPaste24}"
+                                           Height="36" Padding="12,0" Margin="6,0,0,0" Click="BtnPasteKey_Click" />
+                            </Grid>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon x:Name="KeyCheckIcon" Symbol="Info16" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Top"
+                                               Foreground="{DynamicResource TextSubtle}" />
+                                <TextBlock x:Name="TxtKeyCheck" Grid.Column="1" FontSize="11" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextSubtle}" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- ============ 4. Test ============ -->
+                        <StackPanel x:Name="StepTest" Visibility="Collapsed">
+                            <TextBlock x:Name="TxtTestTitle" Style="{StaticResource SetupHeading}" />
+                            <TextBlock x:Name="TxtTestSub" Style="{StaticResource SetupSub}" />
+
+                            <TextBlock x:Name="TxtModelLabel" FontWeight="SemiBold" Margin="0,0,0,6" Foreground="{DynamicResource TextPrimary}" />
+                            <Grid Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="CmbModel" MinHeight="34" Padding="8,4" SelectionChanged="CmbModel_SelectionChanged" />
+                                <ui:Button x:Name="BtnBrowseModels" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Search24}"
+                                           Height="34" Padding="12,0" Margin="6,0,0,0" Click="BtnBrowseModels_Click" />
+                            </Grid>
+                            <TextBlock x:Name="TxtModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,16" Foreground="{DynamicResource TextSubtle}" />
+
+                            <ui:Button x:Name="BtnRunTest" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=PlugConnected24}"
+                                       Height="36" Padding="16,0" HorizontalAlignment="Left" Click="BtnRunTest_Click" />
+
+                            <Border x:Name="TestResult" Style="{StaticResource SetupPanel}" Margin="0,14,0,0" Visibility="Collapsed">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Width="28" Margin="0,0,10,0" VerticalAlignment="Top">
+                                        <ui:ProgressRing x:Name="TestSpinner" IsIndeterminate="True" Width="22" Height="22" />
+                                        <ui:SymbolIcon x:Name="TestIcon" FontSize="22" Visibility="Collapsed" />
+                                    </Grid>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock x:Name="TxtTestResultTitle" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock x:Name="TxtTestResultBody" FontSize="11" TextWrapping="Wrap" LineHeight="17" Margin="0,4,0,0"
+                                                   Foreground="{DynamicResource TextSubtle}" />
+                                        <StackPanel x:Name="TestFixes" Margin="0,8,0,0" />
+                                        <WrapPanel x:Name="TestActions" Margin="0,6,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ============ 5. Finish ============ -->
+                        <StackPanel x:Name="StepFinish" Visibility="Collapsed">
+                            <TextBlock x:Name="TxtFinishTitle" Style="{StaticResource SetupHeading}" />
+                            <TextBlock x:Name="TxtFinishSub" Style="{StaticResource SetupSub}" />
+
+                            <Border Style="{StaticResource SetupPanel}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                            <TextBlock x:Name="TxtHotkeyLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock x:Name="TxtHotkey" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                        </StackPanel>
+                                        <ui:Button x:Name="BtnHotkey" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Keyboard24}"
+                                                   Height="32" Padding="12,0" Click="BtnHotkey_Click" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                            <TextBlock x:Name="TxtTextAnswersLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock x:Name="TxtTextAnswersHint" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                        </StackPanel>
+                                        <ui:ToggleSwitch x:Name="ChkTextAnswers" Grid.Column="1" VerticalAlignment="Center" Checked="OnAnswerModeChanged" Unchecked="OnAnswerModeChanged" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                                            <TextBlock x:Name="TxtVoiceAnswersLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock x:Name="TxtVoiceAnswersHint" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                        </StackPanel>
+                                        <ui:ToggleSwitch x:Name="ChkVoiceAnswers" Grid.Column="1" VerticalAlignment="Center" Checked="OnAnswerModeChanged" Unchecked="OnAnswerModeChanged" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock x:Name="TxtHowToTitle" FontWeight="SemiBold" Margin="0,16,0,8" Foreground="{DynamicResource TextPrimary}" />
+                            <StackPanel x:Name="HowToSteps" />
+
+                            <Border Style="{StaticResource SetupNote}">
+                                <TextBlock x:Name="TxtFinishNote" FontSize="11" TextWrapping="Wrap" LineHeight="17" Foreground="{DynamicResource TextSubtle}" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="16,12,16,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="TxtFooterHint" VerticalAlignment="Center" FontSize="11" TextWrapping="Wrap" Margin="0,0,12,0"
+                       Foreground="{DynamicResource TextSubtle}" />
+            <ui:Button x:Name="BtnBack" Grid.Column="1" Appearance="Secondary" Height="34" Padding="18,0" Margin="0,0,8,0" Click="BtnBack_Click" />
+            <ui:Button x:Name="BtnNext" Grid.Column="2" Appearance="Primary" Height="34" Padding="22,0" Click="BtnNext_Click" />
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

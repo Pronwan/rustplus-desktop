@@ -215,6 +215,8 @@ namespace RustPlusDesk.Views
 
             BtnRemoveAiKey.Visibility = hasKey ? Visibility.Visible : Visibility.Collapsed;
 
+            ApplyAiSetupBanner();
+
             // Streaming needs two things now: spoken answers switched on at all, and a
             // supporter account. It used to need a provider with its own voice as well —
             // that stopped being true once the queue started speaking a sentence at a time,
@@ -369,6 +371,49 @@ namespace RustPlusDesk.Views
         }
 
         private bool _loadingAiModel;
+
+        /// <summary>
+        /// Before any key exists the banner is the first thing to do on this page, and says so;
+        /// afterwards it shrinks to a way back into the walkthrough for adding another provider.
+        /// </summary>
+        private void ApplyAiSetupBanner()
+        {
+            bool anyKey = AiProviders.All.Any(AiCompanionStore.HasKeyFor);
+
+            TxtAiSetupTitle.Text = anyKey
+                ? Loc.Text("AiSetupBannerAgainTitle", "Guided setup")
+                : Loc.Text("AiSetupBannerTitle", "New here? Set it up step by step");
+
+            TxtAiSetupBody.Text = anyKey
+                ? Loc.Text("AiSetupBannerAgainBody", "Add another provider, change model, or check your key still works.")
+                : Loc.Text("AiSetupBannerBody",
+                    "Shows how to get an API key for each provider — including free ones — tests it, and sets your hotkey. About 3 minutes.");
+
+            BtnAiSetupWizard.Content = anyKey
+                ? Loc.Text("AiSetupBannerAgainButton", "Open setup")
+                : Loc.Text("AiSetupBannerButton", "Start setup");
+
+            BtnAiSetupWizard.Appearance = anyKey ? WpfUi.ControlAppearance.Secondary : WpfUi.ControlAppearance.Primary;
+
+            AiSetupBanner.Background = anyKey
+                ? Brushes("SubtleFillColorSecondaryBrush")
+                : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x1C, 0x60, 0xCD, 0xFF));
+            AiSetupBanner.BorderBrush = anyKey
+                ? Brushes("CardBorder")
+                : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x55, 0x60, 0xCD, 0xFF));
+
+            System.Windows.Media.Brush? Brushes(string key) => TryFindResource(key) as System.Windows.Media.Brush;
+        }
+
+        private void BtnAiSetupWizard_Click(object sender, RoutedEventArgs e)
+        {
+            var wizard = new Windows.AiCompanionSetupWindow { Owner = Window.GetWindow(this) };
+            wizard.ShowDialog();
+
+            // Whatever was finished is already saved; the page only has to catch up with it,
+            // whether the wizard was completed or closed half way.
+            LoadAiCompanionSettings();
+        }
 
         private void UpdateAiAnswerLabels()
         {
