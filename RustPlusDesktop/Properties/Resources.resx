@@ -5242,7 +5242,7 @@ You can find more information on the server&apos;s official website:
     <value>Begin Pairing</value>
   </data>
   <data name="Tutorials.Step.pairing.start.Description" xml:space="preserve">
-    <value>Start listening, then use Rust’s in-game Rust+ pairing flow. Credentials are never recorded.</value>
+    <value>Open Manage beside Pairing listener and choose Listen, then use Rust’s in-game Rust+ pairing flow. Credentials are never recorded.</value>
   </data>
   <data name="Tutorials.Step.pairing.list.Title" xml:space="preserve">
     <value>Paired Servers</value>
@@ -8625,5 +8625,20 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Could not reach the cloud. Your server list is unchanged.</value>
+  </data>
+  <data name="UiServerConnection" xml:space="preserve">
+    <value>Server connection</value>
+  </data>
+  <data name="UiPairingListener" xml:space="preserve">
+    <value>Pairing listener</value>
+  </data>
+  <data name="UiManagePairing" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="UiPairingListenerHelp" xml:space="preserve">
+    <value>Receive Rust+ pairing requests and notifications. This runs separately from the selected server connection. Open Manage to start, stop, or troubleshoot the listener.</value>
   </data>
 </root>

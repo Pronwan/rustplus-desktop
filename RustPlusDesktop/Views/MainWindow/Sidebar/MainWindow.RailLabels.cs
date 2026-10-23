@@ -30,7 +30,7 @@ public partial class MainWindow
         // The unfolded panel keeps its content width: the cap grows with the rail.
         LeftPanelBorder.MaxWidth = MaxExpandedSidebarWidth;
         ColSidebar.MaxWidth = MaxExpandedSidebarWidth;
-        LeftPanelContent.Margin = new Thickness(rail + 8, 16, 12, 16);
+        LeftPanelContent.Margin = new Thickness(rail + 8, 8, 12, 16);
         // Full-screen tools and left-panel overlays start at the rail's edge (DynamicResource).
         Resources["RailInset"] = new Thickness(rail, 0, 0, 0);
     }

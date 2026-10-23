@@ -6333,7 +6333,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         e.Handled = true;
     }
 
-    private void GenericAlarmAudioMenu_Click(object sender, RoutedEventArgs e)
+    private void OpenButtonContextMenu_Click(object sender, RoutedEventArgs e)
     {
         e.Handled = true;
         if (sender is not FrameworkElement button || button.ContextMenu is not ContextMenu menu) return;

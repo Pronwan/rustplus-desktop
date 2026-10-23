@@ -773,7 +773,7 @@
                 <Grid>
                     <DockPanel
                         x:Name="LeftPanelContent"
-                        Margin="72,16,12,16"
+                        Margin="72,8,12,16"
                         LastChildFill="True"
                         Visibility="Collapsed">
 
@@ -975,12 +975,7 @@
                             </ui:InfoBar.Style>
                         </ui:InfoBar>
 
-                        <Border
-                            Height="1"
-                            Margin="0,0,0,12"
-                            Background="#12FFFFFF" />
-
-                        <Grid Margin="0,4,0,6">
+                        <Grid Margin="0,0,0,6">
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
@@ -1272,10 +1267,12 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0">
+                                    <TextBlock FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiServerConnection}" Margin="0,0,0,3" />
                                     <TextBlock
-                                        Grid.Column="0"
+                                        x:Name="TxtServerConnectionState"
                                         VerticalAlignment="Center"
-                                        FontSize="10"
+                                        FontSize="12"
                                         FontWeight="Bold"
                                         Opacity="0.8"
                                         Margin="0,0,6,0"
@@ -1311,6 +1308,7 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
+                                    </StackPanel>
 
                                     <StackPanel
                                     Grid.Column="1"
@@ -1433,21 +1431,24 @@
                                 FontWeight="Bold"
                                 Foreground="White"
                                 Opacity="0.6"
-                                Text="{DynamicResource UiCONNECTIONSERVICES}" />
+                                Text="{DynamicResource UiPairingListener}" />
 
-                            <Grid>
+                            <Grid x:Name="PairingServiceControls">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <!--  Pairing recovery actions, shared by the Listen and the Stop button so the
-                                      "Right-click for options" hint is true in every state — recovery is most
-                                      likely to be needed while the listener is stuck running, which is exactly
-                                      when the Listen button hides.  -->
                                 <Grid.Resources>
-                                    <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}">
+                                    <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}"
+                                                 DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem x:Name="BtnListenPairing" Header="{DynamicResource Listen}" Click="BtnListenPairing_Click"
+                                                  IsEnabled="{Binding CanStartPairing}"
+                                                  Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}" />
+                                        <MenuItem x:Name="BtnStopPairing" Header="{DynamicResource Stop}" Click="BtnStopPairing_Click"
+                                                  Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}" />
+                                        <MenuItem x:Name="BtnFcmInfo" Header="{DynamicResource FcmInfoToolTip}" Click="BtnFcmInfo_Click" />
+                                        <Separator />
                                         <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
                                         <Separator />
                                         <MenuItem Click="BtnCheckTokenStatus_Click" Header="Check Token Status &amp; Validity">
@@ -1472,54 +1473,27 @@
                                     </ContextMenu>
                                 </Grid.Resources>
 
-                                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                    <ui:Button
-                                        x:Name="BtnListenPairing"
-                                        tutorials:Tutorial.TargetId="Servers.Pair"
-                                        Height="30"
-                                        Padding="10,0"
-                                        VerticalContentAlignment="Center"
-                                        Appearance="Secondary"
-                                        AutomationProperties.HelpText="{DynamicResource UiListenForRustPairingRequestsRightClickForRecoveryOptions}"
-                                        Click="BtnListenPairing_Click"
-                                        Content="{DynamicResource Listen}"
-                                        ContextMenu="{StaticResource PairingRecoveryMenu}"
-                                        Icon="{ui:SymbolIcon Symbol=Bluetooth24}"
-                                        IsEnabled="{Binding CanStartPairing}"
-                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}" />
-
-                                    <ui:Button
-                                        x:Name="BtnStopPairing"
-                                        Height="30"
-                                        Padding="10,0"
-                                        VerticalContentAlignment="Center"
-                                        Appearance="Caution"
-                                        Click="BtnStopPairing_Click"
-                                        Content="{DynamicResource Stop}"
-                                        ContextMenu="{StaticResource PairingRecoveryMenu}"
-                                        Icon="{ui:SymbolIcon Symbol=Stop24}"
-                                        Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}" />
-
-                                    <ui:Button
-                                        x:Name="BtnFcmInfo"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="6,0,0,0"
-                                        Padding="0"
-                                        Appearance="Transparent"
-                                        Click="BtnFcmInfo_Click"
-                                        Icon="{ui:SymbolIcon Symbol=Info24}"
-                                        ToolTip="{DynamicResource FcmInfoToolTip}" />
-                                </StackPanel>
+                                <ui:Button x:Name="BtnManagePairing" Grid.Column="1" Height="30" Padding="10,0"
+                                           Appearance="Secondary" Click="OpenButtonContextMenu_Click"
+                                           tutorials:Tutorial.TargetId="Servers.Pair"
+                                           AutomationProperties.Name="{DynamicResource UiManagePairing}"
+                                           ToolTip="{DynamicResource UiPairingListenerHelp}"
+                                           ContextMenu="{StaticResource PairingRecoveryMenu}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{DynamicResource UiManagePairing}" VerticalAlignment="Center" />
+                                        <ui:SymbolIcon Symbol="ChevronDown12" Foreground="White" FontSize="10" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ui:Button>
 
                                 <!--  Service state as a chip: one dot and one label. Green only once the
                                       listener actually runs, amber while a start (or the automatic retry) is
                                       still under way, red after a failure, grey when simply off.  -->
                                 <Border
-                                    Grid.Column="1"
+                                    Grid.Column="0"
                                     Height="30"
-                                    Margin="10,0"
+                                    Margin="0,0,8,0"
                                     Padding="10,0"
+                                    ToolTip="{DynamicResource UiPairingListenerHelp}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{DynamicResource WhiteA14}"
@@ -1566,7 +1540,7 @@
                                             FontSize="11"
                                             FontWeight="SemiBold"
                                             Foreground="{DynamicResource SuccessTextBrush}"
-                                            Text="{DynamicResource UiListeningFcm}"
+                                            Text="{DynamicResource UiListenerRunning}"
                                             Visibility="{Binding IsPairingRunning, Converter={StaticResource BoolToVisibility}}" />
                                         <TextBlock
                                             x:Name="TxtPairingState"
@@ -1593,15 +1567,6 @@
                                     </StackPanel>
                                 </Border>
 
-                                <TextBlock
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    FontSize="11"
-                                    FontStyle="Italic"
-                                    Foreground="White"
-                                    Opacity="0.65"
-                                    Text="{DynamicResource RightClickOptions}"
-                                    TextTrimming="CharacterEllipsis" />
                             </Grid>
                         </StackPanel>
                         <Border
@@ -6329,7 +6294,7 @@
                                                                                              Padding="4"
                                                                                              Appearance="Transparent"
                                                                                              AutomationProperties.Name="{DynamicResource UiGenericAlarmAudioOptions}"
-                                                                                             Click="GenericAlarmAudioMenu_Click"
+                                                                                             Click="OpenButtonContextMenu_Click"
                                                                                              Icon="{ui:SymbolIcon Symbol=MoreHorizontal24}">
                                                                                              <ui:Button.ContextMenu>
                                                                                                  <ContextMenu Style="{StaticResource DarkContextMenu}">
