@@ -284,6 +284,7 @@ public partial class MainWindow
                         // Try to restore _worldSizeS from a previously-parsed map_data.json.
                         // Without this, _worldSizeS stays 0 and the heatmap/UV rect is wrong.
                         TryRestoreWorldSizeFromCachedMapData(prof, bitmap);
+                        RedrawMapReferenceLayers();
                     }
                     catch (Exception ex)
                     {

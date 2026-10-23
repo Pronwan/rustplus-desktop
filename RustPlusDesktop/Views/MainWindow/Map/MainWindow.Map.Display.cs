@@ -16,6 +16,10 @@ public partial class MainWindow
 
         const double padPx = 000; // Zeichen-Rand
 
+        _scene ??= new Grid();
+        _scene.Width = wDip + padPx * 2;
+        _scene.Height = hDip + padPx * 2;
+
         ImgMap.Stretch = Stretch.None;
         ImgMap.HorizontalAlignment = HorizontalAlignment.Left;
         ImgMap.VerticalAlignment = VerticalAlignment.Top;
@@ -79,9 +83,6 @@ public partial class MainWindow
             layer.Background = null;   // null, not Transparent: gaps stay click-through to Overlay
         }
 
-        _scene ??= new Grid();
-        _scene.Width = wDip + padPx * 2;
-        _scene.Height = hDip + padPx * 2;
         _scene.Background = new SolidColorBrush(Color.FromRgb(11, 58, 74));
         _scene.ClipToBounds = false;
 
@@ -319,7 +320,6 @@ public partial class MainWindow
 
         ImgMap.Source = bmp;               // zunaechst nackte Map
         SetupMapScene(bmp);
-        RedrawGrid();
         Dispatcher.BeginInvoke(new System.Action(SaveCurrentPlayerWipeMap), System.Windows.Threading.DispatcherPriority.Background);
         ApplyToolCursor();
     }

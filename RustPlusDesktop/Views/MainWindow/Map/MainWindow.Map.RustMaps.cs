@@ -617,7 +617,7 @@ namespace RustPlusDesk.Views
                 MergeCachedExtraMonumentsForCurrentMap();
                 BuildMonumentOverlays();
 
-                RedrawGrid();
+                RedrawMapReferenceLayers();
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
                 RedrawDeathPins();
@@ -918,15 +918,14 @@ namespace RustPlusDesk.Views
                     _isGeneratedMapActive = true;
                     Dispatcher.Invoke(() =>
                     {
-                        ShowMapBasic(bi);
-                        SetupMapScene(bi);
                         double wDip = bi.PixelWidth * (96.0 / bi.DpiX);
                         double hDip = bi.PixelHeight * (96.0 / bi.DpiY);
                         if (_worldSizeS > 0)
                         {
                             _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
                         }
-                        RedrawGrid();
+                        ShowMapBasic(bi);
+                        RedrawMapReferenceLayers();
                         RefreshAllOverlayScales();
                         RefreshMonumentOverlayPositions();
                         RedrawDeathPins();

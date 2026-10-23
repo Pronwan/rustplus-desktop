@@ -14,11 +14,16 @@ public partial class MainWindow
         UpdateSelectAllState();
     }
 
-    private void RedrawGrid()
+    private void RedrawMapReferenceLayers()
     {
+        RedrawGrid();
         RedrawBuildingBlockedZones();
         RedrawCargoPath();
         RedrawKeycards();
+    }
+
+    private void RedrawGrid()
+    {
         ApplyIndependentLayerVisibility();
 
         bool wanted = ChkGrid.IsChecked == true || MiniMapWantsGrid;

@@ -558,15 +558,14 @@ public partial class MainWindow
 
         await Dispatcher.InvokeAsync(() =>
         {
-            ShowMapBasic(map.Bitmap);
-            SetupMapScene(map.Bitmap);
             _worldSizeS = map.WorldSize;
 
             double wDip = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
             double hDip = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
             _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
+            ShowMapBasic(map.Bitmap);
             ResetMapZoom();
-            RedrawGrid();
+            RedrawMapReferenceLayers();
             Dispatcher.InvokeAsync(() =>
             {
                 RefreshAllOverlayScales();
@@ -596,8 +595,6 @@ public partial class MainWindow
             MapUiLayer.Height = ImgMap.Height;
             GridLayer.Width = ImgMap.Width;
             GridLayer.Height = ImgMap.Height;
-
-            RedrawGrid();
 
             double wDip2 = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
             double hDip2 = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);

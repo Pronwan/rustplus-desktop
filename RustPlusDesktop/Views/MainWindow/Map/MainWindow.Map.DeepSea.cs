@@ -169,7 +169,7 @@ public partial class MainWindow
             }
 
             // 2. Redraw grid
-            RedrawGrid();
+            RedrawMapReferenceLayers();
 
             // 3. Update Monument visibility
             if (Monuments != null)

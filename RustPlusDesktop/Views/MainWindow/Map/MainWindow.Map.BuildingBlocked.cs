@@ -19,7 +19,7 @@ public partial class MainWindow
 
     private void ChkNoBuildZones_Checked(object sender, RoutedEventArgs e)
     {
-        RedrawGrid();
+        RedrawBuildingBlockedZones();
 
         // The zones are hidden through the wrapper now, not by leaving them unbuilt, so
         // unchecking has to take the wrapper down as well.
@@ -41,7 +41,7 @@ public partial class MainWindow
             NoBuildLayer.Children.Remove(shape);
         }
         _buildingBlockedZoneEls.Clear();
-        RedrawGrid();
+        RedrawBuildingBlockedZones();
     }
 
     public void ResetBuildingBlockedZonesAfterCacheDelete()
@@ -79,14 +79,14 @@ public partial class MainWindow
 
         if (string.IsNullOrWhiteSpace(folderPath))
         {
-            RedrawGrid();
+            RedrawBuildingBlockedZones();
             return;
         }
 
         string path = System.IO.Path.Combine(folderPath, "building_blocked.json");
         if (!File.Exists(path))
         {
-            RedrawGrid();
+            RedrawBuildingBlockedZones();
             return;
         }
 
@@ -113,7 +113,7 @@ public partial class MainWindow
             ChkNoBuildZones.ToolTip = hasData ? RustPlusDesk.Properties.Resources.GetString("CodeUiShowNoBuildZones") : RustPlusDesk.Properties.Resources.GetString("UiGenerateThe3DMapToEnableNoBuildZones");
             ChkNoBuildZones.IsChecked = false;
         }
-        RedrawGrid();
+        RedrawBuildingBlockedZones();
     }
 
     private void RedrawBuildingBlockedZones()
