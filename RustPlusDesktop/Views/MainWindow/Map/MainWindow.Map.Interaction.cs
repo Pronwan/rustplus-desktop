@@ -825,8 +825,7 @@ public partial class MainWindow
         m.OffsetY = (hostCy - offY) / s - sy * p.Y;
 
         MapTransform.Matrix = m;
-        RefreshAllOverlayScales();
-        RefreshMonumentOverlayPositions();
+        // Translation is carried by the scene transform; marker sizes and map-space positions are unchanged.
     }
  
     private void BtnResetMap_Click(object sender, RoutedEventArgs e)

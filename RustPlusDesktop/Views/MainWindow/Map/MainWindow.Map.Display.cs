@@ -363,24 +363,27 @@ public partial class MainWindow
         }
         RefreshGridLineThickness();
 
-        // 3. CacheMode / RenderScale
+        // Moving players must not invalidate a bitmap of the entire scene; keep the grid vector-sharp.
         if (_scene != null)
         {
-            if (TrackingService.MapUseCacheMode)
+            ConfigureStaticMapCaching(_scene, new UIElement[] { ImgMap!, ImgHeatmap!, NoBuildLayer },
+                TrackingService.MapUseCacheMode, TrackingService.MapRenderScale);
+        }
+    }
+
+    internal static void ConfigureStaticMapCaching(UIElement scene, UIElement[] staticLayers, bool enabled, double scale)
+    {
+        scene.CacheMode = null;
+        foreach (var layer in staticLayers)
+        {
+            if (!enabled)
             {
-                if (_scene.CacheMode is BitmapCache currentCache)
-                {
-                    currentCache.RenderAtScale = TrackingService.MapRenderScale;
-                }
-                else
-                {
-                    _scene.CacheMode = new BitmapCache { RenderAtScale = TrackingService.MapRenderScale };
-                }
+                layer.CacheMode = null;
             }
+            else if (layer.CacheMode is BitmapCache cache)
+                cache.RenderAtScale = scale;
             else
-            {
-                _scene.CacheMode = null;
-            }
+                layer.CacheMode = new BitmapCache { RenderAtScale = scale };
         }
     }
 }

@@ -127,4 +127,24 @@ public class MapGridVisualTests
         }
     }
 
+    [STATestMethod]
+    public void StaticCaching_DoesNotRasterizeTheGridOrMovingMarkers()
+    {
+        var scene = new Grid { CacheMode = new BitmapCache() };
+        var texture = new Image();
+        var grid = new MapGridVisual();
+        var players = new Canvas();
+        scene.Children.Add(texture);
+        scene.Children.Add(grid);
+        scene.Children.Add(players);
+        foreach (bool enabled in new[] { true, false, true })
+        {
+            MainWindow.ConfigureStaticMapCaching(scene, new UIElement[] { texture }, enabled, 1.5);
+            Assert.IsNull(scene.CacheMode);
+            Assert.IsNull(grid.CacheMode);
+            Assert.IsNull(players.CacheMode);
+            if (enabled) Assert.AreEqual(1.5, ((BitmapCache)texture.CacheMode).RenderAtScale);
+            else Assert.IsNull(texture.CacheMode);
+        }
+    }
 }

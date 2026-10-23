@@ -156,7 +156,8 @@ public partial class MainWindow
                 dynamic d = fe.Tag;
                 var p = WorldToImagePx((double)d.X, (double)d.Y);
                 ApplyMonumentScale(fe);
-                fe.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                if (!fe.IsMeasureValid)
+                    fe.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 double w = fe.DesiredSize.Width > 0 ? fe.DesiredSize.Width : 28;
                 double h = fe.DesiredSize.Height > 0 ? fe.DesiredSize.Height : 28;
                 Canvas.SetLeft(fe, p.X - w / 2);
@@ -193,7 +194,15 @@ public partial class MainWindow
         }
 
         el.RenderTransformOrigin = new Point(0.5, 0.5);
-        el.RenderTransform = new ScaleTransform(scale, scale);
+        if (el.RenderTransform is ScaleTransform transform && !transform.IsFrozen)
+        {
+            transform.ScaleX = scale;
+            transform.ScaleY = scale;
+        }
+        else
+        {
+            el.RenderTransform = new ScaleTransform(scale, scale);
+        }
         el.Opacity = TrackingService.MapMonumentOpacity;
     }
 
