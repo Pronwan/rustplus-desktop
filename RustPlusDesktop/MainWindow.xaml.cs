@@ -516,6 +516,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         StartSessionTracking();
         InitSmoothFollowLoop();
         StartCloudSyncTimer();
+        StartHalloweenEventGate();
         ApplySettings();
         LoadPersistentAlerts();
         RefreshEventDock();

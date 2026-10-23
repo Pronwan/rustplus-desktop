@@ -15,7 +15,7 @@ namespace RustPlusDesk.Services.Cloud
     /// </summary>
     public static class CloudFeatureFlags
     {
-        public sealed record FlagState(bool Enabled, string? StatusNote);
+        public sealed record FlagState(bool Enabled, string? StatusNote, DateTimeOffset? StartsAt = null, DateTimeOffset? EndsAt = null);
 
         private static Dictionary<string, FlagState> _flags = new();
 
@@ -25,6 +25,12 @@ namespace RustPlusDesk.Services.Cloud
             var body = await CloudApiClient.GetPublicAsync("feature-flags");
             if (body == null) return;
 
+            Load(body);
+        }
+
+        /// <summary>Replace the flag set from a feed payload. Keeps the previous set when malformed.</summary>
+        internal static void Load(string body)
+        {
             try
             {
                 using var doc = JsonDocument.Parse(body);
@@ -42,7 +48,7 @@ namespace RustPlusDesk.Services.Cloud
                         ? n.GetString()
                         : null;
 
-                    next[prop.Name] = new FlagState(enabled, note);
+                    next[prop.Name] = new FlagState(enabled, note, ReadTime(el, "starts_at"), ReadTime(el, "ends_at"));
                 }
 
                 _flags = next;
@@ -60,5 +66,26 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>The admin status note for a feature, or null when none is set.</summary>
         public static string? Note(string key) =>
             _flags.TryGetValue(key, out var f) ? f.StatusNote : null;
+
+        /// <summary>
+        /// For time-boxed features like seasonal events. Fail-closed, unlike
+        /// <see cref="IsEnabled"/>: true only when the feed has the key, it is
+        /// enabled, and now falls inside its optional starts_at / ends_at window.
+        /// </summary>
+        public static bool IsWithinWindow(string key)
+        {
+            if (!_flags.TryGetValue(key, out var f) || !f.Enabled) return false;
+
+            var now = DateTimeOffset.UtcNow;
+            return (f.StartsAt is not { } start || now >= start)
+                && (f.EndsAt is not { } end || now < end);
+        }
+
+        private static DateTimeOffset? ReadTime(JsonElement el, string name) =>
+            el.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String &&
+            DateTimeOffset.TryParse(v.GetString(), System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AssumeUniversal, out var t)
+                ? t
+                : null;
     }
 }

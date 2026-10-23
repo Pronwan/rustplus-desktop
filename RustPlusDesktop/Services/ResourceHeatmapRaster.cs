@@ -13,14 +13,24 @@ namespace RustPlusDesk.Services;
 public static class ResourceHeatmapRaster
 {
     public const int Size = 512;
-    // Values below half the reference stay clear; 0.12 tinted most of the map.
-    private const float FadeStart = 0.5f;
-    private const float FadeEnd = 0.9f;
+    // Values below half the reference stay clear by default; 0.12 tinted most of the map.
+    // The density slider moves the fade start so a user can still see the sparse areas.
+    public const float DefaultMinDensity = 0.5f;
+    public const float MinDensityFloor = 0.05f;
+    public const float MinDensityCeiling = 0.9f;
     private const byte MaxAlpha = 210;
 
-    /// <summary>Returns premultiplied BGRA pixels (Pbgra32), or null when the data is not size x size.</summary>
-    public static int[]? Colorize(byte[] raw, int size = Size)
+    /// <summary>
+    /// Returns premultiplied BGRA pixels (Pbgra32), or null when the data is not size x size.
+    /// <paramref name="minDensity"/> is the share of full heat where colour begins to fade in.
+    /// </summary>
+    public static int[]? Colorize(byte[] raw, int size = Size, float minDensity = DefaultMinDensity)
     {
+        float fadeStart = Math.Clamp(minDensity, MinDensityFloor, MinDensityCeiling);
+        // A fixed 0.4 fade band: 0.5 -> 0.9 as before, and a lowered start reaches solid
+        // colour soon after instead of leaving the sparse areas barely tinted.
+        float fadeEnd = Math.Min(1f, fadeStart + 0.4f);
+
         if (raw == null || size <= 0 || raw.Length != size * size) return null;
 
         float reference = ReferenceLevel(raw);
@@ -34,7 +44,7 @@ public static class ResourceHeatmapRaster
         {
             float value = Math.Max(blurred[i], raw[i]);
             float t = Math.Min(1f, value / reference);
-            byte a = (byte)(MaxAlpha * SmoothStep(FadeStart, FadeEnd, t));
+            byte a = (byte)(MaxAlpha * SmoothStep(fadeStart, fadeEnd, t));
             if (a < 8) continue;
 
             var (r, g, b) = Ramp(t);

@@ -21,8 +21,11 @@ public static class DeathHeatmapRaster
     private const double CellWorldUnits = 8;
     private const int MaxImageSize = 1024;
 
-    /// <summary>Below this share of the hottest spot a cell is left transparent.</summary>
-    private const double VisibleFloor = 0.02;
+    /// <summary>
+    /// Below this share of the hottest spot a cell is left transparent by default. The layer's
+    /// density slider raises it to keep only the hotspots.
+    /// </summary>
+    public const double DefaultMinShare = 0.02;
 
     private static readonly (double At, byte R, byte G, byte B)[] Ramp =
     {
@@ -37,8 +40,10 @@ public static class DeathHeatmapRaster
     /// The density image for world [0, worldSize] on both axes, north up; null when no death
     /// falls inside the world.
     /// </summary>
-    public static BitmapSource? Render(IReadOnlyList<(double X, double Y)> deaths, double worldSize, double radiusWorldUnits)
+    public static BitmapSource? Render(IReadOnlyList<(double X, double Y)> deaths, double worldSize, double radiusWorldUnits,
+        double minShare = DefaultMinShare)
     {
+        var visibleFloor = Math.Clamp(minShare, 0, 0.95);
         if (deaths.Count == 0 || worldSize <= 0)
             return null;
 
@@ -88,7 +93,7 @@ public static class DeathHeatmapRaster
                 continue;
             // Square root keeps single deaths visible next to a hotspot dozens of deaths deep.
             var t = Math.Sqrt(density[i] / max);
-            if (t < VisibleFloor)
+            if (t < visibleFloor)
                 continue;
             var (r, g, b) = Colour(t);
             // Faint at the low end: a scatter of single deaths should tint the map, not cover it.

@@ -3524,6 +3524,27 @@ Please pair this server first.</value>
   <data name="UiHotAirBalloons" xml:space="preserve">
     <value>Hot Air Balloons</value>
   </data>
+  <data name="UiHeatmapDensity" xml:space="preserve">
+    <value>Show from</value>
+  </data>
+  <data name="UiHeatmapDensityHint" xml:space="preserve">
+    <value>Lower it to also colour sparse areas; raise it to keep only the densest spawns.</value>
+  </data>
+  <data name="UiHalloweenEvent" xml:space="preserve">
+    <value>Halloween Event</value>
+  </data>
+  <data name="UiHalloweenPortals" xml:space="preserve">
+    <value>Halloween Portals (possible spawn areas)</value>
+  </data>
+  <data name="UiScarecrows" xml:space="preserve">
+    <value>Scarecrows</value>
+  </data>
+  <data name="UiMurderers" xml:space="preserve">
+    <value>Murderers</value>
+  </data>
+  <data name="UiZombies" xml:space="preserve">
+    <value>Zombies</value>
+  </data>
   <data name="UiHotkeyTriggers" xml:space="preserve">
     <value>Hotkey Triggers</value>
   </data>

@@ -37,6 +37,29 @@ public class ResourceHeatmapRasterTests
     }
 
     [TestMethod]
+    public void LowerMinDensity_ColoursSparseCellsTheDefaultHides()
+    {
+        // A dense patch at 200 and a sparse patch at 60 (30% of the peak).
+        var raw = new byte[N * N];
+        for (int y = 100; y < 200; y++)
+            for (int x = 100; x < 200; x++)
+                raw[y * N + x] = 200;
+        for (int y = 300; y < 400; y++)
+            for (int x = 300; x < 400; x++)
+                raw[y * N + x] = 60;
+
+        var byDefault = ResourceHeatmapRaster.Colorize(raw)!;
+        var lowered = ResourceHeatmapRaster.Colorize(raw, minDensity: 0.1f)!;
+        var raised = ResourceHeatmapRaster.Colorize(raw, minDensity: 0.9f)!;
+
+        Assert.AreEqual(0, Alpha(byDefault[350 * N + 350]), "30% sits under the default 50% start.");
+        Assert.IsTrue(Alpha(lowered[350 * N + 350]) > 100, "Lowering the start colours the sparse patch.");
+        Assert.AreEqual(210, Alpha(lowered[150 * N + 150]), "The peak stays at full strength.");
+        Assert.AreEqual(0, Alpha(raised[350 * N + 350]));
+        Assert.IsTrue(Alpha(raised[150 * N + 150]) > 0, "Even the strictest setting keeps the peak.");
+    }
+
+    [TestMethod]
     public void BlurredEdges_FadeOutInsteadOfTintingTheMap()
     {
         var raw = new byte[N * N];

@@ -5731,6 +5731,26 @@
                                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource LayerName}" Text="{DynamicResource UiLayersDeathHeatmap}" />
                                                 <ui:ToggleSwitch Grid.Column="2" AutomationProperties.Name="{DynamicResource UiLayersDeathHeatmap}" IsChecked="{Binding IsChecked, ElementName=ChkDeathHeatmap, Mode=TwoWay}" />
                                             </Grid>
+                                            <!--  While the death heatmap is on: what it shows, and how sparse an area still gets colour.  -->
+                                            <Grid x:Name="DeathHeatmapOptions" Margin="30,0,8,6" Visibility="Collapsed">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock x:Name="TxtDeathHeatmapStatus" Grid.ColumnSpan="3" FontSize="11" Foreground="#FF8A5C" TextTrimming="CharacterEllipsis" Margin="0,0,0,2" />
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource UiHeatmapDensity}" FontSize="11" Foreground="#9AA4B6" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <Slider x:Name="SliderDeathHeatmapDensity" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="0.8" Value="0.02"
+                                                        SmallChange="0.02" LargeChange="0.1" TickFrequency="0.02" IsSnapToTickEnabled="True"
+                                                        VerticalAlignment="Center" ValueChanged="SliderDeathHeatmapDensity_ValueChanged"
+                                                        AutomationProperties.Name="{DynamicResource UiHeatmapDensity}" />
+                                                <TextBlock x:Name="TxtDeathHeatmapDensityValue" Grid.Row="1" Grid.Column="2" Text="2%" FontSize="11" FontWeight="SemiBold"
+                                                           Foreground="#FF8A5C" VerticalAlignment="Center" MinWidth="30" TextAlignment="Right" Margin="8,0,0,0" />
+                                            </Grid>
 
                                             <!--  Shops: mirrors the bar's Shops pill, and goes wherever it goes when
                                                   the server has no shop data.  -->
@@ -7691,6 +7711,7 @@
                                         <!-- Heatmap Button -->
                                         <Grid Margin="0,2,0,0">
                                             <Border x:Name="HeatmapActiveGlow" Background="{DynamicResource WarnOrangeBrush}" Opacity="0.18" CornerRadius="4" Visibility="Collapsed" />
+                                            <Border x:Name="HeatmapActiveOutline" BorderBrush="{DynamicResource WarnOrangeBrush}" BorderThickness="1" Opacity="0.7" CornerRadius="4" Visibility="Collapsed" IsHitTestVisible="False" />
                                             <ui:Button
                                                 x:Name="BtnToggleHeatmap"
                                                 tutorials:Tutorial.TargetId="Map.Heatmaps"
@@ -7704,6 +7725,9 @@
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Image Source="pack://application:,,,/Assets/icons/map-markers/Heatmap.png" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                     <TextBlock Text="{DynamicResource UiHeatmaps}" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" />
+                                                    <!-- Which layer is on, so the map says what the colour means -->
+                                                    <TextBlock x:Name="TxtHeatmapActiveName" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource WarnOrangeBrush}"
+                                                               VerticalAlignment="Center" Margin="4,0,0,0" MaxWidth="140" TextTrimming="CharacterEllipsis" Visibility="Collapsed" />
                                                 </StackPanel>
                                             </ui:Button>
                                             <Button
@@ -7937,6 +7961,67 @@
                                                     <!-- ── ROW 1: BENTO CATEGORY GRID ── -->
                                                     <ScrollViewer Grid.Row="1" Margin="14,10,14,14" VerticalScrollBarVisibility="Auto"
                                                                   HorizontalScrollBarVisibility="Disabled">
+                                                        <StackPanel>
+                                                        <!-- Density: where colour starts, as a share of the layer's full heat -->
+                                                        <Border Style="{StaticResource CategoryCard}" Margin="0,0,0,8">
+                                                            <Grid Margin="6,6,6,4">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{DynamicResource UiHeatmapDensity}" FontSize="11" FontWeight="SemiBold" Foreground="#C8D0DC" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                                                <Slider x:Name="SliderHeatmapDensity" Grid.Column="1" Minimum="0.05" Maximum="0.9" Value="0.5"
+                                                                        SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" IsSnapToTickEnabled="True"
+                                                                        VerticalAlignment="Center" ValueChanged="SliderHeatmapDensity_ValueChanged"
+                                                                        AutomationProperties.Name="{DynamicResource UiHeatmapDensity}" />
+                                                                <TextBlock x:Name="TxtHeatmapDensityValue" Grid.Column="2" Text="50%" FontSize="11" FontWeight="SemiBold"
+                                                                           Foreground="{DynamicResource WarnOrangeBrush}" VerticalAlignment="Center" MinWidth="34" TextAlignment="Right" Margin="10,0,0,0" />
+                                                                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{DynamicResource UiHeatmapDensityHint}" FontSize="10" Foreground="#8A94A6" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                                            </Grid>
+                                                        </Border>
+                                                        <!-- Halloween (shown only while the backend's halloween_event window is open) -->
+                                                        <Border x:Name="HalloweenHeatmapCard" Style="{StaticResource CategoryCard}" Margin="0,0,0,8" Visibility="Collapsed">
+                                                            <StackPanel>
+                                                                <TextBlock FontSize="14" Foreground="#9AA4B6" Margin="6,6,0,8">
+    <Run Text="🎃" /><Run Text="{DynamicResource UiHalloweenEvent}" FontSize="11" />
+</TextBlock>
+                                                                <UniformGrid Columns="4">
+                                                                    <Border x:Name="Bento_halloween_portal" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Button Tag="halloween_portal" ToolTip="{DynamicResource UiHalloweenPortals}" Style="{StaticResource HeatmapTileButton}"
+                                                                                Click="BtnHeatmapIcon_Click">
+                                                                            <Image Source="pack://application:,,,/Assets/heatmap icons/Halloween/halloween-portal.png" Stretch="Uniform"
+                                                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                        </Button>
+                                                                    </Border>
+                                                                    <Border x:Name="Bento_scarecrow" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Button Tag="scarecrow" ToolTip="{DynamicResource UiScarecrows}" Style="{StaticResource HeatmapTileButton}"
+                                                                                Click="BtnHeatmapIcon_Click">
+                                                                            <Image Source="pack://application:,,,/Assets/heatmap icons/Halloween/scarecrow.png" Stretch="Uniform"
+                                                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                        </Button>
+                                                                    </Border>
+                                                                    <Border x:Name="Bento_murderer" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Button Tag="murderer" ToolTip="{DynamicResource UiMurderers}" Style="{StaticResource HeatmapTileButton}"
+                                                                                Click="BtnHeatmapIcon_Click">
+                                                                            <Image Source="pack://application:,,,/Assets/heatmap icons/Halloween/murderer.png" Stretch="Uniform"
+                                                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                        </Button>
+                                                                    </Border>
+                                                                    <Border x:Name="Bento_zombie" Style="{StaticResource HeatmapTileContainer}">
+                                                                        <Button Tag="zombie" ToolTip="{DynamicResource UiZombies}" Style="{StaticResource HeatmapTileButton}"
+                                                                                Click="BtnHeatmapIcon_Click">
+                                                                            <Image Source="pack://application:,,,/Assets/heatmap icons/Halloween/zombie.png" Stretch="Uniform"
+                                                                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                                                                        </Button>
+                                                                    </Border>
+                                                                </UniformGrid>
+                                                            </StackPanel>
+                                                        </Border>
                                                         <Grid>
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="Auto" />
@@ -8190,6 +8275,7 @@
                                                             </Border>
 
                                                         </Grid>
+                                                        </StackPanel>
                                                     </ScrollViewer>
                                                 </Grid>
                                             </ui:Card>

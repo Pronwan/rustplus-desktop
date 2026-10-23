@@ -1759,6 +1759,8 @@ namespace RustPlusDesk.Views
                 }
             }
 
+            ApplyHalloweenEventGate();
+            SyncHeatmapDensitySlider();
             HeatmapPopup.IsOpen = true;
             UpdateBentoActiveStates();
         }
@@ -1775,11 +1777,13 @@ namespace RustPlusDesk.Views
             { "modularcar", "Modular Cars" }, { "horse", "Horses" },
             { "pedalbike", "Bicycles" }, { "hab", "Hot Air Balloons" },
             { "flowers", "Flowers" },
+            { "halloween_portal", "Halloween Portals" }, { "scarecrow", "Scarecrows" },
+            { "murderer", "Murderers" }, { "zombie", "Zombies" },
         };
 
         private void UpdateBentoActiveStates()
         {
-            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "pedalbike", "hab", "flowers", "halloween_portal", "scarecrow", "murderer", "zombie" };
             foreach (var cat in allCategories)
             {
                 var border = FindName("Bento_" + cat) as System.Windows.Controls.Border;
@@ -1808,6 +1812,16 @@ namespace RustPlusDesk.Views
             var glow = FindName("HeatmapActiveGlow") as System.Windows.Controls.Border;
             if (glow != null)
                 glow.Visibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            // The map toolbar button names the layer that is on, so the colour on the
+            // map is never a mystery once the popup is closed.
+            var activeVisibility = hasActive ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            HeatmapActiveOutline.Visibility = activeVisibility;
+            TxtHeatmapActiveName.Visibility = activeVisibility;
+            TxtHeatmapActiveName.Text = hasActive ? $"· {HeatmapLabels[_currentActiveHeatmap!]}" : "";
+            BtnToggleHeatmap.ToolTip = hasActive
+                ? $"Active: {HeatmapLabels[_currentActiveHeatmap!]} (from {Math.Round(TrackingService.HeatmapMinDensity * 100)}% density)"
+                : null;
         }
 
         private void HeatmapSearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -1817,7 +1831,7 @@ namespace RustPlusDesk.Views
 
             string filter = searchBox.Text?.Trim().ToLowerInvariant() ?? "";
 
-            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower" };
+            string[] allCategories = { "ores", "ore_hqm", "playerspawn", "wood", "logs", "mushroom", "berries", "corn", "pumpkin", "potato", "wheat", "bear", "boar", "chicken", "wolf", "stag", "crocodile", "tiger", "snake", "junkpiles", "rowboat", "modularcar", "horse", "rose", "orchid", "sunflower", "halloween_portal", "scarecrow", "murderer", "zombie" };
 
             foreach (var cat in allCategories)
             {
@@ -1856,13 +1870,7 @@ namespace RustPlusDesk.Views
 
                 if (heatmapType == "clear")
                 {
-                    ImgHeatmap.Source = null;
-                    if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
-                    {
-                        var data = new { type = "CLEAR_HEATMAP" };
-                        string json = JsonSerializer.Serialize(data);
-                        _ = _map3DWebView.CoreWebView2.ExecuteScriptAsync($"if (window.handleHeatmapRequest) window.handleHeatmapRequest({json});");
-                    }
+                    ClearActiveHeatmap();
                     return;
                 }
 
@@ -1873,7 +1881,8 @@ namespace RustPlusDesk.Views
                         var data = new
                         {
                             type = "SHOW_HEATMAP",
-                            category = heatmapType
+                            category = heatmapType,
+                            minDensity = TrackingService.HeatmapMinDensity
                         };
 
                         string json = JsonSerializer.Serialize(data);
@@ -1891,8 +1900,9 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task DrawHeatmapOn2DMapAsync(string category)
+        private async Task DrawHeatmapOn2DMapAsync(string category, bool allowReparse = true)
         {
+            bool missingCategory = false;
             var profile = _vm.Selected;
             if (profile == null) return;
 
@@ -1917,42 +1927,28 @@ namespace RustPlusDesk.Views
 
             try
             {
-                using var fs = new System.IO.FileStream(dataPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
-                using var doc = await System.Text.Json.JsonDocument.ParseAsync(fs);
-
                 // The full-resolution heatmap (~2 m cells) when the parser wrote one, else the 512 grid.
-                if (ResourceHeatmapRaster.Read(doc.RootElement, category) is { } heatmap)
+                if (await ReadHeatmapRasterAsync(dataPath, category) is { } heatmap)
                 {
-                    int width = heatmap.Size;
-                    int height = heatmap.Size;
-                    int[]? pixels = await Task.Run(() => ResourceHeatmapRaster.Colorize(heatmap.Data, heatmap.Size));
-                    if (pixels == null) return;
-
-                    // Apply the scale and margin
-                    var ptTopLeft = WorldToImagePx(0, _worldSizeS);
-                    var ptBotRight = WorldToImagePx(_worldSizeS, 0);
-                    if (ptBotRight.X > ptTopLeft.X && ptBotRight.Y > ptTopLeft.Y)
-                    {
-                        ImgHeatmap.Width = ptBotRight.X - ptTopLeft.X;
-                        ImgHeatmap.Height = ptBotRight.Y - ptTopLeft.Y;
-                        ImgHeatmap.Margin = new Thickness(ptTopLeft.X, ptTopLeft.Y, 0, 0);
-                    }
-
-                    var writeableBmp = new System.Windows.Media.Imaging.WriteableBitmap(
-                        width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32, null);
-
-                    writeableBmp.WritePixels(new System.Windows.Int32Rect(0, 0, width, height), pixels, width * 4, 0);
-
-                    ImgHeatmap.Source = writeableBmp;
+                    await RenderHeatmapRasterAsync(heatmap.Data, heatmap.Size);
                 }
                 else
                 {
                     AppendLog($"[Heatmap] Category '{category}' not found in map data.");
+                    missingCategory = true;
                 }
             }
             catch (Exception ex)
             {
                 AppendLog($"[Heatmap] Failed to draw 2D heatmap: {ex.Message}");
+            }
+
+            // Maps parsed before the Halloween layers existed lack them; a re-parse
+            // (the parser cache version moved on) adds them.
+            if (missingCategory && allowReparse && HalloweenHeatmapCategories.Contains(category)
+                && await OfferMapParseForHeatmapAsync(profile))
+            {
+                await DrawHeatmapOn2DMapAsync(category, allowReparse: false);
             }
         }
 

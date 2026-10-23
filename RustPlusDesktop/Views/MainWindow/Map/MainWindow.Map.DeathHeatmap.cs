@@ -17,13 +17,61 @@ public partial class MainWindow
     // Influence radius of one death, in world units.
     private const double DeathHeatWorldRadius = 90.0;
 
+    private System.Windows.Threading.DispatcherTimer? _deathHeatDensityDebounce;
+    private bool _syncingDeathHeatDensity;
+
     private void ChkDeathHeatmap_Checked(object sender, RoutedEventArgs e)
     {
         _showDeathHeatmap = ChkDeathHeatmap.IsChecked == true;
         if (_vm != null && !_vm.IsInitializing)
             TrackingService.MapShowDeathHeatmap = _showDeathHeatmap;
 
+        if (_showDeathHeatmap)
+        {
+            _syncingDeathHeatDensity = true;
+            SliderDeathHeatmapDensity.Value = Math.Clamp(TrackingService.DeathHeatmapMinDensity,
+                SliderDeathHeatmapDensity.Minimum, SliderDeathHeatmapDensity.Maximum);
+            _syncingDeathHeatDensity = false;
+        }
+
         RedrawDeathHeatmap();
+    }
+
+    private void SliderDeathHeatmapDensity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        // Fires once during InitializeComponent, before the rest of the window exists.
+        if (TxtDeathHeatmapDensityValue == null) return;
+
+        TxtDeathHeatmapDensityValue.Text = $"{Math.Round(e.NewValue * 100)}%";
+        if (_syncingDeathHeatDensity) return;
+
+        TrackingService.DeathHeatmapMinDensity = e.NewValue;
+
+        // Redraw once the thumb settles rather than on every tick of a drag.
+        if (_deathHeatDensityDebounce == null)
+        {
+            _deathHeatDensityDebounce = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+            _deathHeatDensityDebounce.Tick += (_, _) =>
+            {
+                _deathHeatDensityDebounce.Stop();
+                RedrawDeathHeatmap();
+            };
+        }
+        _deathHeatDensityDebounce.Stop();
+        _deathHeatDensityDebounce.Start();
+    }
+
+    // The layer row's status line: how many deaths are behind the colour.
+    private void UpdateDeathHeatmapStatus(int deaths)
+    {
+        if (DeathHeatmapOptions == null) return;
+
+        DeathHeatmapOptions.Visibility = _showDeathHeatmap ? Visibility.Visible : Visibility.Collapsed;
+        if (!_showDeathHeatmap) return;
+
+        TxtDeathHeatmapStatus.Text = deaths == 0
+            ? "On · no deaths logged this wipe yet"
+            : $"On · {deaths} death{(deaths == 1 ? "" : "s")} this wipe";
     }
 
     private void ClearDeathHeatmap()
@@ -36,6 +84,7 @@ public partial class MainWindow
     public void RedrawDeathHeatmap()
     {
         ClearDeathHeatmap();
+        UpdateDeathHeatmapStatus(0);
 
         // The Deep Sea view maps a different box onto the image; main-world deaths do not belong there.
         if (!_showDeathHeatmap || Overlay == null || _worldSizeS <= 0 || _worldRectPx.Width <= 0 || _isShowingDeepSeaMap)
@@ -47,7 +96,10 @@ public partial class MainWindow
         long? sinceUnix = wipeStart is { } start ? new DateTimeOffset(start).ToUnixTimeSeconds() : null;
         var positions = Services.Deaths.DeathLogStore.LoadPositions(GetServerKey(), sinceUnix);
 
-        var bitmap = Services.Deaths.DeathHeatmapRaster.Render(positions, _worldSizeS, DeathHeatWorldRadius);
+        UpdateDeathHeatmapStatus(positions.Count);
+
+        var bitmap = Services.Deaths.DeathHeatmapRaster.Render(positions, _worldSizeS, DeathHeatWorldRadius,
+            TrackingService.DeathHeatmapMinDensity);
         if (bitmap == null)
             return;
 
