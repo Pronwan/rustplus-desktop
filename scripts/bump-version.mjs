@@ -473,9 +473,16 @@ if (shouldUpdateFiles && nextVersion !== currentCsprojVersion) {
 
 // 10. Git commit & tag if requested
 if (shouldCreateTag && !isDryRun) {
-  run(`git add "${csprojPath}" CHANGELOG.md "${targetNotesPath}" package.json`);
-  run(`git commit -m "chore(release): bump version to ${nextVersion} [skip ci]"`);
-  run(`git tag -a "${nextTag}" -m "Release ${nextTag}"`);
+  // Stage only files that exist and are not ignored: one missing pathspec (the root
+  // package.json is gitignored, so CI has none) fails the whole `git add`, the commit then
+  // has nothing in it, and the tag used to land on the previous commit without the bump.
+  // Each step now stops the run when it fails instead of carrying on.
+  const toStage = [csprojPath, resolve(rootDir, 'CHANGELOG.md'), targetNotesPath, resolve(rootDir, 'package.json')]
+    .filter((p) => existsSync(p))
+    .filter((p) => run(`git check-ignore -q "${p}" && echo ignored`) !== 'ignored');
+  execSync(`git add ${toStage.map((p) => `"${p}"`).join(' ')}`, { cwd: rootDir, stdio: 'inherit' });
+  execSync(`git commit -m "chore(release): bump version to ${nextVersion} [skip ci]"`, { cwd: rootDir, stdio: 'inherit' });
+  execSync(`git tag -a "${nextTag}" -m "Release ${nextTag}"`, { cwd: rootDir, stdio: 'inherit' });
   console.log(`Created git commit and tag ${nextTag}`);
 }
 
