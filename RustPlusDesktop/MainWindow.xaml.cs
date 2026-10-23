@@ -554,12 +554,12 @@ public partial class MainWindow : WpfUi.FluentWindow
         // bei Host-Resize: nur Markerpositionen neu berechnen
 
 
+        MapTransform.Changed += RefreshMapGridViewport;
         WebViewHost.SizeChanged += (_, __) =>
         {
-            // FitMapToHost();
-            // <<< NEU: Basis an neue Hostgröße anpassen
-
-            // UpdateMarkerPositions();
+            RefreshAllOverlayScales();
+            RefreshMonumentOverlayPositions();
+            RefreshMapGridViewport();
         };
         WebViewHost.MouseWheel += WebViewHost_MouseWheel;
         WebViewHost.MouseDown += WebViewHost_MouseDown;

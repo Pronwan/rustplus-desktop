@@ -191,6 +191,7 @@ public partial class MainWindow
             bool on = ChkGrid?.IsChecked == true;
             _gridWrapper.Opacity = on ? TrackingService.MapGridOpacity : 0;
             _gridWrapper.IsHitTestVisible = false;   // the grid never takes the mouse anyway
+            RefreshMapGridViewport();
         }
 
         if (_deathWrapper != null)
@@ -265,6 +266,7 @@ public partial class MainWindow
         ImgMap.Source = null;
         ImgHeatmap.Source = null;
         GridLayer.SetDrawing(null);
+        RefreshMapGridViewport();
         NoBuildLayer?.Children.Clear();
         CargoPathLayer?.Children.Clear();
 

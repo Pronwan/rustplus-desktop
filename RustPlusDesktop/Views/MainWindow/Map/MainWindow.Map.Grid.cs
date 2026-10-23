@@ -8,6 +8,45 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
+    private DrawingBrush? _oceanGridBrush;
+    private MapGridDrawing? _oceanGridDrawing;
+    private double _oceanGridScale;
+    private double _oceanGridOpacity;
+    private bool _oceanGridAliased;
+
+    private void RefreshMapGridViewport(object? sender = null, EventArgs? e = null)
+    {
+        var drawing = GridLayer?.Drawing;
+        var background = _isShowingDeepSeaMap ? Color.FromRgb(24, 43, 73) : Color.FromRgb(11, 58, 74);
+        if (drawing == null || ChkGrid?.IsChecked != true)
+        {
+            if (WebViewHost.Background is not SolidColorBrush solid || solid.Color != background)
+                WebViewHost.Background = new SolidColorBrush(background);
+            return;
+        }
+        double scale = GetEffectiveZoom();
+        double opacity = TrackingService.MapGridOpacity;
+        bool aliased = TrackingService.MapUseAliasedEdgeMode;
+        if (_oceanGridBrush == null || !ReferenceEquals(_oceanGridDrawing, drawing) || _oceanGridScale != scale
+            || _oceanGridOpacity != opacity || _oceanGridAliased != aliased)
+        {
+            _oceanGridBrush = MapGridVisual.CreateOceanBrush(drawing, scale, aliased, opacity, background);
+            _oceanGridDrawing = drawing;
+            _oceanGridScale = scale;
+            _oceanGridOpacity = opacity;
+            _oceanGridAliased = aliased;
+        }
+        var (s, offX, offY) = GetViewboxScaleAndOffset();
+        var matrix = MapTransform.Matrix;
+        matrix.Scale(s, s);
+        matrix.Translate(offX, offY);
+        ((MatrixTransform)_oceanGridBrush.Transform).Matrix = matrix;
+        WebViewHost.Background = _oceanGridBrush;
+        if (WebViewHost.ActualWidth > 0 && WebViewHost.ActualHeight > 0)
+            GridLayer!.SetViewport(new Rect(HostToScenePreTransform(new Point()),
+                HostToScenePreTransform(new Point(WebViewHost.ActualWidth, WebViewHost.ActualHeight))));
+    }
+
     private void ChkGrid_Checked(object sender, RoutedEventArgs e)
     {
         RedrawGrid();
@@ -30,6 +69,7 @@ public partial class MainWindow
         if (!wanted || _worldSizeS <= 0 || _worldRectPx.Width <= 0)
         {
             GridLayer.SetDrawing(null);
+            RefreshMapGridViewport();
             RefreshMiniMapLayers();
             return;
         }
@@ -65,6 +105,7 @@ public partial class MainWindow
     {
         if (GridLayer == null || MapTransform == null) return;
         GridLayer.SetViewScale(GetEffectiveZoom(), TrackingService.MapUseAliasedEdgeMode);
+        RefreshMapGridViewport();
     }
 
     internal static string ColumnLabel(int index)

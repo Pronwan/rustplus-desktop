@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -58,6 +59,10 @@ public class MapGridVisualTests
         Assert.AreEqual(mainLines.Bounds, ((DrawingVisual)VisualTreeHelper.GetChild(main, 0)).Drawing.Bounds);
         var labels = (DrawingVisual)VisualTreeHelper.GetChild(main, 1);
         Assert.IsFalse(labels.Drawing.Bounds.IsEmpty);
+        int fullLabelCount = labels.Drawing.Children.Count;
+        main.SetViewport(new Rect(200, 200, 60, 60));
+        Assert.IsTrue(labels.Drawing.Children.Count < fullLabelCount / 4,
+            "Zoomed views should draw only nearby labels, not every cell on the server.");
         Assert.IsTrue(((DrawingVisual)VisualTreeHelper.GetChild(mini, 1)).Drawing == null,
             "Overview labels should hide when cells are too small to read.");
         Assert.IsTrue(main.SetViewScale(3, true));
@@ -94,4 +99,32 @@ public class MapGridVisualTests
         bitmap.CopyPixels(pixels, 300 * 4, 0);
         Assert.IsTrue(pixels.Where((_, index) => index % 4 == 3).Any(alpha => alpha != 0));
     }
+
+    [STATestMethod]
+    public void OceanGrid_CoversTheViewport_AndStaysAlignedDuringPan()
+    {
+        var data = new MapGridDrawing(new Rect(40, 40, 580, 580), new Size(660, 660), 29, false);
+        var brush = MapGridVisual.CreateOceanBrush(data, 0.5, false, 0.7, Color.FromRgb(11, 58, 74));
+        var transform = (MatrixTransform)brush.Transform;
+        transform.Matrix = new Matrix(0.5, 0, 0, 0.5, 140, 180);
+        var content = brush.Drawing;
+        foreach (double pan in new[] { 0d, 3d })
+        {
+            transform.Matrix = new Matrix(0.5, 0, 0, 0.5, 140 + pan, 180);
+            var visual = new DrawingVisual();
+            using (var context = visual.RenderOpen())
+                context.DrawRectangle(brush, null, new Rect(0, 0, 600, 900));
+            var bitmap = new RenderTargetBitmap(600, 900, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+            var pixels = new byte[600 * 900 * 4];
+            bitmap.CopyPixels(pixels, 600 * 4, 0);
+            Assert.AreEqual((byte)255, pixels[3]);
+            Assert.AreEqual((byte)255, pixels[^1]);
+            int line = (55 * 600 + 50 + (int)pan) * 4;
+            int ocean = (55 * 600 + 55 + (int)pan) * 4;
+            Assert.IsTrue(pixels[line] < pixels[ocean], "Grid must continue beyond the image bounds into the outer ocean.");
+            Assert.AreSame(content, brush.Drawing, "Panning must reuse the tile drawing.");
+        }
+    }
+
 }

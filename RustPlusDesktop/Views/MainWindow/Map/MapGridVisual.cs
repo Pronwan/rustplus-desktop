@@ -69,6 +69,8 @@ public sealed class MapGridVisual : FrameworkElement
     private readonly DrawingVisual _labels = new();
     private double _scale = double.NaN;
     private bool _aliased;
+    private Rect? _viewport;
+    private (int Left, int Top, int Right, int Bottom) _visibleCells;
     internal MapGridDrawing? Drawing { get; private set; }
 
     public MapGridVisual()
@@ -97,7 +99,49 @@ public sealed class MapGridVisual : FrameworkElement
             Width = drawing.MapSize.Width;
             Height = drawing.MapSize.Height;
         }
+        _visibleCells = VisibleCells();
         SetViewScale(scale, _aliased);
+    }
+
+    internal void SetViewport(Rect viewport)
+    {
+        _viewport = viewport;
+        var cells = VisibleCells();
+        if (cells == _visibleCells) return;
+        _visibleCells = cells;
+        DrawLabels();
+    }
+
+    private (int Left, int Top, int Right, int Bottom) VisibleCells()
+    {
+        if (Drawing == null) return default;
+        if (_viewport is not Rect viewport) return (0, 0, Drawing.Cells, Drawing.Cells);
+        var bounds = Drawing.Bounds;
+        double dx = bounds.Width / Drawing.Cells, dy = bounds.Height / Drawing.Cells;
+        return (Math.Clamp((int)Math.Floor((viewport.Left - bounds.Left) / dx) - 1, 0, Drawing.Cells),
+            Math.Clamp((int)Math.Floor((viewport.Top - bounds.Top) / dy) - 1, 0, Drawing.Cells),
+            Math.Clamp((int)Math.Ceiling((viewport.Right - bounds.Left) / dx) + 1, 0, Drawing.Cells),
+            Math.Clamp((int)Math.Ceiling((viewport.Bottom - bounds.Top) / dy) + 1, 0, Drawing.Cells));
+    }
+
+    internal static DrawingBrush CreateOceanBrush(MapGridDrawing drawing, double scale, bool aliased, double opacity, Color background)
+    {
+        var tile = new Rect(0, 0, drawing.Bounds.Width / drawing.Cells, drawing.Bounds.Height / drawing.Cells);
+        var content = new DrawingGroup();
+        using (var context = content.Open())
+        {
+            var stroke = new SolidColorBrush(Color.FromArgb((byte)Math.Round(150 * Math.Clamp(opacity, 0, 1)), 0, 0, 0));
+            context.DrawRectangle(new SolidColorBrush(background), new Pen(stroke, (aliased ? 1 : 0.65) / scale), tile);
+        }
+        content.Freeze();
+        return new DrawingBrush(content)
+        {
+            TileMode = TileMode.Tile,
+            ViewboxUnits = BrushMappingMode.Absolute, Viewbox = tile,
+            ViewportUnits = BrushMappingMode.Absolute,
+            Viewport = new Rect(drawing.Bounds.TopLeft, tile.Size),
+            Transform = new MatrixTransform()
+        };
     }
 
     internal bool SetViewScale(double scale, bool aliased)
@@ -116,13 +160,22 @@ public sealed class MapGridVisual : FrameworkElement
                 context.DrawGeometry(null, pen, Drawing.Lines);
             }
         }
+        DrawLabels();
+        return true;
+    }
+
+    private void DrawLabels()
+    {
+        double scale = _scale;
         using (var context = _labels.RenderOpen())
         {
             if (Drawing != null && Math.Min(Drawing.Bounds.Width, Drawing.Bounds.Height) / Drawing.Cells * scale >= 44)
             {
                 // Text and its inset stay screen-sized; anchors remain at exact map coordinates.
-                foreach (var (origin, glyph) in Drawing.Labels)
+                for (int col = _visibleCells.Left; col < _visibleCells.Right; col++)
+                for (int row = _visibleCells.Top; row < _visibleCells.Bottom; row++)
                 {
+                    var (origin, glyph) = Drawing.Labels[col * Drawing.Cells + row];
                     context.PushTransform(new MatrixTransform(1 / scale, 0, 0, 1 / scale,
                         origin.X + 4 / scale, origin.Y + 2 / scale));
                     context.DrawDrawing(glyph);
@@ -130,6 +183,5 @@ public sealed class MapGridVisual : FrameworkElement
                 }
             }
         }
-        return true;
     }
 }

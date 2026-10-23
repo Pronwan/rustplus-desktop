@@ -360,6 +360,7 @@ namespace RustPlusDesk
 
             // Its own scale keeps grid text readable regardless of the main map's zoom.
             _gridVisual.SetViewScale(_mapWidth / w, Services.TrackingService.MapUseAliasedEdgeMode);
+            _gridVisual.SetViewport(vb);
 
             foreach (var brush in new[] { BrushTexture, BrushHeatmap, BrushGrid, BrushDrawings, BrushIcons, BrushPlayers, BrushDeaths, BrushNoBuild })
             {
