@@ -105,11 +105,10 @@ public static class EventCapabilities
     /// hidden without vending data — so it would point at nothing and force open a panel that
     /// is deliberately blocked.
     ///
-    /// The events chapter deliberately stays: the dock still exists, it just carries fewer
-    /// entries.
+    /// The events chapter also needs a visible dock, which is hidden until the feed is confirmed.
     /// </summary>
     private static readonly HashSet<string> CloudUnavailableTutorials =
-        new(StringComparer.Ordinal) { "shops-vending" };
+        new(StringComparer.Ordinal) { "shops-vending", "events-monitoring" };
 
     public static bool IsTutorialAvailable(string tutorialId) =>
         !IsCloudSourced || !CloudUnavailableTutorials.Contains(tutorialId);

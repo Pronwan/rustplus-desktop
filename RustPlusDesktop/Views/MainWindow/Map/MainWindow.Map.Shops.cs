@@ -228,6 +228,8 @@ public partial class MainWindow
                 await Task.Delay(2000, ct);
             }
             
+            if (ct.IsCancellationRequested) return;
+
             if (shops == null) 
             {
                 AppendLog("[shops] Poll failed after retries. Preserving last known state.");
@@ -238,7 +240,7 @@ public partial class MainWindow
             _lastShops = shops;
 
             // Does this server still deliver vending data at all?
-            TrackShopDataAvailability(shops.Count > 0);
+            TrackShopDataAvailability(shops.Any(shop => !IsDeepSeaShop(shop)));
 
             UpdateShopLifetimes(shops);
 

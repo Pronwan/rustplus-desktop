@@ -45,6 +45,11 @@ public sealed class FacepunchFeatureRemovalTests
             CollectionAssert.AreEqual(new[] { RustEventKind.OilRig }, EventCapabilities.Trackable.ToArray());
             Assert.IsFalse(EventCapabilities.IsAlertAvailable("AlertCargoSpawnedAudio"));
             Assert.IsFalse(EventCapabilities.IsAlertAvailable("AlertOilRigCrateUp"));
+            Assert.IsFalse(EventCapabilities.IsTutorialAvailable("shops-vending"));
+            Assert.IsFalse(EventCapabilities.IsTutorialAvailable("events-monitoring"));
+            EventCapabilities.SetSource(ServerEventSource.RustApi);
+            Assert.IsTrue(EventCapabilities.IsTutorialAvailable("shops-vending"));
+            Assert.IsTrue(EventCapabilities.IsTutorialAvailable("events-monitoring"));
         }
         finally { EventCapabilities.SetSource(previous); }
     }

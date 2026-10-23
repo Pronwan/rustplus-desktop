@@ -18,16 +18,16 @@ public partial class MainWindow
     // their own absence proves nothing — Cargo and Heli are intermittent by design, so "no
     // heli right now" is the normal case.
     //
-    // Polling keeps running while hidden (just slower), so the verdict is always reversible.
+    // Start hidden; only vending data from this connection can reveal these controls.
     //
     // "No shops" is an unambiguous signal, not a matter of server age: the NPC vending
     // machines at Outpost and Bandit Camp belong to the monuments, so a working feed
     // delivers them from the moment the server is up — a freshly wiped server included.
-    // We still want a couple of polls before deciding, purely to survive a single
+    // We still want a couple of probe attempts before giving up, purely to survive a single
     // truncated or rate-limited response (the retry in PollShopsOnceAsync only kicks in
     // once we have seen shops before, so the first poll after connect is unguarded).
 
-    private bool _shopDataAvailable = true;
+    private bool _shopDataAvailable = false;
     private int _emptyShopPolls;
 
     private const int EmptyPollsBeforeHiding = 3;
@@ -37,7 +37,7 @@ public partial class MainWindow
     /// <summary>Clears the verdict. Call on (re)connect and when switching server.</summary>
     private void ResetShopDataAvailability()
     {
-        _shopDataAvailable = true;
+        _shopDataAvailable = false;
         _emptyShopPolls = 0;
         ResetDeepSeaShopFetch();
         Dispatcher.Invoke(ApplyShopDataAvailability);
@@ -63,6 +63,7 @@ public partial class MainWindow
             List<RustPlusClientReal.ShopMarker>? shops;
             try { shops = await real.GetVendingShopsAsync(token); }
             catch { return; }
+            if (token.IsCancellationRequested) return;
 
             // null is a technical failure, not an answer — retry without counting it.
             if (shops != null)
@@ -87,7 +88,6 @@ public partial class MainWindow
 
                 TrackShopDataAvailability(usable > 0);
                 if (usable > 0) return;             // server delivers; verdict settled
-                if (!_shopDataAvailable) return;    // enough empties; verdict settled
             }
 
             try { await Task.Delay(TimeSpan.FromSeconds(8), token); } catch { return; }
@@ -141,8 +141,8 @@ public partial class MainWindow
         if (AlertsShopsColumn != null) AlertsShopsColumn.Visibility = vis;
         if (TradeAlertsMenuItem != null) TradeAlertsMenuItem.Visibility = vis;
 
-        if (EventDock != null) EventDock.Visibility = Visibility.Visible;
-        if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = Visibility.Visible;
+        if (EventDock != null) EventDock.Visibility = vis;
+        if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = vis;
 
         // Once a server is known not to deliver shops, stop asking altogether. Polling a dead
         // endpoint forever costs the server requests for nothing, and a server that starts
@@ -160,6 +160,10 @@ public partial class MainWindow
         else if (_shopTimer != null)
         {
             _shopTimer.Interval = ShopPollInterval;
+        }
+        else if (ChkShops?.IsChecked == true)
+        {
+            ChkShops_Checked(ChkShops, new RoutedEventArgs());
         }
 
         if (show) return;

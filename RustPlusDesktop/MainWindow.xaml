@@ -5505,6 +5505,7 @@
                                             Unchecked="Monuments_Unchecked" />
                                         <CheckBox
                                             x:Name="ChkShops"
+                                            Visibility="Collapsed"
                                             Checked="ChkShops_Checked"
                                             Content="{DynamicResource Shops}"
                                             Style="{StaticResource PillToggleButton}"
@@ -5733,6 +5734,7 @@
                                                 <StackPanel Style="{StaticResource LayerOptions}">
                                                     <CheckBox
                                                         x:Name="ChkLayerAutoLoadShops"
+                                                        Visibility="Collapsed"
                                                         FontSize="12"
                                                         Checked="ChkLayerAutoLoadShops_Changed"
                                                         Content="{DynamicResource UiLoadShopsAutomaticallyOnConnect}"
@@ -6320,7 +6322,7 @@
                                                      </ContextMenu.Style>
 
                                                      <!-- Column 1: Events -->
-                                                     <MenuItem x:Name="AlertsEventsColumn" Header="{DynamicResource Events}" BorderThickness="0,0,1,0">
+                                                     <MenuItem x:Name="AlertsEventsColumn" Visibility="Collapsed" Header="{DynamicResource Events}" BorderThickness="0,0,1,0">
                                                          <MenuItem.Style>
                                                              <Style TargetType="MenuItem">
                                                                  <Setter Property="Template">
@@ -6573,7 +6575,7 @@
                                                      </MenuItem>
 
                                                       <!-- Column 3: Shops & Actions -->
-                                                      <MenuItem x:Name="AlertsShopsColumn" Header="{DynamicResource Shops}" BorderThickness="0,0,1,0">
+                                                      <MenuItem x:Name="AlertsShopsColumn" Visibility="Collapsed" Header="{DynamicResource Shops}" BorderThickness="0,0,1,0">
                                                           <MenuItem.Style>
                                                               <Style TargetType="MenuItem">
                                                                   <Setter Property="Template">
@@ -6617,6 +6619,7 @@
                                                              Tag="SuspiciousShops" />
                                                          <MenuItem
                                                              x:Name="TradeAlertsMenuItem"
+                                                             Visibility="Collapsed"
                                                              Header="{DynamicResource TradeAlerts}"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}" />
@@ -8481,6 +8484,7 @@
                             
                             <StackPanel
                                 x:Name="EventDock"
+                                Visibility="Collapsed"
                                 tutorials:Tutorial.TargetId="Events.Dock"
                                 Orientation="Vertical" />
                             
@@ -9080,6 +9084,7 @@
 
                                 <Border
                                     x:Name="BtnShopToggleBorder"
+                                    Visibility="Collapsed"
                                     Grid.Row="1"
                                     Width="160"
                                     Height="26"

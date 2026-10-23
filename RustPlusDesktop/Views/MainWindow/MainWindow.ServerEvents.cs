@@ -14,10 +14,8 @@ public partial class MainWindow
             string serverKey = GetServerKey();
             if (string.IsNullOrWhiteSpace(serverKey) || serverKey == "unknown-server") return;
 
-            // Start in the mode this server used last time. Correcting after the first shop
-            // poll is unavoidable, but starting from the remembered answer means the correction
-            // is usually a no-op instead of a visible switch on every single connect.
-            ApplyRememberedEventSource();
+            // Only a response from this connection can reveal the shops and events UI.
+            ApplyShopDataAvailability();
             RefreshOilRigTimerCapability();
 
             // Force the next presence upload to go through with this server's key.
@@ -32,7 +30,7 @@ public partial class MainWindow
             _lastCloudPresenceSignature = null;
             _hasCriticalPresenceChange = true;
 
-            // Settle the verdict for this session. Runs regardless of the remembered mode, so
+            // Settle the verdict for this session. Starts hidden, so
             // a server that starts delivering again is picked up — and it is the only
             // detection there is, since the ongoing shop timer stays off in fallback mode.
             await ProbeShopDataAsync();
@@ -79,24 +77,6 @@ public partial class MainWindow
 
         foreach (object child in menuItem.Items)
             ApplyTagVisibility(child, hidden, cloud);
-    }
-
-    private void ApplyRememberedEventSource()
-    {
-        string remembered = _vm?.Selected?.LastEventSource ?? "";
-
-        // Unknown servers fall back on purpose: showing events that can never arrive is worse
-        // than briefly hiding ones that will.
-        bool wasApi = string.Equals(remembered, "RustApi", StringComparison.OrdinalIgnoreCase);
-
-        // Seed the detector's own state, not just the capability flag. ApplyShopDataAvailability
-        // recomputes the source from _shopDataAvailable, so leaving that at its optimistic
-        // default made the next ApplySettings pass overwrite the remembered mode — which is why
-        // a reconnect still showed the full view until the probe had run again.
-        _shopDataAvailable = wasApi;
-
-        EventCapabilities.SetSource(wasApi ? ServerEventSource.RustApi : ServerEventSource.Cloud);
-        ApplyShopDataAvailability();
     }
 
     /// <summary>Persists what the shop poll actually found, for the next connect.</summary>
