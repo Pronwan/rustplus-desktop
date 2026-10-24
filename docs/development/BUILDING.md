@@ -32,6 +32,14 @@ Rust+ Desktop v7.0.0 introduced an interactive 2D/3D Map engine. **Please note t
 ---
 
 ## Building
+
+For everyday builds, double-click `tools\build.cmd` or run it from the
+repository root. It installs Genetics Lab dependencies when missing, builds
+the frontend and Windows solution, and keeps the window open with the result.
+It uses Debug configuration and does not run tests or publish anything.
+
+### Manual setup and verification
+
 From the repository root:
 
 ```powershell

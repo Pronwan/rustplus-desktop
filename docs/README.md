@@ -7,6 +7,7 @@ tools/build/                 Build support and secret generation
 tools/release/               Versioning and release notes
 tools/agents/                Agent skill installation manifest
 tools/dev.cmd                Local Hot Reload launcher
+tools/build.cmd              Double-click frontend and Windows build
 vendor/nuget/                Committed local NuGet packages
 vendor/RustPlus.Auth/         Private authentication submodule (Git reference only)
 vendor/MapParser/             Ignored private map parser checkout
