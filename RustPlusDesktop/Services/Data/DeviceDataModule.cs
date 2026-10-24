@@ -258,6 +258,7 @@ namespace RustPlusDesk.Services.Data
                              ImportedRouteIds = canvasOverlay?.ImportedRouteIds ?? new(),
                              Icons           = canvasOverlay?.Icons   ?? new(),
                              Texts           = canvasOverlay?.Texts   ?? new(),
+                             Space           = canvasOverlay?.Space,
                              LastUpdatedUnix = DataManager.UnixNow()
                          };
 

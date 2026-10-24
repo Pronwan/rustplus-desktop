@@ -2764,6 +2764,8 @@ private bool _overlayToolsVisible = false;
         // 3) Auch unsere Index-Maps resetten
         _playerOverlayElements.Clear();
         _visibleOverlayOwners.Clear();
+        // Otherwise the next map would re-save another server's drawings as if they were its own.
+        _overlaySpaceByPlayer.Clear();
     }
 
     private class OverlayTag
@@ -2782,6 +2784,10 @@ private bool _overlayToolsVisible = false;
     {
         var data = new OverlaySaveData();
         data.LastUpdatedUnix = DataManager.UnixNow(); // NEU: stamp jetzt
+        data.Space = OverlaySpace.From(
+            _overlaySpaceByPlayer.TryGetValue(_mySteamId, out var mySpace) && OverlaySpace.IsUsable(mySpace)
+                ? mySpace
+                : _worldRectPx);
 
         // Routes carry their own geometry rather than appearing in the stroke list. Their visuals
         // have no OverlayTag, so the loop below steps over them on its own.
@@ -2903,9 +2909,27 @@ private bool _overlayToolsVisible = false;
 
         var known = new HashSet<string>(target.Routes.Select(r => r.Id), StringComparer.Ordinal);
 
+        // The two copies may have been drawn on different map images.
+        Rect? from = local.Space?.ToRect();
+        Rect? to = target.Space?.ToRect();
+
         foreach (SavedRoute route in local.Routes)
             if (!string.IsNullOrWhiteSpace(route.Id) && known.Add(route.Id))
-                target.Routes.Add(route);
+            {
+                if (from is { } f && to is { } t)
+                {
+                    // A copy: the local overlay may still be the one that gets used.
+                    var copy = new SavedRoute
+                    {
+                        Id = route.Id, SourceId = route.SourceId, Name = route.Name, Color = route.Color,
+                        Thickness = route.Thickness, Points = route.Points.ToList(),
+                        Closed = route.Closed, Visible = route.Visible,
+                    };
+                    OverlaySpaceMapper.MapRoute(copy, f, t);
+                    target.Routes.Add(copy);
+                }
+                else target.Routes.Add(route);
+            }
 
         if (local.ImportedRouteIds is { Count: > 0 })
         {
@@ -2915,8 +2939,57 @@ private bool _overlayToolsVisible = false;
         }
     }
 
+    /// <summary>
+    /// The space each player's elements on the canvas are in right now: the world's rectangle on
+    /// the map image they were placed against. Empty when that is not known.
+    /// </summary>
+    private readonly Dictionary<ulong, Rect> _overlaySpaceByPlayer = new();
+
+    /// <summary>The server those elements belong to. A map loading for the next server must not touch them.</summary>
+    private string? _overlaySpaceServerKey;
+
+    /// <summary>
+    /// Brings every player's drawings onto the map image now showing, after it changed under them
+    /// (a render generated, deleted, or swapped for the server's image).
+    ///
+    /// Mine are saved first, which records the space they are in, and then everybody's are rebuilt
+    /// from disk, which maps them across. Undo goes with it: its steps hold the old positions.
+    /// </summary>
+    private void ReprojectOverlaysToCurrentMap()
+    {
+        if (!OverlaySpace.IsUsable(_worldRectPx)) return;
+
+        // Connecting starts the next server's map before the last one's drawings are cleared.
+        if (_overlaySpaceServerKey != GetServerKey())
+        {
+            _overlaySpaceByPlayer.Clear();
+            return;
+        }
+
+        bool changed = false;
+        foreach (var (steamId, space) in _overlaySpaceByPlayer.ToList())
+        {
+            if (OverlaySpace.IsUsable(space) && OverlaySpace.AreSame(space, _worldRectPx)) continue;
+
+            if (steamId == _mySteamId) SaveOwnOverlayToJson();
+            LoadOverlayForPlayerFromJson(steamId);
+            changed = true;
+        }
+
+        if (changed) ClearOverlayHistory();
+    }
+
     private void MaterializeOverlayForPlayer(ulong steamId, OverlaySaveData data, bool editableIfMine)
     {
+        // Into the image showing now. Before the map has laid itself out there is nothing to map
+        // into yet; the elements then stay where they were drawn, and the map catches them up.
+        var target = OverlaySpace.IsUsable(_worldRectPx) ? _worldRectPx : (data.Space?.ToRect() ?? Rect.Empty);
+        OverlaySpaceMapper.MapTo(data, target);
+        string serverKey = GetServerKey();
+        if (_overlaySpaceServerKey != serverKey) _overlaySpaceByPlayer.Clear();
+        _overlaySpaceServerKey = serverKey;
+        _overlaySpaceByPlayer[steamId] = target;
+
         // Routes are rebuilt here rather than alongside the strokes: they are their own objects
         // with their own list, and this is the one place every overlay - mine on start-up, a
         // teammate's on sync, a restored one from the cloud - actually comes through.
@@ -3817,6 +3890,7 @@ private bool _overlayToolsVisible = false;
                     // The same omission as everywhere else: a teammate broadcasting their map
                     // would arrive with everything except the routes.
                     data.Routes = mapData.Routes ?? new();
+                    data.Space = mapData.Space;
                 }
             }
 

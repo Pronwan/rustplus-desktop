@@ -112,7 +112,9 @@ namespace RustPlusDesk.Services.Data
                 Height = icon.Height,
                 Label = icon.Label,
                 Note = icon.Note,
-                Screenshots = icon.Screenshots?.Take(maxScreenshots).ToList()
+                Screenshots = icon.Screenshots?.Take(maxScreenshots).ToList(),
+                // Base markers sync as a list of their own, without the overlay around them.
+                Space = icon.Space ?? data.Space
             }).ToList();
 
             var overlayOnlyData = new OverlaySaveData
@@ -127,7 +129,8 @@ namespace RustPlusDesk.Services.Data
                 Routes = (data.Routes ?? new List<SavedRoute>())
                     .Where(r => string.IsNullOrEmpty(r.SourceId))
                     .ToList(),
-                ImportedRouteIds = data.ImportedRouteIds ?? new List<string>()
+                ImportedRouteIds = data.ImportedRouteIds ?? new List<string>(),
+                Space = data.Space
             };
 
             // Size limit check (excluding bases/screenshots)
@@ -311,6 +314,7 @@ namespace RustPlusDesk.Services.Data
                             // the fetch that brings them back leaves them in the payload.
                             data.Routes          = mapData.Routes   ?? data.Routes;
                             data.ImportedRouteIds = mapData.ImportedRouteIds ?? data.ImportedRouteIds;
+                            data.Space           = mapData.Space;
                             data.LastUpdatedUnix = mapData.LastUpdatedUnix > 0
                                 ? mapData.LastUpdatedUnix
                                 : new DateTimeOffset(mapRow.UpdatedAt).ToUnixTimeSeconds();

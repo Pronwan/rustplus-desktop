@@ -669,6 +669,7 @@ public partial class MainWindow
                                 RemoveFromMapLayers(fe);
                             _playerOverlayElements.Remove(id);
                         }
+                        _overlaySpaceByPlayer.Remove(id);
                     }
                     RebuildOverlayTeamBar();
                     UpdateSubscriptionDock();

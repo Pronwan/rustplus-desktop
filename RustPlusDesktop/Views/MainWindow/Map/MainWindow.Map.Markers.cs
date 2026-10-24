@@ -576,6 +576,7 @@ public partial class MainWindow
             double hDip = map.Bitmap.PixelHeight * (96.0 / map.Bitmap.DpiY);
             _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
             ShowMapBasic(map.Bitmap);
+            ReprojectOverlaysToCurrentMap();
             ResetMapZoom();
             RedrawMapReferenceLayers();
             Dispatcher.InvokeAsync(() =>

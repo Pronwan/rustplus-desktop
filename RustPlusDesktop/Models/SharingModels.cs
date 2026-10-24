@@ -42,6 +42,119 @@ namespace RustPlusDesk.Models
         /// straight back — which is not a delete, it is a flicker.
         /// </summary>
         public List<string> ImportedRouteIds { get; set; } = new();
+
+        /// <summary>
+        /// Where the world sat in the pixels everything here was drawn on.
+        ///
+        /// Strokes, icons, texts and routes are stored in the pixels of the map image that was
+        /// showing, and the server's image and MapParser's render differ in size and margin. With
+        /// this the coordinates can be carried over to whichever image is showing now. Null for
+        /// overlays written before it was recorded, which are taken to fit the current image.
+        /// </summary>
+        public OverlaySpace? Space { get; set; }
+    }
+
+    /// <summary>The world's rectangle in an overlay's own pixels.</summary>
+    public sealed class OverlaySpace
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        public static OverlaySpace? From(Rect rect)
+            => IsUsable(rect) ? new OverlaySpace { X = rect.X, Y = rect.Y, Width = rect.Width, Height = rect.Height } : null;
+
+        public Rect ToRect() => new(X, Y, Width, Height);
+
+        public static bool IsUsable(Rect rect)
+            => !rect.IsEmpty && rect.Width > 0 && rect.Height > 0
+               && double.IsFinite(rect.X) && double.IsFinite(rect.Y)
+               && double.IsFinite(rect.Width) && double.IsFinite(rect.Height);
+
+        public static bool AreSame(Rect a, Rect b)
+            => Math.Abs(a.X - b.X) < 0.5 && Math.Abs(a.Y - b.Y) < 0.5
+               && Math.Abs(a.Width - b.Width) < 0.5 && Math.Abs(a.Height - b.Height) < 0.5;
+    }
+
+    /// <summary>
+    /// Carries an overlay from the map image it was drawn on to another one.
+    ///
+    /// Positions follow the world; sizes (stroke width, icon size, font size) follow the map's
+    /// scale, so a drawing looks the same on either image rather than only sitting in the same place.
+    /// </summary>
+    public static class OverlaySpaceMapper
+    {
+        /// <summary>
+        /// Rewrites <paramref name="data"/> into <paramref name="target"/> and records it as its
+        /// space. Parts with no known space of their own are taken to be in the target already.
+        /// </summary>
+        public static void MapTo(OverlaySaveData data, Rect target)
+        {
+            if (!OverlaySpace.IsUsable(target)) return;
+
+            if (data.Space?.ToRect() is { } from && OverlaySpace.IsUsable(from) && !OverlaySpace.AreSame(from, target))
+            {
+                foreach (var stroke in data.Strokes ?? new())
+                {
+                    MapPoints(stroke.Points, from, target);
+                    stroke.Thickness *= Scale(from, target);
+                }
+
+                foreach (var text in data.Texts ?? new())
+                {
+                    var p = MapPoint(new Point(text.X, text.Y), from, target);
+                    text.X = p.X;
+                    text.Y = p.Y;
+                    text.FontSize *= Scale(from, target);
+                }
+
+                foreach (var route in data.Routes ?? new())
+                    MapRoute(route, from, target);
+            }
+
+            // Base markers travel on their own and carry their own space; the rest share the overlay's.
+            foreach (var icon in data.Icons ?? new())
+            {
+                var iconFrom = icon.Space?.ToRect() ?? data.Space?.ToRect();
+                if (iconFrom is { } f && OverlaySpace.IsUsable(f) && !OverlaySpace.AreSame(f, target))
+                    MapIcon(icon, f, target);
+                icon.Space = null;
+            }
+
+            data.Space = OverlaySpace.From(target);
+        }
+
+        public static void MapRoute(SavedRoute route, Rect from, Rect target)
+        {
+            if (!OverlaySpace.IsUsable(from) || !OverlaySpace.IsUsable(target) || OverlaySpace.AreSame(from, target)) return;
+            MapPoints(route.Points, from, target);
+            route.Thickness *= Scale(from, target);
+        }
+
+        // Icons scale about their centre, so they stay on the spot they mark.
+        private static void MapIcon(SavedIcon icon, Rect from, Rect target)
+        {
+            double k = Scale(from, target);
+            var centre = MapPoint(new Point(icon.X + icon.Width / 2, icon.Y + icon.Height / 2), from, target);
+            icon.Width *= k;
+            icon.Height *= k;
+            icon.X = centre.X - icon.Width / 2;
+            icon.Y = centre.Y - icon.Height / 2;
+        }
+
+        private static void MapPoints(List<Point> points, Rect from, Rect target)
+        {
+            for (int i = 0; i < points.Count; i++)
+                points[i] = MapPoint(points[i], from, target);
+        }
+
+        public static Point MapPoint(Point p, Rect from, Rect target)
+            => new(target.X + (p.X - from.X) * target.Width / from.Width,
+                   target.Y + (p.Y - from.Y) * target.Height / from.Height);
+
+        private static double Scale(Rect from, Rect target)
+            => (target.Width / from.Width + target.Height / from.Height) / 2;
     }
 
     public sealed class ExportedDeviceDto
@@ -116,6 +229,12 @@ namespace RustPlusDesk.Models
         public string? Label { get; set; }
         public string? Note { get; set; }
         public List<string>? Screenshots { get; set; } // List of Base64 compressed images
+
+        /// <summary>
+        /// The space of a base marker synced on its own, outside the overlay that carries
+        /// <see cref="OverlaySaveData.Space"/>. Null otherwise.
+        /// </summary>
+        public OverlaySpace? Space { get; set; }
     }
 
     public class SavedText

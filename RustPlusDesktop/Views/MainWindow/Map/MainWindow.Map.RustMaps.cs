@@ -62,6 +62,7 @@ namespace RustPlusDesk.Views
 
                 _worldSizeS = parsedSize;
                 _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
+                ReprojectOverlaysToCurrentMap();
 
                 LoadCargoPathForCurrentMap(folder);
 
@@ -612,6 +613,7 @@ namespace RustPlusDesk.Views
                     _worldRectPx = ComputeWorldRectFromWorldSize(
                         bitmap.PixelWidth * (96.0 / bitmap.DpiX), bitmap.PixelHeight * (96.0 / bitmap.DpiY),
                         _worldSizeS, GetCurrentMapPaddingWorld());
+                    ReprojectOverlaysToCurrentMap();
                 }
 
                 await LoadOfflineMainMonumentsAsync(profile, folder);
@@ -926,6 +928,7 @@ namespace RustPlusDesk.Views
                             _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
                         }
                         ShowMapBasic(bi);
+                        ReprojectOverlaysToCurrentMap();
                         RedrawMapReferenceLayers();
                         RefreshAllOverlayScales();
                         RefreshMonumentOverlayPositions();
