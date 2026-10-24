@@ -49,6 +49,9 @@ RustPlusDesktop/Scripts/*.conf
 !LICENSE
 !docs/
 docs/*
+!docs/media/
+!docs/releases/
+!docs/README.md
 !RustPlusDesktop/*.png
 !RustPlusDesktop/*.jpg
 RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj

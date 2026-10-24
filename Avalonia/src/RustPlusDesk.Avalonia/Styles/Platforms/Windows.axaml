@@ -1,5 +1,0 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- Retain the Fluent templates and Windows 11 control proportions. -->
-  <Style Selector="Button"><Setter Property="CornerRadius" Value="4" /></Style>
-  <Style Selector="TextBox"><Setter Property="CornerRadius" Value="4" /></Style>
-</Styles>

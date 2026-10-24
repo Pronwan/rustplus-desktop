@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <ApplicationManifest>../../src/RustPlusDesk.Avalonia/app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../src/RustPlusDesk.Avalonia/RustPlusDesk.Avalonia.csproj" />
-  </ItemGroup>
-</Project>

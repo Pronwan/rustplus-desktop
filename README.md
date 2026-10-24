@@ -1,6 +1,6 @@
 ![Headline](RustPlusDesktop/Assets/Images/headlineGIT.jpg)  
 [![Discord](https://img.shields.io/badge/Discord-Rust²%20|%20Rust%2B%20Desktop-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/v4X584wye4)
-[![Cloud](https://github.com/Pronwan/rustplus-desktop/blob/master/cloud.png?raw=true)](https://rustplusdesktop.cloud)
+[![Cloud](docs/media/cloud.png)](https://rustplusdesktop.cloud)
 
 [![Donate](./RustPlusDesktop/Assets/Images/donate.png)](https://www.patreon.com/c/Pronwan)
 
@@ -43,9 +43,9 @@ so you don’t have to install dependencies manually.
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
-[![YouTube V9](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
-[![YouTube V8](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
-[![YouTube V7](https://github.com/Pronwan/rustplus-desktop/blob/master/Thumbnail.png?raw=true)](https://www.youtube.com/watch?v=dajHSihKwQs)
+[![YouTube V9](docs/media/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
+[![YouTube V8](docs/media/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
+[![YouTube V7](docs/media/Thumbnail.png)](https://www.youtube.com/watch?v=dajHSihKwQs)
 [![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
 [![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
