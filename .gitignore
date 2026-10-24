@@ -1,4 +1,13 @@
 # --- Visual Studio / .NET ---
+# Private workspaces: keep these ignored before moving or staging anything.
+/vendor/MapParser/
+/vendor/RustPlus.Auth/
+/Submodules/
+/experiments/
+/.cache/
+/artifacts/
+/tools/release/package.json
+/tools/release/package-lock.json
 **/bin/
 **/obj/
 **/.vs/
@@ -12,7 +21,7 @@
 .antigravitycli
 # NuGet / Paketmanager
 *.nupkg
-!packages-local/*.nupkg
+!vendor/nuget/*.nupkg
 **/packages/
 *.snupkg
 Releases/
@@ -38,30 +47,33 @@ installer/Output/*
 
 # Lokale Server-/Helper-Skripte
 **/Scripts/
-!/scripts/
+!/tools/
 !.github/scripts/
-!RustPlusDesktop/Scripts/
-RustPlusDesktop/Scripts/*.py
-RustPlusDesktop/Scripts/*.conf
+!src/RustPlusDesktop/Scripts/
+src/RustPlusDesktop/Scripts/*.py
+src/RustPlusDesktop/Scripts/*.conf
 
 # Doku/Assets (rein informativ – wäre auch ohne diese Zeilen ok)
 !README.md
 !LICENSE
 !docs/
 docs/*
+!docs/development/
 !docs/media/
 !docs/releases/
 !docs/README.md
-!RustPlusDesktop/*.png
-!RustPlusDesktop/*.jpg
-RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
-RustPlusDesktop/Setup.iss
+!src/RustPlusDesktop/*.png
+!src/RustPlusDesktop/*.jpg
+src/RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
+src/RustPlusDesktop/Setup.iss
 .opencode
 .agents
 # Secrets config
 .env
-RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
-RustPlusDesktop/supabase/.temp/
+.env.*
+!.env.example
+src/RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
+src/RustPlusDesktop/supabase/.temp/
 .env-backup
 env
 
@@ -98,9 +110,9 @@ env
 **/*.glb
 **/*.gltf
 # Allow runtime folder executables and bin directories
-!RustPlusDesktop/runtime/**/*.exe
-!RustPlusDesktop/runtime/**/bin/
-!RustPlusDesktop/runtime/**/bin/**
+!src/RustPlusDesktop/runtime/**/*.exe
+!src/RustPlusDesktop/runtime/**/bin/
+!src/RustPlusDesktop/runtime/**/bin/**
 
 # Local build secrets
 build_secrets*.zip
@@ -109,10 +121,10 @@ build_secrets*.zip
 Corel Auto-Preserve/
 
 # Genetics Lab (build assets only; static images & resources stay tracked)
-RustPlusDesktop/Features/GeneticsLab/dist/assets/
-RustPlusDesktop/Features/GeneticsLab/dist/index.html
-RustPlusDesktop/Features/GeneticsLab/node_modules/
+src/RustPlusDesktop/Features/GeneticsLab/dist/assets/
+src/RustPlusDesktop/Features/GeneticsLab/dist/index.html
+src/RustPlusDesktop/Features/GeneticsLab/node_modules/
 
 # WPF emits a temp project per build with a random name; the single literal entry
 # above only ever matched one of them.
-RustPlusDesktop/*_wpftmp.csproj
+src/RustPlusDesktop/*_wpftmp.csproj

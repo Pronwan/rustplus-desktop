@@ -1,12 +1,12 @@
 ## graphify
 
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+This project has a knowledge graph at .cache/graphify-out/ with god nodes, community structure, and cross-file relationships.
 
 Rules:
-- For codebase questions, first run `graphify query "[question]"` when graphify-out/graph.json exists. Use `graphify path "[nodeA]" "[nodeB]"` for relationships and `graphify explain "[concept]"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- For codebase questions, first run `graphify query "[question]" --graph .cache/graphify-out/graph.json` when the cached graph exists. Use `graphify path "[nodeA]" "[nodeB]" --graph .cache/graphify-out/graph.json` for relationships and `graphify explain "[concept]" --graph .cache/graphify-out/graph.json` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If .cache/graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read .cache/graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- The cached graph predates the source-folder reorganization. Refresh it before relying on file paths; keep generated analysis output under `.cache/`.
 
 ## Fluent UI & Component Standards
 

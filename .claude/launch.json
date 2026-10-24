@@ -8,7 +8,7 @@
         "run",
         "dev",
         "--prefix",
-        "RustPlusDesktop/Features/GeneticsLab"
+        "src/RustPlusDesktop/Features/GeneticsLab"
       ],
       "port": 5173
     },
@@ -16,7 +16,7 @@
       "name": "mapparser-viewer",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "MapParser/scripts/dev-server.mjs",
+        "vendor/MapParser/scripts/dev-server.mjs",
         "5077"
       ],
       "port": 5077

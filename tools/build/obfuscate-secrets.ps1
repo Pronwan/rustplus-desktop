@@ -2,7 +2,7 @@ param (
     [string]$ProjectDir
 )
 
-$envPath = Join-Path $ProjectDir "..\.env"
+$envPath = Join-Path $ProjectDir "..\..\.env"
 if (-not (Test-Path $envPath)) {
     Write-Error "No .env file found at $envPath"
     exit 1

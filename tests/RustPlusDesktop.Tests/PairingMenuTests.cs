@@ -13,10 +13,10 @@ public class PairingMenuTests
     [STATestMethod]
     public void ManageMenu_TracksListenerState_IndependentlyOfServerConnection()
     {
-        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
+        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../.."));
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
         XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-        var document = XDocument.Load(Path.Combine(root, "RustPlusDesktop/MainWindow.xaml"));
+        var document = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/MainWindow.xaml"));
         var markup = new XElement(document.Descendants(wpf + "ContextMenu")
             .Single(element => (string?)element.Attribute(x + "Key") == "PairingRecoveryMenu"));
         markup.Attribute(x + "Key")!.Remove();
@@ -25,7 +25,7 @@ public class PairingMenuTests
         markup.SetAttributeValue(XNamespace.Xmlns + "ui", "http://schemas.lepo.co/wpfui/2022/xaml");
         markup.SetAttributeValue(XNamespace.Xmlns + "conv", "clr-namespace:RustPlusDesk.Converters;assembly=RustPlusDesk");
         foreach (var element in markup.Descendants()) element.Attribute("Click")?.Remove();
-        var shared = XDocument.Load(Path.Combine(root, "RustPlusDesktop/Views/MainWindow/SharedResources.xaml"));
+        var shared = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/Views/MainWindow/SharedResources.xaml"));
         markup.AddFirst(new XElement(wpf + "ContextMenu.Resources",
             shared.Root!.Elements().Where(element => (string?)element.Attribute(x + "Key") is "BoolToVisibility" or "BoolToVisibilityInv")
                 .Select(element => new XElement(element))));

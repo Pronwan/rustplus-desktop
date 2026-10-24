@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const rootDir = resolve(__dirname, '..');
+const rootDir = resolve(__dirname, '../..');
 
 // CLI Arguments and Flags
 const args = process.argv.slice(2);
@@ -55,8 +55,8 @@ function getRepoSlug() {
 
 const repoSlug = getRepoSlug();
 
-// 2. Read current version from RustPlusDesktop/RustPlusDesk.csproj
-const csprojPath = resolve(rootDir, 'RustPlusDesktop/RustPlusDesk.csproj');
+// 2. Read current version from src/RustPlusDesktop/RustPlusDesk.csproj
+const csprojPath = resolve(rootDir, 'src/RustPlusDesktop/RustPlusDesk.csproj');
 if (!existsSync(csprojPath)) {
   console.error('Error: RustPlusDesk.csproj not found at', csprojPath);
   process.exit(1);
@@ -424,7 +424,7 @@ if (isDryRun || isGenerateNotesOnly) {
   console.log('=============================================================\n');
   if (isDryRun) {
     console.log(`[DRY RUN] Would update RustPlusDesk.csproj version to: ${nextVersion}`);
-    console.log(`[DRY RUN] Would prepend entry to CHANGELOG.md`);
+    console.log(`[DRY RUN] Would prepend entry to docs/releases/CHANGELOG.md`);
     if (shouldCreateTag) {
       console.log(`[DRY RUN] Would create git commit and tag: ${nextTag}`);
     }
@@ -439,14 +439,14 @@ if (isDryRun || isGenerateNotesOnly) {
 
 // 9. Update Project Files
 if (shouldUpdateFiles && nextVersion !== currentCsprojVersion) {
-  // 9a. Update RustPlusDesktop/RustPlusDesk.csproj
+  // 9a. Update src/RustPlusDesktop/RustPlusDesk.csproj
   let csprojContent = readFileSync(csprojPath, 'utf-8');
   csprojContent = csprojContent.replace(/<Version>[^<]+<\/Version>/, `<Version>${nextVersion}</Version>`);
   writeFileSync(csprojPath, csprojContent, 'utf-8');
   console.log(`Updated RustPlusDesk.csproj -> <Version>${nextVersion}</Version>`);
 
-  // 9b. Update or Create CHANGELOG.md
-  const changelogPath = resolve(rootDir, 'CHANGELOG.md');
+  // 9b. Update or Create docs/releases/CHANGELOG.md
+  const changelogPath = resolve(rootDir, 'docs/releases/CHANGELOG.md');
   let currentChangelog = '';
   if (existsSync(changelogPath)) {
     currentChangelog = readFileSync(changelogPath, 'utf-8');
@@ -457,10 +457,10 @@ if (shouldUpdateFiles && nextVersion !== currentCsprojVersion) {
 
   const fullChangelog = `# Changelog\n\nAll notable changes to Rust+ Desktop are documented in this file.\n\n${releaseNotesMarkdown}${currentChangelog}`;
   writeFileSync(changelogPath, fullChangelog, 'utf-8');
-  console.log(`Updated CHANGELOG.md`);
+  console.log(`Updated docs/releases/CHANGELOG.md`);
 
   // 9c. Update root package.json if present
-  const rootPkgPath = resolve(rootDir, 'package.json');
+  const rootPkgPath = resolve(rootDir, 'tools/release/package.json');
   if (existsSync(rootPkgPath)) {
     try {
       const rootPkg = JSON.parse(readFileSync(rootPkgPath, 'utf-8'));
@@ -477,7 +477,7 @@ if (shouldCreateTag && !isDryRun) {
   // package.json is gitignored, so CI has none) fails the whole `git add`, the commit then
   // has nothing in it, and the tag used to land on the previous commit without the bump.
   // Each step now stops the run when it fails instead of carrying on.
-  const toStage = [csprojPath, resolve(rootDir, 'CHANGELOG.md'), targetNotesPath, resolve(rootDir, 'package.json')]
+  const toStage = [csprojPath, resolve(rootDir, 'docs/releases/CHANGELOG.md'), targetNotesPath, resolve(rootDir, 'tools/release/package.json')]
     .filter((p) => existsSync(p))
     .filter((p) => run(`git check-ignore -q "${p}" && echo ignored`) !== 'ignored');
   execSync(`git add ${toStage.map((p) => `"${p}"`).join(' ')}`, { cwd: rootDir, stdio: 'inherit' });

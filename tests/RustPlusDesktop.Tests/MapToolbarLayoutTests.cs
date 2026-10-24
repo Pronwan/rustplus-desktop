@@ -12,8 +12,8 @@ public class MapToolbarLayoutTests
 {
     private static Border LoadQuickFilters()
     {
-        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
-        var document = XDocument.Load(Path.Combine(root, "RustPlusDesktop/MainWindow.xaml"));
+        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../.."));
+        var document = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/MainWindow.xaml"));
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
         XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
         var quickFilters = new XElement(document.Descendants().Single(element => (string?)element.Attribute(x + "Name") == "MapQuickFilters"));
@@ -24,7 +24,7 @@ public class MapToolbarLayoutTests
             toggle.Attribute("Checked")?.Remove();
             toggle.Attribute("Unchecked")?.Remove();
         }
-        var shared = XDocument.Load(Path.Combine(root, "RustPlusDesktop/Views/MainWindow/SharedResources.xaml"));
+        var shared = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/Views/MainWindow/SharedResources.xaml"));
         quickFilters.Element(wpf + "Border.Resources")!.AddFirst(
             new XElement(shared.Descendants(wpf + "Style").Single(element => (string?)element.Attribute(x + "Key") == "PillToggleButton")));
         return (Border)XamlReader.Parse(quickFilters.ToString().Replace(

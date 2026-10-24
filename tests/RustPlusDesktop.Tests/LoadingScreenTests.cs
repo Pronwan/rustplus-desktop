@@ -47,8 +47,8 @@ public class LoadingScreenTests
     [STATestMethod]
     public void ServerConnection_ReplacesConnectCard_WithoutStartupArtwork()
     {
-        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
-        var document = XDocument.Load(Path.Combine(root, "RustPlusDesktop/MainWindow.xaml"));
+        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../.."));
+        var document = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/MainWindow.xaml"));
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
         XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
         var loader = new XElement(document.Descendants().Single(element => (string?)element.Attribute(x + "Name") == "MapConnectionLoader"));

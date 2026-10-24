@@ -3,7 +3,7 @@ REM ============================================================================
 REM  Fast dev loop: Hot Reload. Edits to C# method bodies and XAML apply to the
 REM  RUNNING app in milliseconds -- no rebuild, no waiting, no exe file locks.
 REM
-REM  Just run:  dev.cmd
+REM  Just run:  tools\dev.cmd
 REM
 REM  While it's running:
 REM    - Save a .cs / .xaml file  -> change is hot-applied instantly.
@@ -16,4 +16,4 @@ REM ============================================================================
 REM Auto-restart on rude edits instead of asking.
 set DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
 
-dotnet watch --project "%~dp0RustPlusDesktop\RustPlusDesk.csproj" run --configuration Debug
+dotnet watch --project "%~dp0..\src\RustPlusDesktop\RustPlusDesk.csproj" run --configuration Debug

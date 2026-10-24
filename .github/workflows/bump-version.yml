@@ -69,7 +69,7 @@ jobs:
           else
             FLAGS="--update-files --create-tag"
           fi
-          node scripts/bump-version.mjs $FLAGS
+          node tools/release/bump-version.mjs $FLAGS
 
       - name: Display Release Notes Summary
         if: always()

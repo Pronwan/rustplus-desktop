@@ -8,7 +8,7 @@ on:
         required: false
         type: string
       mapparser_repository:
-        description: "Repository to checkout into ./MapParser."
+        description: "Repository to checkout into ./vendor/MapParser."
         required: true
         default: "Pronwan/MapParser"
         type: string
@@ -40,8 +40,8 @@ env:
   DOTNET_VERSION: "8.0.x"
   CONFIGURATION: "Release"
   RUNTIME_IDENTIFIER: "win-x64"
-  APP_PROJECT: "RustPlusDesktop/RustPlusDesk.csproj"
-  PUBLISH_DIR: "${{ github.workspace }}/RustPlusDesktop/bin/Installer/publish"
+  APP_PROJECT: "src/RustPlusDesktop/RustPlusDesk.csproj"
+  PUBLISH_DIR: "${{ github.workspace }}/src/RustPlusDesktop/bin/Installer/publish"
   VELOPACK_OUTPUT_DIR: "${{ github.workspace }}/artifacts/velopack"
   VELOPACK_ID: "RustPlusDesk"
 
@@ -61,7 +61,7 @@ jobs:
           repository: 'JawadYzbk/rustplus-auth-private'
           ref: 'main'
           token: ${{ secrets.AUTH_SUBMODULE_TOKEN || secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
-          path: Submodules/RustPlus.Auth
+          path: vendor/RustPlus.Auth
 
       - name: Checkout MapParser
         uses: actions/checkout@v4
@@ -69,7 +69,7 @@ jobs:
           repository: ${{ inputs.mapparser_repository || 'Pronwan/MapParser' }}
           ref: ${{ inputs.mapparser_ref || 'main' }}
           token: ${{ secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
-          path: MapParser
+          path: vendor/MapParser
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -82,8 +82,8 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: |
-            MapParser/package-lock.json
-            RustPlusDesktop/Features/GeneticsLab/package-lock.json
+            vendor/MapParser/package-lock.json
+            src/RustPlusDesktop/Features/GeneticsLab/package-lock.json
 
       # The installer ships the newest published Genetics Lab build. Installed apps then
       # keep themselves current from rust-genetics-lab's `dist` branch (or the hosted
@@ -94,7 +94,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GENETICSLAB_RELEASE: ${{ inputs.geneticslab_release || 'latest' }}
         run: |
-          $labDir = "RustPlusDesktop/Features/GeneticsLab"
+          $labDir = "src/RustPlusDesktop/Features/GeneticsLab"
           $dist = Join-Path $labDir "dist"
           $bundled = $false
 
@@ -135,7 +135,7 @@ jobs:
       - name: Verify GeneticsLab update manifest
         shell: pwsh
         run: |
-          $manifestPath = "RustPlusDesktop/Features/GeneticsLab/dist/genetics-lab-manifest.json"
+          $manifestPath = "src/RustPlusDesktop/Features/GeneticsLab/dist/genetics-lab-manifest.json"
           if (-not (Test-Path -LiteralPath $manifestPath)) {
             throw "$manifestPath is missing; the GeneticsLab build must run scripts/generate-update-manifest.mjs."
           }
@@ -232,7 +232,7 @@ jobs:
             --packDir "${{ env.PUBLISH_DIR }}" `
             --mainExe "RustPlusDesk.exe" `
             --outputDir "${{ env.VELOPACK_OUTPUT_DIR }}" `
-            --icon "RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
+            --icon "src/RustPlusDesktop/Assets/rustplus-desktop-icon.ico" `
             --packAuthors "Pronwan" `
             --packTitle "RustPlusDesk" `
             --noPortable `
@@ -270,7 +270,7 @@ jobs:
 
           if (-not (Test-Path -LiteralPath $notesFile)) {
             Write-Host "Generating release notes from commits..."
-            node scripts/bump-version.mjs --generate-notes-only --to-ref=$tag
+            node tools/release/bump-version.mjs --generate-notes-only --to-ref=$tag
           }
 
           $assets = @(
