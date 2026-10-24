@@ -14,13 +14,10 @@
     },
     {
       "name": "mapparser-viewer",
-      "runtimeExecutable": "python",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
-        "-m",
-        "http.server",
-        "5077",
-        "--directory",
-        "D:/Development/rustplus-desktop/MapParser"
+        "MapParser/scripts/dev-server.mjs",
+        "5077"
       ],
       "port": 5077
     }
