@@ -38,6 +38,11 @@ repository root. It installs Genetics Lab dependencies when missing, builds
 the frontend and Windows solution, and keeps the window open with the result.
 It uses Debug configuration and does not run tests or publish anything.
 
+The finished executable is
+`src/RustPlusDesktop/bin/Debug/net8.0-windows10.0.17763.0/RustPlusDesk.exe`.
+Files under `obj`, including `apphost.exe`, are generated build intermediates;
+do not launch or distribute them. They are recreated after a clean build.
+
 ### Manual setup and verification
 
 From the repository root:
