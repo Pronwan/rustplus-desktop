@@ -5212,12 +5212,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         ToggleMonuments(true);
         UpdateSelectAllState();
+        SyncMapLayersTo3D();
     }
 
     private void Monuments_Unchecked(object sender, RoutedEventArgs e)
     {
         ToggleMonuments(false);
         UpdateSelectAllState();
+        SyncMapLayersTo3D();
     }
     private void ToggleMonuments(bool on)
     {

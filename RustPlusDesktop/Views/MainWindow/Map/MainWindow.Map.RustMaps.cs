@@ -1156,7 +1156,11 @@ namespace RustPlusDesk.Views
                     if (doc.RootElement.TryGetProperty("type", out var typeProp))
                     {
                         string? typeStr = typeProp.GetString();
-                        if (typeStr == "save_buildings")
+                        if (typeStr == "layer_toggled")
+                        {
+                            ApplyMap3DLayerToggle(doc.RootElement);
+                        }
+                        else if (typeStr == "save_buildings")
                         {
                             if (!string.IsNullOrEmpty(_currentMapFolderPath))
                             {
@@ -1176,6 +1180,7 @@ namespace RustPlusDesk.Views
         {
             if (e.IsSuccess)
             {
+                SyncMapLayersTo3D();
                 SyncLiveMarkersTo3DMap();
                 RefreshEventDock();
             }

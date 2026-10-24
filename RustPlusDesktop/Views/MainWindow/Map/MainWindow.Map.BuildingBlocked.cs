@@ -24,6 +24,7 @@ public partial class MainWindow
         // The zones are hidden through the wrapper now, not by leaving them unbuilt, so
         // unchecking has to take the wrapper down as well.
         ApplyIndependentLayerVisibility();
+        SyncMapLayersTo3D();
     }
     private void ResetBuildingBlockedZonesForServerChange()
     {

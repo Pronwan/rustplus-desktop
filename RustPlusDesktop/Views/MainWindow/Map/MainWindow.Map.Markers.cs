@@ -705,6 +705,7 @@ public partial class MainWindow
             }
         }
         UpdateSelectAllState();
+        SyncMapLayersTo3D();
     }
 
     private FrameworkElement BuildEventIconHost(FrameworkElement inner, string? tooltip, int size, double? scaleExp = null, double? baseMult = null)

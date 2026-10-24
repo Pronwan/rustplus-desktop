@@ -51,6 +51,7 @@ public partial class MainWindow
     {
         RedrawGrid();
         UpdateSelectAllState();
+        SyncMapLayersTo3D();
     }
 
     private void RedrawMapReferenceLayers()
