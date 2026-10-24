@@ -1300,6 +1300,7 @@ namespace RustPlusDesk.Views
             try
             {
                 var uri = new Uri(args.Request.Uri);
+                if (TryRelayArchipelRequest(args, uri)) return;
                 string relativePath = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/')).Replace('/', Path.DirectorySeparatorChar);
                 if (string.IsNullOrWhiteSpace(relativePath)) relativePath = "index.html";
                 if (relativePath.Contains("..")) return;
