@@ -26,8 +26,16 @@ public partial class MiniMapWindow
 
     private DispatcherTimer? _miniMapButtonHideTimer;
 
+    /// <summary>
+    /// How long the close and settings buttons stay up after the pointer leaves the map. A round
+    /// map is a layered window whose transparent corners do not count as the window, so the way
+    /// from the map to the buttons in its top-right corner leaves it for a moment.
+    /// </summary>
+    internal static readonly TimeSpan MiniMapButtonHideDelay = TimeSpan.FromSeconds(1);
+
     internal void InitMiniMapButtons()
     {
+        // Hidden until the pointer is over the map (or the dock is unlocked).
         ShowMapButtons(false);
         MouseEnter += (_, _) => UpdateMiniMapButtons();
         MouseLeave += (_, _) => UpdateMiniMapButtons();
@@ -43,12 +51,11 @@ public partial class MiniMapWindow
         Loaded += (_, _) => UpdateMiniMapButtons();
     }
 
-    internal static bool KeepMiniMapButtonsVisible(bool unlocked, bool hovered, bool settingsOpen, Point pointer, Size size)
-        => unlocked || hovered || settingsOpen || new Rect(new Point(), size).Contains(pointer);
+    internal static bool MiniMapButtonsActive(bool unlocked, bool hovered, bool settingsOpen)
+        => unlocked || hovered || settingsOpen;
 
-    private bool MiniMapButtonsWanted()
-        => KeepMiniMapButtonsVisible(!IsDockLocked(), IsMouseOver || MapContainer?.IsMouseOver == true,
-            SettingsPopup.IsOpen, Mouse.GetPosition(this), new Size(ActualWidth, ActualHeight));
+    private bool MiniMapButtonsActive()
+        => MiniMapButtonsActive(!IsDockLocked(), IsMouseOver || MapContainer?.IsMouseOver == true, SettingsPopup.IsOpen);
 
     internal void UpdateMiniMapButtons()
     {
@@ -58,28 +65,26 @@ public partial class MiniMapWindow
             return;
         }
 
-        bool active = !IsDockLocked() || IsMouseOver || MapContainer?.IsMouseOver == true || SettingsPopup.IsOpen;
-        if (active)
+        if (MiniMapButtonsActive())
         {
             _miniMapButtonHideTimer?.Stop();
             ShowMapButtons(true);
             return;
         }
 
-        if (MiniMapButtonsWanted()) ShowMapButtons(true);
-        // A round layered window loses mouse-over in its transparent corners, on the way to the gear.
+        // Leaving restarts the grace period; coming back within it stops the timer above.
         _miniMapButtonHideTimer ??= CreateMiniMapButtonHideTimer();
-        if (!_miniMapButtonHideTimer.IsEnabled) _miniMapButtonHideTimer.Start();
+        _miniMapButtonHideTimer.Stop();
+        _miniMapButtonHideTimer.Start();
     }
 
     private DispatcherTimer CreateMiniMapButtonHideTimer()
     {
-        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+        var timer = new DispatcherTimer { Interval = MiniMapButtonHideDelay };
         timer.Tick += (_, _) =>
         {
-            if (MiniMapButtonsWanted()) return;
             timer.Stop();
-            ShowMapButtons(false);
+            ShowMapButtons(MiniMapButtonsActive());
         };
         return timer;
     }

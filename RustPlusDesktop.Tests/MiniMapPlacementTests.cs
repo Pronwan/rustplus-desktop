@@ -10,14 +10,12 @@ public sealed class MiniMapPlacementTests
     [TestMethod]
     public void SettingsGear_StaysReachableAcrossTransparentCorners_AndWhilePopupIsOpen()
     {
-        var size = new Size(260, 260);
-        // Outside the circular map, but on the route to its top-right settings button.
-        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(235, 10), size));
-        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, true, false, new Point(240, 20), size));
-        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, true, new Point(300, 30), size));
-        Assert.IsTrue(MiniMapWindow.KeepMiniMapButtonsVisible(true, false, false, new Point(-20, -20), size));
-        Assert.IsFalse(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(300, 30), size));
-        Assert.IsFalse(MiniMapWindow.KeepMiniMapButtonsVisible(false, false, false, new Point(-1, 30), size));
+        Assert.IsTrue(MiniMapWindow.MiniMapButtonsActive(unlocked: true, hovered: false, settingsOpen: false));
+        Assert.IsTrue(MiniMapWindow.MiniMapButtonsActive(unlocked: false, hovered: true, settingsOpen: false));
+        Assert.IsTrue(MiniMapWindow.MiniMapButtonsActive(unlocked: false, hovered: false, settingsOpen: true));
+        Assert.IsFalse(MiniMapWindow.MiniMapButtonsActive(unlocked: false, hovered: false, settingsOpen: false));
+        // The transparent corners between a round map and its buttons are crossed on this grace period.
+        Assert.IsTrue(MiniMapWindow.MiniMapButtonHideDelay >= System.TimeSpan.FromSeconds(1));
     }
 
     [TestMethod]

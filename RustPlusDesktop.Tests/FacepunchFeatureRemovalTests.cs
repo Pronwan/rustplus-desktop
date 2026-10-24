@@ -153,7 +153,8 @@ public sealed class FacepunchFeatureRemovalTests
                 gear.ApplyTemplate();
                 Assert.IsNotNull(gear.Template);
                 Assert.AreEqual(1d, gear.Opacity);
-                Assert.AreEqual(Visibility.Visible, gear.Visibility);
+                // Shown on hover, not while the map just sits there.
+                Assert.AreEqual(Visibility.Collapsed, gear.Visibility);
                 Assert.IsTrue(GetWindowRect(mapHandle, out var beforeShow));
                 map.ShowActivated = false;
                 map.Show();
