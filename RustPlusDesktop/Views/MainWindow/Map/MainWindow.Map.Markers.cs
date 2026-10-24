@@ -515,6 +515,9 @@ public partial class MainWindow
         }
 
         // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
+        // Decided afresh on every load: a render shown earlier may have been deleted since, and
+        // the server's image laid out without its ocean margin puts every overlay off.
+        _isGeneratedMapActive = false;
         if (_vm?.Selected != null)
         {
             string preparedFolder = Map3DLocalBuildService.GetPreparedFolderPath(_vm.Selected, _vm.Selected.RustMapsMapId);

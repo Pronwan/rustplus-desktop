@@ -4948,6 +4948,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             int removed = Services.Data.ServerLocalDataCleanup.Clear3DMapDataFor(prof);
             prof.Notify3DMapStateChanged();
             UpdateRustMapsUi();
+            // The 2D map may still be showing the render that was just deleted.
+            if (_vm.Selected == prof) _ = ReloadMapAsync();
 
             AppendLog($"[3D Map] Cleared {removed} 3D map data folder(s)/files for {prof.Name}.");
             ShowInfoSnackbar("3D Map", $"Cleared 3D map data for '{prof.Name}'.", WpfUi.ControlAppearance.Success);
