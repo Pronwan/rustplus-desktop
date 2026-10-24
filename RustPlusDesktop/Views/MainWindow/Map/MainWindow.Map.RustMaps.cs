@@ -1481,7 +1481,14 @@ namespace RustPlusDesk.Views
             bool hasTexture = File.Exists(targetTexturePath);
             node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
 
-            if ((imageWidth <= 0 || imageHeight <= 0 || double.IsNaN(imageWidth) || double.IsNaN(imageHeight)) && hasTexture)
+            // map_texture.png is MapParser's render only when it matches map_render_full.png;
+            // otherwise it is the server's image (no parser render yet), which has the ocean margin.
+            string renderedPath = Path.Combine(Path.GetDirectoryName(sourcePath) ?? "", Map3DLocalBuildService.RenderedTextureFileName);
+            bool isParserRender = hasTexture && File.Exists(renderedPath) &&
+                new FileInfo(renderedPath).Length == new FileInfo(targetTexturePath).Length;
+
+            // The live map image may not be the texture the viewer gets, so measure the texture itself.
+            if (hasTexture)
             {
                 try
                 {
@@ -1503,9 +1510,9 @@ namespace RustPlusDesk.Views
             if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
                 int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
 
-            // Our generated Facepunch map_texture.png has 0m padding (covers 0..worldSize exactly).
-            // Only the legacy low-res companion app texture has 2000m padding.
-            double padWorld = hasTexture ? 0.0 : 2000.0;
+            // MapParser's render has 0m padding (covers 0..worldSize exactly).
+            // The server's companion image has 2000m padding.
+            double padWorld = isParserRender ? 0.0 : 2000.0;
 
             if (parsedWorldSize > 0 && imageWidth > 0 && imageHeight > 0)
             {
