@@ -1,0 +1,38 @@
+name: Web port CI
+
+on:
+  push:
+    branches:
+      - "web-port/**"
+  pull_request:
+    branches:
+      - master
+      - "web-port/**"
+
+concurrency:
+  group: web-port-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Build frontend
+        working-directory: web-client
+        run: |
+          npm install
+          npm run build
+      - name: Build and test backend
+        run: |
+          dotnet restore Web.Tests/RustPlusWeb.Tests.csproj
+          dotnet build Web/RustPlusWeb.csproj --configuration Release --no-restore
+          dotnet test Web.Tests/RustPlusWeb.Tests.csproj --configuration Release --no-restore
+      - name: Build container image
+        run: docker build --tag rustplus-web:ci .
