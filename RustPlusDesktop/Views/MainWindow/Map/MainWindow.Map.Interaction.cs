@@ -364,6 +364,7 @@ public partial class MainWindow
 
     private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
     {
+        if (_isMap3DActive) return;
         if (_scene == null) return;
 
         // Smooth continuous exponential zoom scaling based on wheel ticks
@@ -445,6 +446,8 @@ public partial class MainWindow
 
     private void WebViewHost_MouseDown(object? sender, MouseButtonEventArgs e)
     {
+        // The embedded 3D browser owns input; do not steal its focus or mouse capture.
+        if (_isMap3DActive) return;
         if (!IsMapLoaded) return;
         StopAllMapAnimations();
         WebViewHost.Focus();
@@ -492,6 +495,7 @@ public partial class MainWindow
 
     private void WebViewHost_KeyDown(object sender, KeyEventArgs e)
     {
+        if (_isMap3DActive) return;
         // While typing an inline map label, let the text box handle every key.
         if (_isEditingOverlayText) return;
 
@@ -580,6 +584,7 @@ public partial class MainWindow
 
     private void WebViewHost_KeyUp(object sender, KeyEventArgs e)
     {
+        if (_isMap3DActive) return;
         if (e.Key == Key.Space)
         {
             _spacePanHeld = false;
@@ -595,6 +600,7 @@ public partial class MainWindow
 
     private void WebViewHost_MouseMove(object? sender, MouseEventArgs e)
     {
+        if (_isMap3DActive) return;
         if (!IsMapLoaded)
         {
             if (WebViewHost != null && WebViewHost.Cursor != Cursors.Arrow)
@@ -648,6 +654,7 @@ public partial class MainWindow
 
     private void WebViewHost_MouseUp(object? sender, MouseButtonEventArgs e)
     {
+        if (_isMap3DActive) return;
         var hostPos = e.GetPosition(WebViewHost);
         var mapPos = HostToScenePreTransform(hostPos);
 

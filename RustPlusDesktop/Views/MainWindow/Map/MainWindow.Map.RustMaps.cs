@@ -25,7 +25,8 @@ namespace RustPlusDesk.Views
         private bool _isRustMapsSearching;
         private bool _isMap3DPreparing;
         private bool _isMap3DActive;
-        private WebView2CompositionControl? _map3DWebView;
+        private WebView2? _map3DWebView;
+        private Map3DPointerLockNotice? _map3DPointerLockNotice;
         private static CoreWebView2Environment? _map3DWebViewEnvironment;
         private string? _currentMapFolderPath;
         private EventHandler<CoreWebView2WebResourceRequestedEventArgs>? _map3DResourceRequestHandler;
@@ -954,13 +955,14 @@ namespace RustPlusDesk.Views
                          $"{(hasBlocked ? "&hasBlocked=1" : "")}";
 
             CloseMap3DView();
-            // Visual hosting lets the sidebar drawer render above the embedded map.
-            _map3DWebView = new WebView2CompositionControl
+            // Render directly: composition capture adds a second frame pipeline and breaks pointer lock.
+            _map3DWebView = new WebView2
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
             _map3DWebView.NavigationCompleted += Map3DWebView_NavigationCompleted;
+            _map3DWebView.LayoutUpdated += UpdateMap3DViewportClip;
             Map3DHost.Children.Add(_map3DWebView);
             Map3DHost.Visibility = Visibility.Visible;
             ImgMap.Visibility = Visibility.Collapsed;
@@ -974,6 +976,7 @@ namespace RustPlusDesk.Views
             // create it once and reuse it to avoid the per-open initialization cost.
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
             await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
+            _map3DPointerLockNotice = new Map3DPointerLockNotice(_map3DWebView.CoreWebView2.BrowserProcessId);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
             _map3DWebView.CoreWebView2.ProcessFailed += Map3DProcessFailed;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
@@ -1052,6 +1055,8 @@ namespace RustPlusDesk.Views
 
         private void CloseMap3DView()
         {
+            _map3DPointerLockNotice?.Dispose();
+            _map3DPointerLockNotice = null;
             if (_fullscreenWindow != null)
             {
                 try
@@ -1069,6 +1074,7 @@ namespace RustPlusDesk.Views
                 try
                 {
                     _map3DWebView.NavigationCompleted -= Map3DWebView_NavigationCompleted;
+                    _map3DWebView.LayoutUpdated -= UpdateMap3DViewportClip;
                     if (_map3DWebView.CoreWebView2 != null)
                     {
                         _map3DWebView.CoreWebView2.WebMessageReceived -= Map3DWebMessageReceived;
@@ -1084,6 +1090,7 @@ namespace RustPlusDesk.Views
                 Map3DHost.Children.Remove(_map3DWebView);
                 _map3DWebView.Dispose();
                 _map3DWebView = null;
+                _map3DViewportClip = null;
             }
 
             Map3DHost.Visibility = Visibility.Collapsed;
