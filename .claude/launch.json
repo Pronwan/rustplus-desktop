@@ -4,8 +4,25 @@
     {
       "name": "genetics-lab",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "RustPlusDesktop/Features/GeneticsLab"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "RustPlusDesktop/Features/GeneticsLab"
+      ],
       "port": 5173
+    },
+    {
+      "name": "mapparser-viewer",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5077",
+        "--directory",
+        "D:/Development/rustplus-desktop/MapParser"
+      ],
+      "port": 5077
     }
   ]
 }
