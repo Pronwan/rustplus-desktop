@@ -132,6 +132,8 @@ Corel Auto-Preserve/
 src/RustPlusDesktop/Features/GeneticsLab/dist/assets/
 src/RustPlusDesktop/Features/GeneticsLab/dist/index.html
 src/RustPlusDesktop/Features/GeneticsLab/node_modules/
+# Its CI runs in rust-genetics-lab; GitHub never runs nested workflows, so keep syncs from re-adding them.
+src/RustPlusDesktop/Features/GeneticsLab/.github/workflows/
 
 # WPF emits a temp project per build with a random name; the single literal entry
 # above only ever matched one of them.
