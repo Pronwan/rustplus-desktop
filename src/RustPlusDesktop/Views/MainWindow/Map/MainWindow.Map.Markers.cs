@@ -236,11 +236,15 @@ public partial class MainWindow
             var meta = JsonSerializer.Deserialize<MapCacheMeta>(System.IO.File.ReadAllText(metaPath));
             if (meta == null) return null;
 
-            var bi = Services.Map.MapImageLoader.Load(imgPath);
+            // Straight at the chosen size: decoding it whole and then again smaller held both
+            // until the first one was collected, so Economy briefly cost more than Standard.
+            int decodeWidth = Services.Map.MapImagePolicy.ServerDecodeWidth(TrackingService.MapImageResolution, meta.PixelWidth);
+            var bi = Services.Map.MapImageLoader.Load(imgPath, decodeWidth);
 
             return new RustPlusClientReal.MapWithMonuments
             {
                 Bitmap     = bi,
+                // The image's own size, not the decoded one: the resolution settings measure against it.
                 PixelWidth  = meta.PixelWidth,
                 PixelHeight = meta.PixelHeight,
                 WorldSize   = meta.WorldSize,
@@ -504,7 +508,9 @@ public partial class MainWindow
         }
 
         // The image shown when the HD map is not: what the resolution settings measure against.
-        _serverMapPixelSize = (map.Bitmap.PixelWidth, map.Bitmap.PixelHeight);
+        _serverMapPixelSize = map.PixelWidth > 0 && map.PixelHeight > 0
+            ? (map.PixelWidth, map.PixelHeight)
+            : (map.Bitmap.PixelWidth, map.Bitmap.PixelHeight);
 
         // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
         // Decided afresh on every load: a render shown earlier may have been deleted since, and
