@@ -7,22 +7,66 @@ namespace RustPlusDesktop.Tests;
 public sealed class ServerClockTests
 {
     [TestMethod]
-    public void ReportedClockRateOverridesObservationsAndUpdatesImmediately()
+    public void ReportedCycleSplitsSeventyMinutesOfDayAndTenOfNight()
+    {
+        // Live Facepunch Small reading: 80-minute cycle, scale 1.
+        var clock = new ServerClock();
+        clock.Observe(9.23, DateTime.UtcNow, 7.5836, 19.8963, 80, 1);
+        Assert.AreEqual(70, (clock.Sunset - clock.Sunrise) / clock.DaySpeed, 1e-9);
+        Assert.AreEqual(10, (24 - clock.Sunset + clock.Sunrise) / clock.NightSpeed, 1e-9);
+        // 09:14 is about 64 measured minutes from night; the even split says 60.6, not 72.
+        Assert.AreEqual(60.64, (clock.Sunset - 9.23) / clock.DaySpeed, 0.01);
+    }
+
+    // Polls a server every 15 s whose night (19:00 to 07:00) really lasts nightMinutes.
+    private static ServerClock PollThroughNight(double nightMinutes)
+    {
+        var start = DateTime.UtcNow;
+        double dayPace = 12.0 / 70, nightPace = 12.0 / nightMinutes, dusk = 0.5 / dayPace;
+        var clock = new ServerClock();
+        for (double t = 0; t <= dusk + nightMinutes + 1; t += 0.25)
+        {
+            double h = t <= dusk ? 18.5 + t * dayPace
+                : t <= dusk + nightMinutes ? 19 + (t - dusk) * nightPace
+                : 7 + (t - dusk - nightMinutes) * dayPace;
+            clock.Observe(h % 24, start.AddMinutes(t), 7, 19, 80, 1);
+        }
+        return clock;
+    }
+
+    [TestMethod]
+    public void ModdedShortNightIsMeasuredAndReplacesTheTenMinuteShare()
+    {
+        var clock = PollThroughNight(3);
+        Assert.AreEqual(3, clock.MeasuredNightMinutes!.Value, 0.25);
+        Assert.AreEqual(clock.MeasuredNightMinutes.Value, 12 / clock.NightSpeed, 1e-9);
+        Assert.AreEqual(12.0 / 70, clock.DaySpeed, 1e-10, "the day was not seen whole, so it keeps its share");
+
+        clock = PollThroughNight(10);
+        Assert.AreEqual(10, clock.MeasuredNightMinutes!.Value, 0.25);
+        Assert.AreEqual(1.2, clock.NightSpeed, 1e-10, "a vanilla night stays on the 10-minute share");
+    }
+
+    [TestMethod]
+    public void ReportedCycleOverridesObservationsAndUpdatesImmediately()
     {
         var now = DateTime.UtcNow;
         var clock = new ServerClock();
         clock.Observe(14, now);
         clock.Observe(14.16, now.AddMinutes(1));
+        Assert.AreEqual(0.16, clock.DaySpeed, 1e-10);
         clock.Observe(14.5, now.AddSeconds(61), 7, 19, 80, 1);
-        Assert.AreEqual(0.3, clock.DaySpeed, 1e-10);
-        Assert.AreEqual(0.3, clock.NightSpeed, 1e-10);
-        Assert.AreEqual(15, (clock.Sunset - 14.5) / clock.DaySpeed, 1e-10);
-        Assert.AreEqual(25, (24 - 23.5 + clock.Sunrise) / clock.NightSpeed, 1e-10);
-        clock.Observe(14.5, now.AddSeconds(62), 7, 19, 80, 2);
-        Assert.AreEqual(0.6, clock.DaySpeed, 1e-10);
-        clock.Observe(14.5, now.AddSeconds(63), 7, 19, 40, 1);
-        Assert.AreEqual(0.6, clock.DaySpeed, 1e-10);
-        Assert.AreEqual(19.5, clock.Advance(18.9, 1), 1e-10);
+        Assert.AreEqual(12.0 / 70, clock.DaySpeed, 1e-10);
+        Assert.AreEqual(12.0 / 10, clock.NightSpeed, 1e-10);
+        clock.Observe(14.65, now.AddSeconds(121), 7, 19, 80, 1);
+        Assert.AreEqual(12.0 / 70, clock.DaySpeed, 1e-10, "observations do not override the reported cycle");
+        clock.Observe(14.5, now.AddSeconds(122), 7, 19, 80, 2);
+        Assert.AreEqual(24.0 / 70, clock.DaySpeed, 1e-10);
+        clock.Observe(14.5, now.AddSeconds(123), 7, 19, 40, 1);
+        Assert.AreEqual(24.0 / 70, clock.DaySpeed, 1e-10);
+        clock.Observe(14.5, now.AddSeconds(124), 6, 20, 80, 1);
+        Assert.AreEqual(14.0 / 70, clock.DaySpeed, 1e-10, "follows the server's sunrise and sunset");
+        Assert.AreEqual(10.0 / 10, clock.NightSpeed, 1e-10);
     }
 
     [TestMethod]
@@ -37,30 +81,12 @@ public sealed class ServerClockTests
         Assert.IsFalse(clock.IsPaused);
         Assert.AreEqual(0.24, clock.DaySpeed, 1e-10);
         clock.Observe(14.5, now.AddSeconds(2), 7, 19, 80, 1);
-        Assert.AreEqual(0.3, clock.DaySpeed, 1e-10);
+        Assert.AreEqual(12.0 / 70, clock.DaySpeed, 1e-10);
         clock = new ServerClock();
         clock.Observe(14.5, now, 7, 19, 80, double.NaN);
         Assert.AreEqual(0.24, clock.DaySpeed, 1e-10);
         clock.Observe(14.5, now, 7, 19, 80);
         Assert.IsFalse(clock.IsPaused);
-    }
-
-    [TestMethod]
-    public void UnreportedCurveIsCalibratedAndPreservedAcrossSpeedChangesAndPause()
-    {
-        var now = DateTime.UtcNow;
-        var clock = new ServerClock();
-        clock.Observe(10.6, now, 7.26, 19.76, 80, 1);
-        clock.Observe(10.75, now.AddMinutes(1), 7.26, 19.76, 80, 1);
-        Assert.AreEqual(0.15, clock.DaySpeed, 1e-10);
-        Assert.AreEqual(0.3, clock.NightSpeed, 1e-10);
-        clock.Observe(10.75, now.AddSeconds(61), 7.26, 19.76, 80, 2);
-        Assert.AreEqual(0.3, clock.DaySpeed, 1e-10);
-        Assert.AreEqual(0.6, clock.NightSpeed, 1e-10);
-        clock.Observe(10.75, now.AddSeconds(62), 7.26, 19.76, 80, 0);
-        Assert.AreEqual(10.75, clock.Advance(10.75, 1), 1e-10);
-        clock.Observe(10.75, now.AddSeconds(63), 7.26, 19.76, 80, 2);
-        Assert.AreEqual(0.3, clock.DaySpeed, 1e-10);
     }
 
     [TestMethod]
@@ -100,5 +126,9 @@ public sealed class ServerClockTests
         Assert.IsTrue(clock.IsDay(18.5));
         Assert.IsFalse(clock.IsDay(19));
         Assert.AreEqual(19.7, clock.Advance(18.9, 1), 1e-10);
+
+        clock.Observe(18.5, DateTime.UtcNow, 7, 19, 80, 1);
+        // 0.1 game hours of day take 0.5833 minutes; the rest of the minute runs at night speed.
+        Assert.AreEqual(19 + (1 - 0.1 / (12.0 / 70)) * 1.2, clock.Advance(18.9, 1), 1e-10);
     }
 }
