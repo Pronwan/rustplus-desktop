@@ -3,6 +3,12 @@
     <Grid ClipToBounds="True">
         <Grid.Resources>
             <conv:NotNullToBoolConverter x:Key="LocalNotNull" />
+            <!-- The rows here give dropdowns a fixed 30-32 px; WPF-UI's own vertical padding then
+                 cuts off the bottom of the text, so it gets a little less of it. -->
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="Padding" Value="10,4,10,4" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
             <Style x:Key="SettingsMenuItem" TargetType="ui:ListViewItem">
                 <Setter Property="Margin" Value="12,0,12,8" />
                 <Setter Property="Padding" Value="0" />

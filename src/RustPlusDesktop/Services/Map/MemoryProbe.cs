@@ -13,12 +13,15 @@ namespace RustPlusDesk.Services.Map;
 /// The split is the point: the managed heap (and its large-object part, where every
 /// full-size bitmap buffer lands) against what the process holds in total, most of the
 /// rest being decoded images and WPF's own copies of them.
+///
+/// Debug builds only: the calls compile away in Release, so nobody else's disk collects a log.
 /// </summary>
 internal static class MemoryProbe
 {
     private static readonly object Gate = new();
     private static string LogPath => Path.Combine(DataManager.AppDir, "memory-log.txt");
 
+    [Conditional("DEBUG")]
     public static void Record(string stage)
     {
         try
@@ -42,6 +45,7 @@ internal static class MemoryProbe
     }
 
     /// <summary>Records now, and again once the load has settled.</summary>
+    [Conditional("DEBUG")]
     public static void RecordAndFollowUp(string stage)
     {
         Record(stage);
