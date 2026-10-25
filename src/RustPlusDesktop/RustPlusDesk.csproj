@@ -386,6 +386,8 @@
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\MapParser.csproj</MapParserProjectPath>
     <MapParserPublishDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
     <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
+    <MapParserSourceDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\</MapParserSourceDir>
+    <MapParserViewerDistDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\dist\</MapParserViewerDistDir>
   </PropertyGroup>
 
   <!-- Source inputs for the MapParser publish, so it only re-publishes when MapParser actually
@@ -419,7 +421,20 @@
     <Error Condition="'@(MapParserForbiddenPublishedFile)' != ''" Text="MapParser publish contains source files: @(MapParserForbiddenPublishedFile)" />
   </Target>
 
-  <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <!-- WebView2 serves these from disk; MapParser's single-file EXE cannot supply them. -->
+  <Target Name="StageMapParserViewerRuntime" DependsOnTargets="BuildMapParserRuntime">
+    <Error Condition="!Exists('$(MapParserViewerDistDir)index.html') Or !Exists('$(MapParserViewerDistDir)modules\glbWorker.js')" Text="MapParser's compiled viewer or GLB worker is missing. Rebuild the MapParser runtime." />
+    <ItemGroup>
+      <MapParserViewerFiles Include="$(MapParserViewerDistDir)**\*" />
+      <MapParserViewerSupport Include="$(MapParserSourceDir)style.css;$(MapParserSourceDir)tailwind-local.css;$(MapParserSourceDir)prefabs_map.json;$(MapParserSourceDir)monument_bounds.json;$(MapParserSourceDir)monument_metadata.json;$(MapParserSourceDir)building_block_ORIGINAL_REDDIT.json;$(MapParserSourceDir)draco_decoder.wasm" />
+      <MapParserModelFiles Include="$(MapParserSourceDir)Rust_Assets\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MapParserViewerFiles)" DestinationFiles="@(MapParserViewerFiles->'$(MapParserPublishDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MapParserViewerSupport)" DestinationFiles="@(MapParserViewerSupport->'$(MapParserPublishDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(MapParserModelFiles)" DestinationFiles="@(MapParserModelFiles->'$(MapParserPublishDir)Rust_Assets\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime;StageMapParserViewerRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
       <MapParserPublishedContent Include="$(MapParserPublishDir)**\*" Exclude="$(MapParserPublishedExe)" />
 

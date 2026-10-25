@@ -1250,7 +1250,7 @@ namespace RustPlusDesk.Views
                 SafeDeleteDirectory(Path.Combine(runtimeRoot, "node_modules"));
                 SafeDeleteDirectory(Path.Combine(runtimeRoot, "bin"));
                 SafeDeleteDirectory(Path.Combine(runtimeRoot, "obj"));
-                SafeDeleteDirectory(Path.Combine(runtimeRoot, "modules"));
+                // modules/glbWorker.js is a runtime worker, not an unbundled viewer source file.
                 SafeDeleteFile(Path.Combine(runtimeRoot, "app.js"));
                 SafeDeleteFile(Path.Combine(runtimeRoot, "build-client.mjs"));
                 SafeDeleteFile(Path.Combine(runtimeRoot, "package.json"));
@@ -1714,8 +1714,11 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private static bool IsIgnoredRuntimePath(string relativePath)
+        internal static bool IsIgnoredRuntimePath(string relativePath)
         {
+            if (relativePath.Replace('\\', '/').Equals("modules/glbWorker.js", StringComparison.OrdinalIgnoreCase))
+                return false;
+
             var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var segment in segments)
             {
@@ -1739,7 +1742,7 @@ namespace RustPlusDesk.Views
                    string.Equals(fileName, "MapParser.csproj", StringComparison.OrdinalIgnoreCase);
         }
 
-        private static void CopyDirectoryIfExists(string sourceDir, string targetDir)
+        internal static void CopyDirectoryIfExists(string sourceDir, string targetDir)
         {
             if (!Directory.Exists(sourceDir)) return;
             foreach (string sourceFile in Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories))
