@@ -823,19 +823,19 @@ A Rust+ Desktop regisztralja a helyi alkalmazast az FCM-ben, hogy a hatterben fo
     <value>Kiszolgáló kiválasztása</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DISCONNECTED</value>
+    <value>Leválasztva</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>KAPCSOLAT...</value>
+    <value>Csatlakozás...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALIZÁLÁS...</value>
+    <value>Inicializálás...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>AKTÍV ESZKÖZÖK</value>
+    <value>Eszközök aktívak</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>TELJESEN ÖSSZEKAPCSOLVA</value>
+    <value>Teljesen csatlakozva</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>ISMERETLEN</value>
@@ -5821,5 +5821,11 @@ További információkat a szerver hivatalos honlapján talál:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>A felhő nem érhető el. A szerverlistád nem változott.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Hozzáférés megtagadva</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Fut</value>
   </data>
 </root>

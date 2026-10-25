@@ -883,19 +883,19 @@ Rust+ Desktop registriert deine lokale App bei FCM, damit sie dieselben Rust+-Be
     <value>Server auswählen</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DEAKTIVIERT</value>
+    <value>Getrennt</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>VERBINDEN...</value>
+    <value>Verbinde...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALISIERT...</value>
+    <value>Initialisiere...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>GERÄTE AKTIV</value>
+    <value>Geräte aktiv</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>KOMPLETT VERBUNDEN</value>
+    <value>Vollständig verbunden</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>UNBEKANNT</value>
@@ -2358,7 +2358,7 @@ Bist du sicher, dass du fortfahren möchtest?</value>
     <value>Der Server hat deinen Player-Token abgelehnt. Bitte aktualisiere den Token, indem du den Server im Spiel über das Rust+ Menü neu koppelst.</value>
   </data>
   <data name="StatusAccessDenied" xml:space="preserve">
-    <value>ZUGRIFF VERWEIGERT</value>
+    <value>Zugriff verweigert</value>
   </data>
   <data name="StatusAccessDeniedHint" xml:space="preserve">
     <value>Player-Token abgelaufen. Server im Spiel neu koppeln.</value>
@@ -8217,5 +8217,8 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Verbinden</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Läuft</value>
   </data>
 </root>

@@ -826,16 +826,16 @@ Rust+ Desktop inregistreaza aplicatia locala la FCM pentru a putea primi aceleas
     <value>Deconectat</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTARE...</value>
+    <value>Se conectează...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INIȚIALIZARE...</value>
+    <value>Se inițializează...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DISPOZITIVE ACTIVITATE</value>
+    <value>Dispozitive active</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>CONECTAT complet</value>
+    <value>Complet conectat</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>NECUNOSCUTĂ</value>
@@ -5821,5 +5821,11 @@ Puteți găsi mai multe informații pe site-ul oficial al serverului:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Cloudul nu a putut fi accesat. Lista de servere a rămas neschimbată.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Acces refuzat</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Rulează</value>
   </data>
 </root>

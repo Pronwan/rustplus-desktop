@@ -823,19 +823,19 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
     <value>サーバーを選択</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>切断されました</value>
+    <value>切断済み</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
     <value>接続中...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>初期化中char@@0</value>
+    <value>初期化中...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>デバイスを有効にする</value>
+    <value>デバイス有効</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>完全に接続</value>
+    <value>完全に接続済み</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>不明</value>
@@ -5914,5 +5914,11 @@ Rust+ Desktop はローカルアプリを FCM に登録し、同じ Rust+ 通知
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>クラウドに接続できませんでした。サーバーリストは変更されていません。</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>アクセス拒否</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>実行中</value>
   </data>
 </root>

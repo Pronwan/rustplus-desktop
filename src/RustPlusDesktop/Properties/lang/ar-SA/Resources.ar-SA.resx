@@ -825,13 +825,13 @@
     <value>غير متصل</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>جاري الاتصال...</value>
+    <value>جارٍ الاتصال...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>جاري التهيئة والتحميل...</value>
+    <value>جارٍ التهيئة...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>الأجهزة الذكية نشطة</value>
+    <value>الأجهزة نشطة</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
     <value>متصل بالكامل</value>
@@ -8014,5 +8014,11 @@
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>اتصال</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>تم رفض الوصول</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>قيد التشغيل</value>
   </data>
 </root>

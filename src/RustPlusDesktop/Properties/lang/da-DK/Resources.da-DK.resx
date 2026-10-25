@@ -823,19 +823,19 @@ Rust+ Desktop registrerer din lokale app hos FCM, sa den kan modtage de samme Ru
     <value>Vælg en server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DETKONNEKTET</value>
+    <value>Afbrudt</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>TILSLUTNING...</value>
+    <value>Forbinder...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALISERING...</value>
+    <value>Initialiserer...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ENHEDER (AKTIVE ENHEDER</value>
+    <value>Enheder aktive</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>FULDT FORBINDELSE</value>
+    <value>Fuldt forbundet</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>UKENDT</value>
@@ -5821,5 +5821,11 @@ Du kan finde mere information på serverens officielle hjemmeside:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Kunne ikke nå skyen. Din serverliste er uændret.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Adgang nægtet</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Kører</value>
   </data>
 </root>

@@ -823,19 +823,19 @@ Open Releases page?</value>
     <value>Επιλογή διακομιστή</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ΑΠΟΣΥΝΔΕΣΗ</value>
+    <value>Αποσυνδέθηκε</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ΣΥΝΔΕΣΗ...</value>
+    <value>Σύνδεση...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ΕΓΚΑΤΑΣΤΑΣΗ...</value>
+    <value>Αρχικοποίηση...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ΔΡΑΣΤΙΚΕΣ ΣΥΣΚΕΥΕΣ</value>
+    <value>Συσκευές ενεργές</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>ΠΛΗΡΗ ΣΥΝΔΕΔΕΜΕΝΗ</value>
+    <value>Πλήρως συνδεδεμένο</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>ΑΓΝΩΣΤΟ</value>
@@ -5821,5 +5821,11 @@ Open Releases page?</value>
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Δεν ήταν δυνατή η σύνδεση με το cloud. Η λίστα διακομιστών σας δεν άλλαξε.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Άρνηση πρόσβασης</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Εκτελείται</value>
   </data>
 </root>

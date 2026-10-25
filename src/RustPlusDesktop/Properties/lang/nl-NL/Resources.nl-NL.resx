@@ -823,19 +823,19 @@ Rust+ Desktop registreert je lokale app bij FCM zodat deze dezelfde Rust+-meldin
     <value>Selecteer een server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>UITGESCHAKELD</value>
+    <value>Verbinding verbroken</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>VERBIND...</value>
+    <value>Verbinden...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALISEREN...</value>
+    <value>Initialiseren...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ACTIEVE APPARAAT</value>
+    <value>Apparaten actief</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>VOLLEDIGE VERBINDING</value>
+    <value>Volledig verbonden</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>ONBEKEND</value>
@@ -5827,5 +5827,11 @@ Meer informatie vindt u op de officiële website van de server:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Kan de cloud niet bereiken. Je serverlijst is ongewijzigd.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Toegang geweigerd</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Actief</value>
   </data>
 </root>

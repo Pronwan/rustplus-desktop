@@ -823,19 +823,19 @@ Rust+ Desktop zaregistruje mistni aplikaci ve FCM, aby mohla na pozadi prijimat 
     <value>Vyberte server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ZOBRAZENO</value>
+    <value>Odpojeno</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>PŘIPOJENO...</value>
+    <value>Připojování...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALIZACE...</value>
+    <value>Inicializace...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ZAŘÍZENÍ AKTIVNÍ</value>
+    <value>Zařízení aktivní</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>PLNĚ PŘIPOJENO</value>
+    <value>Plně připojeno</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>NEZNÁMÝ</value>
@@ -5821,5 +5821,11 @@ Více informací naleznete na oficiálních stránkách serveru:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Cloud není dostupný. Seznam serverů zůstal beze změny.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Přístup odepřen</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Běží</value>
   </data>
 </root>

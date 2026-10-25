@@ -823,19 +823,19 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
     <value>选择服务器</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>断开连接</value>
+    <value>已断开连接</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
     <value>正在连接...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALizing...</value>
+    <value>正在初始化...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>设备激活</value>
+    <value>设备已激活</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>已连接</value>
+    <value>已完全连接</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>未知的</value>
@@ -7874,5 +7874,11 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>连接</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>访问被拒绝</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>运行中</value>
   </data>
 </root>

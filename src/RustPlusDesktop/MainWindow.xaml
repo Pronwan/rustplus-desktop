@@ -1055,7 +1055,7 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <ui:Button x:Name="BtnToggleServerArea" Grid.Column="1" Width="24" Height="24" Padding="0"
+                                    <ui:Button x:Name="BtnToggleServerArea" Grid.Column="1" Width="24" Height="24" Padding="0" Margin="0,0,2,0"
                                                Appearance="Transparent" Click="BtnToggleServerArea_Click" ToolTip="{DynamicResource ToggleServerArea}"
                                                AutomationProperties.Name="{DynamicResource ToggleServerArea}">
                                         <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronDown20" FontSize="14" />
@@ -1063,7 +1063,7 @@
                                     <ui:Button x:Name="BtnManageServers" Grid.Column="2" Width="24" Height="24" Padding="0"
                                                Appearance="Transparent" Click="OpenServerManager_Click" ToolTip="{DynamicResource ManageServers}"
                                                AutomationProperties.Name="{DynamicResource ManageServers}">
-                                        <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="16" />
+                                        <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="14" />
                                     </ui:Button>
                                 </Grid>
                         <StackPanel x:Name="PanelServerArea" Visibility="Collapsed">
@@ -1205,30 +1205,35 @@
                                                 <DataTrigger Binding="{Binding Selected.PlayerToken}" Value="offline"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                             </Style.Triggers></Style>
                                         </StackPanel.Style>
-                                        <Grid Width="28" Height="28" Margin="0,0,3,0">
-                                            <ui:Button x:Name="UiBtnConnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
+                                        <Grid Width="24" Height="24" Margin="0,0,2,0">
+                                            <ui:Button x:Name="UiBtnConnect" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
                                                        ToolTip="{DynamicResource Connect}" AutomationProperties.Name="{DynamicResource Connect}" tutorials:Tutorial.TargetId="Servers.Connect">
                                                 <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Visibility" Value="Hidden" /></DataTrigger>
                                                 </Style.Triggers></Style></ui:Button.Style>
-                                                <ui:SymbolIcon Symbol="Play20" FontSize="16" Foreground="{DynamicResource Accent}" />
+                                                <ui:SymbolIcon Symbol="Play20" FontSize="14" Foreground="{DynamicResource Accent}" />
                                             </ui:Button>
-                                            <ui:Button x:Name="UiBtnFullConnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
+                                            <ui:Button x:Name="UiBtnFullConnect" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
                                                        ToolTip="{DynamicResource FullConnect}" AutomationProperties.Name="{DynamicResource FullConnect}" tutorials:Tutorial.TargetId="Servers.FullConnect">
                                                 <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Setter Property="Visibility" Value="Hidden" /><Style.Triggers>
                                                     <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding Selected.IsConnected}" Value="True" /><Condition Binding="{Binding Selected.IsFullConnected}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Visible" /></MultiDataTrigger>
                                                 </Style.Triggers></Style></ui:Button.Style>
-                                                <ui:SymbolIcon Symbol="Play20" FontSize="16" Foreground="{DynamicResource Accent}" />
+                                                <ui:SymbolIcon Symbol="Play20" FontSize="14" Foreground="{DynamicResource Accent}" />
                                             </ui:Button>
                                         </Grid>
-                                        <ui:Button x:Name="UiBtnDisconnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnDisconnect_Click"
+                                        <ui:Button x:Name="UiBtnDisconnect" Width="24" Height="24" Padding="0" Margin="0,0,2,0" Appearance="Transparent" Click="BtnDisconnect_Click"
                                                    ToolTip="{DynamicResource Disconnect}" AutomationProperties.Name="{DynamicResource Disconnect}" tutorials:Tutorial.TargetId="Servers.Disconnect"
                                                    IsEnabled="{Binding Selected.IsConnected, FallbackValue=False}">
-                                            <ui:SymbolIcon Symbol="Stop24" FontSize="16" Foreground="{DynamicResource DangerBrush}" />
+                                            <!--  Muted at rest; red only when the pointer is on it, so a healthy card shows no alarm colour.  -->
+                                            <ui:SymbolIcon Symbol="PlugDisconnected20" FontSize="14">
+                                                <ui:SymbolIcon.Style><Style TargetType="ui:SymbolIcon"><Setter Property="Foreground" Value="{DynamicResource TextSubtle}" /><Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ui:Button}}" Value="True"><Setter Property="Foreground" Value="{DynamicResource DangerBrush}" /></DataTrigger>
+                                                </Style.Triggers></Style></ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
                                         </ui:Button>
-                                        <ui:Button Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnShowServerInfo_Click"
+                                        <ui:Button x:Name="UiBtnServerInfo" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnShowServerInfo_Click"
                                                    ToolTip="{DynamicResource ServerDetails}" AutomationProperties.Name="{DynamicResource ServerDetails}">
-                                            <ui:SymbolIcon Symbol="Info20" FontSize="16" />
+                                            <ui:SymbolIcon Symbol="Info20" FontSize="14" />
                                         </ui:Button>
                                     </StackPanel>
                                 </Grid>
@@ -1303,22 +1308,18 @@
                                         </TextBlock>
                                     </Grid>
                                 </DockPanel>
-                                <Grid Grid.Column="2" Width="24" Height="24" Margin="0,0,3,0">
+                                <!--  Start stays one click away; stopping the app-wide listener lives in the menu below.  -->
+                                <Grid Grid.Column="2" Width="24" Height="24" Margin="0,0,2,0">
                                     <ui:Button x:Name="PairingStartButton" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnListenPairing_Click"
                                                IsEnabled="{Binding CanStartPairing}" ToolTip="{DynamicResource Listen}" AutomationProperties.Name="{DynamicResource Listen}"
                                                Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}">
                                         <ui:SymbolIcon Symbol="Play20" FontSize="14" Foreground="{DynamicResource Accent}" />
                                     </ui:Button>
-                                    <ui:Button x:Name="PairingStopButton" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnStopPairing_Click"
-                                               IsEnabled="{Binding CanStopPairing}" ToolTip="{DynamicResource Stop}" AutomationProperties.Name="{DynamicResource Stop}"
-                                               Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}">
-                                        <ui:SymbolIcon Symbol="Stop24" FontSize="14" Foreground="{DynamicResource DangerBrush}" />
-                                    </ui:Button>
                                 </Grid>
                                 <ui:Button x:Name="BtnManagePairing" Grid.Column="3" Width="24" Height="24" Padding="0" Appearance="Transparent"
                                            Click="OpenButtonContextMenu_Click" ContextMenu="{StaticResource PairingRecoveryMenu}"
                                            ToolTip="{DynamicResource UiManagePairing}" AutomationProperties.Name="{DynamicResource UiManagePairing}" tutorials:Tutorial.TargetId="Servers.Pair">
-                                    <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="16" />
+                                    <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="14" />
                                 </ui:Button>
                         <!--  FCM Token Expiry Badge  -->
                         <ui:InfoBar

@@ -826,16 +826,16 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
     <value>Відключено</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ПІДКЛЮЧЕННЯ...</value>
+    <value>Підключення...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ІНІЦІАЛІЗАЦІЇ...</value>
+    <value>Ініціалізація...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>ПРИСТРОЇ АКТИВНОЇ</value>
+    <value>Пристрої активні</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>ПОВНОГО ПІДКЛЮЧЕНО</value>
+    <value>Повністю підключено</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>НЕВІДОМО</value>
@@ -5821,5 +5821,11 @@ Rust+ Desktop реєструє вашу локальну програму в FCM
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Не вдалося зв'язатися з хмарою. Список серверів не змінено.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Доступ заборонено</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Працює</value>
   </data>
 </root>

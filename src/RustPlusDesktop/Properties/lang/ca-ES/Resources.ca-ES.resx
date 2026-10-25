@@ -823,13 +823,13 @@ Rust+ Desktop registra la teva aplicacio local amb FCM per poder rebre aquestes 
     <value>Seleccioneu un servidor</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DESCONNECTAT</value>
+    <value>Desconnectat</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTANT...</value>
+    <value>Connectant...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALITZANT...</value>
+    <value>Inicialitzant...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
     <value>Dispositius actius</value>
@@ -5821,5 +5821,11 @@ Podeu trobar més informació al lloc web oficial del servidor:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>No s'ha pogut connectar amb el núvol. La llista de servidors no ha canviat.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Accés denegat</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>En marxa</value>
   </data>
 </root>

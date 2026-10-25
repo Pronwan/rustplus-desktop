@@ -823,19 +823,19 @@ Rust+ Desktop dang ky ung dung cuc bo cua ban voi FCM de co the nhan cung cac th
     <value>Chọn máy chủ</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>NGẮT KẾT NỐI</value>
+    <value>Đã ngắt kết nối</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ĐANG KẾT NỐI...</value>
+    <value>Đang kết nối...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ĐANG KHỞI TẠO...</value>
+    <value>Đang khởi tạo...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>CÁC THIẾT BỊ ĐANG HOẠT ĐỘNG</value>
+    <value>Thiết bị đang hoạt động</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>KẾT NỐI HOÀN TOÀN</value>
+    <value>Đã kết nối đầy đủ</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>CHƯA BIẾT</value>
@@ -5821,5 +5821,11 @@ Bạn có thể tìm thêm thông tin trên trang web chính thức của máy c
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Không thể kết nối đám mây. Danh sách máy chủ không thay đổi.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Truy cập bị từ chối</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Đang chạy</value>
   </data>
 </root>

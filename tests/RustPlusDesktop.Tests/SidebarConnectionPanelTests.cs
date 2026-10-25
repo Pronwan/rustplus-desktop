@@ -52,17 +52,34 @@ public class SidebarConnectionPanelTests
         Console.WriteLine($"Collapsed server and pairing controls: {view.DesiredSize.Height:0}px at 264px width.");
         Assert.IsTrue(view.DesiredSize.Height <= 104, $"Collapsed controls use {view.DesiredSize.Height}px.");
         var start = (Wpf.Ui.Controls.Button)view.FindName("PairingStartButton");
-        var stop = (Wpf.Ui.Controls.Button)view.FindName("PairingStopButton");
+        Assert.IsNull(view.FindName("PairingStopButton"), "Stopping the app-wide listener belongs in its menu, not beside the server controls.");
         foreach (var state in new[] { new State(), new State { IsPairingBusy = true }, new State { IsPairingRunning = true }, new State { IsBusy = true } })
         {
             view.DataContext = state;
             Refresh(view);
             Assert.AreEqual(state.CanStartPairing, start.IsEnabled);
-            Assert.AreEqual(state.CanStopPairing, stop.IsEnabled);
             Assert.AreEqual(state.CanStopPairing ? Visibility.Collapsed : Visibility.Visible, start.Visibility);
-            Assert.AreEqual(state.CanStopPairing ? Visibility.Visible : Visibility.Collapsed, stop.Visibility);
         }
         Assert.AreEqual(Visibility.Collapsed, ((Grid)view.FindName("SidebarConnectionRow")).Visibility);
+    }
+
+    [STATestMethod]
+    public void CardButtons_LineUpInOneIconColumn()
+    {
+        var view = LoadPanels();
+        var profile = new ServerProfile { Name = "Test server", IsConnected = true };
+        view.DataContext = new State { Selected = profile, Servers = new() { profile } };
+        Refresh(view);
+        foreach (var column in new[] { new[] { "BtnManageServers", "UiBtnServerInfo", "BtnManagePairing" }, new[] { "BtnToggleServerArea", "UiBtnDisconnect", "PairingStartButton" } })
+        {
+            var buttons = column.Select(name => (FrameworkElement)view.FindName(name)).ToArray();
+            var left = buttons[0].TranslatePoint(new Point(), view).X;
+            foreach (var button in buttons)
+            {
+                Assert.AreEqual(24, button.ActualWidth, $"{button.Name} width");
+                Assert.AreEqual(left, button.TranslatePoint(new Point(), view).X, 0.5, $"{button.Name} must share a column with {buttons[0].Name}.");
+            }
+        }
     }
 
     [STATestMethod]

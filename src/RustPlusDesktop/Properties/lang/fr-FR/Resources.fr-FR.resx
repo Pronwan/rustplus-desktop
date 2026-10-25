@@ -823,19 +823,19 @@ Rust+ Desktop enregistre votre application locale aupres de FCM afin de recevoir
     <value>Sélectionnez un serveur</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DÉCONNECTÉ</value>
+    <value>Déconnecté</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>Connexion en cours...</value>
+    <value>Connexion...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALISATION...</value>
+    <value>Initialisation...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>APPAREILS ACTIFS</value>
+    <value>Appareils actifs</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>FULLEMENT CONNECTÉ</value>
+    <value>Entièrement connecté</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>INCONNU</value>
@@ -8123,5 +8123,11 @@ Ferme cet aperçu quand le panneau te convient.</value>
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Se connecter</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Accès refusé</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>En cours</value>
   </data>
 </root>

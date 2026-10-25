@@ -823,19 +823,19 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
     <value>Select a Server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DISCONNECTED</value>
+    <value>Disconnected</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONNECTING...</value>
+    <value>Connecting...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INITIALIZING...</value>
+    <value>Initializing...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DEVICES ACTIVE</value>
+    <value>Devices active</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>FULLY CONNECTED</value>
+    <value>Fully connected</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>UNKNOWN</value>
@@ -2199,7 +2199,7 @@ Are you sure you want to continue?</value>
     <value>The server rejected your player token. Please refresh your token by re-pairing this server from the in-game Rust+ menu.</value>
   </data>
   <data name="StatusAccessDenied" xml:space="preserve">
-    <value>ACCESS DENIED</value>
+    <value>Access denied</value>
   </data>
   <data name="StatusAccessDeniedHint" xml:space="preserve">
     <value>Player token expired. Re-pair server from in-game Rust+ menu.</value>
@@ -6624,5 +6624,8 @@ You can find more information on the server's official website:
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Connect</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Running</value>
   </data>
 </root>

@@ -823,19 +823,19 @@ Rust+ Desktop rekisteroi paikallisen sovelluksesi FCM:aan, jotta se voi vastaano
     <value>Valitse palvelin</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>HYVÄKSYTTY</value>
+    <value>Yhteys katkaistu</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>YHDISTETÄÄN...</value>
+    <value>Yhdistetään...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ALOITTAMINEN...</value>
+    <value>Alustetaan...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>AKTIIVISET LAITTEET</value>
+    <value>Laitteet aktiivisia</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>TÄYDELLINEN YHDISTETTY</value>
+    <value>Täysin yhdistetty</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>TUNTEMATON</value>
@@ -5821,5 +5821,11 @@ Löydät lisätietoja palvelimen viralliselta verkkosivustolta:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Pilveen ei saatu yhteyttä. Palvelinluettelosi on ennallaan.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Pääsy estetty</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Käynnissä</value>
   </data>
 </root>

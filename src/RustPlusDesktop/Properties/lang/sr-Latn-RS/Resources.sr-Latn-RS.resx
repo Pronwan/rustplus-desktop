@@ -823,19 +823,19 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
     <value>Изаберите сервер</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ОТПОЈЕДЕНО</value>
+    <value>Prekinuto</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ПОВЕЗИВАЊЕ...</value>
+    <value>Povezivanje...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ИНИЦИЈАЛИЗАЦИЈА...</value>
+    <value>Inicijalizacija...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>УРЕЂАЈИ АКТИВНИ</value>
+    <value>Uređaji aktivni</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>Потпуно повезано</value>
+    <value>Potpuno povezano</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>Непознато</value>
@@ -5821,5 +5821,11 @@ Rust+ Desktop registruje lokalnu aplikaciju kod FCM-a kako bi mogla da prima ist
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Oblak nije dostupan. Lista servera je nepromenjena.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Pristup odbijen</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Radi</value>
   </data>
 </root>

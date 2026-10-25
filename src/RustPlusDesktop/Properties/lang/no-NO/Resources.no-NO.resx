@@ -826,16 +826,16 @@ Rust+ Desktop registrerer den lokale appen din hos FCM slik at den kan motta de 
     <value>Frakoblet</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>KOMMEN...</value>
+    <value>Kobler til...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INNSTILLING...</value>
+    <value>Initialiserer...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>AKTIV ENDELSER</value>
+    <value>Enheter aktive</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>FULLY TILKOBLING</value>
+    <value>Fullt tilkoblet</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>UKJENT</value>
@@ -5821,5 +5821,11 @@ Du kan finne mer informasjon på serverens offisielle nettsted:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Fikk ikke kontakt med skyen. Serverlisten din er uendret.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Tilgang nektet</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Kjører</value>
   </data>
 </root>

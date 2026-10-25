@@ -826,13 +826,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
     <value>연결 끊김</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>연결하기...</value>
+    <value>연결 중...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
     <value>초기화 중...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>활성 디바이스</value>
+    <value>기기 활성</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
     <value>완전히 연결됨</value>
@@ -8044,5 +8044,11 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>연결</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>액세스 거부됨</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>실행 중</value>
   </data>
 </root>

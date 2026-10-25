@@ -829,7 +829,7 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
     <value>מתחבר...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>מתבצע אתחול...</value>
+    <value>מאתחל...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
     <value>מכשירים פעילים</value>
@@ -5821,5 +5821,11 @@ Rust+ Desktop רושם את האפליקציה המקומית שלך ב-FCM כד
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>לא ניתן להגיע לענן. רשימת השרתים לא השתנתה.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>הגישה נדחתה</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>פועל</value>
   </data>
 </root>

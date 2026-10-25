@@ -823,19 +823,19 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Выберите сервер</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>ОТКЛЮЧЕНО</value>
+    <value>Отключено</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>ПОДКЛЮЧЕНИЕ...</value>
+    <value>Подключение...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>ИНИТАЛИЗАЦИЯ...</value>
+    <value>Инициализация...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>УСТРОЙСТВА АКТИВНОГО</value>
+    <value>Устройства активны</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>ПОЛНОЕ ПОДКЛЮЧЕСТВО</value>
+    <value>Полностью подключено</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>НЕИЗВЕСТНО</value>
@@ -8123,5 +8123,11 @@ Rust+ Desktop регистрирует локальное приложение �
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Подключиться</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Доступ запрещён</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Работает</value>
   </data>
 </root>

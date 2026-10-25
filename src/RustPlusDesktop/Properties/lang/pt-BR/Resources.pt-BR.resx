@@ -823,19 +823,19 @@ O Rust+ Desktop registra seu app local no FCM para receber essas mesmas notifica
     <value>Selecione um servidor</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DESCONECTADO</value>
+    <value>Desconectado</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONECTANDO...</value>
+    <value>Conectando...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INICIALIZANDO...</value>
+    <value>Inicializando...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DISPOSITIVOS ATIVOS</value>
+    <value>Dispositivos ativos</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>COMPLETO CONECTADO</value>
+    <value>Totalmente conectado</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>DESCONHECIDO</value>
@@ -5827,5 +5827,11 @@ Você pode encontrar mais informações no site oficial do servidor:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Não foi possível acessar a nuvem. Sua lista de servidores não foi alterada.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Acesso negado</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Em execução</value>
   </data>
 </root>

@@ -823,16 +823,16 @@ Rust+ Desktop registreer jou plaaslike app by FCM sodat dit dieselfde Rust+-kenn
     <value>Kies 'n bediener</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>Onverbonde</value>
+    <value>Ontkoppel</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>Koppel...</value>
+    <value>Koppel tans...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INISIALISEER...</value>
+    <value>Inisialiseer tans...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>TOestelle aktief</value>
+    <value>Toestelle aktief</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
     <value>Volledig gekoppel</value>
@@ -5821,5 +5821,11 @@ U kan meer inligting op die bediener se amptelike webwerf vind:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Kon nie die wolk bereik nie. Jou bedienerlys is onveranderd.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Toegang geweier</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Loop</value>
   </data>
 </root>

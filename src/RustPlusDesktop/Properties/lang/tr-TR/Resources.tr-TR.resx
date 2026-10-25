@@ -823,19 +823,19 @@ Rust+ Desktop, ayni Rust+ bildirimlerini arka planda alabilmesi icin yerel uygul
     <value>Bir Sunucu Seçin</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>BAĞLANTISI KESİLDİ</value>
+    <value>Bağlantı kesildi</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>BAĞLANIYORUZ...</value>
+    <value>Bağlanıyor...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>BAŞLATILIYOR...</value>
+    <value>Başlatılıyor...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>AKTİF CİHAZLAR</value>
+    <value>Cihazlar etkin</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>TAMAMEN BAĞLI</value>
+    <value>Tamamen bağlı</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>BİLİNMİYOR</value>
@@ -7099,5 +7099,11 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   </data>
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Bağlan</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Erişim reddedildi</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>Çalışıyor</value>
   </data>
 </root>

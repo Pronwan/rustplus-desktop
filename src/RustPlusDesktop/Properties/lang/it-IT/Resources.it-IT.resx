@@ -823,19 +823,19 @@ Rust+ Desktop registra la tua app locale con FCM cosi puo ricevere le stesse not
     <value>Seleziona un server</value>
   </data>
   <data name="StatusDisconnected" xml:space="preserve">
-    <value>DISCONNESSO</value>
+    <value>Disconnesso</value>
   </data>
   <data name="StatusConnecting" xml:space="preserve">
-    <value>CONNECTING...</value>
+    <value>Connessione...</value>
   </data>
   <data name="StatusInitializing" xml:space="preserve">
-    <value>INIZIALIZZA...</value>
+    <value>Inizializzazione...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>DISPOSITIVI ATTIVI</value>
+    <value>Dispositivi attivi</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
-    <value>COMPLEMENTE CONNESSO</value>
+    <value>Completamente connesso</value>
   </data>
   <data name="StatusUnknown" xml:space="preserve">
     <value>SCONOSCIUTO</value>
@@ -5827,5 +5827,11 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   </data>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Impossibile raggiungere il cloud. L'elenco server non è cambiato.</value>
+  </data>
+  <data name="StatusAccessDenied" xml:space="preserve">
+    <value>Accesso negato</value>
+  </data>
+  <data name="UiListenerRunning" xml:space="preserve">
+    <value>In esecuzione</value>
   </data>
 </root>
