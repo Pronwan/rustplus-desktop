@@ -1159,8 +1159,8 @@
                                         Calculate explosive requirements, sulfur costs, and optimal raid paths.
                                     </TextBlock>
                                     <views:ImageGallery Margin="0,4,0,4">
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v8.0.0/Raid-Calculator.png" Description="Raid Calculator with detailed explosive and sulfur costs"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/v8.0.0/LogicEngine-Proximity.png" Description="Proximity-based smart device automation"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/Raid-calculator.png" Description="Raid Calculator with detailed explosive and sulfur costs"/>
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/8.0/device-automation.png" Description="Device automation with an in-game time trigger"/>
                                     </views:ImageGallery>
                                 </StackPanel>
                             </Border>
