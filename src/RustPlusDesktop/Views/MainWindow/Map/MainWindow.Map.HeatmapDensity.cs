@@ -10,7 +10,7 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    // The last heatmap read from map_data.json. That file runs to tens of MB, so a
+    // The last heatmap read from the map's heatmap slice. That still runs to tens of MB, so a
     // density change re-colours this instead of parsing it again.
     private sealed record HeatmapRasterCache(string DataPath, DateTime WrittenUtc, string Category, byte[] Data, int Size);
 
@@ -26,7 +26,11 @@ public partial class MainWindow
             return (c.Data, c.Size);
         }
 
-        using var fs = new FileStream(dataPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        // The heatmap slice instead of the whole map_data.json: ~20 MB rather than ~90 MB.
+        string? slice = await Task.Run(() => Services.Map.MapDataSlices.EnsureHeatmaps(Path.GetDirectoryName(dataPath) ?? string.Empty));
+        if (slice == null) return null;
+
+        using var fs = new FileStream(slice, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using var doc = await JsonDocument.ParseAsync(fs);
         if (ResourceHeatmapRaster.Read(doc.RootElement, category) is not { } heatmap)
         {

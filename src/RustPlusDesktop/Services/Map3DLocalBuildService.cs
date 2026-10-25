@@ -745,15 +745,9 @@ public static class Map3DLocalBuildService
         try
         {
             string dir = Path.GetDirectoryName(resolvedPath) ?? string.Empty;
-            string mapDataPath = Path.Combine(dir, "map_data.json");
-            if (File.Exists(mapDataPath))
-            {
-                using var mdoc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
-                if (mdoc.RootElement.TryGetProperty("size", out var sizeEl) && sizeEl.TryGetInt32(out int s) && s > 0)
-                {
-                    candidateWorldSize = s;
-                }
-            }
+            // From the overlay slice: the size alone is not worth parsing 90 MB for.
+            int s = Map.MapDataSlices.ReadWorldSize(dir);
+            if (s > 0) candidateWorldSize = s;
         }
         catch { }
 

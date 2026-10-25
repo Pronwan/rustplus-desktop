@@ -907,16 +907,7 @@ namespace RustPlusDesk.Views
                 try
                 {
                     // Decoding the render takes a second or more; keep it off the UI thread.
-                    var bi = await Task.Run(() =>
-                    {
-                        var image = new BitmapImage();
-                        image.BeginInit();
-                        image.CacheOption = BitmapCacheOption.OnLoad;
-                        image.StreamSource = new MemoryStream(File.ReadAllBytes(texPath));
-                        image.EndInit();
-                        image.Freeze();
-                        return image;
-                    });
+                    var bi = await Task.Run(() => Services.Map.MapImageLoader.Load(texPath));
 
                     _isGeneratedMapActive = true;
                     Dispatcher.Invoke(() =>
@@ -1477,13 +1468,10 @@ namespace RustPlusDesk.Views
         private static async Task WriteViewerMapDataAsync(string sourcePath, string targetPath, Rect worldRectPx, double imageWidth, double imageHeight)
         {
             if (!File.Exists(sourcePath)) throw new FileNotFoundException("map_data.json was not found.", sourcePath);
-            var node = JsonNode.Parse(await File.ReadAllTextAsync(sourcePath).ConfigureAwait(false)) as JsonObject;
-            if (node == null) throw new InvalidDataException("map_data.json root must be an object.");
 
             string parentDir = Path.GetDirectoryName(targetPath) ?? "";
             string targetTexturePath = Path.Combine(parentDir, "map_texture.png");
             bool hasTexture = File.Exists(targetTexturePath);
-            node["mapTextureSource"] = hasTexture ? "/maps/current/map_texture.png" : null;
 
             // map_texture.png is MapParser's render only when it matches map_render_full.png;
             // otherwise it is the server's image (no parser render yet), which has the ocean margin.
@@ -1492,17 +1480,15 @@ namespace RustPlusDesk.Views
                 new FileInfo(renderedPath).Length == new FileInfo(targetTexturePath).Length;
 
             // The live map image may not be the texture the viewer gets, so measure the texture itself.
+            // Header only: decoding a 4750 px render just to read its size cost another 90 MB.
             if (hasTexture)
             {
                 try
                 {
-                    var bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.UriSource = new Uri(targetTexturePath);
-                    bi.EndInit();
-                    imageWidth = bi.PixelWidth;
-                    imageHeight = bi.PixelHeight;
+                    using var fs = new FileStream(targetTexturePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var frame = BitmapDecoder.Create(fs, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None).Frames[0];
+                    imageWidth = frame.PixelWidth;
+                    imageHeight = frame.PixelHeight;
                 }
                 catch { }
             }
@@ -1510,9 +1496,8 @@ namespace RustPlusDesk.Views
             // Read worldSize from the parsed map_data.json (written by MapParser as "size").
             // This is critical for offline/placeholder maps where _worldSizeS is 0 because
             // there is no API connection – without the correct size the texture UV is wrong.
-            int parsedWorldSize = 0;
-            if (node.TryGetPropertyValue("size", out var sizeNode) && sizeNode != null)
-                int.TryParse(sizeNode.ToJsonString(), out parsedWorldSize);
+            int parsedWorldSize = await Task.Run(() =>
+                Services.Map.MapDataSlices.ReadWorldSize(Path.GetDirectoryName(sourcePath) ?? "")).ConfigureAwait(false);
 
             // MapParser's render has 0m padding (covers 0..worldSize exactly).
             // The server's companion image has 2000m padding.
@@ -1525,20 +1510,33 @@ namespace RustPlusDesk.Views
                 worldRectPx = ComputeWorldRectFromWorldSize(imageWidth, imageHeight, parsedWorldSize, padWorld);
             }
 
-            node["mapTexturePaddingWorld"] = padWorld;
-            node["mapTextureAutoAlign"] = padWorld > 0;
+            // Streamed through rather than loaded as a JsonNode tree, which for this file ran past a gigabyte.
+            var overrides = new Dictionary<string, Action<Utf8JsonWriter>>
+            {
+                ["mapTextureSource"] = w =>
+                {
+                    if (hasTexture) w.WriteStringValue("/maps/current/map_texture.png");
+                    else w.WriteNullValue();
+                },
+                ["mapTexturePaddingWorld"] = w => w.WriteNumberValue(padWorld),
+                ["mapTextureAutoAlign"] = w => w.WriteBooleanValue(padWorld > 0),
+            };
             if (imageWidth > 0 && imageHeight > 0 && worldRectPx.Width > 0 && worldRectPx.Height > 0)
             {
-                node["mapTextureUv"] = new JsonObject
+                double offsetU = worldRectPx.X / imageWidth, offsetV = worldRectPx.Y / imageHeight;
+                double repeatU = worldRectPx.Width / imageWidth, repeatV = worldRectPx.Height / imageHeight;
+                overrides["mapTextureUv"] = w =>
                 {
-                    ["offsetU"] = worldRectPx.X / imageWidth,
-                    ["offsetV"] = worldRectPx.Y / imageHeight,
-                    ["repeatU"] = worldRectPx.Width / imageWidth,
-                    ["repeatV"] = worldRectPx.Height / imageHeight
+                    w.WriteStartObject();
+                    w.WriteNumber("offsetU", offsetU);
+                    w.WriteNumber("offsetV", offsetV);
+                    w.WriteNumber("repeatU", repeatU);
+                    w.WriteNumber("repeatV", repeatV);
+                    w.WriteEndObject();
                 };
-                node["mapTextureUvZoom"] = 1.0;
+                overrides["mapTextureUvZoom"] = w => w.WriteNumberValue(1.0);
             }
-            await File.WriteAllTextAsync(targetPath, node.ToJsonString(new JsonSerializerOptions { WriteIndented = false })).ConfigureAwait(false);
+            await Task.Run(() => Services.Map.MapDataSlices.RewriteWithOverrides(sourcePath, targetPath, overrides)).ConfigureAwait(false);
         }
 
         private string ImageSourceToBase64(ImageSource source)

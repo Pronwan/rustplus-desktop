@@ -21,7 +21,12 @@ public static class OfflineMonumentBuilder
 
     public static IReadOnlyList<(double X, double Y, string Name)> BuildFromMapDataFile(string mapDataPath)
     {
-        using var doc = JsonDocument.Parse(File.ReadAllText(mapDataPath));
+        // Size and prefabs are all it reads, and the overlay slice carries both.
+        string? core = Map.MapDataSlices.EnsureCore(Path.GetDirectoryName(mapDataPath) ?? string.Empty);
+        if (core == null) return Array.Empty<(double, double, string)>();
+
+        using var fs = new FileStream(core, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var doc = JsonDocument.Parse(fs);
         return Build(doc.RootElement, s_metadata.Value);
     }
 

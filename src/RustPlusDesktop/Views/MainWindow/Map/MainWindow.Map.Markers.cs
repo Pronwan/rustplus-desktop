@@ -236,12 +236,7 @@ public partial class MainWindow
             var meta = JsonSerializer.Deserialize<MapCacheMeta>(System.IO.File.ReadAllText(metaPath));
             if (meta == null) return null;
 
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(imgPath));
-            bi.EndInit();
-            bi.Freeze();
+            var bi = Services.Map.MapImageLoader.Load(imgPath);
 
             return new RustPlusClientReal.MapWithMonuments
             {
@@ -309,13 +304,7 @@ public partial class MainWindow
             string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
             if (!System.IO.File.Exists(imgPath)) return null;
 
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(imgPath));
-            bi.EndInit();
-            bi.Freeze();
-            return bi;
+            return Services.Map.MapImageLoader.Load(imgPath);
         }
         catch { return null; }
     }
@@ -529,16 +518,7 @@ public partial class MainWindow
                 try
                 {
                     // The render runs to ~25 MB; decoding it on the UI thread froze the window.
-                    var bi = await Task.Run(() =>
-                    {
-                        var image = new BitmapImage();
-                        image.BeginInit();
-                        image.CacheOption = BitmapCacheOption.OnLoad;
-                        image.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(generatedTexPath));
-                        image.EndInit();
-                        image.Freeze();
-                        return image;
-                    });
+                    var bi = await Task.Run(() => Services.Map.MapImageLoader.Load(generatedTexPath));
 
                     AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
                     _isGeneratedMapActive = true;

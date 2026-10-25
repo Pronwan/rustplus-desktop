@@ -10,13 +10,11 @@ namespace RustPlusDesk.Services.Map;
 /// clusters, the cargo route and keycard sites. The whole file runs to ~90 MB because it
 /// also carries the 3D map's terrain layers, and the overlays used to parse all of it, on
 /// the UI thread, once each - several seconds of a frozen window every time a generated
-/// map loaded. This parses it once, off the UI thread, and keeps only those few KB.
+/// map loaded. This reads them, off the UI thread, from the slice <see cref="MapDataSlices"/>
+/// cut of the file, and keeps only those few KB.
 /// </summary>
 public static class ParsedMapDataCache
 {
-    private static readonly string[] OverlayProperties =
-        { "size", "prefabs", "rockClusters", "cargoPaths", "cargoPathNodes", "keycardSites" };
-
     private sealed record Entry(string Path, DateTime WrittenUtc, JsonElement Root);
 
     private static readonly object Gate = new();
@@ -87,25 +85,12 @@ public static class ParsedMapDataCache
 
     internal static JsonElement ReadOverlayProperties(string path)
     {
-        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        using var full = JsonDocument.Parse(fs);
+        // The overlay slice holds exactly these properties; the 90 MB file itself is never parsed.
+        string core = MapDataSlices.EnsureCore(Path.GetDirectoryName(path) ?? string.Empty)
+            ?? throw new FileNotFoundException("map_data.json was not found.", path);
 
-        using var buffer = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(buffer))
-        {
-            writer.WriteStartObject();
-            foreach (string name in OverlayProperties)
-            {
-                if (full.RootElement.TryGetProperty(name, out var value))
-                {
-                    writer.WritePropertyName(name);
-                    value.WriteTo(writer);
-                }
-            }
-            writer.WriteEndObject();
-        }
-
-        using var slim = JsonDocument.Parse(buffer.ToArray());
+        using var fs = new FileStream(core, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var slim = JsonDocument.Parse(fs);
         // Clone so the element outlives its document and needs no disposal.
         return slim.RootElement.Clone();
     }
