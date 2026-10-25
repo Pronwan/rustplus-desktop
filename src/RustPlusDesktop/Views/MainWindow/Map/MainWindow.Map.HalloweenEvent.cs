@@ -65,6 +65,8 @@ public partial class MainWindow
     private void ClearActiveHeatmap()
     {
         ImgHeatmap.Source = null;
+        // Its raw raster too: kept only so the density slider can recolour a heatmap that is shown.
+        _heatmapRasterCache = null;
         if (_isMap3DActive && _map3DWebView?.CoreWebView2 != null)
         {
             string json = JsonSerializer.Serialize(new { type = "CLEAR_HEATMAP" });
