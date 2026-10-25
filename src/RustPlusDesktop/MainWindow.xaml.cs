@@ -9810,11 +9810,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void UpdateHotkeyButtonUi()
     {
-        if (BtnHotkeys == null || TxtBtnHotkeys == null) return;
+        if (BtnHotkeys == null) return;
+
+        // The button is icon-only, so its state text lives in the tooltip and accessible name.
+        string label = RustPlusDesk.Properties.Resources.GetString(_hotkeysActive ? "CodeUiHotkeysActive" : "Hotkeys");
+        BtnHotkeys.ToolTip = label;
+        System.Windows.Automation.AutomationProperties.SetName(BtnHotkeys, label);
 
         if (_hotkeysActive)
         {
-            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiHotkeysActive");
             if (BtnHotkeys.IsMouseOver)
             {
                 BtnHotkeys.Background = Brushes.Transparent;
@@ -9830,7 +9834,6 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         else
         {
-            TxtBtnHotkeys.Text = RustPlusDesk.Properties.Resources.GetString("Hotkeys");
             BtnHotkeys.ClearValue(Button.BackgroundProperty);
             BtnHotkeys.ClearValue(Button.BorderBrushProperty);
             BtnHotkeys.ClearValue(Button.ForegroundProperty);

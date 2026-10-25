@@ -1621,6 +1621,12 @@ private bool _overlayToolsVisible = false;
     {
         if (button == null) return;
 
+        if (ReferenceEquals(button, BtnDevicesExport))
+        {
+            ApplyCalmCloudState(button, !syncEnabled ? "Warn" : limitExceeded ? "Danger" : "Success");
+            return;
+        }
+
         if (!syncEnabled)
         {
             StopCloudPulse(button);
@@ -1661,9 +1667,32 @@ private bool _overlayToolsVisible = false;
             FlashCloudButton(ToolUploadButton);
     }
 
+    // The devices action bar marks state with a tint, border and icon colour instead of a solid fill,
+    // matching its other "on" buttons. tone is Success, Warn or Danger.
+    private void ApplyCalmCloudState(Control button, string tone)
+    {
+        StopCloudPulse(button);
+        button.SetResourceReference(Control.BackgroundProperty, tone + "TintBrush");
+        string accent = tone == "Warn" ? "BrandOrangeBrush" : tone + "Brush";
+        button.SetResourceReference(Control.BorderBrushProperty, accent);
+        button.SetResourceReference(Control.ForegroundProperty, tone == "Success" ? "SuccessTextBrush" : accent);
+    }
+
     private void FlashCloudButton(Control button)
     {
         if (button == null) return;
+
+        if (ReferenceEquals(button, BtnDevicesExport))
+        {
+            var tint = SetCloudButtonBrush(button, Color.FromArgb(0x26, 0x39, 0xA9, 0x6B));
+            tint.BeginAnimation(SolidColorBrush.ColorProperty, new System.Windows.Media.Animation.ColorAnimation
+            {
+                From = Color.FromArgb(0x80, 0x39, 0xA9, 0x6B),
+                Duration = TimeSpan.FromMilliseconds(650),
+                FillBehavior = System.Windows.Media.Animation.FillBehavior.Stop
+            });
+            return;
+        }
 
         var brush = SetCloudButtonBrush(button, Color.FromRgb(46, 125, 50));
 
