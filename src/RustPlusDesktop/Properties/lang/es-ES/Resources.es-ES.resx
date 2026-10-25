@@ -8031,4 +8031,58 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>No se pudo conectar con la nube. Tu lista de servidores no ha cambiado.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>Mapa HD</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>¿Usar el mapa HD?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>Este mapa se ha leído del archivo .map del servidor. ¿Debe el mapa 2D mostrar esta versión más nítida en lugar de la imagen de baja resolución del servidor?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>Una mayor resolución del mapa usa más RAM. A la resolución de la imagen del servidor, el mapa HD apenas necesita más. La resolución completa necesita unos {0} MB más para este mapa. Puedes cambiar esta decisión y otros ajustes de RAM en cualquier momento en Ajustes → Mapa.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>Recordar mi decisión</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>Mapa HD del archivo .map</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>Muestra el mapa renderizado a partir del archivo .map del servidor en lugar de la imagen de baja resolución del servidor.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>Preguntar</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>Usar</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>No usar</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>Resolución del mapa</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>Tamaño con el que se carga la imagen del mapa. Menor usa menos RAM; los marcadores, dibujos y etiquetas siguen nítidos.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>Ahorro (2048 px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>Estándar (tamaño del servidor)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>Alta (tamaño completo)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>Este mapa: aprox. {0} MB / {1} MB / {2} MB (Ahorro / Estándar / Alta)</value>
+  </data>
 </root>

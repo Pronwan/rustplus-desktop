@@ -28,4 +28,19 @@ internal static class MapImageLoader
         image.Freeze();
         return image;
     }
+
+    /// <summary>An image file's pixel size, read from its header without decoding it. (0, 0) when unreadable.</summary>
+    public static (int Width, int Height) ReadSize(string path)
+    {
+        try
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var frame = BitmapDecoder.Create(stream, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None).Frames[0];
+            return (frame.PixelWidth, frame.PixelHeight);
+        }
+        catch
+        {
+            return (0, 0);
+        }
+    }
 }

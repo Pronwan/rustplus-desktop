@@ -692,6 +692,45 @@
                 <ui:TextBlock Text="{DynamicResource UiMapPerformanceQuality}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
                 <ui:Card Style="{StaticResource SettingsNativeCard}">
                     <StackPanel>
+                        <!-- HD map from the .map file: ask, use, or not -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource SettingsMapHdImage}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource SettingsMapHdImageDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapHdImage" Width="180" Height="32" SelectionChanged="CmbMapImage_SelectionChanged" VerticalAlignment="Center">
+                                <ComboBoxItem Content="{DynamicResource SettingsMapHdAsk}" />
+                                <ComboBoxItem Content="{DynamicResource SettingsMapHdUse}" />
+                                <ComboBoxItem Content="{DynamicResource SettingsMapHdDontUse}" />
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Map image resolution: the RAM trade-off -->
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource SettingsMapResolution}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource SettingsMapResolutionDesc}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                <ui:TextBlock x:Name="TxtMapResolutionEstimate" FontSize="11" Foreground="{DynamicResource Accent}" TextWrapping="Wrap" Margin="0,4,0,0" Visibility="Collapsed" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" x:Name="CmbMapResolution" Width="180" Height="32" SelectionChanged="CmbMapImage_SelectionChanged" VerticalAlignment="Center">
+                                <ComboBoxItem Content="{DynamicResource SettingsMapResolutionEconomy}" />
+                                <ComboBoxItem Content="{DynamicResource SettingsMapResolutionStandard}" />
+                                <ComboBoxItem Content="{DynamicResource SettingsMapResolutionHigh}" />
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
                         <!-- Image Scaling Quality Dropdown -->
                         <Grid MinHeight="36">
                             <Grid.ColumnDefinitions>

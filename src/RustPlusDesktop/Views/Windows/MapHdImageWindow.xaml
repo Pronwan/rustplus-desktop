@@ -1,0 +1,47 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.MapHdImageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource MapHdPromptTitle}"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Foreground="White"
+        FontFamily="Segoe UI"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource MapHdPromptTitle}" ShowMaximize="False" ShowMinimize="False"/>
+
+        <StackPanel Grid.Row="1">
+            <ui:SymbolIcon Symbol="Map24" FontSize="42" Foreground="#FF8C00" HorizontalAlignment="Center" Margin="0,8,0,14"/>
+            <TextBlock Text="{DynamicResource MapHdPromptHeading}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="24,0,24,8"/>
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="12" Foreground="#B8BDC7" Margin="32,0,32,12" LineHeight="20"
+                       Text="{DynamicResource MapHdPromptBody}"/>
+            <Border Background="#22FF8C00" BorderBrush="#55FF8C00" BorderThickness="1" CornerRadius="6" Margin="32,0,32,18" Padding="12,10">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Info24" FontSize="16" Foreground="#FF8C00" VerticalAlignment="Top" Margin="0,1,10,0"/>
+                    <TextBlock x:Name="TxtRamNote" TextWrapping="Wrap" FontSize="12" Foreground="#D8DCE3" LineHeight="18" MaxWidth="400"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#1E2126" Height="1" Margin="24,0"/>
+            <Grid Margin="24,16,24,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="ChkRemember" Grid.Column="0" Content="{DynamicResource MapHdPromptRemember}" VerticalAlignment="Center" IsChecked="True"/>
+                <ui:Button Grid.Column="1" Content="{DynamicResource MapHdPromptNo}" Appearance="Secondary" MinWidth="96" Margin="0,0,8,0" Height="38" Click="BtnNo_Click"/>
+                <ui:Button Grid.Column="2" Content="{DynamicResource MapHdPromptYes}" Appearance="Primary" MinWidth="96" Height="38" Click="BtnYes_Click"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

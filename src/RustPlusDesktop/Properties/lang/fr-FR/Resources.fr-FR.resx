@@ -8031,4 +8031,58 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Impossible de joindre le cloud. Ta liste de serveurs est inchangée.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>Carte HD</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>Utiliser la carte HD ?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>Cette carte a été lue à partir du fichier .map du serveur. La carte 2D doit-elle afficher cette version plus nette au lieu de l'image basse résolution du serveur ?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>Une résolution de carte plus élevée utilise plus de RAM. À la résolution de l'image du serveur, la carte HD n'en demande presque pas plus. La pleine résolution demande environ {0} Mo de plus pour cette carte. Vous pouvez modifier ce choix et d'autres réglages de RAM à tout moment dans Paramètres → Carte.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>Mémoriser mon choix</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>Carte HD du fichier .map</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>Affiche la carte rendue à partir du fichier .map du serveur au lieu de l'image basse résolution du serveur.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>Demander</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>Utiliser</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>Ne pas utiliser</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>Résolution de la carte</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>Taille à laquelle l'image de la carte est chargée. Plus basse, elle utilise moins de RAM ; les marqueurs, dessins et libellés restent nets.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>Économie (2048 px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>Standard (taille du serveur)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>Haute (pleine taille)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>Cette carte : env. {0} Mo / {1} Mo / {2} Mo (Économie / Standard / Haute)</value>
+  </data>
 </root>

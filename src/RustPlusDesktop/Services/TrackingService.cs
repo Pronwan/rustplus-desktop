@@ -209,6 +209,12 @@ public class TrackingSettings
     public bool MapUseCacheMode { get; set; } = false;
     public double MapRenderScale { get; set; } = 1.0;
     public bool MapUseAliasedEdgeMode { get; set; } = false;
+
+    /// <summary>Show MapParser's render instead of the server's image: null asks, then remembers if told to.</summary>
+    public bool? MapUseRenderedImage { get; set; } = null;
+
+    /// <summary>The 2D map image's decode size, a <see cref="Map.MapImageResolution"/> value.</summary>
+    public int MapImageResolution { get; set; } = (int)Map.MapImageResolution.Standard;
 }
 
 
@@ -1169,6 +1175,18 @@ public static class TrackingService
     {
         get => _settings.MapUseAliasedEdgeMode;
         set { _settings.MapUseAliasedEdgeMode = value; SaveDB(); }
+    }
+    public static bool? MapUseRenderedImage
+    {
+        get => _settings.MapUseRenderedImage;
+        set { _settings.MapUseRenderedImage = value; SaveDB(); }
+    }
+    public static Map.MapImageResolution MapImageResolution
+    {
+        get => Enum.IsDefined(typeof(Map.MapImageResolution), _settings.MapImageResolution)
+            ? (Map.MapImageResolution)_settings.MapImageResolution
+            : Map.MapImageResolution.Standard;
+        set { _settings.MapImageResolution = (int)value; SaveDB(); }
     }
 
     /// <summary>Returns a snapshot of the extra monument type names that are currently hidden by the user.</summary>

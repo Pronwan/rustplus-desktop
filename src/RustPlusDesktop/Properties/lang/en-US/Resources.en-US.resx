@@ -6532,4 +6532,58 @@ You can find more information on the server's official website:
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Could not reach the cloud. Your server list is unchanged.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>HD map</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>Use the HD map?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>This map was read from the server's .map file. Should the 2D map show this sharper version instead of the server's low-resolution image?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>A higher map resolution uses more RAM. At the server image's resolution the HD map needs hardly any more. Full resolution needs about {0} MB more for this map. You can change this decision and further RAM settings at any time under Settings → Map.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>Remember my decision</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>HD map from the .map file</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>Shows the map rendered from the server's .map file instead of the server's low-resolution image.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>Ask</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>Use</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>Don't use</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>Map resolution</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>How large the map image is loaded. Lower uses less RAM; markers, drawings and labels stay sharp.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>Economy (2048 px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>Standard (server size)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>High (full size)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>This map: about {0} MB / {1} MB / {2} MB (Economy / Standard / High)</value>
+  </data>
 </root>

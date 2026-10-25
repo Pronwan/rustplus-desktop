@@ -591,12 +591,8 @@ namespace RustPlusDesk.Views
 
             try
             {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.UriSource = new Uri(imagePath);
-                bitmap.EndInit();
-                bitmap.Freeze();
+                var bitmap = await Task.Run(() => LoadLocalMapImage(imagePath));
+                _serverMapPixelSize = (0, 0);
 
                 ShowMapBasic(bitmap);
                 _isGeneratedMapActive = IsParserRenderedImage(imagePath);
@@ -608,8 +604,9 @@ namespace RustPlusDesk.Views
                 string mapDataPath = Path.Combine(folder, "map_data.json");
                 if (_isGeneratedMapActive && !File.Exists(mapDataPath))
                 {
-                    // Rendered before any full parse: the render is one pixel per world unit.
-                    _worldSizeS = bitmap.PixelWidth;
+                    // Rendered before any full parse: the render is one pixel per world unit, in the
+                    // file. The bitmap may have been decoded smaller.
+                    _worldSizeS = Services.Map.MapImageLoader.ReadSize(imagePath).Width;
                     _worldRectPx = ComputeWorldRectFromWorldSize(
                         bitmap.PixelWidth * (96.0 / bitmap.DpiX), bitmap.PixelHeight * (96.0 / bitmap.DpiY),
                         _worldSizeS, GetCurrentMapPaddingWorld());
@@ -902,12 +899,13 @@ namespace RustPlusDesk.Views
 
             // Apply high-resolution generated Facepunch map image to the main app map view
             string texPath = Path.Combine(folderPath, Map3DLocalBuildService.RenderedTextureFileName);
-            if (applyRenderedImage && File.Exists(texPath))
+            // The first parse is where the question comes up: from here on there is a render to show.
+            if (applyRenderedImage && File.Exists(texPath) && await DecideUseRenderedImageAsync(texPath))
             {
                 try
                 {
                     // Decoding the render takes a second or more; keep it off the UI thread.
-                    var bi = await Task.Run(() => Services.Map.MapImageLoader.Load(texPath));
+                    var bi = await Task.Run(() => LoadRenderedImage(texPath));
 
                     _isGeneratedMapActive = true;
                     Dispatcher.Invoke(() =>

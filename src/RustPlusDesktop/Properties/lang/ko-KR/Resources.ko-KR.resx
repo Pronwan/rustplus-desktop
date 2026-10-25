@@ -7952,4 +7952,58 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>클라우드에 연결할 수 없습니다. 서버 목록은 변경되지 않았습니다.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>HD 지도</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>HD 지도를 사용할까요?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>이 지도는 서버의 .map 파일에서 읽어 왔습니다. 2D 지도에 서버의 저해상도 이미지 대신 이 더 선명한 버전을 표시할까요?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>지도 해상도가 높을수록 RAM을 더 많이 사용합니다. 서버 이미지 해상도로 표시하면 HD 지도는 메모리를 거의 더 쓰지 않습니다. 전체 해상도는 이 지도에서 약 {0}MB를 더 사용합니다. 이 선택과 다른 RAM 설정은 언제든지 설정 → 지도에서 변경할 수 있습니다.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>선택 기억하기</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>아니요</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>예</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>.map 파일의 HD 지도</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>서버의 저해상도 이미지 대신 서버의 .map 파일로 렌더링한 지도를 표시합니다.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>묻기</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>사용</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>사용 안 함</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>지도 해상도</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>지도 이미지를 불러오는 크기입니다. 작을수록 RAM을 적게 쓰며, 마커·그림·라벨은 선명하게 유지됩니다.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>절약 (2048px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>표준 (서버 크기)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>높음 (전체 크기)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>이 지도: 약 {0}MB / {1}MB / {2}MB (절약 / 표준 / 높음)</value>
+  </data>
 </root>

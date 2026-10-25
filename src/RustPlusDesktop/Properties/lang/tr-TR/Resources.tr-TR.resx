@@ -7007,4 +7007,58 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Buluta ulaşılamadı. Sunucu listen değişmedi.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>HD harita</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>HD harita kullanılsın mı?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>Bu harita sunucunun .map dosyasından okundu. 2D harita, sunucunun düşük çözünürlüklü görüntüsü yerine bu daha net sürümü göstersin mi?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>Daha yüksek harita çözünürlüğü daha fazla RAM kullanır. Sunucu görüntüsünün çözünürlüğünde HD harita neredeyse hiç fazla bellek gerektirmez. Tam çözünürlük bu harita için yaklaşık {0} MB daha fazla bellek gerektirir. Bu kararı ve diğer RAM ayarlarını istediğiniz zaman Ayarlar → Harita bölümünden değiştirebilirsiniz.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>Kararımı hatırla</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>Hayır</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>.map dosyasından HD harita</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>Sunucunun düşük çözünürlüklü görüntüsü yerine, sunucunun .map dosyasından oluşturulan haritayı gösterir.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>Sor</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>Kullan</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>Kullanma</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>Harita çözünürlüğü</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>Harita görüntüsünün hangi boyutta yükleneceği. Daha düşük boyut daha az RAM kullanır; işaretler, çizimler ve etiketler net kalır.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>Tasarruflu (2048 px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>Standart (sunucu boyutu)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>Yüksek (tam boyut)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>Bu harita: yakl. {0} MB / {1} MB / {2} MB (Tasarruflu / Standart / Yüksek)</value>
+  </data>
 </root>

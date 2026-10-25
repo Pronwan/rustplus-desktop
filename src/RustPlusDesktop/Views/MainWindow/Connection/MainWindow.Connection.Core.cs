@@ -274,11 +274,7 @@ public partial class MainWindow
                 {
                     try
                     {
-                        var bitmap = new System.Windows.Media.Imaging.BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-                        bitmap.UriSource = new Uri(prof.LocalMapImagePath);
-                        bitmap.EndInit();
+                        var bitmap = LoadLocalMapImage(prof.LocalMapImagePath);
                         ShowMapBasic(bitmap);
 
                         // Try to restore _worldSizeS from a previously-parsed map_data.json.

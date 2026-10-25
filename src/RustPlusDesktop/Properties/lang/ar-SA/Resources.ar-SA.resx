@@ -7922,4 +7922,58 @@
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>تعذر الوصول إلى السحابة. لم تتغير قائمة خوادمك.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>خريطة HD</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>هل تريد استخدام خريطة HD؟</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>تمت قراءة هذه الخريطة من ملف ‎.map الخاص بالخادم. هل تريد أن تعرض الخريطة ثنائية الأبعاد هذه النسخة الأوضح بدلاً من صورة الخادم منخفضة الدقة؟</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>دقة الخريطة الأعلى تستهلك ذاكرة RAM أكثر. بدقة صورة الخادم لا تحتاج خريطة HD تقريباً إلى ذاكرة إضافية. الدقة الكاملة تحتاج إلى نحو {0} ميغابايت إضافية لهذه الخريطة. يمكنك تغيير هذا القرار وإعدادات الذاكرة الأخرى في أي وقت من الإعدادات ← الخريطة.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>تذكّر قراري</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>خريطة HD من ملف ‎.map</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>يعرض الخريطة المرسومة من ملف ‎.map الخاص بالخادم بدلاً من صورة الخادم منخفضة الدقة.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>اسأل</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>استخدم</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>لا تستخدم</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>دقة الخريطة</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>الحجم الذي تُحمَّل به صورة الخريطة. الحجم الأصغر يستهلك ذاكرة أقل، وتبقى العلامات والرسومات والتسميات واضحة.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>موفّر (2048 بكسل)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>قياسي (حجم الخادم)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>عالٍ (الحجم الكامل)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>هذه الخريطة: نحو {0} / {1} / {2} ميغابايت (موفّر / قياسي / عالٍ)</value>
+  </data>
 </root>

@@ -164,7 +164,7 @@ namespace RustPlusDesk.Views
                 Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
                 Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
-                Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance", SectionMapPerformance),
+                Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance hd map resolution ram memory economy", SectionMapPerformance),
                 Section("team-markers", "map", T("TeamMarkersSettings", "Map Markers"), "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
                 Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
                 // Connected Services, in page order. The keywords keep the old section and card names
@@ -701,6 +701,9 @@ namespace RustPlusDesk.Views
             }
 
             // Map performance settings
+            CmbMapHdImage.SelectedIndex = TrackingService.MapUseRenderedImage switch { true => 1, false => 2, null => 0 };
+            CmbMapResolution.SelectedIndex = (int)TrackingService.MapImageResolution;
+            UpdateMapResolutionEstimate();
             CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
             ChkMapUseCacheMode.IsChecked = TrackingService.MapUseCacheMode;
             
@@ -831,6 +834,43 @@ namespace RustPlusDesk.Views
                     app.SetLanguage();
                 }
             }
+        }
+
+        /// <summary>
+        /// The HD map choice and the resolution change the image itself, so the map is loaded
+        /// again; the overlays carry over to the new size (see OverlaySpace).
+        /// </summary>
+        private void CmbMapImage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            if (sender == CmbMapHdImage && CmbMapHdImage.SelectedIndex >= 0)
+            {
+                TrackingService.MapUseRenderedImage = CmbMapHdImage.SelectedIndex switch { 1 => true, 2 => false, _ => null };
+            }
+            else if (sender == CmbMapResolution && CmbMapResolution.SelectedIndex >= 0)
+            {
+                TrackingService.MapImageResolution = (Services.Map.MapImageResolution)CmbMapResolution.SelectedIndex;
+            }
+
+            UpdateMapResolutionEstimate();
+            _ = ParentWindow?.ReloadMapAsync();
+        }
+
+        private void UpdateMapResolutionEstimate()
+        {
+            if (TxtMapResolutionEstimate == null) return;
+            if (ParentWindow?.EstimateMapImageMemory() is not { } mb)
+            {
+                TxtMapResolutionEstimate.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            TxtMapResolutionEstimate.Text = string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                RustPlusDesk.Properties.Resources.GetString("SettingsMapResolutionEstimate"),
+                mb.Economy, mb.Standard, mb.High);
+            TxtMapResolutionEstimate.Visibility = Visibility.Visible;
         }
 
         private void OnSettingChanged(object sender, RoutedEventArgs e)

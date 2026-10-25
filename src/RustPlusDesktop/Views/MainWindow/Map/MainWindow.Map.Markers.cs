@@ -503,6 +503,9 @@ public partial class MainWindow
             }
         }
 
+        // The image shown when the HD map is not: what the resolution settings measure against.
+        _serverMapPixelSize = (map.Bitmap.PixelWidth, map.Bitmap.PixelHeight);
+
         // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
         // Decided afresh on every load: a render shown earlier may have been deleted since, and
         // the server's image laid out without its ocean margin puts every overlay off.
@@ -515,37 +518,67 @@ public partial class MainWindow
             string generatedTexPath = System.IO.Path.Combine(preparedFolder, Map3DLocalBuildService.RenderedTextureFileName);
             if (System.IO.File.Exists(generatedTexPath))
             {
+                if (await DecideUseRenderedImageAsync(generatedTexPath))
+                {
+                    try
+                    {
+                        // The render runs to ~25 MB; decoding it on the UI thread froze the window.
+                        var bi = await Task.Run(() => LoadRenderedImage(generatedTexPath));
+
+                        AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
+                        _isGeneratedMapActive = true;
+                        map = new RustPlusClientReal.MapWithMonuments
+                        {
+                            Bitmap = bi,
+                            PixelWidth = bi.PixelWidth,
+                            PixelHeight = bi.PixelHeight,
+                            WorldSize = map.WorldSize,
+                            WipeTime = map.WipeTime,
+                            Monuments = map.Monuments
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[map-render] Note: could not load generated map texture: {ex.Message}");
+                    }
+                }
+
+                // The parsed overlays go with either image; they no longer cost the 90 MB file a read.
+                var preparedProfile = _vm.Selected;
+                _ = Dispatcher.InvokeAsync(async () =>
+                {
+                    if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
+                });
+            }
+            // Without a render the server's own image is used. Parsing scans the game's map
+            // files, so it only runs when the user asks for it (3D map, Parse, or an import).
+        }
+
+        // The server's image at the economy size, decoded again from the disk cache at that width.
+        if (!_isGeneratedMapActive && string.IsNullOrWhiteSpace(customUrl))
+        {
+            int decodeWidth = Services.Map.MapImagePolicy.ServerDecodeWidth(TrackingService.MapImageResolution, map.Bitmap.PixelWidth);
+            string cachedImage = System.IO.Path.Combine(s_mapCacheDir, cacheKey + ".png");
+            if (decodeWidth > 0 && System.IO.File.Exists(cachedImage))
+            {
                 try
                 {
-                    // The render runs to ~25 MB; decoding it on the UI thread froze the window.
-                    var bi = await Task.Run(() => Services.Map.MapImageLoader.Load(generatedTexPath));
-
-                    AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
-                    _isGeneratedMapActive = true;
+                    var small = await Task.Run(() => Services.Map.MapImageLoader.Load(cachedImage, decodeWidth));
                     map = new RustPlusClientReal.MapWithMonuments
                     {
-                        Bitmap = bi,
-                        PixelWidth = bi.PixelWidth,
-                        PixelHeight = bi.PixelHeight,
+                        Bitmap = small,
+                        PixelWidth = small.PixelWidth,
+                        PixelHeight = small.PixelHeight,
                         WorldSize = map.WorldSize,
                         WipeTime = map.WipeTime,
                         Monuments = map.Monuments
                     };
-
-                    var preparedProfile = _vm.Selected;
-                    _ = Dispatcher.InvokeAsync(async () =>
-                    {
-                        // The render is already the image shown below; only the overlays are needed.
-                        if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
-                    });
                 }
                 catch (Exception ex)
                 {
-                    AppendLog($"[map-render] Note: could not load generated map texture: {ex.Message}");
+                    AppendLog($"[map] Could not reduce the map image: {ex.Message}");
                 }
             }
-            // Without a render the server's own image is used. Parsing scans the game's map
-            // files, so it only runs when the user asks for it (3D map, Parse, or an import).
         }
 
         await Dispatcher.InvokeAsync(() =>

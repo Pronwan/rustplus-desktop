@@ -8031,4 +8031,58 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="RestoreServersFailed" xml:space="preserve">
     <value>Не удалось связаться с облаком. Список серверов не изменён.</value>
   </data>
+  <data name="MapHdPromptTitle" xml:space="preserve">
+    <value>HD-карта</value>
+  </data>
+  <data name="MapHdPromptHeading" xml:space="preserve">
+    <value>Использовать HD-карту?</value>
+  </data>
+  <data name="MapHdPromptBody" xml:space="preserve">
+    <value>Эта карта прочитана из .map-файла сервера. Показывать на 2D-карте эту более чёткую версию вместо изображения сервера в низком разрешении?</value>
+  </data>
+  <data name="MapHdPromptRamNote" xml:space="preserve">
+    <value>Чем выше разрешение карты, тем больше она занимает оперативной памяти. В разрешении изображения сервера HD-карте почти не нужно больше памяти. Полное разрешение требует для этой карты примерно на {0} МБ больше. Это решение и другие настройки памяти можно в любой момент изменить в разделе Настройки → Карта.</value>
+  </data>
+  <data name="MapHdPromptRemember" xml:space="preserve">
+    <value>Запомнить решение</value>
+  </data>
+  <data name="MapHdPromptNo" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="MapHdPromptYes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="SettingsMapHdImage" xml:space="preserve">
+    <value>HD-карта из .map-файла</value>
+  </data>
+  <data name="SettingsMapHdImageDesc" xml:space="preserve">
+    <value>Показывает карту, отрисованную из .map-файла сервера, вместо изображения сервера в низком разрешении.</value>
+  </data>
+  <data name="SettingsMapHdAsk" xml:space="preserve">
+    <value>Спрашивать</value>
+  </data>
+  <data name="SettingsMapHdUse" xml:space="preserve">
+    <value>Использовать</value>
+  </data>
+  <data name="SettingsMapHdDontUse" xml:space="preserve">
+    <value>Не использовать</value>
+  </data>
+  <data name="SettingsMapResolution" xml:space="preserve">
+    <value>Разрешение карты</value>
+  </data>
+  <data name="SettingsMapResolutionDesc" xml:space="preserve">
+    <value>В каком размере загружается изображение карты. Меньший размер экономит память; метки, рисунки и подписи остаются чёткими.</value>
+  </data>
+  <data name="SettingsMapResolutionEconomy" xml:space="preserve">
+    <value>Экономно (2048 px)</value>
+  </data>
+  <data name="SettingsMapResolutionStandard" xml:space="preserve">
+    <value>Стандарт (размер сервера)</value>
+  </data>
+  <data name="SettingsMapResolutionHigh" xml:space="preserve">
+    <value>Высокое (полный размер)</value>
+  </data>
+  <data name="SettingsMapResolutionEstimate" xml:space="preserve">
+    <value>Эта карта: ок. {0} МБ / {1} МБ / {2} МБ (Экономно / Стандарт / Высокое)</value>
+  </data>
 </root>
