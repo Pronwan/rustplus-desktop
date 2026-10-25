@@ -248,6 +248,7 @@ public partial class MainWindow
 
     private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
+        if (_isDeletingServer) return;
         _lastChatTsForCurrentServer = null;
 
         if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))

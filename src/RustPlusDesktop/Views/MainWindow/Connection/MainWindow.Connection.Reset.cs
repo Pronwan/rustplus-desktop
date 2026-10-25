@@ -294,7 +294,7 @@ public partial class MainWindow
             return;
         }
 
-        if (_isReconnecting) return;
+        if (_isReconnecting || _isDeletingServer) return;
         _isReconnecting = true;
 
         try

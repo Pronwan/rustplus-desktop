@@ -8734,4 +8734,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="FirstServerPairedConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="ManageServers" xml:space="preserve"><value>Manage servers</value></data>
+  <data name="ServerManagerHint" xml:space="preserve"><value>Manage paired servers without changing your active connection.</value></data>
+  <data name="ActiveServer" xml:space="preserve"><value>Active server</value></data>
+  <data name="EditConnection" xml:space="preserve"><value>Edit connection</value></data>
+  <data name="MoreServerActions" xml:space="preserve"><value>More server actions</value></data>
+  <data name="DeletingServer" xml:space="preserve"><value>Disconnecting and removing this server…</value></data>
 </root>

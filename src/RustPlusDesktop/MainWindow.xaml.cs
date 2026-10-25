@@ -1045,6 +1045,24 @@ public partial class MainWindow : WpfUi.FluentWindow
 
     private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
+        if (DeleteConfirmationOverlay.Visibility == Visibility.Visible)
+        {
+            if (e.Key == Key.Escape)
+            {
+                BtnCancelDelete_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            return;
+        }
+        if (ServerManagerOverlay.Visibility == Visibility.Visible)
+        {
+            if (e.Key == Key.Escape)
+            {
+                CloseServerManager_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            return;
+        }
         if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
         {
             if (e.Key == Key.T)
@@ -4809,6 +4827,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     }
 
     private ServerProfile? _serverToDelete;
+    private bool _isDeletingServer;
+    private IInputElement? _serverManagerPreviousFocus;
+    private IInputElement? _serverDeletePreviousFocus;
 
 
 
@@ -4851,29 +4872,98 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         dlg.ShowDialog();
     }
 
+    private void OpenServerManager_Click(object sender, RoutedEventArgs e)
+    {
+        _serverManagerPreviousFocus = Keyboard.FocusedElement;
+        ServerManagerOverlay.Visibility = Visibility.Visible;
+        ServerManagerCloseButton.Focus();
+    }
+
+    private void CloseServerManager_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeleteConfirmationOverlay.Visibility == Visibility.Visible) return;
+        ServerManagerOverlay.Visibility = Visibility.Collapsed;
+        RestoreServerDialogFocus(_serverManagerPreviousFocus);
+        _serverManagerPreviousFocus = null;
+    }
+
+    private void ServerManagerBackdrop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, sender)) return;
+        CloseServerManager_Click(sender, e);
+        e.Handled = true;
+    }
+
+    private void DeleteConfirmationBackdrop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, sender)) return;
+        BtnCancelDelete_Click(sender, e);
+        e.Handled = true;
+    }
+
+    private void RestoreServerDialogFocus(IInputElement? previousFocus)
+    {
+        if (previousFocus is UIElement { IsVisible: true, IsEnabled: true })
+            Keyboard.Focus(previousFocus);
+        else if (ServerManagerOverlay.Visibility == Visibility.Visible)
+            ServerManagerCloseButton.Focus();
+        else
+            BtnManageServers.Focus();
+    }
+
     public void Server_Delete_Click(object sender, RoutedEventArgs e)
     {
         if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
         
+        if (_isDeletingServer) return;
+        _serverDeletePreviousFocus = Keyboard.FocusedElement;
         _serverToDelete = prof;
         TxtDeleteConfirmation.Text = string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
         DeleteConfirmationOverlay.Visibility = Visibility.Visible;
+        ServerDeleteCancelButton.Focus();
     }
 
     private void BtnCancelDelete_Click(object sender, RoutedEventArgs e)
     {
+        if (_isDeletingServer) return;
         DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
         _serverToDelete = null;
+        RestoreServerDialogFocus(_serverDeletePreviousFocus);
+        _serverDeletePreviousFocus = null;
     }
 
     private async void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
     {
-        if (_serverToDelete != null)
+        if (_serverToDelete is not { } prof || _isDeletingServer) return;
+        _isDeletingServer = true;
+        DeleteConfirmationOverlay.IsEnabled = false;
+        TxtDeleteConfirmation.Text = Properties.Resources.GetString("DeletingServer");
+        try
         {
-            var prof = _serverToDelete;
+            if (ReferenceEquals(_vm.Selected, prof) || ReferenceEquals(_connectedProfile, prof)
+                || prof.IsConnected || prof.IsFullConnected)
+            {
+                await HardResetAsync(reconnect: false);
+                if (_isMap3DActive) CloseMap3DView();
+            }
+
+            if (ReferenceEquals(_vm.Selected, prof)) _vm.Selected = null;
             _vm.Servers.Remove(prof);
+            if (TrackingService.LastSelectedServerKey == prof.MatchKey)
+                TrackingService.LastSelectedServerKey = "";
             _vm.Save();
             AppendLog($"Server deleted: {prof.Name}");
+
+            try
+            {
+                var remaining = _vm.Servers.ToList();
+                int removedLocal = await Task.Run(() => Services.Data.ServerLocalDataCleanup.DeleteFor(prof, remaining));
+                AppendLog($"Removed {removedLocal} local file(s) and folder(s) stored for {prof.Name}.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"Local cleanup error for deleted server {prof.Name}: {ex.Message}");
+            }
 
             // Clean up cloud data (devices, overlays, base markers, server registration, and reset Alexa active server)
             try
@@ -4903,14 +4993,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
             }
-
-            var remaining = _vm.Servers.ToList();
-            int removedLocal = await Task.Run(() => Services.Data.ServerLocalDataCleanup.DeleteFor(prof, remaining));
-            AppendLog($"Removed {removedLocal} local file(s) and folder(s) stored for {prof.Name}.");
         }
-
-        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
-        _serverToDelete = null;
+        catch (Exception ex)
+        {
+            AppendLog($"Server deletion error for {prof.Name}: {ex.Message}");
+            ShowInfoSnackbar(Properties.Resources.DeleteServerHeader, ex.Message, WpfUi.ControlAppearance.Danger);
+        }
+        finally
+        {
+            DeleteConfirmationOverlay.IsEnabled = true;
+            DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+            _serverToDelete = null;
+            _isDeletingServer = false;
+            RestoreServerDialogFocus(_serverDeletePreviousFocus);
+            _serverDeletePreviousFocus = null;
+        }
     }
 
     private void ServerContextMenu_Opened(object sender, RoutedEventArgs e)
