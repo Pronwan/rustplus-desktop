@@ -50,8 +50,6 @@ installer/Output/*
 !/tools/
 !.github/scripts/
 !src/RustPlusDesktop/Scripts/
-src/RustPlusDesktop/Scripts/*.py
-src/RustPlusDesktop/Scripts/*.conf
 
 # Doku/Assets (rein informativ – wäre auch ohne diese Zeilen ok)
 !README.md
@@ -65,7 +63,6 @@ docs/*
 !src/RustPlusDesktop/*.png
 !src/RustPlusDesktop/*.jpg
 src/RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
-src/RustPlusDesktop/Setup.iss
 # Local AI agent config: kept on each developer's disk, never tracked
 /.agents/
 /.claude/
@@ -83,7 +80,7 @@ src/RustPlusDesktop/Setup.iss
 .env.*
 !.env.example
 src/RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
-src/RustPlusDesktop/supabase/.temp/
+tools/server/supabase/.temp/
 .env-backup
 env
 

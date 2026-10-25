@@ -1,7 +1,7 @@
 param([switch]$Force)
 
 $ErrorActionPreference = 'Stop'
-$projectDir = $PSScriptRoot
+$projectDir = Join-Path $PSScriptRoot '..\src\RustPlusDesktop'
 $raidData = Get-Content -Raw (Join-Path $projectDir 'Assets\Data\raid-data.json') | ConvertFrom-Json
 $itemData = Get-Content -Raw (Join-Path $projectDir 'Assets\Data\rust-item-list.json') | ConvertFrom-Json
 $targetDir = Join-Path $projectDir 'Assets\icons\raid-targets'

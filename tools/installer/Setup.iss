@@ -5,8 +5,10 @@
 
 #define MyAppName      "RustPlusDesk"
 #define MyAppExeName   "RustPlusDesk.exe"
+; The app project, relative to this script in tools\installer
+#define AppDir         "..\..\src\RustPlusDesktop"
 #ifndef MyAppVersion
-#define MyAppVersion   GetFileVersion("..\bin\Installer\publish\" + MyAppExeName)
+#define MyAppVersion   GetFileVersion(AppDir + "\bin\Installer\publish\" + MyAppExeName)
 #endif
 #define MyAppPublisher "Pronwan" 
 #define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
@@ -26,7 +28,7 @@ DefaultGroupName={#MyAppName}
 UsePreviousAppDir=yes
 UsePreviousGroup=yes
 CreateUninstallRegKey=yes
-OutputDir=..\bin\Installer
+OutputDir={#AppDir}\bin\Installer
 OutputBaseFilename=RustPlusDesk-Setup
 Compression=lzma2/max
 SolidCompression=yes
@@ -34,8 +36,8 @@ ArchitecturesInstallIn64BitMode=x64
 DisableProgramGroupPage=yes
 
 ; Deine Optik
-SetupIconFile=..\Assets\rustplus-desktop-icon.ico
-WizardImageFile=..\Assets\Images\installer.png
+SetupIconFile={#AppDir}\Assets\rustplus-desktop-icon.ico
+WizardImageFile=installer.png
 UninstallDisplayIcon={app}\{#MyAppExeName}
 PrivilegesRequired=admin
 
@@ -44,14 +46,14 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; 1. Alle Hauptdateien (DLLs, EXE, cash.wav, etc.) aus dem Release-Ordner
-Source: "..\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppDir}\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
 
 ; 2. Die Unterordner direkt aus dem Release-Verzeichnis
-Source: "..\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\bin\Installer\publish\MapParser\*"; DestDir: "{app}\MapParser"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\MapParser\*"; DestDir: "{app}\MapParser"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
