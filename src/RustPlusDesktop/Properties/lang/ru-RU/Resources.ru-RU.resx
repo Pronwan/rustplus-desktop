@@ -8085,4 +8085,16 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>Эта карта: ок. {0} МБ / {1} МБ / {2} МБ (Экономно / Стандарт / Высокое)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>Удалить все ваши рисунки?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Удаляет все созданные вами метки, подписи и рисунки. Это действие нельзя отменить.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Также удалить маршруты фарма ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
 </root>

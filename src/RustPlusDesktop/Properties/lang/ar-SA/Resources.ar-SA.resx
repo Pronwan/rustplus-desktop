@@ -7976,4 +7976,16 @@
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>هذه الخريطة: نحو {0} / {1} / {2} ميغابايت (موفّر / قياسي / عالٍ)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>هل تريد مسح كل رسوماتك؟</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>يزيل كل العلامات والتسميات والرسومات التي أنشأتها. لا يمكن التراجع عن ذلك.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>احذف أيضاً مسارات الجمع ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>مسح</value>
+  </data>
 </root>

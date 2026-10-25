@@ -8179,4 +8179,16 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>Diese Karte: ca. {0} MB / {1} MB / {2} MB (Sparsam / Standard / Hoch)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>Alle deine Zeichnungen löschen?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Entfernt alle Marker, Beschriftungen und Zeichnungen, die du erstellt hast. Das kann nicht rückgängig gemacht werden.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Auch Farm-Routen löschen ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
 </root>

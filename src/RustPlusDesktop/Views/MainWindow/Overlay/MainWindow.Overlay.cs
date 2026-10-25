@@ -1340,6 +1340,19 @@ private bool _overlayToolsVisible = false;
             return;
         }
 
+        // Routes are their own list and survive clearing the drawings, so offer them too, ticked.
+        int routeCount = _routeItems.Count;
+        ChkClearRoutesToo.Visibility = routeCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        ChkClearRoutesToo.IsChecked = true;
+        // A wrapping TextBlock: the popover is narrow and some languages run long.
+        ChkClearRoutesToo.Content = new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            Text = string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                Properties.Resources.GetString("OverlayClearAlsoRoutes"), routeCount),
+        };
+
         // Ask with an inline popover anchored to the trash button (no modal dialog).
         if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = true;
     }
@@ -1352,6 +1365,11 @@ private bool _overlayToolsVisible = false;
     private void ClearConfirmYes_Click(object sender, RoutedEventArgs e)
     {
         if (ClearConfirmPopup != null) ClearConfirmPopup.IsOpen = false;
+
+        // Before the drawings: clearing them saves and uploads, and that should carry the routes' removal too.
+        if (ChkClearRoutesToo.Visibility == Visibility.Visible && ChkClearRoutesToo.IsChecked == true)
+            ClearAllRoutes();
+
         ClearMyDrawings();
     }
 
@@ -2766,6 +2784,12 @@ private bool _overlayToolsVisible = false;
         _visibleOverlayOwners.Clear();
         // Otherwise the next map would re-save another server's drawings as if they were its own.
         _overlaySpaceByPlayer.Clear();
+
+        // Routes live in their own list, not on the canvas, so the loop above never saw them. A
+        // server with no overlay of its own then kept the last server's routes and saved them as
+        // its own. Every route change is saved as it happens, so nothing is lost here.
+        ApplySavedRoutes(null);
+        UpdateRoutesPanelState();
     }
 
     private class OverlayTag

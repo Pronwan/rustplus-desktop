@@ -8085,4 +8085,16 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>Este mapa: aprox. {0} MB / {1} MB / {2} MB (Ahorro / Estándar / Alta)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>¿Borrar todos tus dibujos?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Elimina todos los marcadores, etiquetas y dibujos que hayas creado. No se puede deshacer.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Borrar también las rutas de farmeo ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
 </root>

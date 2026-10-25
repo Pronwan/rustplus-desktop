@@ -8006,4 +8006,16 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>이 지도: 약 {0}MB / {1}MB / {2}MB (절약 / 표준 / 높음)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>그린 내용을 모두 지울까요?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>직접 만든 모든 마커, 라벨, 그림을 삭제합니다. 되돌릴 수 없습니다.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>파밍 경로도 삭제 ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>지우기</value>
+  </data>
 </root>

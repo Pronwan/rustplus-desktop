@@ -250,6 +250,22 @@ public partial class MainWindow
         SaveOwnOverlayToJson();
     }
 
+    /// <summary>
+    /// Deletes every route in the list, for the trash button's "routes too". Leaves the saving to
+    /// the caller, which clears the drawings next. Imported routes stay in _importedRouteIds, so
+    /// the next sync does not bring them straight back.
+    /// </summary>
+    private void ClearAllRoutes()
+    {
+        foreach (MapRouteItem item in _routeItems.ToList())
+            ClearRouteVisuals(item.Id);
+
+        _routeItems.Clear();
+        _activeRouteId = null;
+
+        UpdateRoutesPanelState();
+    }
+
     private void RefreshRouteRowStates()
     {
         foreach (MapRouteItem item in _routeItems)

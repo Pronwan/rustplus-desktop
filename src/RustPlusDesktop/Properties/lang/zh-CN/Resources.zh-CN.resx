@@ -7836,4 +7836,16 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>此地图：约 {0} MB / {1} MB / {2} MB（节省 / 标准 / 高）</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>清除你的所有绘图？</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>删除你创建的所有标记、标签和绘图。此操作无法撤销。</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>同时删除刷资源路线 ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>清除</value>
+  </data>
 </root>

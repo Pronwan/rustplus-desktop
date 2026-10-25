@@ -8085,4 +8085,16 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>Cette carte : env. {0} Mo / {1} Mo / {2} Mo (Économie / Standard / Haute)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>Effacer tous vos dessins ?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Supprime tous les marqueurs, libellés et dessins que vous avez créés. Cette action est irréversible.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Supprimer aussi les routes de farm ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
 </root>

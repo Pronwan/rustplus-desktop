@@ -6586,4 +6586,16 @@ You can find more information on the server's official website:
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>This map: about {0} MB / {1} MB / {2} MB (Economy / Standard / High)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>Clear all your drawings?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Removes every marker, label and drawing you made. This can't be undone.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Also delete farm routes ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Clear</value>
+  </data>
 </root>

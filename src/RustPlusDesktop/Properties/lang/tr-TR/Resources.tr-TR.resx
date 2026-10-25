@@ -7061,4 +7061,16 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="SettingsMapResolutionEstimate" xml:space="preserve">
     <value>Bu harita: yakl. {0} MB / {1} MB / {2} MB (Tasarruflu / Standart / Yüksek)</value>
   </data>
+  <data name="OverlayClearTitle" xml:space="preserve">
+    <value>Tüm çizimlerin silinsin mi?</value>
+  </data>
+  <data name="OverlayClearDesc" xml:space="preserve">
+    <value>Oluşturduğun tüm işaretleri, etiketleri ve çizimleri kaldırır. Bu işlem geri alınamaz.</value>
+  </data>
+  <data name="OverlayClearAlsoRoutes" xml:space="preserve">
+    <value>Farm rotalarını da sil ({0})</value>
+  </data>
+  <data name="OverlayClearConfirm" xml:space="preserve">
+    <value>Sil</value>
+  </data>
 </root>
