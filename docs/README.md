@@ -22,11 +22,13 @@ experiments/                 Ignored independent migration repositories
 
 Keep application source in `src`, automated tests in `tests`, and developer-only
 utilities in `tools`. The solution, README, license, automatic build/package
-configuration, localization configuration and agent entry points stay at the
-root so their tools can discover them.
+configuration and localization configuration stay at the root so their tools
+can discover them. AI agent configuration (`.claude/`, `.codex/`, `.gemini/`,
+`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`) is per-developer and never tracked.
 
 Start with [building locally](development/BUILDING.md),
-[release automation](development/RELEASING.md), or the
+[release automation](development/RELEASING.md), the
+[UI standards](development/UI-STANDARDS.md), or the
 [changelog](releases/CHANGELOG.md).
 
 ## Private dependencies

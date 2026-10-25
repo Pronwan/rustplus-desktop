@@ -66,8 +66,18 @@ docs/*
 !src/RustPlusDesktop/*.jpg
 src/RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
 src/RustPlusDesktop/Setup.iss
-.opencode
-.agents
+# Local AI agent config: kept on each developer's disk, never tracked
+/.agents/
+/.claude/
+/.codex/
+/.gemini/
+/.opencode/
+/.serena/
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+# Stray driver logs written when a tool runs with the repo as its working directory
+/NVIDIA Corporation/
 # Secrets config
 .env
 .env.*
@@ -116,8 +126,6 @@ env
 
 # Local build secrets
 build_secrets*.zip
-.gemini/
-.serena/
 Corel Auto-Preserve/
 
 # Genetics Lab (build assets only; static images & resources stay tracked)
