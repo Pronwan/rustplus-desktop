@@ -7848,4 +7848,31 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>清除</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>现在在 Rust 中配对服务器</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>在 Rust 中按 ESC → Session → Pair。服务器随后会自动出现在这里。</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>关联你的 Steam 账号</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>关联你的 Steam 账号后即可配对服务器。</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>服务器已配对</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>服务器配对成功！</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>它已在你的服务器列表中并已选中。连接后即可查看地图、队伍和设备。</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>稍后</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>连接</value>
+  </data>
 </root>

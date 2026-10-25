@@ -7073,4 +7073,31 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>Sil</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>Şimdi Rust'ta bir sunucu eşleştir</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>Rust'ta ESC → Session → Pair'e bas. Sunucu ardından burada kendiliğinden görünür.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Steam hesabını bağla</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>Sunucu eşleştirebilmek için Steam hesabını bağla.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>Sunucu eşleştirildi</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>Sunucu başarıyla eşleştirildi!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>Artık sunucu listende ve zaten seçili. Haritayı, takımını ve cihazlarını görmek için bağlan.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>Sonra</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>Bağlan</value>
+  </data>
 </root>

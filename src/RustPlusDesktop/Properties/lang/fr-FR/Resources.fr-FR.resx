@@ -8097,4 +8097,31 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>Effacer</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>Associez maintenant un serveur dans Rust</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>Dans Rust, appuyez sur ESC → Session → Pair. Le serveur apparaîtra ensuite ici tout seul.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Associez votre compte Steam</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>Associez votre compte Steam pour pouvoir associer des serveurs.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>Serveur associé</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>Serveur associé avec succès !</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>Il figure maintenant dans votre liste de serveurs et est déjà sélectionné. Connectez-vous pour voir la carte, votre équipe et vos appareils.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>Plus tard</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
 </root>

@@ -8097,4 +8097,31 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>Удалить</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>Теперь привяжите сервер в Rust</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>В Rust нажмите ESC → Session → Pair. После этого сервер сам появится здесь.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Привяжите аккаунт Steam</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>Привяжите аккаунт Steam, чтобы привязывать серверы.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>Сервер привязан</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>Сервер успешно привязан!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>Он уже в вашем списке серверов и выбран. Подключитесь, чтобы увидеть карту, команду и устройства.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>Подключиться</value>
+  </data>
 </root>

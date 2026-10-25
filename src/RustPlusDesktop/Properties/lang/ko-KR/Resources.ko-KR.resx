@@ -8018,4 +8018,31 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>지우기</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>이제 Rust에서 서버를 페어링하세요</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>Rust에서 ESC → Session → Pair를 누르세요. 그러면 서버가 자동으로 여기에 나타납니다.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Steam 계정 연결</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>서버를 페어링하려면 Steam 계정을 연결하세요.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>서버 페어링됨</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>서버가 페어링되었습니다!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>서버 목록에 추가되었고 이미 선택되어 있습니다. 연결하면 지도, 팀, 기기를 볼 수 있습니다.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>연결</value>
+  </data>
 </root>

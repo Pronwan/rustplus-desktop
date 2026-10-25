@@ -8707,4 +8707,31 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>Now pair a server in Rust</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>In Rust, press ESC → Session → Pair. The server then shows up here on its own.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Link your Steam account</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>Link your Steam account to start pairing servers.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>Server paired</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>Server paired successfully!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>It is now in your server list and already selected. Connect to see the map, your team and your devices.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
 </root>

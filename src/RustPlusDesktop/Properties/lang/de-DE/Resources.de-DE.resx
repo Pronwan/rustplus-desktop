@@ -8191,4 +8191,31 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>Löschen</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>Jetzt einen Server in Rust koppeln</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>Drücke in Rust ESC → Session → Pair. Der Server erscheint dann von selbst hier.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>Steam-Konto verknüpfen</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>Verknüpfe dein Steam-Konto, um Server koppeln zu können.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>Server gekoppelt</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>Server erfolgreich gekoppelt!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>Er steht jetzt in deiner Serverliste und ist bereits ausgewählt. Verbinde dich, um Karte, Team und Geräte zu sehen.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
 </root>

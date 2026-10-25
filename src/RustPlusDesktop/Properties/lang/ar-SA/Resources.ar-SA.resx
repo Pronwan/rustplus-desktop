@@ -7988,4 +7988,31 @@
   <data name="OverlayClearConfirm" xml:space="preserve">
     <value>مسح</value>
   </data>
+  <data name="PairingGuideListeningTitle" xml:space="preserve">
+    <value>اربط الآن خادماً في Rust</value>
+  </data>
+  <data name="PairingGuideListeningMessage" xml:space="preserve">
+    <value>في Rust اضغط ESC ← Session ← Pair. سيظهر الخادم هنا تلقائياً بعد ذلك.</value>
+  </data>
+  <data name="PairingGuideNoSteamTitle" xml:space="preserve">
+    <value>اربط حساب Steam</value>
+  </data>
+  <data name="PairingGuideNoSteamMessage" xml:space="preserve">
+    <value>اربط حساب Steam الخاص بك لتتمكن من ربط الخوادم.</value>
+  </data>
+  <data name="FirstServerPairedTitle" xml:space="preserve">
+    <value>تم ربط الخادم</value>
+  </data>
+  <data name="FirstServerPairedHeading" xml:space="preserve">
+    <value>تم ربط الخادم بنجاح!</value>
+  </data>
+  <data name="FirstServerPairedBody" xml:space="preserve">
+    <value>أصبح الآن في قائمة الخوادم وتم تحديده بالفعل. اتصل لرؤية الخريطة وفريقك وأجهزتك.</value>
+  </data>
+  <data name="FirstServerPairedLater" xml:space="preserve">
+    <value>لاحقاً</value>
+  </data>
+  <data name="FirstServerPairedConnect" xml:space="preserve">
+    <value>اتصال</value>
+  </data>
 </root>

@@ -4341,6 +4341,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
 
+            // The first server of an empty list gets a welcome and a one-click connect, below.
+            bool firstServerInList = false;
+
             if (prof is null)
             {
                 // Smart Re-Pairing Detection: Check if this is an existing server whose port or address changed
@@ -4445,6 +4448,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         UseFacepunchProxy = false,
                         Devices = new ObservableCollection<SmartDevice>()
                     };
+                    firstServerInList = _vm.Servers.Count == 0;
                     _vm.AddServer(prof);
                     AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
                 }
@@ -4633,7 +4637,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 _ = CapturePairedDeviceLocationAsync(prof, dev, keySteam);
             }
 
+            // New users stopped here: the server was in the list, but nothing said so, and it still
+            // had to be picked from the dropdown before Connect did anything.
+            if (firstServerInList)
+            {
+                if (_vm.Selected != prof) _vm.Selected = prof;
 
+                var welcome = new Views.Windows.FirstServerPairedWindow(this, prof.Name);
+                if (welcome.ShowDialog() == true && welcome.ConnectNow)
+                    await PerformConnectAsync(false);
+            }
         });
     }
 
@@ -8278,10 +8291,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         bool isListening = _vm.IsPairingBusy;
 
-        string title = isListening ? "Pairing Active" : "Action Required";
-        string msg = isListening
-            ? "Please pair your server in-game with Rust+"
-            : "Please pair your Steam account to start.";
+        // Listening means Steam is linked; what is left happens in the game, so say exactly where.
+        string title = Properties.Resources.GetString(isListening ? "PairingGuideListeningTitle" : "PairingGuideNoSteamTitle");
+        string msg = Properties.Resources.GetString(isListening ? "PairingGuideListeningMessage" : "PairingGuideNoSteamMessage");
         var appearance = isListening ? WpfUi.ControlAppearance.Info : WpfUi.ControlAppearance.Caution;
         var icon = isListening ? WpfUi.SymbolRegular.Phone24 : WpfUi.SymbolRegular.Warning24;
 
