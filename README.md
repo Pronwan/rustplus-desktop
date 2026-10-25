@@ -1,8 +1,8 @@
-![Headline](src/RustPlusDesktop/Assets/Images/headlineGIT.jpg)
+![Headline](docs/media/app/Images/headlineGIT.jpg)
 [![Discord](https://img.shields.io/badge/Discord-Rust²%20|%20Rust%2B%20Desktop-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/v4X584wye4)
 [![Cloud](docs/media/cloud.png)](https://rustplusdesktop.cloud)
 
-[![Donate](./src/RustPlusDesktop/Assets/Images/donate.png)](https://www.patreon.com/c/Pronwan)
+[![Donate](./docs/media/app/Images/donate.png)](https://www.patreon.com/c/Pronwan)
 
 
 # Rust+ Desktop App (Unofficial)
@@ -48,10 +48,10 @@ so you don’t have to install dependencies manually.
 [![YouTube V9](docs/media/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
 [![YouTube V8](docs/media/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
 [![YouTube V7](docs/media/Thumbnail.png)](https://www.youtube.com/watch?v=dajHSihKwQs)
-[![YouTube V6](./src/RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
+[![YouTube V6](./docs/media/app/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
 [![YouTube V5](./src/RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
-[![YouTube Video](./src/RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)
+[![YouTube Video](./docs/media/app/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)
 *(click the image to watch on YouTube)*
 
 # v10.0.0 — Widget Overlay, AI Companion, Map Layers & Global Chat
@@ -785,7 +785,7 @@ BattleMetrics Refactor: The BM button has been upgraded to a clean icon and move
 **𖦏 Custom Crosshairs**
 - **Draw your own**: intuitive pixel-art style editor. Supports drawing tools (Pen, Pixel, Line, Square, Circle), custom colors, adjustable thickness and opacity, and full Undo/Redo support.
 - **Upload PNGs**: Upload existing PNG images to use as crosshairs. The editor automatically scales them to fit the pixel grid. You can also right-click to erase individual pixels and easily rename or delete your creations.
-![CrosshairEditor](./src/RustPlusDesktop/Assets/Screenshots/v4_5.png)
+![CrosshairEditor](./docs/media/app/Screenshots/v4_5.png)
 ---
 
 ## Update 4.0.0 - The Evolution Update | Major Map & Stability Overhaul (April 30th)
@@ -796,7 +796,7 @@ BattleMetrics Refactor: The BM button has been upgraded to a clean icon and move
 - **Interactive Event Dock**: A new real-time sidebar for active events (Patrol Heli, Cargo Ship, Chinook, etc.). Click any event to **auto-lock and track** it dynamically across the map.
 - **Smart Shop Clustering**: Multiple vending machines in one base are now grouped into clean cluster icons. Hovering over them reveals a redesigned, scrollable list of all items without map clutter.
 
-![V4 Map Overhaul](./src/RustPlusDesktop/Assets/Screenshots/v4_map_overhaul.png)
+![V4 Map Overhaul](./docs/media/app/Screenshots/v4_map_overhaul.png)
 
 **🛠 Improvements**
 - **60 FPS Map Animations**: Butter-smooth zooming and panning with a new cinematic "Overview Dip" when jumping across the map.
@@ -846,7 +846,7 @@ A massive shout-out to [JawadYzbk](https://github.com/JawadYzbk) for contributin
 
 ## Update Notes 3.1.2 (November 17th 25)
 Version 3.1.2 brings full Storage Monitor integration and the following optimizations:
-![Update](./src/RustPlusDesktop/Assets/Screenshots/3.1.0.png)
+![Update](./docs/media/app/Screenshots/3.1.0.png)
 - Shop alerts now also trigger when item was sold out and then comes back online
 - Storage Monitor shows traffic light upkeep indicator (from 1 hr. and less)
 - Map can be zoomed with NUM +/-
@@ -878,9 +878,9 @@ Version 3.1.2 brings full Storage Monitor integration and the following optimiza
 - Notifications in Chat for Deaths, Spawns, Online, Offline
 - added fetching icon symbols from rusthelp.com (including Blueprint Fragments)
 
-![Update](./src/RustPlusDesktop/Assets/Images/V2-1.png)
-![Update](./src/RustPlusDesktop/Assets/Images/V2-2.png)
-![Update](./src/RustPlusDesktop/Assets/Images/V2-3.png)
+![Update](./docs/media/app/Images/V2-1.png)
+![Update](./docs/media/app/Images/V2-2.png)
+![Update](./docs/media/app/Images/V2-3.png)
 
 Enjoy! :) 
 ---
@@ -1034,27 +1034,27 @@ On next launch the registration will run again.
 
 ### Main Screenshots
 
-![Main Background](./src/RustPlusDesktop/Assets/Images/rustplusbg.png)
+![Main Background](./docs/media/app/Images/rustplusbg.png)
 
-![Background 2](./src/RustPlusDesktop/Assets/Images/rustplusbg2.png)
+![Background 2](./docs/media/app/Images/rustplusbg2.png)
 
-![Background 3](./src/RustPlusDesktop/Assets/Images/rustplusbg3.png)
+![Background 3](./docs/media/app/Images/rustplusbg3.png)
 
-![Background 4](./src/RustPlusDesktop/Assets/Images/rustplusbg4.png)
+![Background 4](./docs/media/app/Images/rustplusbg4.png)
 
-![Background 5](./src/RustPlusDesktop/Assets/Images/rustplusbg5.png)
+![Background 5](./docs/media/app/Images/rustplusbg5.png)
 
-![Background 6](./src/RustPlusDesktop/Assets/Images/rustplusbg6.png)
+![Background 6](./docs/media/app/Images/rustplusbg6.png)
 
-![Background 7](./src/RustPlusDesktop/Assets/Images/rustplusbg7.png)
+![Background 7](./docs/media/app/Images/rustplusbg7.png)
 
-![Background 8](./src/RustPlusDesktop/Assets/Images/rustplusbg8.png)
+![Background 8](./docs/media/app/Images/rustplusbg8.png)
 
 
 
 ### Video Overview
 
-[![YouTube Video](./src/RustPlusDesktop/Assets/Images/rustplusbg.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)
+[![YouTube Video](./docs/media/app/Images/rustplusbg.png)](https://www.youtube.com/watch?v=4NlFuLPK4wk)
 
 *(click the image to watch on YouTube)*
 
