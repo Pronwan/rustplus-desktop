@@ -577,6 +577,8 @@ public partial class MainWindow
             _worldRectPx = ComputeWorldRectFromWorldSize(wDip, hDip, _worldSizeS, GetCurrentMapPaddingWorld());
             ShowMapBasic(map.Bitmap);
             ReprojectOverlaysToCurrentMap();
+            Services.Map.MemoryProbe.RecordAndFollowUp(
+                $"map shown ({(_isGeneratedMapActive ? "render" : "server")} {map.Bitmap.PixelWidth}x{map.Bitmap.PixelHeight})");
             ResetMapZoom();
             RedrawMapReferenceLayers();
             Dispatcher.InvokeAsync(() =>

@@ -54,6 +54,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         CrashReporter.Initialize(Dispatcher);
+        Services.Map.MemoryProbe.Record("app start");
         Controls.Menus.MenuFlyout.Initialize();
         AssemblyLoadContext.Default.Resolving += ResolveSatelliteAssemblyFromLangFolder;
         base.OnStartup(e);
