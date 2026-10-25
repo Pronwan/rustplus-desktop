@@ -237,16 +237,11 @@ public class OnlinePlayerBM
 public static class TrackingService
 {
     private static readonly HttpClient _http = new(new TrafficTrackingHttpMessageHandler());
-    private static readonly string _dbPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-        "RustPlusDesk", "tracked_players.json");
-    private static readonly string _settingsPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "tracking_settings.json");
+    // Through DataManager.AppDir, so a test run can keep these away from real settings.
+    private static readonly string _dbPath = Path.Combine(Data.DataManager.AppDir, "tracked_players.json");
+    private static readonly string _settingsPath = Path.Combine(Data.DataManager.AppDir, "tracking_settings.json");
 
-    private static readonly string _fcmConfigPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "RustPlusDesk", "rustplusjs-config.json");
+    private static readonly string _fcmConfigPath = Path.Combine(Data.DataManager.AppDir, "rustplusjs-config.json");
 
     public static bool IsFcmConfigured()
         => File.Exists(_fcmConfigPath) && new FileInfo(_fcmConfigPath).Length > 50;
@@ -427,9 +422,7 @@ public static class TrackingService
     {
         try
         {
-            var logPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "RustPlusDesk", "tracking_log.txt");
+            var logPath = Path.Combine(Data.DataManager.AppDir, "tracking_log.txt");
             var dir = Path.GetDirectoryName(logPath);
             if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
             File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");

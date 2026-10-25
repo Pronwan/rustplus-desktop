@@ -31,7 +31,13 @@ namespace RustPlusDesk.Services.Data
         }
 
         public static string AppDir =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk");
+            AppDirOverride ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustPlusDesk");
+
+        /// <summary>
+        /// Set by the test run to a scratch folder. Tests open real windows, and those save their
+        /// positions and settings as they close: into the developer's own app data, until this.
+        /// </summary>
+        internal static string? AppDirOverride { get; set; }
 
         public static string ProfilesPath => Path.Combine(AppDir, "profiles.json");
 
