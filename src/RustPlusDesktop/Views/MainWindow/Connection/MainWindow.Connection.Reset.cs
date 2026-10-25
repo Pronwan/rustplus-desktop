@@ -222,18 +222,34 @@ public partial class MainWindow
         AppendLog(Properties.Resources.WipeLogComplete);
     }
 
+    private bool _connectionActionPending;
+
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
-        if (_isSoftConnecting)
+        if (_connectionActionPending || _vm.IsConnectionLoading || _vm.IsInitializing) return;
+        _connectionActionPending = true;
+        _vm.IsConnectionLoading = true;
+        try
         {
-            AppendLog("[connect] Soft-connect is currently active. Automatically waiting for it to finish before starting full connect...");
+            if (_isSoftConnecting)
+            {
+                AppendLog("[connect] Soft-connect is currently active. Automatically waiting for it to finish before starting full connect...");
+            }
+            await PerformConnectAsync(false);
         }
-        await PerformConnectAsync(false);
+        finally
+        {
+            _vm.IsConnectionLoading = false;
+            _connectionActionPending = false;
+        }
     }
 
     private async void BtnDisconnect_Click(object sender, RoutedEventArgs e)
     {
-        await HardResetAsync(reconnect: false);
+        if (_connectionActionPending) return;
+        _connectionActionPending = true;
+        try { await HardResetAsync(reconnect: false); }
+        finally { _connectionActionPending = false; }
     }
 
     private void BtnShowServerInfo_Click(object sender, RoutedEventArgs e)

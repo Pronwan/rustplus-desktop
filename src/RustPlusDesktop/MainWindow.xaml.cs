@@ -438,6 +438,12 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         _vm.IsInitializing = true;
         InitializeComponent();
+        _sidebarContextMenus = new Services.Sidebar.SidebarContextMenuTracker(LeftPanelBorder);
+        _sidebarContextMenus.Changed += (_, _) =>
+        {
+            if (_sidebarContextMenus.IsOpen) SetSidebarExpanded(true);
+            else QueueSidebarCollapse();
+        };
         MainTabs.SelectedItem = DevicesTabItem;
         Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
         Services.Auth.SupabaseAuthManager.UpgradeBlockLifted += ResumeCloudTrafficAfterUpgrade;
@@ -1753,7 +1759,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Shares the background import's flag so the two never merge into the list at once.
         if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
 
-        BtnRestoreCloudServers.IsEnabled = false;
+        var restoreAction = sender as UIElement;
+        if (restoreAction != null) restoreAction.IsEnabled = false;
         try
         {
             var result = await ImportCloudPairingsIntoListAsync(full: true);
@@ -1781,7 +1788,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         }
         finally
         {
-            BtnRestoreCloudServers.IsEnabled = true;
+            if (restoreAction != null) restoreAction.IsEnabled = true;
             System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
         }
     }
@@ -5071,42 +5078,68 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private int _pairingUiRequestVersion;
+    private bool _pairingStopPending;
+
     private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
     {
-        // 1. Check if token is valid & not expired
-        bool isTokenValid = TrackingService.IsFcmConfigured() &&
-                            (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
-
-        if (isTokenValid)
+        if (_pairing.IsRunning)
         {
-            AppendLog("[pairing] Valid FCM config exists. Starting listener...");
-            await StartPairingListenerUiAsync();
+            _vm.IsPairingRunning = true;
+            _vm.IsPairingBusy = false;
             return;
         }
-
-        // 2. Token is not configured or expired: Force re-pairing
-        AppendLog("[pairing] FCM token is missing or expired. Forcing a clean stop and re-pairing...");
-
-        // Force stop any starting/running process and cancel active tokens
-        await Task.Run(async () => await _pairing.StopAsync());
-
-        // Reset the starting guard to allow fresh registration
-        _listenerStarting = false;
-
+        if (_listenerStarting || !_vm.CanStartPairing) return;
+        int requestVersion = ++_pairingUiRequestVersion;
+        _vm.IsPairingBusy = true;
+        _vm.IsPairingFaulted = false;
+        TxtPairingState.Text = Properties.Resources.GetString("PairingStarting");
         try
         {
-            if (File.Exists(PairingConfigPath))
+
+            // 1. Check if token is valid & not expired
+            bool isTokenValid = TrackingService.IsFcmConfigured() &&
+                                (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+
+            if (isTokenValid)
             {
-                File.Delete(PairingConfigPath);
-                AppendLog("[pairing] Deleted old/expired FCM config to ensure new registration.");
+                AppendLog("[pairing] Valid FCM config exists. Starting listener...");
+                await StartPairingListenerUiAsync();
+                return;
             }
+
+            // 2. Token is not configured or expired: Force re-pairing
+            AppendLog("[pairing] FCM token is missing or expired. Forcing a clean stop and re-pairing...");
+
+            // Force stop any starting/running process and cancel active tokens
+            await Task.Run(async () => await _pairing.StopAsync());
+            if (requestVersion != _pairingUiRequestVersion) return;
+
+            // Reset the starting guard to allow fresh registration
+            _listenerStarting = false;
+
+            try
+            {
+                if (File.Exists(PairingConfigPath))
+                {
+                    File.Delete(PairingConfigPath);
+                    AppendLog("[pairing] Deleted old/expired FCM config to ensure new registration.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+            }
+
+            await StartPairingListenerUiAsync();
         }
         catch (Exception ex)
         {
-            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+            _vm.IsPairingBusy = false;
+            _vm.IsPairingFaulted = true;
+            TxtPairingState.Text = Properties.Resources.PairingError;
+            AppendLog("[pairing] Start failed: " + ex.Message);
         }
-
-        await StartPairingListenerUiAsync();
     }
 
     private async void BtnOverlayPair_Click(object sender, RoutedEventArgs e)
@@ -5191,6 +5224,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
     {
+        if (_pairingStopPending) return;
+        ++_pairingUiRequestVersion;
+        _pairingStopPending = true;
+        _vm.IsPairingBusy = true;
+        TxtPairingState.Text = Properties.Resources.GetString("PairingStopping");
         try
         {
             AppendLog("Stopping pairing listener...");
@@ -5203,8 +5241,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             AppendLog("Error on stop: " + ex.Message);
             _vm.IsPairingBusy = false;
-            _vm.IsPairingRunning = false;
+            _vm.IsPairingRunning = _pairing.IsRunning;
+            _vm.IsPairingFaulted = true;
+            TxtPairingState.Text = Properties.Resources.PairingError;
         }
+        finally { _pairingStopPending = false; }
     }
     private const int MaxLogLines = 2000;
     private const double CollapsedLogHeight = 200;
@@ -8415,6 +8456,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    private Services.Sidebar.SidebarContextMenuTracker? _sidebarContextMenus;
+
     private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
     {
         if (_isSidebarExpanded || _isSidebarPinnedExpanded)
@@ -8437,16 +8480,18 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e)
+    private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e) => QueueSidebarCollapse();
+
+    private void QueueSidebarCollapse()
     {
-        if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
+        if (_isSidebarPinnedExpanded || _sidebarContextMenus?.IsOpen == true || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
         {
             return;
         }
 
         Dispatcher.BeginInvoke(() =>
         {
-            if (_isSidebarPinnedExpanded || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
+            if (_isSidebarPinnedExpanded || _sidebarContextMenus?.IsOpen == true || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
             {
                 return;
             }
@@ -8536,6 +8581,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void SetSidebarExpanded(bool isExpanded)
     {
+        if (!isExpanded && _sidebarContextMenus?.IsOpen == true) return;
         _sidebarHoverExpandTimer?.Stop();
         // If FCM needs attention, force the sidebar to stay unfolded/expanded
         bool isFcmConfigured = TrackingService.IsFcmConfigured();

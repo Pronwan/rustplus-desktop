@@ -1027,59 +1027,48 @@
                             </StackPanel>
                         </Border>
 
-                        <!--  FCM Token Expiry Badge  -->
-                        <ui:InfoBar
-                            x:Name="FcmExpiryInfoBar"
-                            Title="{DynamicResource UiRustCompanionSession}"
-                            Margin="0,0,0,10"
-                            IsClosable="False"
-                            IsOpen="True"
-                            Message="{Binding FcmExpiryText}"
-                            Severity="Informational">
-                            <ui:InfoBar.Style>
-                                <Style TargetType="ui:InfoBar">
-                                    <Setter Property="Severity" Value="Informational" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
-                                            <Setter Property="Severity" Value="Warning" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ui:InfoBar.Style>
-                        </ui:InfoBar>
-
-                        <Grid Margin="0,0,0,6">
-                            <TextBlock
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontSize="11"
-                                FontWeight="Bold"
-                                Foreground="{DynamicResource TextSubtle}"
-                                Text="{DynamicResource UiSERVERS}" />
-                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <ui:Button
-                                x:Name="BtnToggleServerArea"
-                                HorizontalAlignment="Right"
-                                Padding="8,3"
-                                Appearance="Secondary"
-                                Click="BtnToggleServerArea_Click"
-                                ToolTip="{DynamicResource ToggleServerArea}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,4,0" FontSize="11" Text="{DynamicResource UiChange}" />
-                                    <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronDown20" />
-                                </StackPanel>
-                            </ui:Button>
-                                <ui:Button x:Name="BtnManageServers" Margin="6,0,0,0" Padding="8,3" Appearance="Secondary"
-                                           Click="OpenServerManager_Click" Content="{DynamicResource ManageServers}" />
-                            </StackPanel>
-                        </Grid>
-
+                        <Border x:Name="ServerConnectionPanel" Padding="8,4" Background="{DynamicResource SurfaceAlt}"
+                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="SidebarServerName" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis" Margin="0,0,8,0" Foreground="{DynamicResource TextPrimary}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="{Binding Selected.Name}" />
+                                                <Setter Property="ToolTip" Value="{Binding Selected.Name}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected}" Value="{x:Null}"><Setter Property="Text" Value="{DynamicResource SelectAServer}" /></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Servers.Count}" Value="0">
+                                                        <Setter Property="Text" Value="{DynamicResource NoServersPaired}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsChecked, ElementName=BtnAbbreviateNames}" Value="True">
+                                                        <Setter Property="Text" Value="{DynamicResource UiSERVERHIDDEN}" />
+                                                        <Setter Property="ToolTip" Value="{DynamicResource UiSERVERHIDDEN}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <ui:Button x:Name="BtnToggleServerArea" Grid.Column="1" Width="24" Height="24" Padding="0"
+                                               Appearance="Transparent" Click="BtnToggleServerArea_Click" ToolTip="{DynamicResource ToggleServerArea}"
+                                               AutomationProperties.Name="{DynamicResource ToggleServerArea}">
+                                        <ui:SymbolIcon x:Name="IconToggleServerArea" Symbol="ChevronDown20" FontSize="14" />
+                                    </ui:Button>
+                                    <ui:Button x:Name="BtnManageServers" Grid.Column="2" Width="24" Height="24" Padding="0"
+                                               Appearance="Transparent" Click="OpenServerManager_Click" ToolTip="{DynamicResource ManageServers}"
+                                               AutomationProperties.Name="{DynamicResource ManageServers}">
+                                        <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="16" />
+                                    </ui:Button>
+                                </Grid>
                         <StackPanel x:Name="PanelServerArea" Visibility="Collapsed">
 
-                        <Grid x:Name="ServerListGrid" tutorials:Tutorial.TargetId="Servers.ConnectionStatus">
+                        <Grid x:Name="ServerListGrid">
                             <ListBox
                                 x:Name="ListServers"
                                 tutorials:Tutorial.TargetId="Servers.List"
@@ -1093,6 +1082,11 @@
                                 SelectedItem="{Binding Selected, Mode=TwoWay}"
                                 SelectionChanged="ListServers_SelectionChanged">
 
+                                <ListBox.Style><Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}"><Style.Triggers>
+<DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+<DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+<DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+</Style.Triggers></Style></ListBox.Style>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Grid VerticalAlignment="Center">
@@ -1168,288 +1162,86 @@
                             </TextBlock>
                         </Grid>
 
-                        <!--  The cloud keeps every pairing, so a lost or reset profiles file is recoverable from here.  -->
-                        <ui:Button
-                            x:Name="BtnRestoreCloudServers"
-                            Margin="0,6,0,0"
-                            Padding="8,3"
-                            HorizontalAlignment="Stretch"
-                            Appearance="Secondary"
-                            Click="BtnRestoreCloudServers_Click"
-                            ToolTip="{DynamicResource RestoreServersFromCloudHint}">
-                            <StackPanel Orientation="Horizontal">
-                                <ui:SymbolIcon Margin="0,0,6,0" Symbol="CloudArrowDown20" />
-                                <TextBlock FontSize="11" Text="{DynamicResource RestoreServersFromCloud}" />
-                            </StackPanel>
-                        </ui:Button>
+
                         </StackPanel>
 
-                        <!--  Compact Connection Card  -->
-                        <Border
-                            Margin="0,8,0,0"
-                            Padding="10,7"
-                            Background="{DynamicResource SurfaceAlt}"
-                            BorderBrush="{DynamicResource CardBorder}"
-                            BorderThickness="1"
-                            CornerRadius="10">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Selected, Converter={StaticResource NotNull}}" Value="True">
+
+                                <Grid x:Name="SidebarConnectionRow" Margin="0,2,0,0" tutorials:Tutorial.TargetId="Servers.ConnectionStatus">
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
                                             <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!--  Status Dot  -->
-                                <Grid
-                                    Width="10"
-                                    Height="10"
-                                    Margin="0,0,8,0"
-                                    VerticalAlignment="Center">
-                                    <Ellipse x:Name="StatusDot">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#EF5350" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
-                                                        <Setter Property="Fill" Value="#FF7043" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
-                                                        <Setter Property="Fill" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Fill" Value="#66BB6A" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                </Grid>
-
-                                <Grid Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Foreground="White"
-                                        Text="{Binding Selected.Name, FallbackValue='Select a Server'}"
-                                        TextWrapping="Wrap"
-                                        ToolTip="{Binding Selected.Name}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, ElementName=BtnAbbreviateNames}" Value="True">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Foreground="{DynamicResource TextSubtle}"
-                                        Text="{DynamicResource UiSERVERHIDDEN}"
-                                        Visibility="{Binding IsChecked, ElementName=BtnAbbreviateNames, Converter={StaticResource BoolToVisibility}}" />
-                                </Grid>
-
-                                <Grid
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2"
-                                    Margin="0,6,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0">
-                                    <TextBlock FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiServerConnection}" Margin="0,0,0,3" />
-                                    <TextBlock
-                                        x:Name="TxtServerConnectionState"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        FontWeight="Bold"
-                                        Opacity="0.8"
-                                        Margin="0,0,6,0"
-                                        TextTrimming="CharacterEllipsis"
-                                        TextWrapping="NoWrap"
-                                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="{DynamicResource StatusDisconnected}" />
-                                                <Setter Property="Foreground" Value="#EF5350" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
-                                                        <Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" />
-                                                        <Setter Property="Foreground" Value="#FF7043" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
-                                                        <Setter Property="Text" Value="{DynamicResource StatusConnecting}" />
-                                                        <Setter Property="Foreground" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsInitializing}" Value="True">
-                                                        <Setter Property="Text" Value="{DynamicResource StatusInitializing}" />
-                                                        <Setter Property="Foreground" Value="#FFCA28" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True">
-                                                        <Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" />
-                                                        <Setter Property="Foreground" Value="#66BB6A" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True">
-                                                        <Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" />
-                                                        <Setter Property="Foreground" Value="#66BB6A" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    </StackPanel>
-
-                                    <StackPanel
-                                    Grid.Column="1"
-                                    tutorials:Tutorial.TargetId="Servers.ConnectionActions"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-                                    <!--  Connect  -->
-                                    <ui:Button
-                                        x:Name="UiBtnConnect"
-                                        tutorials:Tutorial.TargetId="Servers.Connect"
-                                        Margin="0,0,4,0"
-                                        Padding="10,4"
-                                        Appearance="Primary"
-                                        Click="BtnConnect_Click"
-                                        Content="{DynamicResource Connect}"
-                                        Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
-                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
-
-                                    <!--  Full Connect  -->
-                                    <ui:Button
-                                        x:Name="UiBtnFullConnect"
-                                        tutorials:Tutorial.TargetId="Servers.FullConnect"
-                                        Margin="0,0,4,0"
-                                        Padding="10,4"
-                                        Appearance="Primary"
-                                        Click="BtnConnect_Click"
-                                        Content="{DynamicResource FullConnect}"
-                                        Icon="{ui:SymbolIcon Symbol=Play20}"
-                                        ToolTip="{DynamicResource LoadMapTeam}">
-                                        <ui:Button.Style>
-                                            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Selected.IsConnected}" Value="True" />
-                                                            <Condition Binding="{Binding Selected.IsFullConnected}" Value="False" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ui:Button.Style>
-                                    </ui:Button>
-
-                                    <!--  Disconnect  -->
-                                    <ui:Button
-                                        x:Name="UiBtnDisconnect"
-                                        tutorials:Tutorial.TargetId="Servers.Disconnect"
-                                        Padding="10,4"
-                                        Appearance="Caution"
-                                        Click="BtnDisconnect_Click"
-                                        Icon="{ui:SymbolIcon Symbol=PlugDisconnected20}"
-                                        ToolTip="{DynamicResource Disconnect}"
-                                        Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibility}}" />
-
-                                    <!--  Info  -->
-                                    <ui:Button
-                                        Margin="4,0,0,0"
-                                        Padding="10,4"
-                                        Appearance="Secondary"
-                                        Click="BtnShowServerInfo_Click"
-                                        Icon="{ui:SymbolIcon Symbol=Info20}"
-                                        ToolTip="{DynamicResource ServerDetails}" />
-
-
-                                    </StackPanel>
-                                </Grid>
-
-                                <!--  Access Denied / Re-Pair Hint Banner  -->
-                                <Border
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2"
-                                    Margin="0,8,0,0"
-                                    Padding="8,6"
-                                    Background="#26EF5350"
-                                    BorderBrush="#80EF5350"
-                                    BorderThickness="1"
-                                    CornerRadius="6">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Visibility" Value="Collapsed" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected}" Value="{x:Null}"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Border.Style>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Text="⚠️"
-                                            FontSize="11"
-                                            VerticalAlignment="Top"
-                                            Margin="0,0,6,0" />
-                                        <TextBlock
-                                            Grid.Column="1"
-                                            FontSize="11"
-                                            FontWeight="SemiBold"
-                                            Foreground="#FF8A80"
-                                            Text="{DynamicResource StatusAccessDeniedHint}"
-                                            TextWrapping="Wrap"
-                                            VerticalAlignment="Center" />
-                                    </Grid>
-                                </Border>
-                            </Grid>
-                        </Border>
-
-                        <StackPanel tutorials:Tutorial.TargetId="Servers.PairingService">
-                            <TextBlock
-                                Margin="0,0,0,10"
-                                FontSize="11"
-                                FontWeight="Bold"
-                                Foreground="White"
-                                Opacity="0.6"
-                                Text="{DynamicResource UiPairingListener}" />
-
+                                    </Grid.Style>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                    <DockPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                        <Ellipse x:Name="StatusDot" Width="7" Height="7" Margin="0,0,6,0" Fill="{Binding Foreground, ElementName=TxtServerConnectionState}" />
+                                        <TextBlock x:Name="TxtServerConnectionState" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}" /><Setter Property="Text" Value="{DynamicResource StatusDisconnected}" /><Setter Property="Foreground" Value="#EF5350" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{DynamicResource StatusAccessDeniedHint}" /></DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DockPanel>
+                                    <StackPanel x:Name="SidebarConnectionActions" Grid.Column="1" Orientation="Horizontal" tutorials:Tutorial.TargetId="Servers.ConnectionActions">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel"><Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected.Port}" Value="0"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding Selected.PlayerToken}" Value="offline"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                            </Style.Triggers></Style>
+                                        </StackPanel.Style>
+                                        <Grid Width="28" Height="28" Margin="0,0,3,0">
+                                            <ui:Button x:Name="UiBtnConnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
+                                                       ToolTip="{DynamicResource Connect}" AutomationProperties.Name="{DynamicResource Connect}" tutorials:Tutorial.TargetId="Servers.Connect">
+                                                <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Visibility" Value="Hidden" /></DataTrigger>
+                                                </Style.Triggers></Style></ui:Button.Style>
+                                                <ui:SymbolIcon Symbol="Play20" FontSize="16" Foreground="{DynamicResource Accent}" />
+                                            </ui:Button>
+                                            <ui:Button x:Name="UiBtnFullConnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
+                                                       ToolTip="{DynamicResource FullConnect}" AutomationProperties.Name="{DynamicResource FullConnect}" tutorials:Tutorial.TargetId="Servers.FullConnect">
+                                                <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Setter Property="Visibility" Value="Hidden" /><Style.Triggers>
+                                                    <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding Selected.IsConnected}" Value="True" /><Condition Binding="{Binding Selected.IsFullConnected}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Visible" /></MultiDataTrigger>
+                                                </Style.Triggers></Style></ui:Button.Style>
+                                                <ui:SymbolIcon Symbol="Play20" FontSize="16" Foreground="{DynamicResource Accent}" />
+                                            </ui:Button>
+                                        </Grid>
+                                        <ui:Button x:Name="UiBtnDisconnect" Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnDisconnect_Click"
+                                                   ToolTip="{DynamicResource Disconnect}" AutomationProperties.Name="{DynamicResource Disconnect}" tutorials:Tutorial.TargetId="Servers.Disconnect"
+                                                   IsEnabled="{Binding Selected.IsConnected, FallbackValue=False}">
+                                            <ui:SymbolIcon Symbol="Stop24" FontSize="16" Foreground="{DynamicResource DangerBrush}" />
+                                        </ui:Button>
+                                        <ui:Button Width="28" Height="28" Padding="0" Appearance="Transparent" Click="BtnShowServerInfo_Click"
+                                                   ToolTip="{DynamicResource ServerDetails}" AutomationProperties.Name="{DynamicResource ServerDetails}">
+                                            <ui:SymbolIcon Symbol="Info20" FontSize="16" />
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Margin="0,6,0,0" FontSize="11" TextWrapping="Wrap" Foreground="#FF8A80" Text="{DynamicResource StatusAccessDeniedHint}">
+                                    <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers>
+                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                                    </Style.Triggers></Style></TextBlock.Style>
+                                </TextBlock>
+                                                    <Border x:Name="PairingListenerPanel" Margin="0,4,0,0" Padding="0,4,0,0" Background="Transparent"
+                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
                             <Grid x:Name="PairingServiceControls">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
+                                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                 <Grid.Resources>
                                     <ContextMenu x:Key="PairingRecoveryMenu" Style="{StaticResource DarkContextMenu}"
                                                  DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
@@ -1458,6 +1250,10 @@
                                                   Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}" />
                                         <MenuItem x:Name="BtnStopPairing" Header="{DynamicResource Stop}" Click="BtnStopPairing_Click"
                                                   Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}" />
+                                        <MenuItem x:Name="BtnRestoreCloudServers" Header="{DynamicResource RestoreServersFromCloud}"
+                                                  Click="BtnRestoreCloudServers_Click" ToolTip="{DynamicResource RestoreServersFromCloudHint}">
+                                            <MenuItem.Icon><ui:SymbolIcon Symbol="CloudArrowDown20" /></MenuItem.Icon>
+                                        </MenuItem>
                                         <MenuItem x:Name="BtnFcmInfo" Header="{DynamicResource FcmInfoToolTip}" Click="BtnFcmInfo_Click" />
                                         <Separator />
                                         <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
@@ -1483,103 +1279,79 @@
                                         <MenuItem Click="BtnResetAndListenEdge_Click" Header="{DynamicResource ResetListenEdge}" />
                                     </ContextMenu>
                                 </Grid.Resources>
-
-                                <ui:Button x:Name="BtnManagePairing" Grid.Column="1" Height="30" Padding="10,0"
-                                           Appearance="Secondary" Click="OpenButtonContextMenu_Click"
-                                           tutorials:Tutorial.TargetId="Servers.Pair"
-                                           AutomationProperties.Name="{DynamicResource UiManagePairing}"
-                                           ToolTip="{DynamicResource UiPairingListenerHelp}"
-                                           ContextMenu="{StaticResource PairingRecoveryMenu}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{DynamicResource UiManagePairing}" VerticalAlignment="Center" />
-                                        <ui:SymbolIcon Symbol="ChevronDown12" Foreground="White" FontSize="10" Margin="6,0,0,0" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </ui:Button>
-
-                                <!--  Service state as a chip: one dot and one label. Green only once the
-                                      listener actually runs, amber while a start (or the automatic retry) is
-                                      still under way, red after a failure, grey when simply off.  -->
-                                <Border
-                                    Grid.Column="0"
-                                    Height="30"
-                                    Margin="0,0,8,0"
-                                    Padding="10,0"
-                                    ToolTip="{DynamicResource UiPairingListenerHelp}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Background="{DynamicResource WhiteA14}"
-                                    CornerRadius="15">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Ellipse Width="8" Height="8" VerticalAlignment="Center">
-                                            <Ellipse.Style>
-                                                <Style TargetType="Ellipse">
-                                                    <Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True">
-                                                            <Setter Property="Fill" Value="{DynamicResource DangerBrush}" />
-                                                        </DataTrigger>
-                                                        <!--  The listener is busy before it is listening, so amber also
-                                                              covers the automatic retry after a failure.  -->
-                                                        <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
-                                                            <Setter Property="Fill" Value="{DynamicResource WarnOrangeBrush}" />
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation AutoReverse="True" RepeatBehavior="Forever"
-                                                                                         Storyboard.TargetProperty="Opacity"
-                                                                                         From="1" To="0.3" Duration="0:0:1" />
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                        </DataTrigger>
-                                                        <!--  Last matching trigger wins, so listening beats starting.  -->
-                                                        <DataTrigger Binding="{Binding IsPairingRunning}" Value="True">
-                                                            <Setter Property="Fill" Value="{DynamicResource SuccessBrush}" />
-                                                            <Setter Property="Effect">
-                                                                <Setter.Value>
-                                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="0" Color="#4CAF50" Opacity="0.6" />
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Ellipse.Style>
-                                        </Ellipse>
-                                        <TextBlock
-                                            Margin="6,0,0,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="11"
-                                            FontWeight="SemiBold"
-                                            Foreground="{DynamicResource SuccessTextBrush}"
-                                            Text="{DynamicResource UiListenerRunning}"
-                                            Visibility="{Binding IsPairingRunning, Converter={StaticResource BoolToVisibility}}" />
-                                        <TextBlock
-                                            x:Name="TxtPairingState"
-                                            Margin="6,0,0,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="11"
-                                            FontWeight="SemiBold"
-                                            Text="{DynamicResource PairingIdle}"
-                                            Visibility="{Binding IsPairingRunning, Converter={StaticResource BoolToVisibilityInv}}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True">
-                                                            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsPairingBusy}" Value="True">
-                                                            <Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
+                                <TextBlock Text="{DynamicResource UiPairingListener}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
+                                <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
+                                    <Ellipse Width="7" Height="7" Margin="0,0,5,0">
+                                        <Ellipse.Style><Style TargetType="Ellipse"><Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" /><Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True"><Setter Property="Fill" Value="{DynamicResource DangerBrush}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsPairingRunning}" Value="True"><Setter Property="Fill" Value="{DynamicResource SuccessBrush}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsPairingBusy}" Value="True"><Setter Property="Fill" Value="{DynamicResource WarnOrangeBrush}" /></DataTrigger>
+                                        </Style.Triggers></Style></Ellipse.Style>
+                                    </Ellipse>
+                                    <Grid ToolTip="{DynamicResource UiPairingListenerHelp}">
+                                        <TextBlock Text="{DynamicResource UiListenerRunning}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessTextBrush}" TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers>
+                                                <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding IsPairingRunning}" Value="True" /><Condition Binding="{Binding IsPairingBusy}" Value="False" /><Condition Binding="{Binding IsPairingFaulted}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Visible" /></MultiDataTrigger>
+                                            </Style.Triggers></Style></TextBlock.Style>
                                         </TextBlock>
-                                    </StackPanel>
-                                </Border>
+                                        <TextBlock x:Name="TxtPairingState" Text="{DynamicResource PairingIdle}" FontSize="10" TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextSubtle}" /><Style.Triggers>
+                                                <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding IsPairingRunning}" Value="True" /><Condition Binding="{Binding IsPairingBusy}" Value="False" /><Condition Binding="{Binding IsPairingFaulted}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
+                                                <DataTrigger Binding="{Binding IsPairingBusy}" Value="True"><Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True"><Setter Property="Foreground" Value="{DynamicResource DangerBrush}" /></DataTrigger>
+                                            </Style.Triggers></Style></TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </DockPanel>
+                                <Grid Grid.Column="2" Width="24" Height="24" Margin="0,0,3,0">
+                                    <ui:Button x:Name="PairingStartButton" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnListenPairing_Click"
+                                               IsEnabled="{Binding CanStartPairing}" ToolTip="{DynamicResource Listen}" AutomationProperties.Name="{DynamicResource Listen}"
+                                               Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibilityInv}}">
+                                        <ui:SymbolIcon Symbol="Play20" FontSize="14" Foreground="{DynamicResource Accent}" />
+                                    </ui:Button>
+                                    <ui:Button x:Name="PairingStopButton" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnStopPairing_Click"
+                                               IsEnabled="{Binding CanStopPairing}" ToolTip="{DynamicResource Stop}" AutomationProperties.Name="{DynamicResource Stop}"
+                                               Visibility="{Binding CanStopPairing, Converter={StaticResource BoolToVisibility}}">
+                                        <ui:SymbolIcon Symbol="Stop24" FontSize="14" Foreground="{DynamicResource DangerBrush}" />
+                                    </ui:Button>
+                                </Grid>
+                                <ui:Button x:Name="BtnManagePairing" Grid.Column="3" Width="24" Height="24" Padding="0" Appearance="Transparent"
+                                           Click="OpenButtonContextMenu_Click" ContextMenu="{StaticResource PairingRecoveryMenu}"
+                                           ToolTip="{DynamicResource UiManagePairing}" AutomationProperties.Name="{DynamicResource UiManagePairing}" tutorials:Tutorial.TargetId="Servers.Pair">
+                                    <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="16" />
+                                </ui:Button>
+                        <!--  FCM Token Expiry Badge  -->
+                        <ui:InfoBar
+                            x:Name="FcmExpiryInfoBar"
+                            Title="{DynamicResource UiRustCompanionSession}"
+                            Grid.Row="1" Grid.ColumnSpan="4" Margin="0,8,0,0"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Message="{Binding FcmExpiryText}"
+                            Severity="Informational">
+                            <ui:InfoBar.Style>
+                                <Style TargetType="ui:InfoBar">
+                                    <Setter Property="Severity" Value="Informational" />
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FcmExpiryDays, Converter={StaticResource LessThanConverter}, ConverterParameter=30}" Value="True">
+                                            <Setter Property="Severity" Value="Warning" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FcmExpiryDays}" Value="-1">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:InfoBar.Style>
+                        </ui:InfoBar>
 
                             </Grid>
-                        </StackPanel>
+                        </Border>
+                            </StackPanel>
+                        </Border>
+
+
                         <Border
                             Height="1"
                             Margin="0,4,0,4"

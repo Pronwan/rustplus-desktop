@@ -60,7 +60,7 @@ public class ServerDeletionConfirmationTests
         public RustPlusDesk.Models.ServerProfile? Selected { get; set; }
     }
 
-    private static XElement ThemeResources()
+    internal static XElement ThemeResources()
     {
         XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
         XNamespace markup = "clr-namespace:Wpf.Ui.Markup;assembly=Wpf.Ui";
