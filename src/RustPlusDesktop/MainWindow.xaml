@@ -1084,7 +1084,9 @@
                                 x:Name="ListServers"
                                 tutorials:Tutorial.TargetId="Servers.List"
                                 MinHeight="60"
-                                MaxHeight="100"
+                                MaxHeight="170"
+                                Padding="0"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 Foreground="White"
                                 ItemsSource="{Binding Servers}"
@@ -1138,6 +1140,8 @@
 
                                 <ListBox.ItemContainerStyle>
                                     <Style TargetType="ListBoxItem">
+                                        <Setter Property="Height" Value="28" />
+                                        <Setter Property="Margin" Value="0" />
                                         <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}" />
                                     </Style>
                                 </ListBox.ItemContainerStyle>
