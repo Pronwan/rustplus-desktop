@@ -14,6 +14,11 @@ namespace RustPlusDesk.Services.Deaths;
 /// Here the deaths are summed into a density grid first and coloured relative to the densest
 /// spot, so the hotspots stay hot and a lone death stays a faint mark however many there are.
 /// It is also a single image instead of thousands of elements on the map canvas.
+///
+/// The densest spot alone is not a fair yardstick early in a wipe: with a handful of scattered
+/// deaths every lone death is the densest spot, and each one came out full red. So the scale
+/// never drops below <see cref="HotDeaths"/> deaths stacked on one spot; a single death sits
+/// low on it and only repeated deaths in one place build up to the hot colours.
 /// </summary>
 public static class DeathHeatmapRaster
 {
@@ -22,10 +27,43 @@ public static class DeathHeatmapRaster
     private const int MaxImageSize = 1024;
 
     /// <summary>
-    /// Below this share of the hottest spot a cell is left transparent by default. The layer's
-    /// density slider raises it to keep only the hotspots.
+    /// How many deaths stacked on one spot it takes to reach full red while no spot on the map is
+    /// denser. Counted in deaths: the kernel adds exactly 1 at a death's own position, so this is
+    /// independent of the radius. Deaths a little apart overlap only partly and add up to less.
+    /// </summary>
+    public const double HotDeaths = 8;
+
+    private const double MaxAlpha = 0.85;
+
+    /// <summary>
+    /// Below this intensity a cell is left transparent by default. The layer's density slider
+    /// raises it to keep only the hotspots; around 0.35 it hides lone deaths.
     /// </summary>
     public const double DefaultMinShare = 0.02;
+
+    /// <summary>
+    /// The density the colours are measured against: the densest spot, but never less than
+    /// <see cref="HotDeaths"/> stacked deaths.
+    /// </summary>
+    public static double Scale(double peakDensity) => Math.Max(peakDensity, HotDeaths);
+
+    /// <summary>
+    /// Where a cell's density sits on the colour ramp, 0 to 1. Logarithmic because deaths are
+    /// counts: the step from one to three deaths in a spot matters as much as from thirty to
+    /// ninety, and a long wipe's big hotspot doesn't wash every smaller one out.
+    /// </summary>
+    public static double Intensity(double density, double scale)
+    {
+        if (density <= 0 || scale <= 0)
+            return 0;
+        return Math.Clamp(Math.Log(1 + density) / Math.Log(1 + scale), 0, 1);
+    }
+
+    /// <summary>
+    /// Opacity for an intensity. Steeper than linear, with no floor, so a lone death is a faint
+    /// smudge whose edges fade out entirely, and the visible size of a spot grows with its count.
+    /// </summary>
+    public static double Opacity(double intensity) => MaxAlpha * Math.Pow(Math.Clamp(intensity, 0, 1), 1.5);
 
     private static readonly (double At, byte R, byte G, byte B)[] Ramp =
     {
@@ -85,19 +123,18 @@ public static class DeathHeatmapRaster
             max = Math.Max(max, value);
         if (max <= 0)
             return null;
+        var scale = Scale(max);
 
         var pixels = new byte[size * size * 4];
         for (var i = 0; i < density.Length; i++)
         {
             if (density[i] <= 0)
                 continue;
-            // Square root keeps single deaths visible next to a hotspot dozens of deaths deep.
-            var t = Math.Sqrt(density[i] / max);
+            var t = Intensity(density[i], scale);
             if (t < visibleFloor)
                 continue;
             var (r, g, b) = Colour(t);
-            // Faint at the low end: a scatter of single deaths should tint the map, not cover it.
-            var alpha = Math.Clamp(0.1 + t * 0.75, 0, 0.85);
+            var alpha = Opacity(t);
             // Pbgra32 wants premultiplied colour.
             pixels[i * 4] = (byte)(b * alpha);
             pixels[i * 4 + 1] = (byte)(g * alpha);
