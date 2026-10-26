@@ -31,7 +31,11 @@ so you don’t have to install dependencies manually.
 
 ---
 
+### Facepunch's review
+Recently, facepunch reviewed our app internally and asked us to remove some features to prevent unfair use. We complied and
+removed and/or adjusted the features in question. Details can be found here:
 
+[<img width="1672" height="941" alt="Image" src="https://github.com/user-attachments/assets/9f15a99f-76a3-4d8a-8063-bc53583d497f" />](https://www.youtube.com/watch?v=bJtCQMEbKaM)
 
 ## 🚀 Latest Release
 
