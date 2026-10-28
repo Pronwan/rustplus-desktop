@@ -3321,11 +3321,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
         bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;
         bool geneticsSelected = MainTabs.SelectedItem == GeneticsLabTab;
+        bool baseBuilderSelected = MainTabs.SelectedItem == BaseBuilderTab;
         bool wipeTrackerSelected = MainTabs.SelectedItem == PlayerWipeTrackerTab;
         bool deathStatsSelected = MainTabs.SelectedItem == DeathStatsTab;
         bool ticketsSelected = MainTabs.SelectedItem == TicketsTab;
         RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
         GeneticsLabPanel.Visibility = geneticsSelected ? Visibility.Visible : Visibility.Collapsed;
+        BaseBuilderPanel.Visibility = baseBuilderSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (baseBuilderSelected) _ = OpenBaseBuilderWorkspaceAsync();
+        else _ = SuspendBaseBuilderAsync();
         PlayerWipeTrackerPanel.Visibility = wipeTrackerSelected ? Visibility.Visible : Visibility.Collapsed;
         DeathStatsPanel.Visibility = deathStatsSelected ? Visibility.Visible : Visibility.Collapsed;
         if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
@@ -3339,8 +3343,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         // Tickets is an inline tab like Recycler: re-read on open, and it takes the workspace over
         // the map without touching the device/servers panel beside it.
         if (ticketsSelected) SupportPanel.Refresh();
-        ServerContextPanel.Visibility = (recyclerSelected || geneticsSelected || wipeTrackerSelected || deathStatsSelected || ticketsSelected) ? Visibility.Collapsed : Visibility.Visible;
-        if (!raidSelected && !recyclerSelected && !geneticsSelected && !wipeTrackerSelected && !deathStatsSelected && !ticketsSelected)
+        ServerContextPanel.Visibility = (recyclerSelected || geneticsSelected || baseBuilderSelected || wipeTrackerSelected || deathStatsSelected || ticketsSelected) ? Visibility.Collapsed : Visibility.Visible;
+        if (!raidSelected && !recyclerSelected && !geneticsSelected && !baseBuilderSelected && !wipeTrackerSelected && !deathStatsSelected && !ticketsSelected)
             _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
 
         if (MainTabs.SelectedItem == NotificationsTab)

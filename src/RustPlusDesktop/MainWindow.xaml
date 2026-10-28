@@ -4449,6 +4449,10 @@
                             <views:NotificationsTabContent x:Name="NotificationsTabControl" />
                         </TabItem>
 
+                        <TabItem x:Name="BaseBuilderTab" Style="{StaticResource PrettyTabItem}" Header="Base Builder">
+                            <Grid />
+                        </TabItem>
+
                         <!--  ===== GENETICS LAB =====  -->
                         <TabItem x:Name="GeneticsLabTab" Style="{StaticResource PrettyTabItem}" tutorials:Tutorial.TargetId="Navigation.GeneticsLab">
                             <TabItem.Header>
@@ -11033,6 +11037,27 @@
                 Panel.ZIndex="9000"
                 Visibility="Collapsed">
                 <views:RaidCalculatorView CloseRequested="RaidCalculator_CloseRequested" />
+            </Border>
+
+            <Border x:Name="BaseBuilderPanel" Grid.ColumnSpan="3" Margin="{DynamicResource RailInset}"
+                    Background="{DynamicResource AppBg}" Panel.ZIndex="9000" Visibility="Collapsed">
+                <Grid Unloaded="BaseBuilderHost_Unloaded">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <DockPanel Margin="16,8">
+                        <ui:Button DockPanel.Dock="Right" Content="Close" Click="BaseBuilder_CloseRequested" AutomationProperties.Name="Close Base Builder" />
+                        <TextBlock Text="Tools / Base Builder" FontSize="14" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                    </DockPanel>
+                    <Grid x:Name="BaseBuilderHost" Grid.Row="1" />
+                    <Border x:Name="BaseBuilderLoading" Grid.Row="1" Background="{DynamicResource AppBg}">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="480">
+                            <TextBlock x:Name="BaseBuilderLoadingText" Text="Opening your building workshop…" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource TextPrimary}" FontSize="16" />
+                            <ui:Button x:Name="BaseBuilderRetry" Content="Try again" Click="BaseBuilderRetry_Click" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0,18,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
 
             <!--  Genetics Lab Overlay  -->

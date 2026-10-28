@@ -43,6 +43,7 @@ public static class RailCatalog
         new("players",       "PlayersTabItem",        "Players",           "Players",             "UiBrowseOnlinePlayersAndTrackedTargets",                  "", SymbolRegular.Globe24, IsPlayersOptIn: true),
         new("notifications", "NotificationsTab",      "NotificationsTab",  "Notifications",       "UiReviewAlertsAndRecentServerEvents",                     "", SymbolRegular.Alert24),
         new("genetics",      "GeneticsLabTab",        "RailGeneticsLab",   "Genetics Lab",        "RailGeneticsLabHelp",       "Calculate plant genetics, crossbreeding, and recipes",     SymbolRegular.LeafTwo24),
+        new("basebuilder",   "BaseBuilderTab",        null,                "Base Builder",        null, "Create a base, import a design, edit on a plot and export for Rust", SymbolRegular.Home24),
         new("pwt",           "PlayerWipeTrackerTab",  "RailPlayerWipeTracker", "Player Wipe Tracker", "RailPlayerWipeTrackerHelp", "Track teammate routes, activity, and history for the current wipe", SymbolRegular.History24),
         new("deathstats",    "DeathStatsTab",         "RailDeathStats",    "Death Stats",         "RailDeathStatsHelp",        "View death statistics for the current server",             SymbolRegular.Empty, GeometryPath: DeathStatsGeometry),
         new("raid",          "RaidCalculatorTab",     "UiRaidCalculator",  "Raid Calculator",     "UiCalculateRaidCostsAndRequiredMaterials",                "", SymbolRegular.Rocket24),
@@ -52,7 +53,7 @@ public static class RailCatalog
 
     /// <summary>Utilities placed inside the default "Tools" folder on first upgrade.</summary>
     public static readonly string[] DefaultFolderTabIds =
-        { "genetics", "pwt", "deathstats", "raid", "recycler", "console" };
+        { "genetics", "basebuilder", "pwt", "deathstats", "raid", "recycler", "console" };
 
     private static readonly Dictionary<string, RailTabInfo> _byId = All.ToDictionary(x => x.Id);
 
@@ -75,7 +76,7 @@ public static class RailCatalog
 
     /// <summary>
     /// Ensures every known tab appears exactly once in <paramref name="layout"/> (appending any
-    /// missing ones at root) and drops ids no longer in the catalog. Keeps a user's arrangement
+    /// missing ones at root, with the new Base Builder in Tools) and drops ids no longer in the catalog. Keeps a user's arrangement
     /// intact across app updates that add or remove tabs.
     /// </summary>
     public static bool Reconcile(RailLayoutData layout)
@@ -112,7 +113,16 @@ public static class RailCatalog
         {
             if (!seen.Contains(info.Id))
             {
-                layout.Nodes.Add(RailNodeData.Tab(info.Id));
+                if (info.Id == "basebuilder")
+                {
+                    var tools = layout.Nodes.FirstOrDefault(n => n.IsFolder && n.FolderId == DefaultFolderId);
+                    if (tools is null)
+                        layout.Nodes.Add(RailNodeData.Folder(DefaultFolderId, "Tools", DefaultFolderColor, new[] { info.Id }));
+                    else
+                        tools.Children.Add(info.Id);
+                }
+                else
+                    layout.Nodes.Add(RailNodeData.Tab(info.Id));
                 seen.Add(info.Id);
                 changed = true;
             }
