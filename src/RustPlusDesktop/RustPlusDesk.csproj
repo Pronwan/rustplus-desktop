@@ -100,6 +100,7 @@
     <None Remove="Assets\icons\jungle_swamp.png" />
 	  <None Remove="Assets\icons\launchsite.png" />
 	  <None Remove="Assets\icons\raid-targets\**\*" />
+	  <None Remove="Assets\icons\builder-items\**\*" />
 	  <None Remove="Assets\icons\lighthouse.png" />
 	  <None Remove="Assets\icons\map-icons\base1.png" />
 	  <None Remove="Assets\icons\map-icons\base2.png" />
@@ -535,6 +536,10 @@
     <Resource Include="Assets\icons\powerstation.png" />
     <Resource Include="Assets\icons\radtown.png" />
     <Content Include="Assets\icons\raid-targets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Assets\icons\builder-items\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

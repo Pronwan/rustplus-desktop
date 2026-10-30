@@ -35,6 +35,11 @@ public partial class MainWindow
             view.CoreWebView2.Settings.IsZoomControlEnabled = false;
             // Same origin and profile as the map, so its base library is available in both tools.
             view.CoreWebView2.SetVirtualHostNameToFolderMapping(host, root, CoreWebView2HostResourceAccessKind.DenyCors);
+            // RustHelp item icons bundled with the app (tools/Download-BuilderItemIcons.ps1). The builder
+            // falls back to its own SVGs when this host is absent, e.g. in the MapParser dev server.
+            string itemIcons = Path.Combine(AppContext.BaseDirectory, "Assets", "icons", "builder-items");
+            if (Directory.Exists(itemIcons))
+                view.CoreWebView2.SetVirtualHostNameToFolderMapping("rustplus-items.local", itemIcons, CoreWebView2HostResourceAccessKind.DenyCors);
             view.CoreWebView2.AddWebResourceRequestedFilter("https://rustplus-api.invalid/archipel/*", CoreWebView2WebResourceContext.All);
             view.CoreWebView2.WebResourceRequested += (_, args) => TryRelayArchipelRequest(args, new Uri(args.Request.Uri), _map3DWebViewEnvironment, () => ReferenceEquals(view, _baseBuilderWebView));
             view.CoreWebView2.NavigationStarting += (_, args) =>
