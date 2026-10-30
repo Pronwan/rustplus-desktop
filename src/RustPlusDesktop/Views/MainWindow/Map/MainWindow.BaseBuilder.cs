@@ -35,7 +35,7 @@ public partial class MainWindow
             view.CoreWebView2.Settings.IsZoomControlEnabled = false;
             // Same origin and profile as the map, so its base library is available in both tools.
             view.CoreWebView2.SetVirtualHostNameToFolderMapping(host, root, CoreWebView2HostResourceAccessKind.DenyCors);
-            view.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/archipel/*", CoreWebView2WebResourceContext.All);
+            view.CoreWebView2.AddWebResourceRequestedFilter("https://rustplus-api.invalid/archipel/*", CoreWebView2WebResourceContext.All);
             view.CoreWebView2.WebResourceRequested += (_, args) => TryRelayArchipelRequest(args, new Uri(args.Request.Uri), _map3DWebViewEnvironment, () => ReferenceEquals(view, _baseBuilderWebView));
             view.CoreWebView2.NavigationStarting += (_, args) =>
             {

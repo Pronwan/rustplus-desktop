@@ -977,6 +977,7 @@ namespace RustPlusDesk.Views
             _map3DWebView.ZoomFactor = 1.0;
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
+            _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter("https://rustplus-api.invalid/archipel/*", CoreWebView2WebResourceContext.All);
             _map3DWebView.CoreWebView2.WebResourceRequested += _map3DResourceRequestHandler;
             _map3DWebView.CoreWebView2.Navigate(url);
 

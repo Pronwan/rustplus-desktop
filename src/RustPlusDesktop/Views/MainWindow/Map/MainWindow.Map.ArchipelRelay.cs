@@ -10,7 +10,8 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     // The 3D viewer's Bases browser reads Archipel (api.archipel.gg), which sends no CORS headers
-    // for https://rustplus3d.local, so the viewer asks for /archipel/... and the app fetches it.
+    // for https://rustplus3d.local, so the app relays requests via an unmapped API origin.
+    // WebView2 does not fire WebResourceRequested for virtual-host folder mappings.
     // Only the public, read-only browsing and build-data endpoints pass.
     private static readonly HttpClient _archipelHttpClient = new(new Services.TrafficTrackingHttpMessageHandler("Archipel"))
     {
@@ -23,25 +24,40 @@ public partial class MainWindow
         RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
     private const long ArchipelRelayMaxBytes = 60L * 1024 * 1024;
+    private const string ArchipelRelayHeaders = "Access-Control-Allow-Origin: https://rustplus3d.local\r\nCache-Control: no-store";
+
+    internal static bool TryGetArchipelRelayPath(Uri uri, string method, out string pathAndQuery)
+    {
+        pathAndQuery = "";
+        const string prefix = "/archipel/";
+        if (!uri.IsAbsoluteUri || uri.Scheme != "https" || !uri.IsDefaultPort ||
+            (uri.Host != "rustplus-api.invalid" && uri.Host != "rustplus3d.local") ||
+            !string.IsNullOrEmpty(uri.UserInfo) || !uri.AbsolutePath.StartsWith(prefix, StringComparison.Ordinal) ||
+            !string.Equals(method, "GET", StringComparison.OrdinalIgnoreCase)) return false;
+        string apiPath = uri.AbsolutePath[prefix.Length..];
+        if (!ArchipelRelayPath.IsMatch(apiPath)) return false;
+        pathAndQuery = apiPath + uri.Query;
+        return true;
+    }
 
     private bool TryRelayArchipelRequest(CoreWebView2WebResourceRequestedEventArgs args, Uri uri, CoreWebView2Environment? environment = null, Func<bool>? isActive = null)
     {
         const string prefix = "/archipel/";
+        if (uri.Scheme != "https" || (uri.Host != "rustplus-api.invalid" && uri.Host != "rustplus3d.local")) return false;
         if (!uri.AbsolutePath.StartsWith(prefix, StringComparison.Ordinal)) return false;
         environment ??= _map3DWebView?.CoreWebView2?.Environment;
         if (environment is null) return false;
         var requestView = _map3DWebView;
         isActive ??= () => requestView != null && ReferenceEquals(requestView, _map3DWebView);
 
-        string apiPath = uri.AbsolutePath[prefix.Length..];
-        if (!string.Equals(args.Request.Method, "GET", StringComparison.OrdinalIgnoreCase) || !ArchipelRelayPath.IsMatch(apiPath))
+        if (!TryGetArchipelRelayPath(uri, args.Request.Method, out string pathAndQuery))
         {
-            args.Response = environment.CreateWebResourceResponse(new MemoryStream(), 404, "Not Found", "Cache-Control: no-store");
+            args.Response = environment.CreateWebResourceResponse(new MemoryStream(), 404, "Not Found", ArchipelRelayHeaders);
             return true;
         }
 
         var deferral = args.GetDeferral();
-        _ = RelayArchipelAsync(args, deferral, apiPath + uri.Query, environment, isActive);
+        _ = RelayArchipelAsync(args, deferral, pathAndQuery, environment, isActive);
         return true;
     }
 
@@ -68,7 +84,7 @@ public partial class MainWindow
                 if (!isActive()) return;
                 args.Response = environment.CreateWebResourceResponse(
                     new MemoryStream(body), (int)response.StatusCode, response.ReasonPhrase ?? "",
-                    $"Content-Type: {contentType}\r\nContent-Length: {body.Length}\r\nCache-Control: no-store");
+                    $"Content-Type: {contentType}\r\nContent-Length: {body.Length}\r\n{ArchipelRelayHeaders}");
             });
         }
         catch (Exception ex)
@@ -78,7 +94,7 @@ public partial class MainWindow
             {
                 if (!isActive()) return;
                 args.Response = environment.CreateWebResourceResponse(
-                    new MemoryStream(), 502, "Bad Gateway", "Cache-Control: no-store");
+                    new MemoryStream(), 502, "Bad Gateway", ArchipelRelayHeaders);
             });
         }
         finally
