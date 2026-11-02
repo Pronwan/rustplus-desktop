@@ -66,10 +66,13 @@ public partial class MainWindow
                         args.Handled = true;
                         try
                         {
+                            bool video = string.Equals(Path.GetExtension(args.ResultFilePath), ".webm", StringComparison.OrdinalIgnoreCase);
                             var dialog = new SaveFileDialog
                             {
                                 FileName = Path.GetFileName(args.ResultFilePath),
-                                DefaultExt = ".json", Filter = "CopyPaste base (*.json)|*.json", AddExtension = true
+                                DefaultExt = video ? ".webm" : ".json",
+                                Filter = video ? "Showcase video (*.webm)|*.webm" : "CopyPaste base (*.json)|*.json",
+                                AddExtension = true
                             };
                             if (dialog.ShowDialog(this) == true) args.ResultFilePath = dialog.FileName;
                             else args.Cancel = true;
