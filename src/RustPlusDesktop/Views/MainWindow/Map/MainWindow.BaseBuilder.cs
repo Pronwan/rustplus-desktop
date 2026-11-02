@@ -47,6 +47,14 @@ public partial class MainWindow
                 if (!Uri.TryCreate(args.Uri, UriKind.Absolute, out var uri) || uri.Scheme != "https" || uri.Host != host) args.Cancel = true;
             };
             view.CoreWebView2.NewWindowRequested += (_, args) => args.Handled = true;
+            // The workshop's full screen button and F11 post this; the host owns the window, so it does the switching.
+            view.CoreWebView2.WebMessageReceived += (_, args) =>
+            {
+                string? message = null;
+                try { message = args.TryGetWebMessageAsString(); } catch { }
+                if (string.Equals(message?.Trim('"'), "toggle_fullscreen", StringComparison.OrdinalIgnoreCase))
+                    Dispatcher.Invoke(ToggleBaseBuilderFullscreen);
+            };
             view.CoreWebView2.DownloadStarting += (_, args) =>
             {
                 var deferral = args.GetDeferral();
@@ -87,6 +95,47 @@ public partial class MainWindow
         finally { _baseBuilderOpening = false; }
     }
 
+    private Window? _baseBuilderFullscreenWindow;
+
+    // Moves the workshop's WebView into a borderless maximised window and back (the same approach as the 3D map).
+    private void ToggleBaseBuilderFullscreen()
+    {
+        if (_baseBuilderWebView == null) return;
+        bool on;
+        if (_baseBuilderFullscreenWindow == null)
+        {
+            BaseBuilderHost.Children.Remove(_baseBuilderWebView);
+            var window = new Window
+            {
+                WindowStyle = WindowStyle.None,
+                WindowState = WindowState.Maximized,
+                ResizeMode = ResizeMode.NoResize,
+                Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(14, 17, 23)),
+                Content = _baseBuilderWebView
+            };
+            window.PreviewKeyDown += (_, ev) =>
+            {
+                if (ev.Key == System.Windows.Input.Key.F11) { ev.Handled = true; ToggleBaseBuilderFullscreen(); }
+            };
+            window.Closed += (_, _) => ExitBaseBuilderFullscreen();
+            _baseBuilderFullscreenWindow = window;
+            window.Show();
+            on = true;
+        }
+        else { ExitBaseBuilderFullscreen(); on = false; }
+        try { _baseBuilderWebView?.CoreWebView2?.ExecuteScriptAsync($"if (window.setFullscreenState) window.setFullscreenState({on.ToString().ToLowerInvariant()});"); } catch { }
+    }
+
+    private void ExitBaseBuilderFullscreen()
+    {
+        var window = _baseBuilderFullscreenWindow;
+        if (window == null) return;
+        _baseBuilderFullscreenWindow = null;
+        window.Content = null;
+        if (_baseBuilderWebView != null && _baseBuilderWebView.Parent == null) BaseBuilderHost.Children.Add(_baseBuilderWebView);
+        if (window.IsLoaded) window.Close();
+    }
+
     private void BaseBuilderFailed(string message)
     {
         BaseBuilderLoadingText.Text = message;
@@ -118,5 +167,9 @@ public partial class MainWindow
         _ = OpenBaseBuilderWorkspaceAsync();
     }
 
-    private void BaseBuilder_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+    private void BaseBuilder_CloseRequested(object sender, RoutedEventArgs e)
+    {
+        ExitBaseBuilderFullscreen();
+        ReturnToLastWorkspace();
+    }
 }

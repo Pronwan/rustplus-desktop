@@ -1093,6 +1093,11 @@ public partial class MainWindow : WpfUi.FluentWindow
                 e.Handled = true;
                 ToggleWpfFullscreen();
             }
+            else if (BaseBuilderPanel.IsVisible)
+            {
+                e.Handled = true;
+                ToggleBaseBuilderFullscreen();
+            }
         }
     }
 
