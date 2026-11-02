@@ -3334,7 +3334,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         GeneticsLabPanel.Visibility = geneticsSelected ? Visibility.Visible : Visibility.Collapsed;
         BaseBuilderPanel.Visibility = baseBuilderSelected ? Visibility.Visible : Visibility.Collapsed;
         if (baseBuilderSelected) _ = OpenBaseBuilderWorkspaceAsync();
-        else _ = SuspendBaseBuilderAsync();
+        else _ = CloseBaseBuilderWorkspaceAsync();
         PlayerWipeTrackerPanel.Visibility = wipeTrackerSelected ? Visibility.Visible : Visibility.Collapsed;
         DeathStatsPanel.Visibility = deathStatsSelected ? Visibility.Visible : Visibility.Collapsed;
         if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");

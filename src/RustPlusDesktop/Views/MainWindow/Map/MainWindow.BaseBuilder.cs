@@ -83,7 +83,7 @@ public partial class MainWindow
             {
                 if (args.IsSuccess) BaseBuilderLoading.Visibility = Visibility.Collapsed;
                 else BaseBuilderFailed("Could not open Base Builder. Please try again.");
-                if (!BaseBuilderPanel.IsVisible) _ = SuspendBaseBuilderAsync();
+                if (!BaseBuilderPanel.IsVisible) _ = CloseBaseBuilderWorkspaceAsync();
             };
             view.CoreWebView2.Navigate($"https://{host}/index.html?embedded=1&workspace=base-builder&v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
         }
@@ -143,15 +143,24 @@ public partial class MainWindow
         BaseBuilderRetry.Visibility = Visibility.Visible;
     }
 
-    private async Task SuspendBaseBuilderAsync()
+    // Leaving the workshop frees it: the recovery draft is written first (the workshop reopens with "Continue"), then the
+    // WebView and its renderer, 3D scene and base are disposed instead of lingering suspended in memory.
+    private async Task CloseBaseBuilderWorkspaceAsync()
     {
+        ExitBaseBuilderFullscreen();
+        var view = _baseBuilderWebView;
+        if (view == null) return;
         try
         {
-            if (_baseBuilderWebView?.CoreWebView2 is not { } core) return;
-            await core.TrySuspendAsync();
-            if (BaseBuilderPanel.IsVisible) core.Resume();
+            if (view.CoreWebView2 != null)
+                await view.CoreWebView2.ExecuteScriptAsync("(async()=>{try{if(typeof saveWorkshopDraft==='function')await saveWorkshopDraft();}catch(e){}return 1})()")
+                    .WaitAsync(TimeSpan.FromSeconds(3));
         }
-        catch (Exception ex) { AppendLog($"[Base Builder] Could not pause workshop: {ex.Message}"); }
+        catch (Exception ex) { AppendLog($"[Base Builder] Could not save the draft before closing: {ex.Message}"); }
+        // The player may have come back (or reopened it) while the draft was saving.
+        if (!ReferenceEquals(view, _baseBuilderWebView) || BaseBuilderPanel.IsVisible) return;
+        BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
+        BaseBuilderLoading.Visibility = Visibility.Collapsed;
     }
 
     private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e)
