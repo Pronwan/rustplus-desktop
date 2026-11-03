@@ -26,7 +26,7 @@ public partial class MainWindow
     private readonly Dictionary<string, Controls.ToastItem> _buildInviteToasts = new();
 
     /// <summary>The session this account joined as a guest, for the builder to load.</summary>
-    internal BuildSessionInfo? BuildGuestSession { get; private set; }
+    internal BuildSessionInfo? BuildGuestSession { get; set; }
 
     private void AttachBuildInvites()
     {
@@ -115,6 +115,9 @@ public partial class MainWindow
                 var session = await BuildSessionApi.AcceptAsync(invite.SessionId);
                 DismissToast(item);
                 BuildGuestSession = session;
+                // The workshop may already be open, in which case it will not ask again.
+                SyncBuildTogetherConnection();
+                PushBuildTogetherState();
                 ShowInfoSnackbar(
                     Loc.Text("BuildInviteJoinedTitle", "Joined"),
                     string.Format(Loc.Text("BuildInviteJoinedMessage", "You are watching {0} build. The host decides whether you may build too."), host),
@@ -159,6 +162,8 @@ public partial class MainWindow
         if (BuildGuestSession?.Id != sessionId) return;
 
         BuildGuestSession = null;
+        SyncBuildTogetherConnection();
+        PushBuildTogetherState();
         ShowInfoSnackbar(Loc.Text("BuildSessionLeftTitle", "Build session"),
             Loc.Text("BuildSessionKicked", "The host removed you from the build session."), WpfUi.ControlAppearance.Caution);
     }
@@ -168,6 +173,8 @@ public partial class MainWindow
         if (BuildGuestSession?.Id != sessionId) return;
 
         BuildGuestSession = null;
+        SyncBuildTogetherConnection();
+        PushBuildTogetherState();
         ShowInfoSnackbar(Loc.Text("BuildSessionLeftTitle", "Build session"),
             Loc.Text("BuildSessionEnded", "The host ended the build session."), WpfUi.ControlAppearance.Info);
     }

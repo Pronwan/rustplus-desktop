@@ -48,12 +48,21 @@ public partial class MainWindow
             };
             view.CoreWebView2.NewWindowRequested += (_, args) => args.Handled = true;
             // The workshop's full screen button and F11 post this; the host owns the window, so it does the switching.
+            // The Together panel posts objects ({ type: "coop_*" }); the app does the talking to the platform.
             view.CoreWebView2.WebMessageReceived += (_, args) =>
             {
                 string? message = null;
                 try { message = args.TryGetWebMessageAsString(); } catch { }
                 if (string.Equals(message?.Trim('"'), "toggle_fullscreen", StringComparison.OrdinalIgnoreCase))
+                {
                     Dispatcher.Invoke(ToggleBaseBuilderFullscreen);
+                    return;
+                }
+
+                Newtonsoft.Json.Linq.JObject? json = null;
+                try { json = Newtonsoft.Json.Linq.JObject.Parse(args.WebMessageAsJson); } catch { }
+                if (json?["type"]?.ToString()?.StartsWith("coop_", StringComparison.Ordinal) == true)
+                    Dispatcher.InvokeAsync(() => HandleBuildTogetherMessageAsync(json));
             };
             view.CoreWebView2.DownloadStarting += (_, args) =>
             {
@@ -168,6 +177,7 @@ public partial class MainWindow
 
     private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e)
     {
+        if (_baseBuilderWebView != null) _ = LeaveBuildTogetherOnCloseAsync();
         _baseBuilderWebView?.Dispose();
         _baseBuilderWebView = null;
         BaseBuilderHost.Children.Clear();
