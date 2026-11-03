@@ -999,6 +999,8 @@ namespace RustPlusDesk.Views
             // Ctrl+wheel and Ctrl +/- zoomed the whole viewer page; it stays at 100%.
             _map3DWebView.CoreWebView2.Settings.IsZoomControlEnabled = false;
             _map3DWebView.ZoomFactor = 1.0;
+            // Building on a placed base uses the same belt, wheel and item browser as the workshop, and their icons.
+            MapBuilderItemIcons(_map3DWebView.CoreWebView2);
             _map3DResourceRequestHandler = (_, args) => HandleMap3DResourceRequest(args, runtimeRoot);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter($"https://{host}/*", CoreWebView2WebResourceContext.All);
             _map3DWebView.CoreWebView2.AddWebResourceRequestedFilter("https://rustplus-api.invalid/archipel/*", CoreWebView2WebResourceContext.All);
