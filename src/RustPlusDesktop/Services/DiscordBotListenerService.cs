@@ -815,10 +815,23 @@ public class DiscordBotListenerService
                 });
 
             using var doc = JsonDocument.Parse(body);
-            var sent = doc.RootElement.TryGetProperty("data", out var data)
-                       && data.TryGetProperty("sent", out var sentEl)
+            var hasData = doc.RootElement.TryGetProperty("data", out var data);
+            var sent = hasData && data.TryGetProperty("sent", out var sentEl)
                 ? sentEl.GetInt32()
                 : 0;
+
+            // The cloud pauses a channel Discord refused (403/404) for an hour and lists it here
+            // once, only for the owner's own servers - the same hint the direct path gives.
+            if (hasData && data.TryGetProperty("unreachable", out var unreachable)
+                && unreachable.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var channel in unreachable.EnumerateArray())
+                {
+                    var channelId = channel.GetString();
+                    if (!string.IsNullOrEmpty(channelId))
+                        WarnMissingChannelPermission(channelId);
+                }
+            }
 
             Log($"[DiscordBotListener] Sent {notificationType} notification to {sent} configured channel(s).");
         }
@@ -888,14 +901,14 @@ public class DiscordBotListenerService
 
     private static void WarnMissingChannelPermission(string channelId)
     {
-        Log($"[DiscordBotListener] Channel {channelId} disabled for one hour: Discord bot is missing permissions.");
+        Log($"[DiscordBotListener] Channel {channelId} disabled for one hour: Discord bot cannot post there.");
         System.Windows.Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
         {
             if (System.Windows.Application.Current.MainWindow is Views.MainWindow mainWindow)
             {
                 mainWindow.ShowInfoSnackbar(
-                    "Discord permissions missing",
-                    "A configured Discord channel was disabled for one hour. Check the bot's channel permissions.",
+                    "Discord channel unreachable",
+                    "A configured Discord channel was disabled for one hour. Check that it still exists and the bot may post there.",
                     Wpf.Ui.Controls.ControlAppearance.Caution);
             }
         }));
