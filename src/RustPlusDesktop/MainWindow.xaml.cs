@@ -3841,6 +3841,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             try
             {
+                // The builder's last edits into its recovery draft, and out of any co-op session, while its page still runs.
+                await Dispatcher.InvokeAsync(CloseBaseBuilderOnExitAsync).Task.Unwrap();
+            }
+            catch { }
+            try
+            {
                 await NotifyTeamFeatureAppClosingAsync();
             }
             catch { }
@@ -8112,6 +8118,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             RemoveToast(Toasts[0]);
 
         Toasts.Add(item);
+        // The builder's WebView hides anything WPF draws over it; it shows its own copy.
+        ForwardToastToBuilder(item);
 
         if (item.Timeout > TimeSpan.Zero)
         {
@@ -8158,7 +8166,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void RemoveToast(Controls.ToastItem item)
     {
         if (Toasts.Remove(item))
+        {
+            ForgetBuilderToast(item);
             item.Closed?.Invoke();
+        }
     }
 
     private void ToastClose_Click(object sender, RoutedEventArgs e)

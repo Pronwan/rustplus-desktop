@@ -61,8 +61,14 @@ public partial class MainWindow
 
                 Newtonsoft.Json.Linq.JObject? json = null;
                 try { json = Newtonsoft.Json.Linq.JObject.Parse(args.WebMessageAsJson); } catch { }
-                if (json?["type"]?.ToString()?.StartsWith("coop_", StringComparison.Ordinal) == true)
-                    Dispatcher.InvokeAsync(() => HandleBuildTogetherMessageAsync(json));
+                var type = json?["type"]?.ToString() ?? "";
+                if (type.StartsWith("coop_", StringComparison.Ordinal))
+                    Dispatcher.InvokeAsync(() => HandleBuildTogetherMessageAsync(json!));
+                else if (type.StartsWith("app_toast_", StringComparison.Ordinal))
+                    Dispatcher.InvokeAsync(() => HandleBuilderToastMessage(json!));
+                else if (type == "workshop_draft_flushed" && json!["id"]?.ToString() is { } flushId
+                         && _builderDraftFlushes.TryGetValue(flushId, out var flushed))
+                    flushed.TrySetResult(json["result"]?.ToString() ?? "failed");
             };
             view.CoreWebView2.DownloadStarting += (_, args) =>
             {
@@ -155,24 +161,66 @@ public partial class MainWindow
         BaseBuilderRetry.Visibility = Visibility.Visible;
     }
 
+    private static readonly TimeSpan BaseBuilderDraftTimeout = TimeSpan.FromSeconds(3);
+
+    /// <summary>Draft writes the builder was asked for, by id, until it answers (workshop_draft_flushed).</summary>
+    private readonly System.Collections.Generic.Dictionary<string, TaskCompletionSource<string>> _builderDraftFlushes = new();
+
+    /// <summary>
+    /// Writes the builder's recovery draft now and waits until IndexedDB has it. "saved", "nothing" (no draft to keep),
+    /// "failed", "unsupported" (a viewer build without the call) or "unanswered" (no answer in time).
+    /// </summary>
+    private async Task<string> FlushBaseBuilderDraftAsync()
+    {
+        var core = _baseBuilderWebView?.CoreWebView2;
+        if (core == null) return "nothing";
+        var id = Guid.NewGuid().ToString("N");
+        var answer = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _builderDraftFlushes[id] = answer;
+        try
+        {
+            var asked = await core.ExecuteScriptAsync($"window.flushWorkshopDraft ? window.flushWorkshopDraft('{id}') : false")
+                .WaitAsync(BaseBuilderDraftTimeout);
+            if (asked != "true") return "unsupported";
+            return await answer.Task.WaitAsync(BaseBuilderDraftTimeout);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Base Builder] The recovery draft did not answer: {ex.Message}");
+            return "unanswered";
+        }
+        finally { _builderDraftFlushes.Remove(id); }
+    }
+
     // Leaving the workshop frees it: the recovery draft is written first (the workshop reopens with "Continue"), then the
-    // WebView and its renderer, 3D scene and base are disposed instead of lingering suspended in memory.
+    // WebView and its renderer, 3D scene and base are disposed instead of lingering suspended in memory. A draft that
+    // could not be written keeps the builder alive instead, so the edits are still there to go back to.
     private async Task CloseBaseBuilderWorkspaceAsync()
     {
         ExitBaseBuilderFullscreen();
         var view = _baseBuilderWebView;
         if (view == null) return;
-        try
-        {
-            if (view.CoreWebView2 != null)
-                await view.CoreWebView2.ExecuteScriptAsync("(async()=>{try{if(typeof saveWorkshopDraft==='function')await saveWorkshopDraft();}catch(e){}return 1})()")
-                    .WaitAsync(TimeSpan.FromSeconds(3));
-        }
-        catch (Exception ex) { AppendLog($"[Base Builder] Could not save the draft before closing: {ex.Message}"); }
+        var draft = await FlushBaseBuilderDraftAsync();
         // The player may have come back (or reopened it) while the draft was saving.
         if (!ReferenceEquals(view, _baseBuilderWebView) || BaseBuilderPanel.IsVisible) return;
+        if (draft is "failed" or "unanswered")
+        {
+            ShowInfoSnackbar("Base Builder",
+                "Your latest changes could not be saved as a recovery draft, so the workshop stays open in the background. Go back to it and export the base to keep them.",
+                Wpf.Ui.Controls.ControlAppearance.Caution);
+            return;
+        }
         BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
         BaseBuilderLoading.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>The app is quitting: the draft is written and any co-op session left while the page still runs.</summary>
+    private async Task CloseBaseBuilderOnExitAsync()
+    {
+        if (_baseBuilderWebView == null) return;
+        var draft = await FlushBaseBuilderDraftAsync();
+        if (draft is "failed" or "unanswered") AppendLog($"[Base Builder] Quitting without a fresh recovery draft ({draft}).");
+        await LeaveBuildTogetherOnCloseAsync().WaitAsync(BaseBuilderDraftTimeout);
     }
 
     private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e)

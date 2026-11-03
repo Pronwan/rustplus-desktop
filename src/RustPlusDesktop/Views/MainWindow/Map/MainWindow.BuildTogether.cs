@@ -178,7 +178,18 @@ public partial class MainWindow
         if (Interlocked.Exchange(ref _buildTogetherAttached, 1) == 1) return;
 
         BuildSessionRealtime.InviteSettled += (_, _, _) => _ = RefreshAndPushBuildTogetherAsync();
-        BuildSessionRealtime.MemberChanged += change => _ = RefreshAndPushBuildTogetherAsync();
+        BuildSessionRealtime.MemberChanged += change =>
+        {
+            // Our own build rights take effect at once; the refresh that follows only fills in the rest.
+            if (BuildGuestSession is { } joined && joined.Id == change["session_id"]?.ToString()
+                && change["user_id"]?.ToString() == CloudAuthManager.CurrentUser?.Id
+                && change["can_build"]?.Type == JTokenType.Boolean)
+            {
+                BuildGuestSession = joined with { CanBuild = change["can_build"]!.Value<bool>() };
+                PushBuildTogetherState();
+            }
+            _ = RefreshAndPushBuildTogetherAsync();
+        };
         BuildSessionRealtime.Rekeyed += (_, _) => _ = RefreshAndPushBuildTogetherAsync();
         BuildSessionRealtime.SessionEnded += (sessionId, reason) =>
         {

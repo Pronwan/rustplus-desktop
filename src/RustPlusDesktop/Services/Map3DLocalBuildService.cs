@@ -151,13 +151,14 @@ public static class Map3DLocalBuildService
         else
         {
             bool multipleCandidates = explicitMapPath == null;
+            bool explicitMapParsed = false;
             foreach (var candidate in candidates)
             {
                 ct.ThrowIfCancellationRequested();
-                string candidateOutput = Path.Combine(folder, "parser_attempts", SanitizeFileName(Path.GetFileNameWithoutExtension(candidate)));
-                Directory.CreateDirectory(candidateOutput);
+                string candidateOutput = PrepareAttemptDirectory(folder, candidate);
 
                 var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct, skipImage: multipleCandidates).ConfigureAwait(false);
+                if (candidate == explicitMapPath) explicitMapParsed = parse.Success;
                 var score = parse.Success
                     ? ScoreParsedMap(Path.Combine(candidateOutput, "map_resolved.json"), referenceMonuments, worldSize)
                     : default;
@@ -187,9 +188,11 @@ public static class Map3DLocalBuildService
                 }
             }
 
-            if (selectedMap == null && explicitMapPath != null && candidates.Count == 1)
+            // A map the player picked by hand is taken even when its monuments do not line up with the server's, but only
+            // when it parsed just now: its attempt folder is emptied first, so nothing older can stand in for a failure.
+            if (selectedMap == null && AcceptsManualSelection(explicitMapPath, candidates.Count, explicitMapParsed))
             {
-                string candidateOutput = Path.Combine(folder, "parser_attempts", SanitizeFileName(Path.GetFileNameWithoutExtension(explicitMapPath)));
+                string candidateOutput = AttemptDirectory(folder, explicitMapPath!);
                 if (File.Exists(Path.Combine(candidateOutput, "map_resolved.json")))
                 {
                     selectedMap = explicitMapPath;
@@ -950,6 +953,30 @@ public static class Map3DLocalBuildService
         if (string.IsNullOrWhiteSpace(safeName)) safeName = "server";
         return $"{safeName}_{hash}";
     }
+
+    /// <summary>
+    /// Where one parse of <paramref name="mapPath"/> writes its output. Keyed by the whole path, so two maps that share a
+    /// file name in different folders never read each other's results.
+    /// </summary>
+    internal static string AttemptDirectory(string folder, string mapPath)
+    {
+        string fullPath = Path.GetFullPath(mapPath).ToLowerInvariant();
+        string hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(fullPath)))[..8].ToLowerInvariant();
+        return Path.Combine(folder, "parser_attempts", $"{SanitizeFileName(Path.GetFileNameWithoutExtension(mapPath))}_{hash}");
+    }
+
+    /// <summary>An empty attempt folder: a parse that fails must not leave an earlier attempt's output looking like its own.</summary>
+    internal static string PrepareAttemptDirectory(string folder, string mapPath)
+    {
+        string directory = AttemptDirectory(folder, mapPath);
+        if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        Directory.CreateDirectory(directory);
+        return directory;
+    }
+
+    /// <summary>The single map the player picked by hand, and only when this run parsed it.</summary>
+    internal static bool AcceptsManualSelection(string? explicitMapPath, int candidateCount, bool explicitMapParsed) =>
+        explicitMapPath != null && candidateCount == 1 && explicitMapParsed;
 
     private static string SanitizeFileName(string name)
     {
