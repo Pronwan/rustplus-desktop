@@ -25,6 +25,7 @@ namespace RustPlusDesk.Views
         private bool _isRustMapsSearching;
         private bool _isMap3DPreparing;
         private bool _isMap3DActive;
+        private int _mapSelectionVersion;
         private WebView2? _map3DWebView;
         private Map3DPointerLockNotice? _map3DPointerLockNotice;
         private static CoreWebView2Environment? _map3DWebViewEnvironment;
@@ -380,6 +381,7 @@ namespace RustPlusDesk.Views
                 return;
 
             var profile = _vm.Selected;
+            int selectionVersion = _mapSelectionVersion;
             bool isPlaceholder = profile != null && !string.IsNullOrEmpty(profile.LocalMapFilePath);
             if (profile == null || (!profile.IsFullConnected && !isPlaceholder))
             {
@@ -409,6 +411,7 @@ namespace RustPlusDesk.Views
                 }
             }
 
+            if (selectionVersion != _mapSelectionVersion) return;
             if (_miniMap?.IsVisible == true)
                 _miniMap.Close();
 
@@ -418,18 +421,19 @@ namespace RustPlusDesk.Views
             try
             {
                 var result = await RunMapParserAsync(profile!, isPlaceholder, "[3D Map]");
+                if (selectionVersion != _mapSelectionVersion) return;
 
                 if (result != null && result.ParserReady)
                 {
                     AppendLog($"[3D Map] Parser output ready for viewer. Map file: {result.MapFilePath}");
-                    await OpenMap3DViewAsync(result);
+                    await OpenMap3DViewAsync(result, selectionVersion);
                 }
             }
             catch (Exception ex)
             {
                 AppendLog($"[3D Map] Preparation failed: {ex.Message}");
                 AppendLog($"[3D Map] {Services.WebView2Diagnostics.Explain(ex)}");
-                RestoreMap2DAfterFailedOpen();
+                if (selectionVersion == _mapSelectionVersion) RestoreMap2DAfterFailedOpen();
             }
             finally
             {
@@ -448,6 +452,8 @@ namespace RustPlusDesk.Views
         private async Task<Map3DLocalBuildResult?> RunMapParserAsync(
             ServerProfile profile, bool isPlaceholder, string logPrefix)
         {
+            int selectionVersion = _mapSelectionVersion;
+            if (!ReferenceEquals(_vm.Selected, profile)) return null;
             BitmapSource? texture = null;
             string host = profile.Host ?? "unknown";
             int port = profile.Port;
@@ -489,6 +495,7 @@ namespace RustPlusDesk.Views
             var result = await Map3DLocalBuildService.PrepareAsync(
                 profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
                 knownMapPath);
+            if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
 
             if (result.NeedsManualMapSelection)
             {
@@ -507,12 +514,14 @@ namespace RustPlusDesk.Views
                     AppendLog($"{logPrefix} Map selection canceled.");
                     return null;
                 }
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
 
                 profile.LocalMapFilePath = picker.FileName;
                 _vm.Save();
 
                 result = await Map3DLocalBuildService.PrepareAsync(
                     profile, texture, profile.RustMapsMapId, references, effectiveWorldSize, picker.FileName, forceReparse: true);
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
             }
 
             if (result.ParserReady && !string.IsNullOrEmpty(result.MapFilePath))
@@ -528,6 +537,7 @@ namespace RustPlusDesk.Views
             AppendLog($"{logPrefix} {result.StatusMessage} ({parseSource}, {result.Elapsed.TotalMilliseconds:F0} ms) Folder: {result.FolderPath}");
 
             if (result.ParserReady) await EnsureOfflineMapImageAsync(profile);
+            if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
             return result;
         }
 
@@ -584,6 +594,7 @@ namespace RustPlusDesk.Views
         /// </summary>
         internal async Task ShowOfflineMapAsync(ServerProfile profile)
         {
+            int selectionVersion = _mapSelectionVersion;
             ResetMapDisplay();
 
             string? imagePath = profile.LocalMapImagePath;
@@ -592,6 +603,7 @@ namespace RustPlusDesk.Views
             try
             {
                 var bitmap = await Task.Run(() => LoadLocalMapImage(imagePath));
+                if (selectionVersion != _mapSelectionVersion) return;
                 _serverMapPixelSize = (0, 0);
 
                 ShowMapBasic(bitmap);
@@ -614,6 +626,7 @@ namespace RustPlusDesk.Views
                 }
 
                 await LoadOfflineMainMonumentsAsync(profile, folder);
+                if (selectionVersion != _mapSelectionVersion) return;
                 MergeCachedExtraMonumentsForCurrentMap();
                 BuildMonumentOverlays();
 
@@ -872,22 +885,26 @@ namespace RustPlusDesk.Views
         /// </param>
         private async Task LoadParsedMapDataAsync(string folderPath, bool applyRenderedImage = true)
         {
+            int selectionVersion = _mapSelectionVersion;
             _currentMapFolderPath = folderPath;
             if (_vm?.Selected is { } offlineProfile && IsOfflineOnlyProfile(offlineProfile))
             {
                 await LoadOfflineMainMonumentsAsync(offlineProfile, folderPath);
+                if (selectionVersion != _mapSelectionVersion) return;
             }
 
             // map_data.json runs to ~90 MB and every overlay below reads from it: read it
             // (and map_resolved.json) once, off the UI thread, instead of once per overlay on it.
             var mapRoot = await Services.Map.ParsedMapDataCache.LoadAsync(folderPath);
             using var resolvedDoc = await Services.Map.ParsedMapDataCache.ParseFileAsync(Path.Combine(folderPath, "map_resolved.json"));
+            if (selectionVersion != _mapSelectionVersion) return;
             JsonElement? resolvedRoot = resolvedDoc?.RootElement;
 
             if (mapRoot is { } root)
             {
                 GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedRoot);
                 await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedRoot);
+                if (selectionVersion != _mapSelectionVersion) return;
             }
             LoadBuildingBlockedZonesForCurrentMap(folderPath);
             LoadCargoPathForCurrentMap(mapRoot.HasValue ? folderPath : null, mapRoot);
@@ -902,10 +919,12 @@ namespace RustPlusDesk.Views
             // The first parse is where the question comes up: from here on there is a render to show.
             if (applyRenderedImage && File.Exists(texPath) && await DecideUseRenderedImageAsync(texPath))
             {
+                if (selectionVersion != _mapSelectionVersion) return;
                 try
                 {
                     // Decoding the render takes a second or more; keep it off the UI thread.
                     var bi = await Task.Run(() => LoadRenderedImage(texPath));
+                    if (selectionVersion != _mapSelectionVersion) return;
 
                     _isGeneratedMapActive = true;
                     Dispatcher.Invoke(() =>
@@ -934,11 +953,14 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result)
+        private async Task OpenMap3DViewAsync(Map3DLocalBuildResult result, int selectionVersion)
         {
+            if (selectionVersion != _mapSelectionVersion) return;
             Ach.Unlock(Ach.Map3D);
             await LoadParsedMapDataAsync(result.FolderPath);
+            if (selectionVersion != _mapSelectionVersion) return;
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
+            if (selectionVersion != _mapSelectionVersion) return;
             const string host = "rustplus3d.local";
             bool hasBuildings = System.IO.File.Exists(System.IO.Path.Combine(result.FolderPath, "map_buildings.json"));
 
@@ -968,7 +990,9 @@ namespace RustPlusDesk.Views
             // The CoreWebView2 environment (fixed user-data folder) is identical across opens, so
             // create it once and reuse it to avoid the per-open initialization cost.
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
+            if (selectionVersion != _mapSelectionVersion) { CloseMap3DView(); return; }
             await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
+            if (selectionVersion != _mapSelectionVersion) { CloseMap3DView(); return; }
             _map3DPointerLockNotice = new Map3DPointerLockNotice(_map3DWebView.CoreWebView2.BrowserProcessId);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
             _map3DWebView.CoreWebView2.ProcessFailed += Map3DProcessFailed;

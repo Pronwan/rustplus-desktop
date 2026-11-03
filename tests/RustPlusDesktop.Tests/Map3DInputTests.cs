@@ -12,6 +12,20 @@ namespace RustPlusDesktop.Tests;
 [TestClass]
 public class Map3DInputTests
 {
+    [STATestMethod]
+    public async Task StalePreparationCannotOpenAViewerAfterTheServerChanges()
+    {
+        var window = (MainWindow)RuntimeHelpers.GetUninitializedObject(typeof(MainWindow));
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        typeof(MainWindow).GetField("_isDeletingServer", flags)!.SetValue(window, true);
+        typeof(MainWindow).GetMethod("ListServers_SelectionChanged", flags)!.Invoke(window, new object?[] { window, null });
+        var open = typeof(MainWindow).GetMethod("OpenMap3DViewAsync", flags)!;
+
+        await (Task)open.Invoke(window, new object[] { new Map3DLocalBuildResult { FolderPath = "missing" }, 0 })!;
+
+        Assert.IsNull(typeof(MainWindow).GetField("_currentMapFolderPath", flags)!.GetValue(window));
+    }
+
     [TestMethod]
     public void PointerLockNotice_OnlyMatchesTheLocalViewerReminder()
     {

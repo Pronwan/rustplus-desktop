@@ -248,7 +248,9 @@ public partial class MainWindow
 
     private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
+        _mapSelectionVersion++;
         if (_isDeletingServer) return;
+        if (_isMap3DActive) CloseMap3DView();
         _lastChatTsForCurrentServer = null;
 
         if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))

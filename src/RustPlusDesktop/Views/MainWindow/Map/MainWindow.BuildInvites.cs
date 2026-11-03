@@ -163,6 +163,7 @@ public partial class MainWindow
         if (BuildGuestSession?.Id != sessionId) return;
 
         BuildGuestSession = null;
+        _buildGuestEnded = true;
         SyncBuildTogetherConnection();
         PushBuildTogetherState();
         ShowInfoSnackbar(Loc.Text("BuildSessionLeftTitle", "Build session"),
