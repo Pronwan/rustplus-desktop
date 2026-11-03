@@ -8260,4 +8260,25 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>Der Host hat die Bau-Session beendet.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>Dem Bau von {0} beitreten?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>Du hostest gerade eine Bau-Session. „{0}“ wird in deiner Bibliothek gespeichert und deine Session endet für deine Gäste, dann trittst du {1} bei.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>„{0}“ wird in deiner Bibliothek gespeichert, dann trittst du {1} bei. Von dort kannst du deine Base wieder öffnen.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>deine Base</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Speichern und beitreten</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>Weiterbauen</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>Deine Base konnte nicht gespeichert werden, deshalb bleibst du dabei. Exportiere sie als Datei und nimm die Einladung dann erneut an.</value>
+  </data>
 </root>

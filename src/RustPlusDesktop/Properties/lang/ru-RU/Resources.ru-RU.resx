@@ -8169,4 +8169,25 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>Хост завершил сессию строительства.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>Присоединиться к постройке {0}?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>Вы проводите сессию постройки. «{0}» сохранится в вашей библиотеке, а сессия для ваших гостей завершится, после чего вы присоединитесь к {1}.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>«{0}» сохранится в вашей библиотеке, после чего вы присоединитесь к {1}. Оттуда её можно снова открыть.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>ваша база</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Сохранить и присоединиться</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>Продолжить стройку</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить вашу базу, поэтому вы остаётесь в ней. Экспортируйте её в файл и примите приглашение снова.</value>
+  </data>
 </root>

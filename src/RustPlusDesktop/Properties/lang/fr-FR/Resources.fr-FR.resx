@@ -8169,4 +8169,25 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>L&apos;hôte a mis fin à la session de construction.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>Rejoindre la construction de {0} ?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>Tu héberges une session de construction. « {0} » est enregistrée dans ta bibliothèque et ta session se termine pour tes invités, puis tu rejoins {1}.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>« {0} » est enregistrée dans ta bibliothèque, puis tu rejoins {1}. Tu pourras la rouvrir depuis là.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>ta base</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Enregistrer et rejoindre</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>Continuer à construire</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>Ta base n&apos;a pas pu être enregistrée, tu restes donc dessus. Exporte-la dans un fichier, puis accepte à nouveau l&apos;invitation.</value>
+  </data>
 </root>

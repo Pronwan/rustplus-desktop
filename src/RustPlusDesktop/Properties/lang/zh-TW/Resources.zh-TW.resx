@@ -2039,4 +2039,25 @@
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>房主已結束建造工作階段。</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>加入 {0} 的建造？</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>你正在主持一個建造工作階段。「{0}」將儲存到你的資料庫，你的工作階段將為你的訪客結束，然後你將加入 {1}。</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>「{0}」將儲存到你的資料庫，然後你將加入 {1}。你可以從資料庫再次開啟它。</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>你的基地</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>儲存並加入</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>繼續建造</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>無法儲存你的基地，因此你將留在其中。請先將其匯出為檔案，然後再次接受邀請。</value>
+  </data>
 </root>

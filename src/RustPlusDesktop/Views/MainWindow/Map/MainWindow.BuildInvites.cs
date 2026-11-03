@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Newtonsoft.Json.Linq;
 using RustPlusDesk.Helpers;
 using RustPlusDesk.Services.Builder;
 using RustPlusDesk.Services.Cloud;
@@ -110,38 +111,141 @@ public partial class MainWindow
         accept.Click += async (_, _) =>
         {
             Busy(true);
-            try
+            // Joining replaces whatever the workshop shows. Someone building their own base, or hosting, is asked first.
+            var own = await OwnWorkshopBaseAsync();
+            if (_buildHostSession != null || own is { Pieces: > 0 })
             {
-                var session = await BuildSessionApi.AcceptAsync(invite.SessionId);
-                DismissToast(item);
-                BuildGuestSession = session;
-                _buildGuestEnded = false;
-                // The workshop may already be open, in which case it will not ask again.
-                SyncBuildTogetherConnection();
-                PushBuildTogetherState();
-                ShowInfoSnackbar(
-                    Loc.Text("BuildInviteJoinedTitle", "Joined"),
-                    string.Format(Loc.Text("BuildInviteJoinedMessage", "You are watching {0} build. The host decides whether you may build too."), host),
-                    WpfUi.ControlAppearance.Success, WpfUi.SymbolRegular.People24);
-                MainTabs.SelectedItem = BaseBuilderTab;
-            }
-            catch (CloudApiException ex) when (ex.StatusCode is 404 or 410)
-            {
-                DismissToast(item);
-                ShowInfoSnackbar(Loc.Text("BuildInviteTitle", "Build together?"),
-                    Loc.Text("BuildInviteGone", "This invite has expired or the session has ended."), WpfUi.ControlAppearance.Caution);
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[Build Together] Could not join: {ex.Message}");
+                AskToLeaveOwnBuild(invite, item, host, own?.Name);
                 Busy(false);
+                return;
             }
+            if (!await JoinBuildInviteAsync(invite, item, host)) Busy(false);
         };
 
         decline.Click += async (_, _) => await AnswerBuildInviteAsync(item, () => BuildSessionApi.DeclineAsync(invite.SessionId));
         ignore.Click += async (_, _) => await AnswerBuildInviteAsync(item, () => BuildSessionApi.IgnoreAsync(invite.SessionId));
 
         _buildInviteToasts[invite.SessionId] = item;
+        AddToast(item);
+    }
+
+    /// <summary>Accepts the invite and opens the workshop on the host's base. False when it failed and can be tried again.</summary>
+    private async Task<bool> JoinBuildInviteAsync(BuildInvite invite, Controls.ToastItem item, string host)
+    {
+        try
+        {
+            // One session at a time: a guest somewhere else walks out of it first.
+            if (BuildGuestSession is { } previous && previous.Id != invite.SessionId)
+            {
+                BuildGuestSession = null;
+                try { await BuildSessionApi.LeaveAsync(previous.Id); }
+                catch (Exception ex) { AppendLog($"[Build Together] Could not leave the previous session: {ex.Message}"); }
+            }
+
+            var session = await BuildSessionApi.AcceptAsync(invite.SessionId);
+            DismissToast(item);
+            BuildGuestSession = session;
+            _buildGuestEnded = false;
+            // The workshop may already be open, in which case it will not ask again.
+            SyncBuildTogetherConnection();
+            PushBuildTogetherState();
+            ShowInfoSnackbar(
+                Loc.Text("BuildInviteJoinedTitle", "Joined"),
+                string.Format(Loc.Text("BuildInviteJoinedMessage", "You are watching {0} build. The host decides whether you may build too."), host),
+                WpfUi.ControlAppearance.Success, WpfUi.SymbolRegular.People24);
+            MainTabs.SelectedItem = BaseBuilderTab;
+            return true;
+        }
+        catch (CloudApiException ex) when (ex.StatusCode is 404 or 410)
+        {
+            DismissToast(item);
+            ShowInfoSnackbar(Loc.Text("BuildInviteTitle", "Build together?"),
+                Loc.Text("BuildInviteGone", "This invite has expired or the session has ended."), WpfUi.ControlAppearance.Caution);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Build Together] Could not join: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>The base open in the workshop, when it is the player's own rather than a shared copy.</summary>
+    private async Task<(string Name, int Pieces)?> OwnWorkshopBaseAsync()
+    {
+        var core = _baseBuilderWebView?.CoreWebView2;
+        if (core == null) return null;
+        try
+        {
+            var json = await core.ExecuteScriptAsync("window.workshopOwnBase ? window.workshopOwnBase() : null").WaitAsync(TimeSpan.FromSeconds(3));
+            if (JToken.Parse(json) is not JObject own) return null;
+            return (own["name"]?.ToString() ?? "", own["pieces"]?.Value<int>() ?? 0);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Build Together] Could not ask the workshop what is open: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// The player is building a base of their own, or hosting: keep it in their library, end their own session, then join.
+    /// A toast rather than a dialog, so it shows inside the builder too (MainWindow.BuilderToasts).
+    /// </summary>
+    private void AskToLeaveOwnBuild(BuildInvite invite, Controls.ToastItem inviteToast, string host, string? baseName)
+    {
+        var hosting = _buildHostSession != null;
+        var name = !string.IsNullOrWhiteSpace(baseName) ? baseName
+            : _buildHostSession?.BaseName ?? Loc.Text("BuildInviteSwitchYourBase", "your base");
+        var message = hosting
+            ? string.Format(Loc.Text("BuildInviteSwitchHosting", "You are hosting a build session. \"{0}\" is saved to your library and your session ends for your guests, then you join {1}."), name, host)
+            : string.Format(Loc.Text("BuildInviteSwitchBuilding", "\"{0}\" is saved to your library, then you join {1}. You can open it again from there."), name, host);
+
+        var remaining = (invite.ExpiresAt ?? DateTimeOffset.UtcNow.AddMinutes(2)) - DateTimeOffset.UtcNow;
+        var item = new Controls.ToastItem
+        {
+            Title = string.Format(Loc.Text("BuildInviteSwitchTitle", "Join {0}'s build?"), host),
+            Icon = WpfUi.SymbolRegular.People24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Caution),
+            MaxCardWidth = 460,
+            Timeout = remaining > TimeSpan.Zero ? remaining : TimeSpan.FromSeconds(30),
+        };
+
+        var panel = new StackPanel();
+        panel.Children.Add(new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 10) });
+        var buttons = new WrapPanel();
+        var confirm = new WpfUi.Button { Content = Loc.Text("BuildInviteSwitchConfirm", "Save and join"), Appearance = WpfUi.ControlAppearance.Primary, Margin = new Thickness(0, 0, 8, 0) };
+        var cancel = new WpfUi.Button { Content = Loc.Text("BuildInviteSwitchCancel", "Keep building"), Appearance = WpfUi.ControlAppearance.Secondary };
+        buttons.Children.Add(confirm);
+        buttons.Children.Add(cancel);
+        panel.Children.Add(buttons);
+        item.Content = panel;
+
+        confirm.Click += async (_, _) =>
+        {
+            confirm.IsEnabled = cancel.IsEnabled = false;
+            // "unsupported" is a viewer without the call; opening the host's base still saves the old one to the library.
+            var saved = await AskBaseBuilderAsync("saveWorkshopOwnBase", TimeSpan.FromSeconds(20));
+            DismissToast(item);
+            if (saved is "failed" or "unanswered")
+            {
+                ShowInfoSnackbar(Loc.Text("BuildInviteTitle", "Build together?"),
+                    Loc.Text("BuildInviteSaveFailed", "Your base could not be saved, so you stay with it. Export it to a file, then accept the invite again."),
+                    WpfUi.ControlAppearance.Danger);
+                return;
+            }
+
+            if (_buildHostSession is { } mine)
+            {
+                _buildHostSession = null;
+                try { await BuildSessionApi.EndAsync(mine.Id); }
+                catch (Exception ex) { AppendLog($"[Build Together] Could not end the own session before joining: {ex.Message}"); }
+                SyncBuildTogetherConnection();
+            }
+            await JoinBuildInviteAsync(invite, inviteToast, host);
+        };
+        cancel.Click += (_, _) => DismissToast(item);
+
         AddToast(item);
     }
 

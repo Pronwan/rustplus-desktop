@@ -66,9 +66,9 @@ public partial class MainWindow
                     Dispatcher.InvokeAsync(() => HandleBuildTogetherMessageAsync(json!));
                 else if (type.StartsWith("app_toast_", StringComparison.Ordinal))
                     Dispatcher.InvokeAsync(() => HandleBuilderToastMessage(json!));
-                else if (type == "workshop_draft_flushed" && json!["id"]?.ToString() is { } flushId
-                         && _builderDraftFlushes.TryGetValue(flushId, out var flushed))
-                    flushed.TrySetResult(json["result"]?.ToString() ?? "failed");
+                else if (type == "builder_reply" && json!["id"]?.ToString() is { } replyId
+                         && _builderReplies.TryGetValue(replyId, out var reply))
+                    reply.TrySetResult(json["result"]?.ToString() ?? "failed");
             };
             view.CoreWebView2.DownloadStarting += (_, args) =>
             {
@@ -163,34 +163,38 @@ public partial class MainWindow
 
     private static readonly TimeSpan BaseBuilderDraftTimeout = TimeSpan.FromSeconds(3);
 
-    /// <summary>Draft writes the builder was asked for, by id, until it answers (workshop_draft_flushed).</summary>
-    private readonly System.Collections.Generic.Dictionary<string, TaskCompletionSource<string>> _builderDraftFlushes = new();
+    /// <summary>Work the builder was asked to do, by id, until it answers (builder_reply).</summary>
+    private readonly System.Collections.Generic.Dictionary<string, TaskCompletionSource<string>> _builderReplies = new();
 
     /// <summary>
-    /// Writes the builder's recovery draft now and waits until IndexedDB has it. "saved", "nothing" (no draft to keep),
-    /// "failed", "unsupported" (a viewer build without the call) or "unanswered" (no answer in time).
+    /// Runs one of the builder's window functions that answer by message, and waits for the answer: "saved", "nothing",
+    /// "failed", or here "unsupported" (a viewer build without the function) and "unanswered" (no answer in time).
     /// </summary>
-    private async Task<string> FlushBaseBuilderDraftAsync()
+    private async Task<string> AskBaseBuilderAsync(string function, TimeSpan? timeout = null)
     {
+        var wait = timeout ?? BaseBuilderDraftTimeout;
         var core = _baseBuilderWebView?.CoreWebView2;
         if (core == null) return "nothing";
         var id = Guid.NewGuid().ToString("N");
         var answer = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _builderDraftFlushes[id] = answer;
+        _builderReplies[id] = answer;
         try
         {
-            var asked = await core.ExecuteScriptAsync($"window.flushWorkshopDraft ? window.flushWorkshopDraft('{id}') : false")
-                .WaitAsync(BaseBuilderDraftTimeout);
+            var asked = await core.ExecuteScriptAsync($"window.{function} ? window.{function}('{id}') : false")
+                .WaitAsync(wait);
             if (asked != "true") return "unsupported";
-            return await answer.Task.WaitAsync(BaseBuilderDraftTimeout);
+            return await answer.Task.WaitAsync(wait);
         }
         catch (Exception ex)
         {
-            AppendLog($"[Base Builder] The recovery draft did not answer: {ex.Message}");
+            AppendLog($"[Base Builder] {function} did not answer: {ex.Message}");
             return "unanswered";
         }
-        finally { _builderDraftFlushes.Remove(id); }
+        finally { _builderReplies.Remove(id); }
     }
+
+    /// <summary>Writes the builder's recovery draft now and waits until IndexedDB has it.</summary>
+    private Task<string> FlushBaseBuilderDraftAsync() => AskBaseBuilderAsync("flushWorkshopDraft");
 
     // Leaving the workshop frees it: the recovery draft is written first (the workshop reopens with "Continue"), then the
     // WebView and its renderer, 3D scene and base are disposed instead of lingering suspended in memory. A draft that

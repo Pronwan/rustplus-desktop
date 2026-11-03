@@ -8169,4 +8169,25 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>El anfitrión ha terminado la sesión de construcción.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>¿Unirte a la construcción de {0}?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>Estás alojando una sesión de construcción. «{0}» se guarda en tu biblioteca y tu sesión termina para tus invitados; después te unes a {1}.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>«{0}» se guarda en tu biblioteca y después te unes a {1}. Puedes volver a abrirla desde allí.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>tu base</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Guardar y unirse</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>Seguir construyendo</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>No se pudo guardar tu base, así que sigues en ella. Expórtala a un archivo y vuelve a aceptar la invitación.</value>
+  </data>
 </root>

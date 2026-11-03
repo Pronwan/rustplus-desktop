@@ -6667,4 +6667,25 @@ You can find more information on the server's official website:
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>The host ended the build session.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>Join {0}&apos;s build?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>You are hosting a build session. &quot;{0}&quot; is saved to your library and your session ends for your guests, then you join {1}.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>&quot;{0}&quot; is saved to your library, then you join {1}. You can open it again from there.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>your base</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Save and join</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>Keep building</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>Your base could not be saved, so you stay with it. Export it to a file, then accept the invite again.</value>
+  </data>
 </root>

@@ -7920,4 +7920,25 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>房主已结束建造会话。</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>加入 {0} 的建造？</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>你正在主持一个建造会话。“{0}”将保存到你的库中，你的会话将为你的访客结束，然后你将加入 {1}。</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>“{0}”将保存到你的库中，然后你将加入 {1}。你可以从库中再次打开它。</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>你的基地</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>保存并加入</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>继续建造</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>无法保存你的基地，因此你将留在其中。请先将其导出为文件，然后再次接受邀请。</value>
+  </data>
 </root>

@@ -8060,4 +8060,25 @@
   <data name="BuildSessionEnded" xml:space="preserve">
     <value>أنهى المضيف جلسة البناء.</value>
   </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>هل تريد الانضمام إلى بناء {0}؟</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>أنت تستضيف جلسة بناء. سيتم حفظ &quot;{0}&quot; في مكتبتك وستنتهي جلستك لضيوفك، ثم تنضم إلى {1}.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>سيتم حفظ &quot;{0}&quot; في مكتبتك، ثم تنضم إلى {1}. يمكنك فتحها مرة أخرى من هناك.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>قاعدتك</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>حفظ وانضمام</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>متابعة البناء</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>تعذّر حفظ قاعدتك، لذلك ستبقى فيها. صدّرها إلى ملف، ثم اقبل الدعوة مرة أخرى.</value>
+  </data>
 </root>
