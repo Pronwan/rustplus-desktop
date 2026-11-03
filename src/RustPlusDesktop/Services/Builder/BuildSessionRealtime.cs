@@ -36,6 +36,15 @@ public static class BuildSessionRealtime
     /// <summary>A session ended: session id, reason (host_ended, host_timeout, premium_lost...).</summary>
     public static event Action<string, string?>? SessionEnded;
 
+    /// <summary>A batch of the host's changes, on the session channel. Raw, for the builder.</summary>
+    public static event Action<JObject>? OpsReceived;
+
+    /// <summary>The host's side: a guest proposed a change. Raw, for the builder.</summary>
+    public static event Action<JObject>? ProposalReceived;
+
+    /// <summary>The host's side: a guest lost track and needs a fresh snapshot.</summary>
+    public static event Action<string>? SnapshotRequested;
+
     private static readonly object Gate = new();
     private static bool _attached;
 
@@ -87,6 +96,18 @@ public static class BuildSessionRealtime
 
             case "builder.member_changed":
                 Raise(() => MemberChanged?.Invoke(data));
+                break;
+
+            case "builder.ops":
+                Raise(() => OpsReceived?.Invoke(data));
+                break;
+
+            case "builder.proposal":
+                Raise(() => ProposalReceived?.Invoke(data));
+                break;
+
+            case "builder.snapshot_requested":
+                Raise(() => SnapshotRequested?.Invoke(sessionId!));
                 break;
 
             case "builder.session_ended":

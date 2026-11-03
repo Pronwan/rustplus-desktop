@@ -45,6 +45,12 @@ public partial class MainWindow
     private async Task HandleBuildTogetherMessageAsync(JObject message)
     {
         var type = message["type"]?.ToString();
+        if (type is "coop_ops" or "coop_snapshot" or "coop_propose" or "coop_fetch_snapshot" or "coop_request_snapshot")
+        {
+            await RelayBuildMessageAsync(type, message);
+            return;
+        }
+
         _buildTogetherNotice = null;
 
         try
@@ -165,6 +171,7 @@ public partial class MainWindow
             SyncBuildTogetherConnection();
             PushBuildTogetherState();
         };
+        AttachBuildRelay();
         BuildSessionRealtime.EnsureStarted();
     }
 
@@ -266,6 +273,96 @@ public partial class MainWindow
 
         try { _ = core.ExecuteScriptAsync($"window.setCoopState && window.setCoopState({JsonSerializer.Serialize(state)});"); }
         catch (Exception ex) { AppendLog($"[Build Together] Could not update the panel: {ex.Message}"); }
+    }
+
+    // ---------------------------------------------------------------- the relay (coopSync.js)
+
+    /// <summary>
+    /// One at a time and in the order the builder sent them: batch 41 must not overtake batch 40, and a snapshot must be
+    /// stored before the resync op that tells guests to fetch it.
+    /// </summary>
+    private readonly SemaphoreSlim _buildRelayGate = new(1, 1);
+
+    /// <summary>The base moving between apps. Quiet: no panel state is pushed, these happen on every edit.</summary>
+    private async Task RelayBuildMessageAsync(string type, JObject message)
+    {
+        await _buildRelayGate.WaitAsync();
+        try
+        {
+            switch (type)
+            {
+                case "coop_ops" when _buildHostSession != null:
+                    var batch = new JObject { ["v"] = message["v"], ["ops"] = message["ops"] };
+                    await BuildSessionApi.SendOpsAsync(_buildHostSession.Id, batch);
+                    break;
+
+                case "coop_snapshot" when _buildHostSession != null && message["snapshot"] is JObject snapshot:
+                    await BuildSessionApi.PutSnapshotAsync(_buildHostSession.Id, message["version"]?.Value<long>() ?? 0, snapshot);
+                    break;
+
+                case "coop_propose" when BuildGuestSession != null:
+                    await BuildSessionApi.ProposeAsync(BuildGuestSession.Id, message["kind"]?.ToString() ?? "edit",
+                        message["payload"] ?? new JObject());
+                    break;
+
+                case "coop_request_snapshot" when BuildGuestSession != null:
+                    // The host answers with a fresh snapshot and a resync op, which brings us back here as a fetch.
+                    await BuildSessionApi.RequestSnapshotAsync(BuildGuestSession.Id);
+                    break;
+
+                case "coop_fetch_snapshot" when BuildGuestSession != null:
+                    var data = await BuildSessionApi.GetSnapshotAsync(BuildGuestSession.Id);
+                    RunInBuilder($"window.loadCoopSnapshot && window.loadCoopSnapshot({data?.ToString(Newtonsoft.Json.Formatting.None) ?? "null"});");
+                    break;
+            }
+        }
+        catch (CloudApiException ex) when (ex.StatusCode == 413 && type == "coop_ops")
+        {
+            // Too big for one broadcast after all: the snapshot path carries any size.
+            RunInBuilder("window.coopSnapshotRequested && window.coopSnapshotRequested();");
+        }
+        catch (CloudApiException ex) when (ex.StatusCode is 403 or 404 or 410)
+        {
+            // Rights taken away, or the session is gone: the panel needs to know.
+            AppendLog($"[Build Together] {type} refused ({ex.StatusCode}); refreshing the session.");
+            _ = RefreshAndPushBuildTogetherAsync();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Build Together] {type} failed: {ex.Message}");
+            // A guest that missed a fetch would wait forever; let it try again on the next batch.
+            if (type == "coop_fetch_snapshot") RunInBuilder("window.loadCoopSnapshot && window.loadCoopSnapshot(null);");
+        }
+        finally
+        {
+            _buildRelayGate.Release();
+        }
+    }
+
+    /// <summary>Broadcasts from the platform that belong to the builder: the host's batches, guests' proposals, resync asks.</summary>
+    private void AttachBuildRelay()
+    {
+        BuildSessionRealtime.OpsReceived += data =>
+        {
+            if (BuildGuestSession?.Id == data["session_id"]?.ToString())
+                RunInBuilder($"window.applyCoopOps && window.applyCoopOps({data.ToString(Newtonsoft.Json.Formatting.None)});");
+        };
+        BuildSessionRealtime.ProposalReceived += data =>
+        {
+            if (_buildHostSession?.Id == data["session_id"]?.ToString())
+                RunInBuilder($"window.applyCoopProposal && window.applyCoopProposal({data.ToString(Newtonsoft.Json.Formatting.None)});");
+        };
+        BuildSessionRealtime.SnapshotRequested += sessionId =>
+        {
+            if (_buildHostSession?.Id == sessionId)
+                RunInBuilder("window.coopSnapshotRequested && window.coopSnapshotRequested();");
+        };
+    }
+
+    private void RunInBuilder(string script)
+    {
+        try { _ = _baseBuilderWebView?.CoreWebView2?.ExecuteScriptAsync(script); }
+        catch (Exception ex) { AppendLog($"[Build Together] Could not reach the builder: {ex.Message}"); }
     }
 
     /// <summary>The workshop is going away, and the session cannot outlive it.</summary>

@@ -134,6 +134,48 @@ public sealed class BuildSessionTests
     }
 
     [TestMethod]
+    public void RoutesTheHostsBatchesAndTheGuestsProposalsToTheBuilder()
+    {
+        JObject? ops = null, proposal = null;
+        string? resync = null;
+        void OnOps(JObject d) => ops = d;
+        void OnProposal(JObject d) => proposal = d;
+        void OnResync(string id) => resync = id;
+        BuildSessionRealtime.OpsReceived += OnOps;
+        BuildSessionRealtime.ProposalReceived += OnProposal;
+        BuildSessionRealtime.SnapshotRequested += OnResync;
+        try
+        {
+            BuildSessionRealtime.OnEvent($"private-build-sessions.{SessionId}.1", ".builder.ops",
+                JObject.Parse($$"""{ "session_id": "{{SessionId}}", "v": 7, "ops": [ { "t": "del", "bid": 4 } ] }"""));
+            BuildSessionRealtime.OnEvent("private-users.u1", ".builder.proposal",
+                JObject.Parse($$"""{ "session_id": "{{SessionId}}", "from_user_id": "u2", "kind": "edit", "payload": { "ops": [] } }"""));
+            BuildSessionRealtime.OnEvent("private-users.u1", ".builder.snapshot_requested",
+                JObject.Parse($$"""{ "session_id": "{{SessionId}}", "from_user_id": "u2" }"""));
+        }
+        finally
+        {
+            BuildSessionRealtime.OpsReceived -= OnOps;
+            BuildSessionRealtime.ProposalReceived -= OnProposal;
+            BuildSessionRealtime.SnapshotRequested -= OnResync;
+        }
+
+        Assert.AreEqual(7, ops?["v"]?.Value<int>());
+        Assert.AreEqual("edit", proposal?["kind"]?.ToString());
+        Assert.AreEqual(SessionId, resync);
+    }
+
+    [TestMethod]
+    public void SendsTheBuildersJsonAsJsonNotAsNewtonsoftMetadata()
+    {
+        var batch = JObject.Parse("""{ "v": 3, "ops": [ { "t": "put", "bid": 1, "p": [0, 1.5, 3], "q": [0, 0, 0, 1] } ] }""");
+
+        var sent = System.Text.Json.JsonSerializer.Serialize(new { payload = BuildSessionApi.AsJson(batch) });
+
+        Assert.AreEqual("""{"payload":{"v":3,"ops":[{"t":"put","bid":1,"p":[0,1.5,3],"q":[0,0,0,1]}]}}""", sent);
+    }
+
+    [TestMethod]
     public void StaysOffUntilTheFlagIsOnTheFeed()
     {
         CloudFeatureFlags.Load("{\"data\":{\"alexa\":{\"enabled\":true}}}");

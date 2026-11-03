@@ -65,6 +65,46 @@ public static class BuildSessionApi
     public static async Task<BuildSessionInfo?> KickAsync(string sessionId, string memberId) =>
         ParseSession(await CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/members/{memberId}", HttpMethod.Delete));
 
+    // ---- the relay: the base itself, carried between host and guests ----
+
+    /// <summary>The host's whole base. The platform refuses a version older than the one it holds.</summary>
+    public static Task PutSnapshotAsync(string sessionId, long version, JToken snapshot) =>
+        CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/snapshot", HttpMethod.Put,
+            payload: new { version, snapshot = AsJson(snapshot) });
+
+    /// <summary>The last snapshot as the platform's <c>data</c> object ({ version, snapshot }), or null when there is none yet.</summary>
+    public static async Task<JObject?> GetSnapshotAsync(string sessionId)
+    {
+        try
+        {
+            var body = await CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/snapshot", HttpMethod.Get);
+            return JObject.Parse(body)["data"] as JObject;
+        }
+        catch (CloudApiException ex) when (ex.StatusCode == 404 && ex.Reason.Contains("no_snapshot"))
+        {
+            return null;
+        }
+    }
+
+    /// <summary>One batch of the host's changes ({ v, ops }), for everyone else in the session.</summary>
+    public static Task SendOpsAsync(string sessionId, JObject batch) =>
+        CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/ops", HttpMethod.Post, payload: AsJson(batch));
+
+    /// <summary>A guest's change for the host to check and apply.</summary>
+    public static Task ProposeAsync(string sessionId, string kind, JToken payload) =>
+        CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/proposals", HttpMethod.Post,
+            payload: new { kind, payload = AsJson(payload) });
+
+    public static Task RequestSnapshotAsync(string sessionId) =>
+        CloudApiClient.CallApiAsync($"build-sessions/{sessionId}/snapshot-request", HttpMethod.Post);
+
+    /// <summary>
+    /// The builder's JSON arrives as Newtonsoft tokens, but the client serializes payloads with System.Text.Json, which
+    /// would write a JObject out as its properties' metadata. A JsonElement it writes as the JSON it holds.
+    /// </summary>
+    internal static System.Text.Json.JsonElement AsJson(JToken token) =>
+        System.Text.Json.JsonDocument.Parse(token.ToString(Newtonsoft.Json.Formatting.None)).RootElement.Clone();
+
     private static BuildSessionInfo? ParseSession(string body) =>
         BuildSessionInfo.Parse(JObject.Parse(body)["data"]);
 }
