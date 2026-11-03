@@ -166,6 +166,24 @@ public sealed class BuildSessionTests
     }
 
     [TestMethod]
+    public void TakesAPlayersPositionOnlyFromTheSessionChannel()
+    {
+        var poses = 0;
+        void OnPose(JObject _) => poses++;
+        BuildSessionRealtime.PoseReceived += OnPose;
+        try
+        {
+            var pose = JObject.Parse("""{ "u": "u2", "p": [1, 0, 2], "yaw": 0.5 }""");
+            BuildSessionRealtime.OnEvent($"private-build-sessions.{SessionId}.1", "client-pose", pose);
+            BuildSessionRealtime.OnEvent("private-users.u1", "client-pose", pose);
+            BuildSessionRealtime.OnEvent("presence-chat.global", "client-pose", pose);
+        }
+        finally { BuildSessionRealtime.PoseReceived -= OnPose; }
+
+        Assert.AreEqual(1, poses);
+    }
+
+    [TestMethod]
     public void SendsTheBuildersJsonAsJsonNotAsNewtonsoftMetadata()
     {
         var batch = JObject.Parse("""{ "v": 3, "ops": [ { "t": "put", "bid": 1, "p": [0, 1.5, 3], "q": [0, 0, 0, 1] } ] }""");

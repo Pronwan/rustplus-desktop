@@ -174,6 +174,27 @@ namespace RustPlusDesk.Services.Cloud
         }
 
         /// <summary>
+        /// A client event ("whisper") to everyone else on a channel we are subscribed to. Reverb relays it
+        /// socket to socket without the platform seeing it, which is what makes it the place for
+        /// frequent, throwaway things like where a player stands. Dropped when not connected or not
+        /// yet subscribed; the next one will do.
+        /// </summary>
+        public async Task WhisperAsync(string channel, string eventName, JObject data)
+        {
+            var name = Normalize(channel);
+            bool confirmed;
+            lock (_confirmedChannels) confirmed = _confirmedChannels.Contains(name);
+            if (!confirmed || !IsConnected) return;
+
+            await SendAsync(new JObject
+            {
+                ["event"] = $"client-{eventName}",
+                ["channel"] = name,
+                ["data"] = data,
+            }, CancellationToken.None);
+        }
+
+        /// <summary>
         /// Private channels carry the `private-` prefix on the wire and presence channels the
         /// `presence-` one. A name that already says which kind it is passes through; anything
         /// else is private, which every channel here was until the public room arrived.

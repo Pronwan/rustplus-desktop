@@ -35,6 +35,13 @@ public partial class MainWindow
 
     private int _buildTogetherAttached;
     private BuildSessionInfo? _buildHostSession;
+
+    /// <summary>A guest's session ended with its base still open; the panel offers to keep a copy until answered.</summary>
+    private bool _buildGuestEnded;
+
+    /// <summary>Reverb allows ten client events a second; the builder asks for two, this makes sure of it.</summary>
+    private static readonly TimeSpan BuildPoseMinInterval = TimeSpan.FromMilliseconds(400);
+    private DateTime _buildPoseSentAt;
     private string? _buildSessionChannel;
     private DispatcherTimer? _buildHeartbeat;
     private (string Text, string Tone)? _buildTogetherNotice;
@@ -45,6 +52,11 @@ public partial class MainWindow
     private async Task HandleBuildTogetherMessageAsync(JObject message)
     {
         var type = message["type"]?.ToString();
+        if (type == "coop_pose")
+        {
+            WhisperBuildPose(message);
+            return;
+        }
         if (type is "coop_ops" or "coop_snapshot" or "coop_propose" or "coop_fetch_snapshot" or "coop_request_snapshot")
         {
             await RelayBuildMessageAsync(type, message);
@@ -99,11 +111,18 @@ public partial class MainWindow
                 case "coop_leave" when BuildGuestSession != null:
                     var left = BuildGuestSession.Id;
                     BuildGuestSession = null;
+                    // Walking out leaves the base on screen, like the host ending it: the guest may keep a copy.
+                    _buildGuestEnded = true;
                     await BuildSessionApi.LeaveAsync(left);
                     break;
 
                 case "coop_upgrade":
                     OpenUrl(BuildTogetherPricingUrl);
+                    break;
+
+                case "coop_dismiss_ended":
+                    // Kept or left behind: either way the offer is answered.
+                    _buildGuestEnded = false;
                     break;
             }
         }
@@ -269,6 +288,7 @@ public partial class MainWindow
                 .Take(50)
                 .Select(f => new { steamId = f.SteamId, name = f.DisplayName, online = f.IsOnline }),
             notice = _buildTogetherNotice is { } n ? new { text = n.Text, tone = n.Tone } : null,
+            ended = session == null && _buildGuestEnded,
         };
 
         try { _ = core.ExecuteScriptAsync($"window.setCoopState && window.setCoopState({JsonSerializer.Serialize(state)});"); }
@@ -357,6 +377,27 @@ public partial class MainWindow
             if (_buildHostSession?.Id == sessionId)
                 RunInBuilder("window.coopSnapshotRequested && window.coopSnapshotRequested();");
         };
+        BuildSessionRealtime.PoseReceived += pose =>
+        {
+            if (ActiveBuildSession != null)
+                RunInBuilder($"window.applyCoopPose && window.applyCoopPose({pose.ToString(Newtonsoft.Json.Formatting.None)});");
+        };
+    }
+
+    /// <summary>
+    /// Where this player stands, to everyone else on the session channel. A whisper rather than an API call: it is
+    /// frequent, worthless a second later, and Reverb relays it without the platform doing any work.
+    /// </summary>
+    private void WhisperBuildPose(JObject message)
+    {
+        var me = CloudAuthManager.CurrentUser?.Id;
+        if (_buildSessionChannel == null || string.IsNullOrEmpty(me)) return;
+        if (DateTime.UtcNow - _buildPoseSentAt < BuildPoseMinInterval) return;
+        if (message["p"] is not JArray { Count: 3 } position || message["yaw"]?.Type is not (JTokenType.Float or JTokenType.Integer)) return;
+
+        _buildPoseSentAt = DateTime.UtcNow;
+        _ = RealtimeClient.Shared.WhisperAsync(_buildSessionChannel, "pose",
+            new JObject { ["u"] = me, ["p"] = position, ["yaw"] = message["yaw"] });
     }
 
     private void RunInBuilder(string script)
@@ -373,6 +414,7 @@ public partial class MainWindow
         _buildHostSession = null;
         BuildGuestSession = null;
         _buildTogetherNotice = null;
+        _buildGuestEnded = false;
         SyncBuildTogetherConnection();
 
         try

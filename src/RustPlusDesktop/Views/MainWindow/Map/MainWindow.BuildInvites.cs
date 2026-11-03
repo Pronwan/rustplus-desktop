@@ -115,6 +115,7 @@ public partial class MainWindow
                 var session = await BuildSessionApi.AcceptAsync(invite.SessionId);
                 DismissToast(item);
                 BuildGuestSession = session;
+                _buildGuestEnded = false;
                 // The workshop may already be open, in which case it will not ask again.
                 SyncBuildTogetherConnection();
                 PushBuildTogetherState();
@@ -173,6 +174,8 @@ public partial class MainWindow
         if (BuildGuestSession?.Id != sessionId) return;
 
         BuildGuestSession = null;
+        // The base stays open; the panel offers to keep a copy of it.
+        _buildGuestEnded = true;
         SyncBuildTogetherConnection();
         PushBuildTogetherState();
         ShowInfoSnackbar(Loc.Text("BuildSessionLeftTitle", "Build session"),

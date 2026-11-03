@@ -45,6 +45,9 @@ public static class BuildSessionRealtime
     /// <summary>The host's side: a guest lost track and needs a fresh snapshot.</summary>
     public static event Action<string>? SnapshotRequested;
 
+    /// <summary>Another player's position in the session ({ u, p, yaw }). Raw, for the builder.</summary>
+    public static event Action<JObject>? PoseReceived;
+
     private static readonly object Gate = new();
     private static bool _attached;
 
@@ -68,6 +71,14 @@ public static class BuildSessionRealtime
     internal static void OnEvent(string channel, string eventName, JObject data)
     {
         var name = eventName?.TrimStart('.') ?? "";
+
+        // Where another player in the session stands: a whisper from their app, not a platform event.
+        if (name == "client-pose" && channel.StartsWith("private-build-sessions.", StringComparison.Ordinal))
+        {
+            Raise(() => PoseReceived?.Invoke(data));
+            return;
+        }
+
         if (!name.StartsWith("builder.", StringComparison.OrdinalIgnoreCase)) return;
 
         var sessionId = data["session_id"]?.ToString();
