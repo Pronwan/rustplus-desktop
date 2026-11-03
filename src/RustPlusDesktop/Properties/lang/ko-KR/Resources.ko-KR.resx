@@ -8051,4 +8051,43 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiListenerRunning" xml:space="preserve">
     <value>실행 중</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>함께 건설할까요?</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0}님이 Base Builder에서 함께 건설하자고 초대했습니다.</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0}님이 Base Builder에서 &quot;{1}&quot;을(를) 함께 건설하자고 초대했습니다.</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>참가</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>거절</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>무시</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>거절하고 이 플레이어를 차단해 다시 초대하지 못하게 합니다. 커뮤니티 허브의 차단한 플레이어에서 되돌릴 수 있습니다.</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>참가함</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>{0}님의 건설을 지켜보고 있습니다. 함께 건설할 수 있는지는 호스트가 정합니다.</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>초대가 만료되었거나 세션이 종료되었습니다.</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>건설 세션</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>호스트가 건설 세션에서 회원님을 내보냈습니다.</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>호스트가 건설 세션을 종료했습니다.</value>
+  </data>
 </root>

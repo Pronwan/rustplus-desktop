@@ -1634,6 +1634,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
 
         AttachCloudPairingAnnouncements();
+        AttachBuildInvites();
 
         // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
         // can land on different threads. A request that lands mid-import is kept for a

@@ -6628,4 +6628,43 @@ You can find more information on the server's official website:
   <data name="UiListenerRunning" xml:space="preserve">
     <value>Running</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>Build together?</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} invites you to build together in the Base Builder.</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} invites you to build &quot;{1}&quot; together in the Base Builder.</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>Join</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>Decline and block this player, so they cannot invite you again. Undo it under Blocked players in the Community Hub.</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>You are watching {0} build. The host decides whether you may build too.</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>This invite has expired or the session has ended.</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>Build session</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>The host removed you from the build session.</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>The host ended the build session.</value>
+  </data>
 </root>

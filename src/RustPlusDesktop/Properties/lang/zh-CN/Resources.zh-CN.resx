@@ -7881,4 +7881,43 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="UiListenerRunning" xml:space="preserve">
     <value>运行中</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>一起建造？</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} 邀请你在 Base Builder 中一起建造。</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} 邀请你在 Base Builder 中一起建造“{1}”。</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>加入</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>忽略</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>拒绝并拉黑该玩家，使其无法再邀请你。可在社区中心的“已拉黑的玩家”中撤销。</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>已加入</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>你正在观看 {0} 建造。是否允许你一起建造由房主决定。</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>此邀请已过期或会话已结束。</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>建造会话</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>房主已将你移出建造会话。</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>房主已结束建造会话。</value>
+  </data>
 </root>

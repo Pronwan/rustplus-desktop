@@ -8221,4 +8221,43 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="UiListenerRunning" xml:space="preserve">
     <value>Läuft</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>Gemeinsam bauen?</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} lädt dich ein, im Base Builder gemeinsam zu bauen.</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} lädt dich ein, „{1}“ im Base Builder gemeinsam zu bauen.</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>Beitreten</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>Ignorieren</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>Ablehnen und diesen Spieler blockieren, damit er dich nicht erneut einladen kann. Rückgängig machen unter Blockierte Spieler im Community Hub.</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>Beigetreten</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>Du schaust {0} beim Bauen zu. Der Host entscheidet, ob du mitbauen darfst.</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>Diese Einladung ist abgelaufen oder die Session wurde beendet.</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>Bau-Session</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>Der Host hat dich aus der Bau-Session entfernt.</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>Der Host hat die Bau-Session beendet.</value>
+  </data>
 </root>

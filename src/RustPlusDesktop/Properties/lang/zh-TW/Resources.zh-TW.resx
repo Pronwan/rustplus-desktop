@@ -2000,4 +2000,43 @@
   <data name="CommandDockResetLookConfirm" xml:space="preserve">
     <value>清除全域設定以及每個磁貼自身的不透明度、文字大小和顏色？磁貼本身的位置保持不變。</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>一起建造？</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} 邀請你在 Base Builder 中一起建造。</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} 邀請你在 Base Builder 中一起建造「{1}」。</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>加入</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>拒絕</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>忽略</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>拒絕並封鎖此玩家，讓對方無法再邀請你。可在社群中心的「已封鎖的玩家」中復原。</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>已加入</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>你正在觀看 {0} 建造。是否允許你一起建造由房主決定。</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>此邀請已過期或工作階段已結束。</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>建造工作階段</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>房主已將你移出建造工作階段。</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>房主已結束建造工作階段。</value>
+  </data>
 </root>

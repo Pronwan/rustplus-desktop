@@ -8130,4 +8130,43 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UiListenerRunning" xml:space="preserve">
     <value>En cours</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>Construire ensemble ?</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} vous invite à construire ensemble dans le Base Builder.</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} vous invite à construire « {1} » ensemble dans le Base Builder.</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>Rejoindre</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>Ignorer</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>Refuser et bloquer ce joueur pour qu&apos;il ne puisse plus vous inviter. Annulable dans Joueurs bloqués, dans l&apos;Espace communauté.</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>Vous avez rejoint</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>Vous regardez {0} construire. L&apos;hôte décide si vous pouvez construire aussi.</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>Cette invitation a expiré ou la session est terminée.</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>Session de construction</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>L&apos;hôte vous a retiré de la session de construction.</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>L&apos;hôte a mis fin à la session de construction.</value>
+  </data>
 </root>
