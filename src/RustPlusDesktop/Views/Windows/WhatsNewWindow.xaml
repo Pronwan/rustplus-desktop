@@ -31,7 +31,7 @@
             <Border Grid.Row="0" Background="{DynamicResource SurfacePanelBrush}" CornerRadius="12,12,0,0" Padding="20,14">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="5" Padding="6,3" Margin="0,0,10,0">
-                        <TextBlock Text="v10.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="v11.0" FontSize="11" FontWeight="Bold" Foreground="White"/>
                     </Border>
                     <TextBlock Text="{DynamicResource UpdateWhatsNewHeading}" FontSize="15" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -40,61 +40,74 @@
             <!-- Content -->
             <StackPanel Grid.Row="1" Margin="22,18,22,10">
 
-                <TextBlock Text="{DynamicResource UpdateWhatsNew93Summary}" FontSize="13" FontWeight="SemiBold"
+                <TextBlock Text="{DynamicResource UpdateWhatsNew110Summary}" FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap"
                            Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,0,0,10"/>
 
                 <!-- Feature list -->
                 <Border Background="{DynamicResource SurfacePanelBrush}" BorderBrush="#2A3040" BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,0,0,14">
                     <StackPanel>
-                        <!-- Bullet 1 -->
+                        <!-- The Base Builder -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Grid24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Building24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title1}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew93Desc1}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title1}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc1}"/>
                             </TextBlock>
                         </Grid>
 
-                        <!-- Bullet 2 -->
+                        <!-- Build together -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Bot24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="PeopleTeam24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title2}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew93Desc2}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title2}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc2}"/>
                             </TextBlock>
                         </Grid>
 
-                        <!-- Bullet 3 -->
+                        <!-- Import and export -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Map24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="ArrowImport24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title3}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew93Desc3}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title3}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc3}"/>
                             </TextBlock>
                         </Grid>
 
-                        <!-- Bullet 4 -->
+                        <!-- Upkeep and TC range -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="ShieldCheckmark24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title4}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc4}"/>
+                            </TextBlock>
+                        </Grid>
+
+                        <!-- Coming next -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Chat24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Wrench24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew93Title4}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew93Desc4}"/>
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title5}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc5}"/>
                             </TextBlock>
                         </Grid>
                     </StackPanel>
@@ -113,7 +126,7 @@
                         off. The buttons keep their old size whenever the text fits.
                     -->
                     <ui:Button Content="{DynamicResource UpdateWhatsNewPatchNotesBtn}" MinWidth="150" Padding="14,0" Margin="0,0,10,0" Click="BtnPatchNotes_Click" Appearance="Secondary" Height="36" Cursor="Hand"/>
-                    <ui:Button Content="{DynamicResource GenericClose}" MinWidth="150" Padding="14,0" Click="BtnClose_Click" Appearance="Primary" Height="36" Cursor="Hand"/>
+                    <ui:Button Content="{DynamicResource OK}" MinWidth="150" Padding="14,0" Click="BtnClose_Click" Appearance="Primary" Height="36" Cursor="Hand"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

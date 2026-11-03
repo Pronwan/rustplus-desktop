@@ -7106,4 +7106,37 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="UiListenerRunning" xml:space="preserve">
     <value>Çalışıyor</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>Base Builder geldi: üssünü oyundaki gibi tasarla, döşe, içinde dolaş ve birlikte inşa et.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>Eksiksiz Bir Base Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>Oyunun kurallarıyla İnşa Planı, Çekiç ve inşa çarkı, tüm DLC kaplamaları, sandıklar, raflar, yataklar ve daha fazlası. Ardından üssünde yürüyerek dolaş.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>Birlikte İnşa Et (Premium)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>Arkadaşlarını arkadaş listenden ya da Steam ID ile üssüne davet et, inşa yetkisi ver ve birbirinizi gerçek zamanlı olarak inşa ederken izleyin. Misafirler ücretsiz katılır.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>İçe ve Dışa Aktarma</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>Herhangi bir Builders Sanctuary tasarımını veya CopyPaste dosyasını aç, üsleri gerçek Rust sunucuları için dışa aktar ve sunucunun 3D haritasına yerleştir.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>Bakım ve TC Menzili</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>Her alet dolabının nereye kadar uzandığını, üssünün inşa maliyetini ve günlük bakım masrafını gör.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>Sıradaki: Ship Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>Bir sonraki güncellemede aynı araçlarla kendi tekneni tasarla.</value>
+  </data>
 </root>

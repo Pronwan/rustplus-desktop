@@ -2066,4 +2066,37 @@
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>主持人收回了你的建造權限。你又只能觀看了。</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>基地建造器來了：像在遊戲中一樣設計、佈置並漫步你的基地，還能和朋友一起建造。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>完整的基地建造器</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>依遊戲規則使用建築藍圖、鎚子和建造輪盤，所有 DLC 外觀、箱子、貨架、床等一應俱全。然後步行穿過你的基地。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>一起建造（進階版）</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>從好友清單或透過 Steam ID 邀請好友進入你的基地，授予建造權限，即時看到彼此建造。訪客免費加入。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>匯入與匯出</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>開啟任何 Builders Sanctuary 設計或 CopyPaste 檔案，為真實的 Rust 伺服器匯出基地，並將其放置在伺服器的 3D 地圖上。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>維護費用與 TC 範圍</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>查看每個工具櫃的涵蓋範圍，以及基地的建造成本和每日維護費用。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>即將推出：船隻建造器</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>下次更新中，用同樣的工具設計你自己的船。</value>
+  </data>
 </root>

@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v10.3.0", Title = "Halloween Heatmaps, High-Res Generated Maps & Smoother Map Controls", Category = "Update", IsLatest = true, TargetCardName = "Card_v10_3_0" },
+                new PatchVersionNavModel { Version = "v11.0.0", Title = "The Base Builder: Build Together, Walk Your Base & Place It on the Real Map", Category = "Major", IsLatest = true, TargetCardName = "Card_v11_0_0" },
+                new PatchVersionNavModel { Version = "v10.3.0", Title = "Halloween Heatmaps, High-Res Generated Maps & Smoother Map Controls", Category = "Update", TargetCardName = "Card_v10_3_0" },
                 new PatchVersionNavModel { Version = "v10.2.0", Title = "Smart Server Migration, Widget Overlay Settings & Hold-to-Peek Map", Category = "Update", TargetCardName = "Card_v10_2_0" },
                 new PatchVersionNavModel { Version = "v10.1.2", Title = "Navigation, Mini-Map & Full-Screen Improvements", Category = "Hotfix", TargetCardName = "Card_v10_1_2" },
                 new PatchVersionNavModel { Version = "v10.1.1", Title = "Easier-to-Find Dock Bar", Category = "Hotfix", TargetCardName = "Card_v10_1_1" },

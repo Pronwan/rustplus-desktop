@@ -8196,4 +8196,37 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>El anfitrión te ha quitado el permiso de construcción. Vuelves a estar solo mirando.</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>Llega el Base Builder: diseña, amuebla y recorre tu base como en el juego, y constrúyela en compañía.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>Un Base Builder completo</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>Plano de construcción, martillo y rueda de construcción con las reglas del juego, todos los skins DLC, cajas, estanterías, camas y más. Después, recorre tu base a pie.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>Construir juntos (Premium)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>Invita a tus amigos a tu base desde tu lista de amigos o por Steam ID, dales permiso para construir y veos construir en tiempo real. Los invitados entran gratis.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>Importar y exportar</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>Abre cualquier diseño de Builders Sanctuary o archivo CopyPaste, exporta bases para servidores de Rust reales y colócalas en el mapa 3D de tu servidor.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>Mantenimiento y alcance del TC</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>Mira hasta dónde llega cada armario de herramientas y cuánto cuesta construir tu base y mantenerla cada día.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>Próximamente: Ship Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>Diseña tu propio barco con las mismas herramientas en la próxima actualización.</value>
+  </data>
 </root>

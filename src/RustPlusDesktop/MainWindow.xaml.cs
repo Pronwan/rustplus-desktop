@@ -763,7 +763,8 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // Everyone arriving from before 10.0 gets the what's-new notice once. A fresh install
+        // Everyone arriving from before 11.0 gets the what's-new notice (the Base Builder) once,
+        // including those who dismissed the 10.0 notice: the latch below sets it again. A fresh install
         // starts on the current version and has nothing to catch up on, so it is left alone.
         //
         // The flag is latched here rather than re-derived on every start: LastSeenVersion has
@@ -775,7 +776,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // ticked — and the notice could never be dismissed.
         if (!string.IsNullOrEmpty(versionBeforeThisStart)
             && versionBeforeThisStart != appVersion
-            && IsVersionLessThan(versionBeforeThisStart, "10.0"))
+            && IsVersionLessThan(versionBeforeThisStart, "11.0"))
         {
             TrackingService.PendingWhatsNewNotice = true;
         }

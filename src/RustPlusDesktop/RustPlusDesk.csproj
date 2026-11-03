@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>10.3.0</Version>
+		<Version>11.0.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -210,6 +210,7 @@
 	  <None Remove="Assets\Screenshots\8.0\*.png" />
 	  <None Remove="Assets\Screenshots\v9.0.0\*.png" />
 	  <None Remove="Assets\Screenshots\10.0\*.jpg" />
+	  <None Remove="Assets\Screenshots\11.0\*.jpg" />
 	  <None Remove="Assets\Screenshots\9.1\*.jpg" />
 	  <None Remove="Assets\TitleScreen-rust-plus-desktop.png" />
 	</ItemGroup>
@@ -605,6 +606,7 @@
     <Resource Include="Assets\Screenshots\8.0\*.png" />
     <Resource Include="Assets\Screenshots\v9.0.0\*.png" />
     <Resource Include="Assets\Screenshots\10.0\*.jpg" />
+    <Resource Include="Assets\Screenshots\11.0\*.jpg" />
     <Resource Include="Assets\Screenshots\9.1\*.jpg" />
     <Resource Include="Assets\Screenshots\beta-5.1_3.png" />
     <Resource Include="Assets\Flags\*.png" />

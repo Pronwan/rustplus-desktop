@@ -8196,4 +8196,37 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>Хост забрал у вас право строить. Вы снова только наблюдаете.</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>Base Builder уже здесь: проектируйте, обставляйте и обходите свою базу, как в игре, и стройте её вместе.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>Полноценный Base Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>План строительства, киянка и колесо строительства по правилам игры, все DLC-скины, ящики, полки, кровати и многое другое. А затем пройдитесь по базе пешком.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>Совместная стройка (Премиум)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>Приглашайте друзей в свою базу из списка друзей или по Steam ID, выдавайте права на строительство и смотрите, как строят другие, в реальном времени. Гости участвуют бесплатно.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>Импорт и экспорт</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>Открывайте любой дизайн из Builders Sanctuary или файл CopyPaste, экспортируйте базы для настоящих серверов Rust и размещайте их на 3D-карте своего сервера.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>Содержание и радиус шкафа</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>Смотрите, докуда дотягивается каждый шкаф с инструментами и сколько стоит постройка базы и её содержание в день.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>Далее: Ship Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>В следующем обновлении спроектируйте свою лодку теми же инструментами.</value>
+  </data>
 </root>

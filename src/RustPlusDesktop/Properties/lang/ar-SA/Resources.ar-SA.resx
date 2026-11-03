@@ -8087,4 +8087,37 @@
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>سحب المضيف صلاحية البناء منك. أنت تشاهد فقط مرة أخرى.</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>وصل منشئ القواعد: صمّم قاعدتك وأثّثها وتجوّل فيها كما في اللعبة، وابنها مع أصدقائك.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>منشئ قواعد متكامل</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>مخطط البناء والمطرقة وعجلة البناء وفق قواعد اللعبة نفسها، وجميع أشكال DLC، والصناديق والرفوف والأسرّة وغيرها. ثم تجوّل في قاعدتك سيرًا على الأقدام.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>البناء معًا (بريميوم)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>ادعُ أصدقاءك إلى قاعدتك من قائمة الأصدقاء أو عبر Steam ID، وامنحهم صلاحيات البناء وشاهدوا بعضكم يبني في الوقت الفعلي. الانضمام مجاني للضيوف.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>الاستيراد والتصدير</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>افتح أي تصميم من Builders Sanctuary أو ملف CopyPaste، وصدّر القواعد لخوادم Rust الحقيقية، وضعها على خريطة خادمك ثلاثية الأبعاد.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>الصيانة ونطاق خزانة الأدوات</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>اعرف إلى أي مدى تصل كل خزانة أدوات، وكم تكلّف قاعدتك للبناء وللصيانة يوميًا.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>قريبًا: منشئ السفن</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>صمّم قاربك الخاص بالأدوات نفسها في التحديث القادم.</value>
+  </data>
 </root>

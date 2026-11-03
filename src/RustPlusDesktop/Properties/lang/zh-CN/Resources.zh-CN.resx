@@ -7947,4 +7947,37 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>主持人收回了你的建造权限。你又只能观看了。</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>基地建造器来了：像在游戏中一样设计、布置并漫步你的基地，还能和朋友一起建造。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>完整的基地建造器</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>按游戏规则使用建筑蓝图、锤子和建造轮盘，所有 DLC 皮肤、箱子、货架、床等一应俱全。然后步行穿过你的基地。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>一起建造（高级版）</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>从好友列表或通过 Steam ID 邀请好友进入你的基地，授予建造权限，实时看到彼此建造。访客免费加入。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>导入与导出</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>打开任意 Builders Sanctuary 设计或 CopyPaste 文件，为真实的 Rust 服务器导出基地，并将其放置在服务器的 3D 地图上。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>维护费用与 TC 范围</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>查看每个工具柜的覆盖范围，以及基地的建造成本和每日维护费用。</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>即将推出：船只建造器</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>下次更新中，用同样的工具设计你自己的船。</value>
+  </data>
 </root>

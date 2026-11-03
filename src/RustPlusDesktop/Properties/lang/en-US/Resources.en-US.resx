@@ -6694,4 +6694,37 @@ You can find more information on the server's official website:
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>The host took your build rights away. You are watching again.</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>The Base Builder is here: design, furnish and walk your base like in-game, and build it together.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>A Complete Base Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>Building Plan, Hammer and the building wheel under the game&apos;s own rules, every DLC skin, boxes, shelves, beds and more. Then walk through your base on foot.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>Build Together (Premium)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>Invite friends into your base from your friends list or by Steam ID, give them build rights and watch each other build in real time. Guests join for free.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>Import &amp; Export</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>Open any Builders Sanctuary design or CopyPaste file, export bases for real Rust servers, and place them on your server&apos;s 3D map.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>Upkeep &amp; TC Range</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>See where each tool cupboard reaches, and what your base costs to build and to keep each day.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>Coming Next: Ship Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>Design your own boat with the same tools in the next update.</value>
+  </data>
 </root>

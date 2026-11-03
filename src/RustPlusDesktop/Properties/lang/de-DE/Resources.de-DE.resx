@@ -8287,4 +8287,37 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="BuildRightsRevoked" xml:space="preserve">
     <value>Der Host hat dir das Baurecht entzogen. Du schaust wieder nur zu.</value>
   </data>
+  <data name="UpdateWhatsNew110Summary" xml:space="preserve">
+    <value>Der Base Builder ist da: Plane, richte ein und begehe deine Base wie im Spiel – und baue sie gemeinsam.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title1" xml:space="preserve">
+    <value>Ein vollständiger Base Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
+    <value>Bauplan, Hammer und Baurad nach den Regeln des Spiels, alle DLC-Skins, Kisten, Regale, Betten und mehr. Danach läufst du zu Fuß durch deine Base.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title2" xml:space="preserve">
+    <value>Gemeinsam bauen (Premium)</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
+    <value>Lade Freunde aus deiner Freundesliste oder per Steam-ID in deine Base ein, vergib Baurechte und seht euch gegenseitig in Echtzeit beim Bauen zu. Gäste sind kostenlos dabei.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title3" xml:space="preserve">
+    <value>Import &amp; Export</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
+    <value>Öffne jedes Design aus Builders Sanctuary oder jede CopyPaste-Datei, exportiere Bases für echte Rust-Server und platziere sie auf der 3D-Map deines Servers.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title4" xml:space="preserve">
+    <value>Upkeep &amp; TC-Reichweite</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
+    <value>Sieh, wie weit jeder Werkzeugschrank reicht und was deine Base im Bau und pro Tag im Unterhalt kostet.</value>
+  </data>
+  <data name="UpdateWhatsNew110Title5" xml:space="preserve">
+    <value>Als Nächstes: Ship Builder</value>
+  </data>
+  <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
+    <value>Mit dem nächsten Update baust du mit denselben Werkzeugen dein eigenes Boot.</value>
+  </data>
 </root>
