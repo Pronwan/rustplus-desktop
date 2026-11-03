@@ -7941,4 +7941,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>无法保存你的基地，因此你将留在其中。请先将其导出为文件，然后再次接受邀请。</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>主持人允许你建造了。你的更改现在会加入共享基地。</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>主持人收回了你的建造权限。你又只能观看了。</value>
+  </data>
 </root>

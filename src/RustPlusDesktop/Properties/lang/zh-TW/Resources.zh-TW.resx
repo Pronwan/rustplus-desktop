@@ -2060,4 +2060,10 @@
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>無法儲存你的基地，因此你將留在其中。請先將其匯出為檔案，然後再次接受邀請。</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>主持人允許你建造了。你的變更現在會加入共享基地。</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>主持人收回了你的建造權限。你又只能觀看了。</value>
+  </data>
 </root>

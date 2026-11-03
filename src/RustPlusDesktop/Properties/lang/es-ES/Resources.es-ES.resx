@@ -8190,4 +8190,10 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>No se pudo guardar tu base, así que sigues en ella. Expórtala a un archivo y vuelve a aceptar la invitación.</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>El anfitrión te deja construir. Tus cambios ahora van a la base compartida.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>El anfitrión te ha quitado el permiso de construcción. Vuelves a estar solo mirando.</value>
+  </data>
 </root>

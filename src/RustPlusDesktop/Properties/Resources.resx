@@ -8801,4 +8801,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>Your base could not be saved, so you stay with it. Export it to a file, then accept the invite again.</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>The host lets you build. Your changes now go into the shared base.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>The host took your build rights away. You are watching again.</value>
+  </data>
 </root>

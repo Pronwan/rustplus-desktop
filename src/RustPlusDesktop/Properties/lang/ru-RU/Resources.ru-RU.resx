@@ -8190,4 +8190,10 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>Не удалось сохранить вашу базу, поэтому вы остаётесь в ней. Экспортируйте её в файл и примите приглашение снова.</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>Хост разрешил вам строить. Теперь ваши изменения попадают в общую базу.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>Хост забрал у вас право строить. Вы снова только наблюдаете.</value>
+  </data>
 </root>

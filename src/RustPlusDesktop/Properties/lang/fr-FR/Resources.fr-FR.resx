@@ -8190,4 +8190,10 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>Ta base n&apos;a pas pu être enregistrée, tu restes donc dessus. Exporte-la dans un fichier, puis accepte à nouveau l&apos;invitation.</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>L&apos;hôte te laisse construire. Tes modifications vont maintenant dans la base partagée.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>L&apos;hôte t&apos;a retiré le droit de construire. Tu regardes à nouveau.</value>
+  </data>
 </root>

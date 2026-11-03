@@ -185,8 +185,17 @@ public partial class MainWindow
                 && change["user_id"]?.ToString() == CloudAuthManager.CurrentUser?.Id
                 && change["can_build"]?.Type == JTokenType.Boolean)
             {
-                BuildGuestSession = joined with { CanBuild = change["can_build"]!.Value<bool>() };
+                var canBuild = change["can_build"]!.Value<bool>();
+                BuildGuestSession = joined with { CanBuild = canBuild };
                 PushBuildTogetherState();
+                // Otherwise a guest only finds out by trying to build. Shown inside the builder too (MainWindow.BuilderToasts).
+                if (canBuild != joined.CanBuild)
+                    ShowInfoSnackbar(Helpers.Loc.Text("BuildSessionLeftTitle", "Build session"),
+                        canBuild
+                            ? Helpers.Loc.Text("BuildRightsGranted", "The host lets you build. Your changes now go into the shared base.")
+                            : Helpers.Loc.Text("BuildRightsRevoked", "The host took your build rights away. You are watching again."),
+                        canBuild ? Wpf.Ui.Controls.ControlAppearance.Success : Wpf.Ui.Controls.ControlAppearance.Caution,
+                        Wpf.Ui.Controls.SymbolRegular.People24);
             }
             _ = RefreshAndPushBuildTogetherAsync();
         };

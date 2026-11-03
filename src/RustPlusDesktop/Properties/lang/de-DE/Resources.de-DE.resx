@@ -8281,4 +8281,10 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="BuildInviteSaveFailed" xml:space="preserve">
     <value>Deine Base konnte nicht gespeichert werden, deshalb bleibst du dabei. Exportiere sie als Datei und nimm die Einladung dann erneut an.</value>
   </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>Der Host lässt dich mitbauen. Deine Änderungen landen jetzt in der gemeinsamen Base.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>Der Host hat dir das Baurecht entzogen. Du schaust wieder nur zu.</value>
+  </data>
 </root>
