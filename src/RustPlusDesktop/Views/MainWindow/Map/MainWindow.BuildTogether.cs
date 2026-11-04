@@ -236,6 +236,8 @@ public partial class MainWindow
             }
         }
 
+        ReleaseParkedBaseBuilder();
+
         if (_buildHostSession == null)
         {
             _buildHeartbeat?.Stop();

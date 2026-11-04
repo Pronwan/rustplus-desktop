@@ -202,7 +202,11 @@ public partial class MainWindow
     }
 
     /// <summary>Writes the builder's recovery draft now and waits until IndexedDB has it.</summary>
-    private Task<string> FlushBaseBuilderDraftAsync() => AskBaseBuilderAsync("flushWorkshopDraft");
+    private Task<string> FlushBaseBuilderDraftAsync(TimeSpan? timeout = null) => AskBaseBuilderAsync("flushWorkshopDraft", timeout);
+
+    // Leaving a tab has time to wait for a big base's IndexedDB write; a reply that comes after the deadline is dropped,
+    // which would report saved work as lost. Quitting keeps the short deadline, the process is going.
+    private static readonly TimeSpan BaseBuilderTabDraftTimeout = TimeSpan.FromSeconds(12);
 
     // Leaving the workshop frees it: the recovery draft is written first (the workshop reopens with "Continue"), then the
     // WebView and its renderer, 3D scene and base are disposed instead of lingering suspended in memory. A draft that
@@ -212,7 +216,7 @@ public partial class MainWindow
         ExitBaseBuilderFullscreen();
         var view = _baseBuilderWebView;
         if (view == null) return;
-        var draft = await FlushBaseBuilderDraftAsync();
+        var draft = await FlushBaseBuilderDraftAsync(BaseBuilderTabDraftTimeout);
         // The player may have come back (or reopened it) while the draft was saving.
         if (!ReferenceEquals(view, _baseBuilderWebView) || BaseBuilderPanel.IsVisible) return;
         if (draft is "failed" or "unanswered")
@@ -222,8 +226,26 @@ public partial class MainWindow
                 Wpf.Ui.Controls.ControlAppearance.Caution);
             return;
         }
+        // A live Build Together session needs the page: it carries the host's batches and the guests' proposals. Looking at
+        // another tab must not end it for everyone, so the workshop stays in the background until the session is over.
+        if (ActiveBuildSession != null)
+        {
+            _baseBuilderParked = true;
+            return;
+        }
         BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
         BaseBuilderLoading.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>True while the workshop is kept alive off screen only because a Build Together session is running.</summary>
+    private bool _baseBuilderParked;
+
+    /// <summary>The session that kept the workshop alive is over: free it now, as leaving the tab would have.</summary>
+    private void ReleaseParkedBaseBuilder()
+    {
+        if (!_baseBuilderParked || ActiveBuildSession != null) return;
+        _baseBuilderParked = false;
+        if (!BaseBuilderPanel.IsVisible) _ = CloseBaseBuilderWorkspaceAsync();
     }
 
     /// <summary>The app is quitting: the draft is written and any co-op session left while the page still runs.</summary>
@@ -235,8 +257,30 @@ public partial class MainWindow
         await LeaveBuildTogetherOnCloseAsync().WaitAsync(BaseBuilderDraftTimeout);
     }
 
+    /// <summary>
+    /// Logoff, restart or shutdown: the window's close path races the process ending, so the draft is written here, on the
+    /// UI thread, with the dispatcher kept running so the page's answer can arrive.
+    /// </summary>
+    private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+    {
+        if (_baseBuilderWebView == null) return;
+        try
+        {
+            var exit = CloseBaseBuilderOnExitAsync();
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = BaseBuilderDraftTimeout + TimeSpan.FromSeconds(1) };
+            timer.Tick += (_, _) => frame.Continue = false;
+            timer.Start();
+            _ = exit.ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => frame.Continue = false)), TaskScheduler.Default);
+            System.Windows.Threading.Dispatcher.PushFrame(frame);
+            timer.Stop();
+        }
+        catch (Exception ex) { AppendLog($"[Base Builder] Session ending without a fresh recovery draft: {ex.Message}"); }
+    }
+
     private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e)
     {
+        _baseBuilderParked = false;
         if (_baseBuilderWebView != null) _ = LeaveBuildTogetherOnCloseAsync();
         _baseBuilderWebView?.Dispose();
         _baseBuilderWebView = null;

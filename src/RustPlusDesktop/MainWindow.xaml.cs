@@ -935,6 +935,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? Properties.Resources.NotLoggedIn : _vm.SteamId64;
 
         this.Closing += MainWindow_Closing;
+        if (System.Windows.Application.Current != null) System.Windows.Application.Current.SessionEnding += Application_SessionEnding;
         Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
         Services.Cloud.CloudAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
         ContentRendered += MainWindow_ContentRendered;
