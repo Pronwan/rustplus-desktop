@@ -7139,4 +7139,76 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>Builders Sanctuary tasarımlarını ve CopyPaste dosyalarını aç, üsleri gerçek Rust sunucuları için dışa aktar ve sunucunun 3D haritasına yerleştir.</value>
   </data>
+  <data name="BuildInviteTitle" xml:space="preserve">
+    <value>Birlikte inşa edelim mi?</value>
+  </data>
+  <data name="BuildInviteMessage" xml:space="preserve">
+    <value>{0} seni Base Builder&apos;da birlikte inşa etmeye davet ediyor.</value>
+  </data>
+  <data name="BuildInviteMessageBase" xml:space="preserve">
+    <value>{0} seni Base Builder&apos;da &quot;{1}&quot; üssünü birlikte inşa etmeye davet ediyor.</value>
+  </data>
+  <data name="BuildInviteAccept" xml:space="preserve">
+    <value>Katıl</value>
+  </data>
+  <data name="BuildInviteDecline" xml:space="preserve">
+    <value>Reddet</value>
+  </data>
+  <data name="BuildInviteIgnore" xml:space="preserve">
+    <value>Yok say</value>
+  </data>
+  <data name="BuildInviteIgnoreTooltip" xml:space="preserve">
+    <value>Reddet ve bu oyuncuyu engelle, böylece seni bir daha davet edemez. Bunu Topluluk Merkezi&apos;ndeki Engellenen oyuncular bölümünden geri alabilirsin.</value>
+  </data>
+  <data name="BuildInviteJoinedTitle" xml:space="preserve">
+    <value>Katıldın</value>
+  </data>
+  <data name="BuildInviteJoinedMessage" xml:space="preserve">
+    <value>{0} inşa ederken izliyorsun. Senin de inşa edip edemeyeceğine ev sahibi karar verir.</value>
+  </data>
+  <data name="BuildInviteGone" xml:space="preserve">
+    <value>Bu davetin süresi doldu ya da oturum sona erdi.</value>
+  </data>
+  <data name="BuildSessionLeftTitle" xml:space="preserve">
+    <value>İnşa oturumu</value>
+  </data>
+  <data name="BuildSessionKicked" xml:space="preserve">
+    <value>Ev sahibi seni inşa oturumundan çıkardı.</value>
+  </data>
+  <data name="BuildSessionEnded" xml:space="preserve">
+    <value>Ev sahibi inşa oturumunu sonlandırdı.</value>
+  </data>
+  <data name="BuildInviteSwitchTitle" xml:space="preserve">
+    <value>{0} adlı oyuncunun inşasına katılmak mı istiyorsun?</value>
+  </data>
+  <data name="BuildInviteSwitchHosting" xml:space="preserve">
+    <value>Bir inşa oturumuna ev sahipliği yapıyorsun. &quot;{0}&quot; kütüphanene kaydedilir ve misafirlerin için oturumun sona erer, ardından {1} oturumuna katılırsın.</value>
+  </data>
+  <data name="BuildInviteSwitchBuilding" xml:space="preserve">
+    <value>&quot;{0}&quot; kütüphanene kaydedilir, ardından {1} oturumuna katılırsın. Onu oradan tekrar açabilirsin.</value>
+  </data>
+  <data name="BuildInviteSwitchYourBase" xml:space="preserve">
+    <value>üssün</value>
+  </data>
+  <data name="BuildInviteSwitchConfirm" xml:space="preserve">
+    <value>Kaydet ve katıl</value>
+  </data>
+  <data name="BuildInviteSwitchCancel" xml:space="preserve">
+    <value>İnşaya devam et</value>
+  </data>
+  <data name="BuildInviteSaveFailed" xml:space="preserve">
+    <value>Üssün kaydedilemedi, bu yüzden onunla kalıyorsun. Onu bir dosyaya aktar, ardından daveti tekrar kabul et.</value>
+  </data>
+  <data name="BuildRightsGranted" xml:space="preserve">
+    <value>Ev sahibi inşa etmene izin veriyor. Değişikliklerin artık ortak üsse gidiyor.</value>
+  </data>
+  <data name="BuildRightsRevoked" xml:space="preserve">
+    <value>Ev sahibi inşa yetkini geri aldı. Yeniden izliyorsun.</value>
+  </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} seni Ship Builder&apos;da birlikte bir gemi inşa etmeye davet ediyor.</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} seni Ship Builder&apos;da &quot;{1}&quot; gemisini birlikte inşa etmeye davet ediyor.</value>
+  </data>
 </root>
