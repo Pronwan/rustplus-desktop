@@ -23,9 +23,12 @@ public static class BuildSessionApi
     public static async Task<BuildSessionsState> CurrentAsync() =>
         BuildSessionsState.Parse(await CloudApiClient.CallApiAsync("build-sessions/current", HttpMethod.Get));
 
-    /// <summary>Starts a session, or returns the one this host already has open.</summary>
-    public static async Task<BuildSessionInfo?> StartAsync(string? baseName) =>
-        ParseSession(await CloudApiClient.CallApiAsync("build-sessions", HttpMethod.Post, payload: new { base_name = baseName }));
+    /// <summary>
+    /// Starts a session, or returns the one this host already has open in the same builder. One open in the other builder
+    /// ends, and a new one starts: its guests would be in the wrong builder.
+    /// </summary>
+    public static async Task<BuildSessionInfo?> StartAsync(string? baseName, string workspace = BuildSessionInfo.BaseWorkspace) =>
+        ParseSession(await CloudApiClient.CallApiAsync("build-sessions", HttpMethod.Post, payload: new { base_name = baseName, workspace }));
 
     public static Task EndAsync(string sessionId) =>
         CloudApiClient.CallApiAsync($"build-sessions/{sessionId}", HttpMethod.Delete);

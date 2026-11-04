@@ -3,6 +3,8 @@ param([switch]$Force)
 # Downloads the RustHelp item icons the Base Builder belt and inventory show, so they ship with the
 # app instead of being fetched at runtime. Builder items without one keep their original SVG.
 $ErrorActionPreference = 'Stop'
+# Windows PowerShell 5.1 does not load HttpClient by itself.
+Add-Type -AssemblyName System.Net.Http
 $projectDir = Join-Path $PSScriptRoot '..\src\RustPlusDesktop'
 $builderDir = Join-Path $PSScriptRoot '..\vendor\MapParser\Rust_Assets\building'
 $buildingData = Get-Content -Raw (Join-Path $builderDir 'building_data.json') | ConvertFrom-Json
@@ -15,6 +17,11 @@ $shortnames = [System.Collections.Generic.SortedSet[string]]::new()
 foreach ($name in $builderIcons.items.PSObject.Properties.Name) { [void]$shortnames.Add($name) }
 foreach ($piece in $buildingData.pieces.PSObject.Properties.Value) {
     if ($piece.kind -ne 'block' -and $piece.item.shortName) { [void]$shortnames.Add([string]$piece.item.shortName) }
+}
+# The Ship Builder's fittings. Every boat piece with an item is placed as one (the boat ladder is listed as a block).
+$boatData = Get-Content -Raw (Join-Path $builderDir 'boat_data.json') | ConvertFrom-Json
+foreach ($piece in $boatData.pieces.PSObject.Properties.Value) {
+    if ($piece.item.shortName) { [void]$shortnames.Add([string]$piece.item.shortName) }
 }
 
 New-Item -ItemType Directory -Path $targetDir -Force | Out-Null

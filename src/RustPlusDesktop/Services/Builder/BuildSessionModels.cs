@@ -39,9 +39,15 @@ public sealed record BuildSessionInfo(
     string? Channel,
     BuildSessionPerson? Host,
     IReadOnlyList<BuildSessionMember> Members,
-    DateTimeOffset? InviteExpiresAt)
+    DateTimeOffset? InviteExpiresAt,
+    string Workspace = BuildSessionInfo.BaseWorkspace)
 {
+    /// <summary>The builder a session runs in, as the platform names it. A platform from before the Ship Builder sends none.</summary>
+    public const string BaseWorkspace = "base";
+    public const string ShipWorkspace = "ship";
+
     public bool IsActive => Status == "active";
+    public bool IsShip => Workspace == ShipWorkspace;
 
     internal static BuildSessionInfo? Parse(JToken? token)
     {
@@ -68,8 +74,11 @@ public sealed record BuildSessionInfo(
             o["channel"]?.Type == JTokenType.String ? o["channel"]!.ToString() : null,
             BuildSessionPerson.Parse(o["host"]),
             members,
-            ParseTime(o["invite_expires_at"]));
+            ParseTime(o["invite_expires_at"]),
+            ParseWorkspace(o["workspace"]));
     }
+
+    internal static string ParseWorkspace(JToken? token) => token?.ToString() == ShipWorkspace ? ShipWorkspace : BaseWorkspace;
 
     /// <summary>
     /// Newtonsoft turns an ISO timestamp into a local DateTime while parsing, and that DateTime's
@@ -87,8 +96,11 @@ public sealed record BuildSessionInfo(
 }
 
 /// <summary>An invite waiting on this account, from the broadcast or from <c>build-sessions/current</c>.</summary>
-public sealed record BuildInvite(string SessionId, string? BaseName, BuildSessionPerson? Host, DateTimeOffset? ExpiresAt)
+public sealed record BuildInvite(string SessionId, string? BaseName, BuildSessionPerson? Host, DateTimeOffset? ExpiresAt,
+    string Workspace = BuildSessionInfo.BaseWorkspace)
 {
+    public bool IsShip => Workspace == BuildSessionInfo.ShipWorkspace;
+
     /// <summary>The <c>builder.invite</c> broadcast.</summary>
     internal static BuildInvite? FromBroadcast(JObject data)
     {
@@ -96,11 +108,11 @@ public sealed record BuildInvite(string SessionId, string? BaseName, BuildSessio
         if (string.IsNullOrWhiteSpace(id)) return null;
 
         return new BuildInvite(id, data["base_name"]?.ToString(), BuildSessionPerson.Parse(data["host"]),
-            BuildSessionInfo.ParseTime(data["expires_at"]));
+            BuildSessionInfo.ParseTime(data["expires_at"]), BuildSessionInfo.ParseWorkspace(data["workspace"]));
     }
 
     internal static BuildInvite FromSession(BuildSessionInfo session) =>
-        new(session.Id, session.BaseName, session.Host, session.InviteExpiresAt);
+        new(session.Id, session.BaseName, session.Host, session.InviteExpiresAt, session.Workspace);
 }
 
 /// <summary>What <c>build-sessions/current</c> answers: the app's whole co-op state after a start.</summary>
@@ -118,5 +130,31 @@ public sealed record BuildSessionsState(BuildSessionInfo? Hosting, BuildSessionI
                 .Where(s => s != null)
                 .Select(s => BuildInvite.FromSession(s!))
                 .ToList());
+    }
+}
+
+/// <summary>What a co-op pose may carry besides where someone stands.</summary>
+internal static class BuildSessionPose
+{
+    /// <summary>
+    /// The boat a player is driving in the Ship Builder (station id, pivot and the boat's move), passed on as numbers only;
+    /// null when they are not at a wheel or the builder sent something else.
+    /// </summary>
+    internal static JObject? Drive(JToken? token)
+    {
+        if (token is not JObject drive) return null;
+        static bool IsNumber(JToken? value) => value?.Type is JTokenType.Float or JTokenType.Integer;
+        var station = drive["s"];
+        if (station?.Type is not (JTokenType.Integer or JTokenType.String) || station.ToString().Length > 32) return null;
+        if (drive["pv"] is not JArray { Count: 3 } pivot || !pivot.All(IsNumber)) return null;
+        if (!IsNumber(drive["dx"]) || !IsNumber(drive["dz"]) || !IsNumber(drive["yaw"])) return null;
+        return new JObject
+        {
+            ["s"] = station.DeepClone(),
+            ["pv"] = new JArray(pivot.Select(v => (JToken)v.Value<double>())),
+            ["dx"] = drive["dx"]!.Value<double>(),
+            ["dz"] = drive["dz"]!.Value<double>(),
+            ["yaw"] = drive["yaw"]!.Value<double>()
+        };
     }
 }

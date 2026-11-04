@@ -8320,4 +8320,10 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>Mit dem nächsten Update baust du mit denselben Werkzeugen dein eigenes Boot.</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} lädt dich ein, im Ship Builder gemeinsam ein Schiff zu bauen.</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} lädt dich ein, „{1}“ im Ship Builder gemeinsam zu bauen.</value>
+  </data>
 </root>

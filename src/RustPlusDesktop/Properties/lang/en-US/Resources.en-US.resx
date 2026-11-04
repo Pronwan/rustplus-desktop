@@ -6727,4 +6727,10 @@ You can find more information on the server's official website:
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>Design your own boat with the same tools in the next update.</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} invites you to build a ship together in the Ship Builder.</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} invites you to build &quot;{1}&quot; together in the Ship Builder.</value>
+  </data>
 </root>

@@ -74,9 +74,13 @@ public partial class MainWindow
         if (remaining <= TimeSpan.Zero) return;
 
         var host = invite.Host?.DisplayName ?? "—";
-        var message = string.IsNullOrWhiteSpace(invite.BaseName)
-            ? string.Format(Loc.Text("BuildInviteMessage", "{0} invites you to build together in the Base Builder."), host)
-            : string.Format(Loc.Text("BuildInviteMessageBase", "{0} invites you to build \"{1}\" together in the Base Builder."), host, invite.BaseName);
+        var message = (invite.IsShip, string.IsNullOrWhiteSpace(invite.BaseName)) switch
+        {
+            (false, true) => string.Format(Loc.Text("BuildInviteMessage", "{0} invites you to build together in the Base Builder."), host),
+            (false, false) => string.Format(Loc.Text("BuildInviteMessageBase", "{0} invites you to build \"{1}\" together in the Base Builder."), host, invite.BaseName),
+            (true, true) => string.Format(Loc.Text("BuildInviteMessageShip", "{0} invites you to build a ship together in the Ship Builder."), host),
+            (true, false) => string.Format(Loc.Text("BuildInviteMessageShipNamed", "{0} invites you to build \"{1}\" together in the Ship Builder."), host, invite.BaseName),
+        };
 
         var item = new Controls.ToastItem
         {
@@ -153,7 +157,8 @@ public partial class MainWindow
                 Loc.Text("BuildInviteJoinedTitle", "Joined"),
                 string.Format(Loc.Text("BuildInviteJoinedMessage", "You are watching {0} build. The host decides whether you may build too."), host),
                 WpfUi.ControlAppearance.Success, WpfUi.SymbolRegular.People24);
-            MainTabs.SelectedItem = BaseBuilderTab;
+            // The session's own builder. The other one, if it is open, saves its draft and makes room (CloseBuilderForOtherWorkspaceAsync).
+            MainTabs.SelectedItem = BuilderTabOf(session?.IsShip ?? invite.IsShip ? ShipBuilderWorkspace : BaseBuilderWorkspace);
             return true;
         }
         catch (CloudApiException ex) when (ex.StatusCode is 404 or 410)

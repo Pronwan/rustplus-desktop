@@ -8229,4 +8229,10 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>Conçois ton propre bateau avec les mêmes outils dans la prochaine mise à jour.</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} vous invite à construire un navire ensemble dans le Ship Builder.</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} vous invite à construire « {1} » ensemble dans le Ship Builder.</value>
+  </data>
 </root>

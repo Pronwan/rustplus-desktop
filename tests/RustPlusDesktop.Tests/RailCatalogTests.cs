@@ -23,6 +23,17 @@ public sealed class RailCatalogTests
     }
 
     [TestMethod]
+    public void ShipBuilderJoinsAnExistingToolsFolderOnUpgrade()
+    {
+        var layout = RailCatalog.BuildDefault("Tools");
+        var folder = layout.Nodes.Single(n => n.IsFolder);
+        folder.Children.Remove("shipbuilder");
+        Assert.IsTrue(RailCatalog.Reconcile(layout));
+        Assert.AreEqual(1, folder.Children.Count(id => id == "shipbuilder"));
+        Assert.IsFalse(layout.Nodes.Any(n => n.TabId == "shipbuilder"));
+    }
+
+    [TestMethod]
     public void BaseBuilderKeepsItsCustomLocationAndMissingToolsCanBeRestored()
     {
         var layout = RailCatalog.BuildDefault("Tools");

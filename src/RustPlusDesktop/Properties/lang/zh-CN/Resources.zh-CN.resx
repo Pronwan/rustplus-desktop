@@ -7980,4 +7980,10 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>下次更新中，用同样的工具设计你自己的船。</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} 邀请你在 Ship Builder 中一起建造一艘船。</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} 邀请你在 Ship Builder 中一起建造“{1}”。</value>
+  </data>
 </root>

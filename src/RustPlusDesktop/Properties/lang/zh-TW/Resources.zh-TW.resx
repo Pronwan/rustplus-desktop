@@ -2099,4 +2099,10 @@
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>下次更新中，用同樣的工具設計你自己的船。</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>{0} 邀請你在 Ship Builder 中一起建造一艘船。</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>{0} 邀請你在 Ship Builder 中一起建造「{1}」。</value>
+  </data>
 </root>

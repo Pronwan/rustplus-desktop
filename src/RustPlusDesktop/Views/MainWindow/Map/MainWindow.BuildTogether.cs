@@ -14,7 +14,8 @@ using RustPlusDesk.Services.Social;
 namespace RustPlusDesk.Views;
 
 /// <summary>
-/// The desktop half of the Base Builder's "Together" panel.
+/// The desktop half of the Base and Ship Builders' "Together" panel. A session belongs to one of the two
+/// (<see cref="BuildSessionInfo.Workspace"/>); a guest's app opens that one.
 ///
 /// The builder never talks to the platform: it posts what the player wants (<c>coop_*</c>) and
 /// this answers every one of them with the whole state through <c>window.setCoopState</c> - even
@@ -77,7 +78,8 @@ public partial class MainWindow
                     break;
 
                 case "coop_start":
-                    _buildHostSession = await BuildSessionApi.StartAsync(message["baseName"]?.ToString());
+                    _buildHostSession = await BuildSessionApi.StartAsync(message["baseName"]?.ToString(),
+                        _builderWorkspace == ShipBuilderWorkspace ? BuildSessionInfo.ShipWorkspace : BuildSessionInfo.BaseWorkspace);
                     break;
 
                 case "coop_invite" when _buildHostSession != null:
@@ -282,7 +284,8 @@ public partial class MainWindow
     private void PushBuildTogetherState()
     {
         var core = _baseBuilderWebView?.CoreWebView2;
-        if (core == null) return;
+        // The other builder's page is on its way out; the session's own page asks for the state when it is ready.
+        if (core == null || !BuilderCarriesSession) return;
 
         var me = CloudAuthManager.CurrentUser?.Id;
         var session = ActiveBuildSession;
@@ -418,12 +421,14 @@ public partial class MainWindow
         if (message["p"] is not JArray { Count: 3 } position || message["yaw"]?.Type is not (JTokenType.Float or JTokenType.Integer)) return;
 
         _buildPoseSentAt = DateTime.UtcNow;
-        _ = RealtimeClient.Shared.WhisperAsync(_buildSessionChannel, "pose",
-            new JObject { ["u"] = me, ["p"] = position, ["yaw"] = message["yaw"] });
+        var pose = new JObject { ["u"] = me, ["p"] = position, ["yaw"] = message["yaw"] };
+        if (BuildSessionPose.Drive(message["drive"]) is { } drive) pose["drive"] = drive;
+        _ = RealtimeClient.Shared.WhisperAsync(_buildSessionChannel, "pose", pose);
     }
 
     private void RunInBuilder(string script)
     {
+        if (!BuilderCarriesSession) return;
         try { _ = _baseBuilderWebView?.CoreWebView2?.ExecuteScriptAsync(script); }
         catch (Exception ex) { AppendLog($"[Build Together] Could not reach the builder: {ex.Message}"); }
     }

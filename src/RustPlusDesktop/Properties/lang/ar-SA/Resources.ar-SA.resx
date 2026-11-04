@@ -8120,4 +8120,10 @@
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
     <value>صمّم قاربك الخاص بالأدوات نفسها في التحديث القادم.</value>
   </data>
+  <data name="BuildInviteMessageShip" xml:space="preserve">
+    <value>يدعوك {0} إلى بناء سفينة معًا في Ship Builder.</value>
+  </data>
+  <data name="BuildInviteMessageShipNamed" xml:space="preserve">
+    <value>يدعوك {0} إلى بناء &quot;{1}&quot; معًا في Ship Builder.</value>
+  </data>
 </root>

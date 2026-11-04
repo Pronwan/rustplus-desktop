@@ -13,18 +13,31 @@ public partial class MainWindow
     private WebView2? _baseBuilderWebView;
     private bool _baseBuilderOpening;
 
-    private async Task OpenBaseBuilderWorkspaceAsync()
+    // The workshop page's workspace parameter. Both builders share the panel and its WebView; only one page runs at a time.
+    private const string BaseBuilderWorkspace = "base-builder";
+    private const string ShipBuilderWorkspace = "ship-builder";
+    private string _builderWorkspace = BaseBuilderWorkspace;
+    private string BuilderName => _builderWorkspace == ShipBuilderWorkspace ? "Ship Builder" : "Base Builder";
+
+    private async Task OpenBaseBuilderWorkspaceAsync(string workspace)
     {
+        if (_baseBuilderWebView != null && workspace != _builderWorkspace)
+        {
+            if (_baseBuilderOpening || !await CloseBuilderForOtherWorkspaceAsync(workspace)) return;
+        }
         if (_baseBuilderWebView != null) { _baseBuilderWebView.CoreWebView2?.Resume(); return; }
         if (_baseBuilderOpening) return;
         _baseBuilderOpening = true;
+        _builderWorkspace = workspace;
+        BaseBuilderTitle.Text = $"Tools / {BuilderName}";
+        System.Windows.Automation.AutomationProperties.SetName(BaseBuilderClose, $"Close {BuilderName}");
         BaseBuilderLoading.Visibility = Visibility.Visible;
         BaseBuilderRetry.Visibility = Visibility.Collapsed;
-        BaseBuilderLoadingText.Text = "Opening your building workshop…";
+        BaseBuilderLoadingText.Text = workspace == ShipBuilderWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
         try
         {
             string root = ResolveMap3DViewerSourceRoot()
-                ?? throw new DirectoryNotFoundException("Base Builder files are missing. Reinstall or rebuild RustPlus Desktop to restore them.");
+                ?? throw new DirectoryNotFoundException($"{BuilderName} files are missing. Reinstall or rebuild RustPlus Desktop to restore them.");
             const string host = "rustplus3d.local";
             string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2");
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
@@ -88,7 +101,7 @@ public partial class MainWindow
                             if (dialog.ShowDialog(this) == true) args.ResultFilePath = dialog.FileName;
                             else args.Cancel = true;
                         }
-                        catch (Exception ex) { args.Cancel = true; AppendLog($"[Base Builder] Export canceled: {ex.Message}"); }
+                        catch (Exception ex) { args.Cancel = true; AppendLog($"[{BuilderName}] Export canceled: {ex.Message}"); }
                     }
                 }));
             };
@@ -96,14 +109,14 @@ public partial class MainWindow
             view.NavigationCompleted += (_, args) =>
             {
                 if (args.IsSuccess) BaseBuilderLoading.Visibility = Visibility.Collapsed;
-                else BaseBuilderFailed("Could not open Base Builder. Please try again.");
+                else BaseBuilderFailed($"Could not open {BuilderName}. Please try again.");
                 if (!BaseBuilderPanel.IsVisible) _ = CloseBaseBuilderWorkspaceAsync();
             };
-            view.CoreWebView2.Navigate($"https://{host}/index.html?embedded=1&workspace=base-builder&v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
+            view.CoreWebView2.Navigate($"https://{host}/index.html?embedded=1&workspace={_builderWorkspace}&v={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
         }
         catch (Exception ex)
         {
-            AppendLog($"[Base Builder] {ex.Message}");
+            AppendLog($"[{BuilderName}] {ex.Message}");
             BaseBuilderFailed(Services.WebView2Diagnostics.Explain(ex));
         }
         finally { _baseBuilderOpening = false; }
@@ -221,20 +234,71 @@ public partial class MainWindow
         if (!ReferenceEquals(view, _baseBuilderWebView) || BaseBuilderPanel.IsVisible) return;
         if (draft is "failed" or "unanswered")
         {
-            ShowInfoSnackbar("Base Builder",
+            ShowInfoSnackbar(BuilderName,
                 "Your latest changes could not be saved as a recovery draft, so the workshop stays open in the background. Go back to it and export the base to keep them.",
                 Wpf.Ui.Controls.ControlAppearance.Caution);
             return;
         }
         // A live Build Together session needs the page: it carries the host's batches and the guests' proposals. Looking at
         // another tab must not end it for everyone, so the workshop stays in the background until the session is over.
-        if (ActiveBuildSession != null)
+        if (ActiveBuildSession != null && BuilderCarriesSession)
         {
             _baseBuilderParked = true;
             return;
         }
-        BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
+        DisposeBaseBuilderView();
         BaseBuilderLoading.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>The builder page a co-op session runs in.</summary>
+    private static string BuilderWorkspaceOf(Services.Builder.BuildSessionInfo session) => session.IsShip ? ShipBuilderWorkspace : BaseBuilderWorkspace;
+
+    private System.Windows.Controls.TabItem BuilderTabOf(string workspace) => workspace == ShipBuilderWorkspace ? ShipBuilderTab : BaseBuilderTab;
+
+    /// <summary>
+    /// The running page is the one the co-op session belongs to (or there is no session). Only then does it get the session's
+    /// state and batches, and only then does closing it end or leave the session: a guest who accepts a ship invite while the
+    /// Base Builder is open keeps the session while that page goes and the Ship Builder opens.
+    /// </summary>
+    private bool BuilderCarriesSession => ActiveBuildSession is not { } session || BuilderWorkspaceOf(session) == _builderWorkspace;
+
+    /// <summary>
+    /// The player switched between the Base and the Ship Builder. The running page is the other builder's, so its draft is
+    /// written and it is freed before the new one opens. A Build Together session running in that page or a draft that could
+    /// not be written keeps the running builder instead: the player is sent back to it.
+    /// </summary>
+    private async Task<bool> CloseBuilderForOtherWorkspaceAsync(string workspace)
+    {
+        var view = _baseBuilderWebView;
+        string running = BuilderName;
+        string? refusal = ActiveBuildSession != null && BuilderCarriesSession
+            ? $"A Build Together session is running in the {running}. Leave it before you open the {(workspace == ShipBuilderWorkspace ? "Ship Builder" : "Base Builder")}."
+            : null;
+        _baseBuilderOpening = true;
+        try
+        {
+            if (refusal == null)
+            {
+                var draft = await FlushBaseBuilderDraftAsync(BaseBuilderTabDraftTimeout);
+                if (draft is "failed" or "unanswered")
+                    refusal = $"Your latest changes in the {running} could not be saved as a recovery draft, so it stays open. Export your work there first.";
+            }
+        }
+        finally { _baseBuilderOpening = false; }
+        if (!ReferenceEquals(view, _baseBuilderWebView)) return false;
+        if (refusal != null)
+        {
+            ShowInfoSnackbar(running, refusal, Wpf.Ui.Controls.ControlAppearance.Caution);
+            var back = BuilderTabOf(_builderWorkspace);
+            // Not from inside the tab change that brought us here.
+            _ = Dispatcher.BeginInvoke(new Action(() => MainTabs.SelectedItem = back));
+            return false;
+        }
+        // The player may have moved on while the draft was saving.
+        if (MainTabs.SelectedItem != BuilderTabOf(workspace)) return false;
+        ExitBaseBuilderFullscreen();
+        DisposeBaseBuilderView();
+        return true;
     }
 
     /// <summary>True while the workshop is kept alive off screen only because a Build Together session is running.</summary>
@@ -278,10 +342,13 @@ public partial class MainWindow
         catch (Exception ex) { AppendLog($"[Base Builder] Session ending without a fresh recovery draft: {ex.Message}"); }
     }
 
-    private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e)
+    private void BaseBuilderHost_Unloaded(object sender, RoutedEventArgs e) => DisposeBaseBuilderView();
+
+    // A page that carries the co-op session takes it with it; one of the other builder leaves it to the page that opens next.
+    private void DisposeBaseBuilderView()
     {
         _baseBuilderParked = false;
-        if (_baseBuilderWebView != null) _ = LeaveBuildTogetherOnCloseAsync();
+        if (_baseBuilderWebView != null && BuilderCarriesSession) _ = LeaveBuildTogetherOnCloseAsync();
         _baseBuilderWebView?.Dispose();
         _baseBuilderWebView = null;
         BaseBuilderHost.Children.Clear();
@@ -290,7 +357,7 @@ public partial class MainWindow
     private void BaseBuilderRetry_Click(object sender, RoutedEventArgs e)
     {
         BaseBuilderHost_Unloaded(sender, e);
-        _ = OpenBaseBuilderWorkspaceAsync();
+        _ = OpenBaseBuilderWorkspaceAsync(_builderWorkspace);
     }
 
     private void BaseBuilder_CloseRequested(object sender, RoutedEventArgs e)

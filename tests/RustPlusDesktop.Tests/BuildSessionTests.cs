@@ -91,6 +91,31 @@ public sealed class BuildSessionTests
     }
 
     [TestMethod]
+    public void KnowsWhichBuilderASessionAndItsInviteRunIn()
+    {
+        var ship = BuildSessionInfo.Parse(JObject.Parse($$"""{ "id": "{{SessionId}}", "status": "active", "workspace": "ship", "members": [] }"""));
+        var older = BuildSessionInfo.Parse(JObject.Parse($$"""{ "id": "{{SessionId}}", "status": "active", "members": [] }"""));
+        var unknown = BuildSessionInfo.Parse(JObject.Parse($$"""{ "id": "{{SessionId}}", "status": "active", "workspace": "plane", "members": [] }"""));
+
+        Assert.IsTrue(ship!.IsShip);
+        Assert.IsTrue(BuildInvite.FromSession(ship).IsShip, "a missed invite keeps the builder");
+        Assert.AreEqual(BuildSessionInfo.BaseWorkspace, older!.Workspace, "a platform without the field means a base");
+        Assert.AreEqual(BuildSessionInfo.BaseWorkspace, unknown!.Workspace);
+
+        BuildInvite? received = null;
+        void Handler(BuildInvite i) => received = i;
+        BuildSessionRealtime.InviteReceived += Handler;
+        try
+        {
+            BuildSessionRealtime.OnEvent("private-users.u2", ".builder.invite", JObject.Parse($$"""
+                { "session_id": "{{SessionId}}", "base_name": "Galleon", "workspace": "ship", "host": { "id": "u1", "display_name": "Carsten" } }
+                """));
+        }
+        finally { BuildSessionRealtime.InviteReceived -= Handler; }
+        Assert.IsTrue(received!.IsShip, "the broadcast says it too");
+    }
+
+    [TestMethod]
     public void AnEndedSessionWithdrawsAnInviteOnTheAccountChannelButEndsItOnTheSessionChannel()
     {
         string? withdrawn = null, ended = null, reason = null;
@@ -204,5 +229,21 @@ public sealed class BuildSessionTests
 
         CloudFeatureFlags.Load("{\"data\":{\"coop_builder\":{\"enabled\":true}}}");
         Assert.IsTrue(CloudFeatureFlags.IsWithinWindow(BuildSessionApi.FeatureFlag));
+    }
+
+    [TestMethod]
+    public void PassesOnABoatBeingDrivenAsNumbersOnly()
+    {
+        var drive = BuildSessionPose.Drive(JObject.Parse("{ \"s\": 3, \"pv\": [1.5, -0.1, -10], \"dx\": 4.25, \"dz\": -8, \"yaw\": 12.5, \"extra\": \"<script>\" }"));
+        Assert.IsNotNull(drive);
+        Assert.AreEqual(3, drive!["s"]!.Value<int>());
+        Assert.AreEqual(-10, drive["pv"]![2]!.Value<double>());
+        Assert.AreEqual(12.5, drive["yaw"]!.Value<double>());
+        Assert.IsNull(drive["extra"], "nothing else travels");
+
+        Assert.IsNull(BuildSessionPose.Drive(null), "not at a wheel");
+        Assert.IsNull(BuildSessionPose.Drive(JObject.Parse("{ \"s\": 3, \"pv\": [1, 2], \"dx\": 0, \"dz\": 0, \"yaw\": 0 }")), "a pivot needs three numbers");
+        Assert.IsNull(BuildSessionPose.Drive(JObject.Parse("{ \"s\": 3, \"pv\": [1, 2, 3], \"dx\": \"far\", \"dz\": 0, \"yaw\": 0 }")), "moves are numbers");
+        Assert.IsNull(BuildSessionPose.Drive(JObject.Parse("{ \"s\": { \"a\": 1 }, \"pv\": [1, 2, 3], \"dx\": 0, \"dz\": 0, \"yaw\": 0 }")), "a station is an id");
     }
 }
