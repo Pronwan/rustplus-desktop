@@ -85,6 +85,25 @@ jobs:
             vendor/MapParser/package-lock.json
             src/RustPlusDesktop/Features/GeneticsLab/package-lock.json
 
+      - name: Record MapParser commit
+        shell: pwsh
+        run: |
+          $sha = git -C vendor/MapParser rev-parse HEAD
+          "MapParser commit: $sha" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Test MapParser builder
+        shell: pwsh
+        working-directory: vendor/MapParser
+        env:
+          REQUIRE_BUNDLE: "1"
+        run: |
+          npm ci
+          if ($LASTEXITCODE -ne 0) { throw "npm ci failed" }
+          npm run build:client
+          if ($LASTEXITCODE -ne 0) { throw "build:client failed" }
+          npm test
+          if ($LASTEXITCODE -ne 0) { throw "MapParser tests failed" }
+
       # The installer ships the newest published Genetics Lab build. Installed apps then
       # keep themselves current from rust-genetics-lab's `dist` branch (or the hosted
       # site), downloading only changed files, so this copy is just the starting point.
@@ -198,6 +217,9 @@ jobs:
           SUPABASE_ANON_KEY=$env:SUPABASE_ANON_KEY
           CLOUD_API_BASEURL=$env:CLOUD_API_BASEURL
           "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
+
+      - name: Test desktop app
+        run: dotnet test tests/RustPlusDesktop.Tests/RustPlusDesktop.Tests.csproj --configuration "${{ env.CONFIGURATION }}" -p:SkipGeneticsLabBuild=true
 
       - name: Publish Windows app
         run: >
