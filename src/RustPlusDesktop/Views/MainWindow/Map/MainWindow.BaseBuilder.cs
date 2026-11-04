@@ -13,14 +13,13 @@ public partial class MainWindow
     private WebView2? _baseBuilderWebView;
     private bool _baseBuilderOpening;
 
-    /// <summary>
-    /// What the Base Builder tab builds: "base-builder" or "ship-builder". One tab, two workshops: the choice is made in the
-    /// panel header, and each keeps its own page, draft and library (the page reads the workspace from its address).
-    /// </summary>
-    private string _builderWorkspace = "base-builder";
-    private bool IsShipWorkspace => _builderWorkspace == "ship-builder";
+    // The workshop page's workspace parameter. Both builders share the panel and its WebView; only one page runs at a time.
+    private const string BaseBuilderWorkspace = "base-builder";
+    private const string ShipBuilderWorkspace = "ship-builder";
+    private string _builderWorkspace = BaseBuilderWorkspace;
+    private string BuilderName => _builderWorkspace == ShipBuilderWorkspace ? "Ship Builder" : "Base Builder";
 
-    private async Task OpenBaseBuilderWorkspaceAsync()
+    private async Task OpenBaseBuilderWorkspaceAsync(string workspace)
     {
         if (_baseBuilderWebView != null && workspace != _builderWorkspace)
         {
@@ -31,10 +30,11 @@ public partial class MainWindow
         _baseBuilderOpening = true;
         _builderWorkspace = workspace;
         BaseBuilderTitle.Text = $"Tools / {BuilderName}";
+        UpdateBuilderModeUi();
         System.Windows.Automation.AutomationProperties.SetName(BaseBuilderClose, $"Close {BuilderName}");
         BaseBuilderLoading.Visibility = Visibility.Visible;
         BaseBuilderRetry.Visibility = Visibility.Collapsed;
-        BaseBuilderLoadingText.Text = IsShipWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
+        BaseBuilderLoadingText.Text = workspace == ShipBuilderWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
         try
         {
             string root = ResolveMap3DViewerSourceRoot()
@@ -355,46 +355,18 @@ public partial class MainWindow
         BaseBuilderHost.Children.Clear();
     }
 
+    // The Bases / Ships switch in the panel header shows which builder is open and opens the other one. It selects that builder's
+    // tab, so switching takes the same way as from Tools: the draft is written first and a running Build Together session is kept.
     private void UpdateBuilderModeUi()
     {
-        BuilderModeBase.Appearance = IsShipWorkspace ? Wpf.Ui.Controls.ControlAppearance.Secondary : Wpf.Ui.Controls.ControlAppearance.Primary;
-        BuilderModeShip.Appearance = IsShipWorkspace ? Wpf.Ui.Controls.ControlAppearance.Primary : Wpf.Ui.Controls.ControlAppearance.Secondary;
-        BuilderPanelTitle.Text = IsShipWorkspace ? "Tools / Ship Builder" : "Tools / Base Builder";
+        bool ship = _builderWorkspace == ShipBuilderWorkspace;
+        BuilderModeBase.Appearance = ship ? Wpf.Ui.Controls.ControlAppearance.Secondary : Wpf.Ui.Controls.ControlAppearance.Primary;
+        BuilderModeShip.Appearance = ship ? Wpf.Ui.Controls.ControlAppearance.Primary : Wpf.Ui.Controls.ControlAppearance.Secondary;
     }
 
-    private async void BuilderMode_Click(object sender, RoutedEventArgs e)
+    private void BuilderMode_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { Tag: string workspace }) await SwitchBuilderWorkspaceAsync(workspace);
-    }
-
-    /// <summary>
-    /// Changes what the tab builds. The page that is open writes its recovery draft first and is then replaced; a draft that could
-    /// not be written, or a running Build Together session (ships are built alone), keeps things as they are.
-    /// </summary>
-    private async Task SwitchBuilderWorkspaceAsync(string workspace)
-    {
-        if (workspace == _builderWorkspace) return;
-        if (workspace == "ship-builder" && ActiveBuildSession != null)
-        {
-            ShowInfoSnackbar("Ship Builder", "Leave your Build Together session before building a ship.", Wpf.Ui.Controls.ControlAppearance.Caution);
-            return;
-        }
-        if (_baseBuilderWebView != null)
-        {
-            ExitBaseBuilderFullscreen();
-            var draft = await FlushBaseBuilderDraftAsync(BaseBuilderTabDraftTimeout);
-            if (draft is "failed" or "unanswered")
-            {
-                ShowInfoSnackbar("Base Builder",
-                    "Your latest changes could not be saved as a recovery draft, so the workshop was not switched. Export your work first.",
-                    Wpf.Ui.Controls.ControlAppearance.Caution);
-                return;
-            }
-            BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
-        }
-        _builderWorkspace = workspace;
-        UpdateBuilderModeUi();
-        if (BaseBuilderPanel.IsVisible) _ = OpenBaseBuilderWorkspaceAsync();
+        if (sender is FrameworkElement { Tag: string workspace } && workspace != _builderWorkspace) MainTabs.SelectedItem = BuilderTabOf(workspace);
     }
 
     private void BaseBuilderRetry_Click(object sender, RoutedEventArgs e)
