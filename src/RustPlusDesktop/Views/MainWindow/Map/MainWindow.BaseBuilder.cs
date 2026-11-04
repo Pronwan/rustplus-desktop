@@ -13,13 +13,14 @@ public partial class MainWindow
     private WebView2? _baseBuilderWebView;
     private bool _baseBuilderOpening;
 
-    // The workshop page's workspace parameter. Both builders share the panel and its WebView; only one page runs at a time.
-    private const string BaseBuilderWorkspace = "base-builder";
-    private const string ShipBuilderWorkspace = "ship-builder";
-    private string _builderWorkspace = BaseBuilderWorkspace;
-    private string BuilderName => _builderWorkspace == ShipBuilderWorkspace ? "Ship Builder" : "Base Builder";
+    /// <summary>
+    /// What the Base Builder tab builds: "base-builder" or "ship-builder". One tab, two workshops: the choice is made in the
+    /// panel header, and each keeps its own page, draft and library (the page reads the workspace from its address).
+    /// </summary>
+    private string _builderWorkspace = "base-builder";
+    private bool IsShipWorkspace => _builderWorkspace == "ship-builder";
 
-    private async Task OpenBaseBuilderWorkspaceAsync(string workspace)
+    private async Task OpenBaseBuilderWorkspaceAsync()
     {
         if (_baseBuilderWebView != null && workspace != _builderWorkspace)
         {
@@ -33,7 +34,7 @@ public partial class MainWindow
         System.Windows.Automation.AutomationProperties.SetName(BaseBuilderClose, $"Close {BuilderName}");
         BaseBuilderLoading.Visibility = Visibility.Visible;
         BaseBuilderRetry.Visibility = Visibility.Collapsed;
-        BaseBuilderLoadingText.Text = workspace == ShipBuilderWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
+        BaseBuilderLoadingText.Text = IsShipWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
         try
         {
             string root = ResolveMap3DViewerSourceRoot()
@@ -352,6 +353,48 @@ public partial class MainWindow
         _baseBuilderWebView?.Dispose();
         _baseBuilderWebView = null;
         BaseBuilderHost.Children.Clear();
+    }
+
+    private void UpdateBuilderModeUi()
+    {
+        BuilderModeBase.Appearance = IsShipWorkspace ? Wpf.Ui.Controls.ControlAppearance.Secondary : Wpf.Ui.Controls.ControlAppearance.Primary;
+        BuilderModeShip.Appearance = IsShipWorkspace ? Wpf.Ui.Controls.ControlAppearance.Primary : Wpf.Ui.Controls.ControlAppearance.Secondary;
+        BuilderPanelTitle.Text = IsShipWorkspace ? "Tools / Ship Builder" : "Tools / Base Builder";
+    }
+
+    private async void BuilderMode_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string workspace }) await SwitchBuilderWorkspaceAsync(workspace);
+    }
+
+    /// <summary>
+    /// Changes what the tab builds. The page that is open writes its recovery draft first and is then replaced; a draft that could
+    /// not be written, or a running Build Together session (ships are built alone), keeps things as they are.
+    /// </summary>
+    private async Task SwitchBuilderWorkspaceAsync(string workspace)
+    {
+        if (workspace == _builderWorkspace) return;
+        if (workspace == "ship-builder" && ActiveBuildSession != null)
+        {
+            ShowInfoSnackbar("Ship Builder", "Leave your Build Together session before building a ship.", Wpf.Ui.Controls.ControlAppearance.Caution);
+            return;
+        }
+        if (_baseBuilderWebView != null)
+        {
+            ExitBaseBuilderFullscreen();
+            var draft = await FlushBaseBuilderDraftAsync(BaseBuilderTabDraftTimeout);
+            if (draft is "failed" or "unanswered")
+            {
+                ShowInfoSnackbar("Base Builder",
+                    "Your latest changes could not be saved as a recovery draft, so the workshop was not switched. Export your work first.",
+                    Wpf.Ui.Controls.ControlAppearance.Caution);
+                return;
+            }
+            BaseBuilderHost_Unloaded(this, new RoutedEventArgs());
+        }
+        _builderWorkspace = workspace;
+        UpdateBuilderModeUi();
+        if (BaseBuilderPanel.IsVisible) _ = OpenBaseBuilderWorkspaceAsync();
     }
 
     private void BaseBuilderRetry_Click(object sender, RoutedEventArgs e)

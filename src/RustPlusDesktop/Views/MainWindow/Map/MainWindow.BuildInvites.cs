@@ -138,6 +138,8 @@ public partial class MainWindow
     {
         try
         {
+            // An invite is a base: a ship workshop that is open gives way to it, before the own-base question is asked of the page.
+            await SwitchBuilderWorkspaceAsync("base-builder");
             // One session at a time: a guest somewhere else walks out of it first.
             if (BuildGuestSession is { } previous && previous.Id != invite.SessionId)
             {
