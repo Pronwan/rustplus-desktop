@@ -6695,37 +6695,37 @@ You can find more information on the server's official website:
     <value>The host took your build rights away. You are watching again.</value>
   </data>
   <data name="UpdateWhatsNew110Summary" xml:space="preserve">
-    <value>The Base Builder is here: design, furnish and walk your base like in-game, and build it together.</value>
+    <value>Two builders in one update: design your base, build your own ship and sail it, and build both together.</value>
   </data>
   <data name="UpdateWhatsNew110Title1" xml:space="preserve">
-    <value>A Complete Base Builder</value>
+    <value>The Base Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
-    <value>Building Plan, Hammer and the building wheel under the game&apos;s own rules, every DLC skin, boxes, shelves, beds and more. Then walk through your base on foot.</value>
+    <value>Build, furnish and walk your base under the game&apos;s own rules, with every DLC skin, TC range and upkeep costs.</value>
   </data>
   <data name="UpdateWhatsNew110Title2" xml:space="preserve">
-    <value>Build Together (Premium)</value>
+    <value>New: The Ship Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
-    <value>Invite friends into your base from your friends list or by Steam ID, give them build rights and watch each other build in real time. Guests join for free.</value>
+    <value>Build boats on a Boat Building Station with every boat piece and fitting, up to three ships per plot, and see what each one costs and what it takes to sink it.</value>
   </data>
   <data name="UpdateWhatsNew110Title3" xml:space="preserve">
-    <value>Import &amp; Export</value>
+    <value>New: The Ship Simulator</value>
   </data>
   <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
-    <value>Open any Builders Sanctuary design or CopyPaste file, export bases for real Rust servers, and place them on your server&apos;s 3D map.</value>
+    <value>See your boat&apos;s top speed and course from the game&apos;s own boat physics, set the sails and start the engines, then take the wheel and sail it.</value>
   </data>
   <data name="UpdateWhatsNew110Title4" xml:space="preserve">
-    <value>Upkeep &amp; TC Range</value>
+    <value>Build Together (Premium)</value>
   </data>
   <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
-    <value>See where each tool cupboard reaches, and what your base costs to build and to keep each day.</value>
+    <value>Invite friends into your base or ship, give them build rights and watch each other build and sail in real time. Guests join for free.</value>
   </data>
   <data name="UpdateWhatsNew110Title5" xml:space="preserve">
-    <value>Coming Next: Ship Builder</value>
+    <value>Import &amp; Export</value>
   </data>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
-    <value>Design your own boat with the same tools in the next update.</value>
+    <value>Open Builders Sanctuary designs and CopyPaste files, export bases for real Rust servers and place them on your server&apos;s 3D map.</value>
   </data>
   <data name="BuildInviteMessageShip" xml:space="preserve">
     <value>{0} invites you to build a ship together in the Ship Builder.</value>

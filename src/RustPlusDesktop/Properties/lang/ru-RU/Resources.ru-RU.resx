@@ -8197,37 +8197,37 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Хост забрал у вас право строить. Вы снова только наблюдаете.</value>
   </data>
   <data name="UpdateWhatsNew110Summary" xml:space="preserve">
-    <value>Base Builder уже здесь: проектируйте, обставляйте и обходите свою базу, как в игре, и стройте её вместе.</value>
+    <value>Два конструктора в одном обновлении: проектируй базу, строй собственный корабль, выходи на нём в море и стройте всё вместе.</value>
   </data>
   <data name="UpdateWhatsNew110Title1" xml:space="preserve">
-    <value>Полноценный Base Builder</value>
+    <value>Base Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
-    <value>План строительства, киянка и колесо строительства по правилам игры, все DLC-скины, ящики, полки, кровати и многое другое. А затем пройдитесь по базе пешком.</value>
+    <value>Строй, обставляй и обходи свою базу по правилам игры: все DLC-скины, радиус шкафа (TC) и стоимость содержания.</value>
   </data>
   <data name="UpdateWhatsNew110Title2" xml:space="preserve">
-    <value>Совместная стройка (Премиум)</value>
+    <value>Новое: Ship Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
-    <value>Приглашайте друзей в свою базу из списка друзей или по Steam ID, выдавайте права на строительство и смотрите, как строят другие, в реальном времени. Гости участвуют бесплатно.</value>
+    <value>Строй лодки на Boat Building Station из всех деталей и оснастки, до трёх кораблей на участке, и смотри, сколько стоит каждый и что нужно, чтобы его потопить.</value>
   </data>
   <data name="UpdateWhatsNew110Title3" xml:space="preserve">
-    <value>Импорт и экспорт</value>
+    <value>Новое: Ship Simulator</value>
   </data>
   <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
-    <value>Открывайте любой дизайн из Builders Sanctuary или файл CopyPaste, экспортируйте базы для настоящих серверов Rust и размещайте их на 3D-карте своего сервера.</value>
+    <value>Узнай максимальную скорость и курс лодки по игровой физике, поднимай паруса, запускай моторы, а потом вставай за штурвал.</value>
   </data>
   <data name="UpdateWhatsNew110Title4" xml:space="preserve">
-    <value>Содержание и радиус шкафа</value>
+    <value>Строим вместе (Premium)</value>
   </data>
   <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
-    <value>Смотрите, докуда дотягивается каждый шкаф с инструментами и сколько стоит постройка базы и её содержание в день.</value>
+    <value>Приглашай друзей на свою базу или корабль, выдавай права на строительство и смотрите в реальном времени, как вы строите и плаваете. Гости участвуют бесплатно.</value>
   </data>
   <data name="UpdateWhatsNew110Title5" xml:space="preserve">
-    <value>Далее: Ship Builder</value>
+    <value>Импорт и экспорт</value>
   </data>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
-    <value>В следующем обновлении спроектируйте свою лодку теми же инструментами.</value>
+    <value>Открывай проекты Builders Sanctuary и файлы CopyPaste, экспортируй базы для настоящих серверов Rust и размещай их на 3D-карте своего сервера.</value>
   </data>
   <data name="BuildInviteMessageShip" xml:space="preserve">
     <value>{0} приглашает вас вместе построить корабль в Ship Builder.</value>

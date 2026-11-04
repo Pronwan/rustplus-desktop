@@ -8197,37 +8197,37 @@ Ferme cet aperçu quand le panneau te convient.</value>
     <value>L&apos;hôte t&apos;a retiré le droit de construire. Tu regardes à nouveau.</value>
   </data>
   <data name="UpdateWhatsNew110Summary" xml:space="preserve">
-    <value>Le Base Builder est là : conçois, aménage et parcours ta base comme en jeu, et construis-la à plusieurs.</value>
+    <value>Deux builders en une mise à jour : conçois ta base, construis ton propre navire, navigue avec, et construisez les deux à plusieurs.</value>
   </data>
   <data name="UpdateWhatsNew110Title1" xml:space="preserve">
-    <value>Un Base Builder complet</value>
+    <value>Le Base Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
-    <value>Plan de construction, marteau et roue de construction selon les règles du jeu, tous les skins DLC, coffres, étagères, lits et plus encore. Puis parcours ta base à pied.</value>
+    <value>Construis, aménage et parcours ta base selon les règles du jeu, avec tous les skins DLC, la portée du TC et les coûts d&apos;entretien.</value>
   </data>
   <data name="UpdateWhatsNew110Title2" xml:space="preserve">
-    <value>Construire ensemble (Premium)</value>
+    <value>Nouveau : le Ship Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
-    <value>Invite tes amis dans ta base depuis ta liste d&apos;amis ou par Steam ID, donne-leur le droit de construire et regardez-vous construire en temps réel. Les invités participent gratuitement.</value>
+    <value>Construis des bateaux sur une Boat Building Station avec toutes les pièces et tous les équipements, jusqu&apos;à trois navires par terrain, et vois ce que chacun coûte et ce qu&apos;il faut pour le couler.</value>
   </data>
   <data name="UpdateWhatsNew110Title3" xml:space="preserve">
-    <value>Import et export</value>
+    <value>Nouveau : le Ship Simulator</value>
   </data>
   <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
-    <value>Ouvre n&apos;importe quel design Builders Sanctuary ou fichier CopyPaste, exporte tes bases pour de vrais serveurs Rust et place-les sur la carte 3D de ton serveur.</value>
+    <value>Vois la vitesse maximale et le cap de ton bateau d&apos;après la physique du jeu, hisse les voiles, démarre les moteurs, puis prends la barre et navigue.</value>
   </data>
   <data name="UpdateWhatsNew110Title4" xml:space="preserve">
-    <value>Entretien et portée du TC</value>
+    <value>Construire ensemble (Premium)</value>
   </data>
   <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
-    <value>Vois jusqu&apos;où porte chaque armoire à outils, et ce que ta base coûte à construire et à entretenir chaque jour.</value>
+    <value>Invite tes amis dans ta base ou sur ton navire, donne-leur le droit de construire et regardez-vous construire et naviguer en temps réel. Les invités participent gratuitement.</value>
   </data>
   <data name="UpdateWhatsNew110Title5" xml:space="preserve">
-    <value>Bientôt : Ship Builder</value>
+    <value>Import et export</value>
   </data>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
-    <value>Conçois ton propre bateau avec les mêmes outils dans la prochaine mise à jour.</value>
+    <value>Ouvre des designs Builders Sanctuary et des fichiers CopyPaste, exporte des bases pour de vrais serveurs Rust et place-les sur la carte 3D de ton serveur.</value>
   </data>
   <data name="BuildInviteMessageShip" xml:space="preserve">
     <value>{0} vous invite à construire un navire ensemble dans le Ship Builder.</value>

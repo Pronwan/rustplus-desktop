@@ -763,7 +763,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             }
         }
 
-        // Everyone arriving from before 11.0 gets the what's-new notice (the Base Builder) once,
+        // Everyone arriving from before 11.0 gets the what's-new notice (the Base & Ship Builder) once,
         // including those who dismissed the 10.0 notice: the latch below sets it again. A fresh install
         // starts on the current version and has nothing to catch up on, so it is left alone.
         //

@@ -1,17 +1,16 @@
 ## [11.0.0](https://github.com/Pronwan/rustplus-desktop/releases/tag/v11.0.0) (2026-11-03)
 
-### ✨ Highlights: the Base Builder
+### ✨ Highlights: the Base & Ship Builder
 
-- **A complete Base Builder.** Design a base on a plot of your own with the Building Plan, the Hammer and the building wheel, under the game's own rules for sockets, stability, collision and cost. Every grade and DLC skin (the Shipping Container with its 16-colour spray can among them), Upgrade all, and 200 steps of undo.
-- **Build Together (Premium).** Invite friends from your friends list or by Steam ID, up to eight at a time, give or take build rights per guest, and see everyone in the base as a player figure. Guests join for free and can keep a copy when the session ends.
-- **Furnish and walk it.** Tool cupboards, boxes, shelves, lockers, furnaces, the small oil refinery, workbenches, beds and sleeping bags, doors, hatches and ladders, external walls and gates. Walk through the base on foot against the game's colliders, or fly over it.
-- **TC range, building and upkeep costs.** See each tool cupboard's privilege as a 3D volume, and what the base costs to build and to keep each day, with a list of what to gather.
-- **Import, export and the real map.** Open any Builders Sanctuary design by share code, load CopyPaste or Fortify files, export bases as CopyPaste (uMod/Oxide) for real Rust servers, and place them on your server's real 3D map with a terrain fit check.
-- **Plots and showcase.** Signature landforms, biomes, water, weather, seasons and a ground brush; replay a base being built and record it as a video.
-- **Coming next:** the Ship Builder.
+- **The Ship Builder (new).** Build boats on a Boat Building Station with every boat piece and fitting: hulls, floors, walls, stairs, steering wheel, sails, small engines, anchor, cannons, plank and small ramp. Hulls sit square to the station's grid, as in the game. Fit the boat out with ladder hatches, doors, lockers, boxes, repair benches, barricades, batteries, switches, tesla coils and shotgun traps. Up to three ships per plot.
+- **The Ship Simulator (new).** Top speed, drag and course come from the game's own boat physics (a pointed bow is faster than a flat one), and the station panel also shows fuel use, health and cost. A Course overlay shows where the boat goes with the wheel left alone, and why. Set the sails, start the engines and drop the anchor all at once or one by one with E. Then take the wheel and sail it, with collisions against the shore and other boats.
+- **Build Together (Premium), for bases and ships.** Invite friends from your friends list or by Steam ID. Give or take build rights per guest and see everyone as a player figure. When someone takes the wheel, the others see them steering and the boat moving. Guests join for free.
+- **The Base Builder.** Build under the game's own rules with every grade and DLC skin. Furnish the base, including the new batteries, switches, tesla coil and shotgun trap, which show their reach while you place them. Walk through it on foot, and see its TC range and its building and upkeep costs.
+- **Import, export and the real map.** Open Builders Sanctuary designs and CopyPaste or Fortify files, export bases as CopyPaste (uMod/Oxide) for real Rust servers, and place them on your server's 3D map with a terrain fit check.
 
 ### 🚀 Features & Enhancements
 
+- **builder**: Ship Builder in Tools, Build Together for ships ([2444aba](https://github.com/Pronwan/rustplus-desktop/commit/2444aba9f6362a907ac520fb884364bdff58e0ac)) (Carsten Podszun)
 - **builder**: tell a co-op guest when the host grants or takes build rights ([643c3bb](https://github.com/Pronwan/rustplus-desktop/commit/643c3bb4aed1559987f47befaceb136fc16807cb)) (Carsten Podszun)
 - **builder**: add refinery and shelf icons ([b5c05fb](https://github.com/Pronwan/rustplus-desktop/commit/b5c05fba06a3882563d596b1ae0ba3af2c2c120e)) (JawadYzbk)
 - **builder**: add the spray can item icon ([915f4be](https://github.com/Pronwan/rustplus-desktop/commit/915f4be6f89577109023a18ae6d49cdbe8f5029f)) (JawadYzbk)
@@ -31,6 +30,7 @@
 
 ### 🐛 Bug Fixes & Stability
 
+- **builder**: keep a Build Together session alive across tab switches and flush the draft on logoff ([921f907](https://github.com/Pronwan/rustplus-desktop/commit/921f9071ae5ca5c3730b2fa5573e422a1412ae1a)) (JawadYzbk)
 - **builder**: ask before an invite takes a player away from their own build ([d770fa2](https://github.com/Pronwan/rustplus-desktop/commit/d770fa2deddfa4e2f1a60c9f2613084876f24ac5)) (Carsten Podszun)
 - keep map and builder session state in sync ([bf39a36](https://github.com/Pronwan/rustplus-desktop/commit/bf39a368c30ced4309f36919bcf9ecf3df0cbef9)) (JawadYzbk)
 - **builder**: wait for the recovery draft, show toasts in the builder, and stop stale map parses ([17f53c4](https://github.com/Pronwan/rustplus-desktop/commit/17f53c4badec2fa2b1c7e6160422b9dc251cc8a4)) (Carsten Podszun)

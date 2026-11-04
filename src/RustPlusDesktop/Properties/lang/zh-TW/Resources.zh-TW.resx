@@ -2067,37 +2067,37 @@
     <value>主持人收回了你的建造權限。你又只能觀看了。</value>
   </data>
   <data name="UpdateWhatsNew110Summary" xml:space="preserve">
-    <value>基地建造器來了：像在遊戲中一樣設計、佈置並漫步你的基地，還能和朋友一起建造。</value>
+    <value>一次更新，兩個建造器：設計你的基地，建造自己的船並駕駛它出海，還能和好友一起建造。</value>
   </data>
   <data name="UpdateWhatsNew110Title1" xml:space="preserve">
-    <value>完整的基地建造器</value>
+    <value>Base Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
-    <value>依遊戲規則使用建築藍圖、鎚子和建造輪盤，所有 DLC 外觀、箱子、貨架、床等一應俱全。然後步行穿過你的基地。</value>
+    <value>依照遊戲規則建造、佈置並在基地中行走，包含所有 DLC 外觀、TC 範圍與維護費用。</value>
   </data>
   <data name="UpdateWhatsNew110Title2" xml:space="preserve">
-    <value>一起建造（進階版）</value>
+    <value>新增：Ship Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
-    <value>從好友清單或透過 Steam ID 邀請好友進入你的基地，授予建造權限，即時看到彼此建造。訪客免費加入。</value>
+    <value>在 Boat Building Station 上用所有船體零件與船上設備建造船隻，每塊地最多三艘，並查看每艘的造價以及擊沉它所需的彈藥。</value>
   </data>
   <data name="UpdateWhatsNew110Title3" xml:space="preserve">
-    <value>匯入與匯出</value>
+    <value>新增：Ship Simulator</value>
   </data>
   <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
-    <value>開啟任何 Builders Sanctuary 設計或 CopyPaste 檔案，為真實的 Rust 伺服器匯出基地，並將其放置在伺服器的 3D 地圖上。</value>
+    <value>依據遊戲本身的船隻物理查看最高速度與航向，升起船帆、啟動引擎，然後親自掌舵出航。</value>
   </data>
   <data name="UpdateWhatsNew110Title4" xml:space="preserve">
-    <value>維護費用與 TC 範圍</value>
+    <value>一起建造（Premium）</value>
   </data>
   <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
-    <value>查看每個工具櫃的涵蓋範圍，以及基地的建造成本和每日維護費用。</value>
+    <value>邀請好友來到你的基地或船上，授予建造權限，即時看到彼此建造與航行。訪客免費加入。</value>
   </data>
   <data name="UpdateWhatsNew110Title5" xml:space="preserve">
-    <value>即將推出：船隻建造器</value>
+    <value>匯入與匯出</value>
   </data>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
-    <value>下次更新中，用同樣的工具設計你自己的船。</value>
+    <value>開啟 Builders Sanctuary 設計與 CopyPaste 檔案，為真實的 Rust 伺服器匯出基地，並將其放到伺服器的 3D 地圖上。</value>
   </data>
   <data name="BuildInviteMessageShip" xml:space="preserve">
     <value>{0} 邀請你在 Ship Builder 中一起建造一艘船。</value>

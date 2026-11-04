@@ -230,7 +230,7 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.0.0 | The Base Builder: Build Together, Walk Your Base &amp; Place It on the Real Map"
+                                            <TextBlock Text="v11.0.0 | The Base &amp; Ship Builder: Build Your Base, Sail Your Ship, Build Together"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
@@ -238,141 +238,122 @@
                                     <!-- Summary Lead Box -->
                                     <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
                                         <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
-                                            Rust+ Desktop now has a complete Base Builder. Design a base on a plot of your own with the Building Plan, the Hammer and the building wheel you know from the game, under the game's own rules for stability, snapping, collision and cost. Furnish it with boxes, shelves, beds and workbenches, see where your tool cupboard reaches and what the base costs to build and to keep, then walk through it on foot. Bring in any design from Builders Sanctuary, place it on your server's real 3D map, or export it to a Rust server. And with the Cloud package you no longer build alone: invite your friends into your base and build it together.
+                                            Rust+ Desktop now has two builders. The Base Builder lets you design, furnish and walk your base under the game's own building rules. The new Ship Builder does the same for boats on a Boat Building Station, and its Ship Simulator shows how fast your boat will be, whether it keeps a straight course and what it takes to sink it. Then take the wheel and sail it. With the Cloud package you build both together with your friends.
                                         </TextBlock>
                                     </Border>
+
+                                    <!-- The Ship Builder -->
+                                        <StackPanel Margin="0,0,0,12">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                    <ui:SymbolIcon Symbol="VehicleShip24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="The Ship Builder" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Build on a Boat Building Station:</Run>
+                                                Open the Ship Builder from Tools, pick a shore or open water, and build your hull, deck and walls on the station's netting, square to its grid as in the game. Every boat piece is in: hulls, floors, walls, stairs, steering wheel, sails, small engines, anchor, cannons, plank and small ramp.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fit It Out:</Run>
+                                                Put on what a boat takes: ladder hatches, doors, lockers, boxes, repair benches, barricades, batteries, switches, tesla coils and shotgun traps. While you place them, the tesla coil shows its shock radius and the shotgun trap its sensor cone. Sails face straight or at 45 degrees, and a blue arrow shows which way they will push.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Same Rules as the Game:</Run>
+                                                The builder checks the station's own rules: one connected hull, one steering wheel, up to 10 sails, 5 engines and one anchor, the build area, the netting and the height limit. It shows what the boat costs to build and its health. It also tells you how many cannonballs, C4, rockets or HV rockets sink it.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Up to Three Ships a Plot:</Run>
+                                                Add more stations and build up to three boats side by side. Switch between them in the station panel. The top bar always shows the ship you are on, with its health, top speed and course.
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                    <!-- The Ship Simulator -->
+                                        <StackPanel Margin="0,0,0,12">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                    <ui:SymbolIcon Symbol="Navigation24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="The Ship Simulator" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; How Fast and How Straight:</Run>
+                                                Speed, drag and course come from the game's own boat physics. Sail and engine thrust, the boat's mass, the drag of your hull's shape (a pointed bow is faster than a flat one) and shallow water all count. The station panel shows your top speed, fuel use and whether the boat holds a straight course or needs the rudder.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Course Overlay:</Run>
+                                                Turn on Course and a line on the water shows where the boat goes with the wheel left alone: green when it runs straight, orange when it pulls a little, red when it turns hard. A panel tells you why, for example which engine or sail pulls the boat to one side, or which sails get no wind because something stands in front of them.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Sails, Engines, Anchor &amp; Ramp:</Run>
+                                                Once the boat is finished, set or furl the sails, start the engines and drop the anchor, all at once from the panel or one by one with E. Sails fill out when they catch the wind and hang slack when they are blocked. The anchor goes down on its rope, and the small ramp folds up on deck.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Take the Wheel:</Run>
+                                                Press E at the steering wheel and sail your boat with W, S, A and D, at the speed it would really reach. It stops at the shore and bumps into other boats, so you can test whether two of your boats lock together. Let go of the wheel and the boat stays where you left it, or send it back to its station.
+                                            </TextBlock>
+                                        </StackPanel>
 
                                     <!-- Build Together -->
-                                    <StackPanel Margin="0,0,0,12">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
-                                                <ui:SymbolIcon Symbol="PeopleTeam24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <TextBlock Text="Build Together" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
-                                            <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="4" Padding="6,1" Margin="10,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock Text="PREMIUM" FontSize="10" FontWeight="Bold" Foreground="White"/>
-                                            </Border>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                    <ui:SymbolIcon Symbol="PeopleTeam24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="Build Together" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                                <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="4" Padding="6,1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="PREMIUM" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Bases and Ships With Friends:</Run>
+                                                Start a session on the base or ship you have open and invite friends from your friends list or by Steam ID. The invite takes them straight into the right builder. Give each guest build rights or take them away, and watch every change appear for everyone as it happens. Guests join for free.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; See Each Other:</Run>
+                                                Everyone walks around as a player figure with a name tag. When someone takes the wheel, the others see them steering and the boat moving, and nobody can edit that boat until the driver lets go.
+                                            </TextBlock>
                                         </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Invite Your Friends Into Your Base:</Run>
-                                            With the Cloud package, open Together in the builder's side rail and start a session on the base you have open. Invite friends from your friends list or by Steam ID, up to eight at a time. The invite pops up wherever they are in the app, even inside the builder, and one click takes them straight into your base. Guests do not need the Cloud package to join.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; You Decide Who Builds:</Run>
-                                            Guests join as watchers. Give each one build rights with a switch, take them away again, or remove someone from the session, and they are told the moment it changes. Every piece placed, upgraded, rotated, re-skinned or demolished shows up for everyone as it happens, and your base stays yours: guests' changes go through your builder, under the same rules.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; See Each Other in the Base:</Run>
-                                            Everyone in the session walks the base as a player figure with a name tag, so you can see who is working where, even through walls. When you move the base or change the plot, everyone gets it at once, and building pauses for guests while the base is in the air.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Keep a Copy:</Run>
-                                            When the host ends the session, guests can keep the base in their own library. Accepting an invite while you are building your own base asks first and saves it for you.
-                                        </TextBlock>
-                                    </StackPanel>
 
                                     <!-- The Base Builder -->
-                                    <StackPanel Margin="0,0,0,12">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
-                                                <ui:SymbolIcon Symbol="Building24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <TextBlock Text="Building Like In-Game" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
+                                                    <ui:SymbolIcon Symbol="Building24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="The Base Builder" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Building Like In-Game:</Run>
+                                                Build with the Building Plan, the Hammer and the building wheel under the game's rules for sockets, stability and collision. You get every grade and DLC skin, the spray can, undo and redo, and a plot you can shape. Furnish your base with boxes, shelves, beds, workbenches, furnaces, batteries, traps and more, then walk through it on foot.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; TC Range &amp; Costs:</Run>
+                                                See where each tool cupboard reaches, what the base costs to build and what its upkeep takes per day.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Import, Export &amp; the Real Map:</Run>
+                                                Open any Builders Sanctuary design or CopyPaste file, export a base for a real Rust server, or place it on your server's 3D map with a check that it fits the terrain.
+                                            </TextBlock>
                                         </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Your Own Workshop:</Run>
-                                            Open the Base Builder from Tools and start a base on an empty plot, continue the one you were working on, open a design from your library, or load a CopyPaste or Fortify file. Your work is kept as a recovery draft, so closing the workshop or the app never costs you a change.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Building Plan, Hammer &amp; Building Wheel:</Run>
-                                            Hold the right mouse button for the cream building wheel, pick a piece and place it with the game's sockets, snapping, stability and collision, from the game's own colliders. The Hammer upgrades, rotates, flips stairs and demolishes. Place pieces as Twig, Wood, Stone, Metal or HQM, upgrade a whole base or a single level at once, and undo or redo up to 200 steps.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Building Skins &amp; the Spray Can:</Run>
-                                            Every DLC building skin is in, the Shipping Container among them. Cycle a grade's skins with Q and E, and paint container blocks in all 16 colours with the spray can.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Furnish It:</Run>
-                                            Tool cupboards, large and small boxes, shelves, lockers, furnaces and the small oil refinery, workbenches, research and repair benches, beds and sleeping bags, doors, hatches, ladders, ceiling lights, wind turbines, external walls and gates. Six belt slots hold what you use most, and Tab opens the item browser with every item's in-game icon.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Walk Through Your Base:</Run>
-                                            Switch between orbit, fly and first-person walking at any time. On foot you move against the game's colliders: climb stairs and ladders, open doors and gates, and see the base the way you will play it. Show one level at a time to work inside.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; A Plot That Fits:</Run>
-                                            Choose from signature landforms and four plot sizes, then set biome, water, weather, season and time of day, add rocks and trees, or sculpt the ground with a brush. Each base keeps its own scene.
-                                        </TextBlock>
-                                    </StackPanel>
 
-                                    <!-- TC Range & Costs -->
-                                    <StackPanel Margin="0,0,0,12">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
-                                                <ui:SymbolIcon Symbol="ShieldCheckmark24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <TextBlock Text="TC Range, Building &amp; Upkeep Costs" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Where Your Cupboard Reaches:</Run>
-                                            The TC range toggle shows each tool cupboard's building privilege as a 3D volume around the base, and which blocks no cupboard covers.
+                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" LineHeight="19">
+                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fixes:</Run>
+                                            A Discord channel the bot can no longer reach is now paused, and you are told why. It no longer fails every minute. A map parse that fails can no longer bring back an older map with the same file name.
                                         </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; What It Costs:</Run>
-                                            See what the base costs to build, piece by piece and grade by grade, what its upkeep takes per day, and a shopping list of everything you need to gather.
-                                        </TextBlock>
-                                    </StackPanel>
 
-                                    <!-- Import, Export & the Real Map -->
-                                    <StackPanel Margin="0,0,0,12">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="6" Width="26" Height="26" Margin="0,0,8,0">
-                                                <ui:SymbolIcon Symbol="ArrowImport24" Foreground="{DynamicResource Accent}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <TextBlock Text="Import, Export &amp; the Real Map" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Builders Sanctuary Import:</Run>
-                                            Browse the Builders Sanctuary library or paste a share code, and the design opens on your plot, ready to explore and to make your own. The workshop's home screen builds a different community base every time you open it.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Export to a Real Rust Server:</Run>
-                                            Export any base as a CopyPaste (uMod/Oxide) file, with grades, skins and paint. Server admins can paste it straight into a running Rust server.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Place It on Your Server's 3D Map:</Run>
-                                            Put a base from your library onto the real 3D map of the server you play on. The fit check marks pieces the terrain cuts through and foundations that end up buried or unsupported. Move, raise and turn the base until it fits, then walk through it or keep building on it right there.
-                                        </TextBlock>
-                                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Show It Off:</Run>
-                                            Replay a base being built piece by piece and record it as a video, with your own camera path, angle and speed.
-                                        </TextBlock>
-                                    </StackPanel>
-
-                                    <!-- Coming Next -->
-                                    <Border Background="{DynamicResource AppBg}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,12">
-                                        <TextBlock TextWrapping="Wrap" LineHeight="19">
-                                            <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">Coming next: the Ship Builder.</Run>
-                                            Design your boat with the same tools in the next update.
-                                        </TextBlock>
-                                    </Border>
-
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fixes:</Run>
-                                        A Discord channel the bot can no longer reach is paused and you are told why, instead of failing every minute; a map parse that fails can no longer bring back an older map with the same file name.
-                                    </TextBlock>
-
-                                    <views:ImageGallery Margin="0,4,0,4">
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/BaseBuilder.jpg" Description="The Base Builder workshop: start a base, open your library, load a file or import from Builders Sanctuary"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Build-together.jpg" Description="Build Together (Premium): your friends in your base, each with a name tag, building with the rights you give them"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Building-wheel.jpg" Description="The building wheel, the Hammer and a six-slot belt, just like in the game"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builder-deployables.jpg" Description="Deployables: boxes, shelves, beds, workbenches, furnaces and more, from the item browser"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/explore-base.jpg" Description="Walk through your base on foot, against the game's own colliders"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builder-TC-Range.jpg" Description="TC range: where each tool cupboard's building privilege reaches"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Building-and-Upkeep-cost.jpg" Description="Building and upkeep costs for the whole base, with a list of what to gather"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builders-Sanctuary-Library-Importer.jpg" Description="Builders Sanctuary import: browse community designs or paste a share code"/>
-                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/place-in-3D-map.jpg" Description="Place a base on your server's real 3D map, with a fit check against the terrain"/>
-                                    </views:ImageGallery>
+                                        <views:ImageGallery Margin="0,4,0,4">
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/ship-builder-and-simulator.jpg" Description="The Ship Builder and Ship Simulator: sails set, the course line on the water, why the boat pulls to one side, and its speed, health and cost"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/BaseBuilder.jpg" Description="The Base Builder workshop: start a base, open your library, load a file or import from Builders Sanctuary"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Build-together.jpg" Description="Build Together (Premium): your friends in your base, each with a name tag, building with the rights you give them"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Building-wheel.jpg" Description="The building wheel, the Hammer and a six-slot belt, just like in the game"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builder-deployables.jpg" Description="Deployables: boxes, shelves, beds, workbenches, furnaces and more, from the item browser"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/explore-base.jpg" Description="Walk through your base on foot, against the game's own colliders"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builder-TC-Range.jpg" Description="TC range: where each tool cupboard's building privilege reaches"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Building-and-Upkeep-cost.jpg" Description="Building and upkeep costs for the whole base, with a list of what to gather"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Builders-Sanctuary-Library-Importer.jpg" Description="Builders Sanctuary import: browse community designs or paste a share code"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/place-in-3D-map.jpg" Description="Place a base on your server's real 3D map, with a fit check against the terrain"/>
+                                        </views:ImageGallery>
                                 </StackPanel>
                             </Border>
 

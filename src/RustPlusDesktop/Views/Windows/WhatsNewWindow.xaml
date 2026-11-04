@@ -59,6 +59,32 @@
                             </TextBlock>
                         </Grid>
 
+                        <!-- The Ship Builder -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="VehicleShip24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title2}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc2}"/>
+                            </TextBlock>
+                        </Grid>
+
+                        <!-- The Ship Simulator -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="Navigation24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
+                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title3}" Foreground="White"/><LineBreak/>
+                                <Run Text="{DynamicResource UpdateWhatsNew110Desc3}"/>
+                            </TextBlock>
+                        </Grid>
+
                         <!-- Build together -->
                         <Grid Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -67,44 +93,18 @@
                             </Grid.ColumnDefinitions>
                             <ui:SymbolIcon Grid.Column="0" Symbol="PeopleTeam24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title2}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew110Desc2}"/>
-                            </TextBlock>
-                        </Grid>
-
-                        <!-- Import and export -->
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="ArrowImport24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
-                                <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title3}" Foreground="White"/><LineBreak/>
-                                <Run Text="{DynamicResource UpdateWhatsNew110Desc3}"/>
-                            </TextBlock>
-                        </Grid>
-
-                        <!-- Upkeep and TC range -->
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="ShieldCheckmark24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title4}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNew110Desc4}"/>
                             </TextBlock>
                         </Grid>
 
-                        <!-- Coming next -->
+                        <!-- Import and export -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ui:SymbolIcon Grid.Column="0" Symbol="Wrench24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
+                            <ui:SymbolIcon Grid.Column="0" Symbol="ArrowImport24" Foreground="{DynamicResource BrandOrangeBrush}" Margin="0,2,10,0" VerticalAlignment="Top"/>
                             <TextBlock Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextBodyBrush}" TextWrapping="Wrap">
                                 <Run FontWeight="SemiBold" Text="{DynamicResource UpdateWhatsNew110Title5}" Foreground="White"/><LineBreak/>
                                 <Run Text="{DynamicResource UpdateWhatsNew110Desc5}"/>

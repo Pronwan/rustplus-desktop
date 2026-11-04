@@ -6,6 +6,7 @@ All notable changes to Rust+ Desktop are documented in this file.
 
 ### 🚀 Features & Enhancements
 
+- **builder**: Ship Builder in Tools, Build Together for ships ([2444aba](https://github.com/Pronwan/rustplus-desktop/commit/2444aba9f6362a907ac520fb884364bdff58e0ac)) (Carsten Podszun)
 - **builder**: tell a co-op guest when the host grants or takes build rights ([643c3bb](https://github.com/Pronwan/rustplus-desktop/commit/643c3bb4aed1559987f47befaceb136fc16807cb)) (Carsten Podszun)
 - **builder**: add refinery and shelf icons ([b5c05fb](https://github.com/Pronwan/rustplus-desktop/commit/b5c05fba06a3882563d596b1ae0ba3af2c2c120e)) (JawadYzbk)
 - **builder**: add the spray can item icon ([915f4be](https://github.com/Pronwan/rustplus-desktop/commit/915f4be6f89577109023a18ae6d49cdbe8f5029f)) (JawadYzbk)
@@ -25,6 +26,7 @@ All notable changes to Rust+ Desktop are documented in this file.
 
 ### 🐛 Bug Fixes & Stability
 
+- **builder**: keep a Build Together session alive across tab switches and flush the draft on logoff ([921f907](https://github.com/Pronwan/rustplus-desktop/commit/921f9071ae5ca5c3730b2fa5573e422a1412ae1a)) (JawadYzbk)
 - **builder**: ask before an invite takes a player away from their own build ([d770fa2](https://github.com/Pronwan/rustplus-desktop/commit/d770fa2deddfa4e2f1a60c9f2613084876f24ac5)) (Carsten Podszun)
 - keep map and builder session state in sync ([bf39a36](https://github.com/Pronwan/rustplus-desktop/commit/bf39a368c30ced4309f36919bcf9ecf3df0cbef9)) (JawadYzbk)
 - **builder**: wait for the recovery draft, show toasts in the builder, and stop stale map parses ([17f53c4](https://github.com/Pronwan/rustplus-desktop/commit/17f53c4badec2fa2b1c7e6160422b9dc251cc8a4)) (Carsten Podszun)

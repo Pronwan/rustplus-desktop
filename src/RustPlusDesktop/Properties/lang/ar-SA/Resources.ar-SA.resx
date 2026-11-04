@@ -8088,37 +8088,37 @@
     <value>سحب المضيف صلاحية البناء منك. أنت تشاهد فقط مرة أخرى.</value>
   </data>
   <data name="UpdateWhatsNew110Summary" xml:space="preserve">
-    <value>وصل منشئ القواعد: صمّم قاعدتك وأثّثها وتجوّل فيها كما في اللعبة، وابنها مع أصدقائك.</value>
+    <value>أداتا بناء في تحديث واحد: صمّم قاعدتك، وابنِ سفينتك وأبحر بها، وابنيا الاثنتين معًا.</value>
   </data>
   <data name="UpdateWhatsNew110Title1" xml:space="preserve">
-    <value>منشئ قواعد متكامل</value>
+    <value>Base Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc1" xml:space="preserve">
-    <value>مخطط البناء والمطرقة وعجلة البناء وفق قواعد اللعبة نفسها، وجميع أشكال DLC، والصناديق والرفوف والأسرّة وغيرها. ثم تجوّل في قاعدتك سيرًا على الأقدام.</value>
+    <value>ابنِ قاعدتك وجهّزها وتجوّل فيها وفق قواعد اللعبة، مع جميع أشكال DLC ونطاق خزانة الأدوات (TC) وتكاليف الصيانة.</value>
   </data>
   <data name="UpdateWhatsNew110Title2" xml:space="preserve">
-    <value>البناء معًا (بريميوم)</value>
+    <value>جديد: Ship Builder</value>
   </data>
   <data name="UpdateWhatsNew110Desc2" xml:space="preserve">
-    <value>ادعُ أصدقاءك إلى قاعدتك من قائمة الأصدقاء أو عبر Steam ID، وامنحهم صلاحيات البناء وشاهدوا بعضكم يبني في الوقت الفعلي. الانضمام مجاني للضيوف.</value>
+    <value>ابنِ القوارب على Boat Building Station بجميع قطع القارب وتجهيزاته، حتى ثلاث سفن في كل قطعة أرض، واعرف تكلفة كل منها وما يلزم لإغراقها.</value>
   </data>
   <data name="UpdateWhatsNew110Title3" xml:space="preserve">
-    <value>الاستيراد والتصدير</value>
+    <value>جديد: Ship Simulator</value>
   </data>
   <data name="UpdateWhatsNew110Desc3" xml:space="preserve">
-    <value>افتح أي تصميم من Builders Sanctuary أو ملف CopyPaste، وصدّر القواعد لخوادم Rust الحقيقية، وضعها على خريطة خادمك ثلاثية الأبعاد.</value>
+    <value>اعرف السرعة القصوى لقاربك ومساره وفق فيزياء القوارب في اللعبة، وارفع الأشرعة وشغّل المحركات، ثم أمسك الدفة وأبحر.</value>
   </data>
   <data name="UpdateWhatsNew110Title4" xml:space="preserve">
-    <value>الصيانة ونطاق خزانة الأدوات</value>
+    <value>البناء معًا (Premium)</value>
   </data>
   <data name="UpdateWhatsNew110Desc4" xml:space="preserve">
-    <value>اعرف إلى أي مدى تصل كل خزانة أدوات، وكم تكلّف قاعدتك للبناء وللصيانة يوميًا.</value>
+    <value>ادعُ أصدقاءك إلى قاعدتك أو سفينتك، وامنحهم صلاحيات البناء، وشاهدوا بعضكم يبني ويبحر في الوقت الفعلي. الضيوف ينضمون مجانًا.</value>
   </data>
   <data name="UpdateWhatsNew110Title5" xml:space="preserve">
-    <value>قريبًا: منشئ السفن</value>
+    <value>الاستيراد والتصدير</value>
   </data>
   <data name="UpdateWhatsNew110Desc5" xml:space="preserve">
-    <value>صمّم قاربك الخاص بالأدوات نفسها في التحديث القادم.</value>
+    <value>افتح تصاميم Builders Sanctuary وملفات CopyPaste، وصدّر القواعد لخوادم Rust حقيقية، وضعها على الخريطة ثلاثية الأبعاد لخادمك.</value>
   </data>
   <data name="BuildInviteMessageShip" xml:space="preserve">
     <value>يدعوك {0} إلى بناء سفينة معًا في Ship Builder.</value>
