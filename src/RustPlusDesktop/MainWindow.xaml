@@ -11052,11 +11052,11 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <DockPanel Margin="16,8">
+                        <ui:Button x:Name="BaseBuilderClose" DockPanel.Dock="Right" Content="Close" Click="BaseBuilder_CloseRequested" AutomationProperties.Name="Close Base Builder" />
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,12,0" AutomationProperties.Name="Builder type">
                             <ui:Button x:Name="BuilderModeBase" Content="Bases" Click="BuilderMode_Click" Tag="base-builder" Appearance="Primary" Margin="0,0,4,0" />
                             <ui:Button x:Name="BuilderModeShip" Content="Ships" Click="BuilderMode_Click" Tag="ship-builder" Appearance="Secondary" />
                         </StackPanel>
-                        <ui:Button x:Name="BaseBuilderClose" DockPanel.Dock="Right" Content="Close" Click="BaseBuilder_CloseRequested" AutomationProperties.Name="Close Base Builder" />
                         <TextBlock x:Name="BaseBuilderTitle" Text="Tools / Base Builder" FontSize="14" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                     </DockPanel>
                     <Grid x:Name="BaseBuilderHost" Grid.Row="1" />

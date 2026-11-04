@@ -19,7 +19,7 @@ public partial class MainWindow
     private string _builderWorkspace = BaseBuilderWorkspace;
     private string BuilderName => _builderWorkspace == ShipBuilderWorkspace ? "Ship Builder" : "Base Builder";
 
-    private async Task OpenBaseBuilderWorkspaceAsync(string workspace)
+    private async Task OpenBaseBuilderWorkspaceAsync(string workspace = BaseBuilderWorkspace)
     {
         if (_baseBuilderWebView != null && workspace != _builderWorkspace)
         {

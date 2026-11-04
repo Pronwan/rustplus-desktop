@@ -182,7 +182,7 @@ public static class Map3DLocalBuildService
                     ClearRenderedTexture(folder);
                     CopyParserOutput(candidateOutput, folder);
                     // Candidates are probed with --skip-image, so only the winning map is rendered.
-                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap, folder, ct).ConfigureAwait(false)
+                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap!, folder, ct).ConfigureAwait(false)
                         ?? PromotePendingTexture(pendingTexturePath, folder);
                     break;
                 }
@@ -198,7 +198,7 @@ public static class Map3DLocalBuildService
                     selectedMap = explicitMapPath;
                     ClearRenderedTexture(folder);
                     CopyParserOutput(candidateOutput, folder);
-                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap, folder, ct).ConfigureAwait(false)
+                    texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap!, folder, ct).ConfigureAwait(false)
                         ?? PromotePendingTexture(pendingTexturePath, folder);
                 }
             }
