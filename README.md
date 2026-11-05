@@ -55,6 +55,50 @@ removed and/or adjusted the features in question. Details can be found here:
 [![YouTube Video](./RustPlusDesktop/Assets/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)  
 *(click the image to watch on YouTube)*
 
+# v11.0.0 — The Base & Ship Builder: Build Your Base, Sail Your Ship, Build Together
+
+Rust+ Desktop now has two builders. The **Base Builder** lets you design, furnish and walk through your base under the game's own building rules. The new **Ship Builder** does the same for boats on a Boat Building Station, and its **Ship Simulator** shows how fast your boat will be, whether it holds a straight course and what it takes to sink it. Then take the wheel and sail it. With the Cloud package, you can build both together with friends.
+
+![The Ship Builder and Ship Simulator](docs/media/app/Screenshots/11.0/ship-builder-and-simulator.jpg)
+
+## ⛵ The Ship Builder
+
+- **Build on a Boat Building Station** — open the Ship Builder from Tools, pick a shore or open water, and build your hull, deck and walls on the station's netting, square to its grid as in the game. Every boat piece is in: hulls, floors, walls, stairs, steering wheel, sails, small engines, anchor, cannons, plank and small ramp.
+- **Fit it out** — ladder hatches, doors, lockers, boxes, repair benches, barricades, batteries, switches, tesla coils and shotgun traps. While you place them, the tesla coil shows its shock radius and the shotgun trap its sensor cone. Sails face straight or at 45 degrees, and a blue arrow shows which way they will push.
+- **The same rules as the game** — one connected hull, one steering wheel, up to 10 sails, 5 engines and one anchor, the build area, the netting and the height limit. The builder shows the boat's cost and health, and how many cannonballs, C4, rockets or HV rockets it takes to sink it.
+- **Up to three ships per plot** — add more stations and build up to three boats side by side. The top bar always shows the ship you are on, with its health, top speed and course.
+
+## 🧭 The Ship Simulator
+
+- **How fast, how straight** — speed, drag and course come from the game's own boat physics. Sail and engine thrust, the boat's mass, your hull's shape (a pointed bow is faster than a flat one) and shallow water all count.
+- **Course overlay** — a line on the water shows where the boat goes with the wheel left alone: green when it runs straight, orange when it pulls a little, red when it turns hard. A panel tells you why, for example which engine pulls it to one side or which sails get no wind.
+- **Sails, engines, anchor & ramp** — set or furl the sails, start the engines and drop the anchor, all at once or one by one with E. Sails fill out in the wind and hang slack when blocked.
+- **Take the wheel** — press E at the steering wheel and sail with W, S, A and D, at the speed the boat would really reach. It stops at the shore and bumps into other boats, so you can test whether two of your boats lock together.
+
+## 👥 Build Together *(Premium)*
+
+- **Bases and ships with friends** — start a session on the base or ship you have open and invite friends from your friends list or by Steam ID. The invite takes them straight into the right builder. Give each guest build rights or take them away, and every change appears for everyone as it happens. Guests join for free.
+- **See each other** — everyone walks around as a player figure with a name tag. When someone takes the wheel, the others see them steering, and nobody can edit that boat until the driver lets go.
+
+![Build Together](docs/media/app/Screenshots/11.0/Build-together.jpg)
+
+## 🏗️ The Base Builder
+
+- **Building like in-game** — the Building Plan, the Hammer and the building wheel under the game's rules for sockets, stability and collision. Every grade and DLC skin, the spray can, undo and redo, and a plot you can shape. Furnish your base with boxes, shelves, beds, workbenches, furnaces, batteries, traps and more, then walk through it on foot.
+- **TC range & costs** — see where each tool cupboard reaches, what the base costs to build and what its upkeep takes per day.
+- **God Rock, iceberg & cliff bases** — plan bases on the game's large rocks, cliffs and icebergs. Add them to your plot under *Scene › Structures*, or build against them on the 3D map, and the base keeps them.
+- **Import, export & the real map** — open Builders Sanctuary designs and CopyPaste or Fortify files, and export bases as CopyPaste (uMod/Oxide) for real Rust servers.
+
+![A God Rock base on the 3D map](docs/media/app/Screenshots/11.0/God-Rock-Base.jpg)
+
+## 🗺️ Bases on Your Server's 3D Map
+
+- **Place it and see whether it fits** — every piece is checked where it would stand, by the game's own building rules: terrain, rock, water, roads and monument zones. You see straight away whether the base can be placed or which pieces need adjusting.
+- **Back onto the same rock** — a base built against a rock, cliff or iceberg gets a list of the same structures on the new map, the ones it fits first. *Show* flies you there with the base on it, *Place here* keeps it, and Shift+wheel fine-tunes the height.
+- **Build right on the map** — each base you build on the map is a base of its own, with its own name, ready to save to your library and keep building in the Base Builder.
+
+![Place a base on the 3D map](docs/media/app/Screenshots/11.0/place-in-3D-map.jpg)
+
 # v10.0.0 — Widget Overlay, AI Companion, Map Layers & Global Chat
 
 The mini-map has grown into a command centre you can build yourself. Alongside it: an AI companion you can talk to mid-raid, map layers that no longer need the 3D world built first, and chat that follows you around the app.
