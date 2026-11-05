@@ -2,8 +2,6 @@
 [![Discord](https://img.shields.io/badge/Discord-Rust²%20|%20Rust%2B%20Desktop-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/v4X584wye4)
 [![Cloud](docs/media/cloud.png)](https://rustplusdesktop.cloud)
 
-[![Donate](./docs/media/app/Images/donate.png)](https://www.patreon.com/c/Pronwan)
-
 
 # Rust+ Desktop App (Unofficial)
 
@@ -35,7 +33,11 @@ so you don’t have to install dependencies manually.
 
 ---
 
+### Facepunch's review
+Recently, facepunch reviewed our app internally and asked us to remove some features to prevent unfair use. We complied and
+removed and/or adjusted the features in question. Details can be found here:
 
+[<img width="1672" height="941" alt="Image" src="https://github.com/user-attachments/assets/9f15a99f-76a3-4d8a-8063-bc53583d497f" />](https://www.youtube.com/watch?v=bJtCQMEbKaM)
 
 ## 🚀 Latest Release
 
@@ -45,14 +47,59 @@ so you don’t have to install dependencies manually.
 
 
 *(I publish the signed/packaged installer as a GitHub Release asset for clean versioning and smaller repositories.)*
-[![YouTube V9](docs/media/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
-[![YouTube V8](docs/media/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
-[![YouTube V7](docs/media/Thumbnail.png)](https://www.youtube.com/watch?v=dajHSihKwQs)
-[![YouTube V6](./docs/media/app/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
-[![YouTube V5](./src/RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
+[![YouTube V10](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/RustPlusv10.jpg)](https://www.youtube.com/watch?v=TOKSoXduyCg)
+[![YouTube V9](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumb_Version9.jpg)](https://www.youtube.com/watch?v=GMtWk4MOxQg)
+[![YouTube V8](https://raw.githubusercontent.com/Pronwan/rustplus-desktop/refs/heads/master/Thumbnail2.jpg)](https://www.youtube.com/watch?v=Xw7JYkat5kQ)
+[![YouTube V7](https://github.com/Pronwan/rustplus-desktop/blob/master/Thumbnail.png?raw=true)](https://www.youtube.com/watch?v=dajHSihKwQs)
+[![YouTube V6](./RustPlusDesktop/Assets/Images/6.0%20Cloud%20Patch/Thumbnail_RustPlus6_V6.jpg?raw=true)](https://www.youtube.com/watch?v=Ywv0hjE8nAI)
+[![YouTube V5](./RustPlusDesktop/Assets/Images/RustPlus_V5_Thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=wrqGoTCtAjs)
 
 [![YouTube Video](./docs/media/app/Images/RustPlus_V4_Thumbnail.png)](https://youtu.be/tmbAn3lIKmM)
 *(click the image to watch on YouTube)*
+
+# v11.0.0 — The Base & Ship Builder: Build Your Base, Sail Your Ship, Build Together
+
+Rust+ Desktop now has two builders. The **Base Builder** lets you design, furnish and walk through your base under the game's own building rules. The new **Ship Builder** does the same for boats on a Boat Building Station, and its **Ship Simulator** shows how fast your boat will be, whether it holds a straight course and what it takes to sink it. Then take the wheel and sail it. With the Cloud package, you can build both together with friends.
+
+![The Ship Builder and Ship Simulator](docs/media/app/Screenshots/11.0/ship-builder-and-simulator.jpg)
+
+## ⛵ The Ship Builder
+
+- **Build on a Boat Building Station** — open the Ship Builder from Tools, pick a shore or open water, and build your hull, deck and walls on the station's netting, square to its grid as in the game. Every boat piece is in: hulls, floors, walls, stairs, steering wheel, sails, small engines, anchor, cannons, plank and small ramp.
+- **Fit it out** — ladder hatches, doors, lockers, boxes, repair benches, barricades, batteries, switches, tesla coils and shotgun traps. While you place them, the tesla coil shows its shock radius and the shotgun trap its sensor cone. Sails face straight or at 45 degrees, and a blue arrow shows which way they will push.
+- **The same rules as the game** — one connected hull, one steering wheel, up to 10 sails, 5 engines and one anchor, the build area, the netting and the height limit. The builder shows the boat's cost and health, and how many cannonballs, C4, rockets or HV rockets it takes to sink it.
+- **Up to three ships per plot** — add more stations and build up to three boats side by side. The top bar always shows the ship you are on, with its health, top speed and course.
+
+## 🧭 The Ship Simulator
+
+- **How fast, how straight** — speed, drag and course come from the game's own boat physics. Sail and engine thrust, the boat's mass, your hull's shape (a pointed bow is faster than a flat one) and shallow water all count.
+- **Course overlay** — a line on the water shows where the boat goes with the wheel left alone: green when it runs straight, orange when it pulls a little, red when it turns hard. A panel tells you why, for example which engine pulls it to one side or which sails get no wind.
+- **Sails, engines, anchor & ramp** — set or furl the sails, start the engines and drop the anchor, all at once or one by one with E. Sails fill out in the wind and hang slack when blocked.
+- **Take the wheel** — press E at the steering wheel and sail with W, S, A and D, at the speed the boat would really reach. It stops at the shore and bumps into other boats, so you can test whether two of your boats lock together.
+
+## 👥 Build Together *(Premium)*
+
+- **Bases and ships with friends** — start a session on the base or ship you have open and invite friends from your friends list or by Steam ID. The invite takes them straight into the right builder. Give each guest build rights or take them away, and every change appears for everyone as it happens. Guests join for free.
+- **See each other** — everyone walks around as a player figure with a name tag. When someone takes the wheel, the others see them steering, and nobody can edit that boat until the driver lets go.
+
+![Build Together](docs/media/app/Screenshots/11.0/Build-together.jpg)
+
+## 🏗️ The Base Builder
+
+- **Building like in-game** — the Building Plan, the Hammer and the building wheel under the game's rules for sockets, stability and collision. Every grade and DLC skin, the spray can, undo and redo, and a plot you can shape. Furnish your base with boxes, shelves, beds, workbenches, furnaces, batteries, traps and more, then walk through it on foot.
+- **TC range & costs** — see where each tool cupboard reaches, what the base costs to build and what its upkeep takes per day.
+- **God Rock, iceberg & cliff bases** — plan bases on the game's large rocks, cliffs and icebergs. Add them to your plot under *Scene › Structures*, or build against them on the 3D map, and the base keeps them.
+- **Import, export & the real map** — open Builders Sanctuary designs and CopyPaste or Fortify files, and export bases as CopyPaste (uMod/Oxide) for real Rust servers.
+
+![A God Rock base on the 3D map](docs/media/app/Screenshots/11.0/God-Rock-Base.jpg)
+
+## 🗺️ Bases on Your Server's 3D Map
+
+- **Place it and see whether it fits** — every piece is checked where it would stand, by the game's own building rules: terrain, rock, water, roads and monument zones. You see straight away whether the base can be placed or which pieces need adjusting.
+- **Back onto the same rock** — a base built against a rock, cliff or iceberg gets a list of the same structures on the new map, the ones it fits first. *Show* flies you there with the base on it, *Place here* keeps it, and Shift+wheel fine-tunes the height.
+- **Build right on the map** — each base you build on the map is a base of its own, with its own name, ready to save to your library and keep building in the Base Builder.
+
+![Place a base on the 3D map](docs/media/app/Screenshots/11.0/place-in-3D-map.jpg)
 
 # v10.0.0 — Widget Overlay, AI Companion, Map Layers & Global Chat
 
@@ -113,20 +160,20 @@ Alarms now tell you when they actually happened, and stop repeating themselves.
 • **A warning when the Alexa link dies** — Amazon invalidates the connection whenever the skill is disabled or linked again elsewhere. Voice control keeps working, so the only sign was that raid alerts silently stopped arriving. The app now says so on startup and tells you how to relink.
 
 ##💬 Community**
-• **Chat and unread fixes** — supporter and public messages no longer leak into each other's feed, slow mode shows the remaining wait instead of a generic failure, and the unread badge settles on the right number after a burst of messages or a pending friend request.
+• **Chat and unread fixes** — Subscriber and public messages no longer leak into each other's feed, slow mode shows the remaining wait instead of a generic failure, and the unread badge settles on the right number after a burst of messages or a pending friend request.
 
 
 # 🚀 RustPlus Desktop 9.1
 The Community Hub is here — and the Wipe Tracker no longer floods your connection.
 
 ## 🌐 Community Hub
-· Global chat, plus a separate supporter room
+· Global chat, plus a separate Subscriber room
 · Group finding with a Steam profile preview before you answer
 · Friend list by Steam ID — the message request and the friend request are two separate decisions, so nobody can be spammed into a conversation
 · Inbox with unread counts, blocking and reporting
 · Replies to individual messages, with a quote and a jump back to the original
 · Translate any message into your app language from the right-click menu
-· Supporter name colours — eight of them, readable on both the dark and light theme
+· SUbscriber name colours — eight of them, readable on both the dark and light theme
 
 ## 🗺️ Farm Routes on the Map
 · Draw routes, name them, colour them, show or hide them
@@ -643,15 +690,15 @@ By simply creating a free account via Email or Discord, you unlock our new cloud
 ✔️ Basic Discord: Get basic webhook alerts sent straight to your Discord server.
 ✔️ Web Portal Access: Manage your account via our new dashboard at rustplusdesktop.onrender.com/dashboard.
 
-**⭐ 3. Supporter Cloud**
-For clans, large groups, and power users, the Supporter Tier unlocks the ultimate Rust+ experience!
+**⭐ 3. Subscriber Cloud**
+For clans, large groups, and power users, the Cloud Package Supporter Tier unlocks the ultimate Rust+ experience!
 
 🌟 Pro Map Sharing: Up to 3 MB of overlay data, 10 Bases, limitless devices and 5 Screenshots per base.
 🌟 Chat Master System: One person's client acts as the "Master" to prevent duplicate chat commands and raid alerts for the whole team. It intelligently hands off master status to another team member when the app is closed!
 🌟 Advanced Discord Bot: A bidirectional Discord Bot with custom command permissions, raid alerts, and event queries directly from your Discord server.
 🌟 Early Beta Access: Get early access to test versions via our Discord.
 
-Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Supporter Roles (you can also create an account or link discord through the app)
+Here's our new [Rust+ Cloud Dashboard](https://rustplusdesktop.onrender.com/) for free and Subscriber Roles (you can also create an account or link discord through the app)
 
 
 # Rust+ Desktop v5.5.0: Custom Timers & Shop Overhaul 🚀
@@ -1096,11 +1143,11 @@ Open an [Issue](../../issues) or create a Pull Request.
 
 
 
-## Support?
+## Subscribe?
 
 
 
 Sure, why not :) 
 
-**https://streamelements.com/pronwan/tip**
+**https://rustplusdesktop.cloud/pricing**
 
