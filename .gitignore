@@ -1,4 +1,13 @@
 # --- Visual Studio / .NET ---
+# Private workspaces: keep these ignored before moving or staging anything.
+/vendor/MapParser/
+/vendor/RustPlus.Auth/
+/Submodules/
+/experiments/
+/.cache/
+/artifacts/
+/tools/release/package.json
+/tools/release/package-lock.json
 **/bin/
 **/obj/
 **/.vs/
@@ -12,7 +21,7 @@
 .antigravitycli
 # NuGet / Paketmanager
 *.nupkg
-!packages-local/*.nupkg
+!vendor/nuget/*.nupkg
 **/packages/
 *.snupkg
 Releases/
@@ -38,27 +47,40 @@ installer/Output/*
 
 # Lokale Server-/Helper-Skripte
 **/Scripts/
-!/scripts/
+!/tools/
 !.github/scripts/
-!RustPlusDesktop/Scripts/
-RustPlusDesktop/Scripts/*.py
-RustPlusDesktop/Scripts/*.conf
+!src/RustPlusDesktop/Scripts/
 
 # Doku/Assets (rein informativ – wäre auch ohne diese Zeilen ok)
 !README.md
 !LICENSE
 !docs/
 docs/*
-!RustPlusDesktop/*.png
-!RustPlusDesktop/*.jpg
-RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
-RustPlusDesktop/Setup.iss
-.opencode
-.agents
+!docs/development/
+!docs/media/
+!docs/releases/
+!docs/README.md
+!src/RustPlusDesktop/*.png
+!src/RustPlusDesktop/*.jpg
+src/RustPlusDesktop/RustPlusDesk_lbvqmzga_wpftmp.csproj
+# Local AI agent config: kept on each developer's disk, never tracked
+/.agents/
+/.claude/
+/.codex/
+/.gemini/
+/.opencode/
+/.serena/
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+# Stray driver logs written when a tool runs with the repo as its working directory
+/NVIDIA Corporation/
 # Secrets config
 .env
-RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
-RustPlusDesktop/supabase/.temp/
+.env.*
+!.env.example
+src/RustPlusDesktop/Services/Data/ObfuscatedSecrets.cs
+tools/server/supabase/.temp/
 .env-backup
 env
 
@@ -95,21 +117,21 @@ env
 **/*.glb
 **/*.gltf
 # Allow runtime folder executables and bin directories
-!RustPlusDesktop/runtime/**/*.exe
-!RustPlusDesktop/runtime/**/bin/
-!RustPlusDesktop/runtime/**/bin/**
+!src/RustPlusDesktop/runtime/**/*.exe
+!src/RustPlusDesktop/runtime/**/bin/
+!src/RustPlusDesktop/runtime/**/bin/**
 
 # Local build secrets
 build_secrets*.zip
-.gemini/
-.serena/
 Corel Auto-Preserve/
 
 # Genetics Lab (build assets only; static images & resources stay tracked)
-RustPlusDesktop/Features/GeneticsLab/dist/assets/
-RustPlusDesktop/Features/GeneticsLab/dist/index.html
-RustPlusDesktop/Features/GeneticsLab/node_modules/
+src/RustPlusDesktop/Features/GeneticsLab/dist/assets/
+src/RustPlusDesktop/Features/GeneticsLab/dist/index.html
+src/RustPlusDesktop/Features/GeneticsLab/node_modules/
+# Its CI runs in rust-genetics-lab; GitHub never runs nested workflows, so keep syncs from re-adding them.
+src/RustPlusDesktop/Features/GeneticsLab/.github/workflows/
 
 # WPF emits a temp project per build with a random name; the single literal entry
 # above only ever matched one of them.
-RustPlusDesktop/*_wpftmp.csproj
+src/RustPlusDesktop/*_wpftmp.csproj

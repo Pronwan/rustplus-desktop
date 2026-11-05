@@ -43,7 +43,7 @@ This document outlines the strategy for reorganizing the RustPlus Desktop projec
 A clean, industry-standard WPF structure:
 
 ```text
-RustPlusDesktop/
+src/RustPlusDesktop/
 ├── Assets/                 # Static resources
 │   ├── Icons/              # .ico and .png icons
 │   ├── Images/             # Backgrounds, UI images

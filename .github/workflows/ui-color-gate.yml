@@ -1,15 +1,15 @@
 name: UI color gate
 
 # Fails if the number of hardcoded hex colors in XAML increases beyond the
-# stored baseline (RustPlusDesktop/Scripts/hardcoded-colors.baseline).
+# stored baseline (src/RustPlusDesktop/Scripts/hardcoded-colors.baseline).
 # Part of the Fluent-UI modernization (docs/UI-Review-Fluent-Audit.md, Phase 0).
 
 on:
   pull_request:
     paths:
       - '**/*.xaml'
-      - 'RustPlusDesktop/Scripts/check-hardcoded-colors.ps1'
-      - 'RustPlusDesktop/Scripts/hardcoded-colors.baseline'
+      - 'src/RustPlusDesktop/Scripts/check-hardcoded-colors.ps1'
+      - 'src/RustPlusDesktop/Scripts/hardcoded-colors.baseline'
   push:
     branches: [ master, beta ]
     paths:
@@ -22,4 +22,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check hardcoded colors
         shell: pwsh
-        run: .\RustPlusDesktop\Scripts\check-hardcoded-colors.ps1
+        run: .\src\RustPlusDesktop\Scripts\check-hardcoded-colors.ps1

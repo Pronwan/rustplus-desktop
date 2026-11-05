@@ -1,0 +1,932 @@
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+using RustPlusDesk.Models;
+using RustPlusDesk.Services;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Threading;
+using WpfUi = Wpf.Ui.Controls;
+
+namespace RustPlusDesk.Views;
+
+public partial class MainWindow
+{
+    private bool _isSoftConnecting = false;
+
+    /// <summary>
+    /// The server this app told the cloud it is driving, so it can hand it back.
+    ///
+    /// Releasing is an optimisation, not a requirement: the platform holds a short
+    /// lease that expires on its own, which is what covers the case this app cannot
+    /// report at all - being killed. Calling it turns a ninety-second gap in cover
+    /// into a couple of seconds.
+    /// </summary>
+    private string? _cloudHeldServerKey;
+
+    /// <summary>
+    /// The profile the Rust+ socket actually connected to when the hold was taken.
+    ///
+    /// The lease is renewed only while this very server is still connected. Asking
+    /// whether the *selected* server is connected is not the same question: the app
+    /// can be online and connected to another server, and renewing then kept the
+    /// cloud silent on a server this app had already left.
+    /// </summary>
+    private ServerProfile? _cloudHeldProfile;
+    private DispatcherTimer? _cloudLeaseHeartbeatTimer;
+
+    private static string CloudServerKeyOf(ServerProfile profile) => $"{profile.Host}-{profile.Port}";
+
+    private bool IsStillConnectedToHeldServer()
+    {
+        var profile = _cloudHeldProfile;
+        var key = _cloudHeldServerKey;
+
+        return profile != null
+            && profile.IsConnected
+            && !string.IsNullOrWhiteSpace(key)
+            && string.Equals(CloudServerKeyOf(profile), key, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void StartCloudLeaseHeartbeatTimer()
+    {
+        _cloudLeaseHeartbeatTimer?.Stop();
+        _cloudLeaseHeartbeatTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(30)
+        };
+        _cloudLeaseHeartbeatTimer.Tick += (s, e) =>
+        {
+            if (IsStillConnectedToHeldServer())
+            {
+                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey!);
+            }
+            else
+            {
+                // Not connected to it any more: hand it back now rather than let the
+                // cloud wait out the lease on a server nobody here is driving.
+                ReleaseCloudHold();
+            }
+        };
+        _cloudLeaseHeartbeatTimer.Start();
+    }
+
+    private void StopCloudLeaseHeartbeatTimer()
+    {
+        _cloudLeaseHeartbeatTimer?.Stop();
+        _cloudLeaseHeartbeatTimer = null;
+    }
+
+    /// <summary>Tell the cloud this app is now driving the server it just connected to.</summary>
+    private void ClaimCloudHold(ServerProfile? connected)
+    {
+        var serverKey = connected == null ? null : CloudServerKeyOf(connected);
+
+        if (connected == null || string.IsNullOrWhiteSpace(connected.Host) || connected.Port <= 0)
+        {
+            ReleaseCloudHold();
+            return;
+        }
+
+        if (!string.Equals(_cloudHeldServerKey, serverKey, StringComparison.OrdinalIgnoreCase))
+        {
+            ReleaseCloudHold();
+        }
+
+        _cloudHeldServerKey = serverKey;
+        _cloudHeldProfile = connected;
+        _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(serverKey!);
+        StartCloudLeaseHeartbeatTimer();
+    }
+
+    /// <summary>Hand the current server back to the cloud, if we claimed one.</summary>
+    private void ReleaseCloudHold()
+    {
+        StopCloudLeaseHeartbeatTimer();
+        var key = _cloudHeldServerKey;
+        _cloudHeldProfile = null;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+        _ = Services.Cloud.CloudSessionsApi.ReleaseAsync(key);
+    }
+
+    /// <summary>
+    /// The same hand-back, but awaited, for the one caller that cannot fire and
+    /// forget: shutdown.
+    ///
+    /// Everywhere else the process carries on and an unawaited call completes on
+    /// its own. On exit it does not — the process is gone before the request
+    /// leaves — so closing the app would cost the full ninety-second lease at
+    /// exactly the moment cover matters most, which is the moment the user walked
+    /// away.
+    ///
+    /// Bounded, because a hand-back is an optimisation and the lease already
+    /// covers us: an unreachable platform must not hold the window open.
+    /// </summary>
+    internal async Task ReleaseCloudHoldOnExitAsync()
+    {
+        StopCloudLeaseHeartbeatTimer();
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        _cloudHeldServerKey = null;
+
+        try
+        {
+            await Services.Cloud.CloudSessionsApi.ReleaseAsync(key)
+                .WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        catch
+        {
+            // Timed out or refused. The lease expiring is the fallback this was
+            // only ever shortening.
+        }
+    }
+
+    private void UpdateFullConnectButtonsEnabled()
+    {
+        void Apply()
+        {
+            bool canFullConnect = !_isSoftConnecting
+                                  && !_vm.IsDeviceStatusChecking
+                                  && _vm.Selected?.IsConnected == true
+                                  && _vm.Selected?.IsFullConnected != true;
+            UiBtnFullConnect.IsEnabled = canFullConnect;
+            MapUiBtnFullConnect.IsEnabled = canFullConnect;
+        }
+
+        if (Dispatcher.CheckAccess()) Apply();
+        else Dispatcher.Invoke(Apply);
+    }
+
+    private async Task EnsureWebView2Async()
+    {
+        try
+        {
+            var dataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk", "WebView2");
+            Directory.CreateDirectory(dataFolder);
+
+            // Pre-warm the CoreWebView2 environment in the background so that features
+            // using embedded web views (such as the 3D Map and Genetics Lab) initialize
+            // quickly when opened, without attaching a dummy control to the visual tree.
+            await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
+        }
+        catch (Exception ex)
+        {
+            // Debug.WriteLine is compiled away in a release build, so a shipped app
+            // would have said nothing at all. This is the earliest moment the
+            // machine can tell us the embedded browser is unusable, and it is worth
+            // hearing: every web view in the app fails afterwards, and the errors
+            // they raise then are far less specific than this one.
+            AppendLog($"[WebView2] Environment pre-warm failed: {Services.WebView2Diagnostics.Explain(ex)}");
+        }
+    }
+
+
+
+    private async Task UpdateServerStatusAsync()
+    {
+        try
+        {
+            if (_rust is RustPlusClientReal real && _vm.Selected?.IsConnected == true)
+            {
+                var st = await real.GetServerStatusAsync();
+                if (st != null && st.Players >= 0)
+                {
+                    _vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
+                    _vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
+                    
+                    if (!string.IsNullOrWhiteSpace(st.TimeString))
+                        _vm.UpdateServerTime(st.TimeString, st.GameHours, st.Sunrise, st.Sunset, st.DayLengthMinutes, st.TimeScale);
+                }
+            }
+        }
+        catch
+        {
+            // leise weiter - der Poll laeuft einfach erneut
+        }
+    }
+
+
+
+    private void BtnAddServer_Click(object sender, RoutedEventArgs e)
+    {
+        var host = Microsoft.VisualBasic.Interaction.InputBox("Server IP/Host:", "Server hinzufügen", "127.0.0.1");
+        var portStr = Microsoft.VisualBasic.Interaction.InputBox("Companion-Port:", "Server hinzufügen", "28082");
+        var token = Microsoft.VisualBasic.Interaction.InputBox("Player-Token (Rust+):", "Server hinzufügen", "");
+        var proxy = Microsoft.VisualBasic.Interaction.InputBox("Facepunch-Proxy verwenden? (y/n)", "Server hinzufügen", "n");
+
+        if (int.TryParse(portStr, out var port) && !string.IsNullOrWhiteSpace(host) && !string.IsNullOrWhiteSpace(token))
+        {
+            var prof = new ServerProfile
+            {
+                Name = $"{host}:{port}",
+                Host = host,
+                Port = port,
+                SteamId64 = _vm.SteamId64,
+                PlayerToken = token,
+                UseFacepunchProxy = proxy.Trim().ToLowerInvariant().StartsWith("y")
+            };
+            _vm.AddServer(prof);
+            _vm.Save();
+        }
+        else
+        {
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUngültigeEingaben"), RustPlusDesk.Properties.Resources.GetString("CodeUiFehler"), MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        _mapSelectionVersion++;
+        if (_isDeletingServer) return;
+        if (_isMap3DActive) CloseMap3DView();
+        _lastChatTsForCurrentServer = null;
+
+        if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))
+        {
+            AppendLog("Server selection changed. Disconnecting from previous server...");
+            await HardResetAsync(reconnect: false);
+        }
+
+        if (_vm.Selected is { } prof)
+        {
+            if (!string.IsNullOrWhiteSpace(prof.SteamId64))
+                _vm.SteamId64 = prof.SteamId64;
+
+            bool isOfflineOnly = prof.Port == 0 || prof.PlayerToken == "offline";
+            bool hasLocalMap = !string.IsNullOrEmpty(prof.LocalMapFilePath);
+
+            if (hasLocalMap && isOfflineOnly)
+            {
+                await ShowOfflineMapAsync(prof);
+            }
+            else if (hasLocalMap)
+            {
+                if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
+                {
+                    try
+                    {
+                        var bitmap = LoadLocalMapImage(prof.LocalMapImagePath);
+                        ShowMapBasic(bitmap);
+
+                        // Try to restore _worldSizeS from a previously-parsed map_data.json.
+                        // Without this, _worldSizeS stays 0 and the heatmap/UV rect is wrong.
+                        TryRestoreWorldSizeFromCachedMapData(prof, bitmap);
+                        RedrawMapReferenceLayers();
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[Offline Map] Failed to load local map image: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    ResetMapDisplay();
+                }
+            }
+
+            // Trigger soft connect to devices only if there are any devices to control and this is not a purely offline profile
+            if (!isOfflineOnly && !prof.IsConnected && prof.Devices.Any())
+            {
+                await PerformConnectDevicesOnlyAsync(prof);
+            }
+        }
+
+        HydrateSteamUiFromStorage();
+        RegisterAllHotkeys();
+        ActivateHotkeysForCurrentServer();
+        UpdateRustMapsUi();
+    }
+
+    private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
+    {
+        if (profile == null) return;
+        _isSoftConnecting = true;
+        _vm.IsDeviceSubscribePriming = true;
+        _vm.DeviceSubscribeMax = Math.Max(1, profile.Devices.Count);
+        _vm.DeviceSubscribeProgress = 0;
+        _vm.DeviceSubscribeText = "Preparing device subscriptions...";
+        Dispatcher.Invoke(() => {
+            UiBtnFullConnect.IsEnabled = false;
+            UiBtnConnect.IsEnabled = false;
+            MapUiBtnFullConnect.IsEnabled = false;
+            MapUiBtnConnect.IsEnabled = false;
+        });
+        try
+        {
+            AppendLog($"Soft-connecting to {profile.Name} (Devices Only)...");
+            await _rust.ConnectAsync(profile);
+            profile.IsConnected = true;
+            profile.IsFullConnected = false;
+            profile.IsAccessDenied = false;
+
+            if (_rust is RustPlusClientReal real)
+            {
+                real.EnsureEventsHooked();
+                
+                // Hook local handlers
+                real.ConnectionLost -= OnConnectionLost;
+                real.ConnectionLost += OnConnectionLost;
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
+                try { await real.PrimeTeamChatAsync(); }
+                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
+
+                // Discord interactions depend on team-master state, even during soft connect.
+                await LoadTeamAsync();
+                StartTeamPolling();
+
+                var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
+                if (allIds.Any())
+                {
+                    _vm.DeviceSubscribeMax = allIds.Count;
+                    _vm.DeviceSubscribeProgress = 0;
+                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _vm.DeviceSubscribeMax = total;
+                            _vm.DeviceSubscribeProgress = done;
+                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
+                        });
+                    });
+                }
+                
+                // Refresh device status in the background so Full Connect can be used once subscriptions are ready.
+                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
+            }
+            
+            // Start the server status loop (players/time) even for soft connect
+            _statusCts?.Cancel();
+            _statusCts = new CancellationTokenSource();
+            _ = PollServerStatusLoopAsync(_statusCts.Token);
+
+            // Start A2S player polling so the Players tab works on soft connect too
+            TrackingService.StartPolling(profile.Host ?? "", profile.Port, profile.Name ?? "", profile.BattleMetricsId);
+            _ = TrackingService.FetchOnlinePlayersNowAsync();
+
+            _ = SearchRustMapsAsync(false);
+
+            // A soft connection is still the desktop owner. Without this takeover
+            // the cloud worker keeps its lease and both clients answer the same chat.
+            var connectedKey = GetServerKey();
+            ClaimCloudHold(profile);
+            if (!string.IsNullOrWhiteSpace(connectedKey))
+            {
+                _ = Services.Cloud.CloudChatCommandSync.SyncAsync(profile, connectedKey);
+            }
+
+            AppendLog("Soft-connect complete.");
+
+        }
+        catch (Exception ex)
+        {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                profile.IsAccessDenied = true;
+                _vm.Save();
+            }
+            AppendLog($"Soft-connect failed: {ex.Message}");
+        }
+        finally
+        {
+            _isSoftConnecting = false;
+            _vm.IsDeviceSubscribePriming = false;
+            Dispatcher.Invoke(() => {
+                UiBtnConnect.IsEnabled = true;
+                MapUiBtnConnect.IsEnabled = true;
+            });
+            UpdateFullConnectButtonsEnabled();
+        }
+    }
+
+    private async Task PollServerStatusLoopAsync(CancellationToken ct)
+    {
+        int serverStatusFailCount = 0;
+        while (!ct.IsCancellationRequested)
+        {
+            bool success = false;
+            try
+            {
+                var vm = _vm!;
+                var selected = vm.Selected;
+                if (_rust is RustPlusClientReal real && selected != null && selected.IsConnected)
+                {
+                    var st = await real.GetServerStatusAsync(ct);
+                    if (st != null && st.Players >= 0)
+                    {
+                        success = true;
+                        serverStatusFailCount = 0;
+                        vm.ServerPlayers = $"{st.Players}/{st.MaxPlayers}";
+                        vm.ServerQueue = (st.Queue >= 0) ? st.Queue.ToString() : "0";
+                        
+                        if (!string.IsNullOrWhiteSpace(st.TimeString))
+                            vm.UpdateServerTime(st.TimeString, st.GameHours, st.Sunrise, st.Sunset, st.DayLengthMinutes, st.TimeScale);
+                    }
+                }
+            }
+            catch { /* Keep last known values on error */ }
+
+            var currentSelected = _vm!.Selected;
+            if (currentSelected != null && currentSelected.IsConnected)
+            {
+                if (!success)
+                {
+                    serverStatusFailCount++;
+                    AppendLog($"[status-poll] Failed to get server status ({serverStatusFailCount}/5).");
+
+                    if (serverStatusFailCount >= 5)
+                    {
+                        serverStatusFailCount = 0;
+                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true) && _vm?.Selected?.IsAccessDenied != true)
+                        {
+                            AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
+                            
+                            _ = Dispatcher.InvokeAsync(async () =>
+                            {
+                                try
+                                {
+                                    await PerformConnectAsync(true, showBusy: false);
+                                    AppendLog("[status-poll] Silent connection refresh complete.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    AppendLog($"[status-poll] Silent connection refresh failed: {ex.Message}");
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                serverStatusFailCount = 0;
+            }
+
+            try { await Task.Delay(TimeSpan.FromSeconds(10), ct); } catch { }
+        }
+    }
+
+    /// <summary>
+    /// Gives this server's notification rows that have no picture the server's own logo
+    /// (its banner if it has none), the image Rust+ itself shows for the server.
+    /// </summary>
+    private async Task BackfillNotificationImagesAsync(string? host, int port)
+    {
+        if (string.IsNullOrWhiteSpace(host)) return;
+        try
+        {
+            var info = await _rust.GetServerInfoAsync();
+            var url = !string.IsNullOrWhiteSpace(info?.LogoImage) ? info!.LogoImage : info?.HeaderImage;
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                NotificationCenterService.BackfillServerImage(host, port, url!);
+            }
+        }
+        catch
+        {
+            // A missing picture is cosmetic; the rows keep their icon tile.
+        }
+    }
+
+    internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
+    {
+        _ownCloudRestoreReady = false;
+
+        if (_isSoftConnecting)
+        {
+            AppendLog("[connect] Soft-connect in progress, waiting for completion to prevent socket conflict...");
+            int waitMs = 0;
+            while (_isSoftConnecting && waitMs < 8000)
+            {
+                await Task.Delay(250);
+                waitMs += 250;
+            }
+            if (_isSoftConnecting)
+            {
+                AppendLog("[connect] Soft-connect is taking too long. Continuing full connect anyway.");
+            }
+            else
+            {
+                AppendLog("[connect] Soft-connect finished. Proceeding with full connect.");
+            }
+        }
+
+        bool alreadySoftConnected = _vm.Selected != null && _vm.Selected.IsConnected && !_vm.Selected.IsFullConnected;
+
+        if (!silent)
+        {
+            if (alreadySoftConnected)
+            {
+                // Soft connect exists: Reset UI/polling states but do NOT call HardResetAsync (which disconnects)
+                _shopTimer?.Stop();
+                _shopTimer = null;
+                StopDynPolling();
+                StopTeamPolling();
+                ReleaseCloudHold();
+                TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
+
+                _avatarCache.Clear();
+                _lastPresence.Clear();
+                ClearAllDeathPins();
+                ClearAllToggleBusy();
+                _lastShops.Clear();
+                _shopLifetimes.Clear();
+                _knownShopIds.Clear();
+                _initialShopSnapshotTimeUtc = DateTime.MinValue;
+                _alertsNeedRebaseline = true;
+                _lastChatSendUtc = DateTime.MinValue;
+
+                foreach (var el in _shopEls.Values)
+                    RemoveFromMapLayers(el);
+                _shopEls.Clear();
+            }
+            else
+            {
+                await HardResetAsync(reconnect: false);
+                _shopTimer?.Stop();
+                _shopTimer = null;
+                StopDynPolling();
+                StopTeamPolling();
+                ReleaseCloudHold();
+                TeamMembers.Clear();
+                ClanMembers.Clear();
+                _lastClanPoll = DateTime.MinValue;
+
+                _avatarCache.Clear();
+                _lastPresence.Clear();
+                ClearAllDeathPins();
+                ClearAllToggleBusy();
+                _lastShops.Clear();
+                _shopLifetimes.Clear();
+                _knownShopIds.Clear();
+                _initialShopSnapshotTimeUtc = DateTime.MinValue;
+                _alertsNeedRebaseline = true;
+                _lastChatSendUtc = DateTime.MinValue;
+
+                foreach (var el in _shopEls.Values)
+                    RemoveFromMapLayers(el);
+                _shopEls.Clear();
+            }
+        }
+        else
+        {
+            if (!alreadySoftConnected)
+            {
+                // Ensure the interface disconnects before recreating
+                try { await _rust.DisconnectAsync(); } catch { }
+
+                _shopTimer?.Stop();
+                StopDynPolling(clearKnown: false);
+                StopTeamPolling();
+                ReleaseCloudHold();
+                _alertsNeedRebaseline = true;
+            }
+        }
+
+        if (_vm.Selected is null)
+        {
+            if (!silent) ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.PleaseSelectServerFirst, WpfUi.ControlAppearance.Info);
+            return false;
+        }
+
+        RenewConnectionPolling();
+        ResetBuildingBlockedZonesForServerChange();
+        ResetCargoPathForServerChange();
+        ResetKeycardsForServerChange();
+
+        try
+        {
+            if (showBusy)
+            {
+                _vm.IsConnectionLoading = true;
+                _vm.IsBusy = true;
+                _vm.BusyText = "Connecting …";
+            }
+
+            if (!alreadySoftConnected)
+            {
+                AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+                await _rust.ConnectAsync(_vm.Selected);
+                AppendLog("Connected.");
+            }
+            else
+            {
+                AppendLog("Reusing existing soft-connection for full connect.");
+            }
+            _connectedProfile = _vm.Selected;
+
+            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
+
+            // Shorter initial delay — just enough for the WS to be ready
+            await Task.Delay(500);
+
+            var real = _rust as RustPlusClientReal;
+            if (real != null)
+            {
+                real.StorageSnapshotReceived -= OnStorageSnapshot;
+                real.StorageSnapshotReceived += OnStorageSnapshot;
+                real.ConnectionLost -= OnConnectionLost;
+                real.ConnectionLost += OnConnectionLost;
+                
+                // Add global chat subscription for background bot commands
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+                real.ClanChatReceived -= Real_ClanChatReceived;
+                real.ClanChatReceived += Real_ClanChatReceived;
+                real.ClanChanged -= OnClanChangedReal;
+                real.ClanChanged += OnClanChangedReal;
+
+                real.EnsureEventsHooked();
+            }
+
+            _lastChatTsForCurrentServer = null;
+
+            if (real != null)
+            {
+                try { await real.PrimeTeamChatAsync(); }
+                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                try { await real.PrimeClanChatAsync(); }
+                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
+            }
+
+            if (showBusy)
+            {
+                _vm.IsBusy = false;
+                _vm.BusyText = "Loading map and team…";
+                _vm.IsInitializing = true;
+            }
+
+            var mapTask = LoadMapAsync();
+            var initTasks = new List<Task>
+            {
+                mapTask,
+                UpdateServerStatusAsync(),
+                LoadTeamAsync()
+            };
+            
+            // Rehydrate local cache immediately (sync)
+            RehydrateDevicesFromStorageInto(_vm.Selected);
+
+            RehydrateCamerasFromStorageInto(_vm.Selected);
+            SwitchCameraSourceTo(_vm.Selected);
+            
+            // Start probing device kinds in parallel (optimized in MainWindow.Devices.cs)
+            initTasks.Add(PrimeDeviceKindsAsync());
+
+
+
+            ClearUserOverlayElements();
+            _visibleOverlayOwners.Add(_mySteamId);
+
+            // Restore saved subscriptions for this server profile
+            if (_vm?.Selected != null)
+            {
+                var savedSubs = _vm.Selected.SubscribedTeammateSteamIds;
+                if (savedSubs != null)
+                {
+                    foreach (var sid in savedSubs)
+                    {
+                        if (sid != _mySteamId)
+                        {
+                            _visibleOverlayOwners.Add(sid);
+                        }
+                    }
+                }
+            }
+            // Async init: merge local + cloud overlays intelligently (no wipe risk)
+            _ownCloudRestoreReady = false;
+            _ = InitOwnOverlayAsync();
+
+
+            await mapTask;
+            if (showBusy)
+                _vm!.BusyText = "Synchronizing server data…";
+
+            await Task.WhenAll(initTasks);
+            
+            // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
+            await Dispatcher.InvokeAsync(() =>
+            {
+                RebuildOverlayTeamBar();
+                UpdateSubscriptionDock();
+
+                var restoredTeammates = _visibleOverlayOwners.Where(id => id != _mySteamId).ToList();
+                foreach (var sid in restoredTeammates)
+                {
+                    _ = TryFetchOverlayForPlayerFromServerAsync(sid);
+                }
+            });
+            
+            if (TrackingService.AutoLoadShops && !Services.RustApiFeatures.EventsAndShopsRemoved)
+                Dispatcher.Invoke(() => ChkShops.IsChecked = true);
+
+            if (showBusy)
+            {
+                _vm!.IsInitializing = false;
+                _vm.IsConnectionLoading = false;
+                _vm.BusyText = "";
+            }
+            var connectedProfile = _vm!.Selected;
+            if (connectedProfile == null)
+                throw new InvalidOperationException("No selected server profile after connection initialization.");
+
+            connectedProfile.IsConnected = true;
+            connectedProfile.IsFullConnected = true;
+            connectedProfile.IsAccessDenied = false;
+
+            _vm.NotifyDevicesChanged();
+            _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
+            AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
+
+            _ = StartServerEventTrackingAsync();
+            _ = Services.Social.SocialApi.UpdateActiveListingServerAsync(connectedProfile.Name);
+
+            // Notification rows saved before pushes kept their picture show this server's logo.
+            _ = BackfillNotificationImagesAsync(connectedProfile.Host, connectedProfile.Port);
+
+
+
+            // Report what this server said about itself, so its cloud record carries
+            // a name and map details rather than just the key it is filed under.
+            _ = Services.Cloud.CloudServerInfo.ReportOnceAsync(
+                GetServerKey(),
+                connectedProfile.Name,
+                _worldSizeS,
+                connectedProfile.WipeTime);
+
+            // Register the per-user pairing (encrypted player token) for this server so
+            // it appears in the web dashboard and its smart devices are controllable
+            // from the cloud. Previously this only happened via the Alexa link flow, so
+            // servers paired after the cloud migration never became controllable.
+            _ = Services.Cloud.CloudServerInfo.EnsurePairedOnceAsync(
+                GetServerKey(),
+                connectedProfile.Host,
+                connectedProfile.Port,
+                connectedProfile.Name,
+                connectedProfile.PlayerToken,
+                _mySteamId);
+
+            // Cloud 24/7: this app is driving the server now, so the cloud should
+            // stand down. Fire-and-forget on purpose - a failure costs at most one
+            // duplicate connection until the next heartbeat, which is not worth
+            // holding up a connect over, and the lease expires on its own anyway.
+            var connectedKey = GetServerKey();
+            ClaimCloudHold(connectedProfile);
+
+            // Send the command words up so the cloud answers to exactly what this
+            // user configured. Without it a teammate would get different replies
+            // depending on whether this app happened to be running.
+            if (!string.IsNullOrWhiteSpace(connectedKey))
+            {
+                _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, connectedKey);
+            }
+
+            // Prime subscriptions for all devices to receive real-time updates.
+            if (real != null && connectedProfile.Devices?.Any() == true)
+            {
+                try
+                {
+                    _vm.IsDeviceSubscribePriming = true;
+                    var allIds = connectedProfile.Devices.Select(d => d.EntityId).Distinct().ToList();
+                    _vm.DeviceSubscribeMax = allIds.Count;
+                    _vm.DeviceSubscribeProgress = 0;
+                    using var primeCts = CancellationTokenSource.CreateLinkedTokenSource(_connectionPollingCts.Token);
+                    primeCts.CancelAfter(TimeSpan.FromSeconds(10));
+                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            _vm.DeviceSubscribeMax = total;
+                            _vm.DeviceSubscribeProgress = done;
+                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
+                        });
+                    }, primeCts.Token);
+                    _vm.IsDeviceSubscribePriming = false;
+                    AppendLog("Device subscription priming finished.");
+                }
+                catch (Exception ex)
+                {
+                    _vm.IsDeviceSubscribePriming = false;
+                    AppendLog("PrimeSubscriptions Error: " + ex.Message);
+                }
+            }
+
+            // Finally, refresh all device statuses to ensure the UI reflects the current server state
+            _ = RefreshAllDevicesStatusAsync(maxRetries: 1, skipIfRecentlyChecked: true);
+
+            _statusCts?.Cancel();
+            _statusCts = new CancellationTokenSource();
+            _ = PollServerStatusLoopAsync(_statusCts.Token);
+            _statusTimer.Start();
+
+            StartTeamPolling();
+            if (_overlayToolsVisible)
+            {
+                RebuildOverlayTeamBar();
+            }
+
+            // Removed redundant 2s delayed RefreshAllDevicesStatusAsync to avoid 'demoted' logs.
+            // Core device status is already fetched during PrimeDeviceKindsAsync.
+        }
+        catch (Exception ex)
+        {
+            var selectedOnError = _vm.Selected;
+            bool isAccessDenied = ex is RustPlusAccessDeniedException || RustPlusClientReal.IsAccessDeniedError(ex);
+            if (selectedOnError != null)
+            {
+                selectedOnError.IsConnected = false;
+                selectedOnError.IsFullConnected = false;
+                selectedOnError.IsAccessDenied = isAccessDenied;
+                _vm.NotifyDevicesChanged();
+                _vm.Save();
+            }
+            if (showBusy)
+            {
+                _vm.IsInitializing = false;
+                _vm.IsBusy = false;
+                _vm.IsConnectionLoading = false;
+                _vm.BusyText = "";
+            }
+            AppendLog("Error: " + ex.Message);
+            if (!silent)
+            {
+                if (isAccessDenied)
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.ConnectionFailedAccessDenied,
+                        Properties.Resources.ConnectionFailedAccessDeniedComment,
+                        WpfUi.ControlAppearance.Danger);
+                }
+                else if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.ConnectionFailedRustPlusUnreachable,
+                        Properties.Resources.ConnectionFailedRustPlusUnreachableComment,
+                        WpfUi.ControlAppearance.Danger);
+                }
+                else
+                {
+                    ShowInfoSnackbar(
+                        Properties.Resources.SnackbarTitleConnection,
+                        $"{Properties.Resources.ErrorPrefix}{ex.Message}",
+                        WpfUi.ControlAppearance.Danger);
+                }
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> EnsureConnectedAsync()
+    {
+        if (_vm.Selected is null) { AppendLog("No server selected."); return false; }
+        if (_vm.Selected.IsConnected) return true;
+
+        AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+        try
+        {
+            await _rust.ConnectAsync(_vm.Selected, cts.Token);
+            _vm.Selected.IsConnected = true;
+            _vm.Selected.IsAccessDenied = false;
+            AppendLog("Connected.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            if (RustPlusClientReal.IsAccessDeniedError(ex))
+            {
+                _vm.Selected.IsAccessDenied = true;
+                _vm.Save();
+            }
+            AppendLog("Connect failed: " + ex.Message);
+            return false;
+        }
+    }
+
+    private void OnClanChangedReal(object? sender, EventArgs e)
+    {
+        _ = Dispatcher.InvokeAsync(LoadClanAsync);
+    }
+}

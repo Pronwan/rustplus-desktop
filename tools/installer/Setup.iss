@@ -1,0 +1,94 @@
+; =============================================
+; RustPlusDesk Installer (Production)
+; Fixes uninstall + supports upgrades
+; =============================================
+
+#define MyAppName      "RustPlusDesk"
+#define MyAppExeName   "RustPlusDesk.exe"
+; The app project, relative to this script in tools\installer
+#define AppDir         "..\..\src\RustPlusDesktop"
+#ifndef MyAppVersion
+#define MyAppVersion   GetFileVersion(AppDir + "\bin\Installer\publish\" + MyAppExeName)
+#endif
+#define MyAppPublisher "Pronwan" 
+#define MyAppURL       "https://github.com/Pronwan/rustplus-desktop"
+; 🔴 ORIGINAL-ID 
+#define MyAppId        "{{E8E0C4C1-2E2F-4D2D-9BE7-3B19F0C1ABCD}}"
+
+[Setup]
+AppId={#MyAppId}
+AppName={#MyAppName}
+AppVersion={#MyAppVersion}
+AppPublisher={#MyAppPublisher}
+AppPublisherURL={#MyAppURL}
+DefaultDirName={autopf}\{#MyAppName}
+DefaultGroupName={#MyAppName}
+
+; Jawads Stabilitäts-Features
+UsePreviousAppDir=yes
+UsePreviousGroup=yes
+CreateUninstallRegKey=yes
+OutputDir={#AppDir}\bin\Installer
+OutputBaseFilename=RustPlusDesk-Setup
+Compression=lzma2/max
+SolidCompression=yes
+ArchitecturesInstallIn64BitMode=x64
+DisableProgramGroupPage=yes
+
+; Deine Optik
+SetupIconFile={#AppDir}\Assets\rustplus-desktop-icon.ico
+WizardImageFile=installer.png
+UninstallDisplayIcon={app}\{#MyAppExeName}
+PrivilegesRequired=admin
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
+[Files]
+; 1. Alle Hauptdateien (DLLs, EXE, cash.wav, etc.) aus dem Release-Ordner
+Source: "{#AppDir}\bin\Installer\publish\*"; DestDir: "{app}"; Flags: ignoreversion
+
+; 2. Die Unterordner direkt aus dem Release-Verzeichnis
+Source: "{#AppDir}\bin\Installer\publish\Assets\*";    DestDir: "{app}\Assets";    Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\lang\*";      DestDir: "{app}\lang";      Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\runtime\*";   DestDir: "{app}\runtime";   Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\runtimes\*";  DestDir: "{app}\runtimes";  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppDir}\bin\Installer\publish\MapParser\*"; DestDir: "{app}\MapParser"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[Icons]
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+
+[Run]
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}\runtimes"
+Type: filesandordirs; Name: "{app}\runtime"
+Type: filesandordirs; Name: "{app}\Assets"
+Type: filesandordirs; Name: "{app}\lang"
+Type: filesandordirs; Name: "{app}\MapParser"
+
+[Code]
+// Jawads Aufräum-Logik (Sehr nützlich!)
+procedure DeleteOldBrokenUninstallers;
+var Key: string;
+begin
+  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+  RegDeleteKeyIncludingSubkeys(HKCU, Key);
+  Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+
+  // Clean up Velopack registry entries to prevent duplicate installed app list entries
+  Key := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+  RegDeleteKeyIncludingSubkeys(HKCU, Key);
+  Key := 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Pronwan.RustPlusDesk';
+  RegDeleteKeyIncludingSubkeys(HKLM, Key);
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssInstall then DeleteOldBrokenUninstallers;
+end;

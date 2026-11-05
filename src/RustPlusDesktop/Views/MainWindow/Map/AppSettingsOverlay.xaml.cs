@@ -1,0 +1,2645 @@
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Navigation;
+using System.Net.Http;
+using System.Text.Json;
+using RustPlusDesk.Services;
+using RustPlusDesk.Models;
+using WpfUi = Wpf.Ui.Controls;
+
+namespace RustPlusDesk.Views
+{
+    public partial class AppSettingsOverlay : UserControl
+    {
+        public MainWindow? ParentWindow { get; set; }
+        private bool _isSettingsInitialized = false;
+        private IReadOnlyList<SettingsSectionDefinition> _settingsSections = Array.Empty<SettingsSectionDefinition>();
+        private IReadOnlyList<SettingsOptionDefinition> _settingsOptions = Array.Empty<SettingsOptionDefinition>();
+        private string _activeSettingsCategory = "general";
+        private bool _isShowingSearchResults;
+        private bool _returnToCategoryPageAfterSearch;
+        private readonly List<(AdornerLayer Layer, Adorner Adorner)> _settingsHighlights = new();
+        private int _settingsHighlightGeneration;
+
+        private sealed class SettingsSectionDefinition
+        {
+            public required string Id { get; init; }
+            public required string Category { get; init; }
+            public required string Title { get; init; }
+            public required string Keywords { get; init; }
+            public required FrameworkElement Element { get; init; }
+        }
+
+        private sealed class SettingsSearchResult
+        {
+            public required string Id { get; init; }
+            public required string Category { get; init; }
+            public required string CategoryTitle { get; init; }
+            public required string Title { get; init; }
+        }
+
+        private sealed class SettingsOptionDefinition
+        {
+            public required string SectionId { get; init; }
+            public required string SectionTitle { get; init; }
+            public required string Category { get; init; }
+            public required string Title { get; init; }
+            public required string SearchText { get; init; }
+            public required FrameworkElement Target { get; init; }
+        }
+
+        private sealed class SettingsOptionResult
+        {
+            public required string SectionId { get; init; }
+            public required string SectionTitle { get; init; }
+            public required string Category { get; init; }
+            public required string CategoryTitle { get; init; }
+            public required string BeforeMatch { get; init; }
+            public required string Match { get; init; }
+            public required string AfterMatch { get; init; }
+            public required FrameworkElement Target { get; init; }
+        }
+
+        private sealed class SettingsMatchAdorner(UIElement adornedElement) : Adorner(adornedElement)
+        {
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                var bounds = new Rect(0, 0, AdornedElement.RenderSize.Width, AdornedElement.RenderSize.Height);
+                drawingContext.DrawRoundedRectangle(
+                    new SolidColorBrush(Color.FromArgb(0x24, 0x60, 0xCD, 0xFF)),
+                    new Pen(new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF)), 1.5),
+                    bounds,
+                    5,
+                    5);
+            }
+        }
+
+        public class LanguageOption
+        {
+            public string Name { get; set; } = "";
+            public string Code { get; set; } = "";
+            public string? ImagePath { get; set; }
+        }
+
+        public AppSettingsOverlay()
+        {
+            InitializeComponent();
+            InitializeSettingsNavigation();
+            Loaded += AppSettingsOverlay_Loaded;
+            IsVisibleChanged += AppSettingsOverlay_IsVisibleChanged;
+
+            Loaded += (_, __) => ApplyEventCapabilities();
+            Services.EventCapabilities.Changed += OnEventCapabilitiesChanged;
+            Unloaded += (_, __) => Services.EventCapabilities.Changed -= OnEventCapabilitiesChanged;
+        }
+
+        private void OnEventCapabilitiesChanged() => Dispatcher.Invoke(ApplyEventCapabilities);
+
+        /// <summary>
+        /// Greys out the Discord shop-alerts channel on servers without vending data. Left in
+        /// place rather than hidden: the channel ID stays configured and works again elsewhere,
+        /// and a visibly disabled field answers "why do I get no shop alerts?" on its own.
+        /// </summary>
+        private void ApplyEventCapabilities()
+        {
+            bool shopsAvailable = !Services.EventCapabilities.IsCloudSourced;
+            string? hint = shopsAvailable ? null : Properties.Resources.AlertUnavailableOnServer;
+
+            if (ShopChannelLabel != null)
+            {
+                ShopChannelLabel.Opacity = shopsAvailable ? 1.0 : 0.45;
+                ShopChannelLabel.ToolTip = hint;
+            }
+
+            if (ShopChannelRow != null)
+            {
+                ShopChannelRow.IsEnabled = shopsAvailable;
+                ShopChannelRow.Opacity = shopsAvailable ? 1.0 : 0.45;
+                ShopChannelRow.ToolTip = hint;
+            }
+        }
+
+        private void AppSettingsOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is true)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    SettingsSearchBox.Focus();
+                    Keyboard.Focus(SettingsSearchBox);
+                    SettingsSearchBox.SelectAll();
+                }), System.Windows.Threading.DispatcherPriority.Input);
+                return;
+            }
+
+            _isShowingSearchResults = false;
+            _returnToCategoryPageAfterSearch = false;
+            if (DataContext is ViewModels.MainViewModel viewModel)
+            {
+                viewModel.Save();
+            }
+            SettingsSearchBox.Clear();
+            ClearSettingsHighlights();
+            ShowSettingsCategoryList();
+        }
+
+        private static string T(string key, string fallback)
+        {
+            return RustPlusDesk.Helpers.Loc.TextOrNull(key) ?? fallback;
+        }
+
+        private void InitializeSettingsNavigation()
+        {
+            _settingsSections = new[]
+            {
+                Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
+                Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
+                Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
+                Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
+                Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance hd map resolution ram memory economy", SectionMapPerformance),
+                Section("team-markers", "map", T("TeamMarkersSettings", "Map Markers"), "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
+                Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
+                // Connected Services, in page order. The keywords keep the old section and card names
+                // ("Cloud Account & Sync", "Basic Discord Integration", ...) findable after the rename.
+                Section("cloud", "connected", T("CsCloudAccountTitle", "RustPlus Desktop account"), "cloud account sync discord email login sign in supporter tier plan usage limits overlay devices bases upgrade backend service", SectionCloud),
+                Section("steam", "connected", T("CsRustPlusAccountTitle", "Rust+ companion (Steam)"), "steam account rust+ companion pairing facepunch fcm token manage", SectionSteamAccount),
+                Section("cloud-features", "connected", T("CsCloudFeaturesTitle", "Cloud features"), "cloud 24/7 247 experimental compare features global chat ticker room", SectionCloudFeatures),
+                Section("offline-alerts", "connected", T("CsOfflineGroupTitle", "Alerts while the app is closed"), "offline cloud alerts discord webhook telegram calls callmebot phone call raid death fcm sync smart home ifttt", SectionOfflineAlerts),
+                Section("discord", "connected", T("CsDiscordGroupTitle", "Discord"), "basic discord integration webhook chat alerts tts advanced discord bot integration invite guild server id commands roles channels", SectionDiscord),
+                Section("smart-home", "connected", T("CsSmartHomeGroupTitle", "Smart home"), "alexa smart home amazon pin home assistant token rest switch configuration yaml", SectionSmartHome),
+                Section("wipe-tracker", "connected", T("CsWipeTrackerTitle", "Player Wipe Tracker"), "player wipe tracker team snapshots cloud backup", SectionWipeTracker),
+                Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
+                Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
+                Section("ai-companion", "ai-companion", T("AiCompanionTitle", "AI Companion"), "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
+                Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
+                Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
+            };
+
+            ShowSettingsCategoryList();
+        }
+
+        private static SettingsSectionDefinition Section(string id, string category, string title, string keywords, FrameworkElement element) =>
+            new() { Id = id, Category = category, Title = title, Keywords = keywords, Element = element };
+
+        private void BuildSettingsOptionIndex()
+        {
+            _settingsOptions = _settingsSections
+                .SelectMany(section => new[]
+                    {
+                        new SettingsOptionDefinition
+                        {
+                            SectionId = section.Id,
+                            SectionTitle = section.Title,
+                            Category = section.Category,
+                            Title = section.Title,
+                            SearchText = $"{section.Title} {section.Keywords}",
+                            Target = section.Element
+                        }
+                    }
+                    .Concat(EnumerateControls(section.Element)
+                    .Where(IsSearchableSettingControl)
+                    .Select(control => new SettingsOptionDefinition
+                    {
+                        SectionId = section.Id,
+                        SectionTitle = section.Title,
+                        Category = section.Category,
+                        Title = GetControlTitle(control),
+                        SearchText = $"{GetControlTitle(control)} {control.ToolTip} {section.Title}",
+                        Target = control
+                    })))
+                .Where(option => option.Title.Length > 1)
+                .DistinctBy(option => $"{option.SectionId}|{option.Title}", StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static bool IsSearchableSettingControl(Control control) =>
+            control is CheckBox or ComboBox or Slider or TextBox or ButtonBase or Expander;
+
+        private static IEnumerable<Control> EnumerateControls(DependencyObject root)
+        {
+            foreach (var child in LogicalTreeHelper.GetChildren(root).OfType<DependencyObject>())
+            {
+                if (child is Control control)
+                {
+                    yield return control;
+                }
+
+                foreach (var descendant in EnumerateControls(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
+        private static string GetControlTitle(Control control)
+        {
+            var automationName = System.Windows.Automation.AutomationProperties.GetName(control);
+            if (!string.IsNullOrWhiteSpace(automationName))
+            {
+                return automationName.Trim();
+            }
+
+            object? label = control switch
+            {
+                HeaderedContentControl headered => headered.Header,
+                ContentControl content => content.Content,
+                _ => null
+            };
+            var contentText = ExtractText(label);
+            return string.IsNullOrWhiteSpace(contentText) ? HumanizeControlName(control.Name) : contentText;
+        }
+
+        private static string ExtractText(object? value)
+        {
+            if (value is string text)
+            {
+                return text.Trim();
+            }
+
+            if (value is TextBlock textBlock)
+            {
+                return textBlock.Text.Trim();
+            }
+
+            if (value is not DependencyObject element)
+            {
+                return "";
+            }
+
+            return string.Join(" ", LogicalTreeHelper.GetChildren(element)
+                .Cast<object>()
+                .Select(ExtractText)
+                .Where(text => text.Length > 0));
+        }
+
+        private static string HumanizeControlName(string name)
+        {
+            foreach (var prefix in new[] { "Chk", "Cmb", "Slider", "Txt", "Btn" })
+            {
+                if (name.StartsWith(prefix, StringComparison.Ordinal))
+                {
+                    name = name[prefix.Length..];
+                    break;
+                }
+            }
+
+            var words = new System.Text.StringBuilder();
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (i > 0 && char.IsUpper(name[i]) && !char.IsUpper(name[i - 1]))
+                {
+                    words.Append(' ');
+                }
+                words.Append(name[i]);
+            }
+            return words.ToString().Replace("Url", "URL", StringComparison.Ordinal).Trim();
+        }
+
+        private void SettingsCategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SettingsCategoryList.SelectedItem is not ListBoxItem { Tag: string category })
+            {
+                return;
+            }
+
+            SettingsCategoryList.SelectedItem = null;
+            SettingsSearchBox.Clear();
+            ShowSettingsCategory(category);
+        }
+
+        private void ShowSettingsCategoryList()
+        {
+            SettingsCategoryPage.Visibility = Visibility.Visible;
+            SettingsDetailPage.Visibility = Visibility.Collapsed;
+            SettingsCategoryList.SelectedItem = null;
+        }
+
+        private void ShowSettingsCategory(string category, string? selectedSectionId = null)
+        {
+            _activeSettingsCategory = category;
+
+            // This page can be reached from the gear icon, the settings search and the tutorial,
+            // none of which went through BtnOpenChatCommands_Click - the only caller that used to
+            // rebuild the mappings. Sync here so every route shows the current devices.
+            if (category == "chat-commands")
+            {
+                var chatVm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel
+                             ?? DataContext as RustPlusDesk.ViewModels.MainViewModel;
+                chatVm?.Selected?.SyncChatCommands();
+            }
+            var sections = _settingsSections.Where(section => section.Category == category).ToList();
+            foreach (var section in _settingsSections)
+            {
+                section.Element.Visibility = section.Category == category ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            var (title, description) = GetSettingsCategoryText(category);
+            SettingsDetailTitle.Text = title;
+            SettingsDetailSubtitle.Text = description;
+            SettingsCategoryPage.Visibility = Visibility.Collapsed;
+            SettingsDetailPage.Visibility = Visibility.Visible;
+            var submenuItems = sections.Select(section => new SettingsSearchResult
+            {
+                Id = section.Id,
+                Category = section.Category,
+                CategoryTitle = title,
+                Title = section.Title
+            }).ToList();
+            SettingsSectionList.ItemsSource = submenuItems;
+            SettingsSectionList.SelectedItem = selectedSectionId == null
+                ? null
+                : submenuItems.FirstOrDefault(item => item.Id == selectedSectionId);
+            SettingsSectionList.Visibility = Visibility.Visible;
+            SettingsSearchResultsScroller.Visibility = Visibility.Collapsed;
+            SettingsScrollViewer.Visibility = Visibility.Visible;
+            SettingsScrollViewer.ScrollToTop();
+
+            if (string.IsNullOrWhiteSpace(SettingsSearchBox.Text))
+            {
+                ClearSettingsHighlights();
+            }
+            else
+            {
+                HighlightMatchingSettings(SettingsSearchBox.Text, category);
+            }
+        }
+
+        private void HighlightMatchingSettings(string query, string category)
+        {
+            ClearSettingsHighlights();
+            var targets = _settingsOptions
+                .Where(option => option.Category == category && SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+                .Select(option => option.Target)
+                .Distinct()
+                .ToList();
+            var generation = _settingsHighlightGeneration;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (generation != _settingsHighlightGeneration)
+                {
+                    return;
+                }
+
+                foreach (var target in targets)
+                {
+                    var layer = AdornerLayer.GetAdornerLayer(target);
+                    if (layer == null)
+                    {
+                        continue;
+                    }
+
+                    var adorner = new SettingsMatchAdorner(target) { IsHitTestVisible = false };
+                    layer.Add(adorner);
+                    _settingsHighlights.Add((layer, adorner));
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private void ClearSettingsHighlights()
+        {
+            _settingsHighlightGeneration++;
+            foreach (var (layer, adorner) in _settingsHighlights)
+            {
+                layer.Remove(adorner);
+            }
+            _settingsHighlights.Clear();
+        }
+
+        private void SettingsSectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SettingsSectionList.SelectedItem is not SettingsSearchResult selected)
+            {
+                return;
+            }
+
+            var section = _settingsSections.First(candidate => candidate.Id == selected.Id);
+            ScrollToSettingsElement(section.Element);
+
+            // Clear the pick so tapping the same chip again scrolls back to it.
+            SettingsSectionList.SelectedItem = null;
+        }
+
+        private void ScrollToSettingsElement(FrameworkElement target, bool focus = false)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ExpandAncestorSettingsGroups(target);
+                SettingsScrollViewer.UpdateLayout();
+                target.UpdateLayout();
+
+                try
+                {
+                    var top = target.TransformToAncestor(SettingsSectionsPanel).Transform(new Point()).Y;
+                    SettingsScrollViewer.ScrollToVerticalOffset(Math.Clamp(top - 12, 0, SettingsScrollViewer.ScrollableHeight));
+                }
+                catch (InvalidOperationException)
+                {
+                    target.BringIntoView();
+                }
+
+                if (focus)
+                {
+                    target.Focus();
+                    Keyboard.Focus(target);
+                }
+            }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+        }
+
+        private static void ExpandAncestorSettingsGroups(DependencyObject element)
+        {
+            for (var parent = GetSettingsParent(element); parent != null; parent = GetSettingsParent(parent))
+            {
+                if (parent is Expander expander)
+                {
+                    expander.IsExpanded = true;
+                }
+            }
+        }
+
+        private static DependencyObject? GetSettingsParent(DependencyObject element) =>
+            LogicalTreeHelper.GetParent(element) ?? (element is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(element) : null);
+
+        private static (string Title, string Description) GetSettingsCategoryText(string category) => category switch
+        {
+            "alerts" => ("Alerts", "Notifications, sounds, and offline death alerts"),
+            "map" => ("Map", "Performance, markers, and 3D map data"),
+            "connected" => ("Connected Services", T("CsCategoryDesc", "Your accounts, alerts while the app is closed, Discord, and smart home")),
+            "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
+            "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
+            "ai-companion" => (T("AiCompanionTitle", "AI Companion"), T("AiCompanionCategoryDesc", "Voice and text companion, provider, hotkey, and appearance")),
+            "system" => ("System", "Maintenance, backup, reset, and application information"),
+            _ => ("General", "Language, startup, and application behavior")
+        };
+
+        private void SettingsBack_Click(object sender, RoutedEventArgs e)
+        {
+            _isShowingSearchResults = false;
+            SettingsSearchBox.Clear();
+            ShowSettingsCategoryList();
+        }
+
+        /// <summary>
+        /// Opens the card a tutorial step is about to point at.
+        ///
+        /// Both of these live inside a collapsed expander, and a spotlight on a closed card
+        /// header teaches nothing — the step is describing the settings inside it.
+        /// </summary>
+        public void ExpandTutorialCard(string? targetId)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                switch (targetId)
+                {
+                    case "Settings.AiCompanion":
+                        break;
+                    case "Settings.CommandDock":
+                        if (CardCommandDock != null) CardCommandDock.IsExpanded = true;
+                        break;
+                }
+            });
+        }
+
+        public void OpenCategory(string category)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                _isShowingSearchResults = false;
+                _returnToCategoryPageAfterSearch = false;
+                SettingsSearchBox.Clear();
+                ShowSettingsCategory(category);
+            });
+        }
+
+        private void SettingsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var query = SettingsSearchBox.Text.Trim();
+            if (query.Length == 0)
+            {
+                ClearSettingsHighlights();
+                if (!_isShowingSearchResults)
+                {
+                    return;
+                }
+
+                _isShowingSearchResults = false;
+                if (_returnToCategoryPageAfterSearch)
+                {
+                    ShowSettingsCategoryList();
+                }
+                else
+                {
+                    ShowSettingsCategory(_activeSettingsCategory);
+                }
+                return;
+            }
+
+            ClearSettingsHighlights();
+            if (!_isShowingSearchResults)
+            {
+                _returnToCategoryPageAfterSearch = SettingsCategoryPage.Visibility == Visibility.Visible;
+            }
+            _isShowingSearchResults = true;
+
+            if (_settingsOptions.Count == 0)
+            {
+                BuildSettingsOptionIndex();
+            }
+
+            var matches = _settingsOptions
+                .Where(option => SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+                .OrderBy(option => option.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                .ThenBy(option => option.Title)
+                .ToList();
+            SettingsSearchResults.ItemsSource = matches.Select(option => CreateSettingsOptionResult(option, query)).ToList();
+            SettingsDetailTitle.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiSearchResults");
+            SettingsDetailSubtitle.Text = matches.Count == 0
+                ? $"No settings found for “{query}”"
+                : $"{matches.Count} setting{(matches.Count == 1 ? "" : "s")} found for “{query}”";
+            SettingsCategoryPage.Visibility = Visibility.Collapsed;
+            SettingsDetailPage.Visibility = Visibility.Visible;
+            SettingsSectionList.Visibility = Visibility.Collapsed;
+            SettingsScrollViewer.Visibility = Visibility.Collapsed;
+            SettingsSearchResultsScroller.Visibility = Visibility.Visible;
+        }
+
+        private static SettingsOptionResult CreateSettingsOptionResult(SettingsOptionDefinition option, string query)
+        {
+            var matchingTerm = query.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .FirstOrDefault(term => option.Title.Contains(term, StringComparison.OrdinalIgnoreCase));
+            if (matchingTerm == null)
+            {
+                return new SettingsOptionResult
+                {
+                    SectionId = option.SectionId,
+                    SectionTitle = option.SectionTitle,
+                    Category = option.Category,
+                    CategoryTitle = GetSettingsCategoryText(option.Category).Title,
+                    BeforeMatch = option.Title,
+                    Match = "",
+                    AfterMatch = "",
+                    Target = option.Target
+                };
+            }
+
+            var matchIndex = option.Title.IndexOf(matchingTerm, StringComparison.OrdinalIgnoreCase);
+            return new SettingsOptionResult
+            {
+                SectionId = option.SectionId,
+                SectionTitle = option.SectionTitle,
+                Category = option.Category,
+                CategoryTitle = GetSettingsCategoryText(option.Category).Title,
+                BeforeMatch = option.Title[..matchIndex],
+                Match = option.Title.Substring(matchIndex, matchingTerm.Length),
+                AfterMatch = option.Title[(matchIndex + matchingTerm.Length)..],
+                Target = option.Target
+            };
+        }
+
+        private void SettingsSearchResult_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not WpfUi.Button { Tag: SettingsOptionResult result })
+            {
+                return;
+            }
+
+            _isShowingSearchResults = false;
+            _returnToCategoryPageAfterSearch = false;
+            ShowSettingsCategory(result.Category, result.SectionId);
+            ScrollToSettingsElement(result.Target, focus: true);
+        }
+
+        private void AppSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_isSettingsInitialized) return;
+            
+            PopulateLanguages();
+            LoadSettings();
+            BuildSettingsOptionIndex();
+            _isSettingsInitialized = true;
+        }
+
+        private void PopulateLanguages()
+        {
+            // One list, shared with the LFG filter and the flag on a listing. They used to be
+            // three, and they disagreed.
+            var langs = new List<LanguageOption>
+            {
+                new() { Name = "System Default", Code = "", ImagePath = null },
+            };
+
+            langs.AddRange(Helpers.AppLanguages.All.Select(l => new LanguageOption
+            {
+                Name = l.Name,
+                Code = l.Code,
+                ImagePath = l.FlagPath,
+            }));
+
+            CmbLanguage.ItemsSource = langs.OrderBy(l => l.Code == "" ? 1 : 0).ThenBy(l => l.Name).ToList();
+        }
+
+        public void LoadSettings()
+        {
+            CmbLanguage.SelectedValue = TrackingService.SelectedLanguage;
+            
+            ChkAutoStart.IsChecked = TrackingService.AutoStartEnabled;
+            ChkStartMinimized.IsChecked = TrackingService.StartMinimizedEnabled;
+            ChkAutoUpdate.IsChecked = TrackingService.AutoUpdateEnabled;
+            ChkAutoConnect.IsChecked = TrackingService.AutoConnectEnabled;
+            ChkCloseToTray.IsChecked = TrackingService.CloseToTrayEnabled;
+            ChkHideConsole.IsChecked = TrackingService.HideConsole;
+            ChkReduceUiEffects.IsChecked = TrackingService.ReduceUiEffects;
+            ChkTrafficMonitor.IsChecked = TrackingService.TrafficMonitorEnabled;
+            ChkStreamerMode.IsChecked = TrackingService.MapAbbreviateNames;
+            LoadGlobalChatSettings();
+
+#if DEBUG
+            RowDevDownloadIcons.Visibility = Visibility.Visible;
+#else
+            RowDevDownloadIcons.Visibility = Visibility.Collapsed;
+#endif
+            
+            TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
+            var fcmMention = TrackingService.DiscordWebhookMention ?? "";
+            ChkFcmMentionEveryone.IsChecked = fcmMention.Contains("@everyone");
+            ChkFcmMentionHere.IsChecked = fcmMention.Contains("@here");
+            TxtSmartHomeWebhookUrl.Text = TrackingService.SmartHomeWebhookUrl;
+            
+            // Load Telegram State
+            TxtTelegramUser.Text = TrackingService.TelegramCallUser;
+            TxtTelegramMsg.Text = TrackingService.TelegramCallMsg;
+            if (string.IsNullOrEmpty(TxtTelegramMsg.Text)) TxtTelegramMsg.Text = RustPlusDesk.Properties.Resources.GetString("UiAlarmAusgeloest");
+            
+            foreach (ComboBoxItem item in CmbTelegramLang.Items)
+            {
+                if (item.Tag?.ToString() == TrackingService.TelegramCallLang)
+                {
+                    CmbTelegramLang.SelectedItem = item;
+                    break;
+                }
+            }
+            
+            ChkTelegramIncTitle.IsChecked = TrackingService.TelegramCallIncTitle;
+            ChkTelegramIncMsg.IsChecked = TrackingService.TelegramCallIncMsg;
+            ChkTelegramIncType.IsChecked = TrackingService.TelegramCallIncType;
+
+            var telegramUrl = TrackingService.TelegramCallWebhookUrl;
+            if (!string.IsNullOrEmpty(telegramUrl))
+            {
+                TxtGeneratedTelegramUrl.Text = telegramUrl;
+                TxtGeneratedTelegramUrl.Visibility = Visibility.Visible;
+                BtnTestTelegramUrl.Visibility = Visibility.Visible;
+                BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
+            }
+
+            // Map performance settings
+            CmbMapHdImage.SelectedIndex = TrackingService.MapUseRenderedImage switch { true => 1, false => 2, null => 0 };
+            CmbMapResolution.SelectedIndex = (int)TrackingService.MapImageResolution;
+            UpdateMapResolutionEstimate();
+            CmbMapScalingMode.SelectedIndex = Math.Clamp(TrackingService.MapBitmapScalingMode, 0, 2);
+            ChkMapUseCacheMode.IsChecked = TrackingService.MapUseCacheMode;
+            
+            double scale = TrackingService.MapRenderScale;
+            int renderScaleIdx = 2; // Default to 1.0 (Native)
+            if (Math.Abs(scale - 0.5) < 0.01) renderScaleIdx = 0;
+            else if (Math.Abs(scale - 0.75) < 0.01) renderScaleIdx = 1;
+            else if (Math.Abs(scale - 1.0) < 0.01) renderScaleIdx = 2;
+            else if (Math.Abs(scale - 1.25) < 0.01) renderScaleIdx = 3;
+            else if (Math.Abs(scale - 1.5) < 0.01) renderScaleIdx = 4;
+            else if (Math.Abs(scale - 2.0) < 0.01) renderScaleIdx = 5;
+            CmbMapRenderScale.SelectedIndex = renderScaleIdx;
+
+            ChkMapUseAliasedEdgeMode.IsChecked = TrackingService.MapUseAliasedEdgeMode;
+
+            // Custom HD Map Image setting load
+            var selectedProfile = ParentWindow?.ViewModel?.Selected;
+            if (selectedProfile != null && TxtCustomMapUrl != null)
+            {
+                TxtCustomMapUrl.Text = selectedProfile.CustomMapUrl ?? "";
+                if (!string.IsNullOrWhiteSpace(selectedProfile.CustomMapUrl))
+                {
+                    TxtCustomMapStatus.Text = "Custom HD Map active. Map image is cached locally and will automatically reset on server wipe.";
+                }
+                else
+                {
+                    TxtCustomMapStatus.Text = "No custom map URL set. Standard server map image is currently in use.";
+                }
+            }
+
+            // Cloud Sync Setting load
+            ChkCloudSync.IsChecked = TrackingService.CloudSyncEnabled;
+            SyncPlayerWipeTrackerToggles();
+
+            // Team marker settings
+            ChkShowProfileMarkers.IsChecked  = TrackingService.MapShowSteamMarkers;
+            ChkShowPlayerArrows.IsChecked    = TrackingService.MapShowPlayerArrows;
+            ChkShowDeathMarkers.IsChecked    = TrackingService.MapShowDeathTags;
+            ChkStreamerModeMarkers.IsChecked  = TrackingService.MapAbbreviateNames;
+            SliderPlayerIconScaleOverlay.Value = TrackingService.MapPlayerIconScale;
+            NumMaxSelfDeathMarkers.Value      = TrackingService.MaxSelfDeathMarkers;
+            NumMaxTeamDeathMarkers.Value      = TrackingService.MaxTeamDeathMarkers;
+
+            LoadCommandDockDefaults();
+            LoadAiCompanionSettings();
+
+            // Server events (audio fallback)
+
+            // Offline Death
+            ChkOfflineDeathAlerts.IsChecked = TrackingService.OfflineDeathAlertsEnabled;
+            TxtOfflineDeathSoundPath.Text = string.IsNullOrEmpty(TrackingService.OfflineDeathSoundPath) ? Properties.Resources.DefaultSoundLabel : System.IO.Path.GetFileName(TrackingService.OfflineDeathSoundPath);
+            ChkOfflineDeathSoundLoop.IsChecked = TrackingService.OfflineDeathSoundLoopEnabled;
+            ChkOfflineDeathDiscord.IsChecked = TrackingService.OfflineDeathDiscordEnabled;
+
+            // Notification Center Settings
+            ChkNotificationsToast.IsChecked = TrackingService.NotificationsToastEnabled;
+            ChkNotificationsSounds.IsChecked = TrackingService.NotificationsSoundsEnabled;
+            SliderNotificationsRetention.Value = TrackingService.NotificationsRetentionDays;
+            TxtRetentionDays.Text = string.Format(T("NotificationRetentionDays", "{0} days"), (int)SliderNotificationsRetention.Value);
+            PopulateMutedServers();
+
+
+            // Auth connection state
+            bool isDiscord = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated;
+            bool isEmail   = Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+            bool connected = isDiscord || isEmail;
+            bool isPremium = Services.Auth.SupabaseAuthManager.IsPremium;
+
+            if (isDiscord)
+            {
+                TxtDiscordBtnLabel.Text = T("AuthDiscordDisconnectButton", "Disconnect Discord");
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Caution;
+                TxtAuthStatus.Text = string.Format(T("CsSignedInDiscordFormat", "Signed in with Discord · {0} plan"), FormatTier());
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
+            }
+            else if (isEmail)
+            {
+                var email = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser?.Email ?? "";
+                TxtDiscordBtnLabel.Text = RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptDiscordButton");
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
+                TxtAuthStatus.Text = string.Format(T("CsSignedInEmailFormat", "Signed in as {0} · {1} plan"), email, FormatTier());
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x4C, 0xAF, 0x50));
+            }
+            else
+            {
+                TxtDiscordBtnLabel.Text = RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptDiscordButton");
+                BtnDiscordConnect.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
+                TxtAuthStatus.Text = T("AuthNotConnectedStatus", "Not connected - sign in to use Cloud Sync and backups");
+                TxtAuthStatus.Foreground = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+            }
+
+            ApplyCloudUsage(connected);
+            ApplySupporterGate(connected, isPremium);
+            BtnEmailConnect.Content = isEmail ? RustPlusDesk.Properties.Resources.GetString("CodeUiManageEmailAccount") : RustPlusDesk.Properties.Resources.GetString("CloudLoginPromptEmailButton");
+
+            if (connected && isPremium)
+            {
+                _ = LoadDiscordBotSettingsAsync();
+            }
+
+            if (connected)
+            {
+                PopulateAlexaServers();
+                _ = LoadAlexaSettingsAsync();
+
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    _ = LoadHomeAssistantSettingsAsync();
+                    _ = InitFeatureFlagsAsync();
+                }
+            }
+        }
+
+        private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            var code = CmbLanguage.SelectedValue as string;
+            if (code != null)
+            {
+                TrackingService.SelectedLanguage = code;
+                
+                // Try to apply it immediately
+                if (Application.Current is App app)
+                {
+                    app.SetLanguage();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The HD map choice and the resolution change the image itself, so the map is loaded
+        /// again; the overlays carry over to the new size (see OverlaySpace).
+        /// </summary>
+        private void CmbMapImage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            if (sender == CmbMapHdImage && CmbMapHdImage.SelectedIndex >= 0)
+            {
+                TrackingService.MapUseRenderedImage = CmbMapHdImage.SelectedIndex switch { 1 => true, 2 => false, _ => null };
+            }
+            else if (sender == CmbMapResolution && CmbMapResolution.SelectedIndex >= 0)
+            {
+                TrackingService.MapImageResolution = (Services.Map.MapImageResolution)CmbMapResolution.SelectedIndex;
+            }
+
+            UpdateMapResolutionEstimate();
+            _ = ParentWindow?.ReloadMapAsync();
+        }
+
+        private void UpdateMapResolutionEstimate()
+        {
+            if (TxtMapResolutionEstimate == null) return;
+            if (ParentWindow?.EstimateMapImageMemory() is not { } mb)
+            {
+                TxtMapResolutionEstimate.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            TxtMapResolutionEstimate.Text = string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                RustPlusDesk.Properties.Resources.GetString("SettingsMapResolutionEstimate"),
+                mb.Economy, mb.Standard, mb.High);
+            TxtMapResolutionEstimate.Visibility = Visibility.Visible;
+        }
+
+        private void OnSettingChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            TrackingService.AutoStartEnabled = ChkAutoStart.IsChecked == true;
+            TrackingService.StartMinimizedEnabled = ChkStartMinimized.IsChecked == true;
+            TrackingService.AutoUpdateEnabled = ChkAutoUpdate.IsChecked == true;
+            TrackingService.AutoConnectEnabled = ChkAutoConnect.IsChecked == true;
+            TrackingService.CloseToTrayEnabled = ChkCloseToTray.IsChecked == true;
+
+            TrackingService.HideConsole = ChkHideConsole.IsChecked == true;
+            TrackingService.ReduceUiEffects = ChkReduceUiEffects.IsChecked == true;
+            TrackingService.TrafficMonitorEnabled = ChkTrafficMonitor.IsChecked == true;
+            TrackingService.MapAbbreviateNames = ChkStreamerMode.IsChecked == true;
+            
+            if (CmbMapScalingMode != null && CmbMapScalingMode.SelectedIndex >= 0)
+            {
+                TrackingService.MapBitmapScalingMode = CmbMapScalingMode.SelectedIndex;
+            }
+            TrackingService.MapUseCacheMode = ChkMapUseCacheMode.IsChecked == true;
+            if (CmbMapRenderScale != null && CmbMapRenderScale.SelectedIndex >= 0)
+            {
+                double val = 1.0;
+                switch (CmbMapRenderScale.SelectedIndex)
+                {
+                    case 0: val = 0.5; break;
+                    case 1: val = 0.75; break;
+                    case 2: val = 1.0; break;
+                    case 3: val = 1.25; break;
+                    case 4: val = 1.5; break;
+                    case 5: val = 2.0; break;
+                }
+                TrackingService.MapRenderScale = val;
+            }
+            TrackingService.MapUseAliasedEdgeMode = ChkMapUseAliasedEdgeMode.IsChecked == true;
+
+            // Save Cloud Sync setting
+            if (sender == ChkCloudSync)
+            {
+                if (ChkCloudSync.IsChecked == true)
+                {
+                    if (ParentWindow != null)
+                    {
+                        var dlg = new CloudDisclaimerWindow { Owner = ParentWindow };
+                        dlg.ShowDialog();
+                        if (dlg.CloudSyncAccepted)
+                        {
+                            TrackingService.CloudSyncEnabled = true;
+                            TrackingService.UploadConsentGiven = true;
+                            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+                        }
+                        else
+                        {
+                            _isSettingsInitialized = false;
+                            ChkCloudSync.IsChecked = false;
+                            _isSettingsInitialized = true;
+                            TrackingService.CloudSyncEnabled = false;
+                            TrackingService.UploadConsentGiven = false;
+                            _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                        }
+                    }
+                    else
+                    {
+                        TrackingService.CloudSyncEnabled = true;
+                        TrackingService.UploadConsentGiven = true;
+                        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+                    }
+                }
+                else
+                {
+                    TrackingService.CloudSyncEnabled = false;
+                    TrackingService.UploadConsentGiven = false;
+                    _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+                }
+            }
+            else
+            {
+                TrackingService.CloudSyncEnabled = ChkCloudSync.IsChecked == true;
+            }
+
+            // NOTE: PlayerWipeTracker flags are intentionally NOT written here. They have a
+            // dedicated handler (OnPlayerWipeTrackerToggled) so the global setting can only
+            // change when the user clicks those toggles — never as a side effect of another
+            // setting changing or a panel reload firing this bulk rewrite from stale state.
+
+            TrackingService.OfflineDeathAlertsEnabled = ChkOfflineDeathAlerts.IsChecked == true;
+            TrackingService.OfflineDeathSoundLoopEnabled = ChkOfflineDeathSoundLoop.IsChecked == true;
+            TrackingService.OfflineDeathDiscordEnabled = ChkOfflineDeathDiscord.IsChecked == true;
+
+            // Notification Center Settings
+            TrackingService.NotificationsToastEnabled = ChkNotificationsToast.IsChecked == true;
+            TrackingService.NotificationsSoundsEnabled = ChkNotificationsSounds.IsChecked == true;
+            TrackingService.NotificationsRetentionDays = (int)SliderNotificationsRetention.Value;
+            TxtRetentionDays.Text = string.Format(T("NotificationRetentionDays", "{0} days"), (int)SliderNotificationsRetention.Value);
+            PopulateMutedServers();
+
+            ParentWindow?.ApplySettings();
+            ParentWindow?.UpdateCloudSyncUI();
+            ParentWindow?.RefreshPlayerWipeTrackerSession();
+        }
+
+        // Dedicated handler for the Player Wipe Tracker toggles. Kept separate from the bulk
+        // OnSettingChanged rewrite so these global flags only change when the user actually
+        // clicks the toggles — never as a side effect of another setting or a panel reload.
+        // This is why the tracker no longer switches itself off on wipe/server changes.
+        //
+        // Both flags appear twice — under General and under Connected Services — so whichever
+        // copy was clicked is the one that carries the new value, and the other has to be brought
+        // along. _syncingWipeToggles stops that write from coming straight back in as another
+        // toggle event and overwriting what the user just chose.
+        private bool _syncingWipeToggles;
+
+        private void OnPlayerWipeTrackerToggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized || _syncingWipeToggles) return;
+
+            bool tracker = ReferenceEquals(sender, ChkPlayerWipeTrackerConnected)
+                ? ChkPlayerWipeTrackerConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeTracker)
+                    ? ChkPlayerWipeTracker.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerEnabled;
+
+            bool cloud = ReferenceEquals(sender, ChkPlayerWipeCloudConnected)
+                ? ChkPlayerWipeCloudConnected.IsChecked == true
+                : ReferenceEquals(sender, ChkPlayerWipeCloud)
+                    ? ChkPlayerWipeCloud.IsChecked == true
+                    : TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+
+            TrackingService.PlayerWipeTrackerEnabled = tracker;
+            TrackingService.PlayerWipeTrackerCloudBackupEnabled = cloud;
+            _ = Services.Cloud.CloudConsentService.RecordConsentAsync(Services.Cloud.CloudConsentService.TypeWipeTrackerBackup, cloud);
+
+            SyncPlayerWipeTrackerToggles();
+            ParentWindow?.RefreshPlayerWipeTrackerSession();
+        }
+
+        /// <summary>Points all four switches at what the setting now says.</summary>
+        private void SyncPlayerWipeTrackerToggles()
+        {
+            _syncingWipeToggles = true;
+            try
+            {
+                ChkPlayerWipeTracker.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloud.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+                ChkPlayerWipeTrackerConnected.IsChecked = TrackingService.PlayerWipeTrackerEnabled;
+                ChkPlayerWipeCloudConnected.IsChecked = TrackingService.PlayerWipeTrackerCloudBackupEnabled;
+            }
+            finally { _syncingWipeToggles = false; }
+        }
+
+        private void BtnCloseSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Visibility = Visibility.Collapsed;
+            ParentWindow?.ApplySettings();
+        }
+
+        /// <summary>
+        /// The per-player marker caps, the same two numbers the dialog behind the map's
+        /// death-marker button sets.
+        ///
+        /// Only stored, never applied backwards: lowering the cap here does not delete markers
+        /// that are already on the map. Trimming is what the dialog's own button is for, and a
+        /// settings page that quietly threw away a wipe's worth of pins on a mis-click would be
+        /// a bad place to find that out.
+        /// </summary>
+        private void OnDeathMarkerCapChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            if (NumMaxSelfDeathMarkers.Value is { } self)
+                TrackingService.MaxSelfDeathMarkers = (int)Math.Clamp(self, 1, 50);
+
+            if (NumMaxTeamDeathMarkers.Value is { } team)
+                TrackingService.MaxTeamDeathMarkers = (int)Math.Clamp(team, 1, 50);
+        }
+
+        private void BtnWipeDeathMarkers_Click(object sender, RoutedEventArgs e) =>
+            ParentWindow?.ConfirmAndClearDeathMarkers();
+
+        private void OnMarkerSettingChanged(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+
+            TrackingService.MapShowSteamMarkers  = ChkShowProfileMarkers.IsChecked == true;
+
+            // Guarded by _isSettingsInitialized above, so this is a real change,
+            // not the overlay restoring what was already stored.
+            if (ChkShowProfileMarkers.IsChecked != true) Ach.Unlock(Ach.DotMarker);
+            TrackingService.MapShowPlayerArrows  = ChkShowPlayerArrows.IsChecked == true;
+            TrackingService.MapShowDeathTags     = ChkShowDeathMarkers.IsChecked == true;
+            TrackingService.MapAbbreviateNames   = ChkStreamerModeMarkers.IsChecked == true;
+            TrackingService.MapPlayerIconScale   = SliderPlayerIconScaleOverlay.Value;
+
+            ParentWindow?.SyncPlayerSettingsFromTrackingService();
+        }
+
+
+        private void BtnShowResetDialog_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var dialog = new ResetDataWindow { Owner = ParentWindow };
+            if (dialog.ShowDialog() == true)
+            {
+                _ = ParentWindow.PerformGranularResetAsync(
+                    dialog.ResetConnection,
+                    dialog.ResetProfiles,
+                    dialog.ResetSteam,
+                    dialog.ResetPairing,
+                    dialog.ResetCrosshairs,
+                    dialog.ResetCache
+                );
+            }
+        }
+      
+        private void BtnDelete3DMapData_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "Delete all cached 3D map data for every server? This removes parsed map files and generated viewer JSON, but keeps app assets and icons.",
+                "Delete 3D Map Data",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            var deleted = Map3DLocalBuildService.DeleteAllCachedMapData();
+            ParentWindow?.ResetBuildingBlockedZonesAfterCacheDelete();
+            // The 2D map may still be showing a render that was just deleted.
+            _ = ParentWindow?.ReloadMapAsync();
+            ParentWindow?.AppendLog($"[3D Map] Deleted cached 3D map data ({deleted.DeletedFiles} files, {deleted.DeletedDirectories} folders). Generated data will be rebuilt when needed.");
+            ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUi3DMapData"), RustPlusDesk.Properties.Resources.GetString("CodeUiCached3DMapDataDeletedItWillBeRebuiltWhenYouOpenA3DMapAgain"), WpfUi.ControlAppearance.Success);
+        }
+
+        private async void BtnPurgeOrphanedCloudData_Click(object sender, RoutedEventArgs e)
+        {
+            var owner = ParentWindow ?? Window.GetWindow(this);
+            if (!Services.Auth.SupabaseAuthManager.IsAuthenticated)
+            {
+                MessageBox.Show(owner, "Cloud connection is not active. Please connect to cloud first.", "Purge Cloud Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string steamId = ParentWindow?.ViewModel?.SteamId64 ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(steamId))
+            {
+                MessageBox.Show(owner, "Steam ID is missing. Please log in to your account.", "Purge Cloud Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                owner,
+                Properties.Resources.PurgeOrphanedCloudDataConfirmMessage ?? "Scan Supabase cloud database and delete all overlays, base markers, and devices belonging to servers no longer in your server list?",
+                Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            try
+            {
+                IEnumerable<ServerProfile> activeServers = ParentWindow?.ViewModel?.Servers ?? (IEnumerable<ServerProfile>)Array.Empty<ServerProfile>();
+                var result = await Services.Auth.SupabaseCloudCleanupService.PurgeOrphanedCloudDataAsync(activeServers, steamId);
+
+                if (result.Success)
+                {
+                    // Nothing removed is the common outcome and used to read as a
+                    // silent no-op, which is what made people press it again. Say
+                    // so plainly instead: every server in the cloud is one you
+                    // still have, so there was nothing orphaned to clean up.
+                    string msg = result.RemovedServers == 0
+                        ? RustPlusDesk.Helpers.Loc.Text(
+                            "PurgeOrphanedCloudDataNothingToDo",
+                            "Nothing to clean up — every server with cloud data is still in your list.")
+                        : string.Format(
+                            System.Globalization.CultureInfo.CurrentCulture,
+                            RustPlusDesk.Helpers.Loc.Text(
+                                "PurgeOrphanedCloudDataSuccessMessage",
+                                "Removed the cloud data of {0} server(s) that are no longer in your list."),
+                            result.RemovedServers);
+
+                    ParentWindow?.AppendLog($"[Cloud] Orphaned cloud data purge complete: {result.RemovedServers} server(s) removed.");
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.PurgeOrphanedCloudDataConfirmTitle ?? "Purge Orphaned Cloud Data", msg, WpfUi.ControlAppearance.Success);
+                }
+                else
+                {
+                    MessageBox.Show(owner, $"Failed to purge cloud data: {result.ErrorMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(owner, $"Error during cloud data purge: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnManuallyParseMap_Click(object sender, RoutedEventArgs e)
+        {
+            ParentWindow?.ManuallyImportMapFile();
+        }
+        private void BtnDownloadItemIcons_Click(object sender, RoutedEventArgs e)
+        {
+            RustPlusDesk.Views.MainWindow.StartIconManualDownload();
+            ParentWindow?.ShowInfoSnackbar("Icon Pack", "Checking and downloading missing icons...", WpfUi.ControlAppearance.Info);
+        }
+
+        private void BtnBackupData_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+
+            var dialog = new BackupPasswordDialog { Owner = ParentWindow };
+            dialog.SetMode(false); // Encryption mode
+
+            if (dialog.ShowDialog() == true)
+            {
+                var sfd = new Microsoft.Win32.SaveFileDialog
+                {
+                    Filter = "ZIP Archives (*.zip)|*.zip",
+                    FileName = "RustPlusDesk_Backup_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".zip",
+                    Title = Properties.Resources.BackupApplicationDataTitle
+                };
+
+                if (sfd.ShowDialog() == true)
+                {
+                    try
+                    {
+                        RustPlusDesk.Services.Data.BackupDataModule.CreateBackup(sfd.FileName, dialog.Password);
+                        ParentWindow.AppendLog(string.Format(Properties.Resources.BackupSuccessLog, sfd.FileName));
+                        ParentWindow?.ShowInfoSnackbar(Properties.Resources.BackupSuccessTitle, Properties.Resources.BackupSuccessMessage, WpfUi.ControlAppearance.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        ParentWindow.AppendLog(string.Format(Properties.Resources.BackupErrorLog, ex.Message));
+                        MessageBox.Show(string.Format(Properties.Resources.BackupErrorMessage, ex.Message), Properties.Resources.BackupFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        private void BtnRestoreData_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+
+            var ask = MessageBox.Show(
+                Properties.Resources.RestoreConfirmMessage,
+                Properties.Resources.RestoreConfirmTitle,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (ask != MessageBoxResult.Yes) return;
+
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "ZIP Archives (*.zip)|*.zip",
+                Title = Properties.Resources.RestoreApplicationDataTitle
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                string password = "";
+                if (RustPlusDesk.Services.Data.BackupDataModule.IsBackupEncrypted(ofd.FileName))
+                {
+                    var dialog = new BackupPasswordDialog { Owner = ParentWindow };
+                    dialog.SetMode(true); // Decryption mode
+
+                    if (dialog.ShowDialog() == true)
+                    {
+                        password = dialog.Password;
+                    }
+                    else
+                    {
+                        // User canceled decryption prompt, abort restore
+                        return;
+                    }
+                }
+
+                try
+                {
+                    RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
+                    ParentWindow.ReloadApplicationData();
+                    ParentWindow?.ShowInfoSnackbar(Properties.Resources.RestoreSuccessTitle, Properties.Resources.RestoreSuccessMessage, WpfUi.ControlAppearance.Success);
+                }
+                catch (System.Security.Cryptography.CryptographicException)
+                {
+                    ParentWindow.AppendLog(Properties.Resources.RestorePasswordErrorLog);
+                    MessageBox.Show(Properties.Resources.RestorePasswordErrorMessage, Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    ParentWindow.AppendLog(string.Format(Properties.Resources.RestoreErrorLog, ex.Message));
+                    MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Open Cloud 24/7: which servers stay watched while the app is closed.
+        ///
+        /// Sits next to the feature comparison deliberately - one explains what the
+        /// cloud does, the other is where it is actually turned on per server.
+        /// </summary>
+        private void BtnCloud247_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RustPlusDesk.Views.Windows.Cloud24x7Window
+            {
+                Owner = ParentWindow ?? Window.GetWindow(this),
+            };
+            window.ShowDialog();
+        }
+
+        private void BtnCompareCloud_Click(object sender, RoutedEventArgs e)
+        {
+            var cloudWindow = new RustPlusDesk.Views.Windows.CloudFeaturesWindow();
+            cloudWindow.Owner = ParentWindow ?? Window.GetWindow(this);
+            cloudWindow.ShowDialog();
+        }
+
+        private void BtnUpgradeSupporter_Click(object sender, RoutedEventArgs e) =>
+            ParentWindow?.OpenSupporterPage();
+
+        public void BringCloudAccountIntoView() => CloudSettingsAnchor.BringIntoView();
+
+        private async void BtnDiscordConnect_Click(object sender, RoutedEventArgs e)
+        {
+            BtnDiscordConnect.IsEnabled = false;
+            BtnEmailConnect.IsEnabled = false;
+
+            if (Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated)
+            {
+                // Disconnect Discord
+                TxtDiscordBtnLabel.Text = T("AuthDisconnectingStatus", "Disconnecting...");
+                await Services.Cloud.CloudAuth.LogoutAsync();
+                ParentWindow?.AppendLog("[Cloud] Discord disconnected.");
+            }
+            else
+            {
+                // Connect Discord
+                ParentWindow?.AppendLog("[Cloud] Starting Discord OAuth login...");
+                TxtDiscordBtnLabel.Text = T("AuthConnectingStatus", "Connecting...");
+                var (success, _) = await Services.Cloud.CloudAuth.LoginWithDiscordAsync();
+
+                if (success)
+                {
+                    ParentWindow?.AppendLog("[Cloud] Discord connected. Syncing roles...");
+                    var tier = Services.Auth.SupabaseAuthManager.CurrentTier;
+                    ParentWindow?.AppendLog($"[Cloud] Rollen-Sync abgeschlossen. Tier: {tier.ToUpper()}");
+                }
+                else
+                {
+                    ParentWindow?.AppendLog("[Cloud] Discord login failed or canceled.");
+                }
+            }
+
+            BtnDiscordConnect.IsEnabled = true;
+            BtnEmailConnect.IsEnabled = true;
+            LoadSettings();
+            ParentWindow?.UpdateCloudSyncUI();
+            _ = ParentWindow?.DismissTutorialIfRunningAsync();
+        }
+
+        private void BtnEmailConnect_Click(object sender, RoutedEventArgs e)
+        {
+            // If email-authenticated, offer logout
+            if (Services.Auth.SupabaseAuthManager.IsEmailAuthenticated)
+            {
+                var result = System.Windows.MessageBox.Show(
+                    T("EmailLogoutConfirmMessage", "Sign out of the email account?"),
+                    T("CloudAccountTitle", "Cloud Account"),
+                    System.Windows.MessageBoxButton.YesNo,
+                    System.Windows.MessageBoxImage.Question);
+
+                if (result == System.Windows.MessageBoxResult.Yes)
+                {
+                    _ = Services.Cloud.CloudAuth.LogoutAsync();
+                    ParentWindow?.AppendLog("[Cloud] Email account signed out.");
+                    LoadSettings();
+                    ParentWindow?.UpdateCloudSyncUI();
+                }
+                return;
+            }
+
+            // Open email login window
+            var win = new Views.Windows.EmailLoginWindow { Owner = ParentWindow };
+            if (win.ShowDialog() == true && win.LoginSuccessful)
+            {
+                ParentWindow?.AppendLog("[Cloud] Email login successful.");
+                LoadSettings();
+                ParentWindow?.UpdateCloudSyncUI();
+                _ = ParentWindow?.DismissTutorialIfRunningAsync();
+            }
+        }
+
+        private void PremiumFeature_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!Services.Auth.SupabaseAuthManager.IsPremium)
+            {
+                e.Handled = true;
+                if (ParentWindow != null)
+                {
+                    var win = new Views.Windows.PremiumInfoWindow("") { Owner = ParentWindow };
+                    win.ShowDialog();
+                }
+            }
+        }
+
+        private void TxtSettingsDiscordWebhook_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Selected != null && ParentWindow != null)
+            {
+                ParentWindow.SyncAlertMenuItems();
+            }
+            RefreshServiceChips();
+        }
+
+        private void BtnClearSettingsWebhook_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Selected != null && ParentWindow != null)
+            {
+                vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
+                ParentWindow.SyncAlertMenuItems();
+            }
+            RefreshServiceChips();
+        }
+
+        private void BtnDiscordWebhookHelp_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks",
+                    UseShellExecute = true
+                });
+            }
+            catch { }
+        }
+
+        private async void BtnFcmHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "With Webhooks, we can automatically send FCM notifications (Offline Death and Raid Alerts) to Discord or other Smart Home solutions like IFTTT to e.g. trigger smart lights or be called when a raid happens.";
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Properties.Resources.GetString("OfflineCloudAlertsTitle"),
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK
+            };
+            await msgBox.ShowDialogAsync();
+        }
+
+        private async void BtnAlexaHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use Alexa Integration:\n\n" +
+                      "1. Enable the 'RustPlusDesktop' Skill in your Amazon Alexa App.\n" +
+                      "2. Select the server whose devices you want to control with Alexa or from which you want to receive Raid Alerts.\n" +
+                      "3. Click 'Generate Login PIN'.\n" +
+                      "4. Link accounts in the Alexa App by entering the PIN.\n" +
+                      "5. Search for new devices in the Alexa App.\n\n" +
+                      "Smart Switches and Smart Alerts will then appear in Alexa as Smart Devices. Smart Alerts are created as motion sensors in the device list of the linked server with their name. Routines can then be created for these. e.g. If triggered, announce on all Alexa devices and send a push notification and turn on my lights.\n\n" +
+                      "Switches can be turned on and off via Alexa as usual, renamed and activated by their name. e.g. \"Alexa, turn on Turrets\".\n\n" +
+                      "If new devices are added later, they can easily be found in Alexa via the device search. After a wipe, simply delete the old devices from the Alexa App.";
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Properties.Resources.GetString("AlexaSmartHomeTitle"),
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK
+            };
+            await msgBox.ShowDialogAsync();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
+            }
+            catch { }
+            e.Handled = true;
+        }
+
+        private bool EnsureOfflineIntegrationsConsent()
+        {
+            if (TrackingService.OfflineIntegrationsConsented ||
+                Services.Cloud.CloudSessionsApi.GlobalConsentEnabled ||
+                !string.IsNullOrEmpty(TrackingService.DiscordWebhookUrl) ||
+                !string.IsNullOrEmpty(TrackingService.TelegramCallWebhookUrl) ||
+                !string.IsNullOrEmpty(TrackingService.SmartHomeWebhookUrl))
+            {
+                if (!TrackingService.OfflineIntegrationsConsented)
+                {
+                    TrackingService.OfflineIntegrationsConsented = true;
+                    _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                        RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+                    _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                        RustPlusDesk.Services.Cloud.CloudConsentService.TypeFcmSync, true);
+                }
+                return true;
+            }
+
+            var consentDialog = new Windows.Dialogs.FcmConsentWindow { Owner = ParentWindow };
+            if (consentDialog.ShowDialog() != true) return false;
+
+            TrackingService.OfflineIntegrationsConsented = true;
+            _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, true);
+            _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                RustPlusDesk.Services.Cloud.CloudConsentService.TypeFcmSync, true);
+
+            return true;
+        }
+
+        private async void BtnSyncFcm_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as WpfUi.Button;
+            if (btn != null) btn.IsEnabled = false;
+
+            try
+            {
+                if (!EnsureOfflineIntegrationsConsent()) return;
+
+                bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                RefreshServiceChips();
+                if (success)
+                {
+                    if (btn != null)
+                    {
+                        btn.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiSynced");
+                        btn.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Checkmark24 };
+                        btn.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToSyncFCMConnectionEnsureYouAreLoggedInHaveAnActD817FA1B12"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudSyncFailed"), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            finally
+            {
+                if (btn != null) btn.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeFcm_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as WpfUi.Button;
+            if (btn != null) btn.IsEnabled = false;
+
+            try
+            {
+                TrackingService.OfflineIntegrationsConsented = false;
+                _ = RustPlusDesk.Services.Cloud.CloudConsentService.RecordConsentAsync(
+                    RustPlusDesk.Services.Cloud.CloudConsentService.TypeOfflineIntegrations, false);
+
+                bool success = await RustPlusDesk.Services.FcmSyncService.RevokeFcmCredentialsAsync();
+                RefreshServiceChips();
+                if (success)
+                {
+                    BtnSyncFcm.Content = RustPlusDesk.Properties.Resources.GetString("UiSyncCloudConnection");
+                    BtnSyncFcm.Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.CloudArrowUp24 };
+                    BtnSyncFcm.ClearValue(WpfUi.Button.ForegroundProperty);
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiAccessRevoked"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudAccessHasBeenRevokedAndYourCredentialsHaveBeenDelD83B833612"), WpfUi.ControlAppearance.Success);
+                }
+                else
+                {
+                    MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToRevokeFCMConnection"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            finally
+            {
+                if (btn != null) btn.IsEnabled = true;
+            }
+        }
+
+        private void BtnInviteDiscordBot_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://discord.com/oauth2/authorize?client_id=1511865399971545199&permissions=39584569350144&integration_type=0&scope=bot+applications.commands",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                ParentWindow?.AppendLog($"[DiscordBot] Failed to open invite link: {ex.Message}");
+            }
+        }
+
+        private async void BtnSaveDiscordGuild_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable) return;
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
+            if (string.IsNullOrEmpty(steamId)) return;
+
+            var guildId = TxtDiscordGuildId.Text?.Trim();
+            if (string.IsNullOrEmpty(guildId))
+            {
+                try
+                {
+                    BtnSaveDiscordGuild.IsEnabled = false;
+                    
+                    var queryParams = new Dictionary<string, string> { ["owner_steam_id"] = steamId };
+                    var body = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Get, null, queryParams);
+                    var list = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordBotSettingsModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var guildSetting = list?.FirstOrDefault();
+                    if (guildSetting != null && !string.IsNullOrEmpty(guildSetting.GuildId))
+                    {
+                        var delParams = new Dictionary<string, string> { ["guild_id"] = guildSetting.GuildId };
+                        await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Delete, null, delParams);
+                    }
+                    
+                    ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerUnlinkedSuccessfullyTheBotWillNoLongerInt3E4A80E18E"), WpfUi.ControlAppearance.Success);
+                    _ = LoadDiscordBotSettingsAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedUnlinkDiscord"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    BtnSaveDiscordGuild.IsEnabled = true;
+                }
+                return;
+            }
+
+            try
+            {
+                BtnSaveDiscordGuild.IsEnabled = false;
+
+                var payload = new
+                {
+                    guild_id = guildId,
+                    owner_steam_id = steamId,
+                    commands_enabled = ChkDiscordCommandsEnabled.IsChecked != false,
+                    allowed_command_role_ids = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text)
+                };
+
+                var resultStr = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Post, payload);
+                bool isSuccess = false;
+                string? errorMessage = null;
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(resultStr);
+                    var root = doc.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+                    {
+                        var first = root[0];
+                        if (first.TryGetProperty("success", out var succProp))
+                            isSuccess = succProp.GetBoolean();
+                        else if (first.TryGetProperty("guild_id", out var gidProp) && !string.IsNullOrEmpty(gidProp.GetString()))
+                            isSuccess = true;
+                        else if (first.TryGetProperty("id", out var idProp) && !string.IsNullOrEmpty(idProp.GetString()))
+                            isSuccess = true;
+
+                        if (first.TryGetProperty("message", out var msgProp))
+                            errorMessage = msgProp.GetString();
+                    }
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    {
+                        if (root.TryGetProperty("success", out var succProp))
+                            isSuccess = succProp.GetBoolean();
+                        else if (root.TryGetProperty("guild_id", out var gidProp) && !string.IsNullOrEmpty(gidProp.GetString()))
+                            isSuccess = true;
+                        else if (root.TryGetProperty("id", out var idProp) && !string.IsNullOrEmpty(idProp.GetString()))
+                            isSuccess = true;
+
+                        if (root.TryGetProperty("message", out var msgProp))
+                            errorMessage = msgProp.GetString();
+                    }
+                }
+                catch
+                {
+                    isSuccess = true;
+                }
+
+                if (!isSuccess)
+                {
+                    MessageBox.Show(errorMessage ?? RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToLinkDiscordServer"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiDiscordServerLinkedSuccessfully"), WpfUi.ControlAppearance.Success);
+                _ = LoadDiscordBotSettingsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedLinkDiscord"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnSaveDiscordGuild.IsEnabled = true;
+            }
+        }
+
+        private async void BtnSaveChannels_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable) return;
+            var guildId = TxtDiscordGuildId.Text?.Trim();
+            if (string.IsNullOrEmpty(guildId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseSaveADiscordServerIDFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                BtnSaveChannels.IsEnabled = false;
+
+                await SaveDiscordCommandPermissionsAsync(guildId);
+
+                var queryParams = new Dictionary<string, string> { ["guild_id"] = guildId };
+                var body = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Get, null, queryParams);
+                
+                var existingList = Services.Cloud.CloudDiscordAdapter.ExtractChannelsConfig(body, guildId);
+
+                async Task SaveChannelAsync(string type, string channelId, bool tts, string mentionText)
+                {
+                    if (string.IsNullOrWhiteSpace(channelId))
+                    {
+                        var modelToDelete = existingList.FirstOrDefault(c => c.NotificationType == type);
+                        if (modelToDelete != null)
+                        {
+                            var delParams = new Dictionary<string, string>
+                            {
+                                ["guild_id"] = guildId,
+                                ["notification_type"] = type
+                            };
+                            await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/channels", HttpMethod.Delete, null, delParams);
+                        }
+                        return;
+                    }
+
+                    var payload = new
+                    {
+                        guild_id = guildId,
+                        notification_type = type,
+                        channel_id = channelId.Trim(),
+                        mention_text = (mentionText ?? "").Trim(),
+                        tts_enabled = tts,
+                        audio_alert_enabled = false
+                    };
+
+                    await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/channels", HttpMethod.Post, payload);
+                }
+
+                await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelRaidEveryone, ChkChannelRaidHere));
+                await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelEventsEveryone, ChkChannelEventsHere));
+                await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
+                await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
+
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiChannelsConfigurationSavedSuccessfully"), WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedSaveChannels"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnSaveChannels.IsEnabled = true;
+            }
+        }
+
+        private string GetMentionFromCheckboxes(System.Windows.Controls.CheckBox everyone, System.Windows.Controls.CheckBox here)
+        {
+            var list = new List<string>();
+            if (everyone?.IsChecked == true) list.Add("@everyone");
+            if (here?.IsChecked == true) list.Add("@here");
+            return string.Join(" ", list);
+        }
+
+        private async Task LoadDiscordBotSettingsAsync()
+        {
+            if (!Services.Cloud.CloudAuth.IsCloudAvailable || !Services.Auth.SupabaseAuthManager.IsPremium) return;
+
+            try
+            {
+                var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+                var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
+                if (string.IsNullOrEmpty(steamId)) return;
+
+                var queryParams = new Dictionary<string, string> { ["owner_steam_id"] = steamId };
+                var body = await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Get, null, queryParams);
+                var list = JsonSerializer.Deserialize<List<RustPlusDesk.Models.DiscordBotSettingsModel>>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var guildSetting = list?.FirstOrDefault();
+
+                Dispatcher.Invoke(() =>
+                {
+                    _discordBotGuildId = guildSetting?.GuildId;
+                    RefreshServiceChips();
+                });
+
+                if (guildSetting != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        TxtDiscordGuildId.Text = guildSetting.GuildId;
+                        ChkDiscordCommandsEnabled.IsChecked = guildSetting.CommandsEnabled;
+                        TxtDiscordAllowedRoleIds.Text = guildSetting.AllowedCommandRoleIds ?? string.Empty;
+                    });
+
+                    var channelsList = Services.Cloud.CloudDiscordAdapter.ExtractChannelsConfig(body, guildSetting.GuildId);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        TxtChannelRaid.Text = string.Empty;
+                        ChkChannelRaidEveryone.IsChecked = false;
+                        ChkChannelRaidHere.IsChecked = false;
+                        ChkRaidTTS.IsChecked = false;
+                        
+                        TxtChannelEvents.Text = string.Empty;
+                        ChkChannelEventsEveryone.IsChecked = false;
+                        ChkChannelEventsHere.IsChecked = false;
+                        ChkEventsTTS.IsChecked = false;
+                        
+                        TxtChannelChat.Text = string.Empty;
+                        ChkChannelChatEveryone.IsChecked = false;
+                        ChkChannelChatHere.IsChecked = false;
+                        ChkChatTTS.IsChecked = false;
+                        
+                        TxtChannelShop.Text = string.Empty;
+                        ChkChannelShopEveryone.IsChecked = false;
+                        ChkChannelShopHere.IsChecked = false;
+                        ChkShopTTS.IsChecked = false;
+
+                        foreach (var ch in channelsList)
+                        {
+                            switch (ch.NotificationType)
+                            {
+                                case "raid":
+                                    TxtChannelRaid.Text = ch.ChannelId;
+                                    ChkChannelRaidEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelRaidHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkRaidTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                                case "events":
+                                    TxtChannelEvents.Text = ch.ChannelId;
+                                    ChkChannelEventsEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelEventsHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkEventsTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                                case "chat":
+                                    TxtChannelChat.Text = ch.ChannelId;
+                                    ChkChannelChatEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelChatHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkChatTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                                case "shop":
+                                    TxtChannelShop.Text = ch.ChannelId;
+                                    ChkChannelShopEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelShopHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkShopTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ParentWindow?.AppendLog($"[DiscordBot] Error loading settings: {ex.Message}");
+            }
+        }
+
+        private async Task SaveDiscordCommandPermissionsAsync(string guildId)
+        {
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64 ?? TrackingService.SteamId64;
+
+            var payload = new
+            {
+                guild_id = guildId,
+                owner_steam_id = steamId ?? string.Empty,
+                commands_enabled = ChkDiscordCommandsEnabled.IsChecked != false,
+                allowed_command_role_ids = NormalizeDiscordRoleIds(TxtDiscordAllowedRoleIds.Text)
+            };
+
+            await Services.Auth.SupabaseAuthManager.CallEdgeFunctionAsync("discord-bot/settings", HttpMethod.Post, payload);
+        }
+
+        private static string NormalizeDiscordRoleIds(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+
+            var ids = raw
+                .Split(new[] { ',', ';', ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(id => id.Trim())
+                .Where(id => id.All(char.IsDigit))
+                .Distinct()
+                .ToArray();
+
+            return string.Join(",", ids);
+        }
+
+        private void BtnSelectOfflineDeathSound_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Audio Files (*.mp3, *.wav)|*.mp3;*.wav",
+                Title = Properties.Resources.GetString("SelectCustomDeathSound")
+            };
+            if (ofd.ShowDialog() == true)
+            {
+                TrackingService.OfflineDeathSoundPath = ofd.FileName;
+                TxtOfflineDeathSoundPath.Text = System.IO.Path.GetFileName(ofd.FileName);
+            }
+        }
+
+        private void BtnResetOfflineDeathSound_Click(object sender, RoutedEventArgs e)
+        {
+            TrackingService.OfflineDeathSoundPath = string.Empty;
+            TxtOfflineDeathSoundPath.Text = Properties.Resources.DefaultSoundLabel;
+        }
+
+        private void BtnOpenOfflineDeathsLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var win = new Windows.OfflineDeathsHistoryWindow { Owner = ParentWindow };
+            win.ShowDialog();
+        }
+
+        private void PopulateMutedServers()
+        {
+            if (PnlMutedServers == null) return;
+            PnlMutedServers.Children.Clear();
+
+            var muted = TrackingService.MutedNotificationServers;
+            if (muted == null || muted.Count == 0)
+            {
+                PnlMutedServers.Children.Add(new TextBlock
+                {
+                    Text = Properties.Resources.NoServersMuted,
+                    Foreground = System.Windows.Media.Brushes.Gray,
+                    FontSize = 11,
+                    FontStyle = FontStyles.Italic,
+                    Margin = new Thickness(4)
+                });
+                return;
+            }
+
+            foreach (var serverKey in muted)
+            {
+                var savedProfile = (ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel)?.Servers
+                    .FirstOrDefault(server => $"{server.Host}:{server.Port}" == serverKey);
+                var serverName = TrackingService.GetMutedServerName(serverKey) ?? savedProfile?.Name;
+
+                var grid = new Grid { Margin = new Thickness(4, 4, 4, 4) };
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                var serverDetails = new StackPanel
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(4, 0, 12, 0)
+                };
+                var nameText = new TextBlock
+                {
+                    Text = string.IsNullOrWhiteSpace(serverName) ? serverKey : serverName,
+                    FontSize = 12,
+                    FontWeight = FontWeights.SemiBold,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                };
+                nameText.SetResourceReference(TextBlock.ForegroundProperty, "TextPrimary");
+                serverDetails.Children.Add(nameText);
+
+                if (!string.IsNullOrWhiteSpace(serverName))
+                {
+                    var endpointText = new TextBlock
+                    {
+                        Text = serverKey,
+                        FontSize = 10,
+                        Margin = new Thickness(0, 2, 0, 0),
+                        TextTrimming = TextTrimming.CharacterEllipsis
+                    };
+                    endpointText.SetResourceReference(TextBlock.ForegroundProperty, "TextSubtle");
+                    serverDetails.Children.Add(endpointText);
+                }
+
+                Grid.SetColumn(serverDetails, 0);
+                grid.Children.Add(serverDetails);
+
+                var btn = new WpfUi.Button
+                {
+                    Content = Properties.Resources.UnmuteServer,
+                    Icon = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.AlertOn24 },
+                    Appearance = WpfUi.ControlAppearance.Secondary,
+                    Height = 30,
+                    Padding = new Thickness(10, 4, 10, 4),
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Tag = serverKey,
+                };
+                btn.Click += (s, e) =>
+                {
+                    if (s is WpfUi.Button { Tag: string key })
+                    {
+                        TrackingService.UnmuteServer(key);
+                        PopulateMutedServers();
+                    }
+                };
+                Grid.SetColumn(btn, 1);
+                grid.Children.Add(btn);
+
+                PnlMutedServers.Children.Add(grid);
+            }
+        }
+
+      
+        private void TxtDiscordWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.DiscordWebhookUrl = TxtDiscordWebhookUrl.Text;
+            RefreshServiceChips();
+            TriggerBackgroundFcmSync();
+        }
+
+        private void ChkFcmMention_Changed(object sender, RoutedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.DiscordWebhookMention = GetMentionFromCheckboxes(ChkFcmMentionEveryone, ChkFcmMentionHere);
+            TriggerBackgroundFcmSync();
+        }
+
+        private void TxtSmartHomeWebhookUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isSettingsInitialized) return;
+            TrackingService.SmartHomeWebhookUrl = TxtSmartHomeWebhookUrl.Text;
+            RefreshServiceChips();
+            TriggerBackgroundFcmSync();
+        }
+
+        private async void TriggerBackgroundFcmSync()
+        {
+            if (Services.Auth.SupabaseAuthManager.IsPremium && (Services.Cloud.CloudAuthManager.IsAuthenticated || Services.Auth.SupabaseAuthManager.IsAuthenticated))
+            {
+                await Task.Delay(500);
+                _ = Services.FcmSyncService.SyncFcmCredentialsAsync();
+            }
+        }
+
+        private async void BtnGenerateTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var user = TxtTelegramUser.Text?.Trim() ?? "";
+            if (!user.StartsWith("@")) user = "@" + user;
+            if (string.IsNullOrWhiteSpace(user) || user == "@")
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnterAValidTelegramUsername"), RustPlusDesk.Properties.Resources.GetString("CodeUiInvalidUsername"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var msg = TxtTelegramMsg.Text?.Trim() ?? "";
+            var lang = (CmbTelegramLang.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "de-DE-Standard-A";
+
+            if (ChkTelegramIncTitle.IsChecked == true) msg = "{{title}} " + msg;
+            if (ChkTelegramIncMsg.IsChecked == true) msg += " {{message}}";
+            if (ChkTelegramIncType.IsChecked == true) msg += " {{type}}";
+
+            var encodedMsg = Uri.EscapeDataString(msg).Replace("%20", "+");
+            var url = $"http://api.callmebot.com/start.php?user={user}&text={encodedMsg}&lang={lang}";
+
+            TxtGeneratedTelegramUrl.Text = url;
+            TrackingService.TelegramCallUser = user;
+            TrackingService.TelegramCallMsg = TxtTelegramMsg.Text?.Trim() ?? "";
+            TrackingService.TelegramCallLang = lang;
+            TrackingService.TelegramCallIncTitle = ChkTelegramIncTitle.IsChecked == true;
+            TrackingService.TelegramCallIncMsg = ChkTelegramIncMsg.IsChecked == true;
+            TrackingService.TelegramCallIncType = ChkTelegramIncType.IsChecked == true;
+            TrackingService.TelegramCallWebhookUrl = url;
+
+            TxtGeneratedTelegramUrl.Visibility = Visibility.Visible;
+            BtnTestTelegramUrl.Visibility = Visibility.Visible;
+            BtnRevokeTelegramUrl.Visibility = Visibility.Visible;
+            RefreshServiceChips();
+
+            // Trigger FCM Sync directly to save
+            if (!EnsureOfflineIntegrationsConsent()) return;
+
+            bool success = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+            if (success)
+            {
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = Properties.Resources.GetString("CodeUiSuccess"),
+                    Content = "Telegram Call URL generated and synced to the cloud worker successfully!",
+                    PrimaryButtonText = Properties.Resources.OK
+                };
+                await msgBox.ShowDialogAsync();
+            }
+            else
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiFailedToSyncFCMConnectionPleaseEnsureYouAreLoggedIn"), RustPlusDesk.Properties.Resources.GetString("CodeUiCloudSyncFailed"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnTestTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var url = TxtGeneratedTelegramUrl.Text;
+            if (!string.IsNullOrEmpty(url))
+            {
+                // Replace placeholders for the test call so the user actually hears something valid
+                var testUrl = url.Replace("%7B%7Btitle%7D%7D", "Test+Alarm")
+                                 .Replace("%7B%7Bmessage%7D%7D", "Test+Message")
+                                 .Replace("%7B%7Btype%7D%7D", "alarm");
+                                 
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = testUrl,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedOpenBrowser"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private async void BtnRevokeTelegramUrl_Click(object sender, RoutedEventArgs e)
+        {
+            TrackingService.TelegramCallWebhookUrl = "";
+            TxtGeneratedTelegramUrl.Text = "";
+            
+            TxtGeneratedTelegramUrl.Visibility = Visibility.Collapsed;
+            BtnTestTelegramUrl.Visibility = Visibility.Collapsed;
+            BtnRevokeTelegramUrl.Visibility = Visibility.Collapsed;
+            RefreshServiceChips();
+
+            await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+        }
+
+        private void PopulateAlexaServers()
+        {
+            CmbAlexaServer.Items.Clear();
+            var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            if (vm?.Servers != null)
+            {
+                foreach (var s in vm.Servers)
+                {
+                    if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
+                    {
+                        CmbAlexaServer.Items.Add(new ComboBoxItem
+                        {
+                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
+                            Tag = $"{s.Host}-{s.Port}"
+                        });
+                    }
+                }
+            }
+        }
+
+        private async Task LoadAlexaSettingsAsync()
+        {
+            try
+            {
+                string? activeServerKey;
+
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+                    activeServerKey = await Services.Cloud.CloudAlexaAdapter.GetActiveServerKeyAsync();
+                }
+                else
+                {
+                    if (Services.Auth.SupabaseAuthManager.Client == null) return;
+                    var user = Services.Auth.SupabaseAuthManager.Client.Auth.CurrentUser;
+                    if (user == null) return;
+
+                    var response = await Services.Auth.SupabaseAuthManager.Client.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                        .Where(x => x.UserId == user.Id)
+                        .Single();
+
+                    activeServerKey = response?.ActiveServerKey;
+                }
+
+                _alexaActiveServerKey = activeServerKey;
+                RefreshServiceChips();
+
+                if (!string.IsNullOrEmpty(activeServerKey))
+                {
+                    foreach (ComboBoxItem item in CmbAlexaServer.Items)
+                    {
+                        if (item.Tag?.ToString() == activeServerKey)
+                        {
+                            CmbAlexaServer.SelectedItem = item;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Ignored, might not exist yet
+            }
+        }
+
+        private async void BtnGenerateAlexaPIN_Click(object sender, RoutedEventArgs e)
+        {
+            var client = Services.Auth.SupabaseAuthManager.Client;
+            if (!Services.Cloud.CloudAuth.IsAuthenticated || (!Services.Cloud.CloudBackend.UsePlatform && client == null))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var vm = RustPlusDesk.App.Current.MainWindow.DataContext as RustPlusDesk.ViewModels.MainViewModel;
+            var steamId = vm?.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnGenerateAlexaPIN.IsEnabled = false;
+            try
+            {
+                var random = new Random();
+                string pin = random.Next(100000, 999999).ToString();
+
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    if (!await Services.Cloud.CloudAlexaAdapter.SetAlexaPinAsync(steamId, pin, DateTime.UtcNow.AddMinutes(15)))
+                    {
+                        MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        BtnGenerateAlexaPIN.IsEnabled = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    var response = await client!.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Where(x => x.SteamId == steamId).Single();
+                    if (response == null)
+                    {
+                        MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseEnableCloudSyncFirstBeforeGeneratingAnAlexaPIN"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        BtnGenerateAlexaPIN.IsEnabled = true;
+                        return;
+                    }
+
+                    var fcmConfig = response.FcmConfig ?? new Newtonsoft.Json.Linq.JObject();
+                    fcmConfig["alexa_pin"] = pin;
+                    fcmConfig["alexa_pin_expires"] = DateTime.UtcNow.AddMinutes(15).ToString("O");
+                    response.FcmConfig = fcmConfig;
+
+                    await client.From<RustPlusDesk.Models.UserFcmCredentialsModel>().Upsert(response);
+                }
+
+                TxtAlexaPIN.Text = pin;
+                TxtAlexaPIN.Visibility = Visibility.Visible;
+                BtnGenerateAlexaPIN.Content = RustPlusDesk.Properties.Resources.GetString("CodeUiPINGeneratedValidFor15m");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedGeneratePin"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateAlexaPIN.IsEnabled = true;
+            }
+        }
+
+        private async void BtnLinkAlexa_Click(object sender, RoutedEventArgs e)
+        {
+            var client = Services.Auth.SupabaseAuthManager.Client;
+            if (!Services.Cloud.CloudAuth.IsAuthenticated || (!Services.Cloud.CloudBackend.UsePlatform && client == null))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var selected = CmbAlexaServer.SelectedItem as ComboBoxItem;
+            var serverKey = selected?.Tag?.ToString();
+            if (string.IsNullOrEmpty(serverKey))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("PleaseSelectServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (ParentWindow?.DataContext is not RustPlusDesk.ViewModels.MainViewModel vm) return;
+            var steamId = vm.SteamId64;
+            if (string.IsNullOrEmpty(steamId))
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiSteamIDNotFoundPleaseConnectToAServerFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var userId = client?.Auth?.CurrentUser?.Id;
+            if (!Services.Cloud.CloudBackend.UsePlatform && string.IsNullOrEmpty(userId)) return;
+
+            if (!EnsureOfflineIntegrationsConsent()) return;
+
+            BtnLinkAlexa.IsEnabled = false;
+            try
+            {
+                bool syncSuccess = await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                if (!syncSuccess)
+                {
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = Properties.Resources.GetString("CodeUiCloudSyncFailed"),
+                        Content = "Failed to sync FCM connection. Ensure you are logged in, have an active Premium/Supporter tier, and your connection in Rust+ Companion is active.",
+                        PrimaryButtonText = Properties.Resources.OK
+                    };
+                    await msgBox.ShowDialogAsync();
+                    return;
+                }
+
+                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
+                if (serverProfile != null)
+                {
+                    if (Services.Cloud.CloudBackend.UsePlatform)
+                    {
+                        // Pairing and linking are one step: the API returns the server id
+                        // that the Alexa setting references.
+                        await Services.Cloud.CloudAlexaAdapter.LinkServerAsync(
+                            steamId,
+                            serverProfile.Host,
+                            serverProfile.Port,
+                            serverProfile.Name,
+                            serverProfile.PlayerToken);
+                    }
+                    else
+                    {
+                        // 1. Link Alexa active server
+                        var alexaModel = new RustPlusDesk.Models.UserAlexaSettingsModel
+                        {
+                            UserId = userId ?? string.Empty,
+                            ActiveServerKey = serverKey,
+                            SteamId = steamId,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        await client!.From<RustPlusDesk.Models.UserAlexaSettingsModel>().Upsert(alexaModel);
+
+                        // 2. Upload Server Credentials for Cloud Worker
+                        var serverCredsModel = new RustPlusDesk.Models.UserServerModel
+                        {
+                            UserId = userId,
+                            SteamId = steamId,
+                            ServerIp = serverProfile.Host,
+                            ServerPort = serverProfile.Port,
+                            PlayerToken = serverProfile.PlayerToken,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        await client.From<RustPlusDesk.Models.UserServerModel>().Upsert(serverCredsModel);
+                    }
+
+                    // 3. Force Sync Devices for Alexa Discovery
+                    if (ulong.TryParse(steamId, out var steamIdUlong))
+                    {
+                        // We use the same generic local overlay to append the devices
+                        var currentOverlay = Services.Data.OverlayDataModule.LoadLocalOverlay(serverKey, steamIdUlong);
+                        _ = Services.Data.DeviceDataModule.UploadDevicesSnapshotAsync(serverKey, steamIdUlong, serverProfile.Devices, currentOverlay, false);
+                    }
+
+                    _alexaActiveServerKey = serverKey;
+                    RefreshServiceChips();
+
+                    var msgBox = new Wpf.Ui.Controls.MessageBox
+                    {
+                        Title = Properties.Resources.GetString("CodeUiSuccess"),
+                        Content = "Alexa Server linked successfully! Alexa will now control devices from this server and receive Smart Alarms.",
+                        PrimaryButtonText = Properties.Resources.OK
+                    };
+                    await msgBox.ShowDialogAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = Properties.Resources.GetString("ErrorTitle"),
+                    Content = $"Failed to link Alexa Server: {ex.Message}",
+                    PrimaryButtonText = Properties.Resources.OK
+                };
+                await msgBox.ShowDialogAsync();
+            }
+            finally
+            {
+                BtnLinkAlexa.IsEnabled = true;
+            }
+        }
+
+        private async void BtnRevokeAlexa_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform && Services.Auth.SupabaseAuthManager.Client == null) return;
+            var user = Services.Auth.SupabaseAuthManager.Client?.Auth?.CurrentUser;
+            if (!Services.Cloud.CloudBackend.UsePlatform && user == null) return;
+
+            BtnRevokeAlexa.IsEnabled = false;
+            try
+            {
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    await Services.Cloud.CloudAlexaAdapter.RevokeAsync();
+                }
+                else
+                {
+                    await Services.Auth.SupabaseAuthManager.Client!.From<RustPlusDesk.Models.UserAlexaSettingsModel>()
+                        .Where(x => x.UserId == user!.Id)
+                        .Delete();
+                }
+
+                CmbAlexaServer.SelectedItem = null;
+                _alexaActiveServerKey = null;
+                RefreshServiceChips();
+                ParentWindow?.ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiSuccess"), RustPlusDesk.Properties.Resources.GetString("CodeUiAlexaAccessRevokedSuccessfully"), WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedRevokeAlexa"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeAlexa.IsEnabled = true;
+            }
+        }
+
+        // --- Home Assistant integration (platform-only) ---
+
+        /// <summary>Public base URL of the cloud worker that serves the /api/ha endpoints.</summary>
+        private const string HaWorkerBaseUrl = "https://worker.rustplusdesktop.cloud";
+
+        private async Task LoadHomeAssistantSettingsAsync()
+        {
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.GetTokenAsync();
+                ApplyHaToken(token);
+            }
+            catch
+            {
+                // No token yet, or the endpoint is unreachable — leave the panel in its empty state.
+                ApplyHaToken(null);
+            }
+        }
+
+        /// <summary>Reflect a token (or its absence) into the token box, copy button, and snippet.</summary>
+        private void ApplyHaToken(string? token)
+        {
+            var hasToken = !string.IsNullOrEmpty(token);
+
+            TxtHaToken.Text = hasToken ? token : string.Empty;
+            BtnCopyHaToken.IsEnabled = hasToken;
+            BtnGenerateHaToken.Content = hasToken ? "Regenerate Token" : "Generate Token";
+            TxtHaSnippet.Text = BuildHaSnippet(token);
+            RefreshServiceChips();
+        }
+
+        private static string BuildHaSnippet(string? token)
+        {
+            var bearer = string.IsNullOrEmpty(token) ? "<YOUR_TOKEN>" : token;
+
+            return
+                "# Add to Home Assistant configuration.yaml\n" +
+                "switch:\n" +
+                "  - platform: rest\n" +
+                "    name: Rust Smart Switch\n" +
+                $"    resource: {HaWorkerBaseUrl}/api/ha/switch/SERVERKEY_ENTITYID\n" +
+                "    headers:\n" +
+                $"      Authorization: \"Bearer {bearer}\"\n" +
+                "    body_on: '{\"on\": true}'\n" +
+                "    body_off: '{\"on\": false}'\n" +
+                "    is_on_template: \"{{ value_json.on }}\"";
+        }
+
+        private async void BtnGenerateHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform)
+            {
+                MessageBox.Show("Home Assistant integration requires the cloud platform.", Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (!Services.Cloud.CloudAuth.IsAuthenticated)
+            {
+                MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiPleaseConnectYourCloudAccountFirst"), RustPlusDesk.Properties.Resources.GetString("ErrorPrefix"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            BtnGenerateHaToken.IsEnabled = false;
+            try
+            {
+                var token = await Services.Cloud.CloudHomeAssistantAdapter.RegenerateTokenAsync();
+                ApplyHaToken(token);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token generated. Copy it into your configuration.yaml.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to generate Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnGenerateHaToken.IsEnabled = true;
+            }
+        }
+
+        private void BtnCopyHaToken_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaToken.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaToken.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Token copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private void BtnCopyHaSnippet_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtHaSnippet.Text)) return;
+            try
+            {
+                Clipboard.SetText(TxtHaSnippet.Text);
+                ParentWindow?.ShowInfoSnackbar("Copied", "Configuration snippet copied to clipboard.", WpfUi.ControlAppearance.Success);
+            }
+            catch { /* clipboard can transiently fail; nothing actionable */ }
+        }
+
+        private async void BtnRevokeHa_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Services.Cloud.CloudBackend.UsePlatform || !Services.Cloud.CloudAuth.IsAuthenticated) return;
+
+            BtnRevokeHa.IsEnabled = false;
+            try
+            {
+                await Services.Cloud.CloudHomeAssistantAdapter.RevokeAsync();
+                ApplyHaToken(null);
+                ParentWindow?.ShowInfoSnackbar("Success", "Home Assistant token revoked.", WpfUi.ControlAppearance.Success);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to revoke Home Assistant token: {ex.Message}", Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnRevokeHa.IsEnabled = true;
+            }
+        }
+
+        private async void BtnHomeAssistantHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = "How to use the Home Assistant integration:\n\n" +
+                      "1. Click 'Generate Token' to create your API token.\n" +
+                      "2. Copy the token (or the whole example snippet).\n" +
+                      "3. In Home Assistant, open configuration.yaml and add a REST switch per device.\n" +
+                      "4. Replace SERVERKEY_ENTITYID with a device id from your device list — the format is {host}-{port}_{entityId}.\n" +
+                      "5. Restart Home Assistant. The switch appears and can be toggled; its state is read back from the Rust server.\n\n" +
+                      "For raid/death alerts, use the Smart Home Webhook URL field with a Home Assistant webhook automation instead.\n\n" +
+                      "Keep your token secret — anyone with it can control your linked switches. Use 'Revoke Token' to invalidate it.";
+
+            var box = new WpfUi.MessageBox
+            {
+                Title = "Home Assistant Setup",
+                Content = msg,
+                PrimaryButtonText = Properties.Resources.OK,
+            };
+            await box.ShowDialogAsync();
+        }
+
+        // --- Global feature flags (admin on/off + status note) ---
+
+        private async Task InitFeatureFlagsAsync()
+        {
+            await Services.Cloud.CloudFeatureFlags.RefreshAsync();
+            ApplyFeatureFlags();
+        }
+
+        /// <summary>
+        /// Reflect the admin feature flags into each integration panel: show the
+        /// status note (or a default "disabled" message) and enable/disable the
+        /// panel's controls when a feature is turned off globally.
+        /// </summary>
+        private void ApplyFeatureFlags()
+        {
+            ApplyFeatureFlag("alexa", TxtAlexaStatusNote,
+                BtnGenerateAlexaPIN, CmbAlexaServer, BtnLinkAlexa, BtnRevokeAlexa);
+            // Note: the HA copy buttons are intentionally excluded — their enabled
+            // state is owned by token-presence logic (ApplyHaToken), and copying an
+            // existing token/snippet is harmless even when the feature is off.
+            ApplyFeatureFlag("home_assistant", TxtHaStatusNote,
+                BtnGenerateHaToken, BtnRevokeHa);
+            ApplyFeatureFlag("cloud_247", TxtCloud247StatusNote, BtnCloud247);
+            RefreshServiceChips();
+        }
+
+        private static void ApplyFeatureFlag(string key, System.Windows.Controls.TextBlock note, params System.Windows.UIElement[] controls)
+        {
+            var enabled = Services.Cloud.CloudFeatureFlags.IsEnabled(key);
+            var statusNote = Services.Cloud.CloudFeatureFlags.Note(key);
+
+            // The banner is shown only when the feature is disabled — it uses the
+            // admin status note if one is set, otherwise a default message.
+            if (!enabled)
+            {
+                note.Text = string.IsNullOrWhiteSpace(statusNote)
+                    ? "This integration is currently disabled by the administrator."
+                    : statusNote;
+                note.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                note.Visibility = Visibility.Collapsed;
+            }
+
+            // Disable interaction and dim the controls — WPF-UI's default disabled
+            // styling is too subtle on the dark theme to read as "off", so the
+            // explicit opacity makes the disabled state obvious.
+            foreach (var control in controls)
+            {
+                control.IsEnabled = enabled;
+                control.Opacity = enabled ? 1.0 : 0.4;
+            }
+        }
+
+        private void TxtCustomMapUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+        }
+
+        private void BtnApplyCustomMapUrl_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedProf = ParentWindow?.ViewModel?.Selected;
+            if (selectedProf == null)
+            {
+                MessageBox.Show(ParentWindow, "No active server profile selected.", "Custom Map URL", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string url = TxtCustomMapUrl.Text.Trim();
+            if (!string.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                MessageBox.Show(ParentWindow, "Please enter a valid absolute HTTP or HTTPS URL (e.g. https://example.com/rust_map.png).", "Invalid URL", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            selectedProf.CustomMapUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+            ParentWindow?.ViewModel?.Save();
+
+            if (!string.IsNullOrWhiteSpace(selectedProf.CustomMapUrl))
+            {
+                string host = selectedProf.Host;
+                int port = selectedProf.Port;
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) host = host.Replace(c, '_');
+                string key = $"{host}_{port}";
+                MainWindow.DeleteCustomMapCache(key);
+
+                TxtCustomMapStatus.Text = "Custom HD Map URL updated. Reloading map image...";
+            }
+            else
+            {
+                TxtCustomMapStatus.Text = "Custom HD Map URL cleared. Reverting to standard server map...";
+            }
+
+            _ = ParentWindow?.ReloadMapAsync();
+        }
+
+        private void BtnClearCustomMapUrl_Click(object sender, RoutedEventArgs e)
+        {
+            TxtCustomMapUrl.Text = "";
+            BtnApplyCustomMapUrl_Click(sender, e);
+        }
+
+        private void BtnOpenCrashLogs_Click(object sender, RoutedEventArgs e)
+        {
+            CrashReporter.OpenCrashLogsFolder();
+        }
+    }
+}

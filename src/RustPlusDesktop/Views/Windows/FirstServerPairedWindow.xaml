@@ -1,0 +1,41 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.FirstServerPairedWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource FirstServerPairedTitle}"
+        Width="480"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Foreground="White"
+        FontFamily="Segoe UI"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource FirstServerPairedTitle}" ShowMaximize="False" ShowMinimize="False"/>
+
+        <StackPanel Grid.Row="1">
+            <ui:SymbolIcon Symbol="CheckmarkCircle24" Filled="True" FontSize="46" Foreground="#3FB950" HorizontalAlignment="Center" Margin="0,8,0,14"/>
+            <TextBlock Text="{DynamicResource FirstServerPairedHeading}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="24,0,24,6"/>
+            <TextBlock x:Name="TxtServerName" FontSize="14" FontWeight="SemiBold" Foreground="#FF8C00" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="24,0,24,10"/>
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="12" Foreground="#B8BDC7" Margin="32,0,32,20" LineHeight="20"
+                       Text="{DynamicResource FirstServerPairedBody}"/>
+            <Border Background="#1E2126" Height="1" Margin="24,0"/>
+            <Grid Margin="24,16,24,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ui:Button Grid.Column="0" Content="{DynamicResource FirstServerPairedLater}" Appearance="Secondary" HorizontalAlignment="Stretch" Margin="0,0,8,0" Height="38" Click="BtnLater_Click"/>
+                <ui:Button Grid.Column="1" Content="{DynamicResource FirstServerPairedConnect}" Appearance="Primary" HorizontalAlignment="Stretch" Height="38" Click="BtnConnect_Click"
+                           Icon="{ui:SymbolIcon Symbol=PlugConnected24}"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

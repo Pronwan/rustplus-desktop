@@ -1,0 +1,9998 @@
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+using RustPlusDesk.Models;
+using RustPlusDesk.Services;
+using RustPlusDesk.ViewModels;
+using RustPlusDesk.Views;
+using System.Windows.Markup;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using RustPlusDesk.Converters;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.WebSockets;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using StorageSnap = RustPlusDesk.Models.StorageSnapshot;
+using StorageItemVM = RustPlusDesk.Models.StorageItemVM;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Resources; // für Application.GetResourceStream
+using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Xml.Linq;
+using static RustPlusDesk.Services.RustPlusClientReal;
+using IOPath = System.IO.Path;
+using RustPlusDesk.Helpers;
+using Wpf.Ui;
+using Wpf.Ui.Appearance;
+using WpfUi = Wpf.Ui.Controls;
+
+
+namespace RustPlusDesk.Views;
+
+
+public partial class MainWindow : WpfUi.FluentWindow
+{
+    private readonly MainViewModel _vm = new();
+    internal MainViewModel ViewModel => _vm;
+    internal string SteamDisplayName => !string.IsNullOrWhiteSpace(_steamDisplayName)
+        ? _steamDisplayName
+        : TxtSteamName?.Text ?? Properties.Resources.SteamAccount;
+    private readonly UpdateService _updateService = new();
+    private string? _fetchedSteamId64;
+    private string? _steamDisplayName;
+
+    private DateTime _lastPairingPingAt = DateTime.MinValue;
+    private readonly IRustPlusClient _rust;  // Interface statt fester Klasse
+    private IPairingListener _pairing;
+    private readonly Dictionary<uint, DateTime> _entityPairSeen = new();
+    private string? _lastPairSig;
+    private bool _listenerStarting; // Schutz gegen Doppelklicks
+    private readonly System.Windows.Threading.DispatcherTimer _statusTimer =
+    new() { Interval = TimeSpan.FromSeconds(30) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _upkeepTimer =
+    new() { Interval = TimeSpan.FromSeconds(60) };
+
+    private readonly System.Windows.Threading.DispatcherTimer _customTimerTicker =
+    new() { Interval = TimeSpan.FromSeconds(1) };
+
+    private System.Windows.Media.MediaPlayer? _timerAlarmPlayer;
+    private string? _timerAlarmFilePath;
+    private bool _timerStartupCleanupDone;
+
+    private Viewbox? _mapView;
+    private Grid? _scene;
+    private bool _isPanning;
+    private const double ZoomStep = 1.1;   // ~10% pro Wheel-Klick
+    private readonly MatrixTransform MapTransform = new MatrixTransform();
+    // --- Dark theme brushes for search window ---
+    private static readonly Brush SearchWinBg = new SolidColorBrush(Color.FromRgb(24, 26, 30));
+    private static readonly Brush SearchCardBg = new SolidColorBrush(Color.FromRgb(36, 40, 46));
+    private static readonly Brush SearchCardBrd = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
+    private static readonly Brush SearchText = Brushes.White;
+    private static readonly Brush SearchSubtle = new SolidColorBrush(Color.FromArgb(180, 220, 220, 220));
+    // CROSSHAIR
+    private CrosshairWindow? _overlay;
+    private CrosshairStyle _currentStyle = CrosshairStyle.GreenDot;
+    private string _currentCustomBase64 = "";
+    private bool _alertsNeedRebaseline = false;
+    private bool _visible;
+    // CAMERA TAB
+
+    // Chinook Chekcer
+    private readonly MonumentWatcher _monumentWatcher = new MonumentWatcher();
+
+    private uint? _trackingEntityId; // NEU: ID des Objekts, dem die Kamera folgt
+    private IReadOnlyList<RustPlusClientReal.DynMarker>? _lastMarkers; // Cache für Interaktionen
+
+    public void StopTracking()
+    {
+        _trackingEntityId = null;
+        _vm.FollowingSteamId = null;
+        _vm.FollowingPlayerName = "";
+        _vm.FollowingPlayerAvatar = null;
+        
+        string serverKey = GetServerKey();
+        if (!string.IsNullOrEmpty(serverKey))
+        {
+            if (Services.TrackingService.Settings.ServerFollowingSteamId.ContainsKey(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
+        }
+    }
+
+    private void BtnFollowPlayer_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsFollowing)
+        {
+            var serverKey = GetServerKey();
+            if (!string.IsNullOrEmpty(serverKey))
+            {
+                Services.TrackingService.Settings.ServerFollowingSteamId.Remove(serverKey);
+                Services.TrackingService.SaveDB();
+            }
+            StopTracking();
+            return;
+        }
+
+        // Build dynamic menu
+        MenuFollowPlayer.Items.Clear();
+
+        var miMe = new MenuItem { Header = Properties.Resources.FollowMe, Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
+        MenuFollowPlayer.Items.Add(miMe);
+
+        if (TeamMembers.Count > 0)
+        {
+            MenuFollowPlayer.Items.Add(new Separator());
+            foreach (var member in TeamMembers)
+            {
+                if (member.SteamId == _mySteamId) continue;
+                var mi = new MenuItem { Header = string.Format(Properties.Resources.FollowPlayer, member.DisplayName), Tag = member.SteamId };
+                mi.Click += (s, ev) => StartFollowing(member.SteamId, member.DisplayName);
+                MenuFollowPlayer.Items.Add(mi);
+            }
+        }
+
+        MenuFollowPlayer.PlacementTarget = BtnFollowPlayer;
+        MenuFollowPlayer.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        MenuFollowPlayer.IsOpen = true;
+    }
+
+    // Camera thumbs: Throttling & "in-flight"-Wächter
+    // Dumper Button
+    private async void BtnDynCheck_Click(object sender, RoutedEventArgs e)
+    {
+        if (_rust is not RustPlusClientReal real)
+        {
+            AppendLog("dyn2: kein Client.");
+            return;
+        }
+
+        try
+        {
+            var list = await real.GetDynamicMapMarkersAsync2();
+            AppendLog($"dyn2: total={list.Count}");
+
+            // kleine Verteilung nach RawType
+            var groups = list.GroupBy(m => m.RawType).OrderBy(g => g.Key)
+                             .Select(g => $"{g.Key}×{g.Count()}");
+            AppendLog("dyn2 types: " + string.Join(", ", groups));
+
+            // zeig die ersten 6 Marker „roh“
+            foreach (var m in list.Take(6))
+                AppendLog("dyn2 sample: " + m.DebugLine);
+            // (optional) schnelle Heuristik für crate-verdächtige
+            var suspects = list.Where(m =>
+                (m.RawType == 7 || m.RawType == 0) &&
+                ((m.Label ?? "").IndexOf("crate", StringComparison.OrdinalIgnoreCase) >= 0
+               || (m.Label ?? "").IndexOf("hack", StringComparison.OrdinalIgnoreCase) >= 0
+               || (m.Label ?? "").IndexOf("lock", StringComparison.OrdinalIgnoreCase) >= 0))
+               .ToList();
+
+            if (suspects.Count > 0)
+            {
+                AppendLog($"dyn2 crate-like: {suspects.Count}");
+                foreach (var s in suspects.Take(3))
+                    AppendLog($"dyn2 crate-like: {s.DebugLine}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("dyn2 error: " + ex.Message);
+        }
+    }
+
+    private void RefreshUpkeepUI()
+    {
+        if (_vm.Servers == null) return;
+        foreach (var server in _vm.Servers)
+        {
+            if (server.Devices == null) continue;
+            foreach (var dev in server.Devices)
+            {
+                if (dev.HasStorage)
+                {
+                    dev.NotifyUpkeepChanged();
+                }
+            }
+        }
+    }
+    public class BoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool b = value is bool bb && bb;
+            bool invert = (parameter as string)?.Equals("invert", StringComparison.OrdinalIgnoreCase) == true;
+            if (invert) b = !b;
+            return b ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    }
+
+    private BitmapSource? _mapBaseBmp; // Original-Map ohne Marker
+    private readonly List<(double uPx, double vPx, string? label)> _staticMarkers = new();
+    private bool _isShuttingDown = false;
+    // The rail is icons only (64) or icons with names (200); everything sized off the rail
+    // (collapsed column, panel content, overlay insets) follows RailWidth.
+    private const double CompactRailWidth = 64;
+    private const double LabelledRailWidth = 200;
+    private double RailWidth => TrackingService.RailShowLabels ? LabelledRailWidth : CompactRailWidth;
+    private double CompactSidebarWidth => RailWidth;
+    private double MinExpandedSidebarWidth => 360 + RailWidth - CompactRailWidth;
+    private double MaxExpandedSidebarWidth => 480 + RailWidth - CompactRailWidth;
+    private const int SidebarAnimationDurationMs = 180;
+    private const int SidebarHoverExpandDelayMs = 200;
+    private double _expandedSidebarWidth = 420;
+    private bool _isSidebarExpanded;
+    private bool _isSidebarPinnedExpanded;
+    private bool _isSidebarTemporarilyExpandedForOverlay;
+    private bool _sidebarOverlayVisibilityUpdateQueued;
+    private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
+    private System.Windows.Threading.DispatcherTimer? _sidebarHoverExpandTimer;
+    private DateTime _sidebarAnimationStartedAt;
+    private double _sidebarAnimationStartWidth;
+    private double _sidebarAnimationTargetWidth;
+    private Action? _sidebarAnimationCompleted;
+
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        if (_isShuttingDown)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        if (TrackingService.CloseToTrayEnabled)
+        {
+            e.Cancel = true;
+            this.Hide();
+            return;
+        }
+
+        if (ColSidebar != null)
+        {
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
+        }
+
+        base.OnClosing(e);
+    }
+
+    // --- Overlay State ---
+    private readonly List<(SmartDevice? Device, AlarmNotification Notification)> _overlayAlarms = new();
+    private int _overlayAlarmIndex = -1;
+    private System.Windows.Threading.DispatcherTimer? _overlayHideTimer;
+    private System.Windows.Threading.DispatcherTimer? _cloudSyncTimer;
+    private volatile bool _ownCloudRestoreReady = false;
+    private bool _premiumProfileRefreshBusy = false;
+    private bool _upgradeRequiredSnackbarShown;
+
+    internal void StopCloudTrafficForUpgrade()
+    {
+        _cloudSyncTimer?.Stop();
+        StopOverlayPollTimer();
+        StopTeamFeatureMasterWatch();
+    }
+
+    /// <summary>
+    /// Mirror of <see cref="StopCloudTrafficForUpgrade"/>: restart the window-side cloud
+    /// timers and watches once a soft (transient) upgrade block lapses. Raised from
+    /// <see cref="Services.Auth.SupabaseAuthManager.UpgradeBlockLifted"/> on a pool thread,
+    /// so it marshals to the UI thread. Re-arming the team-master watch re-establishes the
+    /// Discord listener via its normal team-state path; overlay polling resumes only if the
+    /// overlay tools are currently shown.
+    /// </summary>
+    private void ResumeCloudTrafficAfterUpgrade()
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            _ = Dispatcher.BeginInvoke(new Action(ResumeCloudTrafficAfterUpgrade));
+            return;
+        }
+
+        AppendLog("[upgrade] Cooldown lapsed — resuming cloud sync, team-master watch and overlay polling.");
+        StartCloudSyncTimer();
+        UpdateTeamFeatureMasterWatch();
+        if (_overlayToolsVisible)
+            StartOverlayPollTimer();
+    }
+
+    private void StartCloudSyncTimer()
+    {
+        if (_cloudSyncTimer == null)
+        {
+            int tickCount = 0;
+            int profileRefreshTickCount = 0;
+            _cloudSyncTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2.5)
+            };
+            _cloudSyncTimer.Tick += async (s, e) =>
+            {
+                profileRefreshTickCount++;
+                if (profileRefreshTickCount >= 360)
+                {
+                    profileRefreshTickCount = 0;
+                    await RefreshPremiumProfileSnapshotAsync();
+                }
+
+                if (!TrackingService.CloudSyncEnabled || _vm.Selected == null) return;
+
+                // Upload our own device snapshot every 10 seconds (4 ticks of 2.5s).
+                // Teammate overlays are pulled by the overlay poller only while selected/visible.
+                tickCount++;
+                if (tickCount >= 4)
+                {
+                    tickCount = 0;
+                    if (_mySteamId != 0 && _vm.Selected?.Devices != null)
+                    {
+                        try
+                        {
+                            if (_ownCloudRestoreReady)
+                                await UploadDevicesSnapshotForCurrentServerAsync();
+                        }
+                        catch (Exception)
+                        {
+                            // Silent ignore on background network noise
+                        }
+                    }
+                }
+            };
+        }
+        _cloudSyncTimer.Start();
+    }
+
+    private async Task RefreshPremiumProfileSnapshotAsync()
+    {
+        if (_premiumProfileRefreshBusy) return;
+        if (!Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated &&
+            !Services.Auth.SupabaseAuthManager.IsEmailAuthenticated)
+            return;
+
+        _premiumProfileRefreshBusy = true;
+        try
+        {
+            if (await Services.Auth.SupabaseAuthManager.EnsureFreshSessionAsync())
+            {
+                await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
+                UpdateAdminUi();
+                UpdateCloudSyncUI();
+                AppSettingsPanel?.LoadSettings();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("[Cloud/Debug] Premium status refresh failed: " + ex.Message);
+        }
+        finally
+        {
+            _premiumProfileRefreshBusy = false;
+        }
+    }
+
+    private Action? _pendingUploadAction;
+
+    public void ShowUploadConsent(Action onAccept)
+    {
+        if (TrackingService.UploadConsentGiven)
+        {
+            onAccept?.Invoke();
+            return;
+        }
+
+        _pendingUploadAction = onAccept;
+        UploadConsentOverlay.Visibility = Visibility.Visible;
+    }
+
+    private void BtnAcceptUploadConsent_Click(object sender, RoutedEventArgs e)
+    {
+        TrackingService.UploadConsentGiven = true;
+        TrackingService.CloudSyncEnabled = true;
+        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(true);
+        UploadConsentOverlay.Visibility = Visibility.Collapsed;
+        _pendingUploadAction?.Invoke();
+        _pendingUploadAction = null;
+    }
+
+    private void BtnDeclineUploadConsent_Click(object sender, RoutedEventArgs e)
+    {
+        TrackingService.UploadConsentGiven = false;
+        TrackingService.CloudSyncEnabled = false;
+        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(false);
+        UploadConsentOverlay.Visibility = Visibility.Collapsed;
+        _pendingUploadAction = null;
+    }
+
+    public MainWindow()
+    {
+        // Nur freiwillig zum Diagnostizieren:
+        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+        _vm.IsInitializing = true;
+        InitializeComponent();
+        _sidebarContextMenus = new Services.Sidebar.SidebarContextMenuTracker(LeftPanelBorder);
+        _sidebarContextMenus.Changed += (_, _) =>
+        {
+            if (_sidebarContextMenus.IsOpen) SetSidebarExpanded(true);
+            else QueueSidebarCollapse();
+        };
+        MainTabs.SelectedItem = DevicesTabItem;
+        Services.Auth.SupabaseAuthManager.ShowUpgradeRequiredWarning();
+        Services.Auth.SupabaseAuthManager.UpgradeBlockLifted += ResumeCloudTrafficAfterUpgrade;
+        Services.Emoji.EmojiService.StartBackgroundPreload();
+        CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+        StateChanged += (_, _) =>
+        {
+            CloudTrafficPolicy.IsMinimized = WindowState == WindowState.Minimized;
+            UpdateTeamFeatureMasterWatch();
+        };
+        
+        // Restore window dimensions and position
+        double savedWidth = TrackingService.WindowWidth;
+        double savedHeight = TrackingService.WindowHeight;
+        double savedLeft = TrackingService.WindowLeft;
+        double savedTop = TrackingService.WindowTop;
+        bool savedMaximized = TrackingService.WindowMaximized;
+
+        if (savedWidth > 100 && savedHeight > 100)
+        {
+            this.Width = savedWidth;
+            this.Height = savedHeight;
+        }
+
+        if (!double.IsNaN(savedLeft) && !double.IsNaN(savedTop))
+        {
+            double minLeft = SystemParameters.VirtualScreenLeft;
+            double minTop = SystemParameters.VirtualScreenTop;
+            double maxLeft = SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth;
+            double maxTop = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight;
+
+            if (savedLeft >= minLeft && savedLeft < maxLeft - 100 &&
+                savedTop >= minTop && savedTop < maxTop - 100)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Left = savedLeft;
+                this.Top = savedTop;
+            }
+        }
+
+        // Applied after the window is shown (ApplyStartupWindowState), never here: see there.
+        _startMaximized = savedMaximized;
+
+        this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+        _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+        ApplyRailLayout();
+        LabelStaticRailButtons();
+        _expandedSidebarWidth = Math.Clamp(TrackingService.SidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        TrackLeftPanelOverlayVisibility();
+        SetSidebarExpanded(_isSidebarPinnedExpanded);
+        FlushPendingLogs();
+        MainTabs.SelectionChanged += MainTabs_SelectionChanged;
+        
+        PlayersTab?.SetMainWindow(this);
+        ApplyPlayersTabVisibility();
+
+        UpdateLanguageFlag();
+        InitializeAppSettings();
+        
+        // ── WinUI 3: Apply OS-level Mica backdrop via DWM ────────────────────
+        // Skip Mica when the user has enabled "Reduce UI Effects" (helps with
+        // AMD CPU systems where DWM composition causes input lag / freezes).
+        if (!TrackingService.ReduceUiEffects)
+        {
+            WindowBackdropHelper.Apply(this, WindowBackdropHelper.BackdropType.Mica);
+        }
+        // ── Wpf.Ui: Apply Fluent dark theme to all controls ───────────────────
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark, updateAccent: true);
+        
+        UpdateAppTitle();
+        this.LocationChanged += MainWindow_LocationChangedOrResized;
+        this.SizeChanged += MainWindow_LocationChangedOrResized;
+        if (FindName("TxtAppVersion") is TextBlock txt)
+            txt.Text = $"v{_updateService.VersionRaw}";
+        InitCameraUi();
+        StartSessionTracking();
+        InitSmoothFollowLoop();
+        StartCloudSyncTimer();
+        StartHalloweenEventGate();
+        ApplySettings();
+        LoadPersistentAlerts();
+        RefreshEventDock();
+
+        // Load crosshair settings
+        if (Enum.TryParse<CrosshairStyle>(TrackingService.LastCrosshairStyle, out var parsedStyle))
+        {
+            _currentStyle = parsedStyle;
+        }
+        _currentCustomBase64 = "";
+        if (_currentStyle == CrosshairStyle.Custom && !string.IsNullOrEmpty(TrackingService.LastCustomCrosshairId))
+        {
+            var customCrosshairs = CustomCrosshairManager.LoadCrosshairs();
+            var matched = customCrosshairs.FirstOrDefault(c => c.Id == TrackingService.LastCustomCrosshairId);
+            if (matched != null)
+            {
+                _currentCustomBase64 = matched.Base64Image;
+            }
+            else
+            {
+                _currentStyle = CrosshairStyle.GreenDot;
+            }
+        }
+
+        _selectedMonitor = WinMonitors.All().Count > 0 ? WinMonitors.All()[0] : null;
+        AppendLog($"[startup] baseDir={baseDir}");
+
+        var latestCrashReport = Services.CrashReporter.GetLatestCrashOrFreezeReport();
+        if (!string.IsNullOrEmpty(latestCrashReport))
+        {
+            AppendLog($"⚠️ Recent diagnostic report found: {System.IO.Path.GetFileName(latestCrashReport)} (in CrashLogs folder).");
+        }
+        // GridLayer.RenderTransform = MapTransform;
+        // Overlay.RenderTransform   = MapTransform;
+        // bei Host-Resize: nur Markerpositionen neu berechnen
+
+
+        MapTransform.Changed += RefreshMapGridViewport;
+        WebViewHost.SizeChanged += (_, __) =>
+        {
+            RefreshAllOverlayScales();
+            RefreshMonumentOverlayPositions();
+            RefreshMapGridViewport();
+        };
+        WebViewHost.MouseWheel += WebViewHost_MouseWheel;
+        WebViewHost.MouseDown += WebViewHost_MouseDown;
+        WebViewHost.MouseMove += WebViewHost_MouseMove;
+        WebViewHost.MouseUp += WebViewHost_MouseUp;
+        WebViewHost.MouseEnter += (s, e) => ApplyToolCursor();
+
+        WebViewHost.KeyDown += WebViewHost_KeyDown;
+        WebViewHost.KeyUp += WebViewHost_KeyUp;
+        WebViewHost.Focusable = true;
+        ApplyToolCursor();
+        DataContext = _vm;
+        _vm.Load();
+
+        // Before the push listener exists: a backlog of alarms can land within seconds of
+        // launch, and suppressing rig triggers must not wait for a server connection.
+        RebuildOilRigTriggerRegistry();
+        InitializeTutorials();
+        TeamMembers.CollectionChanged += (s, e) => UpdateClanMembersTeamStatus();
+        // NEU: einmalig auf die aktuell ausgewählte Server-Instanz „umstecken“
+        SwitchCameraSourceTo(_vm.Selected);
+
+        // NEU: bei jedem späteren Serverwechsel Kameraliste umhängen
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(MainViewModel.Selected))
+            {
+                SwitchCameraSourceTo(_vm.Selected);
+                LogicEnginePanel?.RefreshListBindings();
+                DeviceAutomationPanel?.RefreshListBindings();
+                RefreshCurrentHotkeyBindings();
+            }
+        };
+
+        // MapTransform.Changed += (_, __) => UpdateMarkerPositions();
+        HydrateSteamUiFromStorage();   // <= HIER
+
+        // Set version badge dynamically from assembly
+        var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        if (ver != null)
+             _statusTimer.Tick += async (_, __) => await UpdateServerStatusAsync();
+        _upkeepTimer.Tick += (_, __) => RefreshUpkeepUI();
+        _upkeepTimer.Start();
+        
+        _customTimerTicker.Tick += (_, __) => { CheckCustomTimers(); UpdateAdminUi(); };
+        _customTimerTicker.Start();
+
+        ListServers.ItemsSource = _vm.Servers;
+        _vm.Servers.CollectionChanged += (_, __) => Dispatcher.Invoke(() => UpdatePairingGuideSnackbar());
+        
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+
+        // Auto-start FCM listener silently in background on app open
+        Loaded += (_, __) => _ = Task.Delay(1500).ContinueWith(_ => Dispatcher.Invoke(() => 
+        {
+            // Seed in-memory state from the config file (issue_date, expiry_date, steam_id)
+            TrackingService.ReadFcmConfig();
+            _vm.NotifyFcmChanged();
+
+            // Check if FCM config is missing/expired and show login overlay
+            bool isFcmConfigured = TrackingService.IsFcmConfigured();
+            bool isFcmExpired = isFcmConfigured &&
+                                TrackingService.FcmExpiresAt.HasValue &&
+                                TrackingService.FcmExpiresAt.Value < DateTime.Now;
+            if (!isFcmConfigured || isFcmExpired)
+            {
+                _vm.ForceShowLoginOverlay = true;
+                _vm.LoginOverlayMessage = isFcmExpired
+                    ? "FCM is expired you need to relogin to rust+"
+                    : "FCM is not configured. Please login to Rust+.";
+                AppendLog(isFcmExpired
+                    ? "[pairing] FCM token is expired. Forcing login overlay display."
+                    : "[pairing] No FCM config saved. Forcing login overlay display.");
+                SetSidebarExpanded(true);
+            }
+
+            StartPairingSilent(true);
+
+            // Servers paired before we kept Facepunch's server id can't use the companion socket
+            // yet; look their ids up once per launch so they move off direct connections.
+            var serversWithoutId = _vm.Servers.Where(s => string.IsNullOrWhiteSpace(s.ServerId)).ToList();
+            if (serversWithoutId.Count > 0)
+            {
+                _ = Task.Run(async () =>
+                {
+                    var filled = await ServerIdBackfill.RunAsync(serversWithoutId, msg => Dispatcher.BeginInvoke(() => AppendLog(msg)));
+                    if (filled > 0) await Dispatcher.InvokeAsync(() => _vm.Save());
+                });
+            }
+
+            // Auto-connect if enabled and not already connected
+            if (TrackingService.AutoConnectEnabled && _vm.Selected != null && !_vm.Selected.IsConnected)
+            {
+                _ = Task.Run(async () => {
+                    await Task.Delay(1000); // Give Pairing Listener a head start
+                    await Dispatcher.InvokeAsync(async () => await PerformConnectAsync(true));
+                });
+            }
+
+            // Auto-check for updates
+            _ = Task.Run(async () => await AutoCheckUpdatesAsync());
+
+            // Say something when Alexa has quietly stopped receiving alarms.
+            _ = Task.Run(async () => await WarnIfAlexaLinkBrokenAsync());
+
+            UpdatePairingGuideSnackbar();
+            UpdateCloudSyncUI();
+            WireAchievements();
+        }));
+
+        // One-time migration notice for v5.2.0
+        var appVersion = VersionHelper.GetClientVersion();
+
+        // Strictly less than, for a notice aimed at everyone arriving from before a release
+        // rather than everyone up to and including one. "9.3.0" is below "10.0"; "10.0.0" is
+        // not, because System.Version orders an absent build component below a zero one.
+        bool IsVersionLessThan(string versionStr, string targetStr)
+        {
+            string cleanVer = versionStr.Split('-')[0];
+            string cleanTarget = targetStr.Split('-')[0];
+            return System.Version.TryParse(cleanVer, out var v1)
+                && System.Version.TryParse(cleanTarget, out var v2)
+                && v1 < v2;
+        }
+
+        bool IsVersionLessThanOrEqual(string versionStr, string targetStr)
+        {
+            string cleanVer = versionStr.Split('-')[0];
+            string cleanTarget = targetStr.Split('-')[0];
+            if (System.Version.TryParse(cleanVer, out var v1) && System.Version.TryParse(cleanTarget, out var v2))
+            {
+                return v1 <= v2;
+            }
+            return false;
+        }
+        
+        // Read before any branch below rewrites it. Whether this user is arriving from an older
+        // build is knowable exactly once — on the first start after the upgrade — and the
+        // what's-new notice further down needs the answer after that rewrite has happened.
+        string versionBeforeThisStart = TrackingService.LastSeenVersion;
+
+        if (string.IsNullOrEmpty(TrackingService.LastSeenVersion))
+        {
+            // Erst-Installation: Version setzen, aber kein Popup zeigen
+            TrackingService.LastSeenVersion = appVersion;
+
+            if (TrackingService.SelectedLanguage == "en")
+            {
+                TrackingService.SelectedLanguage = "";
+                if (Application.Current is App app)
+                {
+                    app.SetLanguage();
+                }
+            }
+        }
+        else if (TrackingService.LastSeenVersion != appVersion)
+        {
+            if (TrackingService.SelectedLanguage == "en")
+            {
+                TrackingService.SelectedLanguage = "";
+                if (Application.Current is App app)
+                {
+                    app.SetLanguage();
+                }
+            }
+
+            if (IsVersionLessThanOrEqual(TrackingService.LastSeenVersion, "5.5.0"))
+            {
+                // Upgrade von 5.4.0 oder geringer: Popup zeigen
+                Dispatcher.InvokeAsync(() =>
+                {
+                    var dlg = new Views.MigrationNoticeWindow { Owner = this };
+                    dlg.ShowDialog();
+                    
+                    if (dlg.HasMadeChoice)
+                    {
+                        TrackingService.CloudSyncEnabled = dlg.CloudSyncAccepted;
+                        TrackingService.UploadConsentGiven = dlg.CloudSyncAccepted;
+                        _ = Services.Auth.SupabaseAuthManager.UpdateCloudSyncConsentAsync(dlg.CloudSyncAccepted);
+                    }
+                    TrackingService.LastSeenVersion = appVersion;
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+            else
+            {
+                // Upgrade from a previous version: show success notification
+                string oldVersion = TrackingService.LastSeenVersion;
+                TrackingService.LastSeenVersion = appVersion;
+                
+                Dispatcher.InvokeAsync(() =>
+                {
+                    ShowInfoSnackbar(Properties.Resources.GetString("UpdateSuccessfulTitle"), string.Format(Properties.Resources.GetString("FormatUpdateSuccessful"), appVersion), WpfUi.ControlAppearance.Success);
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+        }
+
+        // Everyone arriving from before 11.0 gets the what's-new notice (the Base & Ship Builder) once,
+        // including those who dismissed the 10.0 notice: the latch below sets it again. A fresh install
+        // starts on the current version and has nothing to catch up on, so it is left alone.
+        //
+        // The flag is latched here rather than re-derived on every start: LastSeenVersion has
+        // already been rewritten above, so by the next start this user looks like any other. It
+        // stays set — and the notice keeps appearing — until the "don't show again" box is ticked,
+        // which is the behaviour the previous version notice had.
+        // The version has to have actually moved. Without that test a build still numbered 9.0.4
+        // would re-latch on every single start — including the one right after the box was
+        // ticked — and the notice could never be dismissed.
+        if (!string.IsNullOrEmpty(versionBeforeThisStart)
+            && versionBeforeThisStart != appVersion
+            && IsVersionLessThan(versionBeforeThisStart, "11.0"))
+        {
+            TrackingService.PendingWhatsNewNotice = true;
+        }
+
+        if (TrackingService.PendingWhatsNewNotice)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                var whatsNew = new Views.Windows.WhatsNewWindow { Owner = this };
+                whatsNew.ShowDialog();
+                if (whatsNew.DontShowAgain)
+                {
+                    TrackingService.PendingWhatsNewNotice = false;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        // Initial tracking status update and hook global events
+        TrackingService.OnOnlinePlayersUpdated -= OnOnlinePlayersUpdated;
+        TrackingService.OnOnlinePlayersUpdated += OnOnlinePlayersUpdated;
+        OnOnlinePlayersUpdated();
+        _vm.IsInitializing = false;
+        
+        _pairing = new NativeFcmListener(AppendLog);
+        AppendLog("[pairing] Using native (in-process) FCM listener.");
+
+        _pairing.Paired += Pairing_Paired;
+
+        // Extra notification streams — exposed on both listener implementations via IPairingListener.
+        _pairing.AlarmReceived += (_, a) => Dispatcher.Invoke(() => ShowAlarmPopup(a));
+        _pairing.OfflineDeathReceived += (_, d) => Dispatcher.Invoke(() => HandleOfflineDeath(d));
+        _pairing.ChatReceived += (_, c) => Dispatcher.Invoke(() => HandleFcmChatReceived(c));
+        _pairing.ServerInfoReceived += (_, info) => Dispatcher.BeginInvoke(new Action(() => CaptureFcmServerDescription(info)));
+
+        NotificationCenterService.NotificationAdded -= OnNotificationAdded;
+        NotificationCenterService.NotificationAdded += OnNotificationAdded;
+
+        // Status → UI
+        _pairing.Listening += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.IsPairingRunning = true;
+            _vm.IsPairingBusy = false; // Listener is active and running
+            _vm.IsPairingFaulted = false; // a running listener is by definition not faulted
+            TxtPairingState.Text = "";
+            _vm.NotifyFcmChanged();
+            UpdatePairingGuideSnackbar();
+            ScheduleFcmHealthCheck();
+        }));
+        _pairing.Stopped += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.IsPairingRunning = false;
+            _vm.IsPairingBusy = false; // Update UI button state
+            _vm.IsPairingFaulted = false; // a deliberate stop is no fault
+            TxtPairingState.Text = Properties.Resources.PairingStopped;
+        }));
+        _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.NotifyFcmChanged();
+            if (!string.IsNullOrEmpty(TrackingService.SteamId64))
+            {
+                ShowInfoSnackbar("Rust+ Companion Connected", $"Linked Steam ID: {TrackingService.SteamId64}", WpfUi.ControlAppearance.Success);
+            }
+            _ = StartTutorialOnboardingIfReadyAsync();
+        }));
+        _pairing.Failed += (_, msg) => Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _vm.IsPairingRunning = false;
+            _vm.IsPairingBusy = false; // Error occurred, not busy anymore
+            _vm.IsPairingFaulted = true; // state row shows the failure as a fault, not as idle
+            TxtPairingState.Text = Properties.Resources.PairingFailed; // show failure text
+            AppendLog("[listener] " + msg);
+            // Auto-retry after a short delay
+            _ = Task.Delay(5000).ContinueWith(_ => Dispatcher.BeginInvoke(new Action(() => StartPairingSilent(true))));
+        }));
+
+
+        _rust = new RustPlusClientReal(AppendLog);
+
+        if (_rust is RustPlusClientReal real)
+        {
+            real.EnsureEventsHooked();
+            real.DeviceStateEvent += async (id, isOn, kindFromApi) =>
+            {
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    var dev = FindDeviceById(_vm.Selected?.Devices, id);
+                    if (dev == null) return;
+
+                    // Kind nur setzen, wenn wir es NOCH NICHT kennen – nie ein SmartAlarm "wegschreiben"
+                    if (string.IsNullOrWhiteSpace(dev.Kind) && !string.IsNullOrWhiteSpace(kindFromApi))
+                        dev.Kind = kindFromApi;
+
+                    // ⬇️ SmartAlarm: NICHT proben, sondern den Eventwert verwenden (true = gerade ausgelöst)
+                    if ((dev.Kind ?? kindFromApi)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        _suppressToggleHandler = true;
+                        dev.IsOn = isOn;                  // zeigt in der Liste AKTIV nur während der Auslösung
+                        _suppressToggleHandler = false;
+
+                        TriggerLogicEngineOnDeviceEvent(id, isOn);
+
+                        // optional: nach kurzer Zeit automatisch auf INAKTIV zurücknehmen,
+                        // falls kein weiterer Alarm-Event kommt
+                        // Trigger Alarm UI/Sound auch via WebSocket
+                        if (isOn)
+                        {
+                            string srv = _vm.Selected?.Name ?? "Server";
+                            // Bereinigen für UI und Cache-Matching
+                            srv = Regex.Replace(srv, @"\x1B\[[0-9;]*[A-Za-z]", "");
+                            srv = Regex.Replace(srv, @"\[/?[a-zA-Z]+\]", "").Trim();
+                            if (string.IsNullOrEmpty(srv)) srv = "Server";
+
+                            string title = dev.Name ?? "Smart Alarm";
+                            string msg = dev.LastAlarmMessage ?? "Alarm activated!";
+                            if (_alarmMetadataCache.TryGetValue(dev.EntityId, out var cached))
+                            {
+                                if (title == "Smart Alarm" && !string.IsNullOrEmpty(cached.Title)) title = cached.Title;
+                                if (msg == "Alarm activated!" && !string.IsNullOrEmpty(cached.Message)) msg = cached.Message;
+                            }
+
+                            var alarm = new AlarmNotification(DateTime.Now, srv, title, dev.EntityId, msg);
+                            ShowAlarmPopup(alarm, "WS");
+                        }
+
+                        _ = Task.Run(async () =>
+                        {
+                            await Task.Delay(7000);   // 7s Puls-Fenster
+                            await Dispatcher.InvokeAsync(() =>
+                            {
+                                // nur zurücksetzen, wenn seither kein neuer Alarm kam
+                                if (dev.IsOn == true)
+                                {
+                                    _suppressToggleHandler = true;
+                                    dev.IsOn = false;  // INAKTIV
+                                    _suppressToggleHandler = false;
+                                }
+                            });
+                        });
+                        return;
+                    }
+
+                    // Standard-Geräte (Switch etc.): Eventwert reicht aus
+                    _suppressToggleHandler = true;
+                    dev.IsOn = isOn;
+                    _suppressToggleHandler = false;
+
+                    TriggerLogicEngineOnDeviceEvent(id, isOn);
+                });
+            };
+        }
+        // AppendLog($"DEBUG: Selected={_vm.Selected?.Name ?? "(null)"}  Devices={_vm.Selected?.Devices?.Count.ToString() ?? "(null)"}");
+
+
+
+
+        TxtSteamId.Text = string.IsNullOrEmpty(_vm.SteamId64) ? Properties.Resources.NotLoggedIn : _vm.SteamId64;
+
+        this.Closing += MainWindow_Closing;
+        if (System.Windows.Application.Current != null) System.Windows.Application.Current.SessionEnding += Application_SessionEnding;
+        Services.Auth.SupabaseAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
+        Services.Cloud.CloudAuthManager.AuthenticationChanged += SupabaseAuthManager_AuthenticationChanged;
+        ContentRendered += MainWindow_ContentRendered;
+        try { ClearAllToggleBusy(); } catch { }
+        try { ResetAllBusyStates(); } catch { }
+        this.Closed += MainWindow_Closed;
+        AppSettingsPanel.ChatCommandsEditor.CommandsEnabledChanged += ChatCommandsOverlay_CommandsEnabledChanged;
+
+        _toolButtons = new Dictionary<OverlayToolMode, Button>
+    {
+        { OverlayToolMode.None,   ToolSelectButton },
+        { OverlayToolMode.Draw,   ToolDrawButton },
+        { OverlayToolMode.Line,   ToolLineButton },
+        { OverlayToolMode.Arrow,  ToolArrowButton },
+        { OverlayToolMode.Box,    ToolBoxButton },
+        { OverlayToolMode.Circle, ToolCircleButton },
+        { OverlayToolMode.Route,  ToolRouteButton },
+        { OverlayToolMode.Text,   ToolTextButton },
+        { OverlayToolMode.Icon,   ToolIconButton },
+        { OverlayToolMode.Erase,  ToolEraseButton }
+    };
+
+        InitLayersPanel();
+
+        _monumentWatcher.OnOilRigTriggered += (s, data) =>
+        {
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+
+            // Was two hardcoded strings, which was fine while only Chinook tracking could start
+            // a timer and its two durations were known. A Logic Engine rule sets its own length,
+            // so anything but the real number would announce a time nobody is counting down to.
+            var span = TimeSpan.FromSeconds(data.Duration);
+            string timeStr = span.Seconds == 0
+                ? $"{(int)span.TotalMinutes}m"
+                : $"~{(int)span.TotalMinutes}:{span.Seconds:D2}m";
+            string rigName = data.Name == "Small Oil Rig" ? Properties.Resources.SmallOilRig :
+                             data.Name == "Large Oil Rig" ? Properties.Resources.LargeOilRig :
+                             data.Name;
+            Dispatcher.InvokeAsync(async () =>
+            {
+                var msg = AlertTemplateService.GetFormattedAlert("AlertOilRigTriggered", rigName, timeStr);
+                await SendTeamChatSafeAsync(msg, false, true);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event:** " + msg);
+            });
+        };
+
+        // NEU: Update Events (10m / 5m Warnungen)
+        _monumentWatcher.OnOilRigChatUpdate += (s, message) =>
+        {
+            if (!TrackingService.AnnounceSpawnsMaster || !TrackingService.AnnounceOilRig) return;
+            Dispatcher.InvokeAsync(async () =>
+            {
+                await SendTeamChatSafeAsync(message, false, true);
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("events", "\uD83D\uDEA2 **Event Update:** " + message);
+            });
+        };
+        
+
+        App.CultureChanged += () =>
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RebuildRail();
+                RebuildChatMessages();
+                RefreshEventDock();
+                SyncAlertMenuItems();
+                UpdateLanguageFlag();
+            }));
+        };
+    }
+
+    private async void MainWindow_ContentRendered(object? sender, EventArgs e)
+    {
+        ContentRendered -= MainWindow_ContentRendered;
+
+        // Let WPF present the first usable frame before initializing the embedded
+        // browser and parsing catalogs that are not required to construct the shell.
+        await Dispatcher.Yield(DispatcherPriority.ContextIdle);
+
+        // A returning user is already authenticated from the stored token, and
+        // CloudAuthManager.Initialize restores it without raising
+        // AuthenticationChanged - so this is the only hook that covers them.
+        TryImportCloudPairings();
+        try
+        {
+            await EnsureWebView2Async();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WebView2] EnsureWebView2Async error: {ex.Message}");
+        }
+
+        // Whether the Community entry belongs in the rail at all. Asked once on start and again
+        // whenever the account changes; a stored token means the auth event has already fired by
+        // the time this window exists.
+        _ = RefreshSocialAvailabilityAsync();
+
+        await Dispatcher.InvokeAsync(() =>
+        {
+            AppendLog("[items-new] loading deferred item catalog");
+            EnsureNewItemDbLoaded();
+            AppendLog($"[items-new] source={sNewDbSource} items={sItemsById.Count} byShort={sItemsByShort.Count}");
+        }, DispatcherPriority.ApplicationIdle);
+
+        _ = Task.Run(async () =>
+        {
+            if (!await TryUpdateItemDbAsync().ConfigureAwait(false)) return;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                EnsureNewItemDbLoaded(force: true);
+                AppendLog($"[items-update] Updated from web! New count: {sItemsById.Count}");
+            }, DispatcherPriority.ApplicationIdle);
+        });
+    }
+
+    private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (DeleteConfirmationOverlay.Visibility == Visibility.Visible)
+        {
+            if (e.Key == Key.Escape)
+            {
+                BtnCancelDelete_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            return;
+        }
+        if (ServerManagerOverlay.Visibility == Visibility.Visible)
+        {
+            if (e.Key == Key.Escape)
+            {
+                CloseServerManager_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            return;
+        }
+        if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift))
+        {
+            if (e.Key == Key.T)
+            {
+                e.Handled = true;
+                BtnToggleChat_Click(BtnChatToggle, new RoutedEventArgs());
+                return;
+            }
+
+            if (e.Key == Key.S)
+            {
+                e.Handled = true;
+                BtnShopSearch_Click(BtnShopToggle, new RoutedEventArgs());
+                return;
+            }
+        }
+
+        if (e.Key == Key.F11)
+        {
+            if (_isMap3DActive)
+            {
+                e.Handled = true;
+                ToggleWpfFullscreen();
+            }
+            else if (BaseBuilderPanel.IsVisible)
+            {
+                e.Handled = true;
+                ToggleBaseBuilderFullscreen();
+            }
+        }
+    }
+
+    private void OnTrackingNotification(string msg, string serverName)
+    {
+        if (_vm.Selected != null && _vm.Selected.Name == serverName)
+        {
+            Dispatcher.InvokeAsync(async () => await SendTeamChatSafeAsync(msg));
+        }
+    }
+
+    // CROSSHAIR \\
+    private MonitorInfo? _selectedMonitor;
+
+    private void BtnCrosshair_Click(object sender, RoutedEventArgs e)
+    {
+        if (_visible)
+            HideOverlay();
+        else
+            ShowOverlay();
+    }
+
+    private void ShowOverlay()
+    {
+        Ach.Unlock(Ach.Crosshair);
+        if (_overlay == null)
+            _overlay = new CrosshairWindow
+            {
+                Owner = this,             // <<< wichtig
+                ShowInTaskbar = false
+            };
+
+        if (_currentStyle == CrosshairStyle.Custom)
+        {
+            _overlay.CustomBase64 = _currentCustomBase64;
+        }
+        _overlay.SetStyle(_currentStyle);
+        _overlay.Topmost = true;
+        if (_selectedMonitor != null)
+            PositionOverlayCentered(_overlay, _selectedMonitor);
+
+        _overlay.Show();
+        _visible = true;
+
+        BtnCrosshair.Background = new SolidColorBrush(Color.FromArgb(50, 0, 150, 255));
+        BtnCrosshair.BorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+        BtnCrosshair.BorderThickness = new Thickness(1);
+    }
+
+    private void HideOverlay()
+    {
+        if (_overlay != null)
+        {
+            _overlay.Close();    // statt Hide()
+            _overlay = null;
+        }
+        _visible = false;
+        
+        BtnCrosshair.ClearValue(Control.BackgroundProperty);
+        BtnCrosshair.ClearValue(Control.BorderBrushProperty);
+        BtnCrosshair.ClearValue(Control.BorderThicknessProperty);
+    }
+
+    private void PositionOverlayCentered(Window w, MonitorInfo mon)
+    {
+        var ps = PresentationSource.FromVisual(this);
+        double dpiX = 1.0, dpiY = 1.0;
+        if (ps?.CompositionTarget != null)
+        {
+            var m = ps.CompositionTarget.TransformFromDevice;
+            dpiX = m.M11; dpiY = m.M22;
+        }
+
+        double screenWidthDip = mon.Width * dpiX;
+        double screenHeightDip = mon.Height * dpiY;
+        double screenLeftDip = mon.Left * dpiX;
+        double screenTopDip = mon.Top * dpiY;
+
+        // w.Width / w.Height kommen jetzt aus dem CrosshairWindow je nach Stil
+        w.Left = screenLeftDip + (screenWidthDip - w.Width) / 2.0;
+        w.Top = screenTopDip + (screenHeightDip - w.Height) / 2.0;
+    }
+
+    // Kontextmenü: Rechtsklick abfangen, damit das Menü sicher aufgeht
+    private void BtnCrosshair_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        var btn = (FrameworkElement)sender;
+        if (btn.ContextMenu != null)
+        {
+            btn.ContextMenu.PlacementTarget = btn;
+            btn.ContextMenu.IsOpen = true;
+        }
+    }
+
+    // Menü beim Öffnen mit Monitoren füllen und Häkchen setzen
+    private void CrosshairContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        BuildMonitorMenu();
+        LoadCustomCrosshairs();
+        UpdateStyleChecks();
+    }
+
+    private void LoadCustomCrosshairs()
+    {
+        if (FindName("MenuCrosshairStyle") is MenuItem menuCrosshairStyle && FindName("CrosshairStyleSeparator") is Separator sep)
+        {
+            int sepIndex = menuCrosshairStyle.Items.IndexOf(sep);
+            if (sepIndex == -1) return;
+
+            // Remove all items after "Draw Crosshair..."
+            int drawItemIndex = sepIndex + 1;
+            while (menuCrosshairStyle.Items.Count > drawItemIndex + 1)
+            {
+                menuCrosshairStyle.Items.RemoveAt(drawItemIndex + 1);
+            }
+
+            var customCrosshairs = CustomCrosshairManager.LoadCrosshairs();
+            foreach (var cc in customCrosshairs)
+            {
+                var mi = new MenuItem();
+                mi.Tag = "Custom_" + cc.Id;
+
+                var sp = new StackPanel { Orientation = Orientation.Horizontal };
+
+                var tb = new TextBlock { Text = cc.Name, Width = 100, VerticalAlignment = VerticalAlignment.Center };
+                sp.Children.Add(tb);
+
+                var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
+                btnRename.Click += CustomCrosshairRename_Click;
+
+                var btnEdit = new Button { Content = "\u270F\uFE0F", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                btnEdit.Click += CustomCrosshairEdit_Click;
+                
+                var btnDelete = new Button { Content = "\uD83D\uDDD1\uFE0F", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                btnDelete.Click += CustomCrosshairDelete_Click;
+
+                sp.Children.Add(btnRename);
+                sp.Children.Add(btnEdit);
+                sp.Children.Add(btnDelete);
+
+                if (!string.IsNullOrEmpty(cc.Base64Image))
+                {
+                    try
+                    {
+                        byte[] bytes = Convert.FromBase64String(cc.Base64Image);
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = new System.IO.MemoryStream(bytes);
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+                        
+                        mi.Icon = new Image
+                        {
+                            Source = bitmap,
+                            Width = 16,
+                            Height = 16,
+                            Stretch = Stretch.Uniform
+                        };
+                    }
+                    catch { }
+                }
+
+                mi.Header = sp;
+                mi.Click += CustomStyle_Click;
+
+                menuCrosshairStyle.Items.Add(mi);
+            }
+        }
+    }
+
+    private void DrawCustomCrosshair_Click(object sender, RoutedEventArgs e)
+    {
+        var editor = new CrosshairEditorWindow { Owner = this };
+        if (editor.ShowDialog() == true && editor.SavedCrosshair != null)
+        {
+            _currentStyle = CrosshairStyle.Custom;
+            _currentCustomBase64 = editor.SavedCrosshair.Base64Image;
+            TrackingService.LastCrosshairStyle = _currentStyle.ToString();
+            TrackingService.LastCustomCrosshairId = editor.SavedCrosshair.Id;
+            if (_visible && _overlay != null)
+            {
+                _overlay.CustomBase64 = _currentCustomBase64;
+                _overlay.SetStyle(_currentStyle);
+                if (_selectedMonitor != null)
+                    PositionOverlayCentered(_overlay, _selectedMonitor);
+            }
+        }
+    }
+
+    private void CustomStyle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Header is StackPanel sp)
+        {
+            var btn = sp.Children.OfType<Button>().FirstOrDefault();
+            if (btn != null && btn.Tag is CustomCrosshair cc)
+            {
+                _currentStyle = CrosshairStyle.Custom;
+                _currentCustomBase64 = cc.Base64Image;
+                TrackingService.LastCrosshairStyle = _currentStyle.ToString();
+                TrackingService.LastCustomCrosshairId = cc.Id;
+                UpdateStyleChecks();
+
+                if (!_visible)
+                {
+                    ShowOverlay();
+                }
+                if (_visible && _overlay != null)
+                {
+                    _overlay.CustomBase64 = _currentCustomBase64;
+                    _overlay.SetStyle(_currentStyle);
+                    if (_selectedMonitor != null)
+                        PositionOverlayCentered(_overlay, _selectedMonitor);
+                }
+            }
+        }
+    }
+
+    private void CustomCrosshairRename_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var dlg = new RenameDialog(cc.Name) { Owner = this };
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.InputText))
+            {
+                var list = CustomCrosshairManager.LoadCrosshairs();
+                var existing = list.FirstOrDefault(c => c.Id == cc.Id);
+                if (existing != null)
+                {
+                    existing.Name = dlg.InputText.Trim();
+                    CustomCrosshairManager.SaveCrosshairs(list);
+                }
+            }
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
+    }
+
+    private void CustomCrosshairEdit_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var editor = new CrosshairEditorWindow(cc) { Owner = this };
+            if (editor.ShowDialog() == true && editor.SavedCrosshair != null)
+            {
+                // The editor saves it correctly now, replacing the old entry.
+                // We just update the currently selected crosshair if we were editing the active one
+                if (_currentStyle == CrosshairStyle.Custom && _currentCustomBase64 == cc.Base64Image)
+                {
+                    _currentCustomBase64 = editor.SavedCrosshair.Base64Image;
+                    if (_overlay != null)
+                    {
+                        _overlay.CustomBase64 = _currentCustomBase64;
+                        if (_visible) _overlay.SetStyle(_currentStyle);
+                    }
+                }
+            }
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
+    }
+
+    private void CustomCrosshairDelete_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is Button btn && btn.Tag is CustomCrosshair cc)
+        {
+            var list = CustomCrosshairManager.LoadCrosshairs();
+            list.RemoveAll(c => c.Id == cc.Id);
+            CustomCrosshairManager.SaveCrosshairs(list);
+
+            if (_currentStyle == CrosshairStyle.Custom && _overlay?.CustomBase64 == cc.Base64Image)
+            {
+                _currentStyle = CrosshairStyle.GreenDot;
+                if (_visible && _overlay != null)
+                {
+                    _overlay.CustomBase64 = null;
+                    _overlay.SetStyle(_currentStyle);
+                }
+            }
+
+            BtnCrosshair.ContextMenu.IsOpen = false;
+        }
+    }
+
+    // Menüaufbau
+    private void BuildMonitorMenu()
+    {
+        MonitorRoot.Items.Clear();
+        var screens = WinMonitors.All();
+
+        for (int i = 0; i < screens.Count; i++)
+        {
+            var s = screens[i];
+            var item = new MenuItem
+            {
+                Header = $"{i + 1}: {(s.Primary ? "Hauptmonitor" : "Monitor")} {s.Width}×{s.Height} @ {s.Left},{s.Top}",
+                IsCheckable = true,
+                IsChecked = _selectedMonitor != null &&
+                            s.Left == _selectedMonitor.Left &&
+                            s.Top == _selectedMonitor.Top &&
+                            s.Width == _selectedMonitor.Width &&
+                            s.Height == _selectedMonitor.Height,
+                Tag = s
+            };
+            item.Click += Monitor_Click;
+            MonitorRoot.Items.Add(item);
+        }
+    }
+
+
+    private void UpdateStyleChecks()
+    {
+        if (FindName("MenuCrosshairStyle") is MenuItem menuCrosshairStyle)
+        {
+            foreach (var item in menuCrosshairStyle.Items.OfType<MenuItem>())
+            {
+                if (item.Header is StackPanel)
+                {
+                    bool isSelected = false;
+                    var btn = ((StackPanel)item.Header).Children.OfType<Button>().FirstOrDefault();
+                    if (btn != null && btn.Tag is CustomCrosshair cc)
+                    {
+                        isSelected = (_currentStyle == CrosshairStyle.Custom && _currentCustomBase64 == cc.Base64Image);
+                    }
+                    item.Background = isSelected ? new SolidColorBrush(Color.FromRgb(45, 90, 136)) : Brushes.Transparent;
+                }
+                else
+                {
+                    bool isSelected = (item.Tag is string tag && _currentStyle.ToString() == tag);
+                    item.Background = isSelected ? new SolidColorBrush(Color.FromRgb(45, 90, 136)) : Brushes.Transparent;
+                }
+            }
+        }
+    }
+
+    private MenuItem? FindStyleItem(string tag) =>
+        (BtnCrosshair.ContextMenu.Items[0] as MenuItem)?
+            .Items
+            .OfType<MenuItem>()
+            .FirstOrDefault(mi => (string)mi.Tag == tag);
+
+    private void Style_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag)
+        {
+            _currentStyle = tag switch
+            {
+                "GreenDot" => CrosshairStyle.GreenDot,
+                "MiniGreen" => CrosshairStyle.MiniGreen,
+                "OpenCrossRG" => CrosshairStyle.OpenCrossRG,
+                "ThinRedCircle" => CrosshairStyle.ThinRedCircle,
+                "SquareDot" => CrosshairStyle.SquareDot,
+                "MagentaDot" => CrosshairStyle.MagentaDot,
+                "MagentaOpenCross" => CrosshairStyle.MagentaOpenCross,
+                "RangeLine" => CrosshairStyle.RangeLine,
+                _ => _currentStyle
+            };
+
+            TrackingService.LastCrosshairStyle = _currentStyle.ToString();
+
+            UpdateStyleChecks();
+
+            if (!_visible)
+            {
+                ShowOverlay();
+            }
+            else if (_overlay != null)
+            {
+                _overlay.SetStyle(_currentStyle);
+                // nach Größenänderung neu zentrieren
+                if (_selectedMonitor != null)
+                    PositionOverlayCentered(_overlay, _selectedMonitor);
+            }
+        }
+    }
+
+    private void Monitor_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is MonitorInfo s)
+        {
+            _selectedMonitor = s;
+
+            foreach (MenuItem it in MonitorRoot.Items)
+                it.IsChecked = ReferenceEquals(it.Tag, _selectedMonitor);
+
+            if (_visible && _overlay != null && _selectedMonitor != null)
+                PositionOverlayCentered(_overlay, _selectedMonitor);
+        }
+    }
+
+
+    // === Map-Mapping-State ===
+    private Rect _worldRectPx;      // zentriertes Welt-Quadrat in Bild-Pixeln
+    private int _worldSizeS;       // WorldSize (S) der aktuellen Map
+                                   // === Dynamische Marker (z.B. Shops) ===
+    private readonly Dictionary<uint, FrameworkElement> _shopEls = new();
+    private DispatcherTimer? _shopTimer;
+    // eingebaute Minimal-Liste: ID -> Shortname
+    private static readonly Dictionary<int, string> sIdToShort = new();
+    private static readonly Dictionary<string, string> sShortToNice = new(StringComparer.OrdinalIgnoreCase);
+    private static bool sItemMapLoaded;
+    private static string sItemMapSource = "(unbekannt)";
+    private readonly Dictionary<uint, FrameworkElement> _dynEls = new();   // UI per marker
+
+    private sealed class DynMarkerState
+    {
+        public List<(double X, double Y)> History = new();
+        public int MissingCount;
+        public int Type;
+        public double LastVX, LastVY;
+        public double LastCalculatedAngle;
+        public bool SeenAtEdge;
+        public double LastRealX, LastRealY; // last confirmed non-ghost position (for crash detection)
+    }
+    private readonly Dictionary<uint, DynMarkerState> _dynStates = new();
+    private readonly HashSet<uint> _dynKnown = new();                      // “already spawned” for chat announcements
+    private DispatcherTimer? _dynTimer;
+    private bool _showPlayers = true;                                      // controlled by ChkPlayers
+                                                                           // Wie stark Icons die Zoom-Stufe kompensieren (je kleiner der Exponent, desto GRÖSSER beim Rauszoomen)
+    private const double MON_SIZE_EXP = 0.5;  // Monumente: sehr präsent beim Rauszoomen
+
+
+    // Globale Grenzen, damit es nicht ausufert
+    private const double ICON_SCALE_MIN = 0.6;  // kleiner als 60% nie
+    private const double ICON_SCALE_MAX = 4.5;  // größer als 350% nie
+
+    // Optional: Baseline-Verstärker, um generell alles größer zu machen
+    private const double MON_BASE_MULT = 2.2;  // 20% größer als Basis
+    private const double SHOP_BASE_MULT = 1.3;  // 30% größer als Basis
+
+    // tiny map from type → icon (pack URIs). Put your icons in /icons as Resource.
+    private static readonly Dictionary<int, string> sDynIconByType = new()
+{
+    { 5, "pack://application:,,,/Assets/icons/cargo.png"  },
+    { 6, "pack://application:,,,/Assets/icons/vendor.png"  },
+    { 7, "pack://application:,,,/Assets/icons/blocked.png"   }, // Building areas
+    { 8, "pack://application:,,,/Assets/icons/patrol.png" },
+    { 9, "pack://application:,,,/Assets/icons/crate.png"  }, // alt crate id seen on some builds
+    { 4, "pack://application:,,,/Assets/icons/ch47.png"   }, // optional safety
+    { 2, "pack://application:,,,/Assets/icons/explosion.png"   }, // optional safety
+};
+    private static readonly Brush PopupBg = new SolidColorBrush(Color.FromRgb(32, 36, 40));   // dunkel
+    private static readonly Brush PopupBrd = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+    private const int SHOPS_WRAP_COLUMNS = 3;   // 3 oder 4 “ so viele Karten pro Zeile
+    private const double SHOP_CARD_WIDTH = 320; // feste Breite deiner Shop-Karte
+    private const double SHOP_GAP = 8;   // Abstand zwischen Karten
+
+    // Lokaler Icon-Cache (z.B. %LOCALAPPDATA%\RustPlusDesk\icons)
+    private static readonly string sIconCacheDir =
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                               "RustPlusDesk", "icons");
+
+    // Bundled icon pack in the build/application folder (Assets/icons/items)
+    private static readonly string sBundledIconDir =
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "icons", "items");
+
+    // === Layers ===
+    // Optional: externe Ergänzungen laden (Datei neben der EXE)
+    /// <summary>lädt rust_items.json aus dem Programmordner oder eingebettet als WPF-Resource.</summary>
+    /// 
+
+    private void MainWindow_Closed(object? sender, EventArgs e)
+    {
+        Services.Auth.SupabaseAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
+        Services.Cloud.CloudAuthManager.AuthenticationChanged -= SupabaseAuthManager_AuthenticationChanged;
+
+        try
+        {
+            // falls noch offen/hidden → hart schließen
+            if (_overlay != null)
+            {
+                _overlay.Close();
+                _overlay = null;
+            }
+
+            if (_miniMap != null)
+            {
+                _miniMap.Close();
+                _miniMap = null;
+            }
+
+            // Kontextmenü sauber schließen (optional)
+            if (BtnCrosshair.ContextMenu != null)
+            {
+                BtnCrosshair.ContextMenu.IsOpen = false;
+            }
+
+            // Apply a pending Velopack update if available (silent, without relaunching).
+            if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
+            {
+                var pendingPath = _updateService.PendingInstallerPath;
+                _updateService.PendingInstallerPath = null;
+                _updateService.StartInstaller(pendingPath, restart: false);
+            }
+        }
+        catch
+        { }
+    }
+
+    private void UpdateAppTitle()
+    {
+        bool signedIn = Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
+                        Services.Auth.SupabaseAuthManager.IsEmailAuthenticated;
+        string plan = signedIn
+            ? Services.Auth.SupabaseAuthManager.IsPremium ? " - Premium" : " - Free"
+            : string.Empty;
+        string title = $"RUST+ DESKTOP{plan} v{_updateService.VersionRaw}";
+
+        if (AppTitleBar != null)
+            AppTitleBar.Title = title;
+        Title = title;
+    }
+
+    /// <summary>
+    /// Guards against the two entry points below both firing on one launch.
+    ///
+    /// A signed-in user hits ContentRendered and may hit AuthenticationChanged as
+    /// well; importing twice is harmless but the second pass is pure waste, and it
+    /// would log a second "imported nothing" line for every start.
+    /// </summary>
+    private int _cloudPairingImportRunning;
+
+    /// <summary>
+    /// Pull down servers and devices paired in game while this app was closed.
+    ///
+    /// Runs in the background and never blocks the UI: a slow or unreachable
+    /// platform must not delay the app being usable, and the worst case of skipping
+    /// it is that the user opens Cloud 24/7, which imports there anyway.
+    /// </summary>
+    private void TryImportCloudPairings()
+    {
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
+
+        AttachCloudPairingAnnouncements();
+        AttachBuildInvites();
+
+        // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
+        // can land on different threads. A request that lands mid-import is kept for a
+        // second pass rather than dropped: the running one may already have read the
+        // platform before the pairing that triggered it was saved.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1)
+        {
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 1);
+            return;
+        }
+
+        // On the dispatcher rather than Task.Run: the merge goes into the bound server
+        // list, which is the copy every later save writes back. An import written only
+        // to the file was overwritten by the next save. Only the request awaits; the
+        // UI thread is not held while the platform answers.
+        _ = Dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                // A missing profiles file was lost or never existed here. The cursor still
+                // remembers what a lost one held, so "only what changed" would bring nothing
+                // back. An empty file is not this case: that is someone who removed every
+                // server, and restoring them unasked would undo it. Kept pending until an
+                // import gets through, so a first launch offline still restores later.
+                if (Services.Data.ProfileDataModule.ProfilesFileWasMissing)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, true);
+
+                bool restore = Services.StorageService.LoadCache<bool>(CloudRestorePendingKey) && _vm.Servers.Count == 0;
+                var result = await ImportCloudPairingsIntoListAsync(full: restore);
+
+                if (result != null || _vm.Servers.Count > 0)
+                    Services.StorageService.SaveCache(CloudRestorePendingKey, false);
+
+                if (result is { ChangedAnything: true })
+                {
+                    SafeLog($"[Cloud pairings] Imported {result.Added} server(s), "
+                        + $"{result.Updated} token update(s) and {result.DevicesAdded} device(s) paired while the app was closed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Never fatal: the server list is simply as stale as it was before.
+                SafeLog($"[Cloud pairings] Import failed: {ex.Message}");
+            }
+            finally
+            {
+                System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+
+                if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportAgain, 0) == 1)
+                    TryImportCloudPairings();
+            }
+        });
+    }
+
+    private int _cloudPairingImportAgain;
+    private int _cloudPairingAnnouncementsAttached;
+
+    /// <summary>
+    /// Import as soon as the cloud announces a pairing, rather than at the next launch.
+    ///
+    /// The cloud's listener receives in-game pairings whether or not this app is running,
+    /// and says so on the account's private channel (devices_changed). Without this, a
+    /// server paired while the app is open but its own pairing listener is not running
+    /// only appeared after a restart.
+    /// </summary>
+    private void AttachCloudPairingAnnouncements()
+    {
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingAnnouncementsAttached, 1) == 1) return;
+
+        Services.Cloud.RealtimeClient.Shared.EventReceived += OnCloudPairingAnnouncement;
+
+        // The account channel is the social layer's subscription; asking again is a no-op
+        // once it runs, and makes sure it does when no social panel has started it yet.
+        Services.Social.SocialRealtime.EnsureStarted();
+    }
+
+    private void OnCloudPairingAnnouncement(string channel, string eventName, Newtonsoft.Json.Linq.JObject data)
+    {
+        if (eventName != "devices_changed") return;
+
+        // Teammates' changes arrive on shared channels too; only this account's pairings import.
+        var me = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
+        if (string.IsNullOrWhiteSpace(me) || data["user_id"]?.ToString() != me) return;
+
+        // The same event carries every switch flip and storage reading. A pairing is the
+        // one with no entity (a server) or one marked paired (a device); the rest would
+        // only cost an empty round trip each.
+        bool isPairing = data["entity_id"] == null
+            || (data["device_state"]?["paired"] as Newtonsoft.Json.Linq.JValue)?.Value is true;
+        if (!isPairing) return;
+
+        Dispatcher.BeginInvoke(new Action(TryImportCloudPairings));
+    }
+
+    /// <summary>Set while a lost profiles file is still waiting for its servers to come back.</summary>
+    private const string CloudRestorePendingKey = "cloud_pairings_restore_pending";
+
+    /// <summary>Merge the platform's pairings into the live server list and save it.</summary>
+    internal async Task<Services.Cloud.CloudPairingImporter.ImportResult?> ImportCloudPairingsIntoListAsync(bool full)
+    {
+        var result = await Services.Cloud.CloudPairingImporter.ImportIntoAsync(_vm.Servers, _vm.Save, full);
+
+        // Load() preselects the first server so the device list has something to show;
+        // a list that was empty until now needs the same.
+        if (result is { Added: > 0 } && _vm.Selected == null && _vm.Servers.Count > 0)
+            _vm.Selected = _vm.Servers[0];
+
+        return result;
+    }
+
+    /// <summary>
+    /// Bring back every server the account has paired, whatever the cursor says.
+    ///
+    /// For a profiles file that was deleted, reset, or never came across to this PC.
+    /// Servers already in the list keep their settings; only what a re-pair changes is
+    /// taken, same as the background import.
+    /// </summary>
+    private async void BtnRestoreCloudServers_Click(object sender, RoutedEventArgs e)
+    {
+        var title = Properties.Resources.GetString("RestoreServersFromCloud");
+
+        if (!Services.Cloud.CloudAuthManager.IsAuthenticated)
+        {
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersSignInFirst"), WpfUi.ControlAppearance.Caution);
+            return;
+        }
+
+        // Shares the background import's flag so the two never merge into the list at once.
+        if (System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 1) == 1) return;
+
+        var restoreAction = sender as UIElement;
+        if (restoreAction != null) restoreAction.IsEnabled = false;
+        try
+        {
+            var result = await ImportCloudPairingsIntoListAsync(full: true);
+
+            if (result == null)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+            }
+            else if (!result.ChangedAnything)
+            {
+                ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersNothing"), WpfUi.ControlAppearance.Info);
+            }
+            else
+            {
+                SafeLog($"[Cloud pairings] Restore: {result.Added} server(s) added, {result.Updated} update(s), {result.DevicesAdded} device(s).");
+                ShowInfoSnackbar(title,
+                    string.Format(Properties.Resources.GetString("RestoreServersDone"), result.Added, result.Updated),
+                    WpfUi.ControlAppearance.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            SafeLog($"[Cloud pairings] Restore failed: {ex.Message}");
+            ShowInfoSnackbar(title, Properties.Resources.GetString("RestoreServersFailed"), WpfUi.ControlAppearance.Danger);
+        }
+        finally
+        {
+            if (restoreAction != null) restoreAction.IsEnabled = true;
+            System.Threading.Interlocked.Exchange(ref _cloudPairingImportRunning, 0);
+        }
+    }
+
+    /// <summary>
+    /// Log from a background thread without the log itself becoming the failure.
+    ///
+    /// AppendLog marshals through Dispatcher.Invoke, which blocks and throws once
+    /// the window is shutting down. An import still in flight at that moment would
+    /// otherwise raise from inside its own catch block and escape the task.
+    /// </summary>
+    private void SafeLog(string line)
+    {
+        try { AppendLog(line); } catch { /* shutting down; nothing to report to */ }
+    }
+
+    private void SupabaseAuthManager_AuthenticationChanged()
+    {
+        // Signing in is the other moment new pairings can be waiting: the account
+        // may have been paired from elsewhere entirely since the last launch.
+        TryImportCloudPairings();
+
+        void RefreshAccountUi()
+        {
+            UpdateRustMapsUi();
+            UpdateCloudSyncUI();
+            _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
+            _ = RefreshSocialAvailabilityAsync();
+        }
+
+        if (Dispatcher.CheckAccess())
+            RefreshAccountUi();
+        else
+            _ = Dispatcher.BeginInvoke((Action)RefreshAccountUi);
+    }
+
+    // --- Chat Persistence & Switching ---
+
+    private ServerProfile? _lastChatProfile;
+
+    private string GetChatCachePath(string serverId)
+    {
+        var dir = System.IO.Path.Combine(sIconCacheDir, "..", "chat"); // ../chat/
+        Directory.CreateDirectory(dir);
+        // Sanitize Filename
+        foreach (var c in System.IO.Path.GetInvalidFileNameChars()) serverId = serverId.Replace(c, '_');
+        return System.IO.Path.Combine(dir, $"{serverId}.json");
+    }
+
+    private void SaveChatHistory(ServerProfile? p)
+    {
+        if (p == null) return;
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}";
+            var path = GetChatCachePath(serverKey); // Use Host_Port as filename
+            lock (_chatHistoryLog)
+            {
+                // Begrenzen auf z.B. 500
+                while (_chatHistoryLog.Count > 500) _chatHistoryLog.RemoveAt(0);
+
+                var json = JsonSerializer.Serialize(_chatHistoryLog);
+                System.IO.File.WriteAllText(path, json);
+            }
+        }
+        catch (Exception ex) { AppendLog($"[CHAT-SAVE] {ex.Message}"); }
+    }
+
+    private void LoadChatHistory(ServerProfile? p)
+    {
+        // 1. Clear old
+        lock (_chatHistoryLog) { _chatHistoryLog.Clear(); }
+
+        _lastChatTsForCurrentServer = null;
+
+        // UI leeren - Overlay handled by ChatMessages clearing
+        ChatMessages.Clear();
+
+        if (p == null) return;
+
+        // 2. Load new server specific history
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}";
+            var path = GetChatCachePath(serverKey);
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var loaded = JsonSerializer.Deserialize<List<TeamChatMessage>>(json);
+                if (loaded != null)
+                {
+                    lock (_chatHistoryLog)
+                    {
+                        foreach (var m in loaded)
+                        {
+                            // In LoadChatHistory we don't deduplicate yet, just fill
+                            _chatHistoryLog.Add(m);
+                            
+                            // Max TS tracken
+                            if (!_lastChatTsForCurrentServer.HasValue || m.Timestamp > _lastChatTsForCurrentServer.Value)
+                                _lastChatTsForCurrentServer = m.Timestamp;
+                        }
+                    }
+                }
+            }
+            AppendLog($"[CHAT-LOAD] Loaded {_chatHistoryLog.Count} entries for {serverKey}");
+        }
+        catch (Exception ex) { AppendLog($"[CHAT-LOAD] {ex.Message}"); }
+    }
+
+    private void SaveClanChatHistory(ServerProfile? p)
+    {
+        if (p == null) return;
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            lock (_clanChatHistoryLog)
+            {
+                while (_clanChatHistoryLog.Count > 500) _clanChatHistoryLog.RemoveAt(0);
+
+                var json = JsonSerializer.Serialize(_clanChatHistoryLog);
+                System.IO.File.WriteAllText(path, json);
+            }
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-SAVE] {ex.Message}"); }
+    }
+
+    private void LoadClanChatHistory(ServerProfile? p)
+    {
+        lock (_clanChatHistoryLog) { _clanChatHistoryLog.Clear(); }
+        _lastClanChatTsForCurrentServer = null;
+
+        if (p == null) return;
+
+        try
+        {
+            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var path = GetChatCachePath(serverKey);
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var loaded = JsonSerializer.Deserialize<List<TeamChatMessage>>(json);
+                if (loaded != null)
+                {
+                    lock (_clanChatHistoryLog)
+                    {
+                        foreach (var m in loaded)
+                        {
+                            _clanChatHistoryLog.Add(m);
+                            if (!_lastClanChatTsForCurrentServer.HasValue || m.Timestamp > _lastClanChatTsForCurrentServer.Value)
+                                _lastClanChatTsForCurrentServer = m.Timestamp;
+                        }
+                    }
+                }
+            }
+            AppendLog($"[CLAN-CHAT-LOAD] Loaded {_clanChatHistoryLog.Count} entries for {serverKey}");
+        }
+        catch (Exception ex) { AppendLog($"[CLAN-CHAT-LOAD] {ex.Message}"); }
+    }
+
+    // Ersetzt deine bestehende SwitchCameraSourceTo Logic z.T.
+    private void SwitchCameraSourceTo(ServerProfile? srv)
+    {
+        if (srv == null)
+        {
+            // If srv is null, we are effectively disconnecting from a server.
+            // Save chat for the last profile, then clear camera IDs.
+            SaveChatHistory(_lastChatProfile);
+            SaveClanChatHistory(_lastChatProfile);
+            _lastChatProfile = null; // No current server
+            _cameraIds = new ObservableCollection<string>();
+            _cameraNames = new Dictionary<string, string>();
+            RebuildCameraTiles();
+            return;
+        }
+
+        // 1. Chat speichern (alter Server)
+        SaveChatHistory(_lastChatProfile);
+        SaveClanChatHistory(_lastChatProfile);
+        
+        // 2. Chat laden (neuer Server)
+        LoadChatHistory(srv);
+        LoadClanChatHistory(srv);
+        
+        _lastChatProfile = srv;
+
+        // Reset state for specific server logic
+        _monumentWatcher.Reset();
+        _deepSeaActive = false;
+        _firstShopPollDone = false;
+        ResetShopDataAvailability();
+        _deepSeaSpawnTime = null;
+        _deepSeaDespawnTime = null;
+        _deepSeaMidEvent = false;
+        foreach (var cs in _heliCrashSites) { if (cs.MapElement != null) Overlay?.Children.Remove(cs.MapElement); }
+        _heliCrashSites.Clear();
+
+        if (_rust is RustPlusClientReal real)
+        {
+             // real.Disconnect(); // Nein, wir sharen die Instanz, wir reconnecten erst bei "Connect"
+        }
+        
+        srv.CameraIds ??= new ObservableCollection<string>(); // Ensure CameraIds is initialized
+        srv.CameraNames ??= new Dictionary<string, string>();
+        _cameraIds = srv.CameraIds;
+        _cameraNames = srv.CameraNames;
+        RebuildCameraTiles();
+        EnsureCamThumbPolling();
+    }
+
+    // Verbesserter Key ohne Zeitstempel (nur Inhalt + Autor)
+    private static string ChatKey(TeamChatMessage m)
+    {
+        var author = (m.Author ?? "").Trim().ToLowerInvariant();
+        var text = (m.Text ?? "").Trim().ToLowerInvariant();
+        return $"{author}|{text}";
+    }
+
+    public sealed class ItemInfo
+    {
+        public int Id { get; init; }
+        public string ShortName { get; init; } = "";
+        public string Display { get; init; } = "";   // „pretty“ name
+        public string? IconUrl { get; init; }
+    }
+
+    internal static readonly Dictionary<int, ItemInfo> sItemsById = new();
+    internal static readonly Dictionary<string, ItemInfo> sItemsByShort = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, ImageSource> sIconCache = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly HashSet<string> sPendingDownloads = new();
+    private static readonly SemaphoreSlim sDownloadSemaphore = new SemaphoreSlim(10, 10);
+
+    /// <summary>
+    /// Icons both sources answered 404 for. Remembered across restarts, because an icon that does
+    /// not exist today will not exist tomorrow either — without this the same handful is requested
+    /// on every single launch, twice each, forever.
+    ///
+    /// Only permanent answers land here. A timeout or a 500 means "not now", and those are tried
+    /// again next time.
+    /// </summary>
+    private static readonly HashSet<string> sMissingIcons = new(StringComparer.OrdinalIgnoreCase);
+    private static string? sMissingIconsPath;
+    private static readonly object sMissingIconsGate = new();
+    private static bool sNewDbLoaded = false;
+    private static string sNewDbSource = "(unbekannt)";
+    private static readonly string s_cacheDir = System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "RustPlusDesk", "cache");
+    private static readonly string s_cachePath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.json");
+    private static readonly string s_metaPath = System.IO.Path.Combine(s_cacheDir, "rust-item-list.meta");
+
+    private static void EnsureNewItemDbLoaded(bool force = false)
+    {
+        if (sNewDbLoaded && !force) return;
+
+        sItemsById.Clear();
+        sItemsByShort.Clear();
+        sNewDbSource = "(unbekannt)";
+
+        bool loaded = false;
+
+        // 1) Disk-Kandidaten
+        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        string currDir = Environment.CurrentDirectory;
+        string? entryDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath);
+
+        var diskCandidates = new[]
+        {
+        System.IO.Path.Combine(baseDir, "rust-item-list.json"),
+        s_cachePath,
+        System.IO.Path.Combine(currDir, "rust-item-list.json"),
+        entryDir is null ? null : System.IO.Path.Combine(entryDir, "rust-item-list.json"),
+        // häufige Ordner:
+        System.IO.Path.Combine(baseDir, "assets", "rust-item-list.json"),
+        System.IO.Path.Combine(baseDir, "data",   "rust-item-list.json"),
+        System.IO.Path.Combine(baseDir, "Assets", "Data", "rust-item-list.json"),
+    }.Where(p => !string.IsNullOrWhiteSpace(p)).Cast<string>();
+
+        foreach (var path in diskCandidates)
+        {
+            try
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    var json = System.IO.File.ReadAllText(path);
+                    if (TryParseNewItemList(json))
+                    {
+                        sNewDbSource = System.IO.Path.GetFileName(path) + " (Disk: " + System.IO.Path.GetDirectoryName(path) + ")";
+                        loaded = true;
+                        break;
+                    }
+                }
+            }
+            catch { /* tolerant */ }
+        }
+
+        // 2) WPF-Resource (Build Action: Resource)
+        if (!loaded)
+        {
+            string asmName = System.Reflection.Assembly.GetEntryAssembly()!.GetName().Name!;
+            var packUris = new[]
+            {
+            "pack://application:,,,/rust-item-list.json",
+            "pack://application:,,,/assets/rust-item-list.json",
+            "pack://application:,,,/data/rust-item-list.json",
+            "pack://application:,,,/Assets/Data/rust-item-list.json",
+            $"pack://application:,,,/{asmName};component/rust-item-list.json",
+            $"pack://application:,,,/{asmName};component/assets/rust-item-list.json",
+            $"pack://application:,,,/{asmName};component/data/rust-item-list.json",
+            $"pack://application:,,,/{asmName};component/Assets/Data/rust-item-list.json",
+        };
+
+            foreach (var uri in packUris)
+            {
+                try
+                {
+                    var sri = System.Windows.Application.GetResourceStream(new Uri(uri));
+                    if (sri?.Stream != null)
+                    {
+                        using var r = new StreamReader(sri.Stream);
+                        if (TryParseNewItemList(r.ReadToEnd()))
+                        {
+                            sNewDbSource = uri + " (Resource)";
+                            loaded = true;
+                            break;
+                        }
+                    }
+                }
+                catch { /* tolerant */ }
+            }
+        }
+
+        sNewDbLoaded = loaded;
+#if DEBUG
+        System.Diagnostics.Debug.WriteLine($"[items-new] loaded={loaded} source={sNewDbSource} count={sItemsById.Count}");
+#endif
+    }
+    private void BindIcon(Image img, string? shortName, int itemId)
+    {
+        BindIcon(img, itemId, shortName);
+    }
+    private static void BindIcon(Image img, int itemId, string? shortName, int decodePx = 32)
+    {
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+        // 1) Sofort versuchen
+        var src = ResolveItemIcon(itemId, shortName, decodePx);
+        if (src != null) { img.Source = src; return; }
+
+        // 2) Download wurde von ResolveItemIcon bereits angestoßen → in Intervallen nochmal versuchen
+        _ = Task.Run(async () =>
+        {
+            for (int i = 0; i < 10; i++)   // ~2.75s max (250+300+…)
+            {
+                await Task.Delay(250 + i * 250);
+                var ready = ResolveItemIcon(itemId, shortName, decodePx);
+                if (ready != null)
+                {
+                    // auf UI-Thread setzen
+                    Application.Current.Dispatcher.Invoke(() => img.Source = ready);
+                    break;
+                }
+            }
+        });
+    }
+    private Border BuildOfferRowUI(RustPlusClientReal.ShopOrder o)
+    {
+        bool outOfStock = o.Stock <= 0;
+
+        var row = new Border
+        {
+            CornerRadius = new CornerRadius(6),
+            Background = new SolidColorBrush(Color.FromArgb(outOfStock ? (byte)28 : (byte)42, 255, 255, 255)),
+            Margin = new Thickness(0, 2, 0, 2),
+            Padding = new Thickness(8, 6, 8, 6),
+            Opacity = outOfStock ? 0.70 : 1.0
+        };
+
+        var g = new Grid();
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                       // Icon L
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Name+Stock
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                       // "Price"
+        g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });                       // Icon R+Amount
+        row.Child = g;
+
+        // Linkes Icon mit Mengen-Badge (xN nur wenn >1)
+        var leftIcon = CreateShopIconwithBadge(o.ItemShortName, o.ItemId, o.Quantity);
+        Grid.SetColumn(leftIcon, 0);
+        g.Children.Add(leftIcon);
+
+        // Name + Stock
+        var nameStack = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(10, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+        nameStack.Children.Add(new TextBlock
+        {
+            Text = ResolveItemName(o.ItemId, o.ItemShortName),
+            Foreground = Brushes.White,
+            FontSize = 13,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 200
+        });
+        var stockPanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        stockPanel.Children.Add(new TextBlock
+        {
+            Text = "Stock",
+            Foreground = new SolidColorBrush(Color.FromArgb(200, 220, 220, 220)),
+            FontSize = 11,
+            Margin = new Thickness(0, 2, 6, 0)
+        });
+        stockPanel.Children.Add(new TextBlock
+        {
+            Text = o.Stock.ToString(),
+            Foreground = Brushes.White,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 13
+        });
+        nameStack.Children.Add(stockPanel);
+        Grid.SetColumn(nameStack, 1);
+        g.Children.Add(nameStack);
+
+        // "Price" Label
+        var priceLbl = new TextBlock
+        {
+            Text = "Price",
+            Foreground = new SolidColorBrush(Color.FromArgb(200, 220, 220, 220)),
+            FontSize = 11,
+            Margin = new Thickness(0, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(priceLbl, 2);
+        g.Children.Add(priceLbl);
+
+        // Rechtes Icon + Amount
+        var pricePanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        var curIcon = new Image { Width = 32, Height = 32, Margin = new Thickness(0, 0, 6, 0), Opacity = outOfStock ? 0.65 : 1.0 };
+        // <- dank Overload ist die Reihenfolge egal
+        BindIcon(curIcon, o.CurrencyShortName, o.CurrencyItemId);
+        pricePanel.Children.Add(curIcon);
+        pricePanel.Children.Add(new TextBlock
+        {
+            Text = o.CurrencyAmount.ToString(),
+            Foreground = Brushes.White,
+            FontWeight = FontWeights.SemiBold,
+            FontSize = 14,
+            VerticalAlignment = VerticalAlignment.Center
+        });
+        Grid.SetColumn(pricePanel, 3);
+        g.Children.Add(pricePanel);
+
+        return row;
+    }
+
+    // Sichtbarkeit per Checkbox/Toggle
+    private bool _showMonuments = true;
+
+    // Overlay-Elemente für Monumente
+    private readonly Dictionary<string, FrameworkElement> _monEls = new();
+
+    // Rohdaten (aus GetMapWithMonumentsAsync)
+    private List<(double X, double Y, string Name)> _monData = new();
+
+    // Icon-Zuordnung (key = normalisierte Kennung)
+
+    private static readonly Dictionary<string, string> sMonIconByKeyRaw = new(StringComparer.OrdinalIgnoreCase)
+{
+    // nur Beispiele – ergänze frei:
+    { "stone quarry",            "pack://application:,,,/Assets/icons/stonequarry.png" },
+    { "hqm quarry",              "pack://application:,,,/Assets/icons/hqmquarry.png" },
+    { "sulfur quarry",           "pack://application:,,,/Assets/icons/sulfurquarry.png" },
+    { "excavator",               "pack://application:,,,/Assets/icons/excavator.png" },
+    { "train tunnel",            "pack://application:,,,/Assets/icons/traintunnel2.png" },
+    { "train tunnel link",       "pack://application:,,,/Assets/icons/traintunnel.png" },
+    { "supermarket",             "pack://application:,,,/Assets/icons/supermarket.png" },
+    { "abandoned military base", "pack://application:,,,/Assets/icons/militarybase.png" },
+    { "large fishing village",   "pack://application:,,,/Assets/icons/fishingvillagelarge.png" },
+    { "power plant",             "pack://application:,,,/Assets/icons/powerplant.png" },
+    { "mining outpost",          "pack://application:,,,/Assets/icons/miningoutpost.png" },
+    { "military tunnel",         "pack://application:,,,/Assets/icons/militarytunnel.png" },
+    { "gas station",             "pack://application:,,,/Assets/icons/gasstation.png" },
+    { "arctic base",             "pack://application:,,,/Assets/icons/arcticresearch.png" },
+    { "sewer branch",            "pack://application:,,,/Assets/icons/sewerbranch.png" },
+    { "airfield",                "pack://application:,,,/Assets/icons/airfield.png" },
+    { "radtown",                 "pack://application:,,,/Assets/icons/radtown.png" },
+    { "stables a",               "pack://application:,,,/Assets/icons/stable.png" },
+    { "stables b",               "pack://application:,,,/Assets/icons/barn.png" },
+    { "dome",                    "pack://application:,,,/Assets/icons/dome.png" },
+    { "harbor",                  "pack://application:,,,/Assets/icons/harbour.png" },
+    { "harbor 2",                "pack://application:,,,/Assets/icons/harbour2.png" },
+    { "lighthouse",              "pack://application:,,,/Assets/icons/lighthouse.png" },
+    { "fishing village",         "pack://application:,,,/Assets/icons/fishingvillage.png" },
+    { "missile silo",            "pack://application:,,,/Assets/icons/missilesilo.png" },
+    { "ferry terminal",          "pack://application:,,,/Assets/icons/ferryterminal.png" },
+    { "train yard",              "pack://application:,,,/Assets/icons/trainyard.png" },
+    { "satellite dish",          "pack://application:,,,/Assets/icons/satellitedish.png" },
+    { "outpost",                 "pack://application:,,,/Assets/icons/outpost.png" },
+    { "launch site",             "pack://application:,,,/Assets/icons/launchsite.png" },
+    { "water treatment plant",   "pack://application:,,,/Assets/icons/watertreatment.png" },
+    { "large oil rig",           "pack://application:,,,/Assets/icons/largeoilrig.png" },
+    { "small oil rig",           "pack://application:,,,/Assets/icons/oilrig.png" },
+    { "underwater lab",          "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater lab b",        "pack://application:,,,/Assets/icons/underwater.png" },
+    { "underwater labs",         "pack://application:,,,/Assets/icons/underwater.png" },
+    { "junkyard",                "pack://application:,,,/Assets/icons/junkyard.png" },
+    { "bandit camp",             "pack://application:,,,/Assets/icons/banditcamp.png" },
+    { "swamp",                   "pack://application:,,,/Assets/icons/swamp.png" },
+    { "jungle ziggurat",         "pack://application:,,,/Assets/icons/jungle_ziggurat.png" },
+    { "jungle ruins",            "pack://application:,,,/Assets/icons/jungle.png" },
+    { "jungle swamp",            "pack://application:,,,/Assets/icons/jungle_swamp.png" },
+    { "cave",                    "pack://application:,,,/Assets/icons/cave.png" },
+    { "iceberg",                 "pack://application:,,,/Assets/icons/iceberg.png" },
+    { "water well",              "pack://application:,,,/Assets/icons/waterwell.png" },
+    { "ice lake",                "pack://application:,,,/Assets/icons/ice_lake.png" },
+    { "god rock",                "pack://application:,,,/Assets/icons/godrock.png" },
+    { "large god rock",          "pack://application:,,,/Assets/icons/godrock_large.png" },
+    { "medium god rock",         "pack://application:,,,/Assets/icons/godrock_medium.png" },
+    { "small god rock",          "pack://application:,,,/Assets/icons/godrock_small.png" },
+    { "anvil rock",              "pack://application:,,,/Assets/icons/anvil-rock.png" },
+    { "tunnel entrance",         "pack://application:,,,/Assets/icons/traintunnel.png" },
+    { "apartments complex",      "pack://application:,,,/Assets/icons/apartments_complex_1.png" },
+};
+
+    private static double CalcOverlayScale(double effZoom, double exp, double baseMult = 1.0)
+    {
+        // Gegen-Skalierung (1 / effZoom^exp) + Baseline + Clamp
+        var s = Math.Pow(effZoom, -exp) * baseMult;
+        return Math.Clamp(s, ICON_SCALE_MIN, ICON_SCALE_MAX);
+    }
+
+    private static readonly Dictionary<string, string> sMonIconByKey =
+    BuildCanonIconMap(sMonIconByKeyRaw);
+
+    // Per-monument icon size multipliers (relative to the caller's requested size).
+    // Keys must match the canonicalized name produced by Canon().
+    private static readonly Dictionary<string, double> sMonIconSizeScale = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "swamp",         0.6 },
+        { "jungle swamp",  0.6 },
+    };
+
+    private static Dictionary<string, string> BuildCanonIconMap(
+        Dictionary<string, string> raw)
+    {
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in raw)
+        {
+            var key = Canon(kv.Key);              // <- deine Canon(...) von oben
+            if (string.IsNullOrEmpty(key)) continue;
+
+            // Bei Kollision gewinnt der „präzisere“ Eintrag: Priorisiere längere Keys
+            if (!map.TryGetValue(key, out var existing) || kv.Key.Length > existing.Length)
+                map[key] = kv.Value;
+        }
+        return map;
+    }
+    private static string NormalizeMonName(string raw, out string variant)
+    {
+        variant = "";
+        var low = raw?.ToLowerInvariant() ?? "";
+        if (low.Contains("underwater") || low.Contains("under water") || low.Contains("underwaterlab") || low.Contains("moonpool"))
+        {
+            // Do not extract variant for underwater labs to merge them under one name "Underwater Labs"
+        }
+        else
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+a\s*$")) variant = "A";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+b\s*$")) variant = "B";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(low, @"\s+c\s*$")) variant = "C";
+        }
+
+        return Canon(raw); // <- macht die eigentliche harte Arbeit
+    }
+
+    private static string Canon(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return "";
+        var s = raw.ToLowerInvariant();
+
+        if (s.Contains("underwater") || s.Contains("under water") || s.Contains("underwaterlab") || s.Contains("moonpool"))
+        {
+            return "underwater lab";
+        }
+
+        // unerwünschte Suffixe/Teile robust entfernen (auch mehrfach, egal wo)
+        s = System.Text.RegularExpressions.Regex.Replace(
+                s,
+                @"\b(display\s*name|monument\s*name)\b",
+                "",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        // Klammer-Inhalte mit genau diesen Phrasen entfernen, z. B. "(display name)"
+        s = System.Text.RegularExpressions.Regex.Replace(
+                s,
+                @"\((?:\s*(?:display\s*name|monument\s*name)\s*)\)",
+                "",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        // Trennzeichen vereinheitlichen
+        s = s.Replace('_', ' ').Replace('-', ' ');
+
+        // Varianten A/B/C am Ende abtrennen
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"\s+([abc])\s*$", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        // Mehrfach-Whitespace reduzieren + trimmen
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"\s+", " ").Trim();
+
+        // Aliase vereinheitlichen
+        s = s.Replace("mining quarry stone", "stone quarry")
+             .Replace("mining quarry hqm", "hqm quarry")
+             .Replace("mining quarry sulfur", "sulfur quarry")
+             .Replace("underwaterlab", "underwater lab")
+             .Replace("underwater lab c", "underwater lab")
+               .Replace("underwater lab b", "underwater lab")
+                 .Replace("underwater lab a", "underwater lab")
+              .Replace("sewer display name", "sewer branch")
+             .Replace("abandonedmilitarybase", "abandoned military base")
+             .Replace("ferryterminal", "ferry terminal")
+             .Replace("launch site", "launchsite")
+             .Replace("missile silo monument", "missile silo")
+             .Replace("military tunnels display name", "military tunnel")
+             .Replace("oil rig small", "small oil rig")
+            .Replace("module 900x900 2way moonpool", "Moon Pool")
+            .Replace("water well", "water well")
+            .Replace("water well a", "water well")
+            .Replace("water well b", "water well")
+            .Replace("water well c", "water well")
+            .Replace("water well d", "water well")
+            .Replace("water well e", "water well")
+            .Replace("ice lake 1", "ice lake")
+            .Replace("ice lake 2", "ice lake")
+            .Replace("ice lake 3", "ice lake")
+            .Replace("ice lake 4", "ice lake")
+            .Replace("apartments complex 1", "apartments complex")
+            .Replace("apartment complex 1", "apartments complex")
+            .Replace("apartment complex", "apartments complex")
+            .Replace("train tunnel entrance", "tunnel entrance");
+
+        return s;
+    }
+
+    private FrameworkElement MakeMonIcon(string key, string tooltip, int size = 64)
+    {
+        key = Canon(key);
+        if (tooltip.Contains("Apartments Complex", StringComparison.OrdinalIgnoreCase))
+            key = "apartments complex";
+
+        // Apply per-monument size scale if defined
+        if (sMonIconSizeScale.TryGetValue(key, out double sizeScale))
+            size = Math.Max(8, (int)Math.Round(size * sizeScale));
+
+        if (TrackingService.MapMonumentDisplayMode == 1) // Original text monument names
+        {
+            if (key.Contains("train tunnel"))
+            {
+                try
+                {
+                    var img = MakeIcon("pack://application:,,,/Assets/icons/assets_markers_train.png", size);
+                    ToolTipService.SetToolTip(img, tooltip);
+                    return img;
+                }
+                catch { /* falls back to text flow */ }
+            }
+
+            var textBlock = new TextBlock
+            {
+                Text = tooltip,
+                FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Assets/Fonts/#Permanent Marker"),
+                Foreground = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0)),
+                FontSize = 9,
+                FontWeight = FontWeights.Normal,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                LayoutTransform = new ScaleTransform(1.18, 1.0)
+            };
+
+            var textBorder = new Border
+            {
+                Child = textBlock,
+                Padding = new Thickness(2, 1, 2, 1),
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                IsHitTestVisible = false
+            };
+
+            return textBorder;
+        }
+
+        if (TrackingService.MapMonumentDisplayMode == 0) // Icons by rustmaps.com
+        {
+            if (sMonIconByKey.TryGetValue(key, out var uri))
+            {
+                try
+                {
+                    var img = MakeIcon(uri, size);
+                    ToolTipService.SetToolTip(img, tooltip);
+                    return img;
+                }
+                catch { /* fällt auf Dot zurück */ }
+            }
+        }
+
+        // Mode 2: Default icons (or fallback dot for Mode 0)
+        var dot = new Ellipse
+        {
+            Width = Math.Max(1, size / 5),
+            Height = Math.Max(1, size / 5),
+            Fill = Brushes.OrangeRed,
+            Stroke = Brushes.Black,
+            StrokeThickness = 1.5
+        };
+        ToolTipService.SetToolTip(dot, tooltip);
+        return dot;
+    }
+
+
+    private Grid CreateShopIconwithBadge(string? shortName, int itemId, int qty)
+    {
+        var g = new Grid { Width = 32, Height = 32 };
+
+        var img = new Image { Width = 32, Height = 32, Stretch = Stretch.Uniform };
+        // Reihenfolge beliebig dank Overload
+        BindIcon(img, shortName, itemId);
+        g.Children.Add(img);
+
+        if (qty > 1)
+        {
+            var badge = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(220, 20, 20, 20)),
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(4, 0, 4, 0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, -6, -6, 0)
+            };
+            badge.Child = new TextBlock
+            {
+                Text = $"x{qty}",
+                Foreground = Brushes.White,
+                FontSize = 10,
+                FontWeight = FontWeights.Bold
+            };
+            g.Children.Add(badge);
+        }
+
+        return g;
+    }
+
+    private static bool ShouldCheckForUpdate()
+    {
+        try
+        {
+            if (!System.IO.File.Exists(s_cachePath)) return true;
+            if (!System.IO.File.Exists(s_metaPath)) return true;
+
+            var lines = System.IO.File.ReadAllLines(s_metaPath);
+            if (lines.Length < 2) return true;
+
+            if (long.TryParse(lines[1], out var lastCheckTicks))
+            {
+                var lastCheck = new DateTime(lastCheckTicks, DateTimeKind.Utc);
+                return (DateTime.UtcNow - lastCheck).TotalHours >= 1;
+            }
+        }
+        catch { }
+        return true;
+    }
+
+    private static string? ReadMetaLastModified()
+    {
+        try
+        {
+            if (System.IO.File.Exists(s_metaPath))
+            {
+                var lines = System.IO.File.ReadAllLines(s_metaPath);
+                return lines.Length > 0 ? lines[0].Trim() : null;
+            }
+        }
+        catch { }
+        return null;
+    }
+
+    private static void WriteMeta(string? lastModified)
+    {
+        try
+        {
+            string? dir = System.IO.Path.GetDirectoryName(s_metaPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.WriteAllLines(s_metaPath, new[] {
+                lastModified ?? "",
+                DateTime.UtcNow.Ticks.ToString()
+            });
+        }
+        catch { }
+    }
+
+    private static async Task<bool> TryUpdateItemDbAsync()
+    {
+        const string url = "https://rusthelp.com/downloads/admin-item-list-public.json";
+        try
+        {
+            if (!ShouldCheckForUpdate())
+                return false;
+
+            using var client = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Game Data"));
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
+            client.Timeout = TimeSpan.FromSeconds(15);
+
+            var cachedLastModified = ReadMetaLastModified();
+            if (!string.IsNullOrEmpty(cachedLastModified))
+                client.DefaultRequestHeaders.IfModifiedSince = DateTimeOffset.Parse(cachedLastModified);
+
+            var response = await client.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotModified)
+            {
+                WriteMeta(cachedLastModified);
+                return false;
+            }
+
+            if (!response.IsSuccessStatusCode) return false;
+
+            var json = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(json) || !json.Trim().StartsWith("[")) return false;
+
+            if (!json.Contains("shortName") || !json.Contains("displayName")) return false;
+
+            string? newLastModified = response.Content.Headers.LastModified?.ToString("R");
+
+            string? cacheDir = System.IO.Path.GetDirectoryName(s_cachePath);
+            if (!string.IsNullOrEmpty(cacheDir) && !System.IO.Directory.Exists(cacheDir))
+                System.IO.Directory.CreateDirectory(cacheDir);
+            await System.IO.File.WriteAllTextAsync(s_cachePath, json);
+            WriteMeta(newLastModified);
+
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string targetPath = System.IO.Path.Combine(baseDir, "rust-item-list.json");
+            string? dir = System.IO.Path.GetDirectoryName(targetPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+                System.IO.Directory.CreateDirectory(dir);
+            await System.IO.File.WriteAllTextAsync(targetPath, json);
+
+            return true;
+        }
+        catch { return false; }
+    }
+
+    private static bool TryParseNewItemList(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array) return false;
+
+            foreach (var el in doc.RootElement.EnumerateArray())
+            {
+                int id = el.TryGetProperty("id", out var pid) ? pid.GetInt32() : 0;
+                string shortName = el.TryGetProperty("shortName", out var ps) ? (ps.GetString() ?? "") : "";
+                string display = el.TryGetProperty("displayName", out var pd) ? (pd.GetString() ?? "") : "";
+                string? icon = el.TryGetProperty("iconUrl", out var pi) ? pi.GetString() : null;
+
+                if (id == 0 && string.IsNullOrWhiteSpace(shortName)) continue;
+
+                var ii = new ItemInfo
+                {
+                    Id = id,
+                    ShortName = shortName,
+                    Display = string.IsNullOrWhiteSpace(display) ? (shortName ?? $"Item #{id}") : display,
+                    IconUrl = string.IsNullOrWhiteSpace(icon) ? null : icon
+                };
+
+                if (id != 0) sItemsById[id] = ii;
+                if (!string.IsNullOrWhiteSpace(shortName)) sItemsByShort[shortName] = ii;
+            }
+
+            return sItemsById.Count + sItemsByShort.Count > 0;
+        }
+        catch { return false; }
+    }
+
+    private static void EnsureItemMapLoaded()
+    {
+        if (sItemMapLoaded) return;            // nur wenn noch nicht geladen
+
+        sIdToShort.Clear();
+        sShortToNice.Clear();
+
+        bool loaded = false;
+
+        // 1) Disk – bevorzugt (Content + Copy if newer)
+        foreach (var path in new[] {
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "rust_items.json"),
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "items-map.json"),
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "rust_items.json"),
+        System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Data", "items-map.json"),
+    })
+        {
+            if (System.IO.File.Exists(path))
+            {
+                if (TryLoadFromJson(System.IO.File.ReadAllText(path)))
+                {
+                    sItemMapSource = System.IO.Path.GetFileName(path) + " (Disk)";
+                    loaded = true;
+                    break;
+                }
+            }
+        }
+
+        // 2) WPF Resource – fallback (REBUILD nötig, wenn du die Datei änderst)
+        if (!loaded)
+        {
+            foreach (var uri in new[] {
+            "pack://application:,,,/rust_items.json",
+            "pack://application:,,,/items-map.json",
+            "pack://application:,,,/Assets/Data/rust_items.json",
+            "pack://application:,,,/Assets/Data/items-map.json",
+        })
+            {
+                try
+                {
+                    var sri = Application.GetResourceStream(new Uri(uri));
+                    if (sri?.Stream != null)
+                    {
+                        using var r = new StreamReader(sri.Stream);
+                        if (TryLoadFromJson(r.ReadToEnd()))
+                        {
+                            sItemMapSource = uri + " (Resource)";
+                            loaded = true;
+                            break;
+                        }
+                    }
+                }
+                catch { /* tolerant */ }
+            }
+        }
+
+        sItemMapLoaded = loaded;
+#if DEBUG
+        System.Diagnostics.Debug.WriteLine(
+            $"[items] loaded={loaded} source={sItemMapSource} id->short={sIdToShort.Count} short->nice={sShortToNice.Count}");
+#endif
+    }
+
+
+    // gibt true zurück, wenn mind. ein Mapping ankam (beide Dictionaries werden ergänzt)
+    private static bool TryLoadFromJson(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("id_to_short", out var ids) && ids.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var kv in ids.EnumerateObject())
+                    if (int.TryParse(kv.Name, out var id))
+                    {
+                        var sn = kv.Value.GetString();
+                        if (!string.IsNullOrWhiteSpace(sn))
+                            sIdToShort[id] = sn!;
+                    }
+            }
+
+            if (root.TryGetProperty("short_to_nice", out var nice) && nice.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var kv in nice.EnumerateObject())
+                {
+                    var pretty = kv.Value.GetString();
+                    if (!string.IsNullOrWhiteSpace(pretty))
+                        sShortToNice[kv.Name] = pretty!;
+                }
+            }
+
+            return sIdToShort.Count > 0 || sShortToNice.Count > 0;
+        }
+        catch { return false; }
+    }
+
+
+    /// <summary>gibt einen schönen Anzeigenamen zurück (Shortname bevorzugt, sonst ID-Fallback)</summary>
+    public static string ResolveItemName(int itemId, string? shortName)
+    {
+        // 1) neue DB bevorzugt
+        EnsureNewItemDbLoaded();
+        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1) && !string.IsNullOrWhiteSpace(ii1.Display))
+            return ii1.Display;
+        if (!string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2) && !string.IsNullOrWhiteSpace(ii2.Display))
+            return ii2.Display;
+
+        // 2) Fallback: alte Map
+        EnsureItemMapLoaded();
+        if (!string.IsNullOrWhiteSpace(shortName) && sShortToNice.TryGetValue(shortName!, out var nice))
+            return nice;
+        if (sIdToShort.TryGetValue(itemId, out var sn))
+            return sShortToNice.TryGetValue(sn, out var nice2) ? nice2 : sn;
+
+        // 3) letzter Fallback
+        return !string.IsNullOrWhiteSpace(shortName) ? shortName! : $"Item #{itemId}";
+    }
+
+
+    /// <summary>Formatiert eine Shop-Zeile angenehm lesbar.</summary>
+    private static string FormatShopLine(RustPlusClientReal.ShopOrder o)
+    {
+        var left = $"{ResolveItemName(o.ItemId, o.ItemShortName)} x{o.Quantity}";
+        var right = $"{o.CurrencyAmount} {ResolveItemName(o.CurrencyItemId, o.CurrencyShortName)}";
+        var stock = o.Stock > 0 ? $" (stock {o.Stock})" : "";
+        var bp = o.IsBlueprint ? " [BP]" : "";
+
+        return $"{left} → {right}{stock}{bp}";
+    }
+private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP, double V_DIP, double Radius);
+    private readonly List<MarkerRef> _markers = new();
+
+    private AlarmWindow? _alarmWin; // nicht AlarmPopupWindow
+    private readonly ObservableCollection<AlarmNotification> _alarmFeed = new();
+    private readonly Dictionary<string, DateTime> _lastAlarmProcessed = new();
+    private DateTime _lastAnyAlarmTime = DateTime.MinValue; // Globaler Marker für Fuzzy-Dedup
+    private readonly Dictionary<uint, (string Title, string Message)> _alarmMetadataCache = new();
+    private readonly Dictionary<string, (uint Id, DateTime Time)> _lastSeenIdPerServer = new();
+    private readonly List<string> _alarmHistoryDedup = new();
+    private readonly Dictionary<string, DateTime> _lastGenericAlarmPerServer = new();
+
+    /// <summary>
+    /// Records what an alarm calls itself in-game, joining the two halves that never arrive
+    /// together: the title from the push, the entity from the WebSocket event.
+    ///
+    /// The entity is taken from the last one seen on that server. The window is generous on
+    /// purpose — a push travels through Google and Expo and is routinely seconds late, while
+    /// two different alarms firing on one server inside a minute is not something that happens
+    /// by accident.
+    /// </summary>
+    private void TryLearnAlarmTitle(AlarmNotification n)
+    {
+        if (string.IsNullOrWhiteSpace(n.Title)) return;
+
+        try
+        {
+            uint? entityId = n.EntityId;
+
+            if (!entityId.HasValue)
+            {
+                string server = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+                server = Regex.Replace(server, @"\[/?[a-zA-Z]+\]", "").Trim();
+
+                if (_lastSeenIdPerServer.TryGetValue(server, out var seen)
+                    && (DateTime.UtcNow - seen.Time) < TimeSpan.FromMinutes(1))
+                    entityId = seen.Id;
+            }
+
+            if (!entityId.HasValue) return;
+
+            SmartDevice? device = null;
+            foreach (var profile in _vm.Servers)
+            {
+                device = FindDeviceById(profile.Devices, entityId.Value);
+                if (device != null) break;
+            }
+
+            if (device == null) return;
+
+            string title = n.Title!.Trim();
+            if (string.Equals(device.InGameAlarmTitle, title, StringComparison.Ordinal)) return;
+
+            device.InGameAlarmTitle = title;
+            AppendLog($"[alarm] In-game title for {device.PureName} (#{device.EntityId}) is now \"{title}\".");
+
+            try { _vm.Save(); } catch { }
+
+            // The registry matches pushes by this title, so it has to be rebuilt now. Without
+            // it the new name only takes effect at the next start, and the alarm keeps ringing
+            // as a raid until then.
+            RebuildOilRigTriggerRegistry();
+
+            // Push it out now. The cloud worker is the consumer and runs elsewhere; until it
+            // has the new title it keeps treating this alarm as an unknown one.
+            _ = UploadDevicesSnapshotForCurrentServerAsync();
+        }
+        catch { }
+    }
+
+    private void ShowAlarmPopup(AlarmNotification n, string source = "FCM")
+    {
+        // 0) Backlog-Filter: Ignoriere Alarme, die älter als 5 Minuten sind.
+        //
+        // Judged by when the alarm happened, not by when it reached us. Those were
+        // the same value until the push carried its own time, which is why this
+        // filter existed for a long while without ever being able to fire: a queued
+        // push from two hours ago arrived stamped "now".
+        var eventTime = n.EventTime ?? n.Timestamp;
+        if (OilRigTriggerRegistry.Lookup(n.EntityId, n.Title, n.Message) is string oilRigLabel)
+            RecordOilRigAlarm(n, oilRigLabel);
+        if ((DateTime.Now - eventTime).TotalMinutes > 5) return;
+
+        // Learn the alarm's in-game text before anything can drop this notification.
+        //
+        // The two halves of that fact arrive separately: the WebSocket event names the entity
+        // but carries no title, the push carries the title but no entity id. Whichever lands
+        // first claims the dedup key below, and the other is discarded — so when the WebSocket
+        // won by 70 milliseconds, the title was thrown away every single time and a renamed
+        // alarm was never picked up. Doing it here means it no longer matters which arrives
+        // first, or whether this particular notification is shown at all.
+        TryLearnAlarmTitle(n);
+
+        // 0.1) Exakter Duplikat-Check (Server + Msg + Zeitstempel)
+        // Deliberately still the arrival time. One alarm reaches this method twice —
+        // once over the WebSocket, once as a push — and the two are recognised as one
+        // because they arrive in the same second. They do not share an event time.
+        string dedupKey = $"{n.Server}|{n.Message}|{n.Timestamp:yyyyMMddHHmmss}";
+        if (_alarmHistoryDedup.Contains(dedupKey)) return;
+        _alarmHistoryDedup.Add(dedupKey);
+        if (_alarmHistoryDedup.Count > 100) _alarmHistoryDedup.RemoveAt(0);
+
+        // And the same question across restarts, which the list above cannot answer
+        // because it is empty exactly when the backlog arrives. Only for pushes: a
+        // WebSocket event is live by definition and has nothing to be stale about.
+        if (source == "FCM"
+            && !SeenAlarmStore.MarkIfNew(n.FcmNotificationId ?? $"{n.Server}|{n.Message}", eventTime))
+        {
+            AppendLog($"[alarm] Already shown at {eventTime:HH:mm:ss} — not repeating it.");
+            return;
+        }
+
+        if (n.Message == "Your base is under attack!")
+        {
+            n = n with { Message = Properties.Resources.YourBaseIsUnderAttack };
+        }
+
+        var now = DateTime.UtcNow;
+
+        // Servernamen bereinigen für stabiles Mapping
+        string cleanSrv = Regex.Replace(n.Server ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+        cleanSrv = Regex.Replace(cleanSrv, @"\[/?[a-zA-Z]+\]", "").Trim();
+        if (string.IsNullOrEmpty(cleanSrv)) cleanSrv = "-";
+
+        // Wenn die Meldung eine ID hat (WS), merken wir sie uns für diesen Server
+        if (n.EntityId.HasValue)
+        {
+            _lastSeenIdPerServer[cleanSrv] = (n.EntityId.Value, now);
+        }
+
+        SmartDevice? dev = null;
+        ServerProfile? alarmProfile = null;
+        if (n.EntityId.HasValue)
+        {
+            uint eid = n.EntityId.Value;
+            foreach (var profile in _vm.Servers)
+            {
+                dev = FindDeviceById(profile.Devices, eid);
+                if (dev != null)
+                {
+                    alarmProfile = profile;
+                    break;
+                }
+            }
+        }
+
+        // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
+        // we try to find a matching server and check if it has exactly one Smart Alarm.
+        if (dev == null)
+        {
+            // 1) Try to find the specific server profile first
+            var profile = _vm.Servers.FirstOrDefault(s => 
+                string.Equals(Regex.Replace(s.Name ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "").Trim(), cleanSrv, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(s.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+
+            if (profile != null)
+            {
+                alarmProfile = profile;
+                var serverAlarms = profile.Devices.Where(d => d.Kind == "SmartAlarm").ToList();
+                if (serverAlarms.Count == 1)
+                {
+                    dev = serverAlarms[0];
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single alarm on server '{cleanSrv}': {dev.Name} (ID: {dev.EntityId})");
+                }
+            }
+
+            // 2) Global Fallback: check if there is EXACTLY ONE Smart Alarm registered across all servers.
+            if (dev == null)
+            {
+                var allAlarms = _vm.Servers.SelectMany(s => s.Devices).Where(d => d.Kind == "SmartAlarm").ToList();
+                if (allAlarms.Count == 1)
+                {
+                    dev = allAlarms[0];
+                    alarmProfile = _vm.Servers.FirstOrDefault(p => FindDeviceById(p.Devices, dev.EntityId) != null);
+                    n = n with { EntityId = dev.EntityId };
+                    AppendLog($"[alarm/debug] ({source}) Fuzzy matched single global alarm device: {dev.Name} (ID: {dev.EntityId})");
+                }
+            }
+        }
+
+        // Metadaten cachen (FCM liefert Text, WS liefert ID)
+        if (source == "FCM" && n.Message != "Alarm activated!")
+        {
+            uint? tid = n.EntityId;
+            // Falls FCM keine ID hat, versuchen wir sie über den letzten WS-Event dieses Servers zu finden
+            if (!tid.HasValue && _lastSeenIdPerServer.TryGetValue(cleanSrv, out var last) && (now - last.Time).TotalSeconds < 10)
+            {
+                tid = last.Id;
+                // WICHTIG: Die Benachrichtigung selbst mit der ID aktualisieren, damit UpdateOrAdd korrekt funktioniert!
+                n = n with { EntityId = tid };
+            }
+
+            if (tid.HasValue)
+            {
+                _alarmMetadataCache[tid.Value] = (n.DeviceName, n.Message);
+                if (dev == null)
+                {
+                    foreach (var profile in _vm.Servers)
+                    {
+                        dev = FindDeviceById(profile.Devices, tid.Value);
+                        if (dev != null)
+                        {
+                            alarmProfile = profile;
+                            break;
+                        }
+                    }
+                }
+                if (dev != null) dev.LastAlarmMessage = n.Message;
+            }
+        }
+        
+        // n.Server ebenfalls bereinigen für konsistentes UI/Matching
+        n = n with { Server = cleanSrv };
+
+        // Override DeviceName with Custom Name / PureName if device is identified
+        if (dev != null)
+        {
+            n = n with { DeviceName = dev.PureName };
+        }
+
+        // An alarm wired to an oil rig frequency is not a raid. It has already produced the
+        // event alert the player actually wants, and letting it through here as well would
+        // fire the popup, the raid sound and the raid webhook for a crate hack — the one
+        // false alarm that costs a team an actual base defence. Dropped once the device is
+        // identified, so it never reaches the notification centre either.
+
+        // Learn what this alarm actually says, while we can still prove which device it is.
+        // Push notifications carry no entity ID of their own; the one we have here was
+        // recovered from a WebSocket event, which only happens on the connected server. That
+        // makes this the only reliable chance to record the text for the times there is no
+        // such event — a queued push at startup, or an alarm on another paired server.
+        if (n.EntityId.HasValue
+            && OilRigTriggerRegistry.LearnAlarmText(_vm.Servers, n.EntityId.Value, n.Title))
+        {
+            AppendLog($"[alarm] Learned alarm text for entity {n.EntityId.Value}: \"{n.Title}\".");
+            try { _vm.Save(); } catch { }
+            RebuildOilRigTriggerRegistry();
+        }
+
+        // Text matching is the fallback, never the first answer, and Lookup only reaches it
+        // when there is no entity ID. Texts left at Rust's default are refused outright: every
+        // unrenamed alarm shares them, and swallowing a real raid alert is far worse than
+        // letting one rig alarm through.
+        if (OilRigTriggerRegistry.Lookup(n.EntityId, n.Title, n.Message) is string rigLabel)
+        {
+            // The rule still has to run — this alarm is the sensor that starts the timer, and
+            // for FCM the Logic Engine is triggered further down inside this very method. The
+            // WebSocket path already fired before ShowAlarmPopup was called, so only FCM needs
+            // it here; doing both would start the countdown twice.
+            if (source != "WS" && n.EntityId.HasValue)
+            {
+                TriggerLogicEngineOnDeviceEvent(n.EntityId.Value, true);
+
+                // Same ten-second pulse the normal path gives, so the device still visibly
+                // reacts in the list. Only the noise is suppressed, not the feedback.
+                if (dev != null)
+                {
+                    dev.IsOn = true;
+                    var pulsed = dev;
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(10000);
+                        await Dispatcher.InvokeAsync(() => pulsed.IsOn = false);
+                    });
+                }
+            }
+
+            AppendLog($"[alarm] Suppressed alarm from {rigLabel} trigger " +
+                      $"(entity {n.EntityId?.ToString() ?? "unknown"}) — reported as an oil rig event instead.");
+            return;
+        }
+
+        // Add to Notification Center
+        // Prefer the original FCM title (e.g. "HV Rockets Raid wake up") over the generic device name.
+        var notif = new RustPlusNotification(
+            type: "Alarm",
+            title: !string.IsNullOrWhiteSpace(n.Title) ? n.Title : (string.IsNullOrEmpty(n.DeviceName) ? Properties.Resources.GetString("UiAlarm") : n.DeviceName),
+            message: n.Message,
+            serverIp: n.Ip,
+            serverPort: n.Port,
+            serverName: n.Server
+        )
+        {
+            EntityId = n.EntityId,
+            Timestamp = eventTime,
+            FcmNotificationId = n.FcmNotificationId,
+            ImageUrl = n.ImageUrl
+        };
+        NotificationCenterService.AddNotification(notif);
+
+        if (n.EntityId.HasValue)
+        {
+            // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
+            string key = $"ID:{n.EntityId.Value}";
+            if (_lastAlarmProcessed.TryGetValue(key, out var last) && (now - last).TotalSeconds < 5)
+            {
+                // Wenn dies eine detaillierte FCM-Meldung ist, die auf eine generische WS-Meldung folgt: Update!
+                if (source == "FCM" && n.Message != "Alarm activated!")
+                {
+                    if (_alarmWin != null && _alarmWin.IsLoaded)
+                    {
+                        _alarmWin.UpdateOrAdd(n);
+                    }
+                }
+                return;
+            }
+            // Cross-path dedup: WS alarm arriving after a generic FCM alarm for same server
+            if (source == "WS" && _lastGenericAlarmPerServer.TryGetValue(cleanSrv, out var genTime) && (now - genTime).TotalSeconds < 5)
+            {
+                _lastAlarmProcessed[key] = now;
+                AppendLog($"[alarm/debug] ({source}) Cross-path dedup: WS alarm follows generic FCM alarm for server '{cleanSrv}'");
+                return;
+            }
+
+            _lastAlarmProcessed[key] = now;
+            _lastAnyAlarmTime = now; // Merken, dass IRGENDEIN Alarm kam
+        }
+        else
+        {
+            // FUZZY DEDUP: Wenn gerade erst (vor < 5s) ein gezielter Alarm kam, 
+            // ignoriere diesen generischen (ID-losen) FCM-Alarm.
+            if ((now - _lastAnyAlarmTime).TotalSeconds < 5)
+            {
+                // Auch hier: Wenn es ein detaillierter FCM-Alarm ist -> Updaten statt droppen!
+                if (source == "FCM" && n.Message != "Alarm activated!")
+                {
+                    if (_alarmWin != null && _alarmWin.IsLoaded)
+                    {
+                        _alarmWin.UpdateOrAdd(n);
+                    }
+                }
+                AppendLog($"[alarm/debug] ({source}) Dropping generic alarm because a specific alarm was just handled (or updated).");
+                return;
+            }
+            _lastAnyAlarmTime = now;
+            if (!string.IsNullOrEmpty(cleanSrv))
+                _lastGenericAlarmPerServer[cleanSrv] = now;
+        }
+
+        // 4) Play Audio (per-device setting when identified, generic fallback otherwise)
+        if (dev != null || TrackingService.GenericAlarmAudioEnabled)
+        {
+            PlayAlarmAudio(dev);
+        }
+        else
+        {
+            AppendLog($"[alarm/debug] ({source}) Skipping audio because generic alarm audio is disabled.");
+        }
+
+        // Send smart alert to Discord Bot
+        alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
+            string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+        var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+        var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+            ? _vm.SteamId64
+            : alarmProfile?.SteamId64 ?? "";
+        string alarmName = dev?.PureName ?? (!string.IsNullOrEmpty(n.DeviceName) ? n.DeviceName : "Smart Alarm");
+        string alarmAlert = AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName);
+
+        _ = SendDiscordWebhookAsync(alarmProfile, alarmAlert);
+        _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+            raidServerKey,
+            raidOwnerSteamId,
+            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+
+        // Send smart alert to team chat if setting and master switch are enabled
+        if (_vm.Selected?.IsFullConnected == true
+            && TrackingService.AnnounceSmartAlerts
+            && _announceSpawns)
+        {
+            _ = SendTeamChatSafeAsync(alarmAlert, false, true, skipBasicWebhook: true);
+        }
+
+        if (dev != null)
+        {
+            AppendLog($"[alarm/debug] ({source}) Device identified: {dev.Name} (Kind: {dev.Kind}, ID: {dev.EntityId})");
+            AppendLog($"[alarm/debug] ({source}) Settings: AudioEnabled={dev.AudioEnabled}, PopupEnabled={dev.PopupEnabled}");
+            
+            // Wenn der Alarm via FCM kommt, setzen wir den UI-Zustand manuell auf "ACTIVE" (10s Puls) und triggern die Logic Engine
+            if (source != "WS")
+            {
+                dev.IsOn = true;
+                TriggerLogicEngineOnDeviceEvent(dev.EntityId, true);
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(10000);
+                    await Dispatcher.InvokeAsync(() => dev.IsOn = false);
+                });
+            }
+
+            if (dev.OverlayEnabled)
+            {
+                AddAlarmToOverlay(dev, n);
+            }
+
+            if (!dev.PopupEnabled) 
+            {
+                AppendLog($"[alarm/debug] ({source}) Skipping popup window because PopupEnabled is false for this device.");
+                return; 
+            }
+        }
+        else
+        {
+            if (n.EntityId.HasValue)
+                AppendLog($"[alarm/debug] ({source}) No device found for ID {n.EntityId.Value}. Using generic alarm settings.");
+            else
+                AppendLog($"[alarm/debug] ({source}) Generic alarm (no ID). Using generic alarm settings.");
+
+            if (TrackingService.GenericAlarmOverlayEnabled)
+            {
+                AddAlarmToOverlay(null, n);
+            }
+
+            if (!TrackingService.GenericAlarmPopupEnabled)
+            {
+                AppendLog($"[alarm/debug] ({source}) Skipping popup window because generic alarm popups are disabled.");
+                return;
+            }
+        }
+
+        AppendLog($"[alarm/debug] ({source}) Executing: Show Alarm Window");
+
+        if (_alarmWin is null || !_alarmWin.IsLoaded)
+        {
+            // The in-app alert popup means a smart alarm actually fired.
+            Ach.Unlock(Ach.Raided);
+            _alarmWin = new AlarmWindow { Owner = this };
+            _alarmWin.Closed += (_, __) => _alarmWin = null;
+            _alarmWin.Show();
+        }
+        _alarmWin.Add(n);
+    }
+
+    private System.Media.SoundPlayer? _notificationSoundPlayer;
+
+    private void PlayNotificationSound(string resourceName)
+    {
+        try
+        {
+            if (_notificationSoundPlayer == null)
+            {
+                var resource = Application.GetResourceStream(new Uri($"pack://application:,,,/Assets/{resourceName}"));
+                if (resource != null)
+                {
+                    _notificationSoundPlayer = new System.Media.SoundPlayer(resource.Stream);
+                    _notificationSoundPlayer.Load();
+                }
+                else
+                {
+                    var baseDir = AppContext.BaseDirectory;
+                    var path = System.IO.Path.Combine(baseDir, "Assets", resourceName);
+                    if (!System.IO.File.Exists(path))
+                        path = System.IO.Path.Combine(baseDir, resourceName);
+                    
+                    if (System.IO.File.Exists(path))
+                    {
+                        _notificationSoundPlayer = new System.Media.SoundPlayer(path);
+                        _notificationSoundPlayer.Load();
+                    }
+                }
+            }
+            _notificationSoundPlayer?.Play();
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[NotificationSound] Failed to play sound: {ex.Message}");
+        }
+    }
+
+    private void OnNotificationAdded(object? sender, RustPlusNotification notif)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // Play sound if enabled in settings
+            if (TrackingService.NotificationsSoundsEnabled)
+            {
+                if (notif.Type == "Chat")
+                {
+                    PlayNotificationSound("icq-message.wav");
+                }
+            }
+
+            // Show Toast/Snackbar if enabled
+            if (TrackingService.NotificationsToastEnabled)
+            {
+                var appearance = notif.Type switch
+                {
+                    "Alarm" => WpfUi.ControlAppearance.Danger,
+                    "Death" => WpfUi.ControlAppearance.Caution,
+                    "Chat" => WpfUi.ControlAppearance.Info,
+                    "Pairing" => WpfUi.ControlAppearance.Success,
+                    _ => WpfUi.ControlAppearance.Info
+                };
+                ShowInfoSnackbar(notif.Title, notif.Message, appearance);
+            }
+        });
+    }
+
+    private void HandleFcmChatReceived(TeamChatMessage c)
+    {
+        // Also add it to the chat UI if the server is current!
+        if (_vm.Selected != null && _vm.Selected.Host == c.Ip && _vm.Selected.Port == c.Port)
+        {
+            AppendChatIfNew(c, ChatChannel.Team, isHistorical: false);
+        }
+    }
+
+    private int _lastWorkspaceTabIndex;
+
+    private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.Source != MainTabs) return;
+
+        UpdateRailFolderHighlights();
+
+        bool raidSelected = MainTabs.SelectedItem == RaidCalculatorTab;
+        bool recyclerSelected = MainTabs.SelectedItem == RecyclerCalculatorTab;
+        bool geneticsSelected = MainTabs.SelectedItem == GeneticsLabTab;
+        bool shipBuilderSelected = MainTabs.SelectedItem == ShipBuilderTab;
+        bool baseBuilderSelected = MainTabs.SelectedItem == BaseBuilderTab || shipBuilderSelected;
+        bool wipeTrackerSelected = MainTabs.SelectedItem == PlayerWipeTrackerTab;
+        bool deathStatsSelected = MainTabs.SelectedItem == DeathStatsTab;
+        bool ticketsSelected = MainTabs.SelectedItem == TicketsTab;
+        RaidCalculatorPanel.Visibility = raidSelected ? Visibility.Visible : Visibility.Collapsed;
+        GeneticsLabPanel.Visibility = geneticsSelected ? Visibility.Visible : Visibility.Collapsed;
+        BaseBuilderPanel.Visibility = baseBuilderSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (baseBuilderSelected) _ = OpenBaseBuilderWorkspaceAsync(shipBuilderSelected ? ShipBuilderWorkspace : BaseBuilderWorkspace);
+        else _ = CloseBaseBuilderWorkspaceAsync();
+        PlayerWipeTrackerPanel.Visibility = wipeTrackerSelected ? Visibility.Visible : Visibility.Collapsed;
+        DeathStatsPanel.Visibility = deathStatsSelected ? Visibility.Visible : Visibility.Collapsed;
+        if (raidSelected) _ = OfferNewFeatureTutorialOnceAsync("raid-calculator");
+        if (wipeTrackerSelected) OpenPlayerWipeTrackerWorkspace();
+
+        // Opening these is the whole condition, so the tab switch is the trigger.
+        if (raidSelected) Ach.Unlock(Ach.RaidCalculator);
+        if (geneticsSelected) Ach.Unlock(Ach.GeneticsLab);
+        if (deathStatsSelected) Ach.Unlock(Ach.DeathStats);
+        if (deathStatsSelected) OpenDeathStatsWorkspace();
+        // Tickets is an inline tab like Recycler: re-read on open, and it takes the workspace over
+        // the map without touching the device/servers panel beside it.
+        if (ticketsSelected) SupportPanel.Refresh();
+        ServerContextPanel.Visibility = (recyclerSelected || geneticsSelected || baseBuilderSelected || wipeTrackerSelected || deathStatsSelected || ticketsSelected) ? Visibility.Collapsed : Visibility.Visible;
+        if (!raidSelected && !recyclerSelected && !geneticsSelected && !baseBuilderSelected && !wipeTrackerSelected && !deathStatsSelected && !ticketsSelected)
+            _lastWorkspaceTabIndex = MainTabs.SelectedIndex;
+
+        if (MainTabs.SelectedItem == NotificationsTab)
+        {
+            NotificationCenterService.MarkAllAsRead();
+        }
+    }
+
+    private void RaidCalculator_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void GeneticsLab_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void PlayerWipeTracker_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void DeathStats_CloseRequested(object sender, RoutedEventArgs e) => ReturnToLastWorkspace();
+
+    private void ReturnToLastWorkspace() =>
+        MainTabs.SelectedIndex = Math.Clamp(_lastWorkspaceTabIndex, 0, MainTabs.Items.Count - 1);
+
+    private void HandleOfflineDeath(OfflineDeathNotification d)
+    {
+        if (!TrackingService.OfflineDeathAlertsEnabled) return;
+
+        // Deliberately no age filter here, unlike the alarm path. An offline death is
+        // old by definition — the player was away when it happened, which is why the
+        // push sat in Google's queue at all. Refusing it for being old would refuse
+        // every genuine one.
+        //
+        // What it does need is to be counted once. The history has no duplicate check
+        // of its own and simply inserts, so a push replayed at every start used to add
+        // another entry for the same death each time.
+        if (!SeenAlarmStore.MarkIfNew($"death|{d.ServerName}|{d.AttackerName}", d.Timestamp))
+        {
+            AppendLog($"[FCM] Offline death from {d.Timestamp:dd.MM. HH:mm} already recorded — ignoring the repeat.");
+            return;
+        }
+
+        AppendLog($"[FCM] Offline Death Notification received: You were killed by {d.AttackerName} on {d.ServerName}");
+
+        // Save to local history
+        TrackingService.AddOfflineDeath(d);
+
+        // Add to Notification Center
+        // Worded as the Rust+ app and the live map word it: who killed you as the title,
+        // where as the line under it.
+        var notif = new RustPlusNotification(
+            type: "Death",
+            title: $"You were killed by {d.AttackerName}",
+            message: d.ServerName,
+            serverIp: d.Ip,
+            serverPort: d.Port,
+            serverName: d.ServerName
+        )
+        {
+            AttackerName = d.AttackerName,
+            Timestamp = d.Timestamp,
+            ImageUrl = d.ImageUrl
+        };
+        NotificationCenterService.AddNotification(notif);
+
+        // Play Offline Death sound
+        try
+        {
+            string soundPath = TrackingService.OfflineDeathSoundPath;
+            if (string.IsNullOrWhiteSpace(soundPath) || !System.IO.File.Exists(soundPath))
+            {
+                string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+                soundPath = System.IO.Path.Combine(baseDir, "Assets", "death.mp3");
+            }
+
+            if (System.IO.File.Exists(soundPath))
+            {
+                var fullPath = System.IO.Path.GetFullPath(soundPath);
+                Dispatcher.Invoke(() =>
+                {
+                    bool useLoopPlayer = TrackingService.OfflineDeathSoundLoopEnabled;
+
+                    if (useLoopPlayer)
+                    {
+                        if (_loopPlayer == null)
+                        {
+                            _loopPlayer = new System.Windows.Media.MediaPlayer();
+                            _loopPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Loop Media Failed: {e.ErrorException?.Message}");
+                            _loopPlayer.MediaEnded += (s, e) => {
+                                if (_isLooping && _loopPlayer != null)
+                                {
+                                    _loopPlayer.Position = TimeSpan.Zero;
+                                    _loopPlayer.Play();
+                                }
+                            };
+                        }
+
+                        _loopPlayer.Stop();
+                        _loopPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _loopPlayer.Volume = 1.0;
+                        _isLooping = true;
+                        _loopPlayer.Play();
+                        AppendLog($"[audio] Looping offline death sound: {fullPath}");
+                    }
+                    else
+                    {
+                        if (_alarmPlayer == null)
+                        {
+                            _alarmPlayer = new System.Windows.Media.MediaPlayer();
+                            _alarmPlayer.MediaFailed += (s, e) => AppendLog($"[audio] Death Sound Media Failed: {e.ErrorException?.Message}");
+                        }
+                        _alarmPlayer.Stop();
+                        _alarmPlayer.Open(new Uri(fullPath, UriKind.Absolute));
+                        _alarmPlayer.Volume = 1.0;
+                        _alarmPlayer.Play();
+                        AppendLog($"[audio] Playing offline death sound: {fullPath}");
+                    }
+                });
+            }
+            else
+            {
+                AppendLog($"[audio] Offline death sound file not found: {soundPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[audio] Error playing offline death sound: {ex.Message}");
+        }
+
+        // Show a toast with a Stop button to silence the looping sound. The sound is
+        // stopped however the toast leaves — button, auto-timeout, or close — via its
+        // Closed callback, so there's a single place that owns that side effect.
+        Dispatcher.Invoke(() =>
+        {
+            var item = new Controls.ToastItem
+            {
+                Title = Properties.Resources.OfflineDeathTitle,
+                Icon = WpfUi.SymbolRegular.Alert24,
+                AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Danger),
+                MaxCardWidth = 400,
+                Timeout = TimeSpan.FromHours(24),
+                Closed = () =>
+                {
+                    StopLoopPlayer();
+                    StopAlarmPlayer();
+                },
+            };
+
+            var stopBtn = new WpfUi.Button
+            {
+                Content = Properties.Resources.StopSound,
+                Appearance = WpfUi.ControlAppearance.Danger,
+                FontSize = 12,
+                Padding = new Thickness(8, 2, 8, 2),
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+            stopBtn.Click += (s, e) => DismissToast(item);
+
+            var panel = new StackPanel { Orientation = Orientation.Vertical };
+            panel.Children.Add(new TextBlock
+            {
+                Text = string.Format(Properties.Resources.OfflineDeathMessage, d.AttackerName, d.ServerName),
+                TextWrapping = TextWrapping.Wrap
+            });
+            panel.Children.Add(stopBtn);
+
+            item.Content = panel;
+            AddToast(item);
+        });
+
+        // Send to Discord Bot Raid Alerts if premium user and setting is enabled
+        if (TrackingService.OfflineDeathDiscordEnabled && RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    string cleanSrv = CleanServerName(d.ServerName);
+                    var alarmProfile = _vm.Servers.FirstOrDefault(p =>
+                        string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
+                    
+                    var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+                    var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
+                        ? _vm.SteamId64
+                        : alarmProfile?.SteamId64 ?? "";
+
+                    await DiscordBotListenerService.Instance.SendRaidNotificationAsync(
+                        raidServerKey,
+                        raidOwnerSteamId,
+                        $"☠️ **Offline Death**: You were killed by **{d.AttackerName}** on **{d.ServerName}**"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[DiscordBotListener] Failed to send offline death raid notification: {ex.Message}");
+                }
+            });
+        }
+    }
+
+    private void AddAlarmToOverlay(SmartDevice? dev, AlarmNotification n)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _overlayAlarms.Add((dev, n));
+            _overlayAlarmIndex = _overlayAlarms.Count - 1;
+            UpdateAlarmOverlayUi();
+
+            AlarmOverlayBorder.Visibility = Visibility.Visible;
+
+            if (AlarmOverlayAutoHideChk.IsChecked == true)
+            {
+                RestartAlarmOverlayTimer();
+            }
+            else
+            {
+                _overlayHideTimer?.Stop();
+            }
+        });
+    }
+
+    private void UpdateAlarmOverlayUi()
+    {
+        if (_overlayAlarms.Count == 0 || _overlayAlarmIndex < 0 || _overlayAlarmIndex >= _overlayAlarms.Count)
+        {
+            AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var current = _overlayAlarms[_overlayAlarmIndex];
+        
+        string srvName = string.IsNullOrWhiteSpace(current.Notification.Server) ? "Unknown Server" : current.Notification.Server;
+        AlarmOverlayServerTxt.Text = srvName;
+
+        // When the alarm went off, not when the push reached us — the same time the
+        // notification list shows, so the two never disagree. On its own line: server
+        // names run long, and sharing one with the name pushed the time out of sight.
+        var alarmAt = current.Notification.EventTime ?? current.Notification.Timestamp;
+        AlarmOverlayTimeTxt.Text = alarmAt.Date == DateTime.Today
+            ? alarmAt.ToString("t")
+            : alarmAt.ToString("g");
+        // The title is what Rust actually sent for this alarm — the upper line the player set
+        // on it. Preferring it over a paired device name, and both over the word "Smart Alarm",
+        // means the overlay says which alarm went off instead of merely that one did.
+        AlarmOverlayNameTxt.Text =
+            !string.IsNullOrWhiteSpace(current.Notification.Title) ? current.Notification.Title!
+            : !string.IsNullOrWhiteSpace(current.Device?.PureName) ? current.Device!.PureName
+            : Properties.Resources.SmartAlarm;
+        AlarmOverlayMsgTxt.Text = current.Notification.Message ?? Properties.Resources.AlarmActivated;
+        
+        AlarmOverlayPagingTxt.Text = $"{_overlayAlarmIndex + 1}/{_overlayAlarms.Count}";
+
+        AlarmOverlayPrevBtn.IsEnabled = _overlayAlarmIndex > 0;
+        AlarmOverlayNextBtn.IsEnabled = _overlayAlarmIndex < _overlayAlarms.Count - 1;
+        
+        bool multi = _overlayAlarms.Count > 1;
+        AlarmOverlayPrevBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayPagingTxt.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+        AlarmOverlayNextBtn.Visibility = multi ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void AlarmOverlayPrev_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex > 0)
+        {
+            _overlayAlarmIndex--;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private static string CleanServerName(string? serverName)
+    {
+        var clean = Regex.Replace(serverName ?? "", @"\x1B\[[0-9;]*[A-Za-z]", "");
+        return Regex.Replace(clean, @"\[/?[a-zA-Z]+\]", "").Trim();
+    }
+
+    private void AlarmOverlayNext_Click(object sender, RoutedEventArgs e)
+    {
+        if (_overlayAlarmIndex < _overlayAlarms.Count - 1)
+        {
+            _overlayAlarmIndex++;
+            UpdateAlarmOverlayUi();
+            if (AlarmOverlayAutoHideChk.IsChecked == true) RestartAlarmOverlayTimer();
+        }
+    }
+
+    private void AlarmOverlayClose_Click(object sender, RoutedEventArgs e)
+    {
+        AlarmOverlayBorder.Visibility = Visibility.Collapsed;
+        _overlayAlarms.Clear();
+        _overlayAlarmIndex = -1;
+        _overlayHideTimer?.Stop();
+        StopLoopPlayer();
+        StopAlarmPlayer();
+    }
+
+    private void AlarmOverlayAutoHideChk_Changed(object sender, RoutedEventArgs e)
+    {
+        if (AlarmOverlayAutoHideChk.IsChecked == true)
+        {
+            RestartAlarmOverlayTimer();
+        }
+        else
+        {
+            _overlayHideTimer?.Stop();
+        }
+    }
+
+    private void OnAudioLoopClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.MenuItem item && item.Tag is SmartDevice dev)
+        {
+            if (dev.AudioLoopEnabled)
+            {
+                if (!dev.OverlayEnabled) dev.OverlayEnabled = true;
+                if (AlarmOverlayAutoHideChk.IsChecked == true)
+                {
+                    AlarmOverlayAutoHideChk.IsChecked = false;
+                }
+            }
+            UpdateGlobalAutoHideUI();
+        }
+    }
+
+    private async void OnInAppPopupCheckBoxClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is System.Windows.Controls.CheckBox chk && chk.DataContext is SmartDevice dev)
+        {
+            if (dev.AudioLoopEnabled)
+            {
+                e.Handled = true;
+                var msgBox = new Wpf.Ui.Controls.MessageBox
+                {
+                    Title = Properties.Resources.SmartAlarm,
+                    Content = Properties.Resources.LoopAudioPrompt,
+                    PrimaryButtonText = Properties.Resources.TurnOffNow,
+                    CloseButtonText = Properties.Resources.KeepActive
+                };
+                msgBox.Owner = this;
+                msgBox.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+                var result = await msgBox.ShowDialogAsync();
+                if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
+                {
+                    dev.AudioLoopEnabled = false;
+                    dev.OverlayEnabled = false;
+                    UpdateGlobalAutoHideUI();
+                }
+            }
+        }
+    }
+
+    private async void OnAutoHideCheckBoxClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        bool anyLooping = _vm.CurrentDevices != null && System.Linq.Enumerable.Any(_vm.CurrentDevices, d => d.AudioLoopEnabled);
+        if (anyLooping && AlarmOverlayAutoHideChk.IsChecked == false)
+        {
+            e.Handled = true;
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = Properties.Resources.SmartAlarm,
+                Content = Properties.Resources.LoopAudioGlobalPrompt,
+                PrimaryButtonText = Properties.Resources.TurnOffNow,
+                CloseButtonText = Properties.Resources.KeepActive
+            };
+            msgBox.Owner = this;
+            msgBox.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            var result = await msgBox.ShowDialogAsync();
+            if (result == Wpf.Ui.Controls.MessageBoxResult.Primary)
+            {
+                if (_vm.CurrentDevices != null)
+                {
+                    foreach (var d in System.Linq.Enumerable.Where(_vm.CurrentDevices, d => d.AudioLoopEnabled))
+                    {
+                        d.AudioLoopEnabled = false;
+                    }
+                }
+                AlarmOverlayAutoHideChk.IsChecked = true;
+                UpdateGlobalAutoHideUI();
+            }
+        }
+    }
+
+    private void UpdateGlobalAutoHideUI()
+    {
+        bool anyLooping = _vm.CurrentDevices != null && System.Linq.Enumerable.Any(_vm.CurrentDevices, d => d.AudioLoopEnabled);
+        AlarmOverlayAutoHideChk.Opacity = anyLooping ? 0.4 : 1.0;
+        if (anyLooping && AlarmOverlayAutoHideChk.IsChecked == true)
+        {
+            AlarmOverlayAutoHideChk.IsChecked = false;
+        }
+    }
+
+    private void RestartAlarmOverlayTimer()
+    {
+        if (_overlayHideTimer == null)
+        {
+            _overlayHideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            _overlayHideTimer.Tick += (s, ev) =>
+            {
+                _overlayHideTimer.Stop();
+                AlarmOverlayClose_Click(null!, null!);
+            };
+        }
+        _overlayHideTimer.Stop();
+        _overlayHideTimer.Start();
+    }
+
+    // Hilfsfunktion: stabiler Schlüssel für eine Chat-Nachricht
+
+
+    // Liefert Viewbox-Skalierung s und Offsets (Letterboxing) relativ zum WebViewHost
+    private (double s, double offX, double offY) GetViewboxScaleAndOffset()
+    {
+        if (_scene == null || WebViewHost == null) return (1.0, 0.0, 0.0);
+
+        double hostW = Math.Max(1, WebViewHost.ActualWidth);
+        double hostH = Math.Max(1, WebViewHost.ActualHeight);
+
+        // Inhalt: wir nehmen die "natürliche" Breite/Höhe der Szene
+        double contentW = _scene.ActualWidth > 0 ? _scene.ActualWidth : _scene.Width;
+        double contentH = _scene.ActualHeight > 0 ? _scene.ActualHeight : _scene.Height;
+        if (contentW <= 0 || contentH <= 0) return (1.0, 0.0, 0.0);
+
+        double s = Math.Min(hostW / contentW, hostH / contentH);
+        double offX = (hostW - contentW * s) * 0.5;
+        double offY = (hostH - contentH * s) * 0.5;
+        return (s, offX, offY);
+    }
+
+    private void SaveWindowSettings()
+    {
+        try
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                // Closed before the saved maximize was applied: keep it for next time.
+                TrackingService.SaveWindowBounds(this.ActualWidth, this.ActualHeight, this.Left, this.Top, _startMaximized);
+            }
+            else if (this.WindowState == WindowState.Maximized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, true);
+                }
+                else
+                {
+                    TrackingService.SaveWindowBounds(TrackingService.WindowWidth, TrackingService.WindowHeight, TrackingService.WindowLeft, TrackingService.WindowTop, true);
+                }
+            }
+            else if (this.WindowState == WindowState.Minimized)
+            {
+                var bounds = this.RestoreBounds;
+                if (!bounds.IsEmpty)
+                {
+                    TrackingService.SaveWindowBounds(bounds.Width, bounds.Height, bounds.Left, bounds.Top, TrackingService.WindowMaximized);
+                }
+            }
+        }
+        catch { }
+    }
+
+    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        SaveWindowSettings();
+        if (_isShuttingDown) return;
+
+        if (TrackingService.CloseToTrayEnabled)
+        {
+            e.Cancel = true;
+            this.Hide();
+            // We still save profiles just in case
+            try { _vm.Save(); } catch { }
+            return;
+        }
+
+        e.Cancel = true;
+        this.Hide();
+
+        // The app is going; its overlays go with it.
+        CloseOverlayWindows();
+
+        try
+        {
+            AppendLog($"Speichere Profile → {StorageService.GetProfilesPath()}");
+            _vm.Save();
+        }
+        catch (Exception ex) { AppendLog("Saving failed: " + ex.Message); }
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                // The builder's last edits into its recovery draft, and out of any co-op session, while its page still runs.
+                await Dispatcher.InvokeAsync(CloseBaseBuilderOnExitAsync).Task.Unwrap();
+            }
+            catch { }
+            try
+            {
+                await NotifyTeamFeatureAppClosingAsync();
+            }
+            catch { }
+            try
+            {
+                await DisposePlayerWipeTrackerAsync();
+            }
+            catch { }
+            try
+            {
+                // Hand the server back before the process goes, so the cloud
+                // picks it up in seconds rather than waiting out the lease.
+                await ReleaseCloudHoldOnExitAsync();
+            }
+            catch { }
+            finally
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _isShuttingDown = true;
+                    try { this.Close(); } catch { }
+                    System.Windows.Application.Current.Shutdown();
+                });
+            }
+        });
+    }
+
+    public void ManuallyImportMapFile()
+    {
+        try
+        {
+            var picker = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = Properties.Resources.GetString("SelectRustMapFile"),
+                Filter = "Rust map files (*.map)|*.map|All files (*.*)|*.*",
+                InitialDirectory = Map3DLocalBuildService.GetPreferredMapPickerDirectory(),
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+            if (picker.ShowDialog(this) == true)
+            {
+                string mapFilePath = picker.FileName;
+                string? directoryPath = IOPath.GetDirectoryName(mapFilePath);
+                
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+                
+                AppendLog($"[Offline Map] Manually parsed map added: {prof.Name} ({mapFilePath})");
+                ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[Offline Map] Manual import failed: {ex.Message}");
+            MessageBox.Show(string.Format(Properties.Resources.GetString("FormatFailedImportMap"), ex.Message), Properties.Resources.GetString("ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void Server_CopyMap_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem menuItem && menuItem.Tag is ServerProfile sourceProfile)
+        {
+            if (string.IsNullOrEmpty(sourceProfile.LocalMapFilePath))
+            {
+                ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiCopyMap"), RustPlusDesk.Properties.Resources.GetString("CodeUiOnlyManuallyParsedOfflineMapsCanBeCopiedToOtherServers"), WpfUi.ControlAppearance.Info);
+                return;
+            }
+
+            _copyMapSourceProfile = sourceProfile;
+            AppendLog($"[Offline Map] Staged source map for copy: {sourceProfile.Name} ({sourceProfile.LocalMapFilePath})");
+            ShowInfoSnackbar(Properties.Resources.GetString("CopyMapStagedTitle"), Properties.Resources.GetString("CopyMapStagedMessage"), WpfUi.ControlAppearance.Info);
+        }
+    }
+
+    public void HandleRustPlusLink(string link)
+    {
+        try
+        {
+            if (link != null) link = link.Trim().Trim('"', '\'').Trim();
+
+            string host = "";
+            int port = 28082; // Standard Rust+ Port
+            string playerId = _vm.SteamId64 ?? "0";
+            string playerToken = "0";
+            string serverName = "Manual Server";
+
+            bool isOfflineMapImport = false;
+            string rawLink = (link ?? "").Replace("rustplus://", "").Trim().TrimEnd('/', '\\').Trim();
+            rawLink = Uri.UnescapeDataString(rawLink);
+
+            // Replace forward slashes with backslashes on Windows for local paths
+            rawLink = rawLink.Replace('/', '\\');
+
+            // Handle normalized drive letters (e.g., G\\SteamLibrary -> G:\SteamLibrary)
+            if (rawLink.Length >= 2 && char.IsLetter(rawLink[0]) && rawLink[1] == '\\')
+            {
+                string rest = rawLink.Substring(2);
+                while (rest.StartsWith("\\"))
+                {
+                    rest = rest.Substring(1);
+                }
+                rawLink = rawLink[0] + @":\" + rest;
+            }
+
+            if (!rawLink.Contains("?") && !rawLink.Contains("ip=") && !rawLink.Contains("address=") &&
+                (rawLink.Contains(":") || rawLink.Contains("\\") || Directory.Exists(rawLink) || File.Exists(rawLink)))
+            {
+                isOfflineMapImport = true;
+            }
+
+            if (isOfflineMapImport)
+            {
+                string? mapFilePath = null;
+                string? directoryPath = null;
+
+                // Helper to resolve map file from a directory
+                string? ResolveMapFromDir(string dir)
+                {
+                    if (!Directory.Exists(dir)) return null;
+
+                    var files = Directory.GetFiles(dir, "*.map");
+                    if (files.Length == 1) return files[0];
+                    if (files.Length > 1)
+                    {
+                        // Try to find one matching folder name, else first
+                        string dirName = IOPath.GetFileName(dir);
+                        return files.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(dirName, StringComparison.OrdinalIgnoreCase)) ?? files[0];
+                    }
+                    return null;
+                }
+
+                // Clean the rawLink to see if we can find the file
+                if (File.Exists(rawLink))
+                {
+                    mapFilePath = rawLink;
+                    directoryPath = IOPath.GetDirectoryName(rawLink);
+                }
+                else if (Directory.Exists(rawLink))
+                {
+                    // Check directly in directory
+                    mapFilePath = ResolveMapFromDir(rawLink);
+                    directoryPath = rawLink;
+
+                    // If not found, try "maps" subdirectory
+                    if (string.IsNullOrEmpty(mapFilePath))
+                    {
+                        string subMapsDir = IOPath.Combine(rawLink, "maps");
+                        if (Directory.Exists(subMapsDir))
+                        {
+                            mapFilePath = ResolveMapFromDir(subMapsDir);
+                            if (!string.IsNullOrEmpty(mapFilePath))
+                            {
+                                directoryPath = subMapsDir;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // It's a file path that doesn't exist directly.
+                    // Try with .map suffix if it wasn't there
+                    string pathToCheck = rawLink;
+                    if (!pathToCheck.EndsWith(".map", StringComparison.OrdinalIgnoreCase))
+                    {
+                        pathToCheck += ".map";
+                    }
+
+                    if (File.Exists(pathToCheck))
+                    {
+                        mapFilePath = pathToCheck;
+                        directoryPath = IOPath.GetDirectoryName(pathToCheck);
+                    }
+                    else
+                    {
+                        // Let's check in "maps" subdirectory of the parent folder
+                        string parent = IOPath.GetDirectoryName(pathToCheck) ?? "";
+                        string filename = IOPath.GetFileName(pathToCheck);
+
+                        if (!string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            string subMapsDir = IOPath.Combine(parent, "maps");
+                            string subMapFile = IOPath.Combine(subMapsDir, filename);
+                            if (File.Exists(subMapFile))
+                            {
+                                mapFilePath = subMapFile;
+                                directoryPath = subMapsDir;
+                            }
+                            else if (Directory.Exists(subMapsDir))
+                            {
+                                // Try finding any file matching filename in the maps subfolder
+                                var matchedFiles = Directory.GetFiles(subMapsDir, filename + "*.map");
+                                if (matchedFiles.Length > 0)
+                                {
+                                    mapFilePath = matchedFiles[0];
+                                    directoryPath = subMapsDir;
+                                }
+                            }
+                        }
+
+                        // Last resort: search parent folder itself if parent is a "maps" directory, or search parent directory's wildcard files
+                        if (string.IsNullOrEmpty(mapFilePath) && !string.IsNullOrEmpty(parent) && Directory.Exists(parent))
+                        {
+                            var matchedFiles = Directory.GetFiles(parent, filename + "*.map");
+                            if (matchedFiles.Length > 0)
+                            {
+                                mapFilePath = matchedFiles[0];
+                                directoryPath = parent;
+                            }
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(mapFilePath) || !File.Exists(mapFilePath))
+                {
+                    throw new FileNotFoundException($"No .map file resolved from link path: '{rawLink}'");
+                }
+
+                string? localMapImagePath = null;
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    string mapName = IOPath.GetFileNameWithoutExtension(mapFilePath);
+                    var imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                    var imageFiles = Directory.GetFiles(directoryPath)
+                        .Where(f => imageExtensions.Contains(IOPath.GetExtension(f).ToLower()))
+                        .ToList();
+
+                    var exactMatch = imageFiles.FirstOrDefault(f => IOPath.GetFileNameWithoutExtension(f).Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (exactMatch != null)
+                    {
+                        localMapImagePath = exactMatch;
+                    }
+                    else if (imageFiles.Count == 1)
+                    {
+                        localMapImagePath = imageFiles[0];
+                    }
+                }
+
+                int count = 1;
+                while (_vm.Servers.Any(s => s.Name == $"3D-Map-Parsing {count}"))
+                {
+                    count++;
+                }
+                string importedServerName = $"3D-Map-Parsing {count}";
+
+                var prof = new ServerProfile
+                {
+                    Name = importedServerName,
+                    Host = "127.0.0.1",
+                    Port = 0,
+                    SteamId64 = _vm.SteamId64 ?? "0",
+                    PlayerToken = "offline",
+                    LocalMapFilePath = mapFilePath,
+                    LocalMapImagePath = localMapImagePath,
+                    Devices = new ObservableCollection<SmartDevice>()
+                };
+
+                _vm.AddServer(prof);
+                _vm.Selected = prof;
+                _vm.Save();
+
+                AppendLog($"[Offline Map] Deep link imported map: {prof.Name} ({mapFilePath})");
+                ShowInfoSnackbar(Properties.Resources.GetString("MapImportedTitle"), string.Format(Properties.Resources.GetString("FormatOfflineMapImported"), prof.Name), WpfUi.ControlAppearance.Success);
+                _ = EnsureOfflineMapImageAsync(prof);
+                this.Activate();
+                return;
+            }
+
+            if (rawLink.Contains("?") && (rawLink.Contains("address=") || rawLink.Contains("ip=")))
+            {
+                // --- FALL A: Offizieller Link (mit Parametern) ---
+                var p = ParseRustPlusLink(link ?? string.Empty);
+                host = p.host;
+                port = p.port;
+                playerId = p.playerId != 0 ? p.playerId.ToString() : playerId;
+                playerToken = p.playerToken.ToString();
+                serverName = !string.IsNullOrEmpty(p.name) ? p.name : "Paired Server";
+            }
+            else
+            {
+                // --- FALL B: Manueller Link (z.B. rustplus://1.2.3.4:28082) ---
+                // Wir entfernen das Protokoll "rustplus://"
+                var raw = (link ?? string.Empty).Replace("rustplus://", "").TrimEnd('/');
+
+                if (raw.Contains(":"))
+                {
+                    var parts = raw.Split(':');
+                    host = parts[0];
+                    int.TryParse(parts[1], out port);
+                }
+                else
+                {
+                    host = raw;
+                }
+
+                serverName = "Custom: " + host;
+                AppendLog($"Manual IP detected: {host}:{port}");
+            }
+
+            if (string.IsNullOrEmpty(host)) throw new Exception("IP/Address missing");
+
+            // Wir rufen die Pairing-Funktion auf
+            Pairing_Paired(this, new PairingPayload
+            {
+                Host = host,
+                Port = port,
+                SteamId64 = playerId,
+                PlayerToken = playerToken,
+                ServerName = serverName
+            });
+
+            AppendLog($"Server {host} added to list.");
+            this.Activate(); // Bringt das Fenster nach vorne
+        }
+        catch (Exception ex)
+        {
+            AppendLog("RustPlus-Link-Error: " + ex.Message);
+            MessageBox.Show(string.Format(Properties.Resources.UnableToReadLink, ex.Message));
+        }
+    }
+
+
+    private (string host, int port, ulong playerId, int playerToken, string? name) ParseRustPlusLink(string link)
+    {
+        // Beispiele tolerieren:
+        // rustplus://connect?ip=1.2.3.4&port=28082&playerId=7656…&playerToken=123456
+        // rustplus://?ip=…&port=…&playerid=…&playertoken=…
+        // rustplus://add?address=…&port=…&playerid=…&token=…
+        var l = link.Trim();
+
+        // in normales Schema wandeln, damit Uri es versteht
+        if (l.StartsWith("rustplus://", StringComparison.OrdinalIgnoreCase))
+            l = "http://" + l["rustplus://".Length..]; // dummy-scheme
+
+        var uri = new Uri(l);
+        var q = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        string host = q["ip"] ?? q["address"] ?? throw new ArgumentException("ip/address fehlt");
+        if (!int.TryParse(q["port"], NumberStyles.Integer, CultureInfo.InvariantCulture, out var port)) throw new ArgumentException("port fehlt/ungültig");
+
+        var sidStr = q["playerId"] ?? q["playerid"] ?? throw new ArgumentException("playerId fehlt");
+        if (!ulong.TryParse(sidStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var playerId)) throw new ArgumentException("playerId ungültig");
+
+        var tokStr = q["playerToken"] ?? q["playertoken"] ?? q["token"] ?? throw new ArgumentException("playerToken fehlt");
+        if (!int.TryParse(tokStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var token)) throw new ArgumentException("playerToken ungültig");
+
+        var name = q["name"];
+        return (host, port, playerId, token, name);
+    }
+    private void CaptureFcmServerDescription(PairingPayload info)
+    {
+        if (string.IsNullOrWhiteSpace(info.ServerDescription) && string.IsNullOrWhiteSpace(info.ServerId)) return;
+
+        var profile = !string.IsNullOrWhiteSpace(info.Host)
+            ? _vm.Servers.FirstOrDefault(server =>
+                server.Host.Equals(info.Host, StringComparison.OrdinalIgnoreCase) &&
+                (info.Port <= 0 || server.Port == info.Port))
+            : null;
+        profile ??= !string.IsNullOrWhiteSpace(info.ServerName)
+            ? _vm.Servers.FirstOrDefault(server => server.Name.Equals(info.ServerName, StringComparison.OrdinalIgnoreCase))
+            : null;
+
+        if (profile == null) return;
+
+        bool changed = false;
+        if (string.IsNullOrWhiteSpace(profile.Description) && !string.IsNullOrWhiteSpace(info.ServerDescription))
+        {
+            profile.Description = info.ServerDescription.Trim();
+            changed = true;
+            AppendLog($"[FCM] Saved missing server description for '{profile.Name}'.");
+        }
+        // Only matched by host and port here, so fill a missing id but never overwrite one.
+        if (string.IsNullOrWhiteSpace(profile.ServerId) && !string.IsNullOrWhiteSpace(info.ServerId))
+        {
+            profile.ServerId = info.ServerId;
+            changed = true;
+            AppendLog($"[FCM] Saved server id for '{profile.Name}'.");
+        }
+        if (changed) _vm.Save();
+    }
+
+    private void Pairing_Paired(object? sender, PairingPayload e)
+    {
+        // Key OHNE EntityId: dient nur für „Server-keepalive“-Erkennung
+        var sig = $"{e.Host}:{e.Port}|{e.SteamId64}|{e.PlayerToken}";
+
+        // >>> NUR keepalives ohne EntityId ignorieren
+        if (!e.EntityId.HasValue && string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
+        {
+            AppendLog("[pairing] keepalive for same server+token – ignored.");
+            return;
+        }
+
+        _lastPairSig = sig;
+
+        // >>> Entity-Pairings NIE über server+token wegfiltern!
+        if (e.EntityId.HasValue)
+        {
+            var id = e.EntityId.Value;
+            if (_entityPairSeen.TryGetValue(id, out var last) &&
+                (DateTime.UtcNow - last).TotalSeconds < 5)
+            {
+                AppendLog($"[pairing] duplicate for entity #{id} ignored (5s).");
+                return;
+            }
+            _entityPairSeen[id] = DateTime.UtcNow;
+        }
+
+        _lastPairingPingAt = DateTime.UtcNow;
+        AppendLog("Pairing_Paired fired");
+
+        _ = Dispatcher.InvokeAsync(async () =>
+        {
+            // Add to Notification Center!
+            // The thing that was paired is the title, as on the live map; the line under it
+            // says what happened.
+            var pairedTitle = e.EntityId.HasValue
+                ? e.EntityName ?? "Smart Device"
+                : e.ServerName ?? $"{e.Host}:{e.Port}";
+            var pairedMsg = e.EntityId.HasValue
+                ? $"{e.EntityType ?? "Device"} paired (ID {e.EntityId.Value})"
+                : "Server paired.";
+            var notif = new RustPlusNotification(
+                type: "Pairing",
+                title: pairedTitle,
+                message: pairedMsg,
+                serverIp: e.Host,
+                serverPort: e.Port,
+                serverName: e.ServerName
+            )
+            {
+                EntityId = e.EntityId,
+                EntityName = e.EntityName,
+                Timestamp = DateTime.Now,
+                ImageUrl = e.ImageUrl
+            };
+            NotificationCenterService.AddNotification(notif);
+
+            var keyHost = (e.Host ?? "").Trim();
+            var keyPort = e.Port;
+            // PREFER the SteamID from the pairing payload if it exists. 
+            // Only fallback to _vm.SteamId64 if the payload is missing it.
+            var keySteam = !string.IsNullOrEmpty(e.SteamId64) ? e.SteamId64 : _vm.SteamId64;
+
+            // Save SteamID globally if we just received a new one
+            if (!string.IsNullOrEmpty(e.SteamId64) && e.SteamId64 != TrackingService.SteamId64)
+            {
+                TrackingService.SteamId64 = e.SteamId64;
+                _vm.SteamId64 = e.SteamId64;
+                AppendLog($"[pairing] Captured SteamID {e.SteamId64} from pairing response.");
+                // Persist SteamId into the FCM config file so future launches read it
+                TrackingService.PatchFcmConfigSteamId(e.SteamId64);
+                HydrateSteamUiFromStorage();
+            }
+
+            bool datesChanged = false;
+            if (!string.IsNullOrEmpty(e.IssueDate))
+            {
+                if (long.TryParse(e.IssueDate, out var issueTs))
+                    TrackingService.FcmIssuedAt = DateTimeOffset.FromUnixTimeMilliseconds(issueTs > 9999999999 ? issueTs : issueTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.IssueDate, out var d1))
+                    TrackingService.FcmIssuedAt = d1;
+                datesChanged = true;
+            }
+
+            if (!string.IsNullOrEmpty(e.ExpiryDate))
+            {
+                if (long.TryParse(e.ExpiryDate, out var expTs))
+                    TrackingService.FcmExpiresAt = DateTimeOffset.FromUnixTimeMilliseconds(expTs > 9999999999 ? expTs : expTs * 1000).LocalDateTime;
+                else if (DateTime.TryParse(e.ExpiryDate, out var d2))
+                    TrackingService.FcmExpiresAt = d2;
+                datesChanged = true;
+            }
+            
+            if (datesChanged)
+            {
+                _vm.NotifyFcmChanged();
+                SetSidebarExpanded(_isSidebarPinnedExpanded);
+            }
+
+            // Facepunch's server id is the one identity that survives an address or port
+            // change, so it wins over host:port whenever both sides have it.
+            var prof = (!string.IsNullOrWhiteSpace(e.ServerId)
+                    ? _vm.Servers.FirstOrDefault(s =>
+                        string.Equals(s.ServerId, e.ServerId, StringComparison.OrdinalIgnoreCase) &&
+                        s.SteamId64 == keySteam)
+                    : null)
+                ?? _vm.Servers.FirstOrDefault(s =>
+                    s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
+                    s.Port == keyPort &&
+                    s.SteamId64 == keySteam);
+
+            var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
+
+            // The first server of an empty list gets a welcome and a one-click connect, below.
+            bool firstServerInList = false;
+
+            if (prof is null)
+            {
+                // Smart Re-Pairing Detection: Check if this is an existing server whose port or address changed
+                ServerProfile? candidateMatch = null;
+                var candidates = _vm.Servers.Where(s =>
+                    s.SteamId64 == keySteam &&
+                    (s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) ||
+                     (!string.IsNullOrWhiteSpace(e.ServerName) && s.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase)))
+                ).ToList();
+
+                if (candidates.Count > 0 &&
+                    ulong.TryParse(keySteam, NumberStyles.Integer, CultureInfo.InvariantCulture, out var steamNum) &&
+                    int.TryParse(e.PlayerToken, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tokenNum))
+                {
+                    // 1. Try to find a candidate whose existing devices respond 100% on the new server connection
+                    foreach (var c in candidates)
+                    {
+                        var entityIds = c.Devices?
+                            .Where(d => !d.IsGroup && d.EntityId > 0)
+                            .Select(d => d.EntityId)
+                            .ToList();
+
+                        if (entityIds != null && entityIds.Count > 0)
+                        {
+                            AppendLog($"[pairing] Verifying {entityIds.Count} existing devices for candidate '{c.Name}' on {keyHost}:{keyPort}...");
+                            var verifyResult = await Task.Run(() => Services.RustPlusConnectionVerifier.VerifyServerAndDevicesAsync(
+                                keyHost, keyPort, steamNum, tokenNum, entityIds, c.UseFacepunchProxy, TimeSpan.FromSeconds(5)));
+
+                            if (verifyResult.DevicesVerified)
+                            {
+                                candidateMatch = c;
+                                AppendLog($"[pairing] 100% Device Match Confirmed! Existing devices verified on {keyHost}:{keyPort} for '{c.Name}'.");
+                                ShowInfoSnackbarOnMain(
+                                    "Server Connection Updated",
+                                    $"'{c.Name}' port updated ({c.Port} → {keyPort}). All {c.Devices?.Count ?? 0} devices and automations preserved!",
+                                    Wpf.Ui.Controls.ControlAppearance.Success);
+                                break;
+                            }
+                        }
+                    }
+
+                    // 2. If no devices were verified (e.g. wiped or empty device list), check if exactly 1 server matches the host
+                    if (candidateMatch == null && candidates.Count == 1)
+                    {
+                        var c = candidates[0];
+                        bool sameHost = c.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase);
+                        bool sameName = !string.IsNullOrWhiteSpace(e.ServerName) &&
+                            (c.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
+                             c.Name.Contains(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
+                             e.ServerName.Contains(c.Name, StringComparison.OrdinalIgnoreCase));
+
+                        if (sameHost && (sameName || (c.Devices?.Count ?? 0) == 0))
+                        {
+                            candidateMatch = c;
+                            AppendLog($"[pairing] Matched candidate by host & name: '{c.Name}' ({c.Port} -> {keyPort}).");
+                            ShowInfoSnackbarOnMain(
+                                "Server Port Updated",
+                                $"'{c.Name}' port updated from {c.Port} to {keyPort}.",
+                                Wpf.Ui.Controls.ControlAppearance.Success);
+                        }
+                    }
+                }
+
+                // If this is an entity pairing (switch, alarm, TC) and port didn't match, link to host server if exists
+                if (candidateMatch == null && e.EntityId.HasValue)
+                {
+                    var hostMatch = _vm.Servers.FirstOrDefault(s =>
+                        s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
+                        s.SteamId64 == keySteam);
+
+                    if (hostMatch != null)
+                    {
+                        candidateMatch = hostMatch;
+                        AppendLog($"[pairing] Entity #{e.EntityId.Value} linked to existing server '{hostMatch.Name}' on {keyHost}:{keyPort}.");
+                    }
+                }
+
+                if (candidateMatch != null)
+                {
+                    prof = candidateMatch;
+                    prof.Host = keyHost;
+                    prof.Port = keyPort;
+                    prof.PlayerToken = e.PlayerToken;
+                    prof.SteamId64 = keySteam;
+                    if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
+                    if (!string.IsNullOrWhiteSpace(e.ServerName)) prof.Name = e.ServerName;
+                    prof.IsAccessDenied = false;
+                    prof.Devices ??= new ObservableCollection<SmartDevice>();
+                    _vm.Save();
+                }
+                else
+                {
+                    prof = new ServerProfile
+                    {
+                        Name = serverName,
+                        Host = e.Host ?? string.Empty,
+                        Port = e.Port,
+                        ServerId = e.ServerId,
+                        SteamId64 = keySteam,
+                        PlayerToken = e.PlayerToken,
+                        IsAccessDenied = false,
+                        UseFacepunchProxy = false,
+                        Devices = new ObservableCollection<SmartDevice>()
+                    };
+                    firstServerInList = _vm.Servers.Count == 0;
+                    _vm.AddServer(prof);
+                    AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
+                }
+            }
+            else
+            {
+                prof.Name = serverName;
+                // Matched by id, the address is the part that may have moved.
+                if (!string.IsNullOrWhiteSpace(keyHost)) prof.Host = keyHost;
+                if (keyPort > 0) prof.Port = keyPort;
+                prof.PlayerToken = e.PlayerToken;
+                prof.SteamId64 = keySteam;
+                if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
+                prof.IsAccessDenied = false;
+                prof.Devices ??= new ObservableCollection<SmartDevice>();
+                _vm.Save();
+                AppendLog($"[pairing] Pairing updated -> {prof.Name}");
+            }
+
+            if (string.IsNullOrWhiteSpace(prof.Description) && !string.IsNullOrWhiteSpace(e.ServerDescription))
+            {
+                prof.Description = e.ServerDescription.Trim();
+                _vm.Save();
+            }
+
+            // >>> Geräte zuverlässig hinzufügen/aktualisieren (Switch + Alarm + StorageMonitor)
+
+
+            if (e.EntityId.HasValue)
+            {
+                // ------- NEU: robuste Kind-Erkennung -------
+                string? kind = e.EntityType;
+                string rawType = (e.EntityType ?? "").Trim();
+                string rawName = (e.EntityName ?? "").Trim();
+
+                bool TypeHas(string s) =>
+                    rawType.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                bool NameHas(string s) =>
+                    rawName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                // 1) direkte Typ-Matches
+                if (TypeHas("Alarm")) kind = "SmartAlarm";
+                else if (TypeHas("Switch")) kind = "SmartSwitch";
+                else if (TypeHas("Storage")) kind = "StorageMonitor";
+
+                // 2) Falls Typ leer/„server“/„entity“/unklar → nach Name mappen
+                if (string.IsNullOrWhiteSpace(kind) ||
+                    string.Equals(rawType, "server", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(rawType, "entity", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (NameHas("alarm"))
+                        kind = "SmartAlarm";
+                    else if (NameHas("storage") || NameHas("monitor") || NameHas("cupboard") || NameHas("tool cupboard") || NameHas("tc"))
+                        kind = "StorageMonitor";
+                    else
+                        kind = "SmartSwitch"; // Default
+                }
+
+                // DEBUG
+                AppendLog($"[pair] entityId={e.EntityId.Value} rawType='{(string.IsNullOrWhiteSpace(rawType) ? "(null)" : rawType)}' rawName='{(string.IsNullOrWhiteSpace(rawName) ? "(null)" : rawName)}'");
+                AppendLog($"[pair] inferred kind='{kind ?? "(null)"}' for entity #{e.EntityId.Value}");
+                // ------- /NEU -------
+
+                // ------- /NEU -------
+
+                var dev = FindDeviceById(prof.Devices, e.EntityId.Value);
+                if (dev is null)
+                {
+                    dev = new SmartDevice
+                    {
+                        EntityId = e.EntityId.Value,
+                        Name = string.IsNullOrWhiteSpace(e.EntityName)
+                                   ? (string.IsNullOrWhiteSpace(e.ServerName) ? "Smart Device" : e.ServerName)
+                                   : e.EntityName,
+                        Kind = kind,
+                        IsOn = string.Equals(kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase) ? (bool?)null : false,
+                        IsMissing = false,
+                    };
+                    prof.Devices.Add(dev);
+                    AppendLog($"Device added → {dev.Display}");
+                    // Any kind counts: switch, alarm or storage monitor.
+                    Ach.Unlock(Ach.SmartDevicePaired);
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(e.EntityName)) dev.Name = e.EntityName;
+
+                    if (!string.IsNullOrWhiteSpace(kind))
+                    {
+                        if (!string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase))
+                            dev.Kind = kind;
+                        if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+                            dev.IsOn = null;
+                    }
+
+                    dev.IsMissing = false;
+                    AppendLog($"Device updated → {dev.Display}");
+                }
+
+                /* >>>>>>> HIER EINSETZEN (direkt nach dem add/update-Block) <<<<<<< */
+                // >>> Cache sofort ins UI + Einmal-Expand + Sub/Poke
+                if (string.Equals(dev.Kind, "StorageMonitor", StringComparison.OrdinalIgnoreCase))
+                {
+                    // 1) Cache → UI (falls vorhanden), sonst Hülle
+                    if (_rust is RustPlusClientReal rpc && rpc.TryGetCachedStorage(dev.EntityId, out var cached) && cached != null)
+                    {
+                        dev.IsMissing = false;
+                        Dispatcher.Invoke(() =>
+                        {
+                            var uiSnap = new StorageSnapshot
+                            {
+                                UpkeepSeconds = cached.UpkeepSeconds,
+                                IsToolCupboard = cached.IsToolCupboard
+                            };
+                            foreach (var it in cached.Items) uiSnap.Items.Add(it);
+                            dev.Storage = uiSnap;
+                        });
+                       // AppendLog($"[stor/refresh] (cache on pair) #{dev.EntityId} items={cached.Items?.Count ?? 0} upkeep={(cached.UpkeepSeconds?.ToString() ?? "null")}");
+                    }
+                    else
+                    {
+                        dev.Storage ??= new StorageSnapshot();
+                       // AppendLog($"[stor/refresh] (no cache) #{dev.EntityId} → awaiting event");
+                    }
+
+                    // 2) Einmal automatisch aufklappen + abonnieren
+                    if (!dev.IsExpanded)
+                    {
+                        dev.IsExpanded = true;
+                        _ = Dispatcher.InvokeAsync(async () =>
+                        {
+                            try
+                            {
+                                if (_rust is RustPlusClientReal r2)
+                                {
+                                    await r2.SubscribeEntityAsync(dev.EntityId);
+                                    await r2.PokeEntityAsync(dev.EntityId);
+                                  //  AppendLog($"[stor/sub+poke] #{dev.EntityId} queued");
+                                }
+                            }
+                            catch (Exception subEx)
+                            {
+                                AppendLog($"[stor/sub+poke] #{dev.EntityId} on pair: {subEx.Message}");
+                            }
+                        });
+                    }
+                }
+                /* >>>>>>> /ENDE Einfügeblock <<<<<<< */
+
+                // A freshly-paired Smart Alarm is otherwise invisible to the live WebSocket
+                // until the next (re)connect primes the whole device list. Until then its only
+                // signal is the FCM push, which carries no entity ID — so an oil-rig trigger
+                // cannot be identified and the alarm falls through as generic. Subscribe now, on
+                // the socket for the server it was paired on, so its events arrive with the ID:
+                // that both lets OilRigTriggerRegistry.Lookup match by ID and gives the app the
+                // chance to learn the alarm's text for later ID-less pushes.
+                if (string.Equals(dev.Kind, "SmartAlarm", StringComparison.OrdinalIgnoreCase)
+                    && _rust is RustPlusClientReal ar
+                    && _vm.Selected == prof)
+                {
+                    _ = Dispatcher.InvokeAsync(async () =>
+                    {
+                        try
+                        {
+                            await ar.SubscribeEntityAsync(dev.EntityId);
+                            await ar.PokeEntityAsync(dev.EntityId);
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair queued");
+                        }
+                        catch (Exception subEx)
+                        {
+                            AppendLog($"[alarm/sub+poke] #{dev.EntityId} on pair: {subEx.Message}");
+                        }
+                    });
+                }
+
+                // Rebuild the chat-command mappings right away. Without this the !upkeep / !switch
+                // entry only appears once someone happens to enter the settings through the
+                // Chat Commands button, so a freshly paired Storage Monitor stays unusable.
+                prof.SyncChatCommands();
+
+                if (_vm.Selected != prof)
+                    _vm.Selected = prof;
+
+                _vm.Save();
+                _ = CapturePairedDeviceLocationAsync(prof, dev, keySteam);
+            }
+
+            // New users stopped here: the server was in the list, but nothing said so, and it still
+            // had to be picked from the dropdown before Connect did anything.
+            if (firstServerInList)
+            {
+                if (_vm.Selected != prof) _vm.Selected = prof;
+
+                var welcome = new Views.Windows.FirstServerPairedWindow(this, prof.Name);
+                if (welcome.ShowDialog() == true && welcome.ConnectNow)
+                    await PerformConnectAsync(false);
+            }
+        });
+    }
+
+
+    /// <summary>Starts the FCM pairing listener silently — no busy overlay, no blocking.</summary>
+    private void StartPairingSilent(bool autoStart = false)
+    {
+        if (_listenerStarting || _pairing.IsRunning) return;
+
+        if (autoStart)
+        {
+            if (!TrackingService.IsFcmConfigured())
+            {
+                AppendLog("[pairing] No FCM config saved. Auto-start disabled.");
+                return;
+            }
+            if (TrackingService.FcmExpiresAt.HasValue && TrackingService.FcmExpiresAt.Value < DateTime.Now)
+            {
+                AppendLog("[pairing] FCM config has expired. Manual start (Listen) required to re-register.");
+                return;
+            }
+        }
+
+        _listenerStarting = true;
+        _vm.IsPairingBusy = true; // Tell UI we are trying to start
+        TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingStarting");
+        _ = Task.Run(async () =>
+        {
+            try { await _pairing.StartAsync(); }
+            catch (Exception ex) 
+            { 
+                AppendLog("[pairing] silent start error: " + ex.Message); 
+                Dispatcher.Invoke(() => { _vm.IsPairingBusy = false; _vm.IsPairingFaulted = true; TxtPairingState.Text = Properties.Resources.PairingError; });
+            }
+            finally { Dispatcher.Invoke(() => { _listenerStarting = false; }); }
+        });
+    }
+
+    private async Task StartPairingListenerUiAsync()
+    {
+        // Delegate to silent start — no more busy overlay
+        StartPairingSilent(false);
+        await Task.CompletedTask;
+    }
+
+    // TRY PAIRING WITH EDGE METHOD (Right Click on Listener)
+
+    private async void BtnListenWithEdge_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("[pairing] Edge pairing button clicked. Forcing a clean stop of any starting or running listener...");
+
+        // Force stop any starting/running process and cancel active tokens
+        await Task.Run(async () => await _pairing.StopAsync());
+
+        // Reset the starting guard to allow fresh registration
+        _listenerStarting = false;
+
+        var configPath = System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "RustPlusDesk", "rustplusjs-config.json");
+        try
+        {
+            if (File.Exists(configPath))
+            {
+                File.Delete(configPath);
+                AppendLog("[pairing] Deleted old FCM config to ensure new registration via Edge.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+        }
+
+        await StartPairingListenerUiWithEdgeAsync();
+    }
+
+    private async Task StartPairingListenerUiWithEdgeAsync()
+    {
+        if (_pairing.IsRunning)
+        {
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
+            TxtPairingState.Text = "";
+            AppendLog("Listener already running.");
+            return;
+        }
+        if (_listenerStarting) return;
+
+        try
+        {
+            _listenerStarting = true;
+            _vm.IsPairingBusy = true;
+            _vm.BusyText = "Starting Pairing-Listener (Edge)...";
+
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler onListen = (_, __) => tcs.TrySetResult(true);
+            EventHandler<string> onFail = (_, __) => tcs.TrySetResult(false);
+
+            _pairing.Listening += onListen;
+            _pairing.Failed += onFail;
+
+            await _pairing.StartAsyncUsingEdge();   // <— NEU: eigene Methode (siehe unten)
+
+            var completed = await Task.WhenAny(tcs.Task, Task.Delay(8000));
+            bool ok = (completed == tcs.Task) && tcs.Task.Result;
+
+            _pairing.Listening -= onListen;
+            _pairing.Failed -= onFail;
+
+            _vm.IsPairingBusy = false; _vm.BusyText = "";
+            // The timeout path used to say nothing at all; read as the failure it is.
+            _vm.IsPairingFaulted = !ok;
+            if (ok) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else TxtPairingState.Text = Properties.Resources.PairingFailed;
+        }
+        finally { _listenerStarting = false; }
+    }
+
+
+    private void Real_Status(object? s, string st)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (st == "starting") _vm.BusyText = Properties.Resources.StartingPairingListener;
+            else if (st == RustPlusDesk.Properties.Resources.GetString("UiListening")) { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); }
+            else if (st == "error") TxtPairingState.Text = Properties.Resources.PairingError;
+        });
+    }
+    private void Real_Listening(object? s, EventArgs e)
+    {
+        Dispatcher.Invoke(() => { TxtPairingState.Text = ""; UpdatePairingGuideSnackbar(); });
+    }
+    private void Real_Failed(object? s, string msg)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            TxtPairingState.Text = Properties.Resources.PairingError;
+            AppendLog("[listener] " + msg);
+        });
+    }
+
+    private void OnListening(object? s, EventArgs e)
+    {
+        _vm.IsBusy = false;
+        _vm.BusyText = "";
+        TxtPairingState.Text = "";
+        UpdatePairingGuideSnackbar();
+    }
+
+    private void OnFailed(object? s, string msg)
+    {
+        _vm.IsBusy = false;
+        _vm.BusyText = "";
+        TxtPairingState.Text = Properties.Resources.PairingError;
+        AppendLog("[listener] " + msg);
+    }
+
+    private void OnStatus(object? s, string st)
+    {
+        if (st == "starting") _vm.BusyText = "Starting Pairing-Listener...";
+    }
+
+    private ServerProfile? _serverToDelete;
+    private bool _isDeletingServer;
+    private IInputElement? _serverManagerPreviousFocus;
+    private IInputElement? _serverDeletePreviousFocus;
+
+
+
+    public void Server_EditConnection_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        var dlg = new Views.Windows.EditServerConnectionDialog(prof, _vm)
+        {
+            Owner = this
+        };
+        if (dlg.ShowDialog() == true && dlg.HasChanged)
+        {
+            AppendLog($"[server] Connection updated for '{prof.Name}' -> {prof.Host}:{prof.Port}");
+            ShowInfoSnackbar("Server Connection Updated", $"'{prof.Name}' connection updated to {prof.Host}:{prof.Port}.", WpfUi.ControlAppearance.Success);
+            if (_vm.Selected == prof)
+            {
+                _ = Dispatcher.InvokeAsync(async () =>
+                {
+                    try
+                    {
+                        await HardResetAsync(reconnect: false);
+                        await PerformConnectAsync(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"[server] Reconnect after connection edit failed: {ex.Message}");
+                    }
+                });
+            }
+        }
+    }
+
+    public void Server_TransferDevices_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        var dlg = new Views.Windows.TransferDevicesDialog(prof, _vm)
+        {
+            Owner = this
+        };
+        dlg.ShowDialog();
+    }
+
+    private void OpenServerManager_Click(object sender, RoutedEventArgs e)
+    {
+        _serverManagerPreviousFocus = Keyboard.FocusedElement;
+        ServerManagerOverlay.Visibility = Visibility.Visible;
+        ServerManagerCloseButton.Focus();
+    }
+
+    private void CloseServerManager_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeleteConfirmationOverlay.Visibility == Visibility.Visible) return;
+        ServerManagerOverlay.Visibility = Visibility.Collapsed;
+        RestoreServerDialogFocus(_serverManagerPreviousFocus);
+        _serverManagerPreviousFocus = null;
+    }
+
+    private void ServerManagerBackdrop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, sender)) return;
+        CloseServerManager_Click(sender, e);
+        e.Handled = true;
+    }
+
+    private void DeleteConfirmationBackdrop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, sender)) return;
+        BtnCancelDelete_Click(sender, e);
+        e.Handled = true;
+    }
+
+    private void RestoreServerDialogFocus(IInputElement? previousFocus)
+    {
+        if (previousFocus is UIElement { IsVisible: true, IsEnabled: true })
+            Keyboard.Focus(previousFocus);
+        else if (ServerManagerOverlay.Visibility == Visibility.Visible)
+            ServerManagerCloseButton.Focus();
+        else
+            BtnManageServers.Focus();
+    }
+
+    public void Server_Delete_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        
+        if (_isDeletingServer) return;
+        _serverDeletePreviousFocus = Keyboard.FocusedElement;
+        _serverToDelete = prof;
+        TxtDeleteConfirmation.Text = string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
+        DeleteConfirmationOverlay.Visibility = Visibility.Visible;
+        ServerDeleteCancelButton.Focus();
+    }
+
+    private void BtnCancelDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isDeletingServer) return;
+        DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+        _serverToDelete = null;
+        RestoreServerDialogFocus(_serverDeletePreviousFocus);
+        _serverDeletePreviousFocus = null;
+    }
+
+    private async void BtnConfirmDelete_Click(object sender, RoutedEventArgs e)
+    {
+        if (_serverToDelete is not { } prof || _isDeletingServer) return;
+        _isDeletingServer = true;
+        DeleteConfirmationOverlay.IsEnabled = false;
+        TxtDeleteConfirmation.Text = Properties.Resources.GetString("DeletingServer");
+        try
+        {
+            if (ReferenceEquals(_vm.Selected, prof) || ReferenceEquals(_connectedProfile, prof)
+                || prof.IsConnected || prof.IsFullConnected)
+            {
+                await HardResetAsync(reconnect: false);
+                if (_isMap3DActive) CloseMap3DView();
+            }
+
+            if (ReferenceEquals(_vm.Selected, prof)) _vm.Selected = null;
+            _vm.Servers.Remove(prof);
+            if (TrackingService.LastSelectedServerKey == prof.MatchKey)
+                TrackingService.LastSelectedServerKey = "";
+            _vm.Save();
+            AppendLog($"Server deleted: {prof.Name}");
+
+            try
+            {
+                var remaining = _vm.Servers.ToList();
+                int removedLocal = await Task.Run(() => Services.Data.ServerLocalDataCleanup.DeleteFor(prof, remaining));
+                AppendLog($"Removed {removedLocal} local file(s) and folder(s) stored for {prof.Name}.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"Local cleanup error for deleted server {prof.Name}: {ex.Message}");
+            }
+
+            // Clean up cloud data (devices, overlays, base markers, server registration, and reset Alexa active server)
+            try
+            {
+                string steamIdStr = _mySteamId > 0 ? _mySteamId.ToString() : string.Empty;
+                if (Services.Cloud.CloudBackend.UsePlatform)
+                {
+                    // The legacy route below only clears the overlay on the platform and leaves
+                    // the pairing live, so "Restore servers from cloud" brought deleted servers
+                    // back. This removes the pairing itself, and queues the delete when it
+                    // cannot be sent now.
+                    if (await Services.Cloud.CloudPairingImporter.ForgetServerAsync(prof.Host, prof.Port))
+                        AppendLog($"[Cloud] Removed server {prof.Name} ({prof.Host}:{prof.Port}) from the cloud.");
+                    else
+                        AppendLog($"[Cloud] Server {prof.Name} will be removed from the cloud on the next sync.");
+                }
+                else if (Services.Auth.SupabaseAuthManager.IsAuthenticated && !string.IsNullOrWhiteSpace(steamIdStr))
+                {
+                    bool cleaned = await Services.Auth.SupabaseCloudCleanupService.DeleteCloudDataForServerAsync(prof.Host, prof.Port, steamIdStr);
+                    if (cleaned)
+                    {
+                        AppendLog($"[Cloud] Purged cloud data for server {prof.Name} ({prof.Host}:{prof.Port}).");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[Cloud] Cloud cleanup error for deleted server {prof.Name}: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"Server deletion error for {prof.Name}: {ex.Message}");
+            ShowInfoSnackbar(Properties.Resources.DeleteServerHeader, ex.Message, WpfUi.ControlAppearance.Danger);
+        }
+        finally
+        {
+            DeleteConfirmationOverlay.IsEnabled = true;
+            DeleteConfirmationOverlay.Visibility = Visibility.Collapsed;
+            _serverToDelete = null;
+            _isDeletingServer = false;
+            RestoreServerDialogFocus(_serverDeletePreviousFocus);
+            _serverDeletePreviousFocus = null;
+        }
+    }
+
+    private void ServerContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (sender is ContextMenu menu)
+        {
+            var prof = (menu.PlacementTarget as FrameworkElement)?.DataContext as ServerProfile;
+            bool hasParsed = prof != null && Services.Data.ServerLocalDataCleanup.HasParsed3DMapFor(prof);
+            prof?.Notify3DMapStateChanged();
+
+            foreach (var item in menu.Items.OfType<MenuItem>())
+            {
+                if (item.Name == "MenuClear3DMap")
+                {
+                    item.Visibility = hasParsed ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+        }
+    }
+
+    private void Server_Clear3DMap_Click(object sender, RoutedEventArgs e)
+    {
+        ServerProfile? prof = null;
+        if (sender is MenuItem menuItem)
+        {
+            prof = menuItem.Tag as ServerProfile ?? (menuItem.DataContext as ServerProfile);
+        }
+
+        prof ??= _vm.Selected;
+        if (prof == null) return;
+
+        var confirm = MessageBox.Show(
+            $"Are you sure you want to clear 3D map data for '{prof.Name}'?",
+            "Clear 3D Map Data",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        try
+        {
+            if (_isMap3DActive && _vm.Selected == prof)
+            {
+                CloseMap3DView();
+            }
+
+            _lastExtraMonuments = null;
+            int removed = Services.Data.ServerLocalDataCleanup.Clear3DMapDataFor(prof);
+            prof.Notify3DMapStateChanged();
+            UpdateRustMapsUi();
+            // The 2D map may still be showing the render that was just deleted.
+            if (_vm.Selected == prof) _ = ReloadMapAsync();
+
+            AppendLog($"[3D Map] Cleared {removed} 3D map data folder(s)/files for {prof.Name}.");
+            ShowInfoSnackbar("3D Map", $"Cleared 3D map data for '{prof.Name}'.", WpfUi.ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[3D Map] Error clearing 3D map data for {prof.Name}: {ex.Message}");
+            MessageBox.Show($"Failed to clear 3D map data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private int _pairingUiRequestVersion;
+    private bool _pairingStopPending;
+
+    private async void BtnListenPairing_Click(object sender, RoutedEventArgs e)
+    {
+        if (_pairing.IsRunning)
+        {
+            _vm.IsPairingRunning = true;
+            _vm.IsPairingBusy = false;
+            return;
+        }
+        if (_listenerStarting || !_vm.CanStartPairing) return;
+        int requestVersion = ++_pairingUiRequestVersion;
+        _vm.IsPairingBusy = true;
+        _vm.IsPairingFaulted = false;
+        TxtPairingState.Text = Properties.Resources.GetString("PairingStarting");
+        try
+        {
+
+            // 1. Check if token is valid & not expired
+            bool isTokenValid = TrackingService.IsFcmConfigured() &&
+                                (!TrackingService.FcmExpiresAt.HasValue || TrackingService.FcmExpiresAt.Value >= DateTime.Now);
+
+            if (isTokenValid)
+            {
+                AppendLog("[pairing] Valid FCM config exists. Starting listener...");
+                await StartPairingListenerUiAsync();
+                return;
+            }
+
+            // 2. Token is not configured or expired: Force re-pairing
+            AppendLog("[pairing] FCM token is missing or expired. Forcing a clean stop and re-pairing...");
+
+            // Force stop any starting/running process and cancel active tokens
+            await Task.Run(async () => await _pairing.StopAsync());
+            if (requestVersion != _pairingUiRequestVersion) return;
+
+            // Reset the starting guard to allow fresh registration
+            _listenerStarting = false;
+
+            try
+            {
+                if (File.Exists(PairingConfigPath))
+                {
+                    File.Delete(PairingConfigPath);
+                    AppendLog("[pairing] Deleted old/expired FCM config to ensure new registration.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+            }
+
+            await StartPairingListenerUiAsync();
+        }
+        catch (Exception ex)
+        {
+            _vm.IsPairingBusy = false;
+            _vm.IsPairingFaulted = true;
+            TxtPairingState.Text = Properties.Resources.PairingError;
+            AppendLog("[pairing] Start failed: " + ex.Message);
+        }
+    }
+
+    private async void BtnOverlayPair_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("[pairing] Overlay Login & Pair button clicked. Forcing a clean stop and fresh registration...");
+
+        // Always force stop the listener/registration process
+        await Task.Run(async () => await _pairing.StopAsync());
+
+        // Reset the starting guard
+        _listenerStarting = false;
+
+        try
+        {
+            if (File.Exists(PairingConfigPath))
+            {
+                File.Delete(PairingConfigPath);
+                AppendLog("[pairing] Deleted old FCM config from overlay click.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[pairing] Warning: Could not delete config file: {ex.Message}");
+        }
+
+        await StartPairingListenerUiAsync();
+    }
+
+    private void BtnOverlayRestore_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            Properties.Resources.RestoreConfirmMessage,
+            Properties.Resources.RestoreConfirmTitle,
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "ZIP Archives (*.zip)|*.zip",
+            Title = Properties.Resources.RestoreApplicationDataTitle
+        };
+
+        if (ofd.ShowDialog() == true)
+        {
+            string password = "";
+            if (RustPlusDesk.Services.Data.BackupDataModule.IsBackupEncrypted(ofd.FileName))
+            {
+                var dialog = new BackupPasswordDialog { Owner = this };
+                dialog.SetMode(true); // Decryption mode
+
+                if (dialog.ShowDialog() == true)
+                {
+                    password = dialog.Password;
+                }
+                else
+                {
+                    // User canceled decryption prompt, abort restore
+                    return;
+                }
+            }
+
+            try
+            {
+                RustPlusDesk.Services.Data.BackupDataModule.RestoreBackup(ofd.FileName, password);
+                ReloadApplicationData();
+                ShowInfoSnackbar(Properties.Resources.RestoreSuccessTitle, Properties.Resources.RestoreSuccessMessage, WpfUi.ControlAppearance.Success);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
+            {
+                AppendLog(Properties.Resources.RestorePasswordErrorLog);
+                MessageBox.Show(Properties.Resources.RestorePasswordErrorMessage, Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                AppendLog(string.Format(Properties.Resources.RestoreErrorLog, ex.Message));
+                MessageBox.Show(string.Format(Properties.Resources.RestoreErrorMessage, ex.Message), Properties.Resources.RestoreFailedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    private async void BtnStopPairing_Click(object sender, RoutedEventArgs e)
+    {
+        if (_pairingStopPending) return;
+        ++_pairingUiRequestVersion;
+        _pairingStopPending = true;
+        _vm.IsPairingBusy = true;
+        TxtPairingState.Text = Properties.Resources.GetString("PairingStopping");
+        try
+        {
+            AppendLog("Stopping pairing listener...");
+            _listenerStarting = false;
+            await Task.Run(async () => await _pairing.StopAsync());
+            _vm.IsPairingBusy = false;
+            _vm.IsPairingRunning = false;
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Error on stop: " + ex.Message);
+            _vm.IsPairingBusy = false;
+            _vm.IsPairingRunning = _pairing.IsRunning;
+            _vm.IsPairingFaulted = true;
+            TxtPairingState.Text = Properties.Resources.PairingError;
+        }
+        finally { _pairingStopPending = false; }
+    }
+    private const int MaxLogLines = 2000;
+    private const double CollapsedLogHeight = 200;
+    private const double ExpandedLogHeight = 420;
+    private bool _isLogExpanded;
+    private readonly List<string> _logLines = new();
+    private static readonly List<string> sPendingLogs = new();
+    public static event Action? IconsUpdated;
+
+    public void FlushPendingLogs()
+    {
+        if (TxtLog == null) return;
+        lock (sPendingLogs)
+        {
+            if (sPendingLogs.Count > 0)
+            {
+                foreach (var pl in sPendingLogs) AddLogLine(pl);
+                sPendingLogs.Clear();
+                RefreshLogText();
+            }
+        }
+    }
+
+    public void AppendLog(string line)
+    {
+        Services.CrashReporter.AddRecentLog(line);
+        Dispatcher.Invoke(() =>
+        {
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+            string formatted = $"[{timestamp}] {line}";
+            if (TxtLog == null)
+            {
+                lock (sPendingLogs)
+                {
+                    sPendingLogs.Add(formatted);
+                }
+            }
+            else
+            {
+                FlushPendingLogs();
+                bool trimmed = AddLogLine(formatted);
+                if (trimmed || HasLogFilter())
+                {
+                    RefreshLogText();
+                }
+                else
+                {
+                    TxtLog.AppendText(formatted + Environment.NewLine);
+                    TxtLog.ScrollToEnd();
+                }
+            }
+        });
+    }
+
+    private bool AddLogLine(string line)
+    {
+        _logLines.Add(line);
+        int overflow = _logLines.Count - MaxLogLines;
+        if (overflow <= 0) return false;
+
+        _logLines.RemoveRange(0, overflow);
+        return true;
+    }
+
+    private bool HasLogFilter()
+        => !string.IsNullOrWhiteSpace(TxtLogFilter?.Text);
+
+    private void RefreshLogText()
+    {
+        if (TxtLog == null) return;
+
+        string filter = TxtLogFilter?.Text?.Trim() ?? "";
+        IEnumerable<string> lines = string.IsNullOrWhiteSpace(filter)
+            ? _logLines
+            : _logLines.Where(x => x.Contains(filter, StringComparison.OrdinalIgnoreCase));
+
+        TxtLog.Text = string.Join(Environment.NewLine, lines);
+        if (TxtLog.Text.Length > 0) TxtLog.AppendText(Environment.NewLine);
+        TxtLog.ScrollToEnd();
+    }
+
+    private void TxtLogFilter_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        RefreshLogText();
+    }
+
+    private void BtnToggleLogExpand_Click(object sender, RoutedEventArgs e)
+    {
+        _isLogExpanded = !_isLogExpanded;
+        if (LogPanel != null) LogPanel.Height = _isLogExpanded ? ExpandedLogHeight : CollapsedLogHeight;
+        if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? RustPlusDesk.Properties.Resources.GetString("CodeUiCollapse") : RustPlusDesk.Properties.Resources.GetString("UiExpand");
+        TxtLog?.ScrollToEnd();
+    }
+
+    static readonly JsonSerializerOptions JsonOpt = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never
+    };
+    // PLAYER DEATH MARKERS AVATAR IMAGE PLAYER DEATH
+
+    private bool _showProfileMarkers = true;
+    private bool _showDeathMarkers = false;
+    private bool _showPlayerArrows = true;
+
+    // death pins per player
+    private readonly Dictionary<Guid, FrameworkElement> _deathPins = new();
+
+    // team map notes / markers from Rust+ API
+    private readonly Dictionary<string, FrameworkElement> _teamNotesEls = new();
+    private RustPlusClientReal.TeamInfo? _lastTeamInfo;
+
+
+
+    private void Monuments_Checked(object sender, RoutedEventArgs e)
+    {
+        ToggleMonuments(true);
+        UpdateSelectAllState();
+        SyncMapLayersTo3D();
+    }
+
+    private void Monuments_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ToggleMonuments(false);
+        UpdateSelectAllState();
+        SyncMapLayersTo3D();
+    }
+    private void ToggleMonuments(bool on)
+    {
+        _showMonuments = on;
+        foreach (var fe in _monEls.Values)
+            fe.Visibility = on ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void UpdateSelectAllState()
+    {
+        // Placeholder to fix build errors. 
+        // Logic to update a 'Select All' checkbox state based on individual filters could go here.
+    }
+
+
+
+    private bool _isRefreshingProfile = false;
+    private void HydrateSteamUiFromStorage()
+    {
+        // 1. First try global settings
+        if (string.IsNullOrWhiteSpace(_vm.SteamId64))
+        {
+            _vm.SteamId64 = TrackingService.SteamId64;
+        }
+
+        // 2. Fallback: derive from existing servers
+        if (string.IsNullOrWhiteSpace(_vm.SteamId64))
+        {
+            var sid = _vm.Servers
+                         .Select(s => s.SteamId64)
+                         .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+            if (!string.IsNullOrWhiteSpace(sid))
+            {
+                _vm.SteamId64 = sid;
+                TrackingService.SteamId64 = sid; // Backfill if found
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(_vm.SteamId64) && string.IsNullOrWhiteSpace(_steamDisplayName))
+        {
+            try
+            {
+                var nameCachePath = GetOwnNameCachePath(_vm.SteamId64);
+                if (File.Exists(nameCachePath))
+                    _steamDisplayName = File.ReadAllText(nameCachePath).Trim();
+            }
+            catch { }
+        }
+
+        // Update UI Elements
+        var sidText = string.IsNullOrWhiteSpace(_vm.SteamId64) ? "Not Logged In" : _vm.SteamId64;
+        TxtSteamId.Text = sidText;
+        TxtSteamName.Text = string.IsNullOrWhiteSpace(_vm.SteamId64) ? RustPlusDesk.Properties.Resources.GetString("UiNotConnected") : _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
+        ImgSteam.ToolTip = TxtSteamName.Text;
+        RefreshStreamerModeUI();
+        UpdateAdminUi();
+
+        // Refresh User Profile from Supabase in the background
+        if (!string.IsNullOrWhiteSpace(_vm.SteamId64) && _vm.SteamId64 != "0" && !_isRefreshingProfile)
+        {
+            _isRefreshingProfile = true;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Services.Auth.SupabaseAuthManager.RefreshUserProfileAsync();
+                    Dispatcher.Invoke(() =>
+                    {
+                        UpdateAdminUi();
+                    });
+                }
+                catch { }
+                finally
+                {
+                    _isRefreshingProfile = false;
+                }
+            });
+        }
+        
+
+
+        // Avatar versuchen zu laden (nur wenn wir eine ID haben)
+        _ = TryLoadSteamAvatarAsync(_vm.SteamId64);
+
+        // Notify VM of FCM data (for expiry badge)
+        _vm.NotifyFcmChanged();
+    }
+
+    public void RefreshStreamerModeUI()
+    {
+        if (TxtSteamId == null || TxtSteamName == null || _vm == null) return;
+        if (NotificationsTabControl != null) NotificationsTabControl.IsStreamerMode = _abbreviateNames;
+        
+        var sid = _vm.SteamId64;
+        if (string.IsNullOrWhiteSpace(sid))
+        {
+            TxtSteamId.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiNoCompanionSession");
+            TxtSteamName.Text = RustPlusDesk.Properties.Resources.GetString("UiNotConnected");
+            return;
+        }
+
+        TxtSteamId.Text = _abbreviateNames && sid.Length > 3 ? sid.Substring(0, 3) + "..." : sid;
+        
+        var originalName = (ImgSteam.ToolTip as string) ?? Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _abbreviateNames ? RustPlusDesk.Properties.Resources.GetString("StreamerMode") : originalName;
+
+        if (_vm.IsFollowing && _vm.FollowingSteamId != _mySteamId)
+        {
+            var fMember = TeamMembers.FirstOrDefault(t => t.SteamId == _vm.FollowingSteamId);
+            if (fMember != null)
+            {
+                _vm.FollowingPlayerName = fMember.DisplayName;
+            }
+        }
+    }
+
+    private void BtnToggleServerArea_Click(object? sender, RoutedEventArgs? e)
+    {
+        if (PanelServerArea == null || IconToggleServerArea == null) return;
+
+        if (PanelServerArea.Visibility == Visibility.Visible)
+        {
+            PanelServerArea.Visibility = Visibility.Collapsed;
+            IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronDown20;
+        }
+        else
+        {
+            PanelServerArea.Visibility = Visibility.Visible;
+            IconToggleServerArea.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronUp20;
+        }
+    }
+
+    private string GetOwnAvatarCachePath(string steamId64)
+    {
+        var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "avatars");
+        if (!System.IO.Directory.Exists(dir))
+        {
+            System.IO.Directory.CreateDirectory(dir);
+        }
+        return System.IO.Path.Combine(dir, $"{steamId64}.png");
+    }
+
+    private string GetOwnNameCachePath(string steamId64) =>
+        System.IO.Path.ChangeExtension(GetOwnAvatarCachePath(steamId64), ".name");
+
+    private async Task TryLoadSteamAvatarAsync(string? steamId64)
+    {
+        if (string.IsNullOrWhiteSpace(steamId64))
+        {
+            _vm.MyAvatar = null;
+            return;
+        }
+
+        ImgSteam.ToolTip = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
+        TxtSteamName.Text = _steamDisplayName ?? RustPlusDesk.Properties.Resources.GetString("CodeUiConnected");
+
+        var cachePath = GetOwnAvatarCachePath(steamId64);
+
+        // Try load from local cache first on start
+        if (System.IO.File.Exists(cachePath) && _vm.MyAvatar == null)
+        {
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(cachePath);
+                bmp.EndInit();
+                bmp.Freeze();
+                _vm.MyAvatar = bmp;
+            }
+            catch
+            {
+                // Ignore cache load failure, fallback to network
+            }
+        }
+
+        // Fetch once on start/session (skip if already fetched this steam ID in this session)
+        if (_fetchedSteamId64 == steamId64)
+        {
+            return;
+        }
+
+        try
+        {
+            using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Steam Community"));
+            var xml = await http.GetStringAsync($"https://steamcommunity.com/profiles/{steamId64}?xml=1");
+
+            var nameMatch = Regex.Match(xml, @"<steamID><!\[CDATA\[(.*?)\]\]>");
+            var avatarMatch = Regex.Match(xml, @"<avatarFull><!\[CDATA\[(.*?)\]\]>");
+
+            if (avatarMatch.Success)
+            {
+                var uri = new Uri(avatarMatch.Groups[1].Value);
+                var bytes = await http.GetByteArrayAsync(uri);
+                
+                await System.IO.File.WriteAllBytesAsync(cachePath, bytes);
+
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(cachePath);
+                bmp.EndInit();
+                bmp.Freeze();
+
+                _vm.MyAvatar = bmp;
+                _fetchedSteamId64 = steamId64;
+            }
+            if (nameMatch.Success)
+            {
+                _steamDisplayName = nameMatch.Groups[1].Value;
+                await File.WriteAllTextAsync(GetOwnNameCachePath(steamId64), _steamDisplayName);
+                ImgSteam.ToolTip = _steamDisplayName;
+                Dispatcher.Invoke(() => RefreshStreamerModeUI());
+            }
+        }
+        catch
+        {
+            // If network fails but cache exists, we keep the cached version. Otherwise set null.
+            if (!System.IO.File.Exists(cachePath))
+            {
+                _vm.MyAvatar = null;
+            }
+        }
+    }
+
+    public static IEnumerable<string> GetAllItemShortNames()
+    {
+        EnsureNewItemDbLoaded();
+        return sItemsByShort.Keys;
+    }
+
+    private static string FormatItemName(int id) => /* deine vorhandene Map-Funktion */ ResolveItemName(id, null);
+    public static System.Windows.Media.ImageSource? ResolveItemIcon(int itemId, string? shortName, int decodePx = 32)
+    {
+        EnsureNewItemDbLoaded();
+
+        // Standard-Shortname besorgen, falls fehlt
+        if (string.IsNullOrWhiteSpace(shortName) && itemId != 0 && sItemsById.TryGetValue(itemId, out var ii0))
+            shortName = ii0.ShortName;
+
+        // Original-URL (rusthelp)
+        string? rusthelpUrl = null;
+        if (itemId != 0 && sItemsById.TryGetValue(itemId, out var ii1)) rusthelpUrl = ii1.IconUrl;
+        if (rusthelpUrl == null && !string.IsNullOrWhiteSpace(shortName) && sItemsByShort.TryGetValue(shortName!, out var ii2))
+            rusthelpUrl = ii2.IconUrl;
+
+        return ResolveRustHelpIcon(rusthelpUrl, decodePx);
+    }
+
+    public static System.Windows.Media.ImageSource? ResolveRustHelpIcon(string? rusthelpUrl, int decodePx = 32)
+    {
+        // Keep one high-resolution download on disk; decode-size variants stay in memory.
+        // 40px is the only size the app renders; keeping the cache at 40px saves space and feeds the
+        // sidebar hover decoration (which only accepts 40x40 files). Downloads are normalised to 40x40.
+        string? optimizedUrl = !string.IsNullOrWhiteSpace(rusthelpUrl)
+            ? Build40OptimizedUrl(rusthelpUrl!)
+            : null;
+
+        // 1) Versuche Optimierte URL (im lokalen Cache oder im gebündelten Paket)
+        if (optimizedUrl != null)
+        {
+            string cacheKey = $"{optimizedUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
+            var path = TryFindExistingIconFile(optimizedUrl);
+            if (path != null)
+            {
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
+            }
+        }
+
+        // 2) Versuche Original URL (Fallback/DB)
+        if (rusthelpUrl != null)
+        {
+            string cacheKey = $"{rusthelpUrl}|{decodePx}";
+            if (sIconCache.TryGetValue(cacheKey, out var ready)) return ready;
+            var path = TryFindExistingIconFile(rusthelpUrl);
+            if (path != null)
+            {
+                var img = TryLoadBitmapFromFile(path, decodePx);
+                if (img != null) { sIconCache[cacheKey] = img; return img; }
+            }
+        }
+
+        // 3) Nichts da -> 40px-optimierte URL laden, 40px-Cloudflare-Resize als Fallback (beide klein).
+        if (optimizedUrl != null)
+            QueueIconDownload(optimizedUrl, GetIconCachePath(optimizedUrl), Build40FallbackUrl(rusthelpUrl!));
+
+        return null;
+    }
+
+    public static string Build40OptimizedUrl(string rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl)) return string.Empty;
+        if (rawUrl.Contains("/_next/image")) return rawUrl;
+        return $"https://rusthelp.com/_next/image?url={Uri.EscapeDataString(rawUrl)}&w=40&q=90";
+    }
+
+    public static string? Build40FallbackUrl(string? rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl)) return null;
+        if (rawUrl.Contains("/cdn-cgi/image/")) return rawUrl;
+
+        if (rawUrl.Contains("/_next/image") && Uri.TryCreate(rawUrl, UriKind.Absolute, out var nextUri))
+        {
+            var query = System.Web.HttpUtility.ParseQueryString(nextUri.Query);
+            var innerUrl = query["url"];
+            if (!string.IsNullOrWhiteSpace(innerUrl))
+            {
+                rawUrl = innerUrl;
+            }
+        }
+
+        if (Uri.TryCreate(rawUrl, UriKind.Absolute, out var uri))
+        {
+            return $"{uri.Scheme}://{uri.Authority}/cdn-cgi/image/width=40,format=png{uri.PathAndQuery}";
+        }
+
+        return rawUrl;
+    }
+
+    private static string? TryFindExistingIconFile(string url)
+    {
+        var hash = Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(url))).ToLowerInvariant() + ".png";
+
+        // 1) Local user cache (%LOCALAPPDATA%\RustPlusDesk\icons)
+        var localPath = System.IO.Path.Combine(sIconCacheDir, hash);
+        if (System.IO.File.Exists(localPath)) return localPath;
+
+        // 2) Bundled icon pack in application folder (Assets/icons/items)
+        if (!string.IsNullOrEmpty(sBundledIconDir))
+        {
+            var bundledPath = System.IO.Path.Combine(sBundledIconDir, hash);
+            if (System.IO.File.Exists(bundledPath)) return bundledPath;
+        }
+
+        // 3) Direct icons folder beside executable fallback
+        var exeIconsPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", hash);
+        if (System.IO.File.Exists(exeIconsPath)) return exeIconsPath;
+
+#if DEBUG
+        // 4) Development source directory fallback when running in debug
+        try
+        {
+            var devSourcePath = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items", hash));
+            if (System.IO.File.Exists(devSourcePath)) return devSourcePath;
+        }
+        catch { /* best effort */ }
+#endif
+
+        return null;
+    }
+
+    private static string GetIconCachePath(string url)
+    {
+        Directory.CreateDirectory(sIconCacheDir);
+        var hash = Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(url))).ToLowerInvariant();
+        return System.IO.Path.Combine(sIconCacheDir, hash + ".png");
+    }
+
+    private static ImageSource? TryLoadBitmapFromFile(string path, int decodePx)
+    {
+        try
+        {
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path);
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.DecodePixelWidth = decodePx;
+            bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
+        catch { return null; }
+    }
+
+    private static void LogMessage(string message)
+    {
+        System.Diagnostics.Debug.WriteLine(message);
+    }
+
+    /// <summary>Loads the remembered 404s once, from beside the icons they belong to.</summary>
+    private static void EnsureMissingIconsLoaded(string targetPath)
+    {
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIconsPath != null) return;
+
+            try
+            {
+                var directory = System.IO.Path.GetDirectoryName(targetPath);
+                if (string.IsNullOrEmpty(directory)) return;
+
+                sMissingIconsPath = System.IO.Path.Combine(directory, ".missing-icons.txt");
+
+                // Pre-load from bundled pack if available
+                if (!string.IsNullOrEmpty(sBundledIconDir))
+                {
+                    var bundledMissing = System.IO.Path.Combine(sBundledIconDir, ".missing-icons.txt");
+                    if (File.Exists(bundledMissing))
+                    {
+                        foreach (var line in File.ReadAllLines(bundledMissing))
+                        {
+                            if (!string.IsNullOrWhiteSpace(line)) sMissingIcons.Add(line.Trim());
+                        }
+                    }
+                }
+
+                if (File.Exists(sMissingIconsPath))
+                {
+                    foreach (var line in File.ReadAllLines(sMissingIconsPath))
+                    {
+                        if (!string.IsNullOrWhiteSpace(line)) sMissingIcons.Add(line.Trim());
+                    }
+                }
+            }
+            catch
+            {
+                // Without the list every launch simply retries, which is the old behaviour.
+            }
+        }
+    }
+
+    private static void RememberMissingIcon(string url)
+    {
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIconsPath == null || !sMissingIcons.Add(url)) return;
+
+            try { File.AppendAllText(sMissingIconsPath, url + Environment.NewLine); }
+            catch { /* remembered for this session at least */ }
+
+#if DEBUG
+            try
+            {
+                var devSourceDir = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items"));
+                if (Directory.Exists(devSourceDir))
+                {
+                    var devMissing = System.IO.Path.Combine(devSourceDir, ".missing-icons.txt");
+                    File.AppendAllText(devMissing, url + Environment.NewLine);
+                }
+            }
+            catch { /* best effort */ }
+#endif
+        }
+    }
+
+    private static void SyncDownloadedIcon(string targetPath, byte[] data)
+    {
+        try
+        {
+            var fileName = System.IO.Path.GetFileName(targetPath);
+            if (string.IsNullOrEmpty(fileName)) return;
+
+            if (!string.IsNullOrEmpty(sBundledIconDir))
+            {
+                Directory.CreateDirectory(sBundledIconDir);
+                var bundledTarget = System.IO.Path.Combine(sBundledIconDir, fileName);
+                if (!File.Exists(bundledTarget))
+                {
+                    File.WriteAllBytes(bundledTarget, data);
+                }
+            }
+
+#if DEBUG
+            try
+            {
+                var devSourceDir = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets", "icons", "items"));
+                if (Directory.Exists(devSourceDir))
+                {
+                    var devTarget = System.IO.Path.Combine(devSourceDir, fileName);
+                    if (!File.Exists(devTarget))
+                    {
+                        File.WriteAllBytes(devTarget, data);
+                    }
+                }
+            }
+            catch { /* best effort */ }
+#endif
+        }
+        catch { /* best effort */ }
+    }
+
+    private static void QueueIconDownload(string url, string targetPath, string? fallbackUrl, bool isBulk = false)
+    {
+        EnsureMissingIconsLoaded(targetPath);
+
+        lock (sMissingIconsGate)
+        {
+            if (sMissingIcons.Contains(url)) return;
+        }
+
+        lock (sPendingDownloads)
+        {
+            if (!sPendingDownloads.Add(url)) return;
+        }
+
+        if (!isBulk)
+        {
+            UpdateIconProgress(-1); // Total erhöhen nur bei Einzel-Downloads
+        }
+
+        _ = Task.Run(async () =>
+        {
+            await sDownloadSemaphore.WaitAsync().ConfigureAwait(false);
+
+            var succeeded = false;
+            var primaryGone = false;
+            var fallbackGone = false;
+
+            try
+            {
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(targetPath)!);
+                using var http = new HttpClient(new Services.TrafficTrackingHttpMessageHandler("Game Icons")) { Timeout = TimeSpan.FromSeconds(10) };
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("RustPlusDesktop/1.0");
+
+                HttpResponseMessage? resp = null;
+                try
+                {
+                    resp = await http.GetAsync(url).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LogMessage($"[icon-download] Download failed (exception): {url} -> {ex.Message}");
+                }
+
+                if (resp != null && resp.IsSuccessStatusCode)
+                {
+                    var data = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    data = Services.IconNormalizer.To40(data);
+                    await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                    SyncDownloadedIcon(targetPath, data);
+                    LogMessage($"[icon-download] Successfully downloaded optimized icon: {url}");
+                    succeeded = true;
+                }
+                else
+                {
+                    // A 404 or 410 is the source saying the icon is not there, and it will say the
+                    // same next launch. Anything else — a timeout, a 5xx — is worth retrying.
+                    if (resp != null && (resp.StatusCode == System.Net.HttpStatusCode.NotFound
+                        || resp.StatusCode == System.Net.HttpStatusCode.Gone))
+                    {
+                        primaryGone = true;
+                    }
+
+                    if (resp != null)
+                    {
+                        LogMessage($"[icon-download] Download failed (status): {url} -> {resp.StatusCode} ({(int)resp.StatusCode})");
+                    }
+                    else
+                    {
+                        LogMessage($"[icon-download] Download failed: {url} -> No response");
+                    }
+
+                    if (fallbackUrl != null)
+                    {
+                        LogMessage($"[icon-download] Falling back to original for {fallbackUrl}");
+                        HttpResponseMessage? respF = null;
+                        try
+                        {
+                            respF = await http.GetAsync(fallbackUrl).ConfigureAwait(false);
+                        }
+                        catch (Exception exF)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (exception): {fallbackUrl} -> {exF.Message}");
+                        }
+
+                        if (respF != null && respF.IsSuccessStatusCode)
+                        {
+                            var data = await respF.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                            data = Services.IconNormalizer.To40(data); // shrink the 512px original to 40px
+                            await System.IO.File.WriteAllBytesAsync(targetPath, data).ConfigureAwait(false);
+                            SyncDownloadedIcon(targetPath, data);
+                            LogMessage($"[icon-download] Successfully downloaded fallback icon: {fallbackUrl}");
+                            succeeded = true;
+                        }
+                        else if (respF != null)
+                        {
+                            LogMessage($"[icon-download] Fallback failed (status): {fallbackUrl} -> {respF.StatusCode} ({(int)respF.StatusCode})");
+                            if (respF.StatusCode == System.Net.HttpStatusCode.NotFound
+                                || respF.StatusCode == System.Net.HttpStatusCode.Gone)
+                            {
+                                fallbackGone = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exOverall)
+            {
+                LogMessage($"[icon-download] Overall download process error: {exOverall.Message}");
+            }
+            finally
+            {
+                sDownloadSemaphore.Release();
+                lock (sPendingDownloads)
+                {
+                    sPendingDownloads.Remove(url);
+                }
+
+                // Both sources said the icon does not exist. Writing that down is what stops the
+                // same requests going out on every launch from now on.
+                if (!succeeded && primaryGone && (fallbackUrl == null || fallbackGone))
+                {
+                    RememberMissingIcon(url);
+                }
+
+                UpdateIconProgress(1, succeeded);
+            }
+        });
+    }
+
+    private static int sIconDownloadsFailed;
+    private static volatile bool sIsBulkDownloadEnqueuing = false;
+
+    /// <summary>
+    /// Records one finished attempt. <paramref name="succeeded"/> says whether an icon actually
+    /// arrived — this used to be called from a finally block with no idea either way, so nine
+    /// consecutive 404s were reported as "All icons downloaded (9/9)". A log line that cheerful
+    /// about a complete failure is worse than no line at all.
+    /// </summary>
+    private static void UpdateIconProgress(int deltaFinish, bool succeeded = false)
+    {
+        Application.Current?.Dispatcher?.BeginInvoke(() =>
+        {
+            if (Application.Current?.MainWindow is MainWindow mw)
+            {
+                if (deltaFinish > 0)
+                {
+                    mw._vm.IconsDownloaded++;
+                    if (!succeeded) sIconDownloadsFailed++;
+
+                    IconsUpdated?.Invoke();
+                    if (!sIsBulkDownloadEnqueuing && mw._vm.IconsTotal > 0 && mw._vm.IconsDownloaded >= mw._vm.IconsTotal)
+                    {
+                        var total = mw._vm.IconsTotal;
+                        var ok = total - sIconDownloadsFailed;
+                        mw.AppendLog(sIconDownloadsFailed == 0
+                            ? $"[icon-download] All icons downloaded ({ok}/{total})"
+                            : $"[icon-download] {ok}/{total} icons downloaded, {sIconDownloadsFailed} unavailable (they will not be requested again)");
+                        sIconDownloadsFailed = 0;
+                    }
+                }
+                else
+                {
+                    mw._vm.IconsTotal++;
+                }
+            }
+        });
+    }
+
+    public static void StartIconManualDownload()
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                // One-time housekeeping: drop any old 256/512px icons so the cache is 40px-only.
+                int removed = Services.IconNormalizer.CleanupNon40(sIconCacheDir);
+                if (removed > 0) LogMessage($"[icon-download] Cleaned up {removed} oversized (non-40px) cached icons");
+
+                List<ItemInfo> items;
+                lock (sItemsById)
+                {
+                    items = sItemsById.Values.ToList();
+                }
+
+                var toDownload = new List<(string url, string path, string? fallback)>();
+                foreach (var ii in items)
+                {
+                    if (string.IsNullOrWhiteSpace(ii.IconUrl)) continue;
+
+                    string rusthelpUrl = ii.IconUrl;
+                    string optimizedUrl = Build40OptimizedUrl(rusthelpUrl);
+
+                    var existing = TryFindExistingIconFile(optimizedUrl);
+                    if (existing == null)
+                    {
+                        string path = GetIconCachePath(optimizedUrl);
+                        toDownload.Add((optimizedUrl, path, Build40FallbackUrl(rusthelpUrl)));
+                    }
+                }
+
+                if (toDownload.Count == 0)
+                {
+                    Application.Current?.Dispatcher?.Invoke(() =>
+                    {
+                        if (Application.Current?.MainWindow is MainWindow mw)
+                        {
+                            mw.AppendLog($"[icon-download] All {items.Count} icons are already present in cache/pack.");
+                        }
+                    });
+                    return;
+                }
+
+                Application.Current?.Dispatcher?.Invoke(() =>
+                {
+                    if (Application.Current?.MainWindow is MainWindow mw)
+                    {
+                        sIsBulkDownloadEnqueuing = true;
+                        mw._vm.IconsTotal = toDownload.Count;
+                        mw._vm.IconsDownloaded = 0;
+                        sIconDownloadsFailed = 0;
+                        mw.AppendLog($"[icon-download] Downloading {toDownload.Count} missing icons and updating icon pack...");
+                    }
+                });
+
+                foreach (var (url, path, fallback) in toDownload)
+                {
+                    QueueIconDownload(url, path, fallback, isBulk: true);
+                }
+
+                sIsBulkDownloadEnqueuing = false;
+
+                Application.Current?.Dispatcher?.Invoke(() =>
+                {
+                    if (Application.Current?.MainWindow is MainWindow mw)
+                    {
+                        if (mw._vm.IconsTotal > 0 && mw._vm.IconsDownloaded >= mw._vm.IconsTotal)
+                        {
+                            var total = mw._vm.IconsTotal;
+                            var ok = total - sIconDownloadsFailed;
+                            mw.AppendLog(sIconDownloadsFailed == 0
+                                ? $"[icon-download] All icons downloaded ({ok}/{total})"
+                                : $"[icon-download] {ok}/{total} icons downloaded, {sIconDownloadsFailed} unavailable (they will not be requested again)");
+                            sIconDownloadsFailed = 0;
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[icon-download] Manual download error: {ex.Message}");
+            }
+        });
+    }
+
+    private static Image MakeIcon(string packUri, double size = 32)
+    {
+        var bi = new BitmapImage();
+        try
+        {
+            bi.BeginInit();
+            bi.UriSource = new Uri(packUri, UriKind.Absolute);
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+        }
+        catch when (packUri.StartsWith("pack://application:,,,/Assets/", StringComparison.OrdinalIgnoreCase))
+        {
+            bi = new BitmapImage();
+            string relativePath = packUri["pack://application:,,,/".Length..].Replace('/', System.IO.Path.DirectorySeparatorChar);
+            string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+
+            bi.BeginInit();
+            bi.UriSource = new Uri(filePath, UriKind.Absolute);
+            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+        }
+
+        var img = new Image
+        {
+            Width = size,
+            Height = size,
+            Stretch = Stretch.Uniform,
+            Source = bi,
+            Tag = packUri
+        };
+        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
+        return img;
+    }
+    private static string Beautify(string s)
+        => RustPlusDesk.Services.MonumentFormatter.Beautify(s);
+
+
+    // From worldSize and image size compute the centered playable square in IMAGE PIXELS.
+    // The "2000" is the UI canvas padding used by Rust's own Map code (1000 per side).
+    private static Rect ComputeWorldRectFromWorldSize(double imgW, double imgH, double worldSize, double padWorld = 2000)
+    {
+        if (worldSize <= 0) return new Rect(0, 0, imgW, imgH); // fallback
+
+        double minSidePx = Math.Min(imgW, imgH);
+        double scale = (double)worldSize / (worldSize + padWorld); // fraction of the image occupied by the world
+        double sidePx = minSidePx * scale;
+
+        double ox = (imgW - sidePx) / 2.0; // centered
+        double oy = (imgH - sidePx) / 2.0;
+
+        return new Rect(ox, oy, sidePx, sidePx);
+    }
+    private static string Shorten(string? s, int max = 10)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return "";
+        s = s.Trim();
+        if (s.Length <= max) return s;
+        return s.Substring(0, Math.Max(1, max - 1)) + "…";
+    }
+    // stabiler Fallback-Key-Hasher (aus X,Y,Label)
+    private static uint ShopFallbackKey(double x, double y, string? label)
+    {
+        unchecked
+        {
+            // simpler FNV-1a Hash
+            uint h = 2166136261;
+            void mix(ulong v)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    h ^= (byte)(v & 0xFF);
+                    h *= 16777619;
+                    v >>= 8;
+                }
+            }
+            mix(BitConverter.DoubleToUInt64Bits(x));
+            mix(BitConverter.DoubleToUInt64Bits(y));
+            if (!string.IsNullOrEmpty(label))
+            {
+                foreach (char c in label)
+                {
+                    h ^= (byte)c;
+                    h *= 16777619;
+                }
+            }
+            // 0 vermeiden
+            if (h == 0) h = 1;
+            return h;
+        }
+    }
+    private void BtnSupport_Click(object sender, RoutedEventArgs e) => OpenSupporterPage();
+
+    /// <summary>Paddle checkout lives here; every "upgrade" button in the app leads to it.</summary>
+    internal const string PricingUrl = "https://rustplusdesktop.cloud/pricing";
+
+    /// <summary>Premium users already have everything; their button reads "Support Development".</summary>
+    private const string SupportDevelopmentUrl = "https://www.patreon.com/cw/Pronwan";
+
+    internal void OpenSupporterPage()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = _vm.IsPremium ? SupportDevelopmentUrl : PricingUrl,
+                UseShellExecute = true   // öffnet im Standard-Browser
+            });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Couldn't open supporter page: " + ex.Message);
+        }
+    }
+    private bool _announceSpawns = false;
+
+    private void ChatAnnounce_Toggle(object sender, RoutedEventArgs e)
+    {
+        TrackingService.AnnounceSpawnsMaster = ChatAnnounce.IsChecked ?? false;
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
+    }
+
+    private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
+    {
+        SetAllAlerts(true);
+        TrackingService.AnnounceSpawnsMaster = true;
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
+    }
+
+    private void DeselectAllAlerts_Click(object sender, RoutedEventArgs e)
+    {
+        SetAllAlerts(false);
+        if (CheckIfAllOff())
+        {
+            TrackingService.AnnounceSpawnsMaster = false;
+        }
+
+        UpdateMasterToggleState();
+        SyncAlertMenuItems();
+        UpdateShopSearchConfig();
+        RequestTeamFeatureMasterSync();
+    }
+
+    private void EditAlertTemplates_Click(object sender, RoutedEventArgs e)
+    {
+        OpenSettingsCategory("alert-templates");
+    }
+
+    private void SetAllAlerts(bool val)
+    {
+        TrackingService.AnnounceCargo = val;
+        TrackingService.AnnounceCargoDocking = val;
+        TrackingService.AnnounceCargoEgress = val;
+        TrackingService.AnnounceCargoArrival = val;
+        TrackingService.AnnounceHeli = val;
+        TrackingService.AnnounceChinook = val;
+        TrackingService.AnnounceVendor = val;
+        TrackingService.AnnounceOilRig = val;
+        TrackingService.AnnounceDeepSea = val;
+        TrackingService.AnnouncePlayerOnline = val;
+        TrackingService.AnnouncePlayerOffline = val;
+        TrackingService.AnnouncePlayerAfk = val;
+        TrackingService.AnnouncePlayerAfkReturn = val;
+        TrackingService.AnnouncePlayerDeathSelf = val;
+        TrackingService.AnnouncePlayerDeathTeam = val;
+        TrackingService.AnnouncePlayerRespawnSelf = val;
+        TrackingService.AnnouncePlayerRespawnTeam = val;
+        TrackingService.AnnounceTracking = val;
+        TrackingService.AnnounceNewShops = val;
+        TrackingService.AnnounceSuspiciousShops = val;
+        TrackingService.AnnounceSmartAlerts = val;
+        TrackingService.AnnounceTradeAlerts = val;
+        if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; _vm.Selected.DiscordWebhookChatAlertsEnabled = val; }
+        TrackingService.HotkeyTriggerChatAlertsEnabled = val;
+        if (HotkeyTriggersMenuItem != null)
+        {
+            string serverKey = CurrentServerKey();
+            foreach (var item in HotkeyTriggersMenuItem.Items.OfType<MenuItem>())
+            {
+                if (item.Tag is not long entityId) continue;
+                item.IsChecked = val;
+                TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, val);
+            }
+        }
+    }
+
+    private bool CheckIfAllOff()
+    {
+        return !TrackingService.AnnounceCargo && !TrackingService.AnnounceCargoDocking &&
+               !TrackingService.AnnounceCargoEgress && !TrackingService.AnnounceCargoArrival &&
+               !TrackingService.AnnounceHeli && !TrackingService.AnnounceChinook &&
+               !TrackingService.AnnounceVendor && !TrackingService.AnnounceOilRig && !TrackingService.AnnounceDeepSea &&
+               !TrackingService.AnnouncePlayerOnline && !TrackingService.AnnouncePlayerOffline &&
+               !TrackingService.AnnouncePlayerAfk && !TrackingService.AnnouncePlayerAfkReturn &&
+               !TrackingService.AnnouncePlayerDeathSelf && !TrackingService.AnnouncePlayerDeathTeam &&
+               !TrackingService.AnnouncePlayerRespawnSelf && !TrackingService.AnnouncePlayerRespawnTeam &&
+               !TrackingService.AnnounceTracking &&
+               !TrackingService.AnnounceNewShops && !TrackingService.AnnounceSuspiciousShops &&
+               !TrackingService.AnnounceSmartAlerts && !TrackingService.AnnounceTradeAlerts &&
+               (_vm.Selected == null || !_vm.Selected.AlertCustomTimer) &&
+               (_vm.Selected == null || !_vm.Selected.DiscordWebhookChatAlertsEnabled);
+    }
+
+    internal void UpdateMasterToggleState()
+    {
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+        ChatAnnounce.IsChecked = _announceSpawns;
+    }
+
+    private void BtnClearChatAlertsWebhook_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.Selected != null)
+        {
+            _vm.Selected.DiscordWebhookChatAlertsUrl = string.Empty;
+            _vm.Selected.DiscordWebhookChatAlertsEnabled = false;
+            SyncAlertMenuItems();
+            UpdateShopSearchConfig();
+        }
+    }
+
+    private void Alert_MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag)
+        {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
+            bool val = mi.IsChecked;
+            switch (tag)
+            {
+                case "Cargo": TrackingService.AnnounceCargo = val; break;
+                case "CargoSpawn": TrackingService.AnnounceCargo = val; break;
+                case "CargoDock": TrackingService.AnnounceCargoDocking = val; break;
+                case "CargoEgress": TrackingService.AnnounceCargoEgress = val; break;
+                case "CargoArrival": TrackingService.AnnounceCargoArrival = val; break;
+                case "Heli": TrackingService.AnnounceHeli = val; break;
+                case "Chinook": TrackingService.AnnounceChinook = val; break;
+                case "Vendor": TrackingService.AnnounceVendor = val; break;
+                case "OilRig": TrackingService.AnnounceOilRig = val; break;
+                case "DeepSea": TrackingService.AnnounceDeepSea = val; break;
+                case "SmartAlerts": TrackingService.AnnounceSmartAlerts = val; break;
+                case "PlayerOnline": TrackingService.AnnouncePlayerOnline = val; break;
+                case "PlayerOffline": TrackingService.AnnouncePlayerOffline = val; break;
+                case "PlayerAfk": TrackingService.AnnouncePlayerAfk = val; break;
+                case "PlayerAfkReturn": TrackingService.AnnouncePlayerAfkReturn = val; break;
+                case "AnnounceTracking": TrackingService.AnnounceTracking = val; break;
+                case "PlayerDeathSelf": TrackingService.AnnouncePlayerDeathSelf = val; break;
+                case "PlayerDeathTeam": TrackingService.AnnouncePlayerDeathTeam = val; break;
+                case "PlayerRespawnSelf": TrackingService.AnnouncePlayerRespawnSelf = val; break;
+                case "PlayerRespawnTeam": TrackingService.AnnouncePlayerRespawnTeam = val; break;
+                case "NewShops": TrackingService.AnnounceNewShops = val; break;
+                case "SuspiciousShops": TrackingService.AnnounceSuspiciousShops = val; break;
+                case "CustomTimer": if (_vm.Selected != null) { _vm.Selected.AlertCustomTimer = val; } break;
+                case "DiscordWebhook": 
+                    if (!_vm.IsCloudConnected)
+                    {
+                        mi.IsChecked = false;
+                        return;
+                    }
+                    if (_vm.Selected != null) { _vm.Selected.DiscordWebhookChatAlertsEnabled = val; } 
+                    break;
+            }
+
+            if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
+            }
+
+            UpdateMasterToggleState();
+            UpdateShopSearchConfig();
+            SyncAlertMenuItems();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
+        }
+    }
+
+    private void AfkMinutes_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string tag && tag.StartsWith("Afk_"))
+        {
+            if (int.TryParse(tag.Substring(4), out int minutes))
+            {
+                TrackingService.AfkAlertMinutes = minutes;
+                SyncAlertMenuItems();
+            }
+        }
+    }
+
+    private void GenericAlarmSetting_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        bool enabled = toggle.IsChecked == true;
+        switch (setting)
+        {
+            case "Popup": TrackingService.GenericAlarmPopupEnabled = enabled; break;
+            case "Overlay": TrackingService.GenericAlarmOverlayEnabled = enabled; break;
+            case "Audio": TrackingService.GenericAlarmAudioEnabled = enabled; break;
+        }
+    }
+
+    private void GenericAlarmSetting_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton toggle || toggle.Tag is not string setting) return;
+
+        toggle.IsChecked = setting switch
+        {
+            "Popup" => TrackingService.GenericAlarmPopupEnabled,
+            "Overlay" => TrackingService.GenericAlarmOverlayEnabled,
+            "Audio" => TrackingService.GenericAlarmAudioEnabled,
+            _ => false
+        };
+    }
+
+    private void CmbAfkMinutes_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ComboBox cmb)
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void CmbAfkMinutes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox cmb && cmb.SelectedItem is ComboBoxItem item && int.TryParse(item.Content?.ToString(), out int val))
+        {
+            if (val > 0)
+            {
+                TrackingService.AfkAlertMinutes = val;
+            }
+        }
+    }
+
+    private void CmbAfkMinutes_LostFocus(object sender, RoutedEventArgs e)
+    {
+        SaveAfkMinutesFromText(sender as ComboBox);
+    }
+
+    private void CmbAfkMinutes_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            SaveAfkMinutesFromText(sender as ComboBox);
+            e.Handled = true;
+        }
+    }
+
+    private void SaveAfkMinutesFromText(ComboBox? cmb)
+    {
+        if (cmb == null) return;
+        if (int.TryParse(cmb.Text, out int val) && val > 0)
+        {
+            TrackingService.AfkAlertMinutes = val;
+        }
+        else
+        {
+            cmb.Text = TrackingService.AfkAlertMinutes.ToString();
+        }
+    }
+
+    private void ComboBox_MouseDownPreventClose(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void OpenButtonContextMenu_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is not FrameworkElement button || button.ContextMenu is not ContextMenu menu) return;
+
+        menu.PlacementTarget = button;
+        menu.Placement = PlacementMode.Bottom;
+        menu.IsOpen = true;
+    }
+
+    internal void SyncAlertMenuItems()
+    {
+        bool masterOn = TrackingService.AnnounceSpawnsMaster;
+        PopulateTradeAlertsSubMenu(masterOn);
+        PopulateHotkeyTriggersSubMenu();
+        UpdateAlertEnabledBadge(masterOn);
+
+        if (ChatAlertsConfigureButton.ContextMenu is ContextMenu cm)
+        {
+            SyncContextMenu(cm, masterOn);
+        }
+    }
+
+    private void UpdateAlertEnabledBadge(bool? masterEnabled = null)
+    {
+        bool masterOn = masterEnabled ?? TrackingService.AnnounceSpawnsMaster;
+        int enabledCount = new[]
+        {
+            TrackingService.AnnounceCargo,
+            TrackingService.AnnounceCargoDocking,
+            TrackingService.AnnounceCargoEgress,
+            TrackingService.AnnounceCargoArrival,
+            TrackingService.AnnounceHeli,
+            TrackingService.AnnounceChinook,
+            TrackingService.AnnounceVendor,
+            TrackingService.AnnounceOilRig,
+            TrackingService.AnnounceDeepSea,
+            TrackingService.AnnouncePlayerOnline,
+            TrackingService.AnnouncePlayerOffline,
+            TrackingService.AnnouncePlayerAfk,
+            TrackingService.AnnouncePlayerAfkReturn,
+            TrackingService.AnnouncePlayerDeathSelf,
+            TrackingService.AnnouncePlayerDeathTeam,
+            TrackingService.AnnouncePlayerRespawnSelf,
+            TrackingService.AnnouncePlayerRespawnTeam,
+            TrackingService.AnnounceTracking,
+            TrackingService.AnnounceNewShops,
+            TrackingService.AnnounceSuspiciousShops,
+            TrackingService.AnnounceSmartAlerts,
+            TrackingService.AnnounceTradeAlerts,
+            _vm.Selected?.AlertCustomTimer == true,
+            _vm.Selected?.DiscordWebhookChatAlertsEnabled == true
+        }.Count(enabled => enabled);
+        if (TrackingService.HotkeyTriggerChatAlertsEnabled)
+            enabledCount += HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+
+        AlertEnabledBadge.Visibility = masterOn && enabledCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledDot.Visibility = masterOn && enabledCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        AlertEnabledCountText.Text = enabledCount > 99 ? "99+" : enabledCount.ToString(CultureInfo.InvariantCulture);
+    }
+
+    private void SyncContextMenu(ContextMenu menu, bool masterOn)
+    {
+        if (menu == null) return;
+
+        string host = _rust?.Host ?? "unknown";
+        bool hasTravelData = TrackingService.HasAnyCargoTrigger(host);
+
+        foreach (var item in menu.Items)
+        {
+            if (item is MenuItem mi)
+            {
+                SyncMenuItemRecursive(mi, masterOn, hasTravelData);
+            }
+        }
+    }
+
+    private void SyncMenuItemRecursive(MenuItem mi, bool masterOn, bool hasTravelData)
+    {
+        if (mi.Tag is string tag)
+        {
+            bool isSelected = false;
+            switch (tag)
+            {
+                case "Cargo":
+                case "PlayerAfkParent":
+                case "Partial":
+                    bool isCargo = false;
+                    foreach (var item in mi.Items)
+                    {
+                        if (item is MenuItem sub && sub.Tag is string subTag && subTag.StartsWith("Cargo"))
+                        {
+                            isCargo = true;
+                            break;
+                        }
+                    }
+                    if (isCargo || tag == "Cargo")
+                    {
+                        bool cs = TrackingService.AnnounceCargo;
+                        bool cd = TrackingService.AnnounceCargoDocking;
+                        bool ce = TrackingService.AnnounceCargoEgress;
+                        bool ca = TrackingService.AnnounceCargoArrival;
+                        if (cs && cd && ce && ca) { isSelected = true; mi.Tag = "Cargo"; }
+                        else if (cs || cd || ce || ca) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "Cargo"; }
+                    }
+                    else
+                    {
+                        bool afk = TrackingService.AnnouncePlayerAfk;
+                        bool ret = TrackingService.AnnouncePlayerAfkReturn;
+                        if (afk && ret) { isSelected = true; mi.Tag = "PlayerAfkParent"; }
+                        else if (afk || ret) { isSelected = true; mi.Tag = "Partial"; }
+                        else { isSelected = false; mi.Tag = "PlayerAfkParent"; }
+                    }
+                    break;
+                case "CargoSpawn": isSelected = TrackingService.AnnounceCargo; break;
+                case "CargoDock": isSelected = TrackingService.AnnounceCargoDocking; break;
+                case "CargoEgress": isSelected = TrackingService.AnnounceCargoEgress; break;
+                case "CargoArrival": 
+                    isSelected = TrackingService.AnnounceCargoArrival; 
+                    mi.Header = hasTravelData ? RustPlusDesk.Properties.Resources.GetString("CargoArrival") : RustPlusDesk.Properties.Resources.GetString("CodeUiArrivalWarningUnlearned");
+                    mi.IsEnabled = masterOn && hasTravelData; 
+                    break;
+                case "Heli": isSelected = TrackingService.AnnounceHeli; break;
+                case "Chinook": isSelected = TrackingService.AnnounceChinook; break;
+                case "Vendor": isSelected = TrackingService.AnnounceVendor; break;
+                case "OilRig": isSelected = TrackingService.AnnounceOilRig; break;
+                case "DeepSea": isSelected = TrackingService.AnnounceDeepSea; break;
+                case "SmartAlerts": isSelected = TrackingService.AnnounceSmartAlerts; break;
+                case "PlayerOnline": isSelected = TrackingService.AnnouncePlayerOnline; break;
+                case "PlayerOffline": isSelected = TrackingService.AnnouncePlayerOffline; break;
+                case "PlayerAfk": isSelected = TrackingService.AnnouncePlayerAfk; break;
+                case "PlayerAfkReturn": isSelected = TrackingService.AnnouncePlayerAfkReturn; break;
+                case "Afk_5": isSelected = TrackingService.AfkAlertMinutes == 5; break;
+                case "Afk_10": isSelected = TrackingService.AfkAlertMinutes == 10; break;
+                case "Afk_15": isSelected = TrackingService.AfkAlertMinutes == 15; break;
+                case "Afk_20": isSelected = TrackingService.AfkAlertMinutes == 20; break;
+                case "Afk_30": isSelected = TrackingService.AfkAlertMinutes == 30; break;
+                case "AnnounceTracking": isSelected = TrackingService.AnnounceTracking; break;
+                case "PlayerDeathSelf": isSelected = TrackingService.AnnouncePlayerDeathSelf; break;
+                case "PlayerDeathTeam": isSelected = TrackingService.AnnouncePlayerDeathTeam; break;
+                case "PlayerRespawnSelf": isSelected = TrackingService.AnnouncePlayerRespawnSelf; break;
+                case "PlayerRespawnTeam": isSelected = TrackingService.AnnouncePlayerRespawnTeam; break;
+                case "NewShops": isSelected = TrackingService.AnnounceNewShops; break;
+                case "SuspiciousShops": isSelected = TrackingService.AnnounceSuspiciousShops; break;
+                case "CustomTimer": isSelected = _vm.Selected?.AlertCustomTimer ?? false; break;
+                case "DiscordWebhook": isSelected = _vm.Selected?.DiscordWebhookChatAlertsEnabled ?? false; break;
+            }
+
+            if (tag == "DiscordWebhook")
+            {
+                mi.IsEnabled = masterOn && _vm.IsCloudConnected;
+            }
+            else if (tag != "CargoArrival")
+            {
+                mi.IsEnabled = masterOn;
+            }
+            mi.IsChecked = masterOn && isSelected;
+        }
+
+        if (mi.HasItems)
+        {
+            foreach (var sub in mi.Items)
+            {
+                if (sub is MenuItem smi) SyncMenuItemRecursive(smi, masterOn, hasTravelData);
+            }
+        }
+    }
+
+    private void PopulateTradeAlertsSubMenu(bool masterOn)
+    {
+        if (TradeAlertsMenuItem == null) return;
+
+        TradeAlertsMenuItem.Items.Clear();
+        // Trade Alerts menu is always enabled if rules exist, regardless of master toggle
+        TradeAlertsMenuItem.IsEnabled = _alertRules.Count > 0;
+
+        if (_alertRules.Count == 0)
+        {
+            TradeAlertsMenuItem.Header = $"{Properties.Resources.TradeAlerts} (0)";
+            return;
+        }
+
+        TradeAlertsMenuItem.SetResourceReference(MenuItem.HeaderProperty, "TradeAlerts");
+        foreach (var rule in _alertRules)
+        {
+            var mi = new MenuItem
+            {
+                Header = rule.QueryText,
+                IsCheckable = true,
+                IsChecked = rule.NotifyChat,
+                IsEnabled = true, // Always allow manual control
+                StaysOpenOnClick = true,
+                Style = (Style)FindResource("DarkMenuItem"),
+                Tag = rule
+            };
+            mi.Click += TradeAlertSubItem_Click;
+            TradeAlertsMenuItem.Items.Add(mi);
+        }
+    }
+
+    private void TradeAlertSubItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is ShopAlertRule rule)
+        {
+            bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
+            rule.NotifyChat = mi.IsChecked;
+            SavePersistentAlerts();
+            
+            if (mi.IsChecked)
+            {
+                TrackingService.AnnounceSpawnsMaster = true;
+            }
+            else if (CheckIfAllOff())
+            {
+                TrackingService.AnnounceSpawnsMaster = false;
+            }
+
+            UpdateMasterToggleState();
+            UpdateShopSearchConfig();
+            _ = PushAlertsToWebViewAsync();
+            if (wasMasterEnabled != TrackingService.AnnounceSpawnsMaster)
+            {
+                RequestTeamFeatureMasterSync();
+            }
+        }
+    }
+
+    private void PopulateHotkeyTriggersSubMenu()
+    {
+        if (HotkeyTriggersMenuItem == null) return;
+
+        HotkeyTriggersMenuItem.Items.Clear();
+
+        // Build the list of devices that have hotkeys assigned for the current server
+        var map = MapForCurrentServer();
+        var serverKey = CurrentServerKey();
+
+        // Collect devices with hotkeys
+        var hotkeyDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var kvp in map)
+        {
+            foreach (var entityId in kvp.Value)
+            {
+                var dev = FindDevice(entityId);
+                if (dev != null)
+                    hotkeyDevices.Add((kvp.Key, entityId, dev));
+            }
+        }
+
+        // Remove duplicates (same entityId can appear under multiple gestures)
+        var seen = new HashSet<long>();
+        var uniqueDevices = new List<(string gesture, long entityId, SmartDevice? dev)>();
+        foreach (var item in hotkeyDevices)
+        {
+            if (seen.Add(item.entityId))
+                uniqueDevices.Add(item);
+        }
+
+        // Grey out if no hotkeys are assigned
+        HotkeyTriggersMenuItem.IsEnabled = uniqueDevices.Count > 0;
+
+        if (uniqueDevices.Count == 0)
+        {
+            UpdateHotkeyTriggersMenuIndicator();
+            return;
+        }
+
+        var masterToggle = new MenuItem
+        {
+            Header = "Hotkey alerts enabled",
+            IsCheckable = true,
+            IsChecked = TrackingService.HotkeyTriggerChatAlertsEnabled,
+            StaysOpenOnClick = true,
+            Style = (Style)FindResource("DarkMenuItem")
+        };
+        masterToggle.Click += HotkeyTriggersMaster_Click;
+        HotkeyTriggersMenuItem.Items.Add(masterToggle);
+        HotkeyTriggersMenuItem.Items.Add(new Separator { Margin = new Thickness(8, 4, 8, 4) });
+
+        foreach (var (gesture, entityId, dev) in uniqueDevices)
+        {
+            bool isEnabled = TrackingService.GetHotkeyTriggerChatAlert(serverKey, entityId);
+            string label = dev?.PureName ?? $"#{entityId}";
+
+            var mi = new MenuItem
+            {
+                Header = label,
+                IsCheckable = true,
+                IsChecked = isEnabled,
+                IsEnabled = true,
+                StaysOpenOnClick = true,
+                Style = (Style)FindResource("DarkMenuItem"),
+                Tag = entityId          // store entityId for the click handler
+            };
+            mi.Click += HotkeyTriggerSubItem_Click;
+            HotkeyTriggersMenuItem.Items.Add(mi);
+        }
+        UpdateHotkeyTriggersMenuIndicator();
+    }
+
+    private void HotkeyTriggersMaster_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem masterToggle) return;
+        TrackingService.HotkeyTriggerChatAlertsEnabled = masterToggle.IsChecked;
+        UpdateHotkeyTriggersMenuIndicator();
+        UpdateAlertEnabledBadge();
+    }
+
+    private void UpdateHotkeyTriggersMenuIndicator()
+    {
+        int selectedCount = HotkeyTriggersMenuItem.Items.OfType<MenuItem>().Count(item => item.Tag is long && item.IsChecked);
+        bool enabled = TrackingService.HotkeyTriggerChatAlertsEnabled && HotkeyTriggersMenuItem.IsEnabled;
+        HotkeyTriggersEnabledDot.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Visibility = selectedCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        HotkeyTriggersCountBadge.Background = enabled ? new SolidColorBrush(Color.FromRgb(0x45, 0xE3, 0x9A)) : new SolidColorBrush(Color.FromRgb(0x43, 0x49, 0x52));
+        HotkeyTriggersCountText.Foreground = enabled ? new SolidColorBrush(Color.FromRgb(0x07, 0x17, 0x11)) : new SolidColorBrush(Color.FromRgb(0xC0, 0xC6, 0xCF));
+        HotkeyTriggersCountText.Text = selectedCount > 99 ? "99+" : selectedCount.ToString(CultureInfo.InvariantCulture);
+    }
+
+    private void HotkeyTriggerSubItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is long entityId)
+        {
+            string serverKey = CurrentServerKey();
+            TrackingService.SetHotkeyTriggerChatAlert(serverKey, entityId, mi.IsChecked);
+            UpdateHotkeyTriggersMenuIndicator();
+            UpdateAlertEnabledBadge();
+        }
+    }
+
+    internal void UpdateShopSearchConfig()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            EmbeddedShopSearch?.UpdateFilterButtonsStyles();
+        });
+    }
+
+
+
+    private static string EventKindText(int type) => type switch
+    {
+        5 => Properties.Resources.EventCargoShip,
+        6 => Properties.Resources.EventTravellingVendor,
+        4 => Properties.Resources.EventCH47,
+        8 => Properties.Resources.EventPatrolHelicopter,
+        9 => Properties.Resources.EventOilrigCrate,
+        150 => Properties.Resources.EventOilrigCrate,
+        2 => Properties.Resources.EventExplosion,
+        7 => Properties.Resources.EventBuildingBlocked,
+        _ => Properties.Resources.EventGeneric
+    };
+
+    private List<RustPlusClientReal.ShopMarker> _lastShops = new(); // füllen wir beim Polling
+
+    // PATH FINDER WINDOW LOGIK
+
+    private FrameworkElement BuildSearchResultCard(
+    RustPlusClientReal.ShopMarker shop,
+    IEnumerable<RustPlusClientReal.ShopOrder> offers)
+    {
+        var border = new Border
+        {
+            CornerRadius = new CornerRadius(6),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+            Background = new SolidColorBrush(Color.FromArgb(18, 255, 255, 255)),
+            Padding = new Thickness(8),
+            Margin = new Thickness(0, 0, 0, 0)
+        };
+
+        var content = new StackPanel();
+
+        // Header: Name + Grid
+        var header = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
+        var title = string.IsNullOrWhiteSpace(shop.Label) ? "Shop" : shop.Label;
+        header.Children.Add(new TextBlock { Text = title, FontWeight = FontWeights.SemiBold });
+        header.Children.Add(new TextBlock
+        {
+            Text = $"  [{GetGridLabel(shop)}]",
+            Opacity = 0.7,
+            Margin = new Thickness(6, 0, 0, 0)
+        });
+        content.Children.Add(header);
+
+        // Angebotszeilen mit Icons
+        int shown = 0;
+        foreach (var o in offers)
+        {
+            content.Children.Add(BuildOfferRowUI(o));
+            if (++shown >= 10)
+            {
+                content.Children.Add(new TextBlock { Text = RustPlusDesk.Properties.Resources.GetString("CodeUiÃÂÂ"), Opacity = 0.7, Margin = new Thickness(0, 2, 0, 0) });
+                break;
+            }
+        }
+
+        border.Child = content;
+
+        // Optional: Klick auf Karte → Map auf Shop zentrieren
+        border.Cursor = Cursors.Hand;
+        border.MouseLeftButtonUp += (_, __) =>
+        {
+            CenterMapOnWorld(shop.X, shop.Y);   // ← hier wird zentriert
+                                                // __?.Handled = true;
+        };
+
+        return border;
+    }
+
+    // SHOP ANALYTICS AND ALARM MECHANICS
+
+   
+
+    public class ShopAlertRule
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public string QueryText { get; set; } = "";
+        public bool MatchSellSide { get; set; } = true;
+        public bool MatchBuySide { get; set; } = false;
+
+        public bool NotifyChat { get; set; } = true;
+        public bool NotifySound { get; set; } = true;
+
+        // vom User “gespeichert”? Dann über Neustart hinweg laden
+        public bool IsSaved { get; set; } = false;
+
+        // Baseline der schon bekannten Orders beim Anlegen
+        public List<AlertSeenOrder> Baseline { get; } = new();
+
+        // NEU: Kennzeichnet, ob der erste Poll nach Erstellung/Laden durch ist.
+        // Falls false, unterdrücken wir Alerts für existierende Shops.
+        public bool InitializationComplete { get; set; } = false;
+
+        // Anti-Spam pro Order-Key
+        public Dictionary<string, DateTime> LastAnnouncements { get; } = new();
+    }
+    // Liste aller aktiven Alarmregeln
+    private readonly List<ShopAlertRule> _alertRules = new();
+
+    // ====== SHOP SEARCH WINDOW UI-Elemente ======
+    // Erweiterungen, die wir neu brauchen:
+
+    private DateTime _initialShopSnapshotTime = DateTime.UtcNow; // set beim allerersten erfolgreichen Poll
+
+    private void AddAlertFromCurrentSearch()
+    {
+        string q = _searchTb?.Text?.Trim() ?? "";
+        bool wantSell = _chkSell?.IsChecked != false;
+        bool wantBuy = _chkBuy?.IsChecked != false;
+
+        if (string.IsNullOrWhiteSpace(q))
+            return;
+
+        var rule = new ShopAlertRule
+        {
+            QueryText = q,
+            MatchSellSide = wantSell,
+            MatchBuySide = wantBuy,
+            NotifyChat = true,
+            NotifySound = true
+        };
+
+        // Baseline aufnehmen: alles, was es JETZT schon gibt, gilt als "bekannt"
+        foreach (var shop in _lastShops)
+        {
+            if (shop.Orders == null) continue;
+            foreach (var o in shop.Orders)
+            {
+                bool matchesSide =
+                    (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                    (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                if (!matchesSide) continue;
+               
+                rule.Baseline.Add(new AlertSeenOrder
+                {
+                    ShopId = shop.Id,
+                    ItemShort = o.ItemShortName ?? "",
+                    CurrencyShort = o.CurrencyShortName ?? "",
+                    Stock = o.Stock,
+                    Quantity = o.Quantity,
+                    CurrencyAmount = o.CurrencyAmount
+                });
+            }
+        }
+
+        _alertRules.Add(rule);
+        Ach.Unlock(Ach.Automation);
+
+        RefreshAlertListUI();
+    }
+
+    // Zeichnet die Alert-Liste (_alertList) neu
+    private void RefreshAlertListUI()
+    {
+        // "pill" style (runde kleine Buttons wie bei dir in der UI Leiste)
+        var pillButtonStyle = new Style(typeof(Button));
+        pillButtonStyle.Setters.Add(new Setter(Control.BackgroundProperty,
+            new SolidColorBrush(Color.FromRgb(40, 44, 48))));
+        pillButtonStyle.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
+        pillButtonStyle.Setters.Add(new Setter(Control.BorderBrushProperty,
+            new SolidColorBrush(Color.FromArgb(80, 255, 255, 255))));
+        pillButtonStyle.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
+        pillButtonStyle.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(6, 2, 6, 2)));
+        pillButtonStyle.Setters.Add(new Setter(Control.FontSizeProperty, 11.0));
+        pillButtonStyle.Setters.Add(new Setter(Control.CursorProperty, Cursors.Hand));
+        // CornerRadius geht nur über ControlTemplate hacky;
+        // Quick&dirty ohne Template: wir lassen’s rechteckig mit 4er Radius über Border below:
+
+        // Push to WebView2 shop search panel (replaces WPF _alertList when window is open)
+        _ = PushAlertsToWebViewAsync();
+
+        if (_alertList == null) return;
+
+        _alertList.Items.Clear();
+
+        foreach (var rule in _alertRules.ToList())
+        {
+            var row = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 2),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            // Textblock: "crude [sell/buy]"
+            var modeStr =
+                (rule.MatchSellSide && rule.MatchBuySide) ? "sell/buy" :
+                (rule.MatchSellSide ? "sell" :
+                (rule.MatchBuySide ? "buy" : ""));
+
+            var txt = new TextBlock
+            {
+                Text = $"{rule.QueryText} [{modeStr}]",
+                Foreground = SearchText,
+                Width = 160,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            
+            var chkChat = new ToggleButton
+            {
+                
+               
+                Width = 28,
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                ToolTip = "Send to team chat",
+                IsChecked = rule.NotifyChat,
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.Black,
+                Cursor = Cursors.Hand,
+                Content = new TextBlock
+                {
+                    Style = null,
+                    Text = "💬",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = TextAlignment.Center
+                }
+            };
+            chkChat.Checked += (_, __) => { rule.NotifyChat = true; SavePersistentAlerts(); };
+            chkChat.Unchecked += (_, __) => { rule.NotifyChat = false; SavePersistentAlerts(); };
+
+            var chkSound = new ToggleButton
+            {
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                ToolTip = "Play sound",
+                IsChecked = rule.NotifySound,
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.Black,
+                Cursor = Cursors.Hand,
+                Content = new TextBlock
+                {Style = null,
+                    Text = "🔊",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = TextAlignment.Center
+                }
+            };
+            chkSound.Checked += (_, __) => { rule.NotifySound = true; SavePersistentAlerts(); };
+            chkSound.Unchecked += (_, __) => { rule.NotifySound = false; SavePersistentAlerts(); };
+
+            // Save-Button (💾) - optisch "ausgegraut", wenn schon gespeichert
+            var btnSave = new Button
+            {
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                Padding = new Thickness(0),
+                BorderThickness = new Thickness(1),
+                Cursor = Cursors.Hand,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center
+            };
+
+            // Farben je nach Saved-Status setzen:
+            if (rule.IsSaved)
+            {
+                // saved -> leicht grün getönt
+                btnSave.Background = new SolidColorBrush(Color.FromRgb(32, 48, 32));                // sehr dunkles Grün
+                btnSave.BorderBrush = new SolidColorBrush(Color.FromRgb(64, 160, 64));              // sattes Grün
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSavedClickToUnsave");
+            }
+            else
+            {
+                // nicht saved -> neutral dunkel
+                btnSave.Background = new SolidColorBrush(Color.FromRgb(40, 44, 48));                // dein Dark-UI
+                btnSave.BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));        // dezente helle Kontur
+                btnSave.ToolTip = RustPlusDesk.Properties.Resources.GetString("CodeUiSaveAlert");
+            }
+
+            // Icon-Farbe (Diskette):
+            var saveIcon = new TextBlock
+            {
+                Style = null,
+                Text = "💾",
+                FontSize = 14,
+                FontWeight = FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                // wenn saved -> grünliche Schrift, sonst weiß
+                Foreground = rule.IsSaved
+                    ? new SolidColorBrush(Color.FromRgb(120, 255, 120)) // hellgrün
+                    : Brushes.White
+            };
+
+            btnSave.Content = saveIcon;
+
+            // Click toggelt IsSaved, speichert, und baut UI neu auf
+            btnSave.Click += (_, __) =>
+            {
+                rule.IsSaved = !rule.IsSaved;
+                SavePersistentAlerts();
+                RefreshAlertListUI(); // UI neu zeichnen für neue Farben
+            };
+
+            var btnDel = new Button
+            {
+                
+                Width = 28,
+                
+                Height = 22,
+                Margin = new Thickness(4, 0, 0, 0),
+                Background = new SolidColorBrush(Color.FromRgb(40, 44, 48)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Foreground = Brushes.DarkRed,
+                Cursor = Cursors.Hand,
+                ToolTip = "Remove alert",
+                Content = new TextBlock
+                {
+                   Style=null,
+                    Text = "🗑",
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                }
+            };
+            btnDel.Click += (_, __) => {
+                _alertRules.Remove(rule);
+                SavePersistentAlerts();
+                RefreshAlertListUI();
+            };
+
+            row.Children.Add(txt);
+            row.Children.Add(chkChat);
+            row.Children.Add(chkSound);
+            row.Children.Add(btnSave);
+            row.Children.Add(btnDel);
+
+            _alertList.Items.Add(row);
+        }
+        ApplyThinScrollbar(_alertList);
+    }
+
+    internal void SavePersistentAlerts()
+    {
+        try
+        {
+            var list = _alertRules
+                .Where(r => r.IsSaved)
+                .Select(r => new PersistedAlertDTO
+                {
+                    QueryText = r.QueryText,
+                    MatchSellSide = r.MatchSellSide,
+                    MatchBuySide = r.MatchBuySide,
+                    NotifyChat = r.NotifyChat,
+                    NotifySound = r.NotifySound
+                })
+                .ToList();
+
+            string json = System.Text.Json.JsonSerializer.Serialize(
+                list,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true }
+            );
+
+            System.IO.File.WriteAllText(GetAlertsSavePath(), json);
+        }
+        catch
+        {
+            // absichtlich schlucken - wir wollen hier nicht crashen
+        }
+    }
+
+    private void LoadPersistentAlerts()
+    {
+        try
+        {
+            string path = GetAlertsSavePath();
+            if (!System.IO.File.Exists(path)) return;
+
+            string json = System.IO.File.ReadAllText(path);
+            var list = System.Text.Json.JsonSerializer.Deserialize<List<PersistedAlertDTO>>(json);
+            if (list == null) return;
+
+            foreach (var dto in list)
+            {
+                var rule = new ShopAlertRule
+                {
+                    QueryText = dto.QueryText,
+                    MatchSellSide = dto.MatchSellSide,
+                    MatchBuySide = dto.MatchBuySide,
+                    NotifyChat = dto.NotifyChat,
+                    NotifySound = dto.NotifySound,
+                    IsSaved = true
+                };
+
+                // Baseline NICHT von Disk laden, sondern jetzt frisch setzen,
+                // damit vorhandene Angebote nicht sofort gespammt werden:
+                foreach (var shop in _lastShops)
+                {
+                    if (shop.Orders == null) continue;
+                    foreach (var o in shop.Orders)
+                    {
+                        bool matchesSide =
+                            (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                            (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                        if (!matchesSide) continue;
+
+                        rule.Baseline.Add(new AlertSeenOrder
+                        {
+                            ShopId = shop.Id,
+                            ItemShort = o.ItemShortName ?? "",
+                            CurrencyShort = o.CurrencyShortName ?? "",
+                            Stock = o.Stock,
+                            Quantity = o.Quantity,
+                            CurrencyAmount = o.CurrencyAmount
+                        });
+                    }
+                }
+
+                _alertRules.Add(rule);
+            }
+        }
+        catch
+        {
+            // wenn Laden fehlschlägt, egal – wir starten halt ohne gespeicherte Alerts
+        }
+    }
+
+    private DateTime _lastChatSendUtc = DateTime.MinValue; // Rate-Limit (1/sec)
+
+    // pro Alert merken wir, welche Angebote schon existierten beim Setzen
+    public class AlertSeenOrder
+    {
+        public uint ShopId;
+        public string ItemShort = "";
+        public string CurrencyShort = "";
+        public int Quantity;
+        public float CurrencyAmount;
+        public int Stock;
+    }
+
+    private class PersistedAlertDTO
+    {
+        public string QueryText { get; set; } = "";
+        public bool MatchSellSide { get; set; }
+        public bool MatchBuySide { get; set; }
+        public bool NotifyChat { get; set; }
+        public bool NotifySound { get; set; }
+    }
+
+    private string GetAlertsSavePath()
+    {
+        // simple Variante: im gleichen Ordner wie die EXE
+        return System.IO.Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "shop_alerts.json"
+        );
+    }
+
+    private bool MatchOrderLeft(RustPlusClientReal.ShopOrder o, string q)
+    {
+        if (string.IsNullOrEmpty(q)) return true;
+        var name = ResolveItemName(o.ItemId, o.ItemShortName);
+        return name.Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool MatchOrderRight(RustPlusClientReal.ShopOrder o, string q)
+    {
+        if (string.IsNullOrEmpty(q)) return true;
+        var name = ResolveItemName(o.CurrencyItemId, o.CurrencyShortName);
+        return name.Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task CheckAlerts(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        foreach (var rule in _alertRules)
+        {
+            foreach (var shop in shops)
+            {
+                if (shop.Orders == null) continue;
+
+                foreach (var order in shop.Orders)
+            {
+                // 1) Passt zur Regel?
+                bool matchesSide =
+                    (rule.MatchSellSide && MatchOrderLeft(order, rule.QueryText)) ||
+                    (rule.MatchBuySide && MatchOrderRight(order, rule.QueryText));
+
+                if (!matchesSide)
+                    continue;
+
+                // 2) Baseline-Eintrag für diese Kombo suchen
+                var baseline = rule.Baseline.FirstOrDefault(b =>
+                    b.ShopId        == shop.Id &&
+                    b.ItemShort     == order.ItemShortName &&
+                    b.CurrencyShort == order.CurrencyShortName &&
+                    b.Quantity      == order.Quantity &&
+                    Math.Abs(b.CurrencyAmount - order.CurrencyAmount) < 0.001f
+                );
+
+                int prevStock = baseline?.Stock ?? 0;
+                int curStock  = order.Stock;
+
+                // 3) Baseline updaten/erzeugen – wir wollen immer den letzten Stock dort haben
+                if (baseline == null)
+                {
+                    baseline = new AlertSeenOrder
+                    {
+                        ShopId        = shop.Id,
+                        ItemShort     = order.ItemShortName ?? "",
+                        CurrencyShort = order.CurrencyShortName ?? "",
+                        Quantity      = order.Quantity,
+                        CurrencyAmount= order.CurrencyAmount,
+                        Stock         = curStock
+                    };
+                    rule.Baseline.Add(baseline);
+                }
+                else
+                {
+                    baseline.Stock = curStock;
+                }
+
+                // 4) Wenn aktuell kein Stock → nie alerten, nur Zustand merken
+                if (curStock <= 0)
+                    continue;
+
+                // 5) Wenn die Regel gerade erst initialisiert wird (erster Poll nach Anlage/Start),
+                // unterdrücken wir den Alert, um Massen-Spam beim Programmstart zu vermeiden.
+                // Aber: Ein NEUER Shop, der WÄHREND die Regel schon aktiv ist auftaucht,
+                // soll natürlich TROTZDEM alerten.
+                if (!rule.InitializationComplete)
+                    continue;
+
+                // 6) Entscheiden, ob wir das als "neu" werten
+                bool isNewDeal   = (baseline != null && prevStock == 0); // entweder ganz neu oder aus 0 kommend
+                bool isRestock   = (prevStock <= 0 && curStock > 0);
+                bool alreadySeenWithStock = (prevStock > 0);
+
+                if (!isNewDeal && !isRestock && alreadySeenWithStock)
+                {
+                    // hatten wir schon mit Stock > 0, und es ist kein neuer Preis/Menge → nichts tun
+                    continue;
+                }
+
+                // 6) Pro-Order Spam-Schutz wie gehabt
+                string sig = $"{shop.Id}:{order.ItemShortName}:{order.CurrencyShortName}:{order.Quantity}:{order.CurrencyAmount}";
+                if (rule.LastAnnouncements.TryGetValue(sig, out var lastWhen) &&
+                    (DateTime.UtcNow - lastWhen).TotalSeconds < 60)
+                {
+                    continue;
+                }
+
+                // 7) Globales Rate Limit
+                if ((DateTime.UtcNow - _lastChatSendUtc).TotalSeconds < 1.0)
+                    continue;
+                _lastChatSendUtc = DateTime.UtcNow;
+
+                // 8) Nachricht bauen + loggen
+                string grid         = GetGridLabel(shop);
+                string itemName     = ResolveItemName(order.ItemId, order.ItemShortName);
+                string currencyName = ResolveItemName(order.CurrencyItemId, order.CurrencyShortName);
+                string verb         = rule.MatchSellSide ? Properties.Resources.AlertShopSells : Properties.Resources.AlertShopBuys;
+                string shopLabel    = shop.Label ?? Properties.Resources.AlertShopLabelFallback;
+
+                string msg = string.Format(
+                    Properties.Resources.AlertShopMatch,
+                    shopLabel,
+                    grid,
+                    verb,
+                    order.Quantity,
+                    itemName,
+                    order.Stock,
+                    order.CurrencyAmount,
+                    currencyName
+                );
+
+                AppendLog($"[{DateTime.Now:HH:mm:ss}] Alert: {msg}");
+
+                // 9) Zeitstempel für diese Kombo sofort updaten, um Duplikate im Update-Loop zu vermeiden
+                rule.LastAnnouncements[sig] = DateTime.UtcNow;
+
+                if (rule.NotifyChat)
+                    _ = SendTeamChatSafeAsync(msg, false, true);
+                
+                _ = DiscordBotListenerService.Instance.SendNotificationAsync("shop", $"🛒 **Trade Alert:** {msg}");
+
+                if (rule.NotifySound)
+                    PlayShopAlertSound();
+            }           // end foreach order
+            }           // end foreach shop
+
+            // Nach dem ersten Durchlauf markieren wir die Regel als initialisiert
+            rule.InitializationComplete = true;
+        }
+    }
+    // ─── ONLINE PLAYERS & TRACKING ───────────────────────────────────────────
+
+    private void RebaselineAllAlertRulesFromCurrentShops(IReadOnlyList<RustPlusClientReal.ShopMarker> shops)
+    {
+        foreach (var rule in _alertRules)
+        {
+            // alte bekannte Angebote verwerfen
+            rule.Baseline.Clear();
+            rule.LastAnnouncements.Clear();
+
+            foreach (var shop in shops)
+            {
+                if (shop.Orders == null) continue;
+
+                foreach (var o in shop.Orders)
+                {
+                    if (o.Stock <= 0) continue;
+
+                    bool matchesSide =
+                        (rule.MatchSellSide && MatchOrderLeft(o, rule.QueryText)) ||
+                        (rule.MatchBuySide && MatchOrderRight(o, rule.QueryText));
+
+                    if (!matchesSide)
+                        continue;
+
+                    rule.Baseline.Add(new AlertSeenOrder
+                    {
+                        ShopId = shop.Id,
+                        ItemShort = o.ItemShortName ?? "",
+                        CurrencyShort = o.CurrencyShortName ?? "",
+                        Quantity = o.Quantity,
+                        CurrencyAmount = o.CurrencyAmount,
+                        Stock = o.Stock
+                    });
+                }
+            }
+        }
+    }
+
+    // Flags, die wir aus den Checkboxes lesen:
+    // private bool _notifyNewShopsToChat = false;
+    // private bool _notifySuspiciousShops = false;
+
+
+    // ====== NEW SHOP TRACKING ======
+    // für "neue Shops" nach Initial-Poll:
+    private HashSet<uint> _knownShopIds = new();
+    private DateTime _initialShopSnapshotTimeUtc = DateTime.MinValue;
+
+    // ====== SUSPICIOUS TRACKING ======
+    private class ShopLifetimeInfo
+    {
+        public DateTime FirstSeenUtc;
+        public DateTime? LastSeenUtc;
+        public bool AnnouncedSuspicious = false;
+        public RustPlusClientReal.ShopMarker? LastSnapshot;
+    }
+
+    private readonly Dictionary<uint, ShopLifetimeInfo> _shopLifetimes = new();
+
+
+    // ====== HILFE-FUNKTION SOUND ======
+    private System.Media.SoundPlayer? _shopSoundPlayer;
+
+    private void PlayShopAlertSound()
+    {
+        try
+        {
+            string baseDir = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+            string path = System.IO.Path.Combine(baseDir, "Assets", "cash.wav");
+            if (!System.IO.File.Exists(path)) path = System.IO.Path.Combine(baseDir, "cash.wav");
+
+            if (System.IO.File.Exists(path))
+            {
+                var fullPath = System.IO.Path.GetFullPath(path);
+                // SoundPlayer ist für WAV-Dateien effizienter und verhindert Knirschen
+                if (_shopSoundPlayer == null)
+                {
+                    _shopSoundPlayer = new System.Media.SoundPlayer(fullPath);
+                }
+                else if (_shopSoundPlayer.SoundLocation != fullPath)
+                {
+                    _shopSoundPlayer.SoundLocation = fullPath;
+                }
+                
+                _shopSoundPlayer.Play();
+            }
+        }
+        catch { /* ignore */ }
+    }
+
+    private BitmapSource ComposeMapWithMarkers(BitmapSource baseBmp)
+    {
+        // Mapgröße in DIPs
+        double wDip = baseBmp.PixelWidth * (96.0 / baseBmp.DpiX);
+        double hDip = baseBmp.PixelHeight * (96.0 / baseBmp.DpiY);
+
+        var dv = new DrawingVisual();
+        using (var dc = dv.RenderOpen())
+        {
+            // 1) Map zeichnen
+            dc.DrawImage(baseBmp, new Rect(0, 0, wDip, hDip));
+
+            // 2) Marker (DIP) draufzeichnen
+            foreach (var m in _staticMarkers)
+            {
+                double uDip = m.uPx * (96.0 / baseBmp.DpiX);
+                double vDip = m.vPx * (96.0 / baseBmp.DpiY);
+
+                const double r = 10.0; // Radius in DIPs (skaliert mit)
+                var fill = Brushes.OrangeRed;
+                var stroke = new Pen(Brushes.White, 3);
+
+                dc.DrawEllipse(fill, stroke, new Point(uDip, vDip), r, r);
+
+                if (!string.IsNullOrWhiteSpace(m.label))
+                {
+                    var ft = new FormattedText(
+                        m.label, System.Globalization.CultureInfo.CurrentUICulture,
+                        FlowDirection.LeftToRight, new Typeface("Segoe UI"),
+                        12, Brushes.Black, 1.25);
+                    dc.DrawText(ft, new Point(uDip + 10, vDip - 8));
+                }
+            }
+        }
+
+        var rtb = new RenderTargetBitmap(
+            (int)Math.Ceiling(wDip), (int)Math.Ceiling(hDip), 96, 96, PixelFormats.Pbgra32);
+        rtb.Render(dv);
+        rtb.Freeze();
+        return rtb;
+    }
+
+
+    private double GetCurrentScale()
+    {
+        var m = MapTransform.Matrix;
+        return Math.Sqrt(m.M11 * m.M11 + m.M12 * m.M12);
+
+    }
+
+    public void AddMarker(double uPx, double vPx, string label = "", Brush? color = null)
+    {
+        if (ImgMap.Source is not BitmapSource src) return;
+
+        double uDip = uPx * 96.0 / src.DpiX;
+        double vDip = vPx * 96.0 / src.DpiY;
+
+        const double r = 7.0;
+        var dot = new System.Windows.Shapes.Ellipse
+        {
+            Width = r * 2,
+            Height = r * 2,
+            Fill = color ?? Brushes.OrangeRed,
+            Stroke = Brushes.White,
+            StrokeThickness = 2,
+
+            RenderTransformOrigin = new Point(0.5, 0.5)
+        };
+
+        Canvas.SetLeft(dot, uDip - r);
+        Canvas.SetTop(dot, vDip - r);
+        Overlay.Children.Add(dot);
+    }
+
+    public void AddMarkerPx(double uPx, double vPx, string label = "", Brush? color = null)
+    {
+        if (ImgMap.Source is not BitmapSource src) return;
+        double uDip = uPx * (96.0 / src.DpiX);
+        double vDip = vPx * (96.0 / src.DpiY);
+
+        const double r = 7;
+        var dot = new System.Windows.Shapes.Ellipse
+        {
+            Width = 2 * r,
+            Height = 2 * r,
+            Fill = color ?? Brushes.OrangeRed,
+            Stroke = Brushes.White,
+            StrokeThickness = 2,
+
+            ToolTip = string.IsNullOrWhiteSpace(label) ? null : label
+        };
+        Canvas.SetLeft(dot, uDip - r);
+        Canvas.SetTop(dot, vDip - r);
+        Overlay.Children.Add(dot);
+        // NEU: im Registry merken + gleich korrekt positionieren
+        _markers.Add(new MarkerRef(dot, uDip, vDip, r));
+        // UpdateMarkerPositions();
+    }
+
+    private void RescaleMarkersForCurrentZoom() // optional – nur für konstante Markergröße
+    {
+        double k = 1.0 / GetCurrentScale();
+        foreach (var el in Overlay.Children.OfType<System.Windows.Shapes.Ellipse>())
+            el.RenderTransform = new ScaleTransform(k, k, el.Width / 2.0, el.Height / 2.0);
+    }
+
+    // NEW CLICK HANDLERS TO DELETE JSON CONFIG
+
+    private static string PairingConfigPath =>
+    System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "RustPlusDesk", "rustplusjs-config.json");
+
+    private async Task<bool> ResetPairingConfigAsync(bool stopListenerFirst = true)
+    {
+        try
+        {
+            if (stopListenerFirst && _pairing.IsRunning)
+            {
+                AppendLog("Stopping pairing listener...");
+                await Task.Run(async () => await _pairing.StopAsync());
+                await Task.Delay(200); // kleine Atempause
+            }
+
+            if (File.Exists(PairingConfigPath))
+            {
+                File.Delete(PairingConfigPath);
+                AppendLog($"🗑️ Deleted pairing config: {PairingConfigPath}");
+            }
+            else
+            {
+                AppendLog("ℹ️ No pairing config found to delete on disk.");
+            }
+
+            // Always clear tracking dates on reset
+            TrackingService.FcmIssuedAt = null;
+            TrackingService.FcmExpiresAt = null;
+            _vm.NotifyFcmChanged();
+
+            TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingConfigDeleted");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Failed to delete pairing config: " + ex.Message);
+            return false;
+        }
+    }
+
+    private async void BtnResetPairing_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete existing pairing config?\nYou will need to pair again on next start.",
+            "Reset pairing", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        await ResetPairingConfigAsync(stopListenerFirst: true);
+    }
+
+    private async void BtnResetAndListen_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete pairing config and immediately re-pair/listen?",
+            "Reset + Listen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        if (await ResetPairingConfigAsync(stopListenerFirst: true))
+            await StartPairingListenerUiAsync(); // dein bestehender Standard-Flow
+    }
+
+    private async void BtnResetAndListenEdge_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Delete pairing config and immediately re-pair/listen using Edge?",
+            "Reset + Listen (Edge)", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        if (await ResetPairingConfigAsync(stopListenerFirst: true))
+            await StartPairingListenerUiWithEdgeAsync(); // der Edge-Flow aus voriger Antwort
+    }
+
+    private async void BtnCheckTokenStatus_Click(object sender, RoutedEventArgs e)
+    {
+        AppendLog("🔍 Checking Rust+ companion token status with Facepunch...");
+        try
+        {
+            var result = await RustCompanionAuthService.CheckTokenStatusAsync();
+            var icon = result.Status switch
+            {
+                RustPlusTokenStatus.Valid => MessageBoxImage.Information,
+                RustPlusTokenStatus.Expired => MessageBoxImage.Warning,
+                RustPlusTokenStatus.LoggedOutOrInvalid => MessageBoxImage.Error,
+                RustPlusTokenStatus.Missing => MessageBoxImage.Warning,
+                _ => MessageBoxImage.Error
+            };
+
+            var statusTitle = result.Status switch
+            {
+                RustPlusTokenStatus.Valid => "Token Status: Active & Valid",
+                RustPlusTokenStatus.LoggedOutOrInvalid => "Token Status: Invalid / Logged Out",
+                RustPlusTokenStatus.Expired => "Token Status: Expired",
+                RustPlusTokenStatus.Missing => "Token Status: Missing",
+                _ => "Token Status: Error"
+            };
+
+            var details = new System.Text.StringBuilder();
+            details.AppendLine($"Status: {result.Status}");
+            details.AppendLine($"Message: {result.Message}");
+            if (result.SteamId > 0) details.AppendLine($"Steam ID: {result.SteamId}");
+            if (result.Version > 0) details.AppendLine($"Token Version: {result.Version}");
+            if (result.IssuedAtUtc.HasValue) details.AppendLine($"Issued: {result.IssuedAtUtc.Value.ToLocalTime():g}");
+            if (result.ExpiresAtUtc.HasValue) details.AppendLine($"Expires: {result.ExpiresAtUtc.Value.ToLocalTime():g}");
+
+            AppendLog($"[auth-check] {statusTitle} - {result.Message}");
+
+            MessageBox.Show(details.ToString(), statusTitle, MessageBoxButton.OK, icon);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Failed to check token status: {ex.Message}");
+            MessageBox.Show($"Failed to check token: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async void BtnLogoutThisDevice_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "Unregister this desktop app from Facepunch push notifications and delete local credentials?\n\nYou will need to pair again to receive notifications.",
+            "Logout (This Device)", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        AppendLog("🔌 Logging out this device from Facepunch push notifications...");
+        try
+        {
+            var (success, msg) = await RustCompanionAuthService.LogoutCurrentDeviceAsync();
+            AppendLog($"[logout] {msg}");
+
+            await ResetPairingConfigAsync(stopListenerFirst: true);
+            _vm.NotifyFcmChanged();
+
+            MessageBox.Show("Successfully logged out this device.\nLocal pairing configuration has been cleared.", "Logged Out", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Logout failed: {ex.Message}");
+            MessageBox.Show($"Logout failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async void BtnLogoutAllDevices_Click(object sender, RoutedEventArgs e)
+    {
+        var ask = MessageBox.Show(
+            "⚠️ GLOBAL LOGOUT / INVALIDATE:\n\nThis will invalidate your Rust+ token on Facepunch servers across ALL devices (including mobile phones and other PCs).\n\nAre you sure you want to proceed?",
+            "Logout from All Devices (Invalidate)", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+        if (ask != MessageBoxResult.Yes) return;
+
+        AppendLog("⚡ Requesting global token invalidation on Facepunch servers...");
+        try
+        {
+            var (success, msg) = await RustCompanionAuthService.LogoutAllDevicesAsync();
+            if (success)
+            {
+                AppendLog($"[auth-invalidate] ✔ {msg}");
+                await ResetPairingConfigAsync(stopListenerFirst: true);
+                _vm.NotifyFcmChanged();
+
+                MessageBox.Show("Your Rust+ token has been invalidated across all devices on Facepunch.\nAll sessions have been revoked.", "All Devices Logged Out", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                AppendLog($"[auth-invalidate] ❌ {msg}");
+                MessageBox.Show($"Failed to invalidate token on Facepunch:\n{msg}", "Invalidation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Failed to invalidate: {ex.Message}");
+            MessageBox.Show($"Failed to invalidate: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private CancellationTokenSource? _statusCts;
+
+
+    // CHECK FOR UPDATES
+
+    // --- Konfiguration ---
+    private async Task AutoCheckUpdatesAsync()
+    {
+        if (!TrackingService.AutoUpdateEnabled) return;
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+        try
+        {
+            var latestInfo = await _updateService.GetLatestReleaseAsync();
+            if (latestInfo is null) return;
+
+            var (latest, tag, dlUrl) = latestInfo.Value;
+            var curr = _updateService.VersionForCompare;
+
+            bool updateAvailable = false;
+            if (latest > curr) updateAvailable = true;
+            else if (latest == curr)
+            {
+                bool localIsBeta = _updateService.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+                if (localIsBeta && !remoteIsBeta) updateAvailable = true;
+            }
+
+            if (updateAvailable)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    _vm.IsUpdateAvailable = true;
+                    _vm.UpdateTag = tag;
+                    _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
+                    _vm.IsUpdateStatusExpanded = true;
+                    AppendLog($"✨ Update found: {tag}");
+
+                    if (_updateService.IsDeltaAvailable && !string.IsNullOrEmpty(dlUrl))
+                    {
+                        var sizeText = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+                        AppendLog($"📦 Delta update found{sizeText}. Auto-downloading in background...");
+                        _ = PerformUpdateDownloadAsync(tag, dlUrl);
+                    }
+                    else
+                    {
+                        ShowUpdateSnackbar(tag, dlUrl);
+                    }
+                });
+            }
+        }
+        catch { /* silent */ }
+    }
+
+    private void ShowUpdateSnackbar(string tag, string? dlUrl)
+    {
+        var item = new Controls.ToastItem
+        {
+            Title = Properties.Resources.UpdateAvailableHeader,
+            Icon = WpfUi.SymbolRegular.ArrowDownload24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Success),
+            MaxCardWidth = 350,
+            Timeout = TimeSpan.FromSeconds(7),
+        };
+
+        var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+        stack.Children.Add(new TextBlock { Text = $"Version {tag}{sizeStr} is available. Download now?", TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8) });
+
+        if (!string.IsNullOrEmpty(dlUrl))
+        {
+            var btn = new WpfUi.Button
+            {
+                Content = "Download & Update on Close",
+                Appearance = WpfUi.ControlAppearance.Primary,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            btn.Click += async (s, e) =>
+            {
+                DismissToast(item);
+                await PerformUpdateDownloadAsync(tag, dlUrl);
+            };
+            stack.Children.Add(btn);
+        }
+
+        item.Content = stack;
+        AddToast(item);
+    }
+
+    /// <summary>
+    /// A background download finished and an update is staged. Toasts that it is ready and offers
+    /// the choice the user actually has: restart now, or let it install on close (the default that
+    /// happens either way). Mirrors the inline popover shown from the check-updates button.
+    /// </summary>
+    private void ShowUpdateReadySnackbar(string tag)
+    {
+        var item = new Controls.ToastItem
+        {
+            Title = Properties.Resources.GetString("UpdateDownloadedTitle"),
+            Icon = WpfUi.SymbolRegular.CheckmarkCircle24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Success),
+            MaxCardWidth = 360,
+            Timeout = TimeSpan.FromSeconds(12),
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+        stack.Children.Add(new TextBlock
+        {
+            Text = $"Version {tag} is ready. Restart to update now, or it installs when you close.",
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8),
+        });
+
+        var row = new StackPanel { Orientation = Orientation.Horizontal };
+        var restartBtn = new WpfUi.Button
+        {
+            Content = "Restart now",
+            Appearance = WpfUi.ControlAppearance.Primary,
+            Margin = new Thickness(0, 0, 8, 0),
+        };
+        restartBtn.Click += async (s, e) =>
+        {
+            DismissToast(item);
+            await ApplyPendingUpdateAndRestartAsync();
+        };
+        var onCloseBtn = new WpfUi.Button
+        {
+            Content = "Update on close",
+            Appearance = WpfUi.ControlAppearance.Secondary,
+        };
+        onCloseBtn.Click += (s, e) => DismissToast(item);
+        row.Children.Add(restartBtn);
+        row.Children.Add(onCloseBtn);
+        stack.Children.Add(row);
+
+        item.Content = stack;
+        AddToast(item);
+    }
+
+    /// <summary>Opens the inline "update ready" confirmation anchored under the check-updates button.</summary>
+    private void ShowUpdateReadyPopup()
+    {
+        if (UpdateReadyPopupText != null)
+        {
+            UpdateReadyPopupText.Text = string.IsNullOrEmpty(_lastDownloadTag)
+                ? "An update is downloaded and ready. Restart now to apply it, or it installs when you close the app."
+                : $"Version {_lastDownloadTag} is downloaded and ready. Restart now to apply it, or it installs when you close the app.";
+        }
+        if (UpdateReadyPopup != null)
+            UpdateReadyPopup.IsOpen = true;
+    }
+
+    private async void UpdateRestartNow_Click(object sender, RoutedEventArgs e)
+    {
+        if (UpdateReadyPopup != null) UpdateReadyPopup.IsOpen = false;
+        await ApplyPendingUpdateAndRestartAsync();
+    }
+
+    private void UpdateOnClose_Click(object sender, RoutedEventArgs e)
+    {
+        if (UpdateReadyPopup != null) UpdateReadyPopup.IsOpen = false;
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
+        _vm.IsUpdateStatusExpanded = true;
+        ShowInfoSnackbar(
+            Properties.Resources.GetString("UpdateDownloadedTitle"),
+            Properties.Resources.GetString("UpdateInstallsOnClose"),
+            WpfUi.ControlAppearance.Success);
+    }
+
+    /// <summary>
+    /// Applies the staged update and relaunches. Shared by the ready toast's "Restart now", the
+    /// inline popover's "Restart now", so the restart path lives in one place.
+    /// </summary>
+    private async Task ApplyPendingUpdateAndRestartAsync()
+    {
+        if (string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+
+        AppendLog("Applying update...");
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
+        try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
+
+        var path = _updateService.PendingInstallerPath;
+        _updateService.PendingInstallerPath = null;
+        _updateService.StartInstaller(path, restart: true);
+
+        CloseOverlayWindows();
+        System.Windows.Application.Current.Shutdown();
+    }
+
+    public void ApplySettings()
+    {
+        if (LogPanel != null)
+        {
+            LogPanel.Visibility = TrackingService.HideConsole ? Visibility.Collapsed : Visibility.Visible;
+        }
+        if (BtnTrafficMonitor != null)
+        {
+            BtnTrafficMonitor.Visibility = TrackingService.TrafficMonitorEnabled ? Visibility.Visible : Visibility.Collapsed;
+        }
+        if (WebViewHost != null)
+        {
+            WebViewHost.Margin = new Thickness(-12, 0, -12, TrackingService.HideConsole ? -12 : 8);
+        }
+
+        if (ColSidebar != null)
+        {
+            double w = TrackingService.SidebarWidth;
+            if (w < MinExpandedSidebarWidth) w = MinExpandedSidebarWidth;
+
+            // Ensure we don't squash the map below 800 if window is small
+            if (this.ActualWidth > 0)
+            {
+                double maxW = this.ActualWidth - 850; // 800 map + 50 padding/splitter
+                if (w > maxW && maxW > MinExpandedSidebarWidth) w = maxW;
+            }
+
+            _expandedSidebarWidth = Math.Clamp(w, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            _isSidebarPinnedExpanded = TrackingService.SidebarPinned;
+            // Keep the sidebar unfolded while a left overlay (e.g. settings) is open.
+            // ApplySettings() runs on every settings toggle; without this guard each
+            // switch flip would re-fold the sidebar out from under the open overlay.
+            SetSidebarExpanded(_isSidebarPinnedExpanded || IsLeftOverlayOpen());
+        }
+        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
+
+        _showProfileMarkers = TrackingService.MapShowSteamMarkers;
+        if (ChkProfileMarkers != null) ChkProfileMarkers.IsChecked = _showProfileMarkers;
+
+        _showPlayerArrows = TrackingService.MapShowPlayerArrows;
+        if (ChkPlayerArrows != null) ChkPlayerArrows.IsChecked = _showPlayerArrows;
+
+        _showDeathMarkers = TrackingService.MapShowDeathTags;
+        if (ChkDeathMarkers != null) ChkDeathMarkers.IsChecked = _showDeathMarkers;
+
+        _showDeathHeatmap = TrackingService.MapShowDeathHeatmap;
+        if (ChkDeathHeatmap != null) ChkDeathHeatmap.IsChecked = _showDeathHeatmap;
+
+        _abbreviateNames = TrackingService.MapAbbreviateNames;
+        if (BtnAbbreviateNames != null) BtnAbbreviateNames.IsChecked = _abbreviateNames;
+
+        _playerMarkerScale = TrackingService.MapPlayerIconScale;
+        if (SliderPlayerIconSize != null) SliderPlayerIconSize.Value = _playerMarkerScale;
+
+        BuildMonumentOverlays();
+        UpdateCloudSyncUI();
+        ApplyMapPerformanceSettings();
+        ApplyRustApiFeatureFlags();
+        ApplyShopDataAvailability();
+    }
+
+    // ----- Stacked toast notifications -------------------------------------------------
+    // A lightweight replacement for Wpf.Ui's single-slot SnackbarPresenter: an
+    // ObservableCollection bound to the ToastHost ItemsControl so several toasts can
+    // stack at once. The enter animation lives in the ToastCardTemplate DataTemplate;
+    // exit animation and auto-dismiss timing live here. The public Show*Snackbar
+    // helpers keep their old names/signatures so every existing call site is unchanged.
+
+    /// <summary>At most this many toasts on screen at once; the oldest is evicted past this.</summary>
+    private const int MaxVisibleToasts = 5;
+
+    /// <summary>Bound to ToastHost.ItemsSource. Newest is last — nearest the bottom-right corner.</summary>
+    public ObservableCollection<Controls.ToastItem> Toasts { get; } = new();
+
+    private static readonly Brush _toastSuccessBrush = FrozenBrush(0x4C, 0xAF, 0x50);
+    private static readonly Brush _toastCautionBrush = FrozenBrush(0xFF, 0xA5, 0x00);
+    private static readonly Brush _toastDangerBrush = FrozenBrush(0xF4, 0x43, 0x36);
+    private static readonly Brush _toastInfoBrush = FrozenBrush(0x4F, 0x9C, 0xF0);
+
+    private static Brush FrozenBrush(byte r, byte g, byte b)
+    {
+        var brush = new SolidColorBrush(Color.FromRgb(r, g, b));
+        brush.Freeze();
+        return brush;
+    }
+
+    /// <summary>Accent colour per severity, matching the retired snackbar accent bar.</summary>
+    private Brush ToastAccentBrush(WpfUi.ControlAppearance appearance)
+    {
+        return appearance switch
+        {
+            WpfUi.ControlAppearance.Success => _toastSuccessBrush,
+            WpfUi.ControlAppearance.Caution => _toastCautionBrush,
+            WpfUi.ControlAppearance.Danger => _toastDangerBrush,
+            _ => (TryFindResource("Accent") as Brush) ?? _toastInfoBrush,
+        };
+    }
+
+    /// <summary>Push a toast onto the stack and start its auto-dismiss countdown.</summary>
+    private void AddToast(Controls.ToastItem item)
+    {
+        if (!Dispatcher.CheckAccess()) { Dispatcher.Invoke(() => AddToast(item)); return; }
+
+        // Evict the oldest immediately (no fade) once the stack is full.
+        while (Toasts.Count >= MaxVisibleToasts)
+            RemoveToast(Toasts[0]);
+
+        Toasts.Add(item);
+        // The builder's WebView hides anything WPF draws over it; it shows its own copy.
+        ForwardToastToBuilder(item);
+
+        if (item.Timeout > TimeSpan.Zero)
+        {
+            item.Timer = new DispatcherTimer { Interval = item.Timeout };
+            item.Timer.Tick += (_, _) => DismissToast(item);
+            item.Timer.Start();
+        }
+    }
+
+    /// <summary>Animate a toast out to the right, then drop it from the collection.</summary>
+    private void DismissToast(Controls.ToastItem item)
+    {
+        item.Timer?.Stop();
+        item.Timer = null;
+        if (!Toasts.Contains(item)) return;
+
+        if (ToastHost?.ItemContainerGenerator.ContainerFromItem(item) is not FrameworkElement container)
+        {
+            RemoveToast(item);
+            return;
+        }
+
+        var slide = new TranslateTransform();
+        container.RenderTransform = slide;
+
+        var fade = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(180)));
+        Storyboard.SetTarget(fade, container);
+        Storyboard.SetTargetProperty(fade, new PropertyPath(UIElement.OpacityProperty));
+
+        var move = new DoubleAnimation(0, 40, new Duration(TimeSpan.FromMilliseconds(180)))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+        };
+        Storyboard.SetTarget(move, slide);
+        Storyboard.SetTargetProperty(move, new PropertyPath(TranslateTransform.XProperty));
+
+        var sb = new Storyboard();
+        sb.Children.Add(fade);
+        sb.Children.Add(move);
+        sb.Completed += (_, _) => RemoveToast(item);
+        sb.Begin();
+    }
+
+    private void RemoveToast(Controls.ToastItem item)
+    {
+        if (Toasts.Remove(item))
+        {
+            ForgetBuilderToast(item);
+            item.Closed?.Invoke();
+        }
+    }
+
+    private void ToastClose_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item)
+            DismissToast(item);
+    }
+
+    // Pause the auto-dismiss countdown while the pointer is over a toast, so a user
+    // reading or reaching for its button isn't raced by the timeout.
+    private void Toast_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item)
+            item.Timer?.Stop();
+    }
+
+    private void Toast_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is Controls.ToastItem item && item.Timer != null)
+        {
+            item.Timer.Stop();
+            item.Timer.Start(); // restart the full interval
+        }
+    }
+
+    /// <summary>
+    /// A toast the user can act on, for the cases where telling them is not enough. It lingers
+    /// far longer than an ordinary toast, because it asks for a decision and eight seconds would
+    /// make it no better than the log line it replaces. Not indefinitely, though.
+    /// </summary>
+    internal void ShowActionSnackbar(
+        string title, string message, string buttonText, Action onClick, WpfUi.ControlAppearance appearance)
+    {
+        var item = new Controls.ToastItem
+        {
+            Title = title,
+            Icon = WpfUi.SymbolRegular.PlugDisconnected24,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 500,
+            Timeout = TimeSpan.FromMinutes(10),
+        };
+
+        var panel = new StackPanel();
+        panel.Children.Add(new TextBlock
+        {
+            Text = message,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 10),
+        });
+
+        var button = new WpfUi.Button
+        {
+            Content = buttonText,
+            Appearance = WpfUi.ControlAppearance.Primary,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        button.Click += (_, _) =>
+        {
+            DismissToast(item);
+            onClick();
+        };
+        panel.Children.Add(button);
+
+        item.Content = panel;
+        AddToast(item);
+    }
+
+    /// <summary>
+    /// Convenience for code that isn't the main window itself — child overlays,
+    /// tab controls, and services — to raise an info snackbar on the shared root
+    /// presenter. No-ops when the live window isn't a <see cref="MainWindow"/>
+    /// (e.g. during shutdown), matching the guard the instance method already has.
+    /// </summary>
+    internal static void ShowInfoSnackbarOnMain(string title, string message, WpfUi.ControlAppearance appearance)
+    {
+        if (Application.Current?.MainWindow is MainWindow mw)
+            mw.ShowInfoSnackbar(title, message, appearance);
+    }
+
+    /// <summary>
+    /// Tells the player, once per start, that Alexa is no longer receiving their alarms.
+    ///
+    /// This cannot be repaired from here and it cannot be repaired by the cloud worker
+    /// either: only a fresh grant from Amazon restores it, and only the user can give
+    /// one. So the single useful thing to do is say so plainly, and say what to do — the
+    /// alternative is a raid alarm that silently never arrives.
+    ///
+    /// The toast is pinned rather than timed. It describes something that stays broken
+    /// until acted on, and one that fades after eight seconds is one nobody reads.
+    /// </summary>
+    private async Task WarnIfAlexaLinkBrokenAsync()
+    {
+        try
+        {
+            if (!await Services.Cloud.CloudAlexaAdapter.IsLinkBrokenAsync()) return;
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                AppendLog("[alexa] The Amazon account link is no longer valid — asking the user to link again.");
+                AddToast(new Controls.ToastItem
+                {
+                    Title = Helpers.Loc.Text("AlexaLinkExpiredTitle", "Alexa link expired"),
+                    Message = Helpers.Loc.Text("AlexaLinkExpiredMessage",
+                        "Amazon no longer accepts the connection to Rust+ Desktop, so raid alarms have stopped reaching Alexa. "
+                        + "Voice control still works. Open the Alexa app, disable the Rust+ Desktop skill and link it again."),
+                    Icon = WpfUi.SymbolRegular.Warning24,
+                    AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Caution),
+                    MaxCardWidth = 520,
+                    Timeout = TimeSpan.Zero,
+                });
+            });
+        }
+        catch
+        {
+            // Signed out, offline, or the platform is having a moment. None of those are
+            // evidence that the link is broken, and none are worth a word to the player.
+        }
+    }
+
+    internal void ShowInfoSnackbar(string title, string message, WpfUi.ControlAppearance appearance, WpfUi.SymbolRegular? icon = null)
+    {
+        AddToast(new Controls.ToastItem
+        {
+            Title = title,
+            Message = message,
+            Icon = icon ?? WpfUi.SymbolRegular.Info24,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 500,
+            Timeout = TimeSpan.FromSeconds(8),
+        });
+    }
+
+    internal void ShowUpgradeRequiredSnackbar(string message, string upgradeUrl)
+    {
+        if (_vm.IsDownloadingUpdate || !string.IsNullOrEmpty(_updateService.PendingInstallerPath)) return;
+        if (_upgradeRequiredSnackbarShown) return;
+        _upgradeRequiredSnackbarShown = true;
+
+        var item = new Controls.ToastItem
+        {
+            Title = Properties.Resources.GetString("UpdateRequiredTitle"),
+            Icon = WpfUi.SymbolRegular.ArrowDownload24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Danger),
+            MaxCardWidth = 450,
+            Timeout = TimeSpan.FromSeconds(25),
+        };
+
+        var stack = new StackPanel { Orientation = Orientation.Vertical };
+
+        string displayMessage = message;
+        if (!string.IsNullOrEmpty(displayMessage) && !displayMessage.Contains("cloud features", StringComparison.OrdinalIgnoreCase))
+        {
+            displayMessage = displayMessage.TrimEnd(' ', '.') + ". " + Properties.Resources.GetString("CloudFeaturesUpdateRequired");
+        }
+
+        var textBlock = new TextBlock
+        {
+            Text = displayMessage,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8)
+        };
+        stack.Children.Add(textBlock);
+
+        var btn = new WpfUi.Button
+        {
+            Content = "Download Update",
+            Appearance = WpfUi.ControlAppearance.Primary,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        btn.Click += async (s, e) =>
+        {
+            btn.IsEnabled = false;
+            try
+            {
+                // Always resolve the download through the in-app auto-updater
+                // (Velopack, GitHub Releases fallback) and download it here on click.
+                // The backend's upgrade_url is intentionally not used to launch a
+                // browser — the required build is fetched and applied in-app instead.
+                var latestInfo = await _updateService.GetLatestReleaseAsync();
+                if (latestInfo != null && !string.IsNullOrEmpty(latestInfo.Value.downloadUrl))
+                {
+                    DismissToast(item);
+                    await PerformUpdateDownloadAsync(latestInfo.Value.tag, latestInfo.Value.downloadUrl);
+                }
+                else
+                {
+                    // No release could be resolved to download. Keep the notice up and
+                    // let the user retry rather than sending them to the response URL.
+                    AppendLog("[upgrade] Required update could not be resolved via auto-update. Please try again.");
+                    ShowInfoSnackbar(
+                        Properties.Resources.GetString("UpdateTitle"),
+                        Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates"),
+                        WpfUi.ControlAppearance.Danger);
+                    btn.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[upgrade] Auto-update download failed: " + ex.Message);
+                ShowInfoSnackbar(
+                    Properties.Resources.GetString("UpdateTitle"),
+                    string.Format(Properties.Resources.GetString("FormatDownloadFailed"), ex.Message),
+                    WpfUi.ControlAppearance.Danger);
+                btn.IsEnabled = true;
+            }
+        };
+        stack.Children.Add(btn);
+
+        item.Content = stack;
+        AddToast(item);
+    }
+
+
+    private void ShowTimerSnackbar(string title, string timerName, int timeoutSeconds = 8)
+    {
+        var item = new Controls.ToastItem
+        {
+            Title = title,
+            Icon = WpfUi.SymbolRegular.Timer24,
+            AccentBrush = ToastAccentBrush(WpfUi.ControlAppearance.Caution),
+            MaxCardWidth = 400,
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds),
+        };
+
+        var snoozeBtn = new WpfUi.Button
+        {
+            Content = "Snooze",
+            Appearance = WpfUi.ControlAppearance.Info,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Margin = new Thickness(0, 0, 4, 0),
+            Tag = timerName
+        };
+        snoozeBtn.Click += (s, e) =>
+        {
+            DismissToast(item);
+            SnoozeAlarm();
+        };
+
+        var stopBtn = new WpfUi.Button
+        {
+            Content = "Stop",
+            Appearance = WpfUi.ControlAppearance.Danger,
+            FontSize = 12,
+            Padding = new Thickness(8, 2, 8, 2),
+            Tag = timerName
+        };
+        stopBtn.Click += (s, e) =>
+        {
+            DismissToast(item);
+            DismissAlarm();
+        };
+
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 0) };
+        panel.Children.Add(new TextBlock { Text = timerName, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
+        panel.Children.Add(snoozeBtn);
+        panel.Children.Add(stopBtn);
+
+        item.Content = panel;
+        AddToast(item);
+    }
+
+    private Controls.ToastItem? _guideToast;
+
+    private void UpdatePairingGuideSnackbar()
+    {
+        // A persistent (no-timeout) toast that nudges the user through pairing. It
+        // reflects live state, so on each change we dismiss the old one and add a
+        // fresh toast rather than mutating in place.
+        if (_guideToast != null)
+        {
+            DismissToast(_guideToast);
+            _guideToast = null;
+        }
+
+        if (_vm.Servers.Count > 0)
+            return;
+
+        bool isListening = _vm.IsPairingBusy;
+
+        // Listening means Steam is linked; what is left happens in the game, so say exactly where.
+        string title = Properties.Resources.GetString(isListening ? "PairingGuideListeningTitle" : "PairingGuideNoSteamTitle");
+        string msg = Properties.Resources.GetString(isListening ? "PairingGuideListeningMessage" : "PairingGuideNoSteamMessage");
+        var appearance = isListening ? WpfUi.ControlAppearance.Info : WpfUi.ControlAppearance.Caution;
+        var icon = isListening ? WpfUi.SymbolRegular.Phone24 : WpfUi.SymbolRegular.Warning24;
+
+        _guideToast = new Controls.ToastItem
+        {
+            Title = title,
+            Message = msg,
+            Icon = icon,
+            AccentBrush = ToastAccentBrush(appearance),
+            MaxCardWidth = 350,
+            Timeout = TimeSpan.Zero, // pinned until pairing state changes
+        };
+        AddToast(_guideToast);
+    }
+    private void SidebarSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        if (ColSidebar != null)
+        {
+            _expandedSidebarWidth = Math.Clamp(ColSidebar.ActualWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            TrackingService.SidebarWidth = _expandedSidebarWidth;
+            UpdateSidebarLayoutMode();
+        }
+    }
+
+    private Services.Sidebar.SidebarContextMenuTracker? _sidebarContextMenus;
+
+    private void LeftPanelBorder_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if (_isSidebarExpanded || _isSidebarPinnedExpanded)
+        {
+            return;
+        }
+
+        if (_sidebarHoverExpandTimer == null)
+        {
+            _sidebarHoverExpandTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(SidebarHoverExpandDelayMs)
+            };
+            _sidebarHoverExpandTimer.Tick += SidebarHoverExpandTimer_Tick;
+        }
+
+        if (!_sidebarHoverExpandTimer.IsEnabled)
+        {
+            _sidebarHoverExpandTimer.Start();
+        }
+    }
+
+    private void LeftPanelBorder_MouseLeave(object sender, MouseEventArgs e) => QueueSidebarCollapse();
+
+    private void QueueSidebarCollapse()
+    {
+        if (_isSidebarPinnedExpanded || _sidebarContextMenus?.IsOpen == true || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
+        {
+            return;
+        }
+
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (_isSidebarPinnedExpanded || _sidebarContextMenus?.IsOpen == true || _tutorialService?.IsRunning == true || IsLeftOverlayOpen())
+            {
+                return;
+            }
+
+            if (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true)
+            {
+                return;
+            }
+
+            _sidebarHoverExpandTimer?.Stop();
+            SetSidebarExpanded(false);
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void SidebarHoverExpandTimer_Tick(object? sender, EventArgs e)
+    {
+        _sidebarHoverExpandTimer?.Stop();
+        if (!_isSidebarExpanded &&
+            (LeftPanelBorder?.IsMouseOver == true || SidebarSplitter?.IsMouseOver == true))
+        {
+            SetSidebarExpanded(true);
+        }
+    }
+
+    private void CompactSidebarTab_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: TabItem tab })
+        {
+            CloseLeftPanelOverlays();
+            MainTabs.SelectedItem = tab;
+            SetSidebarExpanded(true);
+        }
+    }
+
+    /// <summary>
+    /// Closes every overlay that covers the left panel. They sit beside the rail, so a rail
+    /// destination has to clear them or the panel it opens stays hidden underneath.
+    /// Closes the same way their own buttons do: settings re-apply, automations save.
+    /// </summary>
+    private void CloseLeftPanelOverlays()
+    {
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+        }
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
+    }
+
+    private void SidebarTabPopover_Opened(object? sender, EventArgs e)
+    {
+        if (sender is Popup { Child: DependencyObject child } &&
+            FindVisualChildByName<Image>(child, "RustPopoverIcon") is { } icon)
+        {
+            icon.GetBindingExpression(Image.SourceProperty)?.UpdateTarget();
+        }
+    }
+
+    private void BtnToggleSidebarPin_Click(object sender, RoutedEventArgs e)
+    {
+        _isSidebarPinnedExpanded = !_isSidebarPinnedExpanded;
+        TrackingService.SidebarPinned = _isSidebarPinnedExpanded;
+
+        if (_isSidebarPinnedExpanded)
+        {
+            SetSidebarExpanded(true);
+        }
+        else
+        {
+            UpdateSidebarForOverlayVisibility();
+            if (!_isSidebarTemporarilyExpandedForOverlay)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+
+        UpdateSidebarPinButtons();
+    }
+
+    private void SetSidebarExpanded(bool isExpanded)
+    {
+        if (!isExpanded && _sidebarContextMenus?.IsOpen == true) return;
+        _sidebarHoverExpandTimer?.Stop();
+        // If FCM needs attention, force the sidebar to stay unfolded/expanded
+        bool isFcmConfigured = TrackingService.IsFcmConfigured();
+        bool needsFcmLogin = !isFcmConfigured ||
+                            TrackingService.FcmExpiresAt.HasValue &&
+                            TrackingService.FcmExpiresAt.Value < DateTime.Now;
+        if (needsFcmLogin)
+        {
+            isExpanded = true;
+        }
+
+        _isSidebarExpanded = isExpanded;
+
+        if (ColSidebar == null || LeftPanelContent == null || CompactSidebarRail == null || LeftPanelBorder == null)
+        {
+            return;
+        }
+
+        UpdateSidebarLayoutMode();
+
+        if (isExpanded)
+        {
+            double width = Math.Clamp(_expandedSidebarWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+            ColSidebar.MinWidth = CompactSidebarWidth;
+            LeftPanelBorder.Padding = new Thickness(0);
+            LeftPanelContent.Visibility = Visibility.Visible;
+            CompactSidebarRail.Visibility = Visibility.Visible;
+            AnimateSidebarWidth(width, () =>
+            {
+                if (_isSidebarExpanded && !_sidebarUsesDrawer)
+                {
+                    ColSidebar.MinWidth = MinExpandedSidebarWidth;
+                }
+            });
+            UpdateSidebarPinButtons();
+            return;
+        }
+
+        double currentWidth = GetCurrentSidebarWidth();
+        if (currentWidth >= MinExpandedSidebarWidth)
+        {
+            _expandedSidebarWidth = Math.Clamp(currentWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
+        }
+
+        ColSidebar.MinWidth = CompactSidebarWidth;
+        LeftPanelBorder.Padding = new Thickness(0);
+        AnimateSidebarWidth(CompactSidebarWidth, () =>
+        {
+            if (!_isSidebarExpanded)
+            {
+                LeftPanelContent.Visibility = Visibility.Collapsed;
+                CompactSidebarRail.Visibility = Visibility.Visible;
+            }
+        });
+        UpdateSidebarPinButtons();
+    }
+
+    private void AnimateSidebarWidth(double targetWidth, Action? completed = null)
+    {
+        if (ColSidebar == null)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        _sidebarAnimationCompleted = completed;
+        _sidebarAnimationStartWidth = GetCurrentSidebarWidth();
+        _sidebarAnimationTargetWidth = targetWidth;
+
+        if (Math.Abs(_sidebarAnimationStartWidth - _sidebarAnimationTargetWidth) < 1)
+        {
+            SetSidebarWidth(_sidebarAnimationTargetWidth);
+            _sidebarAnimationCompleted?.Invoke();
+            _sidebarAnimationCompleted = null;
+            return;
+        }
+
+        _sidebarAnimationStartedAt = DateTime.UtcNow;
+        _sidebarAnimationTimer ??= new System.Windows.Threading.DispatcherTimer(
+            System.Windows.Threading.DispatcherPriority.Render)
+        {
+            Interval = TimeSpan.FromMilliseconds(16)
+        };
+
+        _sidebarAnimationTimer.Tick -= SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Tick += SidebarAnimationTimer_Tick;
+        _sidebarAnimationTimer.Start();
+    }
+
+    private void SidebarAnimationTimer_Tick(object? sender, EventArgs e)
+    {
+        double elapsedMs = (DateTime.UtcNow - _sidebarAnimationStartedAt).TotalMilliseconds;
+        double progress = Math.Clamp(elapsedMs / SidebarAnimationDurationMs, 0, 1);
+        double eased = 1 - Math.Pow(1 - progress, 3);
+        double width = _sidebarAnimationStartWidth + ((_sidebarAnimationTargetWidth - _sidebarAnimationStartWidth) * eased);
+
+        SetSidebarWidth(width);
+
+        if (progress < 1)
+        {
+            return;
+        }
+
+        _sidebarAnimationTimer?.Stop();
+        SetSidebarWidth(_sidebarAnimationTargetWidth);
+        _sidebarAnimationCompleted?.Invoke();
+        _sidebarAnimationCompleted = null;
+    }
+
+    private double GetCurrentSidebarWidth()
+    {
+        if (_sidebarUsesDrawer && LeftPanelBorder is not null && !double.IsNaN(LeftPanelBorder.Width))
+            return LeftPanelBorder.Width;
+
+        if (ColSidebar == null)
+        {
+            return CompactSidebarWidth;
+        }
+
+        if (ColSidebar.Width.IsAbsolute && ColSidebar.Width.Value > 0)
+        {
+            return ColSidebar.Width.Value;
+        }
+
+        if (ColSidebar.ActualWidth > 0)
+        {
+            return ColSidebar.ActualWidth;
+        }
+
+        return _isSidebarExpanded ? _expandedSidebarWidth : CompactSidebarWidth;
+    }
+
+    private void SetSidebarWidth(double width)
+    {
+        if (ColSidebar != null)
+        {
+            ApplySidebarLayout(Root, LeftPanelBorder, SidebarSplitter, CompactSidebarWidth,
+                Math.Clamp(width, CompactSidebarWidth, MaxExpandedSidebarWidth), _sidebarUsesDrawer);
+        }
+    }
+
+    private void TrackLeftPanelOverlayVisibility()
+    {
+        if (AppSettingsPanel != null) AppSettingsPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (ProfitTradesPanel != null) ProfitTradesPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (BuyXForYPanel != null) BuyXForYPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        // These sit beside the rail now, so they need the unfolded sidebar's width too.
+        if (LogicEnginePanel != null) LogicEnginePanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (DeviceAutomationPanel != null) DeviceAutomationPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+        if (LfgPanel != null) LfgPanel.IsVisibleChanged += LeftPanelOverlay_IsVisibleChanged;
+    }
+
+    private void LeftPanelOverlay_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        QueueSidebarOverlayVisibilityUpdate();
+    }
+
+    private void QueueSidebarOverlayVisibilityUpdate()
+    {
+        if (_sidebarOverlayVisibilityUpdateQueued)
+        {
+            return;
+        }
+
+        _sidebarOverlayVisibilityUpdateQueued = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            _sidebarOverlayVisibilityUpdateQueued = false;
+            UpdateSidebarForOverlayVisibility();
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    // True while a left-side overlay (settings, trades, automation, community hub) is open.
+    // While one is open the sidebar must stay unfolded, even when the mouse leaves the
+    // sidebar border to interact with the overlay (clicking an option briefly captures
+    // the mouse and fires MouseLeave on the underlying border).
+    private bool IsLeftOverlayOpen()
+    {
+        return AppSettingsPanel?.Visibility == Visibility.Visible ||
+               ProfitTradesPanel?.Visibility == Visibility.Visible ||
+               BuyXForYPanel?.Visibility == Visibility.Visible ||
+               LogicEnginePanel?.Visibility == Visibility.Visible ||
+               DeviceAutomationPanel?.Visibility == Visibility.Visible ||
+               LfgPanel?.Visibility == Visibility.Visible;
+    }
+
+    private void UpdateSidebarForOverlayVisibility()
+    {
+        bool hasLeftOverlayOpen = IsLeftOverlayOpen();
+
+        if (hasLeftOverlayOpen)
+        {
+            if (!_isSidebarPinnedExpanded)
+            {
+                _isSidebarTemporarilyExpandedForOverlay = true;
+                SetSidebarExpanded(true);
+            }
+
+            return;
+        }
+
+        if (_isSidebarTemporarilyExpandedForOverlay)
+        {
+            _isSidebarTemporarilyExpandedForOverlay = false;
+
+            if (!_isSidebarPinnedExpanded)
+            {
+                SetSidebarExpanded(false);
+            }
+        }
+    }
+
+    private void UpdateSidebarPinButtons()
+    {
+        var tooltip = _isSidebarPinnedExpanded ? "Fold sidebar" : "Keep sidebar unfolded";
+
+        UpdateSidebarPinButton(BtnPinSidebar, tooltip, WpfUi.ControlAppearance.Transparent);
+        UpdateSidebarPinButton(BtnCompactPinSidebar, tooltip, WpfUi.ControlAppearance.Secondary);
+    }
+
+    private void UpdateSidebarPinButton(WpfUi.Button? button, string tooltip, WpfUi.ControlAppearance inactiveAppearance)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        button.ToolTip = tooltip;
+        button.Appearance = _isSidebarPinnedExpanded
+            ? WpfUi.ControlAppearance.Secondary
+            : inactiveAppearance;
+        button.SetResourceReference(ForegroundProperty, _isSidebarPinnedExpanded ? "Accent" : "TextPrimary");
+
+        if (button.Icon is WpfUi.SymbolIcon icon)
+        {
+            icon.Symbol = WpfUi.SymbolRegular.Pin24;
+            icon.Filled = _isSidebarPinnedExpanded;
+            icon.RenderTransformOrigin = new Point(0.5, 0.5);
+            icon.RenderTransform = _isSidebarPinnedExpanded
+                ? new RotateTransform(-45)
+                : Transform.Identity;
+        }
+    }
+
+    private void BtnDiscord_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://discord.gg/v4X584wye4") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Discord link: " + ex.Message);
+        }
+    }
+
+    private void BtnCloudPortal_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://rustplusdesktop.cloud/dashboard") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Could not open the Cloud Portal: " + ex.Message);
+        }
+    }
+
+    private void BtnPatchNotes_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var patchNotesWin = new PatchNotesWindow { Owner = this };
+            patchNotesWin.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Patch Notes window: " + ex.Message);
+        }
+    }
+
+    private Views.Windows.TrafficMonitorWindow? _trafficMonitorWindow;
+
+    private void BtnTrafficMonitor_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (_trafficMonitorWindow != null && _trafficMonitorWindow.IsLoaded)
+            {
+                if (_trafficMonitorWindow.WindowState == WindowState.Minimized)
+                    _trafficMonitorWindow.WindowState = WindowState.Normal;
+                _trafficMonitorWindow.Activate();
+                _trafficMonitorWindow.Focus();
+                return;
+            }
+
+            _trafficMonitorWindow = new Views.Windows.TrafficMonitorWindow();
+            _trafficMonitorWindow.Closed += (_, _) => _trafficMonitorWindow = null;
+            _trafficMonitorWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("❌ Could not open Traffic Monitor window: " + ex.Message);
+            MessageBox.Show($"Could not open Traffic Monitor window:\n{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        if (AppSettingsPanel.Visibility == Visibility.Visible)
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ApplySettings();
+        }
+        else
+        {
+            LogicEnginePanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            ProfitTradesPanel.Visibility = Visibility.Collapsed;
+            BuyXForYPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
+            AppSettingsPanel.LoadSettings();
+            AppSettingsPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OpenSettingsCategory(string category)
+    {
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
+        AppSettingsPanel.LoadSettings();
+        AppSettingsPanel.Visibility = Visibility.Visible;
+        AppSettingsPanel.OpenCategory(category);
+    }
+
+    private void BtnCloudAccount_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_vm.IsCloudConnected)
+        {
+            new Views.Windows.CloudLoginPromptWindow(this).ShowDialog();
+            return;
+        }
+
+        new Views.Windows.CloudAccountWindow(this).ShowDialog();
+    }
+
+    private void BtnLogicEngine_Click(object sender, RoutedEventArgs e)
+    {
+        if (LogicEnginePanel.Visibility == Visibility.Visible)
+        {
+            LogicEnginePanel.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            AppSettingsPanel.Visibility = Visibility.Collapsed;
+            ProfitTradesPanel.Visibility = Visibility.Collapsed;
+            BuyXForYPanel.Visibility = Visibility.Collapsed;
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            LfgPanel.Visibility = Visibility.Collapsed;
+            LogicEnginePanel.RefreshListBindings();
+            LogicEnginePanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void BtnDeviceAutomation_Click(object sender, RoutedEventArgs e)
+    {
+        if (DeviceAutomationPanel.Visibility == Visibility.Visible)
+        {
+            DeviceAutomationPanel.Visibility = Visibility.Collapsed;
+            _vm.Save();
+            return;
+        }
+
+        AppSettingsPanel.Visibility = Visibility.Collapsed;
+        ProfitTradesPanel.Visibility = Visibility.Collapsed;
+        BuyXForYPanel.Visibility = Visibility.Collapsed;
+        LogicEnginePanel.Visibility = Visibility.Collapsed;
+        LfgPanel.Visibility = Visibility.Collapsed;
+        DeviceAutomationPanel.RefreshListBindings();
+        DeviceAutomationPanel.Visibility = Visibility.Visible;
+        _ = OfferNewFeatureTutorialOnceAsync("device-automation");
+    }
+
+    private void BtnLanguageSettings_Click(object sender, RoutedEventArgs e)
+    {
+        OpenSettingsCategory("general");
+    }
+
+    public void UpdateLanguageFlag()
+    {
+        if (ImgLanguageFlag == null) return;
+        string code = TrackingService.SelectedLanguage;
+        if (string.IsNullOrEmpty(code))
+        {
+            ImgLanguageFlag.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            ImgLanguageFlag.Visibility = Visibility.Visible;
+
+            // Try full code first (e.g. sv-SE.png), then fall back to two-letter prefix (e.g. sv.png)
+            // so that most flags (stored as neutral codes) still resolve correctly.
+            var candidates = new[] { code, code.Contains('-') ? code.Split('-')[0] : null };
+            bool loaded = false;
+            foreach (var candidate in candidates)
+            {
+                if (candidate == null) continue;
+                string imageUri = $"pack://application:,,,/Assets/Flags/{candidate}.png";
+                try
+                {
+                    var streamInfo = System.Windows.Application.GetResourceStream(new Uri(imageUri));
+                    if (streamInfo != null)
+                    {
+                        ImgLanguageFlag.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imageUri));
+                        loaded = true;
+                        break;
+                    }
+                }
+                catch { }
+            }
+            if (!loaded)
+                ImgLanguageFlag.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void InitializeAppSettings()
+    {
+        if (AppSettingsPanel != null)
+        {
+            AppSettingsPanel.ParentWindow = this;
+        }
+        if (LogicEnginePanel != null)
+        {
+            LogicEnginePanel.ParentWindow = this;
+        }
+        if (DeviceAutomationPanel != null)
+        {
+            DeviceAutomationPanel.ParentWindow = this;
+        }
+    }
+
+    public System.Windows.Controls.Primitives.CustomPopupPlacement[] CenterMegaMenu_Callback(Size popupSize, Size targetSize, Point offset)
+    {
+        double targetLeft = ChatAlertsConfigureButton.TranslatePoint(new Point(0, 0), this).X;
+        double x = ((ActualWidth - popupSize.Width) / 2) - targetLeft;
+        x = Math.Max(x, 8 - targetLeft);
+        x = Math.Min(x, ActualWidth - popupSize.Width - 8 - targetLeft);
+        double y = targetSize.Height + 4;
+        return new[] { new System.Windows.Controls.Primitives.CustomPopupPlacement(new Point(x, y), System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal) };
+    }
+
+    private long _chatAlertsMenuClosedTimestamp;
+
+    private void ChatAlertsContextMenu_Closed(object sender, RoutedEventArgs e)
+    {
+        _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+    }
+
+    private void ChatAlertsConfigureButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm != null && cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            _chatAlertsMenuClosedTimestamp = Environment.TickCount64;
+            e.Handled = true;
+        }
+    }
+
+    private void ChatAlertsConfigureButton_Click(object sender, RoutedEventArgs e)
+    {
+        var cm = ChatAlertsConfigureButton?.ContextMenu;
+        if (cm == null) return;
+
+        if (Environment.TickCount64 - _chatAlertsMenuClosedTimestamp < 350)
+        {
+            return;
+        }
+
+        if (cm.IsOpen)
+        {
+            cm.IsOpen = false;
+            return;
+        }
+
+        cm.PlacementTarget = ChatAlertsConfigureButton;
+        cm.IsOpen = true;
+    }
+
+
+    private async Task PerformUpdateDownloadAsync(string tag, string dlUrl)
+    {
+        try
+        {
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
+            _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
+            var prog = new Progress<DownloadReport>(r =>
+            {
+                ApplyUpdateDownloadReport(r);
+            });
+
+            var path = await _updateService.DownloadInstallerAsync(dlUrl, prog);
+            
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
+                return;
+            }
+
+            _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+
+            if (path == null)
+            {
+                // The reason, when there is one. A bare "Download failed" tells neither the
+                // user nor us whether it was the network, the disk or something else.
+                string reason = _updateService.LastDownloadError;
+                if (!string.IsNullOrWhiteSpace(reason))
+                    AppendLog("❌ Update download failed: " + reason);
+
+                ShowInfoSnackbar(
+                    Properties.Resources.GetString("UpdateTitle"),
+                    string.IsNullOrWhiteSpace(reason)
+                        ? Properties.Resources.GetString("DownloadFailed")
+                        : string.Format(Properties.Resources.GetString("FormatDownloadFailed"), reason),
+                    WpfUi.ControlAppearance.Danger);
+                return;
+            }
+
+            _updateService.PendingInstallerPath = path;
+            _vm.IsUpdateAvailable = false;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateReady"), tag);
+            _vm.IsUpdateStatusExpanded = true;
+            // The download finished on its own in the background: tell the user it is ready and let
+            // them choose to restart now, rather than silently waiting for the next close.
+            ShowUpdateReadySnackbar(tag);
+        }
+        catch (Exception ex)
+        {
+            _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadFailed");
+            _vm.IsUpdateStatusExpanded = true;
+            AppendLog("❌ Update download failed: " + ex.Message);
+            ShowInfoSnackbar(Properties.Resources.GetString("UpdateTitle"), string.Format(Properties.Resources.GetString("FormatDownloadFailed"), ex.Message), WpfUi.ControlAppearance.Danger);
+        }
+    }    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        if (_listenerStarting || _vm.IsDownloadingUpdate) return;
+        if (!string.IsNullOrEmpty(_updateService.PendingInstallerPath))
+        {
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateReadyInstallsOnClose");
+            _vm.IsUpdateStatusExpanded = true;
+            // Inline Fluent confirmation anchored under the button, rather than a blocking message box.
+            ShowUpdateReadyPopup();
+            return;
+        }
+
+        try
+        {
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingForUpdates");
+            _vm.IsUpdateStatusExpanded = true;
+            var curr = _updateService.VersionForCompare;
+            var latestInfo = await _updateService.GetLatestReleaseAsync();
+            if (latestInfo is null)
+            {
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCouldNotCheckForUpdates");
+                _vm.IsUpdateStatusExpanded = true;
+                ShowInfoSnackbar(
+                    RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"),
+                    "Could not query latest release. Please try again or open Releases page.",
+                    WpfUi.ControlAppearance.Caution);
+                return;
+            }
+
+            var (latest, tag, dlUrl) = latestInfo.Value;
+            AppendLog($"Current: {_updateService.VersionShort} | Latest: {latest} ({tag})");
+
+            bool updateAvailable = false;
+            if (latest > curr) updateAvailable = true;
+            else if (latest == curr)
+            {
+                bool localIsBeta = _updateService.VersionRaw.Contains("-", StringComparison.OrdinalIgnoreCase);
+                bool remoteIsBeta = tag.Contains("-", StringComparison.OrdinalIgnoreCase);
+                if (localIsBeta && !remoteIsBeta) updateAvailable = true;
+            }
+
+            if (!updateAvailable)
+            {
+                _vm.IsUpdateAvailable = false;
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate");
+                _vm.IsUpdateStatusExpanded = false;
+                ShowInfoSnackbar(RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), RustPlusDesk.Properties.Resources.GetString("UpdateUpToDate"), WpfUi.ControlAppearance.Success);
+                return;
+            }
+
+            _vm.IsUpdateAvailable = true;
+            _vm.UpdateTag = tag;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatUpdateAvailable"), tag);
+            _vm.IsUpdateStatusExpanded = true;
+
+            var sizeStr = _updateService.LatestUpdateSize.HasValue ? $" ({UpdateService.FormatBytes(_updateService.LatestUpdateSize.Value)})" : "";
+
+            // An update was found: start the download immediately and auto-install when
+            // it finishes. No confirmation prompt — the user clicked check, and a found
+            // update is downloaded and applied on completion.
+            if (string.IsNullOrWhiteSpace(dlUrl))
+            {
+                // Nothing downloadable was resolved (e.g. the installer asset is missing
+                // from the GitHub fallback). Offer the releases page rather than failing
+                // silently, since there is no URL to auto-download from.
+                AppendLog($"Update {tag}{sizeStr} found, but no downloadable installer could be resolved.");
+                var open = System.Windows.MessageBox.Show(
+                    $"New version available: {tag}{sizeStr}\nOpen Releases page?",
+                    "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (open == MessageBoxResult.Yes)
+                    Process.Start(new ProcessStartInfo(UpdateService.LatestReleaseUrl) { UseShellExecute = true });
+                return;
+            }
+
+            AppendLog($"Update {tag}{sizeStr} found. Downloading and installing when ready…");
+            _lastDownloadUrl = dlUrl;
+            _lastDownloadTag = tag;
+
+            _vm.IsDownloadingUpdate = true;
+            _vm.IsDownloadPaused = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.IsUpdateStatusExpanded = true;
+            _vm.UpdateStatusText = string.Format(Properties.Resources.GetString("FormatDownloadingUpdate"), tag);
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
+            _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+
+            var prog = new Progress<DownloadReport>(r =>
+            {
+                ApplyUpdateDownloadReport(r);
+            });
+            var path = await _updateService.DownloadInstallerAsync(dlUrl!, prog);
+
+            if (path == "PAUSED")
+            {
+                _vm.IsDownloadingUpdate = true;
+                _vm.IsDownloadPaused = true;
+                _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+                _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
+                return;
+            }
+
+            _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+
+            if (path == null)
+            {
+                System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("DownloadFailed"), RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            AppendLog("Applying update...");
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiApplyingUpdate");
+            try { if (_pairing?.IsRunning == true) await Task.Run(async () => await _pairing.StopAsync()); } catch { }
+            _updateService.PendingInstallerPath = null;
+            _updateService.StartInstaller(path, restart: true);
+
+            CloseOverlayWindows();
+            System.Windows.Application.Current.Shutdown();
+        }
+        catch (Exception ex)
+        {
+            _vm.IsUpdateAvailable = false;
+            _vm.IsDownloadingUpdate = false;
+            _vm.IsUpdateProcessing = false;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed");
+            _vm.IsUpdateStatusExpanded = true;
+            AppendLog("❌ Update check failed: " + ex.Message);
+            System.Windows.MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateCheckFailed2") + ex.Message, RustPlusDesk.Properties.Resources.GetString("CodeUiUpdate"), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+    private string? _lastDownloadUrl;
+    private string? _lastDownloadTag;
+
+    private void ApplyUpdateDownloadReport(DownloadReport report)
+    {
+        _vm.BusyText = report.IsIndeterminate ? report.Status : $"{report.Status} {report.Percentage}";
+        _vm.UpdateStatusText = report.Status;
+        _vm.IsUpdateProcessing = report.IsIndeterminate;
+        _vm.UpdateDownloadProgress = report.Progress * 100;
+        _vm.UpdateDownloadSpeed = report.Speed;
+        _vm.UpdateDownloadSize = $"{report.BytesReceived} / {report.TotalBytes}";
+        _vm.UpdateDownloadPercentage = report.Percentage;
+        _vm.CurrentDownloadFile = _updateService.CurrentDownloadFile;
+    }
+
+    public void PauseResumeDownload_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsDownloadPaused)
+        {
+            _updateService.ResumeDownload();
+            _vm.IsDownloadPaused = false;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiResumingUpdateDownload");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("PauseUpdate");
+            if (!string.IsNullOrEmpty(_lastDownloadUrl))
+            {
+                _ = PerformUpdateDownloadAsync(_lastDownloadTag ?? "Update", _lastDownloadUrl);
+            }
+        }
+        else
+        {
+            _updateService.PauseDownload();
+            _vm.IsDownloadPaused = true;
+            _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadPaused");
+            _vm.PauseResumeButtonText = Properties.Resources.GetString("ResumeUpdate");
+        }
+    }
+
+    public void CancelDownload_Click(object sender, RoutedEventArgs e)
+    {
+        _updateService.CancelDownload();
+        _vm.IsDownloadingUpdate = false;
+        _vm.IsDownloadPaused = false;
+        _vm.IsUpdateProcessing = false;
+        _vm.UpdateStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiUpdateDownloadCancelled");
+        _vm.IsUpdateStatusExpanded = false;
+        _vm.UpdateDownloadProgress = 0;
+        _vm.UpdateDownloadPercentage = "0%";
+        _vm.UpdateDownloadSpeed = "";
+        _vm.UpdateDownloadSize = "";
+    }
+
+
+
+    /// DEVICE HOTKEYS
+    /// 
+    
+    private readonly SemaphoreSlim _hotkeySeqGate = new(1, 1);
+
+    private GlobalHotkeyManager? _hotkeyMgr;
+    private readonly Dictionary<string, Dictionary<string, List<long>>> _hotkeysByServer
+     = new(StringComparer.OrdinalIgnoreCase);
+    private HotkeyOptions _hotkeyOptions = new();
+
+    private static string HotkeyConfigPath =>
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                               "RustPlusDesk", "hotkeys.json");
+
+    private static string HotkeyOptionsPath =>
+        System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                               "RustPlusDesk", "hotkey_options.json");
+
+    private void LoadHotkeyOptions()
+    {
+        try
+        {
+            var p = HotkeyOptionsPath;
+            if (!System.IO.File.Exists(p))
+            {
+                _hotkeyOptions = new HotkeyOptions();
+                return;
+            }
+            var json = System.IO.File.ReadAllText(p);
+            _hotkeyOptions = JsonSerializer.Deserialize<HotkeyOptions>(json) ?? new HotkeyOptions();
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Hotkey options load error: " + ex.Message);
+            _hotkeyOptions = new HotkeyOptions();
+        }
+    }
+
+    private void SaveHotkeyOptions()
+    {
+        try
+        {
+            var p = HotkeyOptionsPath;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(p)!);
+            var json = JsonSerializer.Serialize(_hotkeyOptions, new JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(p, json);
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Hotkey options save error: " + ex.Message);
+        }
+    }
+
+    private string CurrentServerKey()
+    {
+        var sel = _vm?.Selected;
+        if (sel == null) return "default";
+        // Beispiel: wenn dein Serverobjekt Host/Port hat:
+        return $"{sel.Host}:{sel.Port}";
+    }
+
+    private Dictionary<string, List<long>> MapForCurrentServer()
+    {
+        var key = CurrentServerKey();
+        if (!_hotkeysByServer.TryGetValue(key, out var map))
+            _hotkeysByServer[key] = map = new(StringComparer.OrdinalIgnoreCase);
+        return map;
+    }
+
+    private void RefreshCurrentHotkeyBindings()
+    {
+        if (_vm == null) return;
+        _vm.CurrentHotkeys = MapForCurrentServer();
+    }
+
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        // Spätestens hier sollte Windows den Titel im Rahmen akzeptieren
+        UpdateAppTitle();
+
+        var hwnd = new WindowInteropHelper(this).Handle;
+        _hotkeyMgr = new GlobalHotkeyManager(hwnd);
+        _hotkeyMgr.HotkeyPressed += OnHotkeyPressed;
+
+        HwndSource.FromHwnd(hwnd)!.AddHook(WndProc);
+
+        LoadHotkeyOptions();
+        LoadHotkeys();
+        RefreshCurrentHotkeyBindings();
+        ActivateHotkeysForCurrentServer();   // statt RegisterAllHotkeys()
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        const int WM_HOTKEY = 0x0312;
+        if (msg == WM_HOTKEY && _hotkeyMgr != null)
+        {
+            _hotkeyMgr.OnWmHotkey(wParam, lParam);
+            handled = true;
+        }
+        return IntPtr.Zero;
+    }
+
+    private void LoadHotkeys()
+    {
+        try
+        {
+            var p = HotkeyConfigPath;
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(p)!);
+            _hotkeysByServer.Clear();
+            if (!System.IO.File.Exists(p)) return;
+
+            var json = System.IO.File.ReadAllText(p);
+
+            // NEUE Struktur: { "host:port": { "Ctrl+Alt+K": [123,456] } }
+            try
+            {
+                var v = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<long>>>>(json);
+                if (v != null && v.Count > 0) { foreach (var kv in v) _hotkeysByServer[kv.Key] = kv.Value; return; }
+            }
+            catch { /* fall through */ }
+
+            // ALTE Struktur: { "Ctrl+Alt+K": [123,456] } -> nach "default" migrieren
+            try
+            {
+                var old = JsonSerializer.Deserialize<Dictionary<string, List<long>>>(json);
+                if (old != null) _hotkeysByServer["default"] = new(old, StringComparer.OrdinalIgnoreCase);
+            }
+            catch { }
+        }
+        catch (Exception ex) { AppendLog("Hotkeys load error: " + ex.Message); }
+    }
+
+    private void SaveHotkeys()
+    {
+        try
+        {
+            // ⬇︎ NEU
+            PruneEmptyGesturesAllServers();
+
+            var json = JsonSerializer.Serialize(_hotkeysByServer,
+                        new JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(HotkeyConfigPath, json);
+        }
+        catch (Exception ex) { AppendLog("Hotkeys save error: " + ex.Message); }
+    }
+
+    private void PruneEmptyGesturesForCurrentServer()
+    {
+        var map = MapForCurrentServer();
+        foreach (var key in map.Where(kv => kv.Value == null || kv.Value.Count == 0)
+                               .Select(kv => kv.Key).ToList())
+            map.Remove(key);
+    }
+
+ 
+
+    private void PruneEmptyGesturesAllServers()
+    {
+        foreach (var srv in _hotkeysByServer.Keys.ToList())
+        {
+            var map = _hotkeysByServer[srv];
+            foreach (var key in map.Where(kv => kv.Value == null || kv.Value.Count == 0)
+                                   .Select(kv => kv.Key).ToList())
+                map.Remove(key);
+        }
+    }
+
+    private void RegisterAllHotkeys()
+    {
+        if (_hotkeyMgr == null) return;
+
+        // ⬇︎ NEU: leere Keys entfernen (verhindert „blockierte“ Gesten)
+        PruneEmptyGesturesForCurrentServer();
+
+        _hotkeyMgr.UnregisterAll();
+        foreach (var gesture in MapForCurrentServer().Keys)
+        {
+            if (!_hotkeyMgr.Register(gesture))
+                AppendLog($"⚠️ Cannot register hotkey '{gesture}'.");
+        }
+    }
+
+    private DateTime _lastHotkeyAt = DateTime.MinValue;
+    private bool HotkeyThrottle(int ms = 400)
+    {
+        var now = DateTime.UtcNow;
+        if ((now - _lastHotkeyAt).TotalMilliseconds < ms) return true;
+        _lastHotkeyAt = now;
+        return false;
+    }
+
+
+    private readonly Dictionary<string, DateTime> _lastGestureAt = new(StringComparer.OrdinalIgnoreCase);
+
+
+    private void OnHotkeyPressed(string gesture)
+    {
+        if (HandledByAiCompanion(gesture)) return;
+        if (HandledByMiniMapPeek(gesture)) return;
+
+        // kleiner Debounce pro Geste für Geräte-Aktionen (falls OS NOREPEAT ignoriert)
+        var now = DateTime.UtcNow;
+        if (_lastGestureAt.TryGetValue(gesture, out var last) &&
+            (now - last).TotalMilliseconds < 350)
+            return;
+        _lastGestureAt[gesture] = now;
+
+        var map = MapForCurrentServer();
+        if (!map.TryGetValue(gesture, out var ids) || ids.Count == 0) return;
+
+        _ = RunHotkeySequenceOnceAsync(ids);
+    }
+
+    private async Task RunHotkeySequenceOnceAsync(IReadOnlyCollection<long> ids)
+    {
+        if (!await _hotkeySeqGate.WaitAsync(0)) // schon eine Sequenz aktiv?
+        {
+            AppendLog("Hotkey sequence already running – ignored.");
+            return;
+        }
+        try
+        {
+            await ToggleSequenceAsync(ids.Distinct().ToList()); // doppelte IDs vermeiden
+        }
+        finally
+        {
+            _hotkeySeqGate.Release();
+        }
+    }
+
+    private SmartDevice? FindDevice(long entityId)
+    {
+        var enumerable = (DataContext as dynamic)?.CurrentDevices as IEnumerable
+                         ?? ListDevices.ItemsSource as IEnumerable; 
+        if (enumerable == null) return null;
+
+        return FindDeviceRecursive(enumerable.OfType<SmartDevice>(), entityId);
+    }
+
+    private SmartDevice? FindDeviceRecursive(IEnumerable<SmartDevice> col, long entityId)
+    {
+        foreach (var dev in col)
+        {
+            if (dev.EntityId == entityId) return dev;
+            if (dev.IsGroup && dev.Children != null)
+            {
+                var found = FindDeviceRecursive(dev.Children, entityId);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    private async Task<string> MyPlayerNameOrYouAsync()
+    {
+        if (_mySteamId != 0)
+        {
+            if (_steamNames.TryGetValue(_mySteamId, out var name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+            await RefreshTeamNamesAsync();
+            if (_steamNames.TryGetValue(_mySteamId, out name) && !string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+        return Properties.Resources.WordYou;
+    }
+
+    private async Task ToggleSequenceAsync(IEnumerable<long> entityIds)
+    {
+        var allTargets = new List<SmartDevice>();
+        foreach (var id in entityIds)
+        {
+            var rootDev = FindDevice(id);
+            if (rootDev == null) continue;
+
+            if (rootDev.IsGroup && rootDev.Children != null)
+                allTargets.AddRange(GetSwitchesRecursive(rootDev.Children));
+            else if (string.Equals(rootDev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
+                allTargets.Add(rootDev);
+        }
+
+        var uniqueSwitches = allTargets
+            .GroupBy(d => d.EntityId)
+            .Select(g => g.First())
+            .Where(d => !d.IsMissing)
+            .ToList();
+
+        if (uniqueSwitches.Count == 0) return;
+
+        string serverKey = CurrentServerKey();
+
+        if (_hotkeyOptions.ParallelMode)
+        {
+            // Capture desired states before launching parallel tasks
+            var toggleWork = uniqueSwitches.Select(dev =>
+            {
+                bool current = dev.IsOn ?? false;
+                bool desired = !current;
+                var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
+                return (dev, desired, task: HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true));
+            }).ToList();
+
+            await Task.WhenAll(toggleWork.Select(t => t.task));
+
+            // Send chat alerts for devices that had it enabled
+            foreach (var (dev, desired, _) in toggleWork)
+            {
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
+                    _ = SendTeamChatSafeAsync(msg, true, true);
+                }
+            }
+        }
+        else
+        {
+            foreach (var dev in uniqueSwitches)
+            {
+                bool current = dev.IsOn ?? false;
+                bool desired = !current;
+                var fakeSender = new System.Windows.FrameworkElement { DataContext = dev };
+                await HandleDeviceToggleAsync(fakeSender, desired, ignoreGlobalBusy: true);
+
+                // Send chat alert if enabled for this device
+                if (TrackingService.HotkeyTriggerChatAlertsEnabled && TrackingService.GetHotkeyTriggerChatAlert(serverKey, dev.EntityId))
+                {
+                    string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
+                    string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
+                    _ = SendTeamChatSafeAsync(msg, true, true);
+                }
+
+                if (_hotkeyOptions.ToggleDelayMs > 0)
+                {
+                    await Task.Delay(_hotkeyOptions.ToggleDelayMs);
+                }
+                if (_rust == null) break;
+            }
+        }
+    }
+
+    private readonly Dictionary<uint, DateTime> _toggleBusy = new();
+    private readonly object _toggleBusyLock = new();
+
+    private readonly Dictionary<long, DateTime> _toggleBusySince = new();
+    private static readonly TimeSpan ToggleBusyTTL = TimeSpan.FromSeconds(12);
+
+    private bool TryMarkToggleBusy(uint id)
+    {
+        lock (_toggleBusy)
+        {
+            if (_toggleBusy.TryGetValue(id, out var ts))
+            {
+                // Stale? -> übernehmen & weitermachen
+                if (DateTime.UtcNow - ts > ToggleBusyTTL)
+                {
+                    _toggleBusy[id] = DateTime.UtcNow;
+                    AppendLog($"(recovered) cleared stale toggle lock for #{id}");
+                    return true;
+                }
+                return false;
+            }
+            _toggleBusy[id] = DateTime.UtcNow;
+            return true;
+        }
+    }
+
+    private void UnmarkToggleBusy(uint id)
+    {
+        lock (_toggleBusy) { _toggleBusy.Remove(id); }
+    }
+
+    private void ClearAllToggleBusy()
+    {
+        lock (_toggleBusy) { _toggleBusy.Clear(); }
+        _globalToggleBusy = false;
+    }
+
+    private void ResetAllBusyStates()
+    {
+        _globalToggleBusy = false;
+        _isDynPollBusy = false;
+        _apiConsecutiveTimeouts = 0;
+        System.Threading.Interlocked.Exchange(ref _teamPollBusy, 0);
+        System.Threading.Interlocked.Exchange(ref _camThumbBusy, 0);
+        AppendLog("[reset] All busy flags cleared.");
+    }
+
+    private void UpdateAdminUi()
+    {
+        var tier = RustPlusDesk.Services.Auth.SupabaseAuthManager.CurrentTier;
+        if (BtnAdminPanel != null)
+        {
+            BtnAdminPanel.Visibility = (tier == "developer" || tier == "lead_contributor" || tier == "lead_developer") ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    private void BtnAdminPanel_Click(object sender, RoutedEventArgs e)
+    {
+        var tier = RustPlusDesk.Services.Auth.SupabaseAuthManager.CurrentTier;
+        if (!RustPlusDesk.Services.Auth.SupabaseAuthManager.IsDiscordAuthenticated ||
+            (tier != "developer" && tier != "lead_contributor" && tier != "lead_developer"))
+        {
+            MessageBox.Show(RustPlusDesk.Properties.Resources.GetString("CodeUiAdminAccessRequiresDiscordAuthAndADeveloperLeadContributorRole"), RustPlusDesk.Properties.Resources.GetString("UiAdminPanel"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var adminWin = new Views.Windows.AdminPanelWindow { Owner = this };
+        adminWin.Show();
+    }
+
+    private void BtnPremiumInfoDevices_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Views.Windows.PremiumInfoWindow(Properties.Resources.PremiumInfoDevicesDesc) { Owner = this }; dlg.ShowDialog();
+    }
+
+    private void BtnPremiumInfoMap_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Views.Windows.PremiumInfoWindow(Properties.Resources.PremiumInfoMapDesc) { Owner = this }; dlg.ShowDialog();
+    }
+
+    private async void BtnFcmInfo_Click(object sender, RoutedEventArgs e)
+    {
+        string title = RustPlusDesk.Helpers.Loc.TextOrNull("FcmInfoTitle") ?? "What is FCM?";
+        string message = RustPlusDesk.Helpers.Loc.TextOrNull("FcmInfoMessage") ??
+                         "FCM stands for Firebase Cloud Messaging. Rust+ uses it to send push notifications for paired servers, devices, alarms, team chat, and other live events.\n\nRust+ Desktop registers your local app with FCM so it can receive those same Rust+ notifications in the background. The pairing credentials are saved locally on this PC and can be deleted by resetting the pairing config.";
+
+        var msgBox = new WpfUi.MessageBox
+        {
+            Title = title,
+            Content = message,
+            CloseButtonText = RustPlusDesk.Helpers.Loc.TextOrNull("GenericClose") ?? "Close"
+        };
+        msgBox.Owner = this;
+        msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        await msgBox.ShowDialogAsync();
+    }
+
+    private void BtnHotkeys_Click(object sender, RoutedEventArgs e)
+    {
+        DeactivateHotkeys();
+
+        IEnumerable? src = (ListDevices.ItemsSource as IEnumerable) ?? (DataContext as IEnumerable);
+        if (src == null) { MessageBox.Show(Properties.Resources.NoDevices); return; }
+        
+        var flatAssignable = GetHotkeyAssignableDevices(src.OfType<SmartDevice>());
+
+        var dlg = new HotkeysWindow(flatAssignable, MapForCurrentServer(), _hotkeyOptions, _hotkeyMgr?.RegistrationStatus) { Owner = this };
+        bool? activate = dlg.ShowDialog();
+
+        SaveHotkeys();
+        SaveHotkeyOptions();
+        RefreshCurrentHotkeyBindings();
+
+        if (activate == true) ActivateHotkeysForCurrentServer();
+        else DeactivateHotkeys();
+
+        // Refresh the Hotkey Triggers submenu to reflect any new/removed hotkey assignments
+        SyncAlertMenuItems();
+    }
+
+    private IEnumerable<SmartDevice> GetHotkeyAssignableDevices(IEnumerable<SmartDevice> devices)
+    {
+        var list = new List<SmartDevice>();
+        foreach (var d in devices)
+        {
+            if (d.IsGroup && d.HasGroupSwitches)
+                list.Add(d);
+            else if (string.Equals(d.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase))
+                list.Add(d);
+                
+            if (d.IsGroup && d.Children != null)
+                list.AddRange(GetHotkeyAssignableDevices(d.Children));
+        }
+        return list;
+    }
+
+    private bool _hotkeysActive;
+
+    private void UpdateHotkeyButtonUi()
+    {
+        if (BtnHotkeys == null) return;
+
+        // The button is icon-only, so its state text lives in the tooltip and accessible name.
+        string label = RustPlusDesk.Properties.Resources.GetString(_hotkeysActive ? "CodeUiHotkeysActive" : "Hotkeys");
+        BtnHotkeys.ToolTip = label;
+        System.Windows.Automation.AutomationProperties.SetName(BtnHotkeys, label);
+
+        if (_hotkeysActive)
+        {
+            if (BtnHotkeys.IsMouseOver)
+            {
+                BtnHotkeys.Background = Brushes.Transparent;
+                BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 204, 0)); // gelb
+                BtnHotkeys.Foreground = new SolidColorBrush(Color.FromRgb(255, 204, 0));
+            }
+            else
+            {
+                BtnHotkeys.Background = new SolidColorBrush(Color.FromRgb(255, 204, 0));   // gelb
+                BtnHotkeys.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 224, 64));
+                BtnHotkeys.Foreground = Brushes.Black;
+            }
+        }
+        else
+        {
+            BtnHotkeys.ClearValue(Button.BackgroundProperty);
+            BtnHotkeys.ClearValue(Button.BorderBrushProperty);
+            BtnHotkeys.ClearValue(Button.ForegroundProperty);
+        }
+    }
+
+    private void BtnHotkeys_MouseEnter(object sender, MouseEventArgs e)
+    {
+        UpdateHotkeyButtonUi();
+    }
+
+    private void BtnHotkeys_MouseLeave(object sender, MouseEventArgs e)
+    {
+        UpdateHotkeyButtonUi();
+    }
+
+    private void DeactivateHotkeys()
+    {
+        _hotkeyMgr?.UnregisterAll();
+        _hotkeysActive = false;
+
+        // Push to talk is not a device binding and does not belong to this switch.
+        ApplyAiHotkey();
+
+        UpdateHotkeyButtonUi();
+    }
+
+    // pruned-Register + Flag setzen
+    private void ActivateHotkeysForCurrentServer()
+    {
+        if (_hotkeyMgr == null) return;
+
+        PruneEmptyGesturesForCurrentServer();
+
+        _hotkeyMgr.UnregisterAll();
+        var map = MapForCurrentServer();
+        bool any = false;
+        foreach (var gesture in map.Keys)
+            any |= _hotkeyMgr.Register(gesture);
+
+        _hotkeysActive = any;
+
+        ApplyAiHotkey();
+
+        UpdateHotkeyButtonUi();
+    }
+
+    // MAP DRAW OVERLAY
+
+
+
+    public void ReloadApplicationData()
+    {
+        _vm.Load();
+        LoadCustomCrosshairs();
+        HydrateSteamUiFromStorage();
+        
+        // Re-read FCM configuration from the restored rustplusjs-config.json
+        TrackingService.ReadFcmConfig();
+        
+        // Notify the login overlay to update its visibility state!
+        _vm.NotifyFcmChanged();
+        
+        AppendLog("[SYSTEM] Application data reloaded successfully after restore.");
+    }
+
+    private Window? _activeDialog;
+
+    public void CenterActiveDialog()
+    {
+        if (_activeDialog != null && _activeDialog.IsVisible)
+        {
+            double ownerLeft = this.Left;
+            double ownerTop = this.Top;
+            double ownerWidth = this.ActualWidth;
+            double ownerHeight = this.ActualHeight;
+
+            double dialogWidth = _activeDialog.Width;
+            double dialogHeight = _activeDialog.Height;
+
+            _activeDialog.Left = ownerLeft + (ownerWidth - dialogWidth) / 2;
+            _activeDialog.Top = ownerTop + (ownerHeight - dialogHeight) / 2;
+        }
+    }
+
+    private void MainWindow_LocationChangedOrResized(object? sender, EventArgs e)
+    {
+        CenterActiveDialog();
+    }
+}
+
+public class RenameDialog : Window
+{
+    public string InputText { get; private set; } = string.Empty;
+    public RenameDialog(string defaultText)
+    {
+        Title = Properties.Resources.GetString("RenameCustomCrosshair");
+        Width = 300; SizeToContent = SizeToContent.Height;
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        ResizeMode = ResizeMode.NoResize;
+        Background = new SolidColorBrush(Color.FromRgb(24, 26, 30));
+        Foreground = Brushes.White;
+
+        var grid = new StackPanel { Margin = new Thickness(15) };
+        var tb = new TextBox 
+        { 
+            Text = defaultText, 
+            Margin = new Thickness(0,0,0,15),
+            Background = new SolidColorBrush(Color.FromRgb(51, 51, 51)),
+            Foreground = Brushes.White,
+            Padding = new Thickness(5),
+            BorderThickness = new Thickness(0)
+        };
+        var btn = new Button 
+        { 
+            Content = "OK", 
+            Width = 80, 
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Background = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
+            Foreground = Brushes.White,
+            Padding = new Thickness(5,2,5,2),
+            BorderThickness = new Thickness(0)
+        };
+        btn.Click += (s, e) => { InputText = tb.Text; DialogResult = true; Close(); };
+        tb.KeyDown += (s, e) => { if (e.Key == Key.Enter) { InputText = tb.Text; DialogResult = true; Close(); } };
+        
+        grid.Children.Add(tb);
+        grid.Children.Add(btn);
+        Content = grid;
+        
+        Loaded += (s, e) => { tb.Focus(); tb.SelectAll(); };
+    }
+}
+
+
+
+
+
