@@ -332,6 +332,10 @@
                                                 See where each tool cupboard reaches, what the base costs to build and what its upkeep takes per day.
                                             </TextBlock>
                                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; God Rock, Iceberg &amp; Cliff Bases:</Run>
+                                                Plan bases on the game's large rocks, cliffs and icebergs. Add them to your plot under Scene, or build against them on the 3D map, and the base keeps them. Place it on another server's 3D map and the app lists the same structures there, flies you to them and checks each piece by the game's rules, so you see straight away whether the base fits or needs adjusting.
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                                 <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Import, Export &amp; the Real Map:</Run>
                                                 Open any Builders Sanctuary design or CopyPaste file, export a base for a real Rust server, or place it on your server's 3D map with a check that it fits the terrain.
                                             </TextBlock>
@@ -344,6 +348,7 @@
 
                                         <views:ImageGallery Margin="0,4,0,4">
                                             <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/ship-builder-and-simulator.jpg" Description="The Ship Builder and Ship Simulator: sails set, the course line on the water, why the boat pulls to one side, and its speed, health and cost"/>
+                                            <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/God-Rock-Base.jpg" Description="A base built into a God Rock, placed on the 3D map: every piece checked by the game's rules, and the rock it was built against"/>
                                             <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/BaseBuilder.jpg" Description="The Base Builder workshop: start a base, open your library, load a file or import from Builders Sanctuary"/>
                                             <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Build-together.jpg" Description="Build Together (Premium): your friends in your base, each with a name tag, building with the rights you give them"/>
                                             <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.0/Building-wheel.jpg" Description="The building wheel, the Hammer and a six-slot belt, just like in the game"/>
