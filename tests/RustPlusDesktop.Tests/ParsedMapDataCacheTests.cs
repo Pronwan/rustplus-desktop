@@ -17,6 +17,42 @@ public sealed class ParsedMapDataCacheTests
     }
 
     [TestMethod]
+    public async System.Threading.Tasks.Task ReadPrefabs_KeepsOnlyWhatIsAsked()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "rpd-prefabs-" + Guid.NewGuid().ToString("N") + ".json");
+        File.WriteAllText(path, "[{\"i\":\"cave_a\",\"x\":1},{\"i\":\"rock\",\"x\":2},{\"i\":\"cave_b\",\"x\":3}]");
+        try
+        {
+            var kept = await ParsedMapDataCache.ReadPrefabsAsync(path, p => p.GetProperty("i").GetString()!.StartsWith("cave_"));
+
+            Assert.IsNotNull(kept);
+            Assert.AreEqual(2, kept.Count);
+            Assert.AreEqual(3, kept[1].GetProperty("x").GetInt32(), "Kept entries must stay readable after the file is closed.");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public async System.Threading.Tasks.Task ReadPrefabs_IsNullForAMissingOrUnreadableFile()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "rpd-prefabs-" + Guid.NewGuid().ToString("N") + ".json");
+        Assert.IsNull(await ParsedMapDataCache.ReadPrefabsAsync(path, _ => true));
+
+        File.WriteAllText(path, "{\"not\":\"an array\"}");
+        try
+        {
+            Assert.IsNull(await ParsedMapDataCache.ReadPrefabsAsync(path, _ => true));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
     public void KeepsOnlyTheOverlayProperties()
     {
         string folder = WriteMapData(
