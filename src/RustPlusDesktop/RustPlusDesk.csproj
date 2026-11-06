@@ -368,7 +368,7 @@
     -->
     <MSBuild Projects="$(MapParserProjectPath)" Targets="Restore" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;TargetFramework=net8.0;TargetFrameworks=net8.0" />
 
-    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);IncludeRustModels=$(IncludeRustModels);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
     <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
     <ItemGroup>
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" Exclude="$(MapParserPublishDir)modules\glbWorker.js" />
@@ -387,6 +387,8 @@
       <MapParserViewerFiles Include="$(MapParserViewerDistDir)**\*" />
       <MapParserViewerSupport Include="$(MapParserSourceDir)style.css;$(MapParserSourceDir)tailwind-local.css;$(MapParserSourceDir)prefabs_map.json;$(MapParserSourceDir)monument_bounds.json;$(MapParserSourceDir)monument_metadata.json;$(MapParserSourceDir)building_block_ORIGINAL_REDDIT.json;$(MapParserSourceDir)draco_decoder.wasm" />
       <MapParserModelFiles Include="$(MapParserSourceDir)Rust_Assets\**\*" />
+      <!-- A lite build leaves the models out: the app downloads them, and packs own FP\assets. -->
+      <MapParserModelFiles Remove="$(MapParserSourceDir)Rust_Assets\FP\assets\**\*" Condition="'$(IncludeRustModels)' == 'false'" />
     </ItemGroup>
     <Copy SourceFiles="@(MapParserViewerFiles)" DestinationFiles="@(MapParserViewerFiles->'$(MapParserPublishDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(MapParserViewerSupport)" DestinationFiles="@(MapParserViewerSupport->'$(MapParserPublishDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
