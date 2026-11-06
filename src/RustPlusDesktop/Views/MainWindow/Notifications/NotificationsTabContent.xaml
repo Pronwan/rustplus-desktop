@@ -298,6 +298,12 @@
                             Style="{StaticResource CommandBarButton}"
                             ToolTip="{DynamicResource MarkAllAsRead}" />
                         <ui:Button
+                            AutomationProperties.Name="Sync"
+                            Click="BtnSyncHistory_Click"
+                            Icon="{ui:SymbolIcon Symbol=ArrowSync24}"
+                            Style="{StaticResource CommandBarButton}"
+                            ToolTip="Sync missed notifications and pairings" />
+                        <ui:Button
                             AutomationProperties.Name="{DynamicResource ClearNotifications}"
                             Click="BtnClearHistory_Click"
                             Icon="{ui:SymbolIcon Symbol=Delete24}"

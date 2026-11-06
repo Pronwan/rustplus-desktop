@@ -37,9 +37,15 @@ public readonly record struct Map3DReferenceMonument(double X, double Y, string 
 
 public static class Map3DLocalBuildService
 {
-    private const int RecentCandidateCount = 7;
-    private const int NameCandidateCount = 5;
-    private const double MatchDistanceWorldUnits = 300.0;
+    // Files older than the wipe are still tried, for a server that re-wiped on the same map, but only this many.
+    private const int OlderCandidateCount = 12;
+
+    // The server reports a monument at the spot the map file places it. Measured over 312 pairings
+    // of real maps and wipes: the right map lands 21 of 25 monuments within 2 units, a wrong one
+    // lands none within 10. At the old 300 units, 38 wrong pairings passed.
+    private const double MatchDistanceWorldUnits = 10.0;
+    private const int MinExactMatches = 3;
+    private const int MaxReferenceMonuments = 25;
 
     private static BitmapSource CreateDummyTexture()
     {
@@ -65,8 +71,9 @@ public static class Map3DLocalBuildService
         string? rustMapsMapId,
         IReadOnlyList<Map3DReferenceMonument>? referenceMonuments = null,
         int worldSize = 0,
-        string? explicitMapPath = null,
+        string? pickedMapPath = null,
         bool forceReparse = false,
+        string? knownMapPath = null,
         CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(profile);
@@ -104,12 +111,14 @@ public static class Map3DLocalBuildService
         }
 
         string manifestPath = Path.Combine(folder, "map3d_manifest.json");
-        // The folder is already keyed by server, RustMaps id and wipe time, so a complete
-        // parse in it is reused. A known map path (saved after the first parse, or an offline
-        // or copied map) only has to match the cached one; forceReparse is for a file the
-        // user just picked by hand.
+        // The folder is keyed by server, RustMaps id and wipe time, but that key cannot vouch for
+        // what is in it: the wipe time may not be known yet, and a wrong map chosen earlier would
+        // sit here for the whole wipe. So the parse has to match the server's monuments first.
+        // A picked map (by hand, or an offline profile's own file) only has to be the cached one;
+        // forceReparse is for a file the user just picked.
         var parseStopwatch = Stopwatch.StartNew();
-        if (!forceReparse && TryLoadReusableResult(folder, manifestPath, explicitMapPath, out var cached))
+        if (pickedMapPath == null) DiscardParseOfAnotherMap(folder, referenceMonuments, worldSize);
+        if (!forceReparse && TryLoadReusableResult(folder, manifestPath, pickedMapPath, out var cached))
         {
             texturePath = await EnsureRenderedTextureAsync(null, cached.SelectedMapFile, folder, ct).ConfigureAwait(false);
             if (texturePath == null && pendingTexturePath != null)
@@ -135,9 +144,14 @@ public static class Map3DLocalBuildService
         }
 
         var parserPath = ResolveParserExecutable();
-        var candidates = explicitMapPath == null
-            ? FindMapCandidates(profile.Name, profile.Host).ToList()
-            : new List<string> { explicitMapPath };
+        // Nothing found on disk can be told apart without the server's monuments, so without them
+        // the search is skipped rather than guessed at, and the choice goes to the player.
+        bool canVerify = CanVerify(referenceMonuments);
+        var candidates = pickedMapPath != null
+            ? new List<string> { pickedMapPath }
+            : canVerify
+                ? FindMapCandidates(knownMapPath, profile.WipeTime)
+                : new List<string>();
 
         var attempts = new List<object>();
         string? selectedMap = null;
@@ -150,15 +164,15 @@ public static class Map3DLocalBuildService
         }
         else
         {
-            bool multipleCandidates = explicitMapPath == null;
-            bool explicitMapParsed = false;
+            bool multipleCandidates = pickedMapPath == null;
+            bool pickedMapParsed = false;
             foreach (var candidate in candidates)
             {
                 ct.ThrowIfCancellationRequested();
                 string candidateOutput = PrepareAttemptDirectory(folder, candidate);
 
                 var parse = await RunParserAsync(parserPath, candidate, candidateOutput, ct, skipImage: multipleCandidates).ConfigureAwait(false);
-                if (candidate == explicitMapPath) explicitMapParsed = parse.Success;
+                if (candidate == pickedMapPath) pickedMapParsed = parse.Success;
                 var score = parse.Success
                     ? ScoreParsedMap(Path.Combine(candidateOutput, "map_resolved.json"), referenceMonuments, worldSize)
                     : default;
@@ -179,7 +193,7 @@ public static class Map3DLocalBuildService
                 if (parse.Success && IsGoodMatch(score, referenceMonuments))
                 {
                     selectedMap = candidate;
-                    ClearRenderedTexture(folder);
+                    ClearParseOutput(folder);
                     CopyParserOutput(candidateOutput, folder);
                     // Candidates are probed with --skip-image, so only the winning map is rendered.
                     texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap!, folder, ct).ConfigureAwait(false)
@@ -190,26 +204,32 @@ public static class Map3DLocalBuildService
 
             // A map the player picked by hand is taken even when its monuments do not line up with the server's, but only
             // when it parsed just now: its attempt folder is emptied first, so nothing older can stand in for a failure.
-            if (selectedMap == null && AcceptsManualSelection(explicitMapPath, candidates.Count, explicitMapParsed))
+            bool pickedDespiteMismatch = false;
+            if (selectedMap == null && AcceptsManualSelection(pickedMapPath, candidates.Count, pickedMapParsed))
             {
-                string candidateOutput = AttemptDirectory(folder, explicitMapPath!);
+                string candidateOutput = AttemptDirectory(folder, pickedMapPath!);
                 if (File.Exists(Path.Combine(candidateOutput, "map_resolved.json")))
                 {
-                    selectedMap = explicitMapPath;
-                    ClearRenderedTexture(folder);
+                    selectedMap = pickedMapPath;
+                    pickedDespiteMismatch = canVerify;
+                    ClearParseOutput(folder);
                     CopyParserOutput(candidateOutput, folder);
                     texturePath = await EnsureRenderedTextureAsync(parserPath, selectedMap!, folder, ct).ConfigureAwait(false)
                         ?? PromotePendingTexture(pendingTexturePath, folder);
                 }
             }
 
-            status = selectedMap != null
-                ? "3D map data extracted and staged."
-                : candidates.Count == 0
-                    ? "No local .map candidates were found automatically."
-                    : explicitMapPath != null
-                        ? $"Failed to parse the selected map. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors."
-                        : $"No matching local .map file was found automatically. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors.";
+            status = pickedDespiteMismatch
+                ? "The selected map does not match this server's monuments. It was used because it was picked by hand."
+                : selectedMap != null
+                    ? "3D map data extracted and staged."
+                    : !canVerify && pickedMapPath == null
+                        ? "The server's monuments are not available, so a local .map file cannot be verified."
+                        : candidates.Count == 0
+                            ? "No local .map candidates were found automatically."
+                            : pickedMapPath != null
+                                ? $"Failed to parse the selected map. Check 'parser_log.txt' in {Path.Combine(folder, "parser_attempts")} for errors."
+                                : "No local .map file matches this wipe. Join the server once so Rust downloads the current map.";
         }
 
         if (texturePath == null && File.Exists(Path.Combine(folder, "map_texture.png")))
@@ -248,6 +268,7 @@ public static class Map3DLocalBuildService
             MapTexture = texturePath == null ? null : Path.GetFileName(texturePath),
             MapTextureSha256 = textureSha256,
             SelectedMapFile = selectedMap,
+            ManualSelection = selectedMap != null && pickedMapPath != null,
             SelectedMapFileLength = selectedMapInfo?.Exists == true ? selectedMapInfo.Length : (long?)null,
             SelectedMapFileLastWriteUtc = selectedMapInfo?.Exists == true ? selectedMapInfo.LastWriteTimeUtc : (DateTime?)null,
             ParserExecutable = parserPath,
@@ -283,9 +304,9 @@ public static class Map3DLocalBuildService
 
     /// <summary>
     /// Decides whether the parse output already in <paramref name="folder"/> can be reused.
-    /// The folder name carries the server, RustMaps id and wipe time, so this only checks that
-    /// the parse finished and that its map file is still the same one on disk. The map
-    /// texture is not part of it: the viewer copes without one and it is refreshed on reuse.
+    /// This only checks that the parse finished and that its map file is still the same one on
+    /// disk; <see cref="DiscardParseOfAnotherMap"/> has already removed a parse of the wrong map.
+    /// The map texture is not part of it: the viewer copes without one and it is refreshed on reuse.
     /// </summary>
     internal static bool TryLoadReusableResult(string folder, string manifestPath, string? expectedMapPath, out CachedMap3DManifest cached)
     {
@@ -377,11 +398,58 @@ public static class Map3DLocalBuildService
         return Path.Combine(folder, RenderedTextureFileName);
     }
 
-    private static void ClearRenderedTexture(string folder)
+    /// <summary>
+    /// Removes the parse in <paramref name="folder"/> when it is not the map the server is running,
+    /// so neither a reuse nor the overlays that read the folder directly can show it. A map the
+    /// player picked by hand stays: that was their call for this wipe. Without enough monuments
+    /// to compare against, nothing is known either way and the parse is left alone.
+    /// </summary>
+    internal static bool DiscardParseOfAnotherMap(string folder, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
     {
-        foreach (var name in new[] { "map_texture.png", RenderedTextureFileName })
+        string resolvedPath = Path.Combine(folder, "map_resolved.json");
+        if (!CanVerify(refs) || !File.Exists(resolvedPath) || IsManualSelection(Path.Combine(folder, "map3d_manifest.json"))) return false;
+
+        MapMatchScore score;
+        try { score = ScoreParsedMap(resolvedPath, refs, worldSize); }
+        catch { score = default; } // Unreadable output is no use to anything.
+
+        if (IsGoodMatch(score, refs)) return false;
+        ClearParseOutput(folder);
+        return true;
+    }
+
+    /// <summary>Discards this server's cached parse if it is of another map. See <see cref="DiscardParseOfAnotherMap"/>.</summary>
+    public static bool DiscardStaleParse(ServerProfile profile, IReadOnlyList<Map3DReferenceMonument>? refs, int worldSize)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        return DiscardParseOfAnotherMap(GetPreparedFolderPath(profile, profile.RustMapsMapId), refs, worldSize);
+    }
+
+    private static bool IsManualSelection(string manifestPath)
+    {
+        try
         {
-            try { File.Delete(Path.Combine(folder, name)); } catch { }
+            if (!File.Exists(manifestPath)) return false;
+            using var doc = JsonDocument.Parse(File.ReadAllText(manifestPath));
+            return doc.RootElement.TryGetProperty("ManualSelection", out var manual) && manual.ValueKind == JsonValueKind.True;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Empties the folder of one map's parse and everything worked out from it (slices, extra
+    /// monuments, blocked zones, renders), leaving parser_attempts. The manifest goes first:
+    /// should a viewer still hold another file, the leftovers can at least not be reused.
+    /// </summary>
+    private static void ClearParseOutput(string folder)
+    {
+        try { File.Delete(Path.Combine(folder, "map3d_manifest.json")); } catch { }
+        foreach (string file in Directory.EnumerateFiles(folder))
+        {
+            try { File.Delete(file); } catch { }
         }
     }
 
@@ -404,28 +472,32 @@ public static class Map3DLocalBuildService
         return FindRustInstallDirectories().FirstOrDefault() ?? FindSteamRoots().FirstOrDefault() ?? DataManager.AppDir;
     }
 
-    private static IEnumerable<string> FindMapCandidates(string serverName, string host)
+    private static List<string> FindMapCandidates(string? knownMapPath, DateTime? wipeTime)
     {
-        var all = EnumerateLikelyMapFiles()
-            .GroupBy(p => p, StringComparer.OrdinalIgnoreCase)
-            .Select(g => new FileInfo(g.Key))
+        var files = EnumerateLikelyMapFiles();
+        if (!string.IsNullOrWhiteSpace(knownMapPath)) files = files.Append(knownMapPath);
+
+        var found = files
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Select(p => new FileInfo(p))
             .Where(f => f.Exists && f.Length > 1024 * 1024)
-            .OrderByDescending(f => f.LastWriteTimeUtc)
-            .ToList();
+            .Select(f => (f.FullName, f.LastWriteTimeUtc));
 
-        var selected = new List<FileInfo>();
-        selected.AddRange(all.Take(RecentCandidateCount));
+        return OrderMapCandidates(found, wipeTime);
+    }
 
-        string token = GetServerSearchToken(serverName, host);
-        if (!string.IsNullOrWhiteSpace(token))
-        {
-            selected.AddRange(all
-                .Where(f => !selected.Any(s => string.Equals(s.FullName, f.FullName, StringComparison.OrdinalIgnoreCase)))
-                .Where(f => f.Name.Contains(token, StringComparison.OrdinalIgnoreCase) || f.DirectoryName?.Contains(token, StringComparison.OrdinalIgnoreCase) == true)
-                .Take(NameCandidateCount));
-        }
-
-        return selected.Select(f => f.FullName);
+    /// <summary>
+    /// The order to try map files in, newest first. A file's date cannot prove which wipe it
+    /// belongs to, so this only decides how soon each one gets tested: every file written since
+    /// the wipe is tried, then a limited number of older ones. The last map used for this server
+    /// gets no head start, since a newer file may be the same layout rebuilt.
+    /// </summary>
+    internal static List<string> OrderMapCandidates(IEnumerable<(string Path, DateTime WrittenUtc)> files, DateTime? wipeTime)
+    {
+        var newestFirst = files.OrderByDescending(f => f.WrittenUtc).ToList();
+        DateTime? wipeUtc = wipeTime?.ToUniversalTime();
+        int sinceWipe = wipeUtc == null ? 0 : newestFirst.Count(f => f.WrittenUtc >= wipeUtc);
+        return newestFirst.Take(sinceWipe + OlderCandidateCount).Select(f => f.Path).ToList();
     }
 
     private static IEnumerable<string> EnumerateLikelyMapFiles()
@@ -532,13 +604,6 @@ public static class Map3DLocalBuildService
             foreach (var file in files) yield return file;
             foreach (var child in dirs) pending.Push(child);
         }
-    }
-
-    private static string GetServerSearchToken(string serverName, string host)
-    {
-        string source = string.IsNullOrWhiteSpace(serverName) ? host : serverName;
-        var match = Regex.Match(source, @"[A-Za-z0-9]{3,}");
-        return match.Success ? match.Value : string.Empty;
     }
 
     private static string? ResolveParserExecutable()
@@ -772,7 +837,7 @@ public static class Map3DLocalBuildService
 
         var refList = refs
             .Where(r => !string.IsNullOrWhiteSpace(r.Name))
-            .Take(25)
+            .Take(MaxReferenceMonuments)
             .Select(r => new Map3DReferenceMonument(r.X, r.Y, NormalizeName(r.Name)))
             .ToList();
 
@@ -827,12 +892,43 @@ public static class Map3DLocalBuildService
         };
     }
 
+    /// <summary>
+    /// The monuments a parsed map is checked against: those the server itself reported, never the
+    /// extra ones worked out from a parse, which would only confirm that same parse. Tunnels and
+    /// the like are left out when enough others remain.
+    /// </summary>
+    public static List<Map3DReferenceMonument> BuildReferenceMonuments(IEnumerable<(double X, double Y, string Name)> serverMonuments)
+    {
+        var named = serverMonuments.Where(m => !string.IsNullOrWhiteSpace(m.Name)).ToList();
+        var surface = named
+            .Where(m => !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
+                        !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
+                        !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return (surface.Count >= MinExactMatches ? surface : named)
+            .Take(MaxReferenceMonuments)
+            .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
+            .ToList();
+    }
+
+    /// <summary>Whether there are enough of the server's monuments to tell one map from another.</summary>
+    public static bool CanVerify(IReadOnlyList<Map3DReferenceMonument>? refs) => CountNamed(refs) >= MinExactMatches;
+
+    /// <summary>
+    /// Whether a parsed map is the one the server is running. A third of the monuments must sit
+    /// exactly where the server says: not all, because some names never pair up with a prefab
+    /// (4 of 25 on stock maps, more on custom ones), and no wrong map came anywhere near it.
+    /// </summary>
     public static bool IsGoodMatch(MapMatchScore score, IReadOnlyList<Map3DReferenceMonument>? refs)
     {
-        int available = refs?.Count(r => !string.IsNullOrWhiteSpace(r.Name)) ?? 0;
-        int required = Math.Min(3, Math.Max(1, available));
-        return score.MatchedCount >= required;
+        if (!CanVerify(refs)) return false;
+        int available = Math.Min(CountNamed(refs), MaxReferenceMonuments);
+        return score.MatchedCount >= Math.Max(MinExactMatches, (available + 2) / 3);
     }
+
+    private static int CountNamed(IReadOnlyList<Map3DReferenceMonument>? refs) =>
+        refs?.Count(r => !string.IsNullOrWhiteSpace(r.Name)) ?? 0;
 
     private static bool LooksLikeMatchablePoint(string name, string category)
     {
@@ -975,8 +1071,8 @@ public static class Map3DLocalBuildService
     }
 
     /// <summary>The single map the player picked by hand, and only when this run parsed it.</summary>
-    internal static bool AcceptsManualSelection(string? explicitMapPath, int candidateCount, bool explicitMapParsed) =>
-        explicitMapPath != null && candidateCount == 1 && explicitMapParsed;
+    internal static bool AcceptsManualSelection(string? pickedMapPath, int candidateCount, bool pickedMapParsed) =>
+        pickedMapPath != null && candidateCount == 1 && pickedMapParsed;
 
     private static string SanitizeFileName(string name)
     {

@@ -60,10 +60,22 @@ namespace RustPlusDesk.Services
                         var cutoff = DateTime.Now.AddDays(-TrackingService.NotificationsRetentionDays);
                         var validNotifications = cached.Where(n => n.Timestamp >= cutoff).OrderByDescending(n => n.Timestamp).ToList();
 
+                        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                         foreach (var notif in validNotifications)
                         {
                             Reword(notif);
-                            Notifications.Add(notif);
+                            string key;
+                            if (!string.IsNullOrEmpty(notif.FcmNotificationId))
+                                key = $"fcm:{notif.FcmNotificationId}";
+                            else if (notif.Type == "Pairing")
+                                key = $"pair:{notif.Title}|{notif.EntityId}|{notif.ServerName}|{notif.ServerIp}:{notif.ServerPort}";
+                            else
+                                key = $"{notif.Type}|{notif.Title}|{notif.Message}|{notif.ServerIp}:{notif.ServerPort}|{notif.Timestamp:yyyyMMddHHmm}";
+
+                            if (seen.Add(key))
+                            {
+                                Notifications.Add(notif);
+                            }
                         }
                     }
                     UpdateUnreadCount();
@@ -122,6 +134,22 @@ namespace RustPlusDesk.Services
                     return;
                 }
 
+                // Pairing notifications: do not allow duplicate pairing cards for the same server / entity
+                if (notification.Type == "Pairing")
+                {
+                    var existingPairing = Notifications.FirstOrDefault(n =>
+                        n.Type == "Pairing" &&
+                        n.EntityId == notification.EntityId &&
+                        (string.Equals(n.Title, notification.Title, StringComparison.OrdinalIgnoreCase) ||
+                         string.Equals(n.ServerName, notification.ServerName, StringComparison.OrdinalIgnoreCase) ||
+                         (!string.IsNullOrEmpty(n.ServerIp) && n.ServerIp == notification.ServerIp && n.ServerPort == notification.ServerPort)));
+
+                    if (existingPairing != null)
+                    {
+                        return;
+                    }
+                }
+
                 // De-duplication check: if a notification with same Type, Message, Server name/IP
                 // is already in the list within 4 seconds, skip it to prevent double alerts (FCM + WS bounce).
                 var duplicate = Notifications.FirstOrDefault(n =>
@@ -163,6 +191,64 @@ namespace RustPlusDesk.Services
             }
 
             NotificationAdded?.Invoke(null, notification);
+        }
+
+        /// <summary>
+        /// Scans existing notifications in memory and removes redundant duplicates
+        /// (such as duplicate pairing rows or duplicate FCM messages).
+        /// </summary>
+        public static void PruneDuplicates()
+        {
+            EnsureLoaded();
+            lock (LockObj)
+            {
+                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var toRemove = new List<RustPlusNotification>();
+
+                foreach (var n in Notifications)
+                {
+                    string key;
+                    if (!string.IsNullOrEmpty(n.FcmNotificationId))
+                    {
+                        key = $"fcm:{n.FcmNotificationId}";
+                    }
+                    else if (n.Type == "Pairing")
+                    {
+                        key = $"pair:{n.Title}|{n.EntityId}|{n.ServerName}|{n.ServerIp}:{n.ServerPort}";
+                    }
+                    else
+                    {
+                        key = $"{n.Type}|{n.Title}|{n.Message}|{n.ServerIp}:{n.ServerPort}|{n.Timestamp:yyyyMMddHHmm}";
+                    }
+
+                    if (!seen.Add(key))
+                    {
+                        toRemove.Add(n);
+                    }
+                }
+
+                if (toRemove.Count > 0)
+                {
+                    void RemoveAction()
+                    {
+                        foreach (var r in toRemove)
+                        {
+                            Notifications.Remove(r);
+                        }
+                        UpdateUnreadCount();
+                        SaveHistory();
+                    }
+
+                    if (System.Windows.Application.Current?.Dispatcher?.CheckAccess() == true)
+                    {
+                        RemoveAction();
+                    }
+                    else
+                    {
+                        System.Windows.Application.Current?.Dispatcher?.Invoke(RemoveAction);
+                    }
+                }
+            }
         }
 
         /// <summary>

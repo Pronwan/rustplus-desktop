@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -133,6 +133,16 @@ namespace RustPlusDesk.Views
         {
             NotificationCenterService.MarkAllAsRead();
             _notificationsView?.Refresh();
+        }
+
+        private async void BtnSyncHistory_Click(object sender, RoutedEventArgs e)
+        {
+            NotificationCenterService.PruneDuplicates();
+            if (System.Windows.Application.Current.MainWindow is MainWindow mw)
+            {
+                await mw.SyncPairingsFromHistoryAsync(showToastIfFound: true);
+                _notificationsView?.Refresh();
+            }
         }
 
         private void BtnClearHistory_Click(object sender, RoutedEventArgs e)

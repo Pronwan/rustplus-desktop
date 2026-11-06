@@ -80,11 +80,26 @@ public class ServerProfile : INotifyPropertyChanged
     /// port — not even getInfo reports it — so it has to be kept from the pairing that
     /// delivered it. Empty on servers paired before it was captured.
     /// </summary>
-    public string? ServerId { get; set; } = null;
+    private string? _serverId = null;
+    public string? ServerId
+    {
+        get => _serverId;
+        set
+        {
+            if (_serverId != value)
+            {
+                _serverId = value;
+                OnProp();
+                OnProp(nameof(MatchKey));
+            }
+        }
+    }
 
     // Stable identity used to remember the last selected server across restarts.
     // PlayerToken is deliberately excluded so a re-pair on the same server still matches.
-    public string MatchKey => $"{Host}:{Port}|{SteamId64}";
+    public string MatchKey => !string.IsNullOrWhiteSpace(ServerId)
+        ? $"{ServerId}|{SteamId64}"
+        : $"{Host}:{Port}|{SteamId64}";
 
     private string? _localMapFilePath;
     public string? LocalMapFilePath

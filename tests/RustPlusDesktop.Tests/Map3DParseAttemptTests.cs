@@ -72,8 +72,8 @@ public class Map3DParseAttemptTests
     {
         var map = Path.Combine(_folder, "server.map");
 
-        Assert.IsTrue(Map3DLocalBuildService.AcceptsManualSelection(map, 1, explicitMapParsed: true));
-        Assert.IsFalse(Map3DLocalBuildService.AcceptsManualSelection(map, 1, explicitMapParsed: false));
-        Assert.IsFalse(Map3DLocalBuildService.AcceptsManualSelection(null, 1, explicitMapParsed: true), "automatic search needs a monument match");
+        Assert.IsTrue(Map3DLocalBuildService.AcceptsManualSelection(map, 1, pickedMapParsed: true));
+        Assert.IsFalse(Map3DLocalBuildService.AcceptsManualSelection(map, 1, pickedMapParsed: false));
+        Assert.IsFalse(Map3DLocalBuildService.AcceptsManualSelection(null, 1, pickedMapParsed: true), "automatic search needs a monument match");
     }
 }

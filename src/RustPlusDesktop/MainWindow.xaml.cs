@@ -4275,7 +4275,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
         // Key OHNE EntityId: dient nur für „Server-keepalive“-Erkennung
-        var sig = $"{e.Host}:{e.Port}|{e.SteamId64}|{e.PlayerToken}";
+        var sig = $"{e.Host}:{e.Port}|{e.ServerId}|{e.SteamId64}|{e.PlayerToken}";
 
         // >>> NUR keepalives ohne EntityId ignorieren
         if (!e.EntityId.HasValue && string.Equals(sig, _lastPairSig, StringComparison.Ordinal))
@@ -4309,7 +4309,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             // says what happened.
             var pairedTitle = e.EntityId.HasValue
                 ? e.EntityName ?? "Smart Device"
-                : e.ServerName ?? $"{e.Host}:{e.Port}";
+                : e.ServerName ?? (!string.IsNullOrWhiteSpace(e.Host) && e.Host != "companion-socket" ? $"{e.Host}:{e.Port}" : "Rust Server");
             var pairedMsg = e.EntityId.HasValue
                 ? $"{e.EntityType ?? "Device"} paired (ID {e.EntityId.Value})"
                 : "Server paired.";
@@ -4324,8 +4324,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             {
                 EntityId = e.EntityId,
                 EntityName = e.EntityName,
-                Timestamp = DateTime.Now,
-                ImageUrl = e.ImageUrl
+                Timestamp = e.Timestamp ?? DateTime.Now,
+                ImageUrl = e.ImageUrl,
+                FcmNotificationId = e.NotificationId
             };
             NotificationCenterService.AddNotification(notif);
 
@@ -4379,11 +4380,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         s.SteamId64 == keySteam)
                     : null)
                 ?? _vm.Servers.FirstOrDefault(s =>
+                    !string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket" &&
                     s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
                     s.Port == keyPort &&
                     s.SteamId64 == keySteam);
 
-            var serverName = string.IsNullOrWhiteSpace(e.ServerName) ? $"{e.Host}:{e.Port}" : e.ServerName!;
+            var serverName = string.IsNullOrWhiteSpace(e.ServerName)
+                ? (!string.IsNullOrWhiteSpace(e.Host) && e.Host != "companion-socket" ? $"{e.Host}:{e.Port}" : "Rust Server")
+                : e.ServerName!;
 
             // The first server of an empty list gets a welcome and a one-click connect, below.
             bool firstServerInList = false;
@@ -4394,7 +4398,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 ServerProfile? candidateMatch = null;
                 var candidates = _vm.Servers.Where(s =>
                     s.SteamId64 == keySteam &&
-                    (s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) ||
+                    ((!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket" && s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase)) ||
+                     (!string.IsNullOrWhiteSpace(e.ServerId) && string.Equals(s.ServerId, e.ServerId, StringComparison.OrdinalIgnoreCase)) ||
                      (!string.IsNullOrWhiteSpace(e.ServerName) && s.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase)))
                 ).ToList();
 
@@ -4433,7 +4438,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     if (candidateMatch == null && candidates.Count == 1)
                     {
                         var c = candidates[0];
-                        bool sameHost = c.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase);
+                        bool sameHost = !string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket" && c.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase);
                         bool sameName = !string.IsNullOrWhiteSpace(e.ServerName) &&
                             (c.Name.Equals(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
                              c.Name.Contains(e.ServerName, StringComparison.OrdinalIgnoreCase) ||
@@ -4455,8 +4460,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (candidateMatch == null && e.EntityId.HasValue)
                 {
                     var hostMatch = _vm.Servers.FirstOrDefault(s =>
-                        s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) &&
-                        s.SteamId64 == keySteam);
+                        (!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket" && s.Host.Equals(keyHost, StringComparison.OrdinalIgnoreCase) && s.SteamId64 == keySteam) ||
+                        (!string.IsNullOrWhiteSpace(e.ServerId) && string.Equals(s.ServerId, e.ServerId, StringComparison.OrdinalIgnoreCase) && s.SteamId64 == keySteam));
 
                     if (hostMatch != null)
                     {
@@ -4468,12 +4473,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 if (candidateMatch != null)
                 {
                     prof = candidateMatch;
-                    prof.Host = keyHost;
-                    prof.Port = keyPort;
+                    if (!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket") prof.Host = keyHost;
+                    if (keyPort > 0) prof.Port = keyPort;
                     prof.PlayerToken = e.PlayerToken;
                     prof.SteamId64 = keySteam;
                     if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
                     if (!string.IsNullOrWhiteSpace(e.ServerName)) prof.Name = e.ServerName;
+                    if (string.IsNullOrWhiteSpace(prof.Host) || prof.Host == "companion-socket" || prof.Port == 0)
+                        prof.UseFacepunchProxy = true;
                     prof.IsAccessDenied = false;
                     prof.Devices ??= new ObservableCollection<SmartDevice>();
                     _vm.Save();
@@ -4489,23 +4496,25 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         SteamId64 = keySteam,
                         PlayerToken = e.PlayerToken,
                         IsAccessDenied = false,
-                        UseFacepunchProxy = false,
+                        UseFacepunchProxy = string.IsNullOrWhiteSpace(e.Host) || e.Host == "companion-socket" || e.Port == 0,
                         Devices = new ObservableCollection<SmartDevice>()
                     };
                     firstServerInList = _vm.Servers.Count == 0;
                     _vm.AddServer(prof);
-                    AppendLog($"[pairing] Pairing received -> {prof.Name} ({prof.Host}:{prof.Port})");
+                    AppendLog($"[pairing] Pairing received -> {prof.Name} ({(prof.UseFacepunchProxy ? "via companion proxy" : $"{prof.Host}:{prof.Port}")})");
                 }
             }
             else
             {
                 prof.Name = serverName;
                 // Matched by id, the address is the part that may have moved.
-                if (!string.IsNullOrWhiteSpace(keyHost)) prof.Host = keyHost;
+                if (!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket") prof.Host = keyHost;
                 if (keyPort > 0) prof.Port = keyPort;
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
                 if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
+                if (string.IsNullOrWhiteSpace(prof.Host) || prof.Host == "companion-socket" || prof.Port == 0)
+                    prof.UseFacepunchProxy = true;
                 prof.IsAccessDenied = false;
                 prof.Devices ??= new ObservableCollection<SmartDevice>();
                 _vm.Save();
@@ -4719,7 +4728,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TxtPairingState.Text = RustPlusDesk.Properties.Resources.GetString("PairingStarting");
         _ = Task.Run(async () =>
         {
-            try { await _pairing.StartAsync(); }
+            try 
+            { 
+                await _pairing.StartAsync(); 
+                _ = Task.Run(async () => await SyncPairingsFromHistoryAsync());
+            }
             catch (Exception ex) 
             { 
                 AppendLog("[pairing] silent start error: " + ex.Message); 
@@ -7763,6 +7776,74 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             AppendLog($"❌ Failed to check token status: {ex.Message}");
             MessageBox.Show($"Failed to check token: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    public async Task<int> SyncPairingsFromHistoryAsync(bool showToastIfFound = false)
+    {
+        try
+        {
+            NotificationCenterService.PruneDuplicates();
+            AppendLog("🔍 Checking notification history for missed pairings...");
+            int synced = await FacepunchNotificationHistoryService.SyncHistoryPairingsAsync(
+                payload =>
+                {
+                    Dispatcher.Invoke(() => Pairing_Paired(this, payload));
+                    return Task.CompletedTask;
+                },
+                payload =>
+                {
+                    var prof = (!string.IsNullOrWhiteSpace(payload.ServerId)
+                            ? _vm.Servers.FirstOrDefault(s =>
+                                string.Equals(s.ServerId, payload.ServerId, StringComparison.OrdinalIgnoreCase))
+                            : null)
+                        ?? _vm.Servers.FirstOrDefault(s =>
+                            !string.IsNullOrWhiteSpace(payload.Host) && payload.Host != "companion-socket" &&
+                            s.Host.Equals(payload.Host, StringComparison.OrdinalIgnoreCase) &&
+                            s.Port == payload.Port);
+
+                    if (prof == null) return false;
+
+                    if (!payload.EntityId.HasValue)
+                    {
+                        return string.Equals(prof.PlayerToken, payload.PlayerToken, StringComparison.Ordinal);
+                    }
+
+                    return prof.Devices != null && prof.Devices.Any(d => d.EntityId == payload.EntityId.Value);
+                },
+                AppendLog);
+
+            if (synced > 0)
+            {
+                AppendLog($"✔ Reconciled {synced} pairing(s) from notification history.");
+                if (showToastIfFound)
+                {
+                    ShowInfoSnackbarOnMain("Pairings Synced", $"Synced {synced} pairing(s) from notification history.", Wpf.Ui.Controls.ControlAppearance.Success);
+                }
+            }
+            else
+            {
+                AppendLog("ℹ️ No new pairings found in notification history.");
+            }
+            return synced;
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"❌ Failed to sync history: {ex.Message}");
+            return 0;
+        }
+    }
+
+    public Task<int> SyncPairingsFromFacepunchHistoryAsync(bool showToastIfFound = false)
+        => SyncPairingsFromHistoryAsync(showToastIfFound);
+
+    private async void BtnSyncPairingsFromHistory_Click(object sender, RoutedEventArgs e)
+    {
+        NotificationCenterService.PruneDuplicates();
+        int count = await SyncPairingsFromHistoryAsync(showToastIfFound: true);
+        if (count == 0)
+        {
+            ShowInfoSnackbarOnMain("History Checked", "No pending server pairings found in notification history.", Wpf.Ui.Controls.ControlAppearance.Secondary);
         }
     }
 
