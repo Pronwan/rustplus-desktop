@@ -5804,8 +5804,21 @@
                                             </Grid>
                                             <!--  Hidden by code when the map has none, rather than saying so.  -->
                                             <StackPanel x:Name="LayerExtraMonumentsSection" Margin="16,4,16,2">
-                                                <TextBlock Margin="0,0,0,4" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiEXTRAMONUMENTTYPES}" />
-                                                <WrapPanel x:Name="PnlLayerExtraMonumentFilters" Orientation="Horizontal" />
+                                                <Grid Margin="0,0,0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiEXTRAMONUMENTTYPES}" />
+                                                    <ui:Button x:Name="BtnLayerExtraShowAll" Grid.Column="1" Height="26" Margin="0" Style="{StaticResource LayerLink}" Click="BtnLayerExtraMonumentsAll_Click">
+                                                        <TextBlock FontSize="12" Text="{DynamicResource UiLayersShowAll}" />
+                                                    </ui:Button>
+                                                    <ui:Button x:Name="BtnLayerExtraHideAll" Grid.Column="2" Height="26" Margin="0" Style="{StaticResource LayerLink}" Click="BtnLayerExtraMonumentsAll_Click">
+                                                        <TextBlock FontSize="12" Text="{DynamicResource UiLayersHideAll}" />
+                                                    </ui:Button>
+                                                </Grid>
+                                                <UniformGrid x:Name="PnlLayerExtraMonumentFilters" Columns="2" />
                                             </StackPanel>
 
                                             <TextBlock Style="{StaticResource LayerSubHeader}" Text="{DynamicResource Grid}" />

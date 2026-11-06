@@ -1192,19 +1192,24 @@ public static class TrackingService
 
     /// <summary>Sets the visibility of a named extra monument group and persists the change.</summary>
     public static void SetExtraMonumentTypeHidden(string name, bool hidden)
+        => SetExtraMonumentTypesHidden(new[] { name }, hidden);
+
+    /// <summary>Sets the visibility of several extra monument groups, with one save.</summary>
+    public static void SetExtraMonumentTypesHidden(IEnumerable<string> names, bool hidden)
     {
-        bool changed;
-        if (hidden)
+        bool changed = false;
+        foreach (string name in names)
         {
-            if (!_settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase))
+            if (!hidden)
+            {
+                changed |= _settings.HiddenExtraMonumentTypes.RemoveAll(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)) > 0;
+            }
+            else if (!_settings.HiddenExtraMonumentTypes.Contains(name, StringComparer.OrdinalIgnoreCase))
             {
                 _settings.HiddenExtraMonumentTypes.Add(name);
                 changed = true;
             }
-            else changed = false;
         }
-        else
-            changed = _settings.HiddenExtraMonumentTypes.RemoveAll(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase)) > 0;
         if (changed) SaveDB();
     }
     public static string LastSeenVersion
