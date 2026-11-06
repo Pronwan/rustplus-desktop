@@ -36,6 +36,12 @@ public static class ParsedMapDataCache
         return null;
     }
 
+    /// <summary>Forgets the loaded map, for when the app leaves it.</summary>
+    public static void Clear()
+    {
+        lock (Gate) _entry = null;
+    }
+
     /// <summary>Loads (or returns the cached) overlay data for this map folder off the calling thread.</summary>
     public static async Task<JsonElement?> LoadAsync(string? folder)
     {

@@ -6167,27 +6167,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private static Image MakeIcon(string packUri, double size = 32)
     {
-        var bi = new BitmapImage();
-        try
-        {
-            bi.BeginInit();
-            bi.UriSource = new Uri(packUri, UriKind.Absolute);
-            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.EndInit();
-        }
-        catch when (packUri.StartsWith("pack://application:,,,/Assets/", StringComparison.OrdinalIgnoreCase))
-        {
-            bi = new BitmapImage();
-            string relativePath = packUri["pack://application:,,,/".Length..].Replace('/', System.IO.Path.DirectorySeparatorChar);
-            string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
-
-            bi.BeginInit();
-            bi.UriSource = new Uri(filePath, UriKind.Absolute);
-            bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.EndInit();
-        }
+        var bi = Services.Map.MapIconCache.Get(packUri);
 
         var img = new Image
         {

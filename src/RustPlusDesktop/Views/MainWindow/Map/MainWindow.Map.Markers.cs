@@ -642,6 +642,7 @@ public partial class MainWindow
             ReprojectOverlaysToCurrentMap();
             Services.Map.MemoryProbe.RecordAndFollowUp(
                 $"map shown ({(_isGeneratedMapActive ? "render" : "server")} {map.Bitmap.PixelWidth}x{map.Bitmap.PixelHeight})");
+            Services.Map.MapMemoryTrim.Schedule();
             ResetMapZoom();
             RedrawMapReferenceLayers();
             Dispatcher.InvokeAsync(() =>
@@ -1563,7 +1564,7 @@ public partial class MainWindow
                             Height = bladeSize,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
-                            Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png")),
+                            Source = Services.Map.MapIconCache.Get("pack://application:,,,/Assets/icons/animat-Icons/chinook_map_blades.png"),
                             RenderTransformOrigin = new Point(0.5, 0.5),
                             RenderTransform = new RotateTransform(0),
                             IsHitTestVisible = false
@@ -2325,7 +2326,7 @@ public partial class MainWindow
 
         var img = new Image { Width = 28, Height = 28, HorizontalAlignment = HorizontalAlignment.Center };
         RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality);
-        try { img.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/explosion.png")); } catch { }
+        try { img.Source = Services.Map.MapIconCache.Get("pack://application:,,,/Assets/icons/explosion.png"); } catch { }
         container.Children.Add(img);
 
         var lbl = new TextBlock

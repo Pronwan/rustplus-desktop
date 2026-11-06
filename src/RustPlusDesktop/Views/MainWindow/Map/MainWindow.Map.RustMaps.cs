@@ -960,6 +960,7 @@ namespace RustPlusDesk.Views
                         ShowMapBasic(bi);
                         ReprojectOverlaysToCurrentMap();
                         Services.Map.MemoryProbe.RecordAndFollowUp($"render applied ({bi.PixelWidth}x{bi.PixelHeight})");
+                        Services.Map.MapMemoryTrim.Schedule();
                         RedrawMapReferenceLayers();
                         RefreshAllOverlayScales();
                         RefreshMonumentOverlayPositions();

@@ -2369,22 +2369,7 @@ private bool _overlayToolsVisible = false;
         };
     }
 
-    private BitmapImage LoadBitmapResource(string packUri)
-    {
-        var uri = new Uri(packUri, UriKind.RelativeOrAbsolute);
-        var sri = Application.GetResourceStream(uri);
-        if (sri == null)
-        {
-            throw new System.IO.IOException($"Cannot locate resource: {packUri}");
-        }
-        var bitmap = new BitmapImage();
-        bitmap.BeginInit();
-        bitmap.StreamSource = sri.Stream;
-        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-        bitmap.EndInit();
-        bitmap.Freeze();
-        return bitmap;
-    }
+    private BitmapImage LoadBitmapResource(string packUri) => Services.Map.MapIconCache.Get(packUri);
 
     private void UpdateNoteVisibilityAndText(Grid container, string? note)
     {

@@ -1254,7 +1254,7 @@ public partial class MainWindow
                     Width = 18,
                     Height = 18,
                     Background = bgBrush,
-                    OpacityMask = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png")))
+                    OpacityMask = new ImageBrush(Services.Map.MapIconCache.Get("pack://application:,,,/Assets/icons/map-markers/assets_markers_iconmappinbg.png"))
                     {
                         Stretch = Stretch.Uniform
                     }
@@ -1309,7 +1309,7 @@ public partial class MainWindow
                     Width = 18,
                     Height = 18,
                     Background = fgBrush,
-                    OpacityMask = new ImageBrush(new BitmapImage(new Uri(fgUri)))
+                    OpacityMask = new ImageBrush(Services.Map.MapIconCache.Get(fgUri))
                     {
                         Stretch = Stretch.Uniform
                     }

@@ -278,6 +278,13 @@ public partial class MainWindow
         _lastExtraMonuments = null;
         _extraMonumentNames.Clear();
 
+        // These outlive the map otherwise: the mask alone pins its full-size source bitmap.
+        _waterMask = null;
+        _waterMaskSource = null;
+        _heatmapRasterCache = null;
+        Services.Map.ParsedMapDataCache.Clear();
+        Services.Map.MapMemoryTrim.Schedule();
+
         _myPlayerWasInDeepSea = false;
         _isShowingDeepSeaMap = false;
 

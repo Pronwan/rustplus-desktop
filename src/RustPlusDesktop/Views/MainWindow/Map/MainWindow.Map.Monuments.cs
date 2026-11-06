@@ -251,7 +251,7 @@ public partial class MainWindow
                 // Custom Train Icon
                 var img = new Image
                 {
-                    Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/assets_markers_train.png")),
+                    Source = Services.Map.MapIconCache.Get("pack://application:,,,/Assets/icons/assets_markers_train.png"),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 0, 8, 0),
@@ -264,7 +264,7 @@ public partial class MainWindow
                 // Standard Monument Icon
                 var img = new Image
                 {
-                    Source = new BitmapImage(new Uri(uri)),
+                    Source = Services.Map.MapIconCache.Get(uri),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 0, 8, 0),

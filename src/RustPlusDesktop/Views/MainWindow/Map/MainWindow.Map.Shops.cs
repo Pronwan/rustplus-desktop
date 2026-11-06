@@ -526,7 +526,7 @@ public partial class MainWindow
                         var bi = icon.Source as System.Windows.Media.Imaging.BitmapImage;
                         if (bi == null || bi.UriSource.ToString() != iconUri)
                         {
-                            icon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(iconUri));
+                            icon.Source = Services.Map.MapIconCache.Get(iconUri);
                         }
                     }
 
