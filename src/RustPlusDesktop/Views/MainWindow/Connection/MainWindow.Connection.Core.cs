@@ -42,7 +42,7 @@ public partial class MainWindow
     private ServerProfile? _cloudHeldProfile;
     private DispatcherTimer? _cloudLeaseHeartbeatTimer;
 
-    private static string CloudServerKeyOf(ServerProfile profile) => $"{profile.Host}-{profile.Port}";
+    private static string CloudServerKeyOf(ServerProfile profile) => profile.ServerKey;
 
     private bool IsStillConnectedToHeldServer()
     {

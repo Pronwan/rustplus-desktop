@@ -101,6 +101,76 @@ public class ServerProfile : INotifyPropertyChanged
         ? $"{ServerId}|{SteamId64}"
         : $"{Host}:{Port}|{SteamId64}";
 
+    /// <summary>
+    /// Stable key for disk caches, map caches, and chat logs.
+    /// Prefers host_port when a real IP/host and port are available.
+    /// If IP and port are not available (e.g. Facepunch companion-socket proxy),
+    /// uses ServerId (Facepunch server GUID) to prevent collisions.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string CacheKey
+    {
+        get
+        {
+            bool hasRealIpAndPort = !string.IsNullOrWhiteSpace(Host)
+                && !Host.Equals("companion-socket", StringComparison.OrdinalIgnoreCase)
+                && !Host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase)
+                && Port > 0;
+
+            if (hasRealIpAndPort)
+            {
+                var h = Host.Trim();
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) h = h.Replace(c, '_');
+                return $"{h}_{Port}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(ServerId))
+            {
+                var s = ServerId.Trim();
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) s = s.Replace(c, '_');
+                return s;
+            }
+
+            var fallbackHost = Host ?? "unknown";
+            foreach (var c in System.IO.Path.GetInvalidFileNameChars()) fallbackHost = fallbackHost.Replace(c, '_');
+            return $"{fallbackHost}_{Port}";
+        }
+    }
+
+    /// <summary>
+    /// Stable key formatted with hyphen ("{host}-{port}") for overlay, deaths, and team features.
+    /// Uses ServerId if IP/port are not available or host is "companion-socket".
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string ServerKey
+    {
+        get
+        {
+            bool hasRealIpAndPort = !string.IsNullOrWhiteSpace(Host)
+                && !Host.Equals("companion-socket", StringComparison.OrdinalIgnoreCase)
+                && !Host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase)
+                && Port > 0;
+
+            if (hasRealIpAndPort)
+            {
+                var h = Host.Trim();
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) h = h.Replace(c, '_');
+                return $"{h}-{Port}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(ServerId))
+            {
+                var s = ServerId.Trim();
+                foreach (var c in System.IO.Path.GetInvalidFileNameChars()) s = s.Replace(c, '_');
+                return s;
+            }
+
+            var fallbackHost = Host ?? "unknown";
+            foreach (var c in System.IO.Path.GetInvalidFileNameChars()) fallbackHost = fallbackHost.Replace(c, '_');
+            return $"{fallbackHost}-{Port}";
+        }
+    }
+
     private string? _localMapFilePath;
     public string? LocalMapFilePath
     {

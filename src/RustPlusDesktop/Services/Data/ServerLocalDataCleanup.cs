@@ -21,9 +21,11 @@ public static class ServerLocalDataCleanup
         ArgumentNullException.ThrowIfNull(deleted);
 
         bool isOffline = deleted.Port == 0 || deleted.PlayerToken == "offline";
+        bool isCompanionSocket = (deleted.Host ?? "").Contains("companion-socket", StringComparison.OrdinalIgnoreCase);
         bool serverStillUsed = remaining.Any(p => !ReferenceEquals(p, deleted)
-            && string.Equals(p.Host, deleted.Host, StringComparison.OrdinalIgnoreCase)
-            && p.Port == deleted.Port);
+            && (isCompanionSocket
+                ? string.Equals(p.ServerId, deleted.ServerId, StringComparison.OrdinalIgnoreCase)
+                : string.Equals(p.Host, deleted.Host, StringComparison.OrdinalIgnoreCase) && p.Port == deleted.Port));
 
         return DeleteFor(
             deleted.Host ?? string.Empty,
@@ -31,7 +33,9 @@ public static class ServerLocalDataCleanup
             isOffline || serverStillUsed,
             Map3DLocalBuildService.GetPreparedFolderPath(deleted, deleted.RustMapsMapId),
             DataManager.AppDir,
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk"));
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk"),
+            deleted.ServerKey,
+            deleted.CacheKey);
     }
 
     /// <summary>
@@ -39,14 +43,14 @@ public static class ServerLocalDataCleanup
     /// everything stored under the server's host and port. Returns how many files and
     /// folders were removed. Each removal is best effort; a locked file is left behind.
     /// </summary>
-    internal static int DeleteFor(string host, int port, bool keepServerData, string? ownMapFolder, string appDir, string localDir)
+    internal static int DeleteFor(string host, int port, bool keepServerData, string? ownMapFolder, string appDir, string localDir, string? serverKey = null, string? cacheKey = null)
     {
         int removed = 0;
         if (!string.IsNullOrWhiteSpace(ownMapFolder)) removed += DeleteDirectory(ownMapFolder);
         if (keepServerData || string.IsNullOrWhiteSpace(host)) return removed;
 
-        string dashKey = Safe($"{host}-{port}");
-        string underscoreKey = Safe($"{host}_{port}");
+        string dashKey = Safe(serverKey ?? $"{host}-{port}");
+        string underscoreKey = Safe(cacheKey ?? $"{host}_{port}");
 
         removed += DeleteFile(Path.Combine(appDir, "deaths", dashKey + ".jsonl"));
         removed += DeleteFile(Path.Combine(appDir, "deaths", dashKey + ".killers.jsonl"));

@@ -72,7 +72,7 @@ namespace RustPlusDesk.Services.Cloud
 
             try
             {
-                await CloudAlexaAdapter.PairServerAsync(steamId.ToString(), host, port, name, playerToken);
+                await CloudAlexaAdapter.PairServerAsync(steamId.ToString(), host, port, name, playerToken, serverKey);
             }
             catch (Exception ex)
             {

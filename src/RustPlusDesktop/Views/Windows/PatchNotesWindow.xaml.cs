@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v11.1.0", Title = "Companion Proxy Pairing, History Sync & Map Fixes", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v11_1_0" },
+                new PatchVersionNavModel { Version = "v11.1.1", Title = "Cache Key Isolation & UI Freeze Fix", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v11_1_1" },
+                new PatchVersionNavModel { Version = "v11.1.0", Title = "Companion Proxy Pairing, History Sync & Map Fixes", Category = "Hotfix", TargetCardName = "Card_v11_1_0" },
                 new PatchVersionNavModel { Version = "v11.0.0", Title = "The Base & Ship Builder: Build Your Base, Sail Your Ship, Build Together", Category = "Major", TargetCardName = "Card_v11_0_0" },
                 new PatchVersionNavModel { Version = "v10.3.0", Title = "Halloween Heatmaps, High-Res Generated Maps & Smoother Map Controls", Category = "Update", TargetCardName = "Card_v10_3_0" },
                 new PatchVersionNavModel { Version = "v10.2.0", Title = "Smart Server Migration, Widget Overlay Settings & Hold-to-Peek Map", Category = "Update", TargetCardName = "Card_v10_2_0" },

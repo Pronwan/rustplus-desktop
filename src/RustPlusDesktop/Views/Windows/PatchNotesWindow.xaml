@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.1.0 HOTFIX -->
+                            <!-- v11.1.1 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_1_0"
+                            <Border x:Name="Card_v11_1_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,52 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.1.0 | Companion Proxy Pairing, History Sync &amp; Map Fixes"
+                                            <TextBlock Text="v11.1.1 | Cache Key Isolation &amp; UI Freeze Fix"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            This update fixes cache key collisions on Facepunch proxy servers, ensuring maps, chat logs, overlays, and cloud device registries stay isolated per server GUID, and eliminates an 8-second UI freeze triggered by building-blocked zones on modded servers.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Companion Proxy Cache Isolation:</Run>
+                                        Servers using Facepunch companion relay sockets now use their unique server GUID for disk caching and cloud synchronization instead of a shared placeholder name, preventing multi-server cache collisions.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; UI Freeze &amp; Event Loop Fix:</Run>
+                                        Dynamic event announcement tracking now strictly isolates real vehicle events (Patrol Heli, Chinook, Vendor), eliminating rapid notification loops and UI freezes from building-blocked radius markers on modded and PVE servers.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Full Direct-Connection Compatibility:</Run>
+                                        Direct IP and port servers continue using their established identifiers with seamless backward compatibility and zero backend conflicts.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.1.0 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_1_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.1.0 | Companion Proxy Pairing, History Sync &amp; Map Fixes"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

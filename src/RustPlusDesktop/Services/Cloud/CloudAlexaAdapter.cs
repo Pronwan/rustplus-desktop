@@ -95,11 +95,12 @@ namespace RustPlusDesk.Services.Cloud
         /// the same rust_servers row the device/overlay sync files under; sending only
         /// ip+port can create a second row and split the token from the devices.
         /// </summary>
-        public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken)
+        public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null)
         {
+            var effectiveKey = !string.IsNullOrWhiteSpace(serverKey) ? serverKey : $"{host}-{port}";
             var pairBody = await CloudApiClient.CallApiAsync("me/servers", HttpMethod.Post, payload: new
             {
-                server_key = $"{host}-{port}",
+                server_key = effectiveKey,
                 server_ip = host,
                 server_port = port,
                 name,
@@ -114,9 +115,9 @@ namespace RustPlusDesk.Services.Cloud
         /// Pair the server (idempotent) and point Alexa at it. Returns false when the
         /// pairing response carried no server id to link.
         /// </summary>
-        public static async Task<bool> LinkServerAsync(string steamId, string host, int port, string? name, string playerToken)
+        public static async Task<bool> LinkServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null)
         {
-            var serverId = await PairServerAsync(steamId, host, port, name, playerToken);
+            var serverId = await PairServerAsync(steamId, host, port, name, playerToken, serverKey);
             if (serverId == null) return false;
 
             await CloudApiClient.CallApiAsync("me/alexa", HttpMethod.Put, payload: new
