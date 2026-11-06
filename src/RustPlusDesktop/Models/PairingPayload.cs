@@ -18,6 +18,8 @@ public class PairingPayload
     public string? EntityType { get; set; } // z.B. "server", "entity", "SmartSwitch" …
     public string? IssueDate { get; set; }
     public string? ExpiryDate { get; set; }
+    public string? NotificationId { get; set; }
+    public DateTime? Timestamp { get; set; }
 
 }
 

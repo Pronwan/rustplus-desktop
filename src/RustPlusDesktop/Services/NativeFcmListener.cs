@@ -453,7 +453,11 @@ namespace RustPlusDesk.Services
 
         private void HandlePairing(FcmMessage message, Body? body)
         {
-            if (body is null || string.IsNullOrWhiteSpace(body.Ip) || string.IsNullOrWhiteSpace(body.PlayerToken))
+            if (body is null || string.IsNullOrWhiteSpace(body.PlayerToken))
+                return;
+
+            var serverId = ServerIdOf(body.Id);
+            if (string.IsNullOrWhiteSpace(body.Ip) && string.IsNullOrWhiteSpace(serverId))
                 return;
 
             string? kind = body.EntityType switch
@@ -464,11 +468,16 @@ namespace RustPlusDesk.Services
                 _ => null,
             } ?? (string.IsNullOrWhiteSpace(body.Type) ? null : body.Type);
 
+            string host = !string.IsNullOrWhiteSpace(body.Ip)
+                ? body.Ip
+                : (serverId != null ? "companion-socket" : string.Empty);
+            int port = body.Port > 0 ? body.Port : 28082;
+
             var payload = new PairingPayload
             {
-                Host = body.Ip,
-                Port = body.Port,
-                ServerId = ServerIdOf(body.Id),
+                Host = host,
+                Port = port,
+                ServerId = serverId,
                 ServerName = string.IsNullOrWhiteSpace(body.Name) ? null : body.Name,
                 ServerDescription = string.IsNullOrWhiteSpace(body.Desc) ? null : body.Desc,
                 ImageUrl = ImageOf(body),
@@ -477,9 +486,11 @@ namespace RustPlusDesk.Services
                 EntityId = (uint?)body.EntityId,
                 EntityName = string.IsNullOrWhiteSpace(body.EntityName) ? null : body.EntityName,
                 EntityType = kind,
+                NotificationId = !string.IsNullOrWhiteSpace(message.PersistentId) ? message.PersistentId : null,
+                Timestamp = DateTime.Now,
             };
 
-            var key = $"{payload.Host}:{payload.Port}|{payload.SteamId64}|{payload.PlayerToken}|{payload.EntityId}";
+            var key = $"{payload.Host}:{payload.Port}|{payload.ServerId}|{payload.SteamId64}|{payload.PlayerToken}|{payload.EntityId}";
             if (_lastPairKey == key && (DateTime.UtcNow - _lastPairAt).TotalSeconds < 20)
             {
                 _log("[fcm-native] duplicate pairing ignored.");
@@ -489,7 +500,7 @@ namespace RustPlusDesk.Services
             _lastPairAt = DateTime.UtcNow;
 
             Paired?.Invoke(this, payload);
-            _log($"[fcm-native] Pairing → {(payload.ServerName ?? payload.Host)}:{payload.Port}"
+            _log($"[fcm-native] Pairing → {(payload.ServerName ?? payload.Host)}:{(payload.Port > 0 ? payload.Port.ToString() : "proxy")}"
                  + (payload.EntityId.HasValue ? $"  // Entity {payload.EntityId}" : ""));
         }
 

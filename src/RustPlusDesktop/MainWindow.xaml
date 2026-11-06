@@ -1275,6 +1275,10 @@
                                                   Click="BtnRestoreCloudServers_Click" ToolTip="{DynamicResource RestoreServersFromCloudHint}">
                                             <MenuItem.Icon><ui:SymbolIcon Symbol="CloudArrowDown20" /></MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem x:Name="BtnSyncPairingsFromHistory" Header="Sync Missed Pairings"
+                                                  Click="BtnSyncPairingsFromHistory_Click" ToolTip="Sync pairings from notification history">
+                                            <MenuItem.Icon><ui:SymbolIcon Symbol="ArrowSync20" /></MenuItem.Icon>
+                                        </MenuItem>
                                         <MenuItem x:Name="BtnFcmInfo" Header="{DynamicResource FcmInfoToolTip}" Click="BtnFcmInfo_Click" />
                                         <Separator />
                                         <MenuItem Click="BtnListenWithEdge_Click" Header="{DynamicResource TryPairingEdge}" />
