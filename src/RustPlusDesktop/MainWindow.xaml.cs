@@ -1851,8 +1851,8 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (p == null) return;
         try
         {
-            var serverKey = $"{p.Host}_{p.Port}";
-            var path = GetChatCachePath(serverKey); // Use Host_Port as filename
+            var serverKey = p.CacheKey;
+            var path = GetChatCachePath(serverKey);
             lock (_chatHistoryLog)
             {
                 // Begrenzen auf z.B. 500
@@ -1880,8 +1880,17 @@ public partial class MainWindow : WpfUi.FluentWindow
         // 2. Load new server specific history
         try
         {
-            var serverKey = $"{p.Host}_{p.Port}";
+            var serverKey = p.CacheKey;
             var path = GetChatCachePath(serverKey);
+            if (!System.IO.File.Exists(path))
+            {
+                var legacyKey = $"{p.Host}_{p.Port}";
+                if (legacyKey != serverKey && !legacyKey.Contains("companion-socket", StringComparison.OrdinalIgnoreCase))
+                {
+                    var legacyPath = GetChatCachePath(legacyKey);
+                    if (System.IO.File.Exists(legacyPath)) path = legacyPath;
+                }
+            }
             if (System.IO.File.Exists(path))
             {
                 var json = System.IO.File.ReadAllText(path);
@@ -1912,7 +1921,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (p == null) return;
         try
         {
-            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var serverKey = $"{p.CacheKey}_clan";
             var path = GetChatCachePath(serverKey);
             lock (_clanChatHistoryLog)
             {
@@ -1934,8 +1943,17 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         try
         {
-            var serverKey = $"{p.Host}_{p.Port}_clan";
+            var serverKey = $"{p.CacheKey}_clan";
             var path = GetChatCachePath(serverKey);
+            if (!System.IO.File.Exists(path))
+            {
+                var legacyKey = $"{p.Host}_{p.Port}_clan";
+                if (legacyKey != serverKey && !legacyKey.Contains("companion-socket", StringComparison.OrdinalIgnoreCase))
+                {
+                    var legacyPath = GetChatCachePath(legacyKey);
+                    if (System.IO.File.Exists(legacyPath)) path = legacyPath;
+                }
+            }
             if (System.IO.File.Exists(path))
             {
                 var json = System.IO.File.ReadAllText(path);

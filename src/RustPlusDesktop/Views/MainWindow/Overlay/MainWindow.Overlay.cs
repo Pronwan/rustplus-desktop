@@ -2777,12 +2777,10 @@ private bool _overlayToolsVisible = false;
 
     private string GetServerKey()
     {
-        // simplest first pass: nimm Host-Port vom aktuell ausgewaehlten Server
         var prof = _vm?.Selected;
         if (prof == null) return "unknown-server";
 
-        // du hast im Connect-Code `_vm.Selected.Host` und `_vm.Selected.Port`
-        return $"{prof.Host}-{prof.Port}";
+        return prof.ServerKey;
     }
 
     private string GetOverlayJsonPathForPlayerServer(ulong steamId)

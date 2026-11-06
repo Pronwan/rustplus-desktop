@@ -458,7 +458,7 @@ namespace RustPlusDesk.Views
             BitmapSource? texture = null;
             string host = profile.Host ?? "unknown";
             int port = profile.Port;
-            var serverCached = TryLoadMapCache(MapCacheKey(host, port));
+            var serverCached = TryLoadMapCache(profile.CacheKey, MapCacheKey(host, port));
 
             // The monuments below decide which map file is right, so they have to be this wipe's.
             // The server may have wiped since they were loaded, without the connection dropping.
@@ -469,7 +469,7 @@ namespace RustPlusDesk.Views
                 {
                     AppendLog($"{logPrefix} The server wiped since its map was loaded; loading the new one first.");
                     await LoadMapAsync();
-                    serverCached = TryLoadMapCache(MapCacheKey(host, port));
+                    serverCached = TryLoadMapCache(profile.CacheKey, MapCacheKey(host, port));
                 }
                 if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
             }

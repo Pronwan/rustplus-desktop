@@ -211,8 +211,25 @@ public partial class MainWindow
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "RustPlusDesk", "map_cache");
 
-    private static string MapCacheKey(string host, int port)
+    private static string MapCacheKey(string host, int port, string? serverId = null)
     {
+        bool isCompanionSocket = string.IsNullOrWhiteSpace(host)
+            || host.Equals("companion-socket", StringComparison.OrdinalIgnoreCase)
+            || host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase);
+
+        if (!isCompanionSocket && port > 0)
+        {
+            foreach (var c in System.IO.Path.GetInvalidFileNameChars()) host = host.Replace(c, '_');
+            return $"{host}_{port}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(serverId))
+        {
+            var s = serverId.Trim();
+            foreach (var c in System.IO.Path.GetInvalidFileNameChars()) s = s.Replace(c, '_');
+            return s;
+        }
+
         // Sanitize so it's safe as a file name
         foreach (var c in System.IO.Path.GetInvalidFileNameChars()) host = host.Replace(c, '_');
         return $"{host}_{port}";
@@ -225,13 +242,20 @@ public partial class MainWindow
 
     private sealed record MapMonumentEntry(double X, double Y, string Name);
 
-    private static RustPlusClientReal.MapWithMonuments? TryLoadMapCache(string key)
+    private static RustPlusClientReal.MapWithMonuments? TryLoadMapCache(string key, string? fallbackKey = null)
     {
         try
         {
             string imgPath  = System.IO.Path.Combine(s_mapCacheDir, key + ".png");
             string metaPath = System.IO.Path.Combine(s_mapCacheDir, key + ".json");
-            if (!System.IO.File.Exists(imgPath) || !System.IO.File.Exists(metaPath)) return null;
+            if (!System.IO.File.Exists(imgPath) || !System.IO.File.Exists(metaPath))
+            {
+                if (!string.IsNullOrEmpty(fallbackKey) && fallbackKey != key && !fallbackKey.Contains("companion-socket", StringComparison.OrdinalIgnoreCase))
+                {
+                    return TryLoadMapCache(fallbackKey);
+                }
+                return null;
+            }
 
             var meta = JsonSerializer.Deserialize<MapCacheMeta>(System.IO.File.ReadAllText(metaPath));
             if (meta == null) return null;
@@ -301,12 +325,19 @@ public partial class MainWindow
 
 
 
-    private static BitmapImage? TryLoadCustomMapCache(string key)
+    private static BitmapImage? TryLoadCustomMapCache(string key, string? fallbackKey = null)
     {
         try
         {
             string imgPath = System.IO.Path.Combine(s_mapCacheDir, key + "_custom.png");
-            if (!System.IO.File.Exists(imgPath)) return null;
+            if (!System.IO.File.Exists(imgPath))
+            {
+                if (!string.IsNullOrEmpty(fallbackKey) && fallbackKey != key && !fallbackKey.Contains("companion-socket", StringComparison.OrdinalIgnoreCase))
+                {
+                    return TryLoadCustomMapCache(fallbackKey);
+                }
+                return null;
+            }
 
             return Services.Map.MapImageLoader.Load(imgPath);
         }
@@ -398,15 +429,17 @@ public partial class MainWindow
     {
         if (_rust is not RustPlusClientReal real) return;
 
-        string host     = real.Host ?? "unknown";
-        int    port     = _vm?.Selected?.Port ?? 0;
-        string cacheKey = MapCacheKey(host, port);
-        DateTime? currentWipeTime = _vm?.Selected == null ? null : await RefreshProfileWipeTimeAsync(_vm.Selected);
+        var selected    = _vm?.Selected;
+        string host     = real.Host ?? selected?.Host ?? "unknown";
+        int    port     = selected?.Port ?? 0;
+        string cacheKey = selected?.CacheKey ?? MapCacheKey(host, port, selected?.ServerId);
+        string? fallbackKey = (!string.IsNullOrWhiteSpace(host) && port > 0) ? MapCacheKey(host, port) : null;
+        DateTime? currentWipeTime = selected == null ? null : await RefreshProfileWipeTimeAsync(selected);
 
         RustPlusClientReal.MapWithMonuments? map = null;
 
         // ── Check wipe status on existing caches ─────────────────────────────────────────────
-        var cached = TryLoadMapCache(cacheKey);
+        var cached = TryLoadMapCache(cacheKey, fallbackKey);
         bool isWipe = false;
         if (cached != null)
         {
@@ -473,7 +506,7 @@ public partial class MainWindow
         string? customUrl = _vm?.Selected?.CustomMapUrl?.Trim();
         if (!string.IsNullOrWhiteSpace(customUrl))
         {
-            BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey);
+            BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey, fallbackKey);
             if (customBmp == null)
             {
                 AppendLog($"[custom-map] Downloading custom HD map image from URL: {customUrl}");
@@ -1862,8 +1895,10 @@ public partial class MainWindow
 
                     _dynEls[key] = el;
 
-                    // Announcement Logic for all dynamic events (API types and internal virtual markers)
-                    if (!isPlayer && (knownEventType || m.Type == 150) && !_dynKnown.Contains(key))
+                    // Announcement Logic for real dynamic events (Patrol Heli, Chinook, Vendor, Cargo, Oil Rig)
+                    // Note: Type 7 is GenericRadius/BuildingBlocked on modded servers; do not log or announce as dynamic event
+                    bool isRealDynEvent = !isPlayer && (m.Type is 4 or 5 or 6 or 8 or 9 or 150);
+                    if (isRealDynEvent && !_dynKnown.Contains(key))
                     {
                         _dynKnown.Add(key);
                         AppendLog($"[DynEvent] New: Type={m.Type}, Kind={m.Kind}, Label={m.Label}");
@@ -1905,7 +1940,7 @@ public partial class MainWindow
                             6 => TrackingService.AnnounceVendor,
                             9 => false,   // Oil Rig handled by MonumentWatcher (sends its own triggered message)
                             150 => false, // Virtual markers for Oil Rig handled by MonumentWatcher
-                            _ => true 
+                            _ => false 
                         };
 
                         if (_announceSpawns && shouldAnnounce && _firstMarkerPollDone && !_firstPollDyn)
