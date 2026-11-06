@@ -22,6 +22,11 @@ on:
         required: false
         default: "latest"
         type: string
+      lite_build:
+        description: "Leave the 3D models out of the package. Only once the bridge release is out and the app can download them."
+        required: true
+        default: false
+        type: boolean
       create_github_release:
         description: "Create or update a GitHub Release with installer artifacts."
         required: true
@@ -218,6 +223,17 @@ jobs:
           CLOUD_API_BASEURL=$env:CLOUD_API_BASEURL
           "@.Trim() | Set-Content -LiteralPath ".env" -Encoding UTF8
 
+      # A lite app can only fetch models that are published, so its manifest has to be the live one.
+      - name: Check the models are published
+        if: ${{ inputs.lite_build }}
+        shell: pwsh
+        run: |
+          $local = Get-Content -LiteralPath "vendor/MapParser/Rust_Assets/FP/models-manifest.json" -Raw | ConvertFrom-Json
+          $published = Invoke-RestMethod "https://raw.githubusercontent.com/JawadYzbk/rustplus-models/master/latest.json"
+          if ($local.contentId -ne $published.contentId) {
+            throw "This build uses models $($local.contentId), but $($published.contentId) is published. Run the Publish models workflow first."
+          }
+
       - name: Test desktop app
         run: dotnet test tests/RustPlusDesktop.Tests/RustPlusDesktop.Tests.csproj --configuration "${{ env.CONFIGURATION }}" -p:SkipGeneticsLabBuild=true
 
@@ -235,6 +251,7 @@ jobs:
           -p:PublishDocumentationFiles=false
           -p:GenerateDocumentationFile=false
           -p:SkipGeneticsLabBuild=true
+          -p:IncludeRustModels=${{ inputs.lite_build && 'false' || 'true' }}
 
       - name: Build Velopack release
         shell: pwsh

@@ -37,8 +37,18 @@ public partial class MainWindow
         BaseBuilderLoadingText.Text = workspace == ShipBuilderWorkspace ? "Opening your shipyard…" : "Opening your building workshop…";
         try
         {
-            string root = ResolveMap3DViewerSourceRoot()
-                ?? throw new DirectoryNotFoundException($"{BuilderName} files are missing. Reinstall or rebuild RustPlus Desktop to restore them.");
+            if (ResolveMap3DViewerSourceRoot() == null)
+                throw new DirectoryNotFoundException($"{BuilderName} files are missing. Reinstall or rebuild RustPlus Desktop to restore them.");
+            bool hasModels = await EnsureModelPacksAsync(
+                $"Download models for the {BuilderName}",
+                "The builders need these models. You only download them once.",
+                true, BuilderPack);
+            if (!hasModels)
+            {
+                BaseBuilderFailed($"{BuilderName} needs its models. Choose Retry to download them.");
+                return;
+            }
+            string root = await PrepareMap3DViewerStaticRuntimeAsync();
             const string host = "rustplus3d.local";
             string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RustPlusDesk", "WebView2");
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: dataFolder);
@@ -46,6 +56,7 @@ public partial class MainWindow
             _baseBuilderWebView = view;
             BaseBuilderHost.Children.Add(view);
             await view.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
+            await ClearReplacedModelsFromCacheAsync(view.CoreWebView2);
             view.CoreWebView2.Settings.IsZoomControlEnabled = false;
             // Same origin and profile as the map, so its base library is available in both tools.
             view.CoreWebView2.SetVirtualHostNameToFolderMapping(host, root, CoreWebView2HostResourceAccessKind.DenyCors);

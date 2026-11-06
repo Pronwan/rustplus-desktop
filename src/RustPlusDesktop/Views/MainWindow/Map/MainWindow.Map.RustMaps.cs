@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using RustPlusDesk.Services;
 using RustPlusDesk.Services.Auth;
+using RustPlusDesk.Services.ModelPacks;
 using RustPlusDesk.Views.Windows;
 using System.Windows;
 using System.Windows.Media;
@@ -959,6 +960,11 @@ namespace RustPlusDesk.Views
             Ach.Unlock(Ach.Map3D);
             await LoadParsedMapDataAsync(result.FolderPath);
             if (selectionVersion != _mapSelectionVersion) return;
+            await EnsureModelPacksAsync(
+                "Download models for the 3D map",
+                "The map opens without them, but monuments and rocks will be missing. You only download them once.",
+                false, MonumentsPack, TerrainPack);
+            if (selectionVersion != _mapSelectionVersion) return;
             string runtimeRoot = await PrepareMap3DViewerRuntimeAsync(result).ConfigureAwait(true);
             if (selectionVersion != _mapSelectionVersion) return;
             const string host = "rustplus3d.local";
@@ -992,6 +998,7 @@ namespace RustPlusDesk.Views
             _map3DWebViewEnvironment ??= await CoreWebView2Environment.CreateAsync(userDataFolder: webViewDataFolder);
             if (selectionVersion != _mapSelectionVersion) { CloseMap3DView(); return; }
             await _map3DWebView.EnsureCoreWebView2Async(_map3DWebViewEnvironment);
+            await ClearReplacedModelsFromCacheAsync(_map3DWebView.CoreWebView2);
             if (selectionVersion != _mapSelectionVersion) { CloseMap3DView(); return; }
             _map3DPointerLockNotice = new Map3DPointerLockNotice(_map3DWebView.CoreWebView2.BrowserProcessId);
             _map3DWebView.CoreWebView2.WebMessageReceived += Map3DWebMessageReceived;
@@ -1256,19 +1263,20 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
+        // The viewer folder both the 3D map and the builders serve from. The models live here, outside
+        // the install folder, so they outlast an update that replaces it.
+        private static async Task<string> PrepareMap3DViewerStaticRuntimeAsync()
         {
-            string runtimeRoot = Path.Combine(RustPlusDesk.Services.Data.DataManager.AppDir, "Map3DViewer");
-            string currentDir = Path.Combine(runtimeRoot, "maps", "current");
+            string runtimeRoot = ModelStoreService.ViewerRoot;
+            await ModelStoreService.Instance.WaitForAdoptionAsync().ConfigureAwait(false);
 
-            // The static viewer runtime (index.html, bundled JS, style.css and the ~265 MB of
-            // Rust_Assets) plus the per-map files are all plain file IO. Offload it to a background
-            // thread so the first-time copy never freezes the UI, and rely on the incremental copy
-            // in CopyDirectoryIfExists to make every subsequent open a cheap timestamp scan.
+            // The static viewer runtime (index.html, bundled JS, style.css and any bundled
+            // Rust_Assets) is plain file IO. Offload it to a background thread so the first-time copy
+            // never freezes the UI, and rely on the incremental copy in CopyDirectoryIfExists to make
+            // every subsequent open a cheap timestamp scan.
             await Task.Run(() =>
             {
                 Directory.CreateDirectory(runtimeRoot);
-                Directory.CreateDirectory(currentDir);
 
                 // Proactively clean up any legacy/unwanted directories in the viewer folder to avoid issues
                 SafeDeleteDirectory(Path.Combine(runtimeRoot, ".git"));
@@ -1290,6 +1298,19 @@ namespace RustPlusDesk.Views
 
                 string? iconsRoot = ResolveIconsSourceRoot();
                 if (iconsRoot != null) CopyDirectoryIfExists(iconsRoot, Path.Combine(runtimeRoot, "Icons"));
+            }).ConfigureAwait(false);
+
+            return runtimeRoot;
+        }
+
+        private async Task<string> PrepareMap3DViewerRuntimeAsync(Map3DLocalBuildResult result)
+        {
+            string runtimeRoot = await PrepareMap3DViewerStaticRuntimeAsync().ConfigureAwait(true);
+            string currentDir = Path.Combine(runtimeRoot, "maps", "current");
+
+            await Task.Run(() =>
+            {
+                Directory.CreateDirectory(currentDir);
 
                 CopyFileIfExists(Path.Combine(result.FolderPath, "map_resolved.json"), Path.Combine(currentDir, "map_resolved.json"));
 
@@ -1474,7 +1495,7 @@ namespace RustPlusDesk.Views
                 Directory.Exists(path) &&
                 (File.Exists(Path.Combine(path, "airfield.png")) || File.Exists(Path.Combine(path, "trainyard.png"))));
         }
-        private static string? ResolveMap3DViewerSourceRoot()
+        internal static string? ResolveMap3DViewerSourceRoot()
         {
             string baseDir = AppContext.BaseDirectory;
             string[] candidates =

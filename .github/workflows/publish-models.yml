@@ -1,0 +1,114 @@
+name: Publish models
+
+# Publishes MapParser's models to the public model repository, which the app downloads them from.
+# Reuses the release workflow's MAP_PARSER_TOKEN. It needs write access to the model
+# repository, because this workflow pushes to it; the first step below checks that.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mapparser_ref:
+        description: "MapParser branch, tag, or SHA."
+        required: true
+        default: "main"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  MODELS_REPO: "JawadYzbk/rustplus-models"
+  MODELS_TOKEN: ${{ secrets.MAP_PARSER_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check the token can write to the model repository
+        env:
+          GH_TOKEN: ${{ env.MODELS_TOKEN }}
+        run: |
+          if [ "$(gh api "repos/$MODELS_REPO" --jq .permissions.push)" != "true" ]; then
+            echo "::error::The token cannot push to $MODELS_REPO. Give MAP_PARSER_TOKEN contents write access to it."
+            exit 1
+          fi
+
+      - name: Checkout MapParser
+        uses: actions/checkout@v4
+        with:
+          repository: Pronwan/MapParser
+          ref: ${{ inputs.mapparser_ref }}
+          token: ${{ secrets.MAP_PARSER_TOKEN }}
+          path: mapparser
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check the model manifest
+        run: node mapparser/scripts/generate-model-manifest.mjs --check
+
+      - name: Compare with the published models
+        id: compare
+        run: |
+          id=$(jq -r .contentId mapparser/Rust_Assets/FP/models-manifest.json)
+          published=$(curl -fsSL "https://raw.githubusercontent.com/$MODELS_REPO/master/latest.json" | jq -r .contentId)
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          if [ "$id" = "$published" ]; then
+            echo "Models $id are already published." >> "$GITHUB_STEP_SUMMARY"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Files first, under an immutable tag. latest.json moves last, so no app is ever told about
+      # a tag or a release that does not hold its files yet.
+      - name: Publish the files
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          TOKEN: ${{ env.MODELS_TOKEN }}
+          ID: ${{ steps.compare.outputs.id }}
+        run: |
+          git clone --filter=blob:none --no-checkout --depth 1 "https://x-access-token:$TOKEN@github.com/$MODELS_REPO.git" models
+          cd models
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git read-tree HEAD
+          git rm -r -q --cached assets
+          cp -r ../mapparser/Rust_Assets/FP/assets assets
+          cp ../mapparser/Rust_Assets/FP/models-manifest.json .
+          cp ../mapparser/Rust_Assets/building/model-provenance.json .
+          git add assets models-manifest.json model-provenance.json
+          git commit -m "feat(models): publish $ID"
+          git tag "models-$ID"
+          git push origin HEAD:master "models-$ID"
+
+      - name: Upload the packs
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ env.MODELS_TOKEN }}
+          ID: ${{ steps.compare.outputs.id }}
+        run: |
+          # The models are already compressed, so the zips only store them.
+          cd mapparser/Rust_Assets/FP
+          for pack in $(jq -r '.packs | keys[]' models-manifest.json); do
+            jq -r --arg pack "$pack" '.files | to_entries[] | select(.value.pack == $pack) | .key' models-manifest.json \
+              | zip -0 -q "../../../$pack.zip" -@
+          done
+          cd ../../..
+          gh release create "models-$ID" builder.zip monuments.zip terrain.zip mapparser/Rust_Assets/FP/models-manifest.json \
+            --repo "$MODELS_REPO" --title "Models $ID" --notes "Model packs for RustPlus Desktop."
+
+      - name: Announce the new models
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          ID: ${{ steps.compare.outputs.id }}
+        run: |
+          cd models
+          jq -n --arg id "$ID" '{schema: 1, contentId: $id, ref: ("models-" + $id)}' > latest.json
+          git add latest.json
+          git commit -m "feat(models): point latest at $ID"
+          git push origin HEAD:master
+          echo "Published models $ID." >> "$GITHUB_STEP_SUMMARY"

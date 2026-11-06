@@ -632,7 +632,23 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            <ui:Button
+                                x:Name="BtnModelDownload"
+                                Grid.Column="3"
+                                AutomationProperties.Name="Manage 3D models"
+                                MinWidth="34"
+                                Height="34"
+                                Padding="7,3"
+                                Appearance="Transparent"
+                                Click="BtnModelDownload_Click"
+                                ToolTip="3D models">
+                                <Grid>
+                                    <ui:SymbolIcon x:Name="IconModelDownload" Foreground="{DynamicResource Accent}" Symbol="Cube24" />
+                                    <ui:ProgressRing x:Name="RingModelDownload" Width="18" Height="18" IsIndeterminate="False" Progress="0" Visibility="Collapsed" />
+                                </Grid>
+                            </ui:Button>
                             <ui:Button
                                 x:Name="BtnCheckUpdates"
                                 tutorials:Tutorial.TargetId="Updates.Check"
