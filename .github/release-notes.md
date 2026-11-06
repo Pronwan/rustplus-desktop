@@ -1,11 +1,15 @@
-## [11.0.1](https://github.com/Pronwan/rustplus-desktop/releases/tag/v11.0.1) (2026-11-06)
+## [11.1.0](https://github.com/Pronwan/rustplus-desktop/releases/tag/v11.1.0) (2026-11-06)
 
 ### 🚀 Features & Enhancements
 
-- **models**: keep models outside the install and download them as packs ([a06b035](https://github.com/Pronwan/rustplus-desktop/commit/a06b035daed1ef7d68e160f5bed0342de3b30a98)) (JawadYzbk)
+- **pairing**: sync missed server pairings from history and handle proxy-only servers ([5c9939f](https://github.com/Pronwan/rustplus-desktop/commit/5c9939f8519c610a9e2bf82015e6e350b8491b15)) (JawadYzbk)
+
+### 🐛 Bug Fixes & Stability
+
+- **map**: only accept a map file that matches the server's monuments ([bfd1d2c](https://github.com/Pronwan/rustplus-desktop/commit/bfd1d2cf2e6bce307acbb718b049eb9122535f79)) (JawadYzbk)
 
 ### 👥 Contributors
 
 Special thanks to: @JawadYzbk
 
-**Full Changelog**: https://github.com/Pronwan/rustplus-desktop/compare/v11.0.0...v11.0.1
+**Full Changelog**: https://github.com/Pronwan/rustplus-desktop/compare/v11.0.1...v11.1.0
