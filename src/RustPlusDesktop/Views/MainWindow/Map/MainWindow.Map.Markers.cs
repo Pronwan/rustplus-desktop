@@ -512,6 +512,17 @@ public partial class MainWindow
             ? (map.PixelWidth, map.PixelHeight)
             : (map.Bitmap.PixelWidth, map.Bitmap.PixelHeight);
 
+        // ── Drop a cached parse of another map, before anything below reads the folder ────────
+        if (_vm?.Selected is { } parsedProfile)
+        {
+            var serverMonuments = Map3DLocalBuildService.BuildReferenceMonuments(map.Monuments);
+            int parsedWorldSize = map.WorldSize;
+            if (await Task.Run(() => Map3DLocalBuildService.DiscardStaleParse(parsedProfile, serverMonuments, parsedWorldSize)))
+            {
+                AppendLog("[map-cache] The cached map parse does not match this server's monuments; discarded it.");
+            }
+        }
+
         // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
         // Decided afresh on every load: a render shown earlier may have been deleted since, and
         // the server's image laid out without its ocean margin puts every overlay off.

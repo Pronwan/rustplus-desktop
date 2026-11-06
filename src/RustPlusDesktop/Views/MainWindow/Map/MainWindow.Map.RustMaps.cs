@@ -459,6 +459,21 @@ namespace RustPlusDesk.Views
             string host = profile.Host ?? "unknown";
             int port = profile.Port;
             var serverCached = TryLoadMapCache(MapCacheKey(host, port));
+
+            // The monuments below decide which map file is right, so they have to be this wipe's.
+            // The server may have wiped since they were loaded, without the connection dropping.
+            if (profile.IsFullConnected)
+            {
+                DateTime? currentWipe = await RefreshProfileWipeTimeAsync(profile);
+                if (serverCached != null && IsNewerWipe(currentWipe, serverCached.WipeTime))
+                {
+                    AppendLog($"{logPrefix} The server wiped since its map was loaded; loading the new one first.");
+                    await LoadMapAsync();
+                    serverCached = TryLoadMapCache(MapCacheKey(host, port));
+                }
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
+            }
+
             if (serverCached?.Bitmap != null)
             {
                 texture = serverCached.Bitmap;
@@ -470,37 +485,32 @@ namespace RustPlusDesk.Views
 
             int effectiveWorldSize = _worldSizeS > 0 ? _worldSizeS : (serverCached?.WorldSize ?? 0);
 
-            var monList = _monData ?? new List<(double X, double Y, string Name)>();
-            var references = monList
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name) &&
-                            !m.Name.Contains("tunnel", StringComparison.OrdinalIgnoreCase) &&
-                            !m.Name.Contains("dungeon", StringComparison.OrdinalIgnoreCase) &&
-                            !m.Name.Contains("substation", StringComparison.OrdinalIgnoreCase))
-                .Take(25)
-                .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                .ToList();
+            var references = ServerReferenceMonuments(profile);
 
-            if (references.Count < 3)
-            {
-                references = monList
-                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                    .Take(25)
-                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                    .ToList();
-            }
-
-            string? knownMapPath = !string.IsNullOrEmpty(profile.LocalMapFilePath) && File.Exists(profile.LocalMapFilePath)
+            string? savedMapPath = !string.IsNullOrEmpty(profile.LocalMapFilePath) && File.Exists(profile.LocalMapFilePath)
                 ? profile.LocalMapFilePath
                 : null;
 
+            // An offline map is the file it was imported from. A live server's saved path is only
+            // the map of some earlier parse: it may be last wipe's, so it has to prove itself.
+            bool offlineOnly = IsOfflineOnlyProfile(profile);
             var result = await Map3DLocalBuildService.PrepareAsync(
                 profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
-                knownMapPath);
+                pickedMapPath: offlineOnly ? savedMapPath : null,
+                knownMapPath: offlineOnly ? null : savedMapPath);
             if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
 
             if (result.NeedsManualMapSelection)
             {
-                AppendLog($"{logPrefix} Automatic map detection failed ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
+                AppendLog($"{logPrefix} {result.StatusMessage} ({result.AttemptCount}/{result.CandidateCount} candidates tried). Asking for the map file manually.");
+
+                // It was tested against this server and failed: don't keep offering it as this server's map.
+                if (!offlineOnly && savedMapPath != null && Map3DLocalBuildService.CanVerify(references))
+                {
+                    profile.LocalMapFilePath = null;
+                    _vm.Save();
+                }
+
                 var picker = new Microsoft.Win32.OpenFileDialog
                 {
                     Title = Properties.Resources.GetString("SelectRustMapFile"),
@@ -580,6 +590,17 @@ namespace RustPlusDesk.Views
 
         private static bool IsOfflineOnlyProfile(ServerProfile profile)
             => profile.Port == 0 || profile.PlayerToken == "offline";
+
+        /// <summary>
+        /// What a map file is checked against: the monuments this server reported. Empty when it
+        /// isn't connected, because <c>_monData</c> then proves nothing about its current wipe,
+        /// and without the extras in <c>_monData</c>, which came from a parse in the first place.
+        /// </summary>
+        private List<Map3DReferenceMonument> ServerReferenceMonuments(ServerProfile profile)
+        {
+            if (!profile.IsFullConnected || IsOfflineOnlyProfile(profile) || _monData == null) return new();
+            return Map3DLocalBuildService.BuildReferenceMonuments(_monData.Where(m => !_extraMonumentNames.Contains(m.Name)));
+        }
 
         /// <summary>
         /// MapParser's render covers exactly the world, edge to edge, unlike a server's map
@@ -2093,11 +2114,7 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
-                var references = (_monData ?? new List<(double X, double Y, string Name)>())
-                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                    .Take(12)
-                    .Select(m => new Map3DReferenceMonument(m.X, m.Y, m.Name))
-                    .ToList();
+                var references = ServerReferenceMonuments(connectedProfile);
 
                 var score = Map3DLocalBuildService.ScoreParsedMap(resolvedPath, references, _worldSizeS);
                 bool isGoodMatch = Map3DLocalBuildService.IsGoodMatch(score, references);
