@@ -143,7 +143,7 @@ public static class Map3DLocalBuildService
             };
         }
 
-        var parserPath = ResolveParserExecutable();
+        var parserPath = MapParserHost.ResolveParserAssembly();
         // Nothing found on disk can be told apart without the server's monuments, so without them
         // the search is skipped rather than guessed at, and the choice goes to the player.
         bool canVerify = CanVerify(referenceMonuments);
@@ -160,7 +160,7 @@ public static class Map3DLocalBuildService
 
         if (parserPath == null)
         {
-            status = "3D map workspace prepared, but MapParser.exe was not found.";
+            status = "3D map workspace prepared, but MapParser was not found.";
         }
         else
         {
@@ -370,7 +370,7 @@ public static class Map3DLocalBuildService
 
         if (!File.Exists(renderedPath))
         {
-            parserPath ??= ResolveParserExecutable();
+            parserPath ??= MapParserHost.ResolveParserAssembly();
             if (parserPath == null || !File.Exists(mapFile)) return null;
             await RunParserAsync(parserPath, mapFile, folder, ct, extraArg: "--image-only").ConfigureAwait(false);
             if (!File.Exists(renderedPath)) return null;
@@ -606,127 +606,6 @@ public static class Map3DLocalBuildService
         }
     }
 
-    private static string? ResolveParserExecutable()
-    {
-        // 1. Embedded parser is always the primary source.
-        //    It is extracted to AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime
-        //    and re-extracted only when the embedded content has changed (build-id stamp).
-        string? embeddedParser = ExtractEmbeddedParserRuntime();
-        if (embeddedParser != null) return embeddedParser;
-
-        // 2. Fallback: local MapParser.exe next to the running executable (installed layout).
-        string baseDir = AppContext.BaseDirectory;
-        string localExe = Path.Combine(baseDir, "MapParser.exe");
-        if (IsRunnableParserExecutable(localExe)) return localExe;
-
-        string localSubExe = Path.Combine(baseDir, "MapParser", "MapParser.exe");
-        if (IsRunnableParserExecutable(localSubExe)) return localSubExe;
-
-        // 3. Last resort: development sibling build (source checkout layout).
-        return ResolveDevelopmentParserExecutable(baseDir);
-    }
-
-    private static bool IsRunnableParserExecutable(string path)
-    {
-        if (!File.Exists(path)) return false;
-
-        var info = new FileInfo(path);
-        if (info.Length >= 5 * 1024 * 1024) return true;
-
-        string parserDll = Path.ChangeExtension(path, ".dll");
-        return File.Exists(parserDll);
-    }
-
-    private static string? ResolveDevelopmentParserExecutable(string baseDir)
-    {
-        var candidates = new List<string>();
-
-        foreach (string root in EnumerateAncestorDirectories(baseDir))
-        {
-            string parserRoot = Path.Combine(root, "MapParser");
-            if (!File.Exists(Path.Combine(parserRoot, "MapParser.csproj"))) continue;
-
-            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "win-x64", "publish", "MapParser.exe"));
-            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "win-x64", "publish", "MapParser.exe"));
-            candidates.Add(Path.Combine(parserRoot, "bin", "Debug", "net8.0", "MapParser.exe"));
-            candidates.Add(Path.Combine(parserRoot, "bin", "Release", "net8.0", "MapParser.exe"));
-        }
-
-        return candidates
-            .Where(IsRunnableParserExecutable)
-            .OrderByDescending(path => new FileInfo(path).LastWriteTimeUtc)
-            .FirstOrDefault();
-    }
-
-    private static IEnumerable<string> EnumerateAncestorDirectories(string start)
-    {
-        var dir = new DirectoryInfo(Path.GetFullPath(start));
-        while (dir != null)
-        {
-            yield return dir.FullName;
-            dir = dir.Parent;
-        }
-    }
-
-    /// <summary>
-    /// Extracts the embedded Map3DParser resources to
-    /// <c>AppData\Roaming\RustPlusDesk\cache\map3d-parser-runtime</c> when needed
-    /// and returns the path to <c>MapParser.exe</c> inside that directory.
-    /// Extraction is skipped when the directory already contains an up-to-date build
-    /// (verified via a build-id stamp derived from the embedded resource manifest).
-    /// Returns <c>null</c> if no embedded parser resources are present in the assembly.
-    /// </summary>
-    private static string? ExtractEmbeddedParserRuntime()
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        string[] resourceNames = assembly.GetManifestResourceNames()
-            .Where(name => name.StartsWith("Map3DParser/", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(n => n, StringComparer.Ordinal)
-            .ToArray();
-        if (resourceNames.Length == 0) return null;
-
-        string targetRoot = Path.Combine(DataManager.CacheDir, "map3d-parser-runtime");
-        string exePath = Path.Combine(targetRoot, "MapParser.exe");
-
-        try
-        {
-            Directory.CreateDirectory(targetRoot);
-            TryHideDirectory(targetRoot);
-
-            foreach (string resourceName in resourceNames)
-            {
-                string relative = resourceName["Map3DParser/".Length..].Replace('/', Path.DirectorySeparatorChar);
-                if (string.IsNullOrWhiteSpace(relative) || relative.Contains("..")) continue;
-
-                string targetPath = Path.GetFullPath(Path.Combine(targetRoot, relative));
-                if (!targetPath.StartsWith(Path.GetFullPath(targetRoot), StringComparison.OrdinalIgnoreCase)) continue;
-
-                Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
-                using Stream? source = assembly.GetManifestResourceStream(resourceName);
-                if (source == null) continue;
-                using var target = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.Read);
-                source.CopyTo(target);
-            }
-
-            return File.Exists(exePath) ? exePath : null;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-
-    private static void TryHideDirectory(string path)
-    {
-        try
-        {
-            var info = new DirectoryInfo(path);
-            info.Attributes |= FileAttributes.Hidden;
-        }
-        catch { }
-    }
-
     private static async Task<(bool Success, int ExitCode, string? Error)> RunParserAsync(
         string parserPath,
         string mapPath,
@@ -735,20 +614,10 @@ public static class Map3DLocalBuildService
         bool skipImage = false,
         string? extraArg = null)
     {
-        var psi = new ProcessStartInfo
-        {
-            FileName = parserPath,
-            WorkingDirectory = Path.GetDirectoryName(parserPath) ?? AppContext.BaseDirectory,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true
-        };
-        psi.ArgumentList.Add(mapPath);
-        psi.ArgumentList.Add("--output-dir");
-        psi.ArgumentList.Add(outputDir);
-        if (skipImage) psi.ArgumentList.Add("--skip-image");
-        if (!string.IsNullOrEmpty(extraArg)) psi.ArgumentList.Add(extraArg);
+        var parserArgs = new List<string> { mapPath, "--output-dir", outputDir };
+        if (skipImage) parserArgs.Add("--skip-image");
+        if (!string.IsNullOrEmpty(extraArg)) parserArgs.Add(extraArg);
+        var psi = MapParserHost.CreateStartInfo(parserPath, parserArgs);
 
         using var process = Process.Start(psi);
         if (process == null) return (false, -1, "Failed to start parser.");
@@ -780,20 +649,10 @@ public static class Map3DLocalBuildService
     /// </summary>
     public static async Task<bool> AddMissingHeatmapsAsync(string mapDataPath, CancellationToken ct = default)
     {
-        string? parserPath = ResolveParserExecutable();
+        string? parserPath = MapParserHost.ResolveParserAssembly();
         if (parserPath == null || !File.Exists(mapDataPath)) return false;
 
-        var psi = new ProcessStartInfo
-        {
-            FileName = parserPath,
-            WorkingDirectory = Path.GetDirectoryName(parserPath) ?? AppContext.BaseDirectory,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true
-        };
-        psi.ArgumentList.Add("--add-heatmaps");
-        psi.ArgumentList.Add(mapDataPath);
+        var psi = MapParserHost.CreateStartInfo(parserPath, new[] { "--add-heatmaps", mapDataPath });
 
         using var process = Process.Start(psi);
         if (process == null) return false;
