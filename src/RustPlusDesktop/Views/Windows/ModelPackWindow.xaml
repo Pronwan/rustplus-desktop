@@ -1,0 +1,42 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.ModelPackWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="3D models"
+        Width="520" SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="3D models" ShowMaximize="False" ShowMinimize="False"/>
+
+        <StackPanel Grid.Row="1" Margin="20,4,20,20">
+            <ui:TextBlock x:Name="TxtHeading" FontTypography="Subtitle" TextWrapping="Wrap"/>
+            <ui:TextBlock x:Name="TxtMessage" FontTypography="Body" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,6,0,14"/>
+
+            <StackPanel x:Name="PackList"/>
+
+            <StackPanel x:Name="ProgressArea" Visibility="Collapsed" Margin="0,8,0,0">
+                <ProgressBar x:Name="BarProgress" Minimum="0" Maximum="100"/>
+                <ui:TextBlock x:Name="TxtProgress" FontTypography="Caption" Foreground="{DynamicResource TextSubtle}" Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <ui:InfoBar x:Name="InfoError" Title="The download failed" Severity="Error" IsClosable="False" IsOpen="False" Margin="0,8,0,0"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <ui:Button x:Name="BtnBackground" Content="Continue in background" Appearance="Primary" Visibility="Collapsed" Margin="0,0,8,0" Click="BtnBackground_Click"/>
+                <ui:Button x:Name="BtnDownload" Content="Download" Icon="{ui:SymbolIcon ArrowDownload24}" Appearance="Primary" MinWidth="120" Margin="0,0,8,0" Click="BtnDownload_Click"/>
+                <ui:Button x:Name="BtnCancel" Content="Not now" Appearance="Secondary" MinWidth="100" Click="BtnCancel_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

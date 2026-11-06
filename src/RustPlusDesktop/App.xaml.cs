@@ -206,6 +206,9 @@ public partial class App : Application
             _ = Task.Run(async () => { await Task.Delay(5000); CleanupLegacyInnoSetupInstallation(); });
             _ = Task.Run(CleanupLegacyNodeRuntime);
             _ = Task.Run(async () => { await Task.Delay(1000); EnsureUrlProtocolRegistered(); });
+            Services.ModelPacks.ModelStoreService.Instance.StartAdoption(Views.MainWindow.ResolveMap3DViewerSourceRoot());
+            _ = Services.ModelPacks.ModelPackService.Instance.CheckForUpdatesAfterStartAsync();
+            _ = _main?.OfferModelPacksAtFirstRunAsync();
         }
         catch (Exception ex)
         {
