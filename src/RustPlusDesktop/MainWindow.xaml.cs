@@ -249,17 +249,23 @@ public partial class MainWindow : WpfUi.FluentWindow
     private double CompactSidebarWidth => RailWidth;
     private double MinExpandedSidebarWidth => 360 + RailWidth - CompactRailWidth;
     private double MaxExpandedSidebarWidth => 480 + RailWidth - CompactRailWidth;
-    private const int SidebarAnimationDurationMs = 180;
+    private const int SidebarAnimationDurationMs = 220;
+    private const double MaxSidebarFrameStepMs = 12;
+    private const int SidebarWarmupFrames = 2;
     private const int SidebarHoverExpandDelayMs = 200;
     private double _expandedSidebarWidth = 420;
     private bool _isSidebarExpanded;
     private bool _isSidebarPinnedExpanded;
     private bool _isSidebarTemporarilyExpandedForOverlay;
     private bool _sidebarOverlayVisibilityUpdateQueued;
-    private System.Windows.Threading.DispatcherTimer? _sidebarAnimationTimer;
     private System.Windows.Threading.DispatcherTimer? _sidebarHoverExpandTimer;
-    private DateTime _sidebarAnimationStartedAt;
+    private RectangleGeometry? _sidebarAnimationClip;
+    private TimeSpan? _sidebarAnimationLastFrame;
+    private double _sidebarAnimationElapsedMs;
+    private int _sidebarAnimationWarmupLeft;
+    private bool _sidebarAnimationRunning;
     private double _sidebarAnimationStartWidth;
+    private System.Windows.Media.Effects.Effect? _sidebarAnimationShadow;
     private double _sidebarAnimationTargetWidth;
     private Action? _sidebarAnimationCompleted;
 
@@ -562,6 +568,9 @@ public partial class MainWindow : WpfUi.FluentWindow
         MapTransform.Changed += RefreshMapGridViewport;
         WebViewHost.SizeChanged += (_, __) =>
         {
+            // Hundreds of markers: once, when the sidebar stops moving, not on every frame of it.
+            if (_sidebarAnimationRunning) return;
+
             RefreshAllOverlayScales();
             RefreshMonumentOverlayPositions();
             RefreshMapGridViewport();
@@ -8723,7 +8732,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         double currentWidth = GetCurrentSidebarWidth();
-        if (currentWidth >= MinExpandedSidebarWidth)
+        if (!_sidebarAnimationRunning && currentWidth >= MinExpandedSidebarWidth)
         {
             _expandedSidebarWidth = Math.Clamp(currentWidth, MinExpandedSidebarWidth, MaxExpandedSidebarWidth);
         }
@@ -8734,13 +8743,21 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             if (!_isSidebarExpanded)
             {
-                LeftPanelContent.Visibility = Visibility.Collapsed;
+                // Hidden, not Collapsed: it keeps its layout, so unfolding starts without a layout pass.
+                LeftPanelContent.Visibility = Visibility.Hidden;
                 CompactSidebarRail.Visibility = Visibility.Visible;
             }
         });
         UpdateSidebarPinButtons();
     }
 
+    /// <summary>
+    /// Unfolds or folds the sidebar. It stuttered because a 16 ms timer set the width, off the
+    /// display's beat, while the panel's own content reflowed and its shadow was rebuilt each
+    /// time. Now the content keeps its final width, the shadow waits, and one loop follows the
+    /// display: as a drawer only a clip moves, and docked the column itself does, so everything
+    /// to its right travels with it.
+    /// </summary>
     private void AnimateSidebarWidth(double targetWidth, Action? completed = null)
     {
         if (ColSidebar == null)
@@ -8748,53 +8765,127 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
-        _sidebarAnimationTimer?.Stop();
-        _sidebarAnimationCompleted = completed;
-        _sidebarAnimationStartWidth = GetCurrentSidebarWidth();
-        _sidebarAnimationTargetWidth = targetWidth;
+        double startWidth = GetCurrentSidebarWidth();
+        CancelSidebarAnimation();
 
-        if (Math.Abs(_sidebarAnimationStartWidth - _sidebarAnimationTargetWidth) < 1)
+        if (Math.Abs(startWidth - targetWidth) < 1)
         {
-            SetSidebarWidth(_sidebarAnimationTargetWidth);
-            _sidebarAnimationCompleted?.Invoke();
-            _sidebarAnimationCompleted = null;
+            SetSidebarWidth(targetWidth);
+            ReleaseSidebarContentWidth();
+            completed?.Invoke();
             return;
         }
 
-        _sidebarAnimationStartedAt = DateTime.UtcNow;
-        _sidebarAnimationTimer ??= new System.Windows.Threading.DispatcherTimer(
-            System.Windows.Threading.DispatcherPriority.Render)
-        {
-            Interval = TimeSpan.FromMilliseconds(16)
-        };
+        double canvasWidth = Math.Max(startWidth, targetWidth);
+        PinSidebarContentWidth(canvasWidth);
 
-        _sidebarAnimationTimer.Tick -= SidebarAnimationTimer_Tick;
-        _sidebarAnimationTimer.Tick += SidebarAnimationTimer_Tick;
-        _sidebarAnimationTimer.Start();
+        // A shadow on a panel whose shape changes has to be redrawn every frame.
+        _sidebarAnimationShadow = LeftPanelBorder.Effect;
+        LeftPanelBorder.Effect = null;
+
+        _sidebarAnimationRunning = true;
+        Services.Map.MapMemoryTrim.Hold = true;
+        _sidebarAnimationStartWidth = startWidth;
+        _sidebarAnimationTargetWidth = targetWidth;
+        _sidebarAnimationCompleted = completed;
+
+        if (_sidebarUsesDrawer)
+        {
+            // The drawer floats over the map, so it needs no layout at all while it moves.
+            ApplySidebarLayout(Root, LeftPanelBorder, SidebarSplitter, CompactSidebarWidth, canvasWidth, drawer: true);
+            _sidebarAnimationClip = new RectangleGeometry(new Rect(0, 0, startWidth, SidebarClipHeight));
+            LeftPanelBorder.Clip = _sidebarAnimationClip;
+        }
+
+        _sidebarAnimationLastFrame = null;
+        _sidebarAnimationElapsedMs = 0;
+        _sidebarAnimationWarmupLeft = SidebarWarmupFrames;
+        CompositionTarget.Rendering += OnSidebarFrame;
     }
 
-    private void SidebarAnimationTimer_Tick(object? sender, EventArgs e)
+    /// <summary>
+    /// One step of the motion per displayed frame. Showing the content and dropping the shadow
+    /// cost the first frames, so the motion waits them out. Time is read from when the frame
+    /// will be shown, and a late frame counts for <see cref="MaxSidebarFrameStepMs"/> at most:
+    /// a stall makes the slide a little longer, it never shows as a jump.
+    /// </summary>
+    private void OnSidebarFrame(object? sender, EventArgs e)
     {
-        double elapsedMs = (DateTime.UtcNow - _sidebarAnimationStartedAt).TotalMilliseconds;
-        double progress = Math.Clamp(elapsedMs / SidebarAnimationDurationMs, 0, 1);
-        double eased = 1 - Math.Pow(1 - progress, 3);
-        double width = _sidebarAnimationStartWidth + ((_sidebarAnimationTargetWidth - _sidebarAnimationStartWidth) * eased);
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _sidebarAnimationLastFrame) return; // Rendering can repeat within a frame
 
-        SetSidebarWidth(width);
-
-        if (progress < 1)
+        var lastFrame = _sidebarAnimationLastFrame;
+        _sidebarAnimationLastFrame = frameTime;
+        if (_sidebarAnimationWarmupLeft > 0)
         {
+            _sidebarAnimationWarmupLeft--;
             return;
         }
 
-        _sidebarAnimationTimer?.Stop();
-        SetSidebarWidth(_sidebarAnimationTargetWidth);
-        _sidebarAnimationCompleted?.Invoke();
+        if (lastFrame is { } previous)
+        {
+            _sidebarAnimationElapsedMs += Math.Min((frameTime - previous).TotalMilliseconds, MaxSidebarFrameStepMs);
+        }
+
+        double progress = Math.Clamp(_sidebarAnimationElapsedMs / SidebarAnimationDurationMs, 0, 1);
+        double eased = progress * progress * (3 - (2 * progress)); // starts gently, so nothing jumps
+        double width = _sidebarAnimationStartWidth + ((_sidebarAnimationTargetWidth - _sidebarAnimationStartWidth) * eased);
+
+        if (_sidebarAnimationClip is { } clip) clip.Rect = new Rect(0, 0, width, SidebarClipHeight);
+        else SetSidebarWidth(width);
+
+        if (progress >= 1) FinishSidebarAnimation();
+    }
+
+    /// <summary>Taller than any window, so only the clip's width ever matters.</summary>
+    private const double SidebarClipHeight = 20000;
+
+    /// <summary>Gives the content the width it will end up with, so the motion does not reflow it.</summary>
+    private void PinSidebarContentWidth(double sidebarWidth)
+    {
+        var margin = LeftPanelContent.Margin;
+        LeftPanelContent.Width = Math.Max(0, sidebarWidth - margin.Left - margin.Right);
+    }
+
+    private void ReleaseSidebarContentWidth()
+    {
+        if (_isSidebarExpanded) LeftPanelContent.ClearValue(WidthProperty);
+    }
+
+    private void CancelSidebarAnimation()
+    {
+        if (!_sidebarAnimationRunning) return;
+        _sidebarAnimationRunning = false;
+        Services.Map.MapMemoryTrim.Hold = false;
+
+        CompositionTarget.Rendering -= OnSidebarFrame;
+        if (_sidebarAnimationClip != null)
+        {
+            _sidebarAnimationClip = null;
+            LeftPanelBorder.Clip = null;
+        }
+
         _sidebarAnimationCompleted = null;
+        LeftPanelBorder.Effect = _sidebarAnimationShadow;
+        _sidebarAnimationShadow = null;
+    }
+
+    private void FinishSidebarAnimation()
+    {
+        var completed = _sidebarAnimationCompleted;
+        CancelSidebarAnimation();
+
+        // Folded content is hidden first, so the one real layout does not reflow it.
+        if (!_isSidebarExpanded) completed?.Invoke();
+        SetSidebarWidth(_sidebarAnimationTargetWidth);
+        ReleaseSidebarContentWidth();
+        if (_isSidebarExpanded) completed?.Invoke();
     }
 
     private double GetCurrentSidebarWidth()
     {
+        if (_sidebarAnimationClip is { } clip) return clip.Rect.Width;
+
         if (_sidebarUsesDrawer && LeftPanelBorder is not null && !double.IsNaN(LeftPanelBorder.Width))
             return LeftPanelBorder.Width;
 

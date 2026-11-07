@@ -30,6 +30,7 @@ public partial class MainWindow
 
     private void MapToolbar_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        if (_sidebarAnimationRunning) return;
         if (MapToolbarActions is not null && MapToolbarLayout.IsLoaded)
             ApplyMapToolbarLayout(MapToolbarLayout, MapToolbarFilters, MapQuickFilters, MapToolbarActions, MapLayersLabel);
     }

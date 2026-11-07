@@ -21,6 +21,9 @@ internal static class MapMemoryTrim
 
     private static CancellationTokenSource? _pending;
 
+    /// <summary>Set while something is animating: a blocking collection is a visible stall.</summary>
+    internal static volatile bool Hold;
+
     /// <summary>Collects once, <see cref="SettleDelay"/> after the last call. Call on the UI thread.</summary>
     public static void Schedule()
     {
@@ -42,6 +45,8 @@ internal static class MapMemoryTrim
             {
                 return;
             }
+
+            while (Hold) await Task.Delay(250).ConfigureAwait(false);
 
             // The first pass queues the bitmaps' finalizers; the second takes what they released.
             GC.Collect();
