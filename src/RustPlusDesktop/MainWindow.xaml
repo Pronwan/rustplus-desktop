@@ -10905,7 +10905,7 @@
                             Width="48"
                             Height="48"
                             Margin="0,0,0,20"
-                            IsIndeterminate="True" />
+                            IsIndeterminate="{Binding IsVisible, RelativeSource={RelativeSource Self}}" />
                         <TextBlock
                             FontSize="16"
                             FontWeight="SemiBold"

@@ -861,19 +861,39 @@ public partial class MainWindow
     private double? _camTargetX, _camTargetY;
     private double? _currentCamX, _currentCamY;
 
-    private void InitSmoothFollowLoop()
+    private bool _smoothFollowLoopRunning;
+
+    /// <summary>
+    /// Only while something is being followed: a Rendering handler makes WPF draw every frame
+    /// whether or not anything changed, which cost a quarter of a core with the app idle.
+    /// </summary>
+    private void StartSmoothFollowLoop()
     {
+        if (_smoothFollowLoopRunning) return;
+        _smoothFollowLoopRunning = true;
         CompositionTarget.Rendering += OnMapRendering;
+    }
+
+    private void StopSmoothFollowLoop()
+    {
+        _smoothFollowLoopRunning = false;
+        CompositionTarget.Rendering -= OnMapRendering;
     }
 
     private void OnMapRendering(object? sender, EventArgs e)
     {
-        if (!_camTargetX.HasValue || !_camTargetY.HasValue || _isAnimatingMap) return;
-        if (!_vm.IsFollowing && !_trackingEntityId.HasValue) 
+        if (!_camTargetX.HasValue || !_camTargetY.HasValue)
+        {
+            StopSmoothFollowLoop();
+            return;
+        }
+        if (_isAnimatingMap) return;
+        if (!_vm.IsFollowing && !_trackingEntityId.HasValue)
         {
             _camTargetX = _camTargetY = null;
             _currentCamX = _currentCamY = null;
             _isSmoothingFollow = false;
+            StopSmoothFollowLoop();
             return;
         }
 
@@ -928,5 +948,6 @@ public partial class MainWindow
 
         _camTargetX = targetX;
         _camTargetY = targetY;
+        StartSmoothFollowLoop();
     }
 }

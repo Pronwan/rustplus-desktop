@@ -520,7 +520,6 @@ public partial class MainWindow : WpfUi.FluentWindow
             txt.Text = $"v{_updateService.VersionRaw}";
         InitCameraUi();
         StartSessionTracking();
-        InitSmoothFollowLoop();
         StartCloudSyncTimer();
         StartHalloweenEventGate();
         ApplySettings();
