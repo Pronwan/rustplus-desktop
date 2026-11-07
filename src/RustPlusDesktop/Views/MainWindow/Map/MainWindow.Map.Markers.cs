@@ -134,6 +134,15 @@ public partial class MainWindow
         PopulateMonumentList();
     }
 
+    /// <summary>
+    /// The part of <see cref="RefreshMonumentOverlayPositions"/> a zoom needs. That one also works
+    /// out names and positions, which allocated enough at every step to keep the GC running.
+    /// </summary>
+    private void RefreshMonumentScales()
+    {
+        foreach (var fe in _monEls.Values) ApplyMonumentScale(fe);
+    }
+
     private void RefreshMonumentOverlayPositions()
     {
         if (_monEls.Count == 0) return;

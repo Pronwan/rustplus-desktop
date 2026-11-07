@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
@@ -14,6 +15,8 @@ internal sealed class MapGridDrawing
     internal int Cells { get; }
     internal bool IsDeepSea { get; }
     internal StreamGeometry Lines { get; }
+    internal List<(double X, double Top, double Bottom)> VerticalLines { get; } = new();
+    internal List<(double Y, double Left, double Right)> HorizontalLines { get; } = new();
     internal (Point Origin, DrawingGroup Glyph)[] Labels { get; }
 
     internal MapGridDrawing(Rect bounds, Size mapSize, int cells, bool deepSea)
@@ -36,12 +39,14 @@ internal sealed class MapGridDrawing
                 double x = bounds.Left + col * dx;
                 context.BeginFigure(new Point(x, deepSea ? bounds.Top : 0), false, false);
                 context.LineTo(new Point(x, deepSea ? bounds.Bottom : mapSize.Height), true, false);
+                VerticalLines.Add((x, deepSea ? bounds.Top : 0, deepSea ? bounds.Bottom : mapSize.Height));
             }
             for (int row = firstRow; row <= lastRow; row++)
             {
                 double y = bounds.Top + row * dy;
                 context.BeginFigure(new Point(deepSea ? bounds.Left : 0, y), false, false);
                 context.LineTo(new Point(deepSea ? bounds.Right : mapSize.Width, y), true, false);
+                HorizontalLines.Add((y, deepSea ? bounds.Left : 0, deepSea ? bounds.Right : mapSize.Width));
             }
         }
         Lines.Freeze();
@@ -152,10 +157,21 @@ public sealed class MapGridVisual : FrameworkElement
         };
     }
 
-    internal bool SetViewScale(double scale, bool aliased)
+    /// <summary>How far the zoom may drift from what is drawn while it is still moving.</summary>
+    private const double MovingScaleTolerance = 0.1;
+
+    /// <summary>
+    /// Whether what is drawn at <paramref name="drawn"/> will do for <paramref name="wanted"/>.
+    /// Rebuilding the grid at every step of a zoom halved its frame rate, and nobody can see a
+    /// line a tenth too thick for a moment; the zoom ending settles it exactly.
+    /// </summary>
+    internal static bool IsDrawnScaleGoodEnough(double drawn, double wanted, bool moving)
+        => moving ? Math.Abs((wanted / drawn) - 1) < MovingScaleTolerance : drawn == wanted;
+
+    internal bool SetViewScale(double scale, bool aliased, bool moving = false)
     {
         if (!double.IsFinite(scale) || scale <= 0) return false;
-        if (_scale == scale && _aliased == aliased) return false;
+        if (_aliased == aliased && IsDrawnScaleGoodEnough(_scale, scale, moving)) return false;
         _scale = scale;
         _aliased = aliased;
         RenderOptions.SetEdgeMode(_lines, aliased ? EdgeMode.Aliased : EdgeMode.Unspecified);
@@ -163,9 +179,15 @@ public sealed class MapGridVisual : FrameworkElement
         {
             if (Drawing != null)
             {
-                var pen = new Pen(new SolidColorBrush(Color.FromArgb(150, 0, 0, 0)), (aliased ? 1 : 0.65) / scale);
-                pen.Freeze();
-                context.DrawGeometry(null, pen, Drawing.Lines);
+                // Thin rectangles, not a stroked geometry: WPF re-tessellates a stroke every time
+                // the view moves, which cost a third of the frame rate; these it just fills.
+                var brush = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0));
+                brush.Freeze();
+                double thickness = (aliased ? 1 : 0.65) / scale;
+                foreach (var (x, top, bottom) in Drawing.VerticalLines)
+                    context.DrawRectangle(brush, null, new Rect(x - (thickness / 2), top, thickness, bottom - top));
+                foreach (var (y, left, right) in Drawing.HorizontalLines)
+                    context.DrawRectangle(brush, null, new Rect(left, y - (thickness / 2), right - left, thickness));
             }
         }
         DrawLabels();

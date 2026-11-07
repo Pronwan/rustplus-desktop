@@ -27,7 +27,7 @@ public partial class MainWindow
         double scale = GetEffectiveZoom();
         double opacity = TrackingService.MapGridOpacity;
         bool aliased = TrackingService.MapUseAliasedEdgeMode;
-        if (_oceanGridBrush == null || !ReferenceEquals(_oceanGridDrawing, drawing) || _oceanGridScale != scale
+        if (_oceanGridBrush == null || !ReferenceEquals(_oceanGridDrawing, drawing) || !MapGridVisual.IsDrawnScaleGoodEnough(_oceanGridScale, scale, IsMapZoomMoving)
             || _oceanGridOpacity != opacity || _oceanGridAliased != aliased)
         {
             _oceanGridBrush = MapGridVisual.CreateOceanBrush(drawing, scale, aliased, opacity, background);
@@ -102,10 +102,12 @@ public partial class MainWindow
         RefreshGridLineThickness();
     }
 
+    private bool IsMapZoomMoving => _isZooming || _isAnimatingMap;
+
     public void RefreshGridLineThickness()
     {
         if (GridLayer == null || MapTransform == null) return;
-        GridLayer.SetViewScale(GetEffectiveZoom(), TrackingService.MapUseAliasedEdgeMode);
+        GridLayer.SetViewScale(GetEffectiveZoom(), TrackingService.MapUseAliasedEdgeMode, IsMapZoomMoving);
         RefreshMapGridViewport();
     }
 

@@ -88,6 +88,53 @@ public partial class MainWindow
         _isAnimatingMap = false;
     }
 
+    /// <summary>The longest a stalled frame may advance an animation, so it pauses rather than leaps.</summary>
+    private const double MaxMapFrameStepSeconds = 0.034;
+
+    private static readonly List<TaskCompletionSource<TimeSpan>> _mapFrameWaiters = new();
+    private static bool _mapFramePumpRunning;
+    private static TimeSpan _lastMapFrame;
+
+    /// <summary>
+    /// Waits for the next displayed frame and returns the time it will be shown. Map animations
+    /// used to wait on a 14-16 ms timer, about 65 steps a second however fast the display is,
+    /// and off its beat. The code after the await runs in time to be drawn in that same frame.
+    /// </summary>
+    private static Task<TimeSpan> NextMapFrameAsync()
+    {
+        var frame = new TaskCompletionSource<TimeSpan>();
+        _mapFrameWaiters.Add(frame);
+        if (!_mapFramePumpRunning)
+        {
+            _mapFramePumpRunning = true;
+            CompositionTarget.Rendering += PumpMapFrame;
+        }
+        return frame.Task;
+    }
+
+    /// <summary>
+    /// One subscription for as long as anything is waiting: subscribing to Rendering makes WPF
+    /// raise it again at once, so doing that per frame spun the UI thread flat out. It can also
+    /// repeat within a frame, which the frame time gives away.
+    /// </summary>
+    private static void PumpMapFrame(object? sender, EventArgs e)
+    {
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _lastMapFrame) return;
+        _lastMapFrame = frameTime;
+
+        if (_mapFrameWaiters.Count == 0)
+        {
+            _mapFramePumpRunning = false;
+            CompositionTarget.Rendering -= PumpMapFrame;
+            return;
+        }
+
+        var waiting = _mapFrameWaiters.ToArray();
+        _mapFrameWaiters.Clear();
+        foreach (var waiter in waiting) waiter.TrySetResult(frameTime);
+    }
+
     private double _zoomAnimationTarget = -1;
     private Point _zoomAnimationHostPivot;
     private Point _zoomAnimationScenePivot;
@@ -116,20 +163,18 @@ public partial class MainWindow
         if (_isZooming) return;
         _isZooming = true;
 
-        var lastTime = DateTime.UtcNow;
-        int frame = 0;
-
         try
         {
+            var lastFrame = await NextMapFrameAsync();
             while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
             {
-                await Task.Delay(14);
+                var frame = await NextMapFrameAsync();
                 // Immediately yield control if user started panning or requested stop
                 if (_scene == null || !_isZooming || _isPanning) break;
 
-                var now = DateTime.UtcNow;
-                double dt = Math.Min(0.05, Math.Max(0.001, (now - lastTime).TotalSeconds));
-                lastTime = now;
+                double dt = Math.Min(MaxMapFrameStepSeconds, (frame - lastFrame).TotalSeconds);
+                lastFrame = frame;
+                if (dt <= 0) continue;
 
                 var (s, offX, offY) = GetViewboxScaleAndOffset();
                 var curM = MapTransform.Matrix;
@@ -154,12 +199,10 @@ public partial class MainWindow
                 curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
                 MapTransform.Matrix = curM;
 
-                frame++;
-                if (frame % 3 == 0)
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
+                // Every step, so markers do not lag behind the map. Zooming moves nothing on the
+                // map, so it only rescales; the full pass runs once, when the zoom settles.
+                RefreshAllOverlayScales();
+                RefreshMonumentScales();
             }
 
             // Settle final layout only if user hasn't taken over with manual panning
@@ -175,6 +218,7 @@ public partial class MainWindow
         finally
         {
             _isZooming = false;
+            RefreshGridLineThickness(); // the moving zoom left it close, not exact
         }
     }
 
@@ -246,19 +290,18 @@ public partial class MainWindow
         if (_scene == null || _isPanning || _isAnimatingMap) return;
         _isFlinging = true;
         var vel = startVel;
-        var lastTime = DateTime.UtcNow;
 
         try
         {
+            var lastFrame = await NextMapFrameAsync();
             while (_isFlinging && !_isPanning && !_isAnimatingMap && vel.Length > 12)
             {
-                await Task.Delay(16);
+                var frame = await NextMapFrameAsync();
                 if (!_isFlinging || _isPanning || _isAnimatingMap || _scene == null) break;
 
-                var now = DateTime.UtcNow;
-                double dt = (now - lastTime).TotalSeconds;
-                lastTime = now;
-                if (dt <= 0 || dt > 0.1) dt = 0.016;
+                double dt = Math.Min(MaxMapFrameStepSeconds, (frame - lastFrame).TotalSeconds);
+                lastFrame = frame;
+                if (dt <= 0) continue;
 
                 var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
                 var curM = MapTransform.Matrix;
@@ -328,13 +371,22 @@ public partial class MainWindow
         _isSpringingBack = true;
         try
         {
-            for (int i = 0; i < 24; i++)
+            var lastFrame = await NextMapFrameAsync();
+            for (double elapsed = 0; elapsed < 0.384;)
             {
+                var frame = await NextMapFrameAsync();
                 if (!_isSpringingBack || _isPanning || _isAnimatingMap || _scene == null) break;
 
+                double dt = Math.Min(MaxMapFrameStepSeconds, (frame - lastFrame).TotalSeconds);
+                lastFrame = frame;
+                if (dt <= 0) continue;
+                elapsed += dt;
+
+                // 18% of the gap per 16 ms, whatever the frame rate.
+                double pull = 1 - Math.Pow(1 - 0.18, dt / 0.016);
                 var m = MapTransform.Matrix;
-                double dX = (targetX - m.OffsetX) * 0.18;
-                double dY = (targetY - m.OffsetY) * 0.18;
+                double dX = (targetX - m.OffsetX) * pull;
+                double dY = (targetY - m.OffsetY) * pull;
 
                 if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
                 {
@@ -351,8 +403,6 @@ public partial class MainWindow
                 m.OffsetY += dY;
                 MapTransform.Matrix = m;
                 CenterMiniMapOnPlayer();
-
-                await Task.Delay(16);
             }
         }
         catch { }
@@ -744,12 +794,20 @@ public partial class MainWindow
 
         try
         {
-            int steps = fast ? 30 : 60; // Faster steps for better responsiveness
-            for (int i = 0; i <= steps; i++)
+            double duration = fast ? 0.48 : 0.96; // Faster for better responsiveness
+            double elapsed = 0;
+            var lastFrame = await NextMapFrameAsync();
+            while (true)
             {
+                var frame = await NextMapFrameAsync();
                 if (!_isAnimatingMap) break;
 
-                double t = i / (double)steps;
+                double dt = Math.Min(MaxMapFrameStepSeconds, (frame - lastFrame).TotalSeconds);
+                lastFrame = frame;
+                if (dt <= 0) continue;
+                elapsed += dt;
+
+                double t = Math.Min(1, elapsed / duration);
                 double ease = t * t * (3 - 2 * t); // Smoothstep
 
                 // Interpolate position
@@ -785,13 +843,10 @@ public partial class MainWindow
                 m.OffsetY = (hostCy - offY) / s - curSy * curPy;
                 MapTransform.Matrix = m;
 
-                if (i % 2 == 0) // Update UI every other frame
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
+                RefreshAllOverlayScales();
+                RefreshMonumentScales();
 
-                await Task.Delay(16);
+                if (t >= 1) break;
             }
 
             // Final snap
@@ -803,6 +858,7 @@ public partial class MainWindow
         finally
         {
             _isAnimatingMap = false;
+            RefreshGridLineThickness();
         }
     }
 

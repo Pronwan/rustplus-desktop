@@ -11,6 +11,19 @@ namespace RustPlusDesktop.Tests;
 public class MapGridVisualTests
 {
     [STATestMethod]
+    public void Zoom_RedrawsOnlyWhenItDriftsWhileMoving_AndExactlyOnceItStops()
+    {
+        var grid = new MapGridVisual();
+        Assert.IsTrue(grid.SetViewScale(2, false));
+
+        Assert.IsFalse(grid.SetViewScale(2.1, false, moving: true), "A small step mid-zoom keeps what is drawn.");
+        Assert.IsTrue(grid.SetViewScale(2.4, false, moving: true), "A real drift redraws.");
+        Assert.IsTrue(grid.SetViewScale(2.5, false), "The zoom ending settles it exactly.");
+        Assert.IsFalse(grid.SetViewScale(2.5, false));
+        Assert.IsTrue(grid.SetViewScale(2.5, true, moving: true), "A changed edge mode always redraws.");
+    }
+
+    [STATestMethod]
     public void Grid_PreservesCellBoundaries_Labels_AndOceanPadding()
     {
         foreach (double worldSize in new[] { 1000d, 3000, 4250, 4500, 6000 })

@@ -184,7 +184,15 @@ public partial class MainWindow
         foreach (var fe in _shopEls.Values)
         {
             fe.RenderTransformOrigin = new Point(0.5, 0.5);
-            fe.RenderTransform = new ScaleTransform(scale, scale);
+            if (fe.RenderTransform is ScaleTransform { IsFrozen: false } transform)
+            {
+                transform.ScaleX = scale;
+                transform.ScaleY = scale;
+            }
+            else
+            {
+                fe.RenderTransform = new ScaleTransform(scale, scale);
+            }
         }
     }
 
