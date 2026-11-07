@@ -37,6 +37,27 @@ public static class ParsedMapDataCache
         return null;
     }
 
+    /// <summary>
+    /// Whether files generated from others can be used as they are: every output exists, and
+    /// none is older than any input that exists.
+    /// </summary>
+    public static bool AreOutputsCurrent(IEnumerable<string> outputs, IEnumerable<string> inputs)
+    {
+        DateTime newestInput = DateTime.MinValue;
+        foreach (string input in inputs)
+        {
+            if (!File.Exists(input)) continue;
+            DateTime written = File.GetLastWriteTimeUtc(input);
+            if (written > newestInput) newestInput = written;
+        }
+
+        foreach (string output in outputs)
+        {
+            if (!File.Exists(output) || File.GetLastWriteTimeUtc(output) < newestInput) return false;
+        }
+        return true;
+    }
+
     /// <summary>Forgets the loaded map, for when the app leaves it.</summary>
     public static void Clear()
     {

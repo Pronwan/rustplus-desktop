@@ -918,11 +918,13 @@ namespace RustPlusDesk.Views
             // map_data.json runs to ~90 MB and every overlay below reads from it: read it
             // (and map_resolved.json) once, off the UI thread, instead of once per overlay on it.
             var mapRoot = await Services.Map.ParsedMapDataCache.LoadAsync(folderPath);
-            var resolvedPrefabs = await Services.Map.ParsedMapDataCache.ReadPrefabsAsync(Path.Combine(folderPath, "map_resolved.json"), IsResolvedPrefabUsed);
             if (selectionVersion != _mapSelectionVersion) return;
 
-            if (mapRoot is { } root)
+            if (mapRoot is { } root && !(AreGeneratedMapFilesCurrent(folderPath) && TryLoadGeneratedExtraMonuments(folderPath)))
             {
+                var resolvedPrefabs = await Services.Map.ParsedMapDataCache.ReadPrefabsAsync(Path.Combine(folderPath, "map_resolved.json"), IsResolvedPrefabUsed);
+                if (selectionVersion != _mapSelectionVersion) return;
+
                 GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedPrefabs);
                 await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedPrefabs);
                 if (selectionVersion != _mapSelectionVersion) return;

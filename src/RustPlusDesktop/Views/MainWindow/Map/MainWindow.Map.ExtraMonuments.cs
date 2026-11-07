@@ -145,6 +145,45 @@ public partial class MainWindow
         }
     }
 
+    /// <summary>
+    /// Whether this folder's extra monuments and building-blocked zones can be used as they are.
+    /// Generating them walks every prefab on the map. The app counts as an input because the
+    /// rules, and the monument bounds they read, ship inside it.
+    /// </summary>
+    private static bool AreGeneratedMapFilesCurrent(string folderPath)
+    {
+        var inputs = new List<string>
+        {
+            Path.Combine(folderPath, Services.Map.MapDataSlices.MapDataFileName),
+            Path.Combine(folderPath, "map_resolved.json")
+        };
+        if (Environment.ProcessPath is { } app) inputs.Add(app);
+
+        return Services.Map.ParsedMapDataCache.AreOutputsCurrent(
+            new[] { Path.Combine(folderPath, ExtraMonumentsFileName), Path.Combine(folderPath, "building_blocked.json") },
+            inputs);
+    }
+
+    /// <summary>Shows the extra monuments already generated for this folder; false if that failed.</summary>
+    private bool TryLoadGeneratedExtraMonuments(string folderPath)
+    {
+        try
+        {
+            var extras = JsonSerializer.Deserialize<List<ExtraMonument>>(
+                File.ReadAllText(Path.Combine(folderPath, ExtraMonumentsFileName)),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (extras == null) return false;
+
+            StoreAndMergeExtraMonuments(extras);
+            BuildMonumentOverlays();
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return false;
+        }
+    }
+
     private void MergeCachedExtraMonumentsForCurrentMap()
     {
         try

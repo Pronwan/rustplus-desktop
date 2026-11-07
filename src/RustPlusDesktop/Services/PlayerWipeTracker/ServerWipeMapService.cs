@@ -39,6 +39,10 @@ public sealed class ServerWipeMapService
     public void QueueUploadExtraMonuments(string serverKey, string wipeKey, IReadOnlyList<TrackerMonument> extraMonuments)
         => _ = TryUploadExtraMonumentsAsync(serverKey, wipeKey, extraMonuments);
 
+    /// <summary>Whether <see cref="QueueUploadWipeMap"/> would do anything, before anyone encodes a map for it.</summary>
+    public bool NeedsWipeMapUpload(string serverKey, string wipeKey)
+        => CloudAuthManager.IsAuthenticated && !_store.IsWipeMapUploaded(serverKey, wipeKey);
+
     private async Task TryUploadWipeMapAsync(string serverKey, string wipeKey, TrackerWipeMap map, DateTime? wipeStartedAtUtc)
     {
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))

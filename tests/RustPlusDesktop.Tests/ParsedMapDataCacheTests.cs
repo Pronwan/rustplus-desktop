@@ -53,6 +53,40 @@ public sealed class ParsedMapDataCacheTests
     }
 
     [TestMethod]
+    public void OutputsAreCurrent_OnlyWhenAllExistAndNoneIsOlderThanAnInput()
+    {
+        string folder = Path.Combine(Path.GetTempPath(), "rpd-outputs-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        string input = Path.Combine(folder, "in.json");
+        string first = Path.Combine(folder, "a.json");
+        string second = Path.Combine(folder, "b.json");
+        try
+        {
+            var written = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+            foreach (string file in new[] { input, first })
+            {
+                File.WriteAllText(file, "x");
+                File.SetLastWriteTimeUtc(file, written);
+            }
+
+            Assert.IsFalse(ParsedMapDataCache.AreOutputsCurrent(new[] { first, second }, new[] { input }), "One output is missing.");
+
+            File.WriteAllText(second, "x");
+            File.SetLastWriteTimeUtc(second, written);
+            Assert.IsTrue(ParsedMapDataCache.AreOutputsCurrent(new[] { first, second }, new[] { input }));
+            Assert.IsTrue(ParsedMapDataCache.AreOutputsCurrent(new[] { first }, new[] { Path.Combine(folder, "absent.json") }),
+                "An input that does not exist cannot make anything stale.");
+
+            File.SetLastWriteTimeUtc(input, written.AddMinutes(1));
+            Assert.IsFalse(ParsedMapDataCache.AreOutputsCurrent(new[] { first, second }, new[] { input }), "The map was parsed again.");
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [TestMethod]
     public void KeepsOnlyTheOverlayProperties()
     {
         string folder = WriteMapData(
