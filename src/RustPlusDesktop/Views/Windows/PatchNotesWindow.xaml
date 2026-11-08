@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.2.0 RELEASE -->
+                            <!-- v11.2.1 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_2_0"
+                            <Border x:Name="Card_v11_2_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,52 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.2.0 | High-Performance Map Engine, Monument Toggles &amp; Lite Build"
+                                            <TextBlock Text="v11.2.1 | Display-Frame Map Animations &amp; Inertia"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            This hotfix synchronizes map animations, zoom easing, and inertia physics directly with your monitor's display frames, delivering stutter-free camera travel and responsive physics.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Display-Frame Fly-To Camera:</Run>
+                                        Fly-to transitions when focusing on teammates, monuments, or event markers now render cleanly on display refresh frames.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Refresh-Rate Zoom Easing &amp; Spring-Back:</Run>
+                                        Zoom momentum curves and edge bounce-back animations track native refresh frames for fluid zoom transitions.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Pan Inertia &amp; Boundary Physics:</Run>
+                                        Flick momentum and pan boundary physics now glide without micro-stuttering or dropped frames.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.2.0 RELEASE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_2_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.2.0 | High-Performance Map Engine, Monument Toggles &amp; Lite Build"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 
