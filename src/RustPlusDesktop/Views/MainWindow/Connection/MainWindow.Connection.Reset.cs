@@ -26,6 +26,7 @@ public partial class MainWindow
 
     private async Task HardResetAsync(bool reconnect = false)
     {
+        Services.Map.MemoryProbe.Mark("disconnect: start", restart: true);
         _connectedProfile = null;
 
         // Leaving the server for good (e.g. picking another one in the list) means
@@ -92,14 +93,6 @@ public partial class MainWindow
         catch { }
 
 
-        // 5) WIRKLICH vom Rust-Server trennen
-        try
-        {
-            if (_rust != null)
-                await _rust.DisconnectAsync();   // RustPlusClientReal trennt hier sauber und setzt _api = null
-        }
-        catch { }
-
         // 6) ViewModel "entkoppeln"
         if (_vm != null)
         {
@@ -113,6 +106,17 @@ public partial class MainWindow
         }
 
         ResetMapDisplay();
+        Services.Map.MemoryProbe.Mark("disconnect: map cleared");
+
+        // After the UI on purpose: a socket can take seconds to close, and nothing above needs it.
+        // 5) WIRKLICH vom Rust-Server trennen
+        try
+        {
+            if (_rust != null)
+                await _rust.DisconnectAsync();   // RustPlusClientReal trennt hier sauber und setzt _api = null
+                Services.Map.MemoryProbe.Mark("disconnect: socket closed");
+        }
+        catch { }
 
         AppendLog("Hard reset completed.");
 

@@ -19,6 +19,7 @@ namespace RustPlusDesk.Services.Map;
 internal static class MemoryProbe
 {
     private static readonly object Gate = new();
+    private static readonly Stopwatch Timer = new();
     private static string LogPath => Path.Combine(DataManager.AppDir, "memory-log.txt");
 
     [Conditional("DEBUG")]
@@ -36,6 +37,23 @@ internal static class MemoryProbe
                 Mb(process.WorkingSet64), Mb(process.PrivateMemorySize64),
                 Mb(gc.HeapSizeBytes), Mb(loh), Mb(gc.TotalCommittedBytes), Mb(gc.FragmentedBytes));
 
+            lock (Gate) File.AppendAllText(LogPath, line + Environment.NewLine);
+        }
+        catch
+        {
+            // A diagnostic that fails is not worth an error of its own.
+        }
+    }
+
+    /// <summary>Times a step of connecting or disconnecting, in ms since the last <paramref name="restart"/>.</summary>
+    [Conditional("DEBUG")]
+    public static void Mark(string stage, bool restart = false)
+    {
+        try
+        {
+            if (restart) Timer.Restart();
+            string line = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                "{0:yyyy-MM-dd HH:mm:ss} | {1,-40} | {2,6} ms", DateTime.Now, stage, Timer.ElapsedMilliseconds);
             lock (Gate) File.AppendAllText(LogPath, line + Environment.NewLine);
         }
         catch

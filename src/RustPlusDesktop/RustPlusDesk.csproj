@@ -26,7 +26,7 @@
 
 	<PropertyGroup>
 		<!-- Single source of truth for app, assembly, package, UI, and installer versioning. -->
-		<Version>11.1.1</Version>
+		<Version>11.2.0</Version>
 		<Title>Rust+ Desk</Title>
 		<Authors>Pronwan</Authors>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -344,18 +344,18 @@
   <PropertyGroup>
     <MapParserProjectPath>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\MapParser.csproj</MapParserProjectPath>
     <MapParserPublishDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\bin\$(Configuration)\net8.0\win-x64\publish\</MapParserPublishDir>
-    <MapParserPublishedExe>$(MapParserPublishDir)MapParser.exe</MapParserPublishedExe>
+    <MapParserPublishedAssembly>$(MapParserPublishDir)MapParser.dll</MapParserPublishedAssembly>
     <MapParserSourceDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\</MapParserSourceDir>
     <MapParserViewerDistDir>$(MSBuildProjectDirectory)\..\..\vendor\MapParser\dist\</MapParserViewerDistDir>
   </PropertyGroup>
 
   <!-- Source inputs for the MapParser publish, so it only re-publishes when MapParser actually
-       changes (a self-contained single-file compressed publish is expensive to run every build). -->
+       changes (a publish is expensive to run every build). -->
   <ItemGroup>
     <MapParserSource Include="$(MSBuildProjectDirectory)\..\..\vendor\MapParser\**\*.cs;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\**\*.csproj;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\**\*.js;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\**\*.mjs;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\**\*.json" Exclude="$(MSBuildProjectDirectory)\..\..\vendor\MapParser\bin\**;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\obj\**;$(MSBuildProjectDirectory)\..\..\vendor\MapParser\node_modules\**" />
   </ItemGroup>
 
-  <Target Name="BuildMapParserRuntime" Inputs="@(MapParserSource)" Outputs="$(MapParserPublishedExe)" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
+  <Target Name="BuildMapParserRuntime" Inputs="@(MapParserSource)" Outputs="$(MapParserPublishedAssembly)" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <RemoveDir Directories="$(MapParserPublishDir)" Condition="Exists('$(MapParserPublishDir)')" />
 
     <!--
@@ -366,10 +366,10 @@
       the graph for the same reason the ProjectReference was dropped. Pin TargetFramework too:
       a project-reference build can otherwise pass the Windows app's framework into Restore.
     -->
-    <MSBuild Projects="$(MapParserProjectPath)" Targets="Restore" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;TargetFramework=net8.0;TargetFrameworks=net8.0" />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Restore" Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=false;TargetFramework=net8.0;TargetFrameworks=net8.0" />
 
-    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);IncludeRustModels=$(IncludeRustModels);RuntimeIdentifier=win-x64;SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
-    <Error Condition="!Exists('$(MapParserPublishedExe)')" Text="MapParser publish did not produce $(MapParserPublishedExe)." />
+    <MSBuild Projects="$(MapParserProjectPath)" Targets="Publish" Properties="Configuration=$(Configuration);IncludeRustModels=$(IncludeRustModels);RuntimeIdentifier=win-x64;SelfContained=false;UseAppHost=false;ErrorOnDuplicatePublishOutputFiles=false;TargetFramework=net8.0;PublishDir=$(MapParserPublishDir);NoBuild=false" />
+    <Error Condition="!Exists('$(MapParserPublishedAssembly)')" Text="MapParser publish did not produce $(MapParserPublishedAssembly)." />
     <ItemGroup>
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)**\*.cs;$(MapParserPublishDir)**\*.csproj;$(MapParserPublishDir)modules\**\*.js" Exclude="$(MapParserPublishDir)modules\glbWorker.js" />
       <MapParserForbiddenPublishedFile Include="$(MapParserPublishDir)app.js" Condition="Exists('$(MapParserPublishDir)app.js')" />
@@ -380,7 +380,7 @@
     <Error Condition="'@(MapParserForbiddenPublishedFile)' != ''" Text="MapParser publish contains source files: @(MapParserForbiddenPublishedFile)" />
   </Target>
 
-  <!-- WebView2 serves these from disk; MapParser's single-file EXE cannot supply them. -->
+  <!-- WebView2 serves these from disk. -->
   <Target Name="StageMapParserViewerRuntime" DependsOnTargets="BuildMapParserRuntime">
     <Error Condition="!Exists('$(MapParserViewerDistDir)index.html') Or !Exists('$(MapParserViewerDistDir)modules\glbWorker.js')" Text="MapParser's compiled viewer or GLB worker is missing. Rebuild the MapParser runtime." />
     <ItemGroup>
@@ -397,14 +397,8 @@
 
   <Target Name="IncludeMapParserRuntime" BeforeTargets="AssignTargetPaths" DependsOnTargets="BuildMapParserRuntime;StageMapParserViewerRuntime" Condition="Exists('$(MapParserProjectPath)') And !$([System.String]::Copy('$(MSBuildProjectName)').Contains('_wpftmp'))">
     <ItemGroup>
-      <MapParserPublishedContent Include="$(MapParserPublishDir)**\*" Exclude="$(MapParserPublishedExe)" />
+      <MapParserPublishedContent Include="$(MapParserPublishDir)**\*" />
 
-      <Content Include="$(MapParserPublishedExe)">
-        <Link>MapParser\MapParser.exe</Link>
-        <TargetPath>MapParser\MapParser.exe</TargetPath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
       <Content Include="@(MapParserPublishedContent)">
         <Link>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</Link>
         <TargetPath>MapParser\%(MapParserPublishedContent.RecursiveDir)%(MapParserPublishedContent.Filename)%(MapParserPublishedContent.Extension)</TargetPath>

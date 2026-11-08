@@ -7,7 +7,24 @@ public partial class MainWindow
 {
     private bool _sidebarUsesDrawer;
 
-    private void SidebarViewport_Loaded(object sender, RoutedEventArgs e) => UpdateSidebarLayoutMode();
+    private void SidebarViewport_Loaded(object sender, RoutedEventArgs e)
+    {
+        UpdateSidebarLayoutMode();
+
+        // Lays out and draws the folded content while nobody is waiting: the first unfold spent
+        // 74 ms on it otherwise. Beyond the folded panel's edge, none of it shows.
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (_isSidebarExpanded || LeftPanelContent.Visibility != Visibility.Collapsed) return;
+            PinSidebarContentWidth(_expandedSidebarWidth);
+            LeftPanelContent.Visibility = Visibility.Visible;
+
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (!_isSidebarExpanded) LeftPanelContent.Visibility = Visibility.Hidden;
+            }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+    }
 
     private void SidebarViewport_SizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -20,8 +37,7 @@ public partial class MainWindow
         bool drawer = ShouldUseSidebarDrawer(Root.ActualWidth, _expandedSidebarWidth, _isSidebarPinnedExpanded);
         if (drawer == _sidebarUsesDrawer) return;
 
-        _sidebarAnimationTimer?.Stop();
-        _sidebarAnimationCompleted = null;
+        CancelSidebarAnimation();
         _sidebarUsesDrawer = drawer;
         SetSidebarWidth(_isSidebarExpanded ? _expandedSidebarWidth : CompactSidebarWidth);
         if (_isSidebarExpanded && !drawer) ColSidebar.MinWidth = MinExpandedSidebarWidth;

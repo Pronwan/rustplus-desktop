@@ -195,21 +195,28 @@ public partial class MainWindow
         return $"{fallback}\n{owner.Name}\n{owner.Type} / {owner.Prefab}";
     }
 
-    // mapRoot / resolvedRoot are read once, off the UI thread, by LoadParsedMapDataAsync; the
+    private static readonly Lazy<Dictionary<string, BoundsDBEntry>?> BuildingBlockedBounds = new(() =>
+    {
+        var streamInfo = Application.GetResourceStream(new Uri("pack://application:,,,/Assets/Data/monument_bounds.json"));
+        if (streamInfo == null) return null;
+        using var reader = new StreamReader(streamInfo.Stream);
+        return JsonSerializer.Deserialize<Dictionary<string, BoundsDBEntry>>(reader.ReadToEnd(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    });
+
+    /// <summary>Whether this prefab id, in lower case, has building-blocked bounds.</summary>
+    private static bool IsBuildingBlockedPrefab(string prefabId)
+        => BuildingBlockedBounds.Value is { } bounds && FindBuildingBlockedBoundsKey(bounds, prefabId).Length > 0;
+
+    // mapRoot / resolvedPrefabs are read once, off the UI thread, by LoadParsedMapDataAsync; the
     // zone maths over every prefab runs off it too.
-    private async System.Threading.Tasks.Task GenerateBuildingBlockedZonesForCurrentMap(string? folderPath, JsonElement mapRoot, JsonElement? resolvedRoot)
+    private async System.Threading.Tasks.Task GenerateBuildingBlockedZonesForCurrentMap(string? folderPath, JsonElement mapRoot, IReadOnlyList<JsonElement>? resolvedPrefabs)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
         string outputPath = System.IO.Path.Combine(folderPath, "building_blocked.json");
 
         try
         {
-            var uri = new Uri("pack://application:,,,/Assets/Data/monument_bounds.json");
-            var streamInfo = Application.GetResourceStream(uri);
-            if (streamInfo == null) return;
-            using var reader = new StreamReader(streamInfo.Stream);
-            var dbJson = await reader.ReadToEndAsync();
-            var boundsDb = JsonSerializer.Deserialize<Dictionary<string, BoundsDBEntry>>(dbJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var boundsDb = BuildingBlockedBounds.Value;
             if (boundsDb == null) return;
 
             if (!mapRoot.TryGetProperty("prefabs", out var prefabs) || prefabs.ValueKind != JsonValueKind.Array) return;
@@ -219,10 +226,7 @@ public partial class MainWindow
             var allPrefabs = new List<JsonElement>();
             foreach (var p in prefabs.EnumerateArray()) allPrefabs.Add(p);
 
-            if (resolvedRoot is { ValueKind: JsonValueKind.Array } resolved)
-            {
-                foreach (var p in resolved.EnumerateArray()) allPrefabs.Add(p);
-            }
+            if (resolvedPrefabs != null) allPrefabs.AddRange(resolvedPrefabs);
 
             var finalSpheres = new List<BuildingBlockedSphere>();
             var finalBoxes = new List<BuildingBlockedBox>();

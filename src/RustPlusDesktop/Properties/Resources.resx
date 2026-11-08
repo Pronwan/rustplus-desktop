@@ -3626,6 +3626,12 @@ Please pair this server first.</value>
   <data name="UiLayersNeedsParsedMap" xml:space="preserve">
     <value>Needs the parsed map file</value>
   </data>
+  <data name="UiLayersShowAll" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <data name="UiLayersHideAll" xml:space="preserve">
+    <value>Hide all</value>
+  </data>
   <data name="UiLayersOpacity" xml:space="preserve">
     <value>Opacity</value>
   </data>

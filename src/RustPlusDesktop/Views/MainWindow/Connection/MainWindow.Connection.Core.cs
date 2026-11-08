@@ -506,8 +506,15 @@ public partial class MainWindow
         }
     }
 
+    private async Task PrimeChatAsync(Func<CancellationToken, Task> prime, string logTag)
+    {
+        try { await prime(default); }
+        catch (Exception ex) { AppendLog($"{logTag} prime error: {ex.Message}"); }
+    }
+
     internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
     {
+        Services.Map.MemoryProbe.Mark("connect: start", restart: true);
         _ownCloudRestoreReady = false;
 
         if (_isSoftConnecting)
@@ -628,6 +635,7 @@ public partial class MainWindow
                 AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
                 await _rust.ConnectAsync(_vm.Selected);
                 AppendLog("Connected.");
+                Services.Map.MemoryProbe.Mark("connect: socket open");
             }
             else
             {
@@ -637,9 +645,7 @@ public partial class MainWindow
 
             TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
 
-            // Shorter initial delay — just enough for the WS to be ready
-            await Task.Delay(500);
-
+            // ConnectAsync returns once the server has answered a request, so the socket is ready.
             var real = _rust as RustPlusClientReal;
             if (real != null)
             {
@@ -661,13 +667,6 @@ public partial class MainWindow
 
             _lastChatTsForCurrentServer = null;
 
-            if (real != null)
-            {
-                try { await real.PrimeTeamChatAsync(); }
-                catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
-                try { await real.PrimeClanChatAsync(); }
-                catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
-            }
 
             if (showBusy)
             {
@@ -683,6 +682,13 @@ public partial class MainWindow
                 UpdateServerStatusAsync(),
                 LoadTeamAsync()
             };
+
+            // Nothing above needs the chat history, so it no longer holds the map back.
+            if (real != null)
+            {
+                initTasks.Add(PrimeChatAsync(real.PrimeTeamChatAsync, "[chat]"));
+                initTasks.Add(PrimeChatAsync(real.PrimeClanChatAsync, "[clan]"));
+            }
             
             // Rehydrate local cache immediately (sync)
             RehydrateDevicesFromStorageInto(_vm.Selected);
@@ -719,10 +725,12 @@ public partial class MainWindow
 
 
             await mapTask;
+            Services.Map.MemoryProbe.Mark("connect: map loaded");
             if (showBusy)
                 _vm!.BusyText = "Synchronizing server data…";
 
             await Task.WhenAll(initTasks);
+            Services.Map.MemoryProbe.Mark("connect: server data loaded");
             
             // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
             await Dispatcher.InvokeAsync(() =>
@@ -757,6 +765,7 @@ public partial class MainWindow
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
             AppendLog($"Connection initialization complete. Server: {connectedProfile.Name}");
+            Services.Map.MemoryProbe.Mark("connect: marked connected");
 
             _ = StartServerEventTrackingAsync();
             _ = Services.Social.SocialApi.UpdateActiveListingServerAsync(connectedProfile.Name);
@@ -840,6 +849,7 @@ public partial class MainWindow
             _statusTimer.Start();
 
             StartTeamPolling();
+            Services.Map.MemoryProbe.Mark("connect: finished");
             if (_overlayToolsVisible)
             {
                 RebuildOverlayTeamBar();

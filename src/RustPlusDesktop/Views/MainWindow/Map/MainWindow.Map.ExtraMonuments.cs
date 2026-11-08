@@ -64,8 +64,30 @@ public partial class MainWindow
         });
     }
 
-    // mapRoot / resolvedRoot are read once, off the UI thread, by LoadParsedMapDataAsync.
-    private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath, JsonElement mapRoot, JsonElement? resolvedRoot)
+    /// <summary>The extra monument a prefab stands for, or null. Both arguments in lower case.</summary>
+    private static string? ExtraMonumentNameOf(string category, string id)
+    {
+        if (category == "iceberg") return "Iceberg";
+        if (category == "oasis") return "Oasis";
+        if (id.StartsWith("water_well", StringComparison.OrdinalIgnoreCase)) return "Water Well";
+        if (id.StartsWith("ice_lake", StringComparison.OrdinalIgnoreCase)) return "Ice Lake";
+        if (id.StartsWith("jungle_ruins", StringComparison.OrdinalIgnoreCase)) return "Jungle Ruins";
+        if (id.StartsWith("ue_jungle_swamp", StringComparison.OrdinalIgnoreCase)) return "Jungle Swamp";
+        if (id.StartsWith("cave_", StringComparison.OrdinalIgnoreCase)) return "Cave";
+        if (category == "lake") return "Lake";
+        return null; // "Jungle Ziggurat" among them: the API already returns it
+    }
+
+    /// <summary>Whether anything on the 2D map reads this entry of map_resolved.json; few of its 100,000 do.</summary>
+    private static bool IsResolvedPrefabUsed(JsonElement prefab)
+    {
+        string id = ReadString(prefab, "i").ToLowerInvariant();
+        return ExtraMonumentNameOf(ReadString(prefab, "c").ToLowerInvariant(), id) != null
+            || IsBuildingBlockedPrefab(id);
+    }
+
+    // mapRoot / resolvedPrefabs are read once, off the UI thread, by LoadParsedMapDataAsync.
+    private void GenerateAndLoadExtraMonumentsForCurrentMap(string? folderPath, JsonElement mapRoot, IReadOnlyList<JsonElement>? resolvedPrefabs)
     {
         if (string.IsNullOrWhiteSpace(folderPath)) return;
         try
@@ -74,51 +96,23 @@ public partial class MainWindow
             double half = root.TryGetProperty("size", out var sizeEl) ? sizeEl.GetDouble() * 0.5 : _worldSizeS * 0.5;
             var extras = new List<ExtraMonument>();
 
-            void AddPrefab(JsonElement el, string name)
+            void AddIfExtra(JsonElement el)
             {
-                if (!TryReadPoint(el, out double x, out double y)) return;
+                string? name = ExtraMonumentNameOf(ReadString(el, "c").ToLowerInvariant(), ReadString(el, "i").ToLowerInvariant());
+                if (name == null || !TryReadPoint(el, out double x, out double y)) return;
                 extras.Add(new ExtraMonument { X = x + half, Y = y + half, Name = name });
             }
 
             if (root.TryGetProperty("prefabs", out var prefabs) && prefabs.ValueKind == JsonValueKind.Array)
             {
-                foreach (var el in prefabs.EnumerateArray())
-                {
-                    string c = ReadString(el, "c").ToLowerInvariant();
-                    string i = ReadString(el, "i").ToLowerInvariant();
-                    if (c == "iceberg") AddPrefab(el, "Iceberg");
-                    else if (c == "oasis") AddPrefab(el, "Oasis");
-                    else if (i.StartsWith("water_well", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Water Well");
-                    else if (i.StartsWith("ice_lake", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Ice Lake");
-                    else if (i.StartsWith("jungle_ruins", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Ruins");
-                    else if (i.StartsWith("ue_jungle_swamp", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Swamp");
-                    else if (i.StartsWith("cave_", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Cave");
-                    else if (c == "lake") AddPrefab(el, "Lake");
-                    else if (i.Contains("ziggurat")) continue; // already returned by API as "Jungle Ziggurat"
-                }
+                foreach (var el in prefabs.EnumerateArray()) AddIfExtra(el);
             }
 
             // Fallback: scan map_resolved.json for extra monuments missed by map_data.json
             // (handles maps processed by older Program.cs versions that didn't include oasis in isOfInterest)
-            if (resolvedRoot is { } resolved)
+            if (resolvedPrefabs != null)
             {
-                if (resolved.ValueKind == JsonValueKind.Array)
-                {
-                    foreach (var el in resolved.EnumerateArray())
-                    {
-                        string c = ReadString(el, "c").ToLowerInvariant();
-                        string i = ReadString(el, "i").ToLowerInvariant();
-                        if (c == "oasis") AddPrefab(el, "Oasis");
-                        else if (c == "iceberg") AddPrefab(el, "Iceberg");
-                        else if (i.StartsWith("water_well", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Water Well");
-                        else if (i.StartsWith("ice_lake", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Ice Lake");
-                        else if (i.StartsWith("jungle_ruins", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Ruins");
-                        else if (i.StartsWith("ue_jungle_swamp", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Jungle Swamp");
-                        else if (i.StartsWith("cave_", StringComparison.OrdinalIgnoreCase)) AddPrefab(el, "Cave");
-                        else if (c == "lake") AddPrefab(el, "Lake");
-                        else if (i.Contains("ziggurat")) continue; // already returned by API as "Jungle Ziggurat"
-                    }
-                }
+                foreach (var el in resolvedPrefabs) AddIfExtra(el);
             }
 
             if (root.TryGetProperty("rockClusters", out var rocks) && rocks.ValueKind == JsonValueKind.Array)
@@ -148,6 +142,45 @@ public partial class MainWindow
         catch (Exception ex)
         {
             AppendLog($"[3D Map] Failed to generate extra monuments: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Whether this folder's extra monuments and building-blocked zones can be used as they are.
+    /// Generating them walks every prefab on the map. The app counts as an input because the
+    /// rules, and the monument bounds they read, ship inside it.
+    /// </summary>
+    private static bool AreGeneratedMapFilesCurrent(string folderPath)
+    {
+        var inputs = new List<string>
+        {
+            Path.Combine(folderPath, Services.Map.MapDataSlices.MapDataFileName),
+            Path.Combine(folderPath, "map_resolved.json")
+        };
+        if (Environment.ProcessPath is { } app) inputs.Add(app);
+
+        return Services.Map.ParsedMapDataCache.AreOutputsCurrent(
+            new[] { Path.Combine(folderPath, ExtraMonumentsFileName), Path.Combine(folderPath, "building_blocked.json") },
+            inputs);
+    }
+
+    /// <summary>Shows the extra monuments already generated for this folder; false if that failed.</summary>
+    private bool TryLoadGeneratedExtraMonuments(string folderPath)
+    {
+        try
+        {
+            var extras = JsonSerializer.Deserialize<List<ExtraMonument>>(
+                File.ReadAllText(Path.Combine(folderPath, ExtraMonumentsFileName)),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (extras == null) return false;
+
+            StoreAndMergeExtraMonuments(extras);
+            BuildMonumentOverlays();
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return false;
         }
     }
 

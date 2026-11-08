@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.1.1 HOTFIX -->
+                            <!-- v11.2.0 RELEASE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_1_1"
+                            <Border x:Name="Card_v11_2_0"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,62 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.1.1 | Cache Key Isolation &amp; UI Freeze Fix"
+                                            <TextBlock Text="v11.2.0 | High-Performance Map Engine, Monument Toggles &amp; Lite Build"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            This release brings massive engine performance optimizations with monitor refresh rate synchronized panning, complete idle redraw pausing for near-zero background CPU usage, 33% faster map connections, granular extra monument toggles, and our ultra-lightweight "Lite" distribution.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Display-Rate Map Zoom &amp; Pan:</Run>
+                                        Map zooming and panning now follow your monitor's display refresh rate directly without stutter, and continuous animations no longer starve mouse or scroll inputs.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Idle Redraw Optimization:</Run>
+                                        App rendering now halts completely while idle, drastically lowering background CPU and GPU energy consumption.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; 33% Faster Map Connections:</Run>
+                                        Connecting to servers with parsed maps is significantly faster due to streaming JSON parsing, shared icon caching, and direct runtime execution.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Extra Monument Filter Toggles:</Run>
+                                        Added individual toggle switches for extra monument categories along with quick Show All and Hide All buttons.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Default "Lite" Distribution:</Run>
+                                        The application installer now ships as a lean, ultra-lightweight build with on-demand 3D model streaming, saving hundreds of megabytes of download size.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.1.1 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_1_1"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.1.1 | Cache Key Isolation &amp; UI Freeze Fix"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

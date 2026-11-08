@@ -383,6 +383,8 @@ public sealed class PlayerWipeTrackerService : IAsyncDisposable
     public long StorageBytes => _store.StorageBytes;
     public bool HasCurrentWipeMap => _serverKey is not null && _wipeKey is not null && _store.HasWipeMap(_serverKey, _wipeKey);
 
+    public bool HasWipeMap(string serverKey, string wipeKey) => _store.HasWipeMap(serverKey, wipeKey);
+
     public void SaveCurrentWipeMap(TrackerWipeMap map)
     {
         if (_serverKey is not null && _wipeKey is not null)

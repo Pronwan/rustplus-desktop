@@ -263,6 +263,9 @@ public partial class MainWindow
         catch { }
     }
 
+    /// <summary>The wipe whose map is being encoded, so a second map shown meanwhile does not repeat it.</summary>
+    private volatile string? _wipeMapBeingSaved;
+
     private void SaveCurrentPlayerWipeMap()
     {
         if (ImgMap.Source is not BitmapSource bitmap ||
@@ -281,36 +284,58 @@ public partial class MainWindow
         if (string.IsNullOrWhiteSpace(serverKey) || string.IsNullOrWhiteSpace(wipeKey))
             return;
 
-        try
-        {
-            using var stream = new MemoryStream();
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-            encoder.Save(stream);
-            var monuments = _monData
-                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                .Select(m => new TrackerMonument(m.Name, m.X, m.Y))
-                .ToList();
+        // A wipe keeps its first map, so this usually has nothing to do. It runs on every map shown.
+        if (_playerWipeTracker.HasWipeMap(serverKey, wipeKey) && !_serverWipeMaps.NeedsWipeMapUpload(serverKey, wipeKey))
+            return;
+        if (_wipeMapBeingSaved == wipeKey) return;
+        _wipeMapBeingSaved = wipeKey;
 
-            var mapData = new TrackerWipeMap(
-                stream.ToArray(),
-                _worldSizeS,
-                _worldRectPx.X,
-                _worldRectPx.Y,
-                _worldRectPx.Width,
-                _worldRectPx.Height,
-                GetCurrentMapPaddingWorld() / 2.0,
-                monuments);
+        var monuments = _monData
+            .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+            .Select(m => new TrackerMonument(m.Name, m.X, m.Y))
+            .ToList();
+        int worldSize = _worldSizeS;
+        var worldRect = _worldRectPx;
+        double padding = GetCurrentMapPaddingWorld() / 2.0;
+        var wipeStartedAt = _vm?.Selected?.WipeTime;
 
-            // Persist locally (feeds the tracker preview), then upload via the
-            // dedicated, decoupled service (base map + monuments).
-            _playerWipeTracker.SaveWipeMap(serverKey, wipeKey, mapData, _vm?.Selected?.WipeTime);
-            _serverWipeMaps.QueueUploadWipeMap(serverKey, wipeKey, mapData, _vm?.Selected?.WipeTime);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
+        void EncodeAndSave()
         {
-            AppendLog($"[Server Wipe Map] Could not process wipe map: {ex.Message}");
+            try
+            {
+                using var stream = new MemoryStream();
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                encoder.Save(stream);
+
+                var mapData = new TrackerWipeMap(
+                    stream.ToArray(),
+                    worldSize,
+                    worldRect.X,
+                    worldRect.Y,
+                    worldRect.Width,
+                    worldRect.Height,
+                    padding,
+                    monuments);
+
+                // Persist locally (feeds the tracker preview), then upload via the
+                // dedicated, decoupled service (base map + monuments).
+                _playerWipeTracker.SaveWipeMap(serverKey, wipeKey, mapData, wipeStartedAt);
+                _serverWipeMaps.QueueUploadWipeMap(serverKey, wipeKey, mapData, wipeStartedAt);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
+            {
+                Dispatcher.BeginInvoke(() => AppendLog($"[Server Wipe Map] Could not process wipe map: {ex.Message}"));
+            }
+            finally
+            {
+                _wipeMapBeingSaved = null;
+            }
         }
+
+        // Encoding a full map takes seconds; it froze the window just as the map appeared.
+        if (bitmap.IsFrozen) _ = Task.Run(EncodeAndSave);
+        else EncodeAndSave();
     }
 
     private static BitmapImage? DecodeMap(byte[]? bytes)

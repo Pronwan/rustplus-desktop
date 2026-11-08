@@ -918,14 +918,15 @@ namespace RustPlusDesk.Views
             // map_data.json runs to ~90 MB and every overlay below reads from it: read it
             // (and map_resolved.json) once, off the UI thread, instead of once per overlay on it.
             var mapRoot = await Services.Map.ParsedMapDataCache.LoadAsync(folderPath);
-            using var resolvedDoc = await Services.Map.ParsedMapDataCache.ParseFileAsync(Path.Combine(folderPath, "map_resolved.json"));
             if (selectionVersion != _mapSelectionVersion) return;
-            JsonElement? resolvedRoot = resolvedDoc?.RootElement;
 
-            if (mapRoot is { } root)
+            if (mapRoot is { } root && !(AreGeneratedMapFilesCurrent(folderPath) && TryLoadGeneratedExtraMonuments(folderPath)))
             {
-                GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedRoot);
-                await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedRoot);
+                var resolvedPrefabs = await Services.Map.ParsedMapDataCache.ReadPrefabsAsync(Path.Combine(folderPath, "map_resolved.json"), IsResolvedPrefabUsed);
+                if (selectionVersion != _mapSelectionVersion) return;
+
+                GenerateAndLoadExtraMonumentsForCurrentMap(folderPath, root, resolvedPrefabs);
+                await GenerateBuildingBlockedZonesForCurrentMap(folderPath, root, resolvedPrefabs);
                 if (selectionVersion != _mapSelectionVersion) return;
             }
             LoadBuildingBlockedZonesForCurrentMap(folderPath);
@@ -960,6 +961,7 @@ namespace RustPlusDesk.Views
                         ShowMapBasic(bi);
                         ReprojectOverlaysToCurrentMap();
                         Services.Map.MemoryProbe.RecordAndFollowUp($"render applied ({bi.PixelWidth}x{bi.PixelHeight})");
+                        Services.Map.MapMemoryTrim.Schedule();
                         RedrawMapReferenceLayers();
                         RefreshAllOverlayScales();
                         RefreshMonumentOverlayPositions();

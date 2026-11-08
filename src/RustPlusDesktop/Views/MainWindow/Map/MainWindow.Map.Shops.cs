@@ -184,7 +184,15 @@ public partial class MainWindow
         foreach (var fe in _shopEls.Values)
         {
             fe.RenderTransformOrigin = new Point(0.5, 0.5);
-            fe.RenderTransform = new ScaleTransform(scale, scale);
+            if (fe.RenderTransform is ScaleTransform { IsFrozen: false } transform)
+            {
+                transform.ScaleX = scale;
+                transform.ScaleY = scale;
+            }
+            else
+            {
+                fe.RenderTransform = new ScaleTransform(scale, scale);
+            }
         }
     }
 
@@ -526,7 +534,7 @@ public partial class MainWindow
                         var bi = icon.Source as System.Windows.Media.Imaging.BitmapImage;
                         if (bi == null || bi.UriSource.ToString() != iconUri)
                         {
-                            icon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(iconUri));
+                            icon.Source = Services.Map.MapIconCache.Get(iconUri);
                         }
                     }
 

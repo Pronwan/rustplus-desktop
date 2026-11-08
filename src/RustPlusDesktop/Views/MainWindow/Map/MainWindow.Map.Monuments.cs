@@ -41,23 +41,46 @@ public partial class MainWindow
         {
             foreach (string name in types)
             {
-                var checkBox = new CheckBox
+                var toggle = new Wpf.Ui.Controls.ToggleSwitch
                 {
                     Content = name,
                     IsChecked = !TrackingService.IsExtraMonumentTypeHidden(name),
-                    Margin = new Thickness(0, 0, 0, 0),
+                    Margin = new Thickness(0, 4, 0, 4),
                     Tag = name,
                     ToolTip = name,
-                    Width = 174,   // two per row in the Layers flyout
-                    HorizontalContentAlignment = HorizontalAlignment.Left
+                    HorizontalAlignment = HorizontalAlignment.Left
                 };
-                checkBox.Checked += LayerExtraMonumentFilter_Changed;
-                checkBox.Unchecked += LayerExtraMonumentFilter_Changed;
-                PnlLayerExtraMonumentFilters.Children.Add(checkBox);
+                toggle.Checked += LayerExtraMonumentFilter_Changed;
+                toggle.Unchecked += LayerExtraMonumentFilter_Changed;
+                PnlLayerExtraMonumentFilters.Children.Add(toggle);
             }
         }
 
         _loadingLayerControls = false;
+        UpdateLayerExtraMonumentBulkButtons();
+    }
+
+    /// <summary>Show all and hide all, each greyed out once it has nothing left to do.</summary>
+    private void UpdateLayerExtraMonumentBulkButtons()
+    {
+        var toggles = PnlLayerExtraMonumentFilters.Children.OfType<Wpf.Ui.Controls.ToggleSwitch>().ToList();
+        BtnLayerExtraShowAll.IsEnabled = toggles.Any(t => t.IsChecked != true);
+        BtnLayerExtraHideAll.IsEnabled = toggles.Any(t => t.IsChecked == true);
+    }
+
+    private void BtnLayerExtraMonumentsAll_Click(object sender, RoutedEventArgs e)
+    {
+        bool show = ReferenceEquals(sender, BtnLayerExtraShowAll);
+        var toggles = PnlLayerExtraMonumentFilters.Children.OfType<Wpf.Ui.Controls.ToggleSwitch>().ToList();
+
+        // One save and one redraw for the lot, rather than one per switch.
+        TrackingService.SetExtraMonumentTypesHidden(toggles.Select(t => (string)t.Tag), !show);
+        _loadingLayerControls = true;
+        foreach (var toggle in toggles) toggle.IsChecked = show;
+        _loadingLayerControls = false;
+
+        RebuildExtraMonumentOverlay();
+        UpdateLayerExtraMonumentBulkButtons();
     }
 
     private void CmbLayerMonumentStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -84,9 +107,10 @@ public partial class MainWindow
 
     private void LayerExtraMonumentFilter_Changed(object sender, RoutedEventArgs e)
     {
-        if (_loadingLayerControls || sender is not CheckBox { Tag: string name } checkBox) return;
-        TrackingService.SetExtraMonumentTypeHidden(name, checkBox.IsChecked != true);
+        if (_loadingLayerControls || sender is not Wpf.Ui.Controls.ToggleSwitch { Tag: string name } toggle) return;
+        TrackingService.SetExtraMonumentTypeHidden(name, toggle.IsChecked != true);
         RebuildExtraMonumentOverlay();
+        UpdateLayerExtraMonumentBulkButtons();
     }
 
     private void ChkLayerAutoLoadShops_Changed(object sender, RoutedEventArgs e)
@@ -251,7 +275,7 @@ public partial class MainWindow
                 // Custom Train Icon
                 var img = new Image
                 {
-                    Source = new BitmapImage(new Uri("pack://application:,,,/Assets/icons/assets_markers_train.png")),
+                    Source = Services.Map.MapIconCache.Get("pack://application:,,,/Assets/icons/assets_markers_train.png"),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 0, 8, 0),
@@ -264,7 +288,7 @@ public partial class MainWindow
                 // Standard Monument Icon
                 var img = new Image
                 {
-                    Source = new BitmapImage(new Uri(uri)),
+                    Source = Services.Map.MapIconCache.Get(uri),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 0, 8, 0),

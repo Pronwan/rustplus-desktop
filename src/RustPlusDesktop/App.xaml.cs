@@ -42,6 +42,13 @@ public partial class App : Application
     [STAThread]
     private static void Main(string[] args)
     {
+        // A parser run is a child process of this app, not a second app: nothing below applies.
+        if (MapParserHost.TryRun(args, out int parserExitCode))
+        {
+            Environment.Exit(parserExitCode);
+            return;
+        }
+
         VelopackApp.Build().Run();
 
         CrashReporter.Initialize();

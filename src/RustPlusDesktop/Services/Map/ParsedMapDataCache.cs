@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -36,6 +37,33 @@ public static class ParsedMapDataCache
         return null;
     }
 
+    /// <summary>
+    /// Whether files generated from others can be used as they are: every output exists, and
+    /// none is older than any input that exists.
+    /// </summary>
+    public static bool AreOutputsCurrent(IEnumerable<string> outputs, IEnumerable<string> inputs)
+    {
+        DateTime newestInput = DateTime.MinValue;
+        foreach (string input in inputs)
+        {
+            if (!File.Exists(input)) continue;
+            DateTime written = File.GetLastWriteTimeUtc(input);
+            if (written > newestInput) newestInput = written;
+        }
+
+        foreach (string output in outputs)
+        {
+            if (!File.Exists(output) || File.GetLastWriteTimeUtc(output) < newestInput) return false;
+        }
+        return true;
+    }
+
+    /// <summary>Forgets the loaded map, for when the app leaves it.</summary>
+    public static void Clear()
+    {
+        lock (Gate) _entry = null;
+    }
+
     /// <summary>Loads (or returns the cached) overlay data for this map folder off the calling thread.</summary>
     public static async Task<JsonElement?> LoadAsync(string? folder)
     {
@@ -68,18 +96,30 @@ public static class ParsedMapDataCache
         }
     }
 
-    /// <summary>Parses a JSON file off the calling thread; null when missing or unreadable.</summary>
-    public static Task<JsonDocument?> ParseFileAsync(string path) => Task.Run(() =>
+    /// <summary>
+    /// The entries of a prefab array file that <paramref name="keep"/> accepts, off the calling
+    /// thread; null when missing or unreadable.
+    ///
+    /// Reads one entry at a time. Parsing map_resolved.json as a document rented buffers of
+    /// several times its size from the shared ArrayPool, which keeps them after the document is
+    /// disposed, where no collection can reach them: nearly 200 MB for a 19 MB file.
+    /// </summary>
+    public static Task<List<JsonElement>?> ReadPrefabsAsync(string path, Func<JsonElement, bool> keep) => Task.Run(async () =>
     {
         if (!File.Exists(path)) return null;
         try
         {
-            using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            return JsonDocument.Parse(fs);
+            var kept = new List<JsonElement>();
+            await using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            await foreach (var prefab in JsonSerializer.DeserializeAsyncEnumerable<JsonElement>(fs).ConfigureAwait(false))
+            {
+                if (keep(prefab)) kept.Add(prefab);
+            }
+            return kept;
         }
         catch
         {
-            return (JsonDocument?)null;
+            return (List<JsonElement>?)null;
         }
     });
 
