@@ -759,15 +759,31 @@ public partial class MainWindow
 
     private bool _isAnimatingMap = false;
 
-    // Smoothly fly to a world coordinate (x,y) with a zoom dip
-    internal async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
+    private bool _flyHooked;
+    private TimeSpan _flyLastFrame;
+    private double _flyElapsed, _flyDuration, _flySinceOverlayRefresh;
+    private double _flyStartPx, _flyStartPy, _flyDx, _flyDy;
+    private double _flyStartSx, _flyStartSy, _flyTargetSx, _flyTargetSy;
+    private double _flyHostCx, _flyHostCy, _flyS, _flyOffX, _flyOffY;
+    private bool _flyDip;
+
+    /// <summary>
+    /// Smoothly flies to a world coordinate (x,y), with a zoom dip when the target is far.
+    /// It steps once per displayed frame on real time. It used to take 30 or 60 steps of
+    /// Task.Delay(16), which the 15.6 ms Windows timer rounds up to 31 ms, so the zoom in
+    /// and out ran at about 32 fps. A frame moves only the matrix; markers rescale every 40 ms.
+    /// </summary>
+    internal void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
     {
-        if (_worldSizeS <= 0) return;
+        if (_worldSizeS <= 0 || WebViewHost == null) return;
 
         if (!keepTracking) StopTracking(); // Reset any active follow-lock when manually animating somewhere else
-        
-        _isAnimatingMap = false; // Stop any current animation
-        await Task.Delay(20);    // Give it a moment to stop
+
+        // This replaces whatever was moving the map, including an earlier fly-to.
+        _isZooming = false;
+        _zoomAnimationTarget = -1;
+        _isFlinging = false;
+        _isSpringingBack = false;
         _isAnimatingMap = true;
 
         var targetP = WorldToImagePx(targetX, targetY);
@@ -795,69 +811,125 @@ public partial class MainWindow
         double dist = Math.Sqrt(dx * dx + dy * dy);
         bool shouldDip = allowDip && dist > 500; // Only dip if allowed and target is far away
 
+        _flyStartPx = startPx; _flyStartPy = startPy;
+        _flyDx = dx; _flyDy = dy;
+        _flyStartSx = startSx; _flyStartSy = startSy;
+        _flyTargetSx = targetSx; _flyTargetSy = targetSy;
+        _flyHostCx = hostCx; _flyHostCy = hostCy;
+        _flyS = s; _flyOffX = offX; _flyOffY = offY;
+        _flyDip = shouldDip;
+        // The step counts were meant as 16 ms frames: 30 and 60 of them.
+        _flyDuration = fast ? 0.5 : 1.0;
+        _flyElapsed = 0;
+        _flySinceOverlayRefresh = 0;
+
+        ApplyFlyStep(0);
+
+        if (_flyHooked) return;
+        _flyHooked = true;
+        _flyLastFrame = TimeSpan.Zero;
+        CompositionTarget.Rendering += OnFlyFrame;
+    }
+
+    private void OnFlyFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _flyLastFrame) return;
+        bool firstFrame = _flyLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _flyLastFrame).TotalSeconds;
+        _flyLastFrame = frameTime;
+        // A stalled frame pauses the flight rather than making it leap.
+        dt = Math.Clamp(dt, 0.001, 0.034);
+
+        if (!_isAnimatingMap || _scene == null)
+        {
+            EndFlyAnimation();
+            return;
+        }
+
         try
         {
-            int steps = fast ? 30 : 60; // Faster steps for better responsiveness
-            for (int i = 0; i <= steps; i++)
+            _flyElapsed += dt;
+            double t = Math.Min(1.0, _flyElapsed / _flyDuration);
+            ApplyFlyStep(t);
+
+            if (t >= 1.0)
             {
-                if (!_isAnimatingMap) break;
-
-                double t = i / (double)steps;
-                double ease = t * t * (3 - 2 * t); // Smoothstep
-
-                // Interpolate position
-                double curPx = startPx + dx * ease;
-                double curPy = startPy + dy * ease;
-
-                // Base linear lerp of scale
-                double baseSx = startSx + (targetSx - startSx) * ease;
-                double baseSy = startSy + (targetSy - startSy) * ease;
-
-                double curSx = baseSx;
-                double curSy = baseSy;
-
-                if (shouldDip)
-                {
-                    // Parabola for the zoom dip (peaks at 1.0 when ease=0.5)
-                    double zoomDip = 4 * ease * (1 - ease); 
-                    
-                    // Pronounced zoom out: dip towards 0.6 scale in the middle
-                    double dipScale = 0.6;
-                    curSx = baseSx - (baseSx - dipScale) * zoomDip;
-                    curSy = baseSy - (baseSy - dipScale) * zoomDip;
-
-                    // Don't zoom out too far if already zoomed out
-                    if (curSx > baseSx) curSx = baseSx; 
-                    if (curSy > baseSy) curSy = baseSy;
-                }
-
-                var m = MapTransform.Matrix;
-                m.M11 = curSx;
-                m.M22 = curSy;
-                m.OffsetX = (hostCx - offX) / s - curSx * curPx;
-                m.OffsetY = (hostCy - offY) / s - curSy * curPy;
-                MapTransform.Matrix = m;
-
-                if (i % 2 == 0) // Update UI every other frame
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
-
-                await Task.Delay(16);
+                EndFlyAnimation();
+                return;
             }
 
+            _flySinceOverlayRefresh += dt;
+            if (_flySinceOverlayRefresh >= ZoomOverlayRefreshSeconds)
+            {
+                _flySinceOverlayRefresh = 0;
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+            }
+        }
+        catch
+        {
+            EndFlyAnimation();
+        }
+    }
+
+    private void ApplyFlyStep(double t)
+    {
+        double ease = t * t * (3 - 2 * t); // Smoothstep
+
+        // Interpolate position
+        double curPx = _flyStartPx + _flyDx * ease;
+        double curPy = _flyStartPy + _flyDy * ease;
+
+        // Base linear lerp of scale
+        double baseSx = _flyStartSx + (_flyTargetSx - _flyStartSx) * ease;
+        double baseSy = _flyStartSy + (_flyTargetSy - _flyStartSy) * ease;
+
+        double curSx = baseSx;
+        double curSy = baseSy;
+
+        if (_flyDip)
+        {
+            // Parabola for the zoom dip (peaks at 1.0 when ease=0.5)
+            double zoomDip = 4 * ease * (1 - ease);
+
+            // Pronounced zoom out: dip towards 0.6 scale in the middle
+            double dipScale = 0.6;
+            curSx = baseSx - (baseSx - dipScale) * zoomDip;
+            curSy = baseSy - (baseSy - dipScale) * zoomDip;
+
+            // Don't zoom out too far if already zoomed out
+            if (curSx > baseSx) curSx = baseSx;
+            if (curSy > baseSy) curSy = baseSy;
+        }
+
+        var m = MapTransform.Matrix;
+        m.M11 = curSx;
+        m.M22 = curSy;
+        m.OffsetX = (_flyHostCx - _flyOffX) / _flyS - curSx * curPx;
+        m.OffsetY = (_flyHostCy - _flyOffY) / _flyS - curSy * curPy;
+        MapTransform.Matrix = m;
+    }
+
+    private void EndFlyAnimation()
+    {
+        if (_flyHooked)
+        {
+            _flyHooked = false;
+            CompositionTarget.Rendering -= OnFlyFrame;
+        }
+        _isAnimatingMap = false;
+
+        try
+        {
             // Final snap
             RefreshAllOverlayScales();
             RefreshMonumentOverlayPositions();
             CenterMiniMapOnPlayer();
-        }
-        catch { }
-        finally
-        {
-            _isAnimatingMap = false;
             RefreshGridLineThickness();
         }
+        catch { }
     }
 
     // Weltpunkt (x,y) in die Mitte des sichtbaren Bereichs schieben - Zoom bleibt unveraendert
