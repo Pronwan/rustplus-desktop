@@ -239,128 +239,138 @@ public partial class MainWindow
         return (minOffsetX, maxOffsetX, minOffsetY, maxOffsetY);
     }
 
+    private Vector _glideVelocity;
+    private bool _glideHooked;
+    private TimeSpan _glideLastFrame;
+
     /// <summary>
-    /// Glides the map smoothly following mouse release velocity with friction damping and boundary resistance.
+    /// Glides the map along the release velocity with friction, rubber-banding past the edges,
+    /// then springs back inside the bounds. Both steps run on displayed frames: they used to
+    /// wait on Task.Delay(16), which the 15.6 ms Windows timer rounds up to 31 ms, so the
+    /// glide ran at about 32 fps and off the display's beat. Each frame only moves the matrix,
+    /// so the UI thread stays free for mouse and wheel input.
     /// </summary>
-    private async void StartKineticFling(Vector startVel)
+    private void StartKineticFling(Vector startVel)
     {
         if (_scene == null || _isPanning || _isAnimatingMap) return;
+        _glideVelocity = startVel;
         _isFlinging = true;
-        var vel = startVel;
-        var lastTime = DateTime.UtcNow;
+        _isSpringingBack = false;
+        HookGlide();
+    }
+
+    private bool IsOutsideMapBounds()
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var m = MapTransform.Matrix;
+        return m.OffsetX < minX - 0.5 || m.OffsetX > maxX + 0.5 || m.OffsetY < minY - 0.5 || m.OffsetY > maxY + 0.5;
+    }
+
+    private void HookGlide()
+    {
+        if (_glideHooked) return;
+        _glideHooked = true;
+        _glideLastFrame = TimeSpan.Zero;
+        CompositionTarget.Rendering += OnGlideFrame;
+    }
+
+    private void UnhookGlide()
+    {
+        if (!_glideHooked) return;
+        _glideHooked = false;
+        CompositionTarget.Rendering -= OnGlideFrame;
+    }
+
+    private void OnGlideFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _glideLastFrame) return;
+        bool firstFrame = _glideLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _glideLastFrame).TotalSeconds;
+        _glideLastFrame = frameTime;
+        // A stalled frame pauses the glide rather than making it leap.
+        dt = Math.Clamp(dt, 0.001, 0.034);
+
+        if (_scene == null || _isPanning || _isAnimatingMap || (!_isFlinging && !_isSpringingBack))
+        {
+            _isFlinging = false;
+            _isSpringingBack = false;
+            UnhookGlide();
+            return;
+        }
 
         try
         {
-            while (_isFlinging && !_isPanning && !_isAnimatingMap && vel.Length > 12)
-            {
-                await Task.Delay(16);
-                if (!_isFlinging || _isPanning || _isAnimatingMap || _scene == null) break;
-
-                var now = DateTime.UtcNow;
-                double dt = (now - lastTime).TotalSeconds;
-                lastTime = now;
-                if (dt <= 0 || dt > 0.1) dt = 0.016;
-
-                var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-                var curM = MapTransform.Matrix;
-
-                bool outOfBoundsX = curM.OffsetX < minX || curM.OffsetX > maxX;
-                bool outOfBoundsY = curM.OffsetY < minY || curM.OffsetY > maxY;
-
-                if (outOfBoundsX || outOfBoundsY)
-                {
-                    vel *= Math.Pow(0.0001, dt);
-                    if (vel.Length < 35)
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    vel *= Math.Pow(0.006, dt);
-                }
-
-                if (_isPanning || !_isFlinging) break;
-
-                var dHost = vel * dt;
-                var dScene = HostDeltaToSceneDelta(dHost);
-
-                var m = MapTransform.Matrix;
-                m.Translate(dScene.X, dScene.Y);
-                MapTransform.Matrix = m;
-                CenterMiniMapOnPlayer();
-            }
+            if (_isFlinging) StepFling(dt);
+            else StepSpringBack(dt);
         }
-        catch { }
-        finally
+        catch
         {
             _isFlinging = false;
-            if (!_isPanning && !_isSpringingBack)
-            {
-                var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-                var curM = MapTransform.Matrix;
-                if (curM.OffsetX < minX || curM.OffsetX > maxX || curM.OffsetY < minY || curM.OffsetY > maxY)
-                {
-                    SpringBackToBoundsAnimated();
-                }
-            }
+            _isSpringingBack = false;
+            UnhookGlide();
         }
+    }
+
+    private void StepFling(double dt)
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var curM = MapTransform.Matrix;
+        bool outside = curM.OffsetX < minX || curM.OffsetX > maxX || curM.OffsetY < minY || curM.OffsetY > maxY;
+
+        // Past the edge the glide drags hard, like a rubber band, before springing back.
+        _glideVelocity *= Math.Pow(outside ? 0.0001 : 0.006, dt);
+
+        if (_glideVelocity.Length < (outside ? 35 : 12))
+        {
+            _isFlinging = false;
+            _isSpringingBack = IsOutsideMapBounds();
+            if (!_isSpringingBack) UnhookGlide();
+            return;
+        }
+
+        var dScene = HostDeltaToSceneDelta(_glideVelocity * dt);
+        curM.Translate(dScene.X, dScene.Y);
+        MapTransform.Matrix = curM;
+        CenterMiniMapOnPlayer();
+    }
+
+    private void StepSpringBack(double dt)
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var m = MapTransform.Matrix;
+        double targetX = Math.Clamp(m.OffsetX, minX, maxX);
+        double targetY = Math.Clamp(m.OffsetY, minY, maxY);
+
+        if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
+        {
+            m.OffsetX = targetX;
+            m.OffsetY = targetY;
+            MapTransform.Matrix = m;
+            CenterMiniMapOnPlayer();
+            _isSpringingBack = false;
+            UnhookGlide();
+            return;
+        }
+
+        // Closes 18% of the gap per 60 Hz frame, on real time so the speed does not follow the refresh rate.
+        double k = 1.0 - Math.Pow(0.82, dt * 60.0);
+        m.OffsetX += (targetX - m.OffsetX) * k;
+        m.OffsetY += (targetY - m.OffsetY) * k;
+        MapTransform.Matrix = m;
+        CenterMiniMapOnPlayer();
     }
 
     /// <summary>
     /// Smoothly springs back to within allowed matrix offset bounds when outside (elastic rebound).
     /// </summary>
-    private async void SpringBackToBoundsAnimated()
+    private void SpringBackToBoundsAnimated()
     {
-        if (_scene == null || _isPanning || _isAnimatingMap || _isSpringingBack) return;
-
-        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-        var curM = MapTransform.Matrix;
-
-        double targetX = Math.Clamp(curM.OffsetX, minX, maxX);
-        double targetY = Math.Clamp(curM.OffsetY, minY, maxY);
-
-        double diffX = targetX - curM.OffsetX;
-        double diffY = targetY - curM.OffsetY;
-
-        if (Math.Abs(diffX) < 1.0 && Math.Abs(diffY) < 1.0)
-            return;
-
+        if (_scene == null || _isPanning || _isAnimatingMap || _isSpringingBack || _isFlinging) return;
+        if (!IsOutsideMapBounds()) return;
         _isSpringingBack = true;
-        try
-        {
-            for (int i = 0; i < 24; i++)
-            {
-                if (!_isSpringingBack || _isPanning || _isAnimatingMap || _scene == null) break;
-
-                var m = MapTransform.Matrix;
-                double dX = (targetX - m.OffsetX) * 0.18;
-                double dY = (targetY - m.OffsetY) * 0.18;
-
-                if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
-                {
-                    m.OffsetX = targetX;
-                    m.OffsetY = targetY;
-                    MapTransform.Matrix = m;
-                    CenterMiniMapOnPlayer();
-                    break;
-                }
-
-                if (_isPanning || !_isSpringingBack) break;
-
-                m.OffsetX += dX;
-                m.OffsetY += dY;
-                MapTransform.Matrix = m;
-                CenterMiniMapOnPlayer();
-
-                await Task.Delay(16);
-            }
-        }
-        catch { }
-        finally
-        {
-            _isSpringingBack = false;
-        }
+        HookGlide();
     }
 
     private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
