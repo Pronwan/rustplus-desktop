@@ -25,7 +25,7 @@ on:
       lite_build:
         description: "Leave the 3D models out of the package. Only once the bridge release is out and the app can download them."
         required: true
-        default: false
+        default: true
         type: boolean
       create_github_release:
         description: "Create or update a GitHub Release with installer artifacts."
