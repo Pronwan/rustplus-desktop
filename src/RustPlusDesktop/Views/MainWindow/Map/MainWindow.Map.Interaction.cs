@@ -93,7 +93,20 @@ public partial class MainWindow
     private Point _zoomAnimationScenePivot;
     private bool _isZooming = false;
 
-    private async void ZoomAtHostPositionAnimated(Point hostPos, double factor)
+    private bool _zoomHooked;
+    private TimeSpan _zoomLastFrame;
+    private double _zoomSinceOverlayRefresh;
+
+    /// <summary>The marker pass is the costly part of a zoom step, so it runs at most this often.</summary>
+    private const double ZoomOverlayRefreshSeconds = 0.04;
+
+    /// <summary>
+    /// Eases the zoom toward its target once per displayed frame. It used to step on
+    /// Task.Delay(14), off the display's beat. A frame moves only the matrix; markers rescale
+    /// on a 40 ms cadence, because rescaling them every frame is what once starved mouse and
+    /// wheel input. When the zoom settles outside the pan bounds, the map springs back.
+    /// </summary>
+    private void ZoomAtHostPositionAnimated(Point hostPos, double factor)
     {
         if (_scene == null) return;
 
@@ -104,6 +117,10 @@ public partial class MainWindow
             ZoomAtHostPosition(hostPos, factor);
             return;
         }
+
+        // A glide would fight the zoom's pivot anchoring; the zoom springs back itself when it ends.
+        _isFlinging = false;
+        _isSpringingBack = false;
 
         double curScale = MapTransform.Matrix.M11;
         double baseScale = (_isZooming && _zoomAnimationTarget > 0) ? _zoomAnimationTarget : curScale;
@@ -116,67 +133,92 @@ public partial class MainWindow
         if (_isZooming) return;
         _isZooming = true;
 
-        var lastTime = DateTime.UtcNow;
-        int frame = 0;
+        if (_zoomHooked) return;
+        _zoomHooked = true;
+        _zoomLastFrame = TimeSpan.Zero;
+        _zoomSinceOverlayRefresh = 0;
+        CompositionTarget.Rendering += OnZoomFrame;
+    }
+
+    private void OnZoomFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _zoomLastFrame) return;
+        bool firstFrame = _zoomLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _zoomLastFrame).TotalSeconds;
+        _zoomLastFrame = frameTime;
+        dt = Math.Clamp(dt, 0.001, 0.05);
+
+        // Immediately yield control if user started panning or requested stop
+        if (_scene == null || !_isZooming || _isPanning || _zoomAnimationTarget <= 0)
+        {
+            EndZoomAnimation();
+            return;
+        }
 
         try
         {
-            while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
+            var (s, offX, offY) = GetViewboxScaleAndOffset();
+            var curM = MapTransform.Matrix;
+            double curS = curM.M11;
+
+            // Continuous exponential approach curve
+            double easeFactor = 1.0 - Math.Pow(0.00008, dt);
+            double nextScale = curS + (_zoomAnimationTarget - curS) * easeFactor;
+            bool done = Math.Abs(_zoomAnimationTarget - nextScale) < 0.001;
+            if (done) nextScale = _zoomAnimationTarget;
+
+            // Perfectly anchor the scene pivot under the cursor with zero jitter
+            curM.M11 = nextScale;
+            curM.M22 = nextScale;
+            curM.OffsetX = (_zoomAnimationHostPivot.X - offX) / s - nextScale * _zoomAnimationScenePivot.X;
+            curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
+            MapTransform.Matrix = curM;
+
+            if (done)
             {
-                await Task.Delay(14);
-                // Immediately yield control if user started panning or requested stop
-                if (_scene == null || !_isZooming || _isPanning) break;
-
-                var now = DateTime.UtcNow;
-                double dt = Math.Min(0.05, Math.Max(0.001, (now - lastTime).TotalSeconds));
-                lastTime = now;
-
-                var (s, offX, offY) = GetViewboxScaleAndOffset();
-                var curM = MapTransform.Matrix;
-                double curS = curM.M11;
-
-                // Continuous exponential approach curve
-                double easeFactor = 1.0 - Math.Pow(0.00008, dt);
-                double nextScale = curS + (_zoomAnimationTarget - curS) * easeFactor;
-
-                if (Math.Abs(_zoomAnimationTarget - nextScale) < 0.001)
-                {
-                    nextScale = _zoomAnimationTarget;
-                }
-
-                // Double-check pan state before applying any offset adjustments
-                if (_isPanning || !_isZooming) break;
-
-                // Perfectly anchor the scene pivot under the cursor with zero jitter
-                curM.M11 = nextScale;
-                curM.M22 = nextScale;
-                curM.OffsetX = (_zoomAnimationHostPivot.X - offX) / s - nextScale * _zoomAnimationScenePivot.X;
-                curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
-                MapTransform.Matrix = curM;
-
-                frame++;
-                if (frame % 3 == 0)
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
+                EndZoomAnimation();
+                return;
             }
 
+            _zoomSinceOverlayRefresh += dt;
+            if (_zoomSinceOverlayRefresh >= ZoomOverlayRefreshSeconds)
+            {
+                _zoomSinceOverlayRefresh = 0;
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+            }
+        }
+        catch
+        {
+            EndZoomAnimation();
+        }
+    }
+
+    private void EndZoomAnimation()
+    {
+        if (_zoomHooked)
+        {
+            _zoomHooked = false;
+            CompositionTarget.Rendering -= OnZoomFrame;
+        }
+        _isZooming = false;
+
+        try
+        {
             // Settle final layout only if user hasn't taken over with manual panning
-            if (!_isPanning)
+            if (_scene != null && !_isPanning)
             {
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
                 RefreshUserOverlayIcons();
                 CenterMiniMapOnPlayer();
+                SpringBackToBoundsAnimated(); // zooming out can leave the view past the edge
             }
-        }
-        catch { }
-        finally
-        {
-            _isZooming = false;
             RefreshGridLineThickness(); // the moving zoom left it close, not exact
         }
+        catch { }
     }
 
     /// <summary>
