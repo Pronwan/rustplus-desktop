@@ -14,6 +14,7 @@ All notable changes to Rust+ Desktop are documented in this file.
 
 ### 🐛 Bug Fixes & Stability
 
+- **logic**: save rule edits when a field is left, so the cloud gets them ([b46ae21](https://github.com/Pronwan/rustplus-desktop/commit/b46ae21981bb4d080bec2cd195ad65a0727d4774)) (Carsten Podszun)
 - **app**: stop the TC monitor loop, hide the webhook with a bot, guard the map key ([962dd37](https://github.com/Pronwan/rustplus-desktop/commit/962dd37be328335ee0f3a26e26f0837f92e901f9)) (Carsten Podszun)
 - **log**: stop the console filling with routine cloud and clan lines ([887dfea](https://github.com/Pronwan/rustplus-desktop/commit/887dfea911a9318f115e5f634b5684a2b700960f)) (Carsten Podszun)
 
@@ -22,7 +23,6 @@ All notable changes to Rust+ Desktop are documented in this file.
 Special thanks to: @Carsten Podszun
 
 **Full Changelog**: https://github.com/Pronwan/rustplus-desktop/compare/v11.2.1...v11.3.0
-All notable changes to Rust+ Desktop are documented in this file.
 
 ## [11.2.1](https://github.com/Pronwan/rustplus-desktop/releases/tag/v11.2.1) (2026-11-08)
 

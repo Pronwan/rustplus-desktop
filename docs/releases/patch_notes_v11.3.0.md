@@ -23,6 +23,7 @@ Hey @everyone! 🎉
 #### 🛠️ Fixes
 * A paired TC monitor no longer queries the game every few seconds.
 * The mini-map key keeps working while you're in game.
+* Logic Engine rule edits save immediately when leaving a field, ensuring changes sync to the cloud reliably.
 * Routine background messages no longer flood the console.
 
 ---
