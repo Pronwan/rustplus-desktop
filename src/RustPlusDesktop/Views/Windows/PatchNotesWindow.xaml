@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.2.1 HOTFIX -->
+                            <!-- v11.2.2 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_2_1"
+                            <Border x:Name="Card_v11_2_2"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,80 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.2.1 | Display-Frame Map Animations &amp; Inertia"
+                                            <TextBlock Text="v11.2.2 | Custom Keybinds, Rule Messages &amp; Smarter Cloud 24/7"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            Set your own keys for the 3D map and the builders, let Logic Engine rules report back in chat, and Cloud 24/7 now keeps your rules and automations running while the app is closed.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <TextBlock Text="For everyone" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource Accent}" Margin="0,8,0,8"/>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Custom Keybinds:</Run>
+                                        Change every key of the 3D map, Base Builder and Ship Builder. Open the keyboard icon next to Controls, or Keys in the builder toolbar. The on-screen hints always show your keys, in your keyboard layout.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Logic Engine Messages:</Run>
+                                        New steps Send to Team Chat, Send to Clan Chat and Send to Discord, so a rule can tell your team when it is done. Send to Discord appears when a Discord bot or webhook is set up.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cleaner Log:</Run>
+                                        Routine cloud and clan messages no longer flood the console.
+                                    </TextBlock>
+
+                                    <TextBlock Text="Cloud 24/7 (Premium)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource Accent}" Margin="0,8,0,8"/>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Your Rules Keep Running:</Run>
+                                        Logic Engine rules and Device Automations (player proximity, in-game time) now run in the cloud while the app is closed, and stop the moment the app takes over again.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Oil Rig Triggers Fixed:</Run>
+                                        An alarm set as an oil rig trigger is no longer treated as a raid by the cloud, so it no longer sets off your Telegram call.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No Repeated Team Messages:</Run>
+                                        Closing the app no longer makes the cloud repeat online, offline or death messages the app had already sent.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Expired Login Warning:</Run>
+                                        Your Rust+ login runs out after about two weeks. When it does, Cloud 24/7, the website and a one-time Discord message tell you to log in again in the app.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Alerts Through Your Discord Bot:</Run>
+                                        Offline raid, crate and death alerts now go to your Advanced Discord Bot. The extra Discord webhook in Offline Alerts is no longer needed.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.2.1 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_2_1"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.2.1 | Display-Frame Map Animations &amp; Inertia"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

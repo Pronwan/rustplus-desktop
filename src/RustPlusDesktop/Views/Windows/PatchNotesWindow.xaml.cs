@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v11.2.1", Title = "Display-Frame Map Animations & Inertia", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v11_2_1" },
+                new PatchVersionNavModel { Version = "v11.2.2", Title = "Custom Keybinds, Rule Messages & Smarter Cloud 24/7", Category = "Hotfix", IsLatest = true, TargetCardName = "Card_v11_2_2" },
+                new PatchVersionNavModel { Version = "v11.2.1", Title = "Display-Frame Map Animations & Inertia", Category = "Hotfix", TargetCardName = "Card_v11_2_1" },
                 new PatchVersionNavModel { Version = "v11.2.0", Title = "Performance Overhaul, Monument Toggles & Lite Build", Category = "Update", TargetCardName = "Card_v11_2_0" },
                 new PatchVersionNavModel { Version = "v11.1.1", Title = "Cache Key Isolation & UI Freeze Fix", Category = "Hotfix", TargetCardName = "Card_v11_1_1" },
                 new PatchVersionNavModel { Version = "v11.1.0", Title = "Companion Proxy Pairing, History Sync & Map Fixes", Category = "Hotfix", TargetCardName = "Card_v11_1_0" },
