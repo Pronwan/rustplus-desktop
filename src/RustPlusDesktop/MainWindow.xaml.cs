@@ -591,6 +591,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Before the push listener exists: a backlog of alarms can land within seconds of
         // launch, and suppressing rig triggers must not wait for a server connection.
         RebuildOilRigTriggerRegistry();
+        InitializeCloudAutomationSync();
         InitializeTutorials();
         TeamMembers.CollectionChanged += (s, e) => UpdateClanMembersTeamStatus();
         // NEU: einmalig auf die aktuell ausgewählte Server-Instanz „umstecken“

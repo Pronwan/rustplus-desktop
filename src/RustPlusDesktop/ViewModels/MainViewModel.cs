@@ -719,7 +719,14 @@ public class MainViewModel : INotifyPropertyChanged
 
 
     public void NotifyCamerasChanged() => OnPropertyChanged(nameof(Selected));
-    public void Save() => StorageService.SaveProfiles(Servers);
+    public void Save()
+    {
+        StorageService.SaveProfiles(Servers);
+        Saved?.Invoke();
+    }
+
+    /// <summary>After every save, so the cloud can follow what was edited (see CloudAutomationSync).</summary>
+    public event Action? Saved;
 
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string? name = null)

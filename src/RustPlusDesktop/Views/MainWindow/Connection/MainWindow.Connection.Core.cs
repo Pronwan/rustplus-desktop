@@ -391,6 +391,7 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(connectedKey))
             {
                 _ = Services.Cloud.CloudChatCommandSync.SyncAsync(profile, connectedKey);
+                _ = Services.Cloud.CloudAutomationSync.SyncAsync(profile, connectedKey);
             }
 
             AppendLog("Soft-connect complete.");
@@ -808,6 +809,8 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(connectedKey))
             {
                 _ = Services.Cloud.CloudChatCommandSync.SyncAsync(connectedProfile, connectedKey);
+                // The rules the cloud runs while this app is closed (see CloudAutomationSync).
+                _ = Services.Cloud.CloudAutomationSync.SyncAsync(connectedProfile, connectedKey);
             }
 
             // Prime subscriptions for all devices to receive real-time updates.
