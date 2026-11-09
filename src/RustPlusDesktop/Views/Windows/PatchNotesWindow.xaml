@@ -266,7 +266,7 @@
 
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fixes:</Run>
-                                        A paired TC monitor no longer queries the game every few seconds, the mini-map key keeps working while you are in game, and routine background messages no longer flood the console.
+                                        A paired TC monitor no longer queries the game every few seconds, the mini-map key keeps working while you are in game, rule edits save reliably on field exit, and routine background messages no longer flood the console.
                                     </TextBlock>
 
                                     <TextBlock Text="Cloud 24/7 (Premium)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource Accent}" Margin="0,8,0,8"/>

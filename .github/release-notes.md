@@ -10,6 +10,7 @@
 
 ### 🐛 Bug Fixes & Stability
 
+- **logic**: save rule edits when a field is left, so the cloud gets them ([b46ae21](https://github.com/Pronwan/rustplus-desktop/commit/b46ae21981bb4d080bec2cd195ad65a0727d4774)) (Carsten Podszun)
 - **app**: stop the TC monitor loop, hide the webhook with a bot, guard the map key ([962dd37](https://github.com/Pronwan/rustplus-desktop/commit/962dd37be328335ee0f3a26e26f0837f92e901f9)) (Carsten Podszun)
 - **log**: stop the console filling with routine cloud and clan lines ([887dfea](https://github.com/Pronwan/rustplus-desktop/commit/887dfea911a9318f115e5f634b5684a2b700960f)) (Carsten Podszun)
 
