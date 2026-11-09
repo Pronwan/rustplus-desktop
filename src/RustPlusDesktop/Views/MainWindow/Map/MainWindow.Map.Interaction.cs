@@ -93,7 +93,20 @@ public partial class MainWindow
     private Point _zoomAnimationScenePivot;
     private bool _isZooming = false;
 
-    private async void ZoomAtHostPositionAnimated(Point hostPos, double factor)
+    private bool _zoomHooked;
+    private TimeSpan _zoomLastFrame;
+    private double _zoomSinceOverlayRefresh;
+
+    /// <summary>The marker pass is the costly part of a zoom step, so it runs at most this often.</summary>
+    private const double ZoomOverlayRefreshSeconds = 0.04;
+
+    /// <summary>
+    /// Eases the zoom toward its target once per displayed frame. It used to step on
+    /// Task.Delay(14), off the display's beat. A frame moves only the matrix; markers rescale
+    /// on a 40 ms cadence, because rescaling them every frame is what once starved mouse and
+    /// wheel input. When the zoom settles outside the pan bounds, the map springs back.
+    /// </summary>
+    private void ZoomAtHostPositionAnimated(Point hostPos, double factor)
     {
         if (_scene == null) return;
 
@@ -104,6 +117,10 @@ public partial class MainWindow
             ZoomAtHostPosition(hostPos, factor);
             return;
         }
+
+        // A glide would fight the zoom's pivot anchoring; the zoom springs back itself when it ends.
+        _isFlinging = false;
+        _isSpringingBack = false;
 
         double curScale = MapTransform.Matrix.M11;
         double baseScale = (_isZooming && _zoomAnimationTarget > 0) ? _zoomAnimationTarget : curScale;
@@ -116,67 +133,92 @@ public partial class MainWindow
         if (_isZooming) return;
         _isZooming = true;
 
-        var lastTime = DateTime.UtcNow;
-        int frame = 0;
+        if (_zoomHooked) return;
+        _zoomHooked = true;
+        _zoomLastFrame = TimeSpan.Zero;
+        _zoomSinceOverlayRefresh = 0;
+        CompositionTarget.Rendering += OnZoomFrame;
+    }
+
+    private void OnZoomFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _zoomLastFrame) return;
+        bool firstFrame = _zoomLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _zoomLastFrame).TotalSeconds;
+        _zoomLastFrame = frameTime;
+        dt = Math.Clamp(dt, 0.001, 0.05);
+
+        // Immediately yield control if user started panning or requested stop
+        if (_scene == null || !_isZooming || _isPanning || _zoomAnimationTarget <= 0)
+        {
+            EndZoomAnimation();
+            return;
+        }
 
         try
         {
-            while (Math.Abs(MapTransform.Matrix.M11 - _zoomAnimationTarget) > 0.001)
+            var (s, offX, offY) = GetViewboxScaleAndOffset();
+            var curM = MapTransform.Matrix;
+            double curS = curM.M11;
+
+            // Continuous exponential approach curve
+            double easeFactor = 1.0 - Math.Pow(0.00008, dt);
+            double nextScale = curS + (_zoomAnimationTarget - curS) * easeFactor;
+            bool done = Math.Abs(_zoomAnimationTarget - nextScale) < 0.001;
+            if (done) nextScale = _zoomAnimationTarget;
+
+            // Perfectly anchor the scene pivot under the cursor with zero jitter
+            curM.M11 = nextScale;
+            curM.M22 = nextScale;
+            curM.OffsetX = (_zoomAnimationHostPivot.X - offX) / s - nextScale * _zoomAnimationScenePivot.X;
+            curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
+            MapTransform.Matrix = curM;
+
+            if (done)
             {
-                await Task.Delay(14);
-                // Immediately yield control if user started panning or requested stop
-                if (_scene == null || !_isZooming || _isPanning) break;
-
-                var now = DateTime.UtcNow;
-                double dt = Math.Min(0.05, Math.Max(0.001, (now - lastTime).TotalSeconds));
-                lastTime = now;
-
-                var (s, offX, offY) = GetViewboxScaleAndOffset();
-                var curM = MapTransform.Matrix;
-                double curS = curM.M11;
-
-                // Continuous exponential approach curve
-                double easeFactor = 1.0 - Math.Pow(0.00008, dt);
-                double nextScale = curS + (_zoomAnimationTarget - curS) * easeFactor;
-
-                if (Math.Abs(_zoomAnimationTarget - nextScale) < 0.001)
-                {
-                    nextScale = _zoomAnimationTarget;
-                }
-
-                // Double-check pan state before applying any offset adjustments
-                if (_isPanning || !_isZooming) break;
-
-                // Perfectly anchor the scene pivot under the cursor with zero jitter
-                curM.M11 = nextScale;
-                curM.M22 = nextScale;
-                curM.OffsetX = (_zoomAnimationHostPivot.X - offX) / s - nextScale * _zoomAnimationScenePivot.X;
-                curM.OffsetY = (_zoomAnimationHostPivot.Y - offY) / s - nextScale * _zoomAnimationScenePivot.Y;
-                MapTransform.Matrix = curM;
-
-                frame++;
-                if (frame % 3 == 0)
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
+                EndZoomAnimation();
+                return;
             }
 
+            _zoomSinceOverlayRefresh += dt;
+            if (_zoomSinceOverlayRefresh >= ZoomOverlayRefreshSeconds)
+            {
+                _zoomSinceOverlayRefresh = 0;
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+            }
+        }
+        catch
+        {
+            EndZoomAnimation();
+        }
+    }
+
+    private void EndZoomAnimation()
+    {
+        if (_zoomHooked)
+        {
+            _zoomHooked = false;
+            CompositionTarget.Rendering -= OnZoomFrame;
+        }
+        _isZooming = false;
+
+        try
+        {
             // Settle final layout only if user hasn't taken over with manual panning
-            if (!_isPanning)
+            if (_scene != null && !_isPanning)
             {
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
                 RefreshUserOverlayIcons();
                 CenterMiniMapOnPlayer();
+                SpringBackToBoundsAnimated(); // zooming out can leave the view past the edge
             }
-        }
-        catch { }
-        finally
-        {
-            _isZooming = false;
             RefreshGridLineThickness(); // the moving zoom left it close, not exact
         }
+        catch { }
     }
 
     /// <summary>
@@ -239,128 +281,138 @@ public partial class MainWindow
         return (minOffsetX, maxOffsetX, minOffsetY, maxOffsetY);
     }
 
+    private Vector _glideVelocity;
+    private bool _glideHooked;
+    private TimeSpan _glideLastFrame;
+
     /// <summary>
-    /// Glides the map smoothly following mouse release velocity with friction damping and boundary resistance.
+    /// Glides the map along the release velocity with friction, rubber-banding past the edges,
+    /// then springs back inside the bounds. Both steps run on displayed frames: they used to
+    /// wait on Task.Delay(16), which the 15.6 ms Windows timer rounds up to 31 ms, so the
+    /// glide ran at about 32 fps and off the display's beat. Each frame only moves the matrix,
+    /// so the UI thread stays free for mouse and wheel input.
     /// </summary>
-    private async void StartKineticFling(Vector startVel)
+    private void StartKineticFling(Vector startVel)
     {
         if (_scene == null || _isPanning || _isAnimatingMap) return;
+        _glideVelocity = startVel;
         _isFlinging = true;
-        var vel = startVel;
-        var lastTime = DateTime.UtcNow;
+        _isSpringingBack = false;
+        HookGlide();
+    }
+
+    private bool IsOutsideMapBounds()
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var m = MapTransform.Matrix;
+        return m.OffsetX < minX - 0.5 || m.OffsetX > maxX + 0.5 || m.OffsetY < minY - 0.5 || m.OffsetY > maxY + 0.5;
+    }
+
+    private void HookGlide()
+    {
+        if (_glideHooked) return;
+        _glideHooked = true;
+        _glideLastFrame = TimeSpan.Zero;
+        CompositionTarget.Rendering += OnGlideFrame;
+    }
+
+    private void UnhookGlide()
+    {
+        if (!_glideHooked) return;
+        _glideHooked = false;
+        CompositionTarget.Rendering -= OnGlideFrame;
+    }
+
+    private void OnGlideFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _glideLastFrame) return;
+        bool firstFrame = _glideLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _glideLastFrame).TotalSeconds;
+        _glideLastFrame = frameTime;
+        // A stalled frame pauses the glide rather than making it leap.
+        dt = Math.Clamp(dt, 0.001, 0.034);
+
+        if (_scene == null || _isPanning || _isAnimatingMap || (!_isFlinging && !_isSpringingBack))
+        {
+            _isFlinging = false;
+            _isSpringingBack = false;
+            UnhookGlide();
+            return;
+        }
 
         try
         {
-            while (_isFlinging && !_isPanning && !_isAnimatingMap && vel.Length > 12)
-            {
-                await Task.Delay(16);
-                if (!_isFlinging || _isPanning || _isAnimatingMap || _scene == null) break;
-
-                var now = DateTime.UtcNow;
-                double dt = (now - lastTime).TotalSeconds;
-                lastTime = now;
-                if (dt <= 0 || dt > 0.1) dt = 0.016;
-
-                var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-                var curM = MapTransform.Matrix;
-
-                bool outOfBoundsX = curM.OffsetX < minX || curM.OffsetX > maxX;
-                bool outOfBoundsY = curM.OffsetY < minY || curM.OffsetY > maxY;
-
-                if (outOfBoundsX || outOfBoundsY)
-                {
-                    vel *= Math.Pow(0.0001, dt);
-                    if (vel.Length < 35)
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    vel *= Math.Pow(0.006, dt);
-                }
-
-                if (_isPanning || !_isFlinging) break;
-
-                var dHost = vel * dt;
-                var dScene = HostDeltaToSceneDelta(dHost);
-
-                var m = MapTransform.Matrix;
-                m.Translate(dScene.X, dScene.Y);
-                MapTransform.Matrix = m;
-                CenterMiniMapOnPlayer();
-            }
+            if (_isFlinging) StepFling(dt);
+            else StepSpringBack(dt);
         }
-        catch { }
-        finally
+        catch
         {
             _isFlinging = false;
-            if (!_isPanning && !_isSpringingBack)
-            {
-                var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-                var curM = MapTransform.Matrix;
-                if (curM.OffsetX < minX || curM.OffsetX > maxX || curM.OffsetY < minY || curM.OffsetY > maxY)
-                {
-                    SpringBackToBoundsAnimated();
-                }
-            }
+            _isSpringingBack = false;
+            UnhookGlide();
         }
+    }
+
+    private void StepFling(double dt)
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var curM = MapTransform.Matrix;
+        bool outside = curM.OffsetX < minX || curM.OffsetX > maxX || curM.OffsetY < minY || curM.OffsetY > maxY;
+
+        // Past the edge the glide drags hard, like a rubber band, before springing back.
+        _glideVelocity *= Math.Pow(outside ? 0.0001 : 0.006, dt);
+
+        if (_glideVelocity.Length < (outside ? 35 : 12))
+        {
+            _isFlinging = false;
+            _isSpringingBack = IsOutsideMapBounds();
+            if (!_isSpringingBack) UnhookGlide();
+            return;
+        }
+
+        var dScene = HostDeltaToSceneDelta(_glideVelocity * dt);
+        curM.Translate(dScene.X, dScene.Y);
+        MapTransform.Matrix = curM;
+        CenterMiniMapOnPlayer();
+    }
+
+    private void StepSpringBack(double dt)
+    {
+        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
+        var m = MapTransform.Matrix;
+        double targetX = Math.Clamp(m.OffsetX, minX, maxX);
+        double targetY = Math.Clamp(m.OffsetY, minY, maxY);
+
+        if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
+        {
+            m.OffsetX = targetX;
+            m.OffsetY = targetY;
+            MapTransform.Matrix = m;
+            CenterMiniMapOnPlayer();
+            _isSpringingBack = false;
+            UnhookGlide();
+            return;
+        }
+
+        // Closes 18% of the gap per 60 Hz frame, on real time so the speed does not follow the refresh rate.
+        double k = 1.0 - Math.Pow(0.82, dt * 60.0);
+        m.OffsetX += (targetX - m.OffsetX) * k;
+        m.OffsetY += (targetY - m.OffsetY) * k;
+        MapTransform.Matrix = m;
+        CenterMiniMapOnPlayer();
     }
 
     /// <summary>
     /// Smoothly springs back to within allowed matrix offset bounds when outside (elastic rebound).
     /// </summary>
-    private async void SpringBackToBoundsAnimated()
+    private void SpringBackToBoundsAnimated()
     {
-        if (_scene == null || _isPanning || _isAnimatingMap || _isSpringingBack) return;
-
-        var (minX, maxX, minY, maxY) = GetAllowedMatrixOffsetBounds();
-        var curM = MapTransform.Matrix;
-
-        double targetX = Math.Clamp(curM.OffsetX, minX, maxX);
-        double targetY = Math.Clamp(curM.OffsetY, minY, maxY);
-
-        double diffX = targetX - curM.OffsetX;
-        double diffY = targetY - curM.OffsetY;
-
-        if (Math.Abs(diffX) < 1.0 && Math.Abs(diffY) < 1.0)
-            return;
-
+        if (_scene == null || _isPanning || _isAnimatingMap || _isSpringingBack || _isFlinging) return;
+        if (!IsOutsideMapBounds()) return;
         _isSpringingBack = true;
-        try
-        {
-            for (int i = 0; i < 24; i++)
-            {
-                if (!_isSpringingBack || _isPanning || _isAnimatingMap || _scene == null) break;
-
-                var m = MapTransform.Matrix;
-                double dX = (targetX - m.OffsetX) * 0.18;
-                double dY = (targetY - m.OffsetY) * 0.18;
-
-                if (Math.Abs(targetX - m.OffsetX) < 0.5 && Math.Abs(targetY - m.OffsetY) < 0.5)
-                {
-                    m.OffsetX = targetX;
-                    m.OffsetY = targetY;
-                    MapTransform.Matrix = m;
-                    CenterMiniMapOnPlayer();
-                    break;
-                }
-
-                if (_isPanning || !_isSpringingBack) break;
-
-                m.OffsetX += dX;
-                m.OffsetY += dY;
-                MapTransform.Matrix = m;
-                CenterMiniMapOnPlayer();
-
-                await Task.Delay(16);
-            }
-        }
-        catch { }
-        finally
-        {
-            _isSpringingBack = false;
-        }
+        HookGlide();
     }
 
     private void WebViewHost_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -707,15 +759,31 @@ public partial class MainWindow
 
     private bool _isAnimatingMap = false;
 
-    // Smoothly fly to a world coordinate (x,y) with a zoom dip
-    internal async void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
+    private bool _flyHooked;
+    private TimeSpan _flyLastFrame;
+    private double _flyElapsed, _flyDuration, _flySinceOverlayRefresh;
+    private double _flyStartPx, _flyStartPy, _flyDx, _flyDy;
+    private double _flyStartSx, _flyStartSy, _flyTargetSx, _flyTargetSy;
+    private double _flyHostCx, _flyHostCy, _flyS, _flyOffX, _flyOffY;
+    private bool _flyDip;
+
+    /// <summary>
+    /// Smoothly flies to a world coordinate (x,y), with a zoom dip when the target is far.
+    /// It steps once per displayed frame on real time. It used to take 30 or 60 steps of
+    /// Task.Delay(16), which the 15.6 ms Windows timer rounds up to 31 ms, so the zoom in
+    /// and out ran at about 32 fps. A frame moves only the matrix; markers rescale every 40 ms.
+    /// </summary>
+    internal void CenterMapOnWorldAnimated(double targetX, double targetY, bool allowDip = true, bool fast = false, bool keepTracking = false, double? targetZoom = null)
     {
-        if (_worldSizeS <= 0) return;
+        if (_worldSizeS <= 0 || WebViewHost == null) return;
 
         if (!keepTracking) StopTracking(); // Reset any active follow-lock when manually animating somewhere else
-        
-        _isAnimatingMap = false; // Stop any current animation
-        await Task.Delay(20);    // Give it a moment to stop
+
+        // This replaces whatever was moving the map, including an earlier fly-to.
+        _isZooming = false;
+        _zoomAnimationTarget = -1;
+        _isFlinging = false;
+        _isSpringingBack = false;
         _isAnimatingMap = true;
 
         var targetP = WorldToImagePx(targetX, targetY);
@@ -743,69 +811,125 @@ public partial class MainWindow
         double dist = Math.Sqrt(dx * dx + dy * dy);
         bool shouldDip = allowDip && dist > 500; // Only dip if allowed and target is far away
 
+        _flyStartPx = startPx; _flyStartPy = startPy;
+        _flyDx = dx; _flyDy = dy;
+        _flyStartSx = startSx; _flyStartSy = startSy;
+        _flyTargetSx = targetSx; _flyTargetSy = targetSy;
+        _flyHostCx = hostCx; _flyHostCy = hostCy;
+        _flyS = s; _flyOffX = offX; _flyOffY = offY;
+        _flyDip = shouldDip;
+        // The step counts were meant as 16 ms frames: 30 and 60 of them.
+        _flyDuration = fast ? 0.5 : 1.0;
+        _flyElapsed = 0;
+        _flySinceOverlayRefresh = 0;
+
+        ApplyFlyStep(0);
+
+        if (_flyHooked) return;
+        _flyHooked = true;
+        _flyLastFrame = TimeSpan.Zero;
+        CompositionTarget.Rendering += OnFlyFrame;
+    }
+
+    private void OnFlyFrame(object? sender, EventArgs e)
+    {
+        // Rendering can fire more than once per frame; only the frame time tells them apart.
+        var frameTime = ((RenderingEventArgs)e).RenderingTime;
+        if (frameTime == _flyLastFrame) return;
+        bool firstFrame = _flyLastFrame == TimeSpan.Zero;
+        double dt = firstFrame ? 1.0 / 60 : (frameTime - _flyLastFrame).TotalSeconds;
+        _flyLastFrame = frameTime;
+        // A stalled frame pauses the flight rather than making it leap.
+        dt = Math.Clamp(dt, 0.001, 0.034);
+
+        if (!_isAnimatingMap || _scene == null)
+        {
+            EndFlyAnimation();
+            return;
+        }
+
         try
         {
-            int steps = fast ? 30 : 60; // Faster steps for better responsiveness
-            for (int i = 0; i <= steps; i++)
+            _flyElapsed += dt;
+            double t = Math.Min(1.0, _flyElapsed / _flyDuration);
+            ApplyFlyStep(t);
+
+            if (t >= 1.0)
             {
-                if (!_isAnimatingMap) break;
-
-                double t = i / (double)steps;
-                double ease = t * t * (3 - 2 * t); // Smoothstep
-
-                // Interpolate position
-                double curPx = startPx + dx * ease;
-                double curPy = startPy + dy * ease;
-
-                // Base linear lerp of scale
-                double baseSx = startSx + (targetSx - startSx) * ease;
-                double baseSy = startSy + (targetSy - startSy) * ease;
-
-                double curSx = baseSx;
-                double curSy = baseSy;
-
-                if (shouldDip)
-                {
-                    // Parabola for the zoom dip (peaks at 1.0 when ease=0.5)
-                    double zoomDip = 4 * ease * (1 - ease); 
-                    
-                    // Pronounced zoom out: dip towards 0.6 scale in the middle
-                    double dipScale = 0.6;
-                    curSx = baseSx - (baseSx - dipScale) * zoomDip;
-                    curSy = baseSy - (baseSy - dipScale) * zoomDip;
-
-                    // Don't zoom out too far if already zoomed out
-                    if (curSx > baseSx) curSx = baseSx; 
-                    if (curSy > baseSy) curSy = baseSy;
-                }
-
-                var m = MapTransform.Matrix;
-                m.M11 = curSx;
-                m.M22 = curSy;
-                m.OffsetX = (hostCx - offX) / s - curSx * curPx;
-                m.OffsetY = (hostCy - offY) / s - curSy * curPy;
-                MapTransform.Matrix = m;
-
-                if (i % 2 == 0) // Update UI every other frame
-                {
-                    RefreshAllOverlayScales();
-                    RefreshMonumentOverlayPositions();
-                }
-
-                await Task.Delay(16);
+                EndFlyAnimation();
+                return;
             }
 
+            _flySinceOverlayRefresh += dt;
+            if (_flySinceOverlayRefresh >= ZoomOverlayRefreshSeconds)
+            {
+                _flySinceOverlayRefresh = 0;
+                RefreshAllOverlayScales();
+                RefreshMonumentOverlayPositions();
+            }
+        }
+        catch
+        {
+            EndFlyAnimation();
+        }
+    }
+
+    private void ApplyFlyStep(double t)
+    {
+        double ease = t * t * (3 - 2 * t); // Smoothstep
+
+        // Interpolate position
+        double curPx = _flyStartPx + _flyDx * ease;
+        double curPy = _flyStartPy + _flyDy * ease;
+
+        // Base linear lerp of scale
+        double baseSx = _flyStartSx + (_flyTargetSx - _flyStartSx) * ease;
+        double baseSy = _flyStartSy + (_flyTargetSy - _flyStartSy) * ease;
+
+        double curSx = baseSx;
+        double curSy = baseSy;
+
+        if (_flyDip)
+        {
+            // Parabola for the zoom dip (peaks at 1.0 when ease=0.5)
+            double zoomDip = 4 * ease * (1 - ease);
+
+            // Pronounced zoom out: dip towards 0.6 scale in the middle
+            double dipScale = 0.6;
+            curSx = baseSx - (baseSx - dipScale) * zoomDip;
+            curSy = baseSy - (baseSy - dipScale) * zoomDip;
+
+            // Don't zoom out too far if already zoomed out
+            if (curSx > baseSx) curSx = baseSx;
+            if (curSy > baseSy) curSy = baseSy;
+        }
+
+        var m = MapTransform.Matrix;
+        m.M11 = curSx;
+        m.M22 = curSy;
+        m.OffsetX = (_flyHostCx - _flyOffX) / _flyS - curSx * curPx;
+        m.OffsetY = (_flyHostCy - _flyOffY) / _flyS - curSy * curPy;
+        MapTransform.Matrix = m;
+    }
+
+    private void EndFlyAnimation()
+    {
+        if (_flyHooked)
+        {
+            _flyHooked = false;
+            CompositionTarget.Rendering -= OnFlyFrame;
+        }
+        _isAnimatingMap = false;
+
+        try
+        {
             // Final snap
             RefreshAllOverlayScales();
             RefreshMonumentOverlayPositions();
             CenterMiniMapOnPlayer();
-        }
-        catch { }
-        finally
-        {
-            _isAnimatingMap = false;
             RefreshGridLineThickness();
         }
+        catch { }
     }
 
     // Weltpunkt (x,y) in die Mitte des sichtbaren Bereichs schieben - Zoom bleibt unveraendert
