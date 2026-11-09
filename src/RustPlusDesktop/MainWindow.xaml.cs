@@ -662,7 +662,14 @@ public partial class MainWindow : WpfUi.FluentWindow
                 _ = Task.Run(async () =>
                 {
                     var filled = await ServerIdBackfill.RunAsync(serversWithoutId, msg => Dispatcher.BeginInvoke(() => AppendLog(msg)));
-                    if (filled > 0) await Dispatcher.InvokeAsync(() => _vm.Save());
+                    if (filled > 0)
+                    {
+                        await Dispatcher.InvokeAsync(() => _vm.Save());
+                        // The cloud only learns an id through the pairing upload, and without
+                        // one its worker has no companion socket route for that server - and
+                        // direct connections are gone. Push the newly found ids straight away.
+                        await RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+                    }
                 });
             }
 
@@ -844,6 +851,11 @@ public partial class MainWindow : WpfUi.FluentWindow
         _pairing.RegistrationCompleted += (_, __) => Dispatcher.BeginInvoke(new Action(() =>
         {
             _vm.NotifyFcmChanged();
+            // A (re)registration writes a new Rust+ login token to the local config only.
+            // Upload it now, or the cloud keeps the old token, reports the login as expired
+            // and loses the companion socket the day servers stop taking direct connections.
+            // The sync checks consent and premium itself, so this is a no-op without them.
+            _ = RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
             if (!string.IsNullOrEmpty(TrackingService.SteamId64))
             {
                 ShowInfoSnackbar("Rust+ Companion Connected", $"Linked Steam ID: {TrackingService.SteamId64}", WpfUi.ControlAppearance.Success);
