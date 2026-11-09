@@ -8156,4 +8156,34 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0}님이 Ship Builder에서 &quot;{1}&quot;을(를) 함께 건조하자고 초대했습니다.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>팀 채팅으로 보내기</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>클랜 채팅으로 보내기</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Discord로 보내기</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>메시지 내용</value>
+  </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: 레이드 알림은 Advanced Discord Bot의 레이드 채널로, 석유 시추선 상자와 사망은 이벤트 채널로 전송됩니다. 이 앱이 닫혀 있어도 마찬가지입니다. 채널은 Discord Bot에서 설정하세요.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>이전 Discord 웹훅 - Discord 봇이 없을 때만 사용됩니다. 더 이상 사용하지 않으려면 비우세요.</value>
+  </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>온라인</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>사망</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Cloud 24/7의 도어 코드</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>이 앱이 닫혀 있을 때 클라우드가 코드 명령에 응답하도록 합니다. 코드는 rustplusdesktop.cloud에 암호화되어 저장되며, 끄면 삭제됩니다. Premium 전용.</value>
+  </data>
 </root>

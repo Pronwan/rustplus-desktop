@@ -5879,6 +5879,18 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiStartTimer" xml:space="preserve">
     <value>Timer starten</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>In Team-Chat senden</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>In Clan-Chat senden</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>An Discord senden</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Nachrichtentext</value>
+  </data>
   <data name="UiMinutes" xml:space="preserve">
     <value>Min</value>
   </data>
@@ -8325,5 +8337,23 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   </data>
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} lädt dich ein, „{1}“ im Ship Builder gemeinsam zu bauen.</value>
+  </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: Raid-Alarme gehen in den Raid-Kanal deines Advanced Discord Bots, Oil-Rig-Crates und Tode in seinen Events-Kanal - auch wenn diese App geschlossen ist. Die Kanäle richtest du unter Discord Bot ein.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Alter Discord-Webhook - wird nur ohne Discord-Bot verwendet. Leere das Feld, um ihn nicht mehr zu nutzen.</value>
+  </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Tode</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Türcodes in Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Erlaubt der Cloud, den Code-Befehl zu beantworten, wenn diese App geschlossen ist. Die Codes werden verschlüsselt auf rustplusdesktop.cloud gespeichert; abschalten entfernt sie wieder. Nur mit Premium.</value>
   </data>
 </root>

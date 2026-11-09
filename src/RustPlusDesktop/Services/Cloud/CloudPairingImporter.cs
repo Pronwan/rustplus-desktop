@@ -308,7 +308,12 @@ namespace RustPlusDesk.Services.Cloud
                         case "afk": profile.CmdAfk = value!; break;
                         case "promote": profile.CmdPromote = value!; break;
                         case "list": profile.CmdList = value!; break;
+                        // "upkeep" is where older versions kept the detail word.
                         case "upkeep": profile.CmdUpkeepDetail = value!; break;
+                        case "upkeepdetail": profile.CmdUpkeepDetail = value!; break;
+                        case "online": profile.CmdOnline = value!; break;
+                        case "deaths": profile.CmdDeaths = value!; break;
+                        case "oilrig": profile.CmdOilRig = value!; break;
                         case "base_codes": profile.CmdBaseCodes = value!; break;
                     }
                 }

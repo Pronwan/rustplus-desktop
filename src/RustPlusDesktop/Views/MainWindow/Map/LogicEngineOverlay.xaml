@@ -410,7 +410,33 @@
                                                                     <ComboBoxItem Content="{DynamicResource UiToggleDevice}" Tag="Toggle"/>
                                                                     <ComboBoxItem Content="{DynamicResource UiCheckAvailability}" Tag="CheckAvailability"/>
                                                                     <ComboBoxItem Content="{DynamicResource UiStartTimer}" Tag="StartTimer"/>
+                                                                    <ComboBoxItem Content="{DynamicResource UiSendTeamChat}" Tag="SendTeamChat"/>
+                                                                    <ComboBoxItem Content="{DynamicResource UiSendClanChat}" Tag="SendClanChat"/>
+                                                                    <!-- Only offered where it can arrive: a Discord bot or a webhook is set up. -->
+                                                                    <ComboBoxItem Content="{DynamicResource UiSendDiscord}" Tag="SendDiscord"
+                                                                                  Visibility="{Binding DataContext.IsLogicDiscordAvailable, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                                 </ComboBox>
+
+                                                                <!-- Message Config: one text, wherever it goes. -->
+                                                                <ui:TextBox Text="{Binding MessageText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="330" Margin="0,0,8,4"
+                                                                            MaxLength="250" PlaceholderText="{DynamicResource UiMessageTextPlaceholder}">
+                                                                    <ui:TextBox.Style>
+                                                                        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding StepType}" Value="SendTeamChat">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding StepType}" Value="SendClanChat">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding StepType}" Value="SendDiscord">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </ui:TextBox.Style>
+                                                                </ui:TextBox>
 
                                                                 <!-- Start Timer Config. Two rows, because the alarm text needs room:
                                                                      its label runs long in most languages and was cut off beside

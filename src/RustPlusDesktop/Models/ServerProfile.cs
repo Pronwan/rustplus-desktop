@@ -604,6 +604,22 @@ public class ServerProfile : INotifyPropertyChanged
         set { _cmdAfk = ValidateCommand(value, "afk"); OnProp(); }
     }
 
+    /// <summary>Who on the team is online and who is not - the whole team, which the team panel often cuts off.</summary>
+    private string _cmdOnline = "online";
+    public string CmdOnline
+    {
+        get => _cmdOnline;
+        set { _cmdOnline = ValidateCommand(value, "online"); OnProp(); }
+    }
+
+    /// <summary>The team's latest deaths, from the death log.</summary>
+    private string _cmdDeaths = "deaths";
+    public string CmdDeaths
+    {
+        get => _cmdDeaths;
+        set { _cmdDeaths = ValidateCommand(value, "deaths"); OnProp(); }
+    }
+
     private string _chatCommandPrefix = "!";
     public string ChatCommandPrefix
     {
@@ -644,6 +660,18 @@ public class ServerProfile : INotifyPropertyChanged
     {
         get => _cmdBaseCodes;
         set { _cmdBaseCodes = ValidateCommand(value, "code"); OnProp(); }
+    }
+
+    /// <summary>
+    /// Lets Cloud 24/7 answer the code command while the app is closed. Off unless switched on,
+    /// and Premium only: the codes leave this PC for it, stored encrypted on the platform.
+    /// Switching it off removes them from the cloud with the next sync.
+    /// </summary>
+    private bool _baseCodesInCloud;
+    public bool BaseCodesInCloud
+    {
+        get => _baseCodesInCloud;
+        set { _baseCodesInCloud = value; OnProp(); }
     }
 
     public const int MaxBaseCodes = 5;

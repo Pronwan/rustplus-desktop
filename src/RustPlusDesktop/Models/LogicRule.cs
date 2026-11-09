@@ -154,7 +154,7 @@ namespace RustPlusDesk.Models
 
     public class LogicStep : INotifyPropertyChanged
     {
-        private string _stepType = "Wait"; // Wait, Toggle, CheckAvailability, StartTimer
+        private string _stepType = "Wait"; // Wait, Toggle, CheckAvailability, StartTimer, SendTeamChat, SendClanChat, SendDiscord
         public string StepType
         {
             get => _stepType;
@@ -236,6 +236,17 @@ namespace RustPlusDesk.Models
             "LargeOilRig" => "Large Oil Rig",
             _ => null,
         };
+
+        /// <summary>
+        /// The text a SendTeamChat, SendClanChat or SendDiscord step sends - typically feedback
+        /// once the rule has done its work, so the team knows the turrets really are on.
+        /// </summary>
+        private string _messageText = "";
+        public string MessageText
+        {
+            get => _messageText;
+            set { _messageText = value ?? ""; OnProp(); }
+        }
 
         private int _waitSeconds = 10;
         public int WaitSeconds

@@ -668,6 +668,13 @@ namespace RustPlusDesk.Views
 #endif
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
+            // Decided on opening, not while typing: clearing the field must not make it vanish mid-edit.
+            // Hidden as well once the Discord bot is set up: the cloud then posts through the bot
+            // and never uses this webhook, so showing it only asks a question with no effect.
+            PnlLegacyDiscordWebhook.Visibility = string.IsNullOrWhiteSpace(TrackingService.DiscordWebhookUrl)
+                                                 || Services.DiscordBotListenerService.Instance.HasGuild
+                ? Visibility.Collapsed
+                : Visibility.Visible;
             var fcmMention = TrackingService.DiscordWebhookMention ?? "";
             ChkFcmMentionEveryone.IsChecked = fcmMention.Contains("@everyone");
             ChkFcmMentionHere.IsChecked = fcmMention.Contains("@here");

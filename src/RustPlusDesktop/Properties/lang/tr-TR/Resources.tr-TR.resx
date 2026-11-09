@@ -7211,4 +7211,34 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} seni Ship Builder&apos;da &quot;{1}&quot; gemisini birlikte inşa etmeye davet ediyor.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Takım Sohbetine Gönder</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Klan Sohbetine Gönder</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Discord'a Gönder</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Mesaj metni</value>
+  </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: Baskın uyarıları Advanced Discord Bot'unuzun baskın kanalına, petrol platformu sandıkları ve ölümler etkinlik kanalına gider - bu uygulama kapalıyken de. Kanalları Discord Bot altında ayarlayın.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Eski Discord webhook'u - yalnızca Discord botunuz yoksa kullanılır. Kullanmayı bırakmak için temizleyin.</value>
+  </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>Çevrimiçi</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Ölümler</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Cloud 24/7'de kapı kodları</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Bu uygulama kapalıyken bulutun kod komutunu yanıtlamasına izin verir. Kodlar rustplusdesktop.cloud üzerinde şifreli saklanır; kapatınca silinir. Yalnızca Premium.</value>
+  </data>
 </root>

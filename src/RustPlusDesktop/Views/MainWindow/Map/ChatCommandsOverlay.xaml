@@ -112,32 +112,21 @@
                              <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                              <ui:TextBox Grid.Row="2" Grid.Column="2" Text="{Binding CmdPromote}" Margin="0,4" VerticalAlignment="Center" />
 
-                             <!-- Deep Sea -->
-                             <TextBlock x:Name="CmdRowDeepSeaLabel" Grid.Row="3" Text="{DynamicResource DeepSeaCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock x:Name="CmdRowDeepSeaPrefix" Grid.Row="3" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox x:Name="CmdRowDeepSeaBox" Grid.Row="3" Grid.Column="2" Text="{Binding CmdDeepSea}" Margin="0,4" VerticalAlignment="Center" />
+                             <!-- Online: the whole team's status, which the team panel often cuts off -->
+                             <TextBlock Grid.Row="3" Text="{DynamicResource OnlineCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="3" Grid.Column="2" Text="{Binding CmdOnline}" Margin="0,4" VerticalAlignment="Center" />
 
-                             <!-- Cargo -->
-                             <TextBlock x:Name="CmdRowCargoLabel" Grid.Row="4" Text="{DynamicResource CargoShipCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock x:Name="CmdRowCargoPrefix" Grid.Row="4" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox x:Name="CmdRowCargoBox" Grid.Row="4" Grid.Column="2" Text="{Binding CmdCargo}" Margin="0,4" VerticalAlignment="Center" />
+                             <!-- Deaths: the team's latest, from the death log -->
+                             <TextBlock Grid.Row="4" Text="{DynamicResource DeathsCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
+                             <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
+                             <ui:TextBox Grid.Row="4" Grid.Column="2" Text="{Binding CmdDeaths}" Margin="0,4" VerticalAlignment="Center" />
 
                              <!-- Oil Rig -->
                              <TextBlock Grid.Row="5" Text="{DynamicResource OilRigCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
                              <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
                              <ui:TextBox Grid.Row="5" Grid.Column="2" Text="{Binding CmdOilRig}" Margin="0,4" VerticalAlignment="Center" />
 
-
-                             <!--  Heli — hidden on servers without event markers; the row is Auto-sized,
-                                   so collapsing all three cells removes it without leaving a gap.  -->
-                             <TextBlock x:Name="CmdRowHeliLabel" Grid.Row="6" Text="{DynamicResource PatrolHeliCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock x:Name="CmdRowHeliPrefix" Grid.Row="6" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox x:Name="CmdRowHeliBox" Grid.Row="6" Grid.Column="2" Text="{Binding CmdHeli}" Margin="0,4" VerticalAlignment="Center" />
-
-                             <!--  Vendor  -->
-                             <TextBlock x:Name="CmdRowVendorLabel" Grid.Row="7" Text="{DynamicResource TravellingVendorCommand}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
-                             <TextBlock x:Name="CmdRowVendorPrefix" Grid.Row="7" Grid.Column="1" Text="{Binding ChatCommandPrefix}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontWeight="Bold" Margin="0,0,4,0" />
-                             <ui:TextBox x:Name="CmdRowVendorBox" Grid.Row="7" Grid.Column="2" Text="{Binding CmdVendor}" Margin="0,4" VerticalAlignment="Center" />
 
                              <!-- Upkeep Detail -->
                              <TextBlock Grid.Row="8" Text="{DynamicResource UpkeepDetails}" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}" />
@@ -290,6 +279,12 @@
                                 <ui:TextBox Grid.Column="2" Text="{Binding CmdBaseCodes, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="3" Text="{DynamicResource BaseCodesCmdHint}" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontStyle="Italic" TextTrimming="CharacterEllipsis" />
                             </Grid>
+
+                            <!-- Off unless switched on, and Premium only (enabled in code-behind): the codes leave this PC for it. -->
+                            <CheckBox x:Name="ChkBaseCodesInCloud" Content="{DynamicResource BaseCodesInCloud}"
+                                      IsChecked="{Binding BaseCodesInCloud, Mode=TwoWay}"
+                                      Foreground="{DynamicResource TextPrimary}" Margin="0,6,0,0" />
+                            <TextBlock x:Name="TxtBaseCodesInCloudHint" Text="{DynamicResource BaseCodesInCloudHint}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="18,0,0,6" />
 
                             <ItemsControl ItemsSource="{Binding BaseCodes}">
                                 <ItemsControl.ItemTemplate>

@@ -47,6 +47,8 @@
                                FontSize="11.5" FontWeight="Medium" Foreground="#F59E0B" Margin="0,4,0,0" TextWrapping="Wrap"/>
                     <TextBlock x:Name="GlobalFeatureFlagNote" FontSize="11.5" FontWeight="SemiBold"
                                Foreground="#EF4444" Margin="0,4,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
+                    <TextBlock x:Name="LoginExpiredNote" FontSize="11.5" FontWeight="SemiBold"
+                               Foreground="#EF4444" Margin="0,4,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
                 </StackPanel>
                 <ui:Button Grid.Column="1" x:Name="BtnUpgrade" Content="{DynamicResource Cloud247Upgrade}"
                            Appearance="Primary" Visibility="Collapsed" Click="BtnUpgrade_Click"

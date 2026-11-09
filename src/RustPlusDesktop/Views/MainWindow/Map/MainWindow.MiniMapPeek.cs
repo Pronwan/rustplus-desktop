@@ -124,6 +124,16 @@ public partial class MainWindow
             !string.Equals(gesture, _peekGesture, StringComparison.OrdinalIgnoreCase))
             return false;
 
+        // The hotkey is registered with MOD_NOREPEAT, so every one of these is a fresh press. A
+        // fresh press while a peek is still running, or still marked as spent, means the release
+        // before it never reached us - with the game in front the hook and the key state can both
+        // miss it - and the old state would swallow this press and every one after it. Start over.
+        if (_peeking || _peekSpent)
+        {
+            _peekSpent = false;
+            EndMiniMapPeek();
+        }
+
         BeginMiniMapPeek();
         return true;
     }
@@ -139,7 +149,9 @@ public partial class MainWindow
     {
         // When the widget overlay or the minimap is not open, hotkey must not bring them back
         if (_deviceOverlay == null || !_deviceOverlay.IsLoaded || _miniMap == null || !_miniMap.IsLoaded || _peeking)
+        {
             return;
+        }
 
         // The key is auto-repeating into this while it is held, so a hold that has already
         // run out of time must not simply start again.

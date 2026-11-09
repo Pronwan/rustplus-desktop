@@ -8126,4 +8126,34 @@
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>يدعوك {0} إلى بناء &quot;{1}&quot; معًا في Ship Builder.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>إرسال إلى دردشة الفريق</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>إرسال إلى دردشة العشيرة</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>إرسال إلى Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>نص الرسالة</value>
+  </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: تُرسل تنبيهات الغارات إلى قناة الغارات في Advanced Discord Bot، وصناديق منصة النفط وحالات الوفاة إلى قناة الأحداث - حتى عندما يكون هذا التطبيق مغلقًا. اضبط القنوات ضمن Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Webhook قديم لـ Discord - يُستخدم فقط إذا لم يكن لديك بوت Discord. امسحه لإيقاف استخدامه.</value>
+  </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>الوفيات</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>رموز الأبواب في Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>يسمح للسحابة بالرد على أمر الرمز عندما يكون هذا التطبيق مغلقًا. تُخزَّن الرموز مشفّرة على rustplusdesktop.cloud، وإيقاف الخيار يحذفها. لمشتركي Premium فقط.</value>
+  </data>
 </root>

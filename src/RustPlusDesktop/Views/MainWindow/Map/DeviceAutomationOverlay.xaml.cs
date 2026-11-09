@@ -20,7 +20,16 @@ public partial class DeviceAutomationOverlay : UserControl
             DataContext = _vm;
             RefreshListBindings();
         };
+
+        // Edits saved only on close with the X, so Cloud 24/7 (which follows every save) ran an
+        // automation as it was before. Leaving a field saves, and so does closing by any route.
+        AddHandler(LostKeyboardFocusEvent, new System.Windows.Input.KeyboardFocusChangedEventHandler((_, _) => SaveSoon()), true);
+        IsVisibleChanged += (_, e) => { if (e.NewValue is false) SaveSoon(); };
     }
+
+    /// <summary>After the binding has written the field's value back, not before.</summary>
+    private void SaveSoon()
+        => Dispatcher.BeginInvoke(new System.Action(() => _vm?.Save()), System.Windows.Threading.DispatcherPriority.Background);
 
     public void RefreshListBindings()
     {

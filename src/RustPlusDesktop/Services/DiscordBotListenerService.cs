@@ -612,6 +612,12 @@ public class DiscordBotListenerService
         Log("[DiscordBotListener] Stopped listening to Discord queues.");
     }
 
+    /// <summary>Whether a Discord server with the Advanced Discord Bot is connected for this team.</summary>
+    public bool HasGuild
+    {
+        get { lock (_subscribedGuildIds) { return _isListening && _subscribedGuildIds.Count > 0; } }
+    }
+
     public async Task SendNotificationAsync(string notificationType, string message)
     {
         if (!_isNotificationMaster || !_isListening || _teamSteamIds.Count == 0) return;

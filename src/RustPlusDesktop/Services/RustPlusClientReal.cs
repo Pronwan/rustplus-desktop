@@ -1225,10 +1225,12 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
             _storageCache[entityId] = snap;
             StorageSnapshotReceived?.Invoke(entityId, snap);
-            _log?.Invoke($"[stor/event] {entityId} items={snap.Items.Count} upkeep={(snap.UpkeepSeconds?.ToString() ?? "null")} isTc={isTc}");
 
-            // TC-Spezial: Immer kurz nachhaken für den Upkeep, da Rust+ Events oft "einen Schritt hinterher" sind
-            if (isTc)
+            // A TC's broadcast can lag a step behind its upkeep, so it is checked once more shortly
+            // after. At most once a minute per cupboard: the answer to that check arrives as another
+            // TC event, and following every event with a check kept the two feeding each other - a
+            // request and a log line every few seconds for as long as the monitor was paired.
+            if (isTc && ShouldFollowUpTc(entityId))
             {
                 ScheduleEntityInfoPull(entityId, delayMs: 1500);
             }
@@ -1371,6 +1373,20 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
     private readonly Dictionary<uint, CancellationTokenSource> _entityPullTimers = new();
 
+    /// <summary>When each TC was last followed up after an event (see the storage event handler).</summary>
+    private readonly Dictionary<uint, DateTime> _tcFollowUps = new();
+
+    private bool ShouldFollowUpTc(uint entityId)
+    {
+        lock (_tcFollowUps)
+        {
+            var now = DateTime.UtcNow;
+            if (_tcFollowUps.TryGetValue(entityId, out var last) && now - last < TimeSpan.FromMinutes(1)) return false;
+            _tcFollowUps[entityId] = now;
+            return true;
+        }
+    }
+
     public void ScheduleEntityInfoPull(uint entityId, int delayMs = 2500)
     {
         if (entityId == 0) return;
@@ -1397,8 +1413,6 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
 
                 // <<< WICHTIG: exakt der gleiche Call wie beim Refresh-Button
                 await ProbeEntityAsync(entityId);
-
-                _log?.Invoke($"[stor/pull-sched] #{entityId} delayed ProbeEntityAsync executed");
             }
             catch (TaskCanceledException)
             {
@@ -1671,9 +1685,13 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             var (errorCode, errorMessage) = ReadResponseError(resObj);
             if (IsFailedResponse(resObj) || resObj is null)
             {
+                var previousError = LastClanLoadError;
                 LastClanLoadError = errorMessage ?? errorCode;
                 LastClanLoadStatus = IsNoClanError(errorCode, errorMessage) ? ClanLoadStatus.NoClan : ClanLoadStatus.Failed;
-                _log($"[get-clan-info] failed: {LastClanLoadError ?? "unknown error"}");
+                // Clan info is polled every few seconds, and a player without a clan answered
+                // no_clan to every poll - a line each time. Said once, until the answer changes.
+                if (!string.Equals(previousError, LastClanLoadError, StringComparison.Ordinal))
+                    _log($"[get-clan-info] failed: {LastClanLoadError ?? "unknown error"}");
                 return null;
             }
 

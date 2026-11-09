@@ -257,6 +257,7 @@ namespace RustPlusDesk.Views
                 ClanScoreText = clan.Score?.ToString() ?? "-";
                 LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
                 HasClanInfo = true;
+                _lastClanLoadLog = null;   // a later "no clan" is news again
                 IsClanNoClanState = false;
                 IsClanLoadErrorState = false;
 
@@ -577,10 +578,17 @@ namespace RustPlusDesk.Views
             IsClanLoadErrorState = loadFailed;
             LastClanPullTime = DateTime.Now.ToString("HH:mm:ss");
 
-            AppendLog(loadFailed
+            // Once per change, not per poll: the clan is asked for every few seconds.
+            var line = loadFailed
                 ? $"[clan-load] failed: {_real?.LastClanLoadError ?? "unknown error"}"
-                : "[clan-load] no clan: the player is not in a clan (no_clan)");
+                : "[clan-load] no clan: the player is not in a clan (no_clan)";
+            if (!string.Equals(line, _lastClanLoadLog, StringComparison.Ordinal))
+                AppendLog(line);
+            _lastClanLoadLog = line;
         }
+
+        /// <summary>The last clan state written to the log, so an unchanged one is not repeated.</summary>
+        private string? _lastClanLoadLog;
 
         private void BtnToggleClanView_Click(object sender, System.Windows.RoutedEventArgs e)
         {

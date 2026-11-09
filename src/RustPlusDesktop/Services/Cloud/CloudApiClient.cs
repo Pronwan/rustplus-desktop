@@ -130,6 +130,29 @@ namespace RustPlusDesk.Services.Cloud
         }
 
         /// <summary>
+        /// Whether every API call is written to the log, not only the failed ones. The app makes
+        /// a call every few seconds (presence, takeover, heartbeats), and two lines each buried
+        /// everything else in the console. Debug builds keep them, and RUSTPLUS_LOG_API=1 turns
+        /// them on in a release build; the traffic monitor records every call either way.
+        /// </summary>
+        internal static readonly bool LogEveryCall =
+#if DEBUG
+            true;
+#else
+            Environment.GetEnvironmentVariable("RUSTPLUS_LOG_API") == "1";
+#endif
+
+        /// <summary>One line per call while debugging; always one for a call that failed.</summary>
+        internal static void LogCall(string method, string path, int status, string reason, string? body = null)
+        {
+            bool ok = status is >= 200 and < 300;
+            if (ok && !LogEveryCall) return;
+            SupabaseAuthManager.AppendLog(ok
+                ? $"[Cloud/Debug] API {method} {path} -> {status} {reason}"
+                : $"[Cloud] API {method} {path} -> {status} {reason}" + (!string.IsNullOrWhiteSpace(body) ? $" ({body})" : ""));
+        }
+
+        /// <summary>
         /// Call an authenticated route without throwing, returning the status code
         /// alongside the body. Needed where the caller has to act on a specific status
         /// — notably 401, which means the session token has been revoked or expired
@@ -159,8 +182,6 @@ namespace RustPlusDesk.Services.Cloud
                 request.Content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
             }
 
-            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Request: {method} /api/v1/{routePath}" + (payload != null ? " (with payload)" : ""));
-
             using var response = await Http.SendAsync(request);
             sw.Stop();
             var body = await response.Content.ReadAsStringAsync();
@@ -176,7 +197,7 @@ namespace RustPlusDesk.Services.Cloud
                 $"{(int)response.StatusCode} {response.StatusCode}",
                 details: payload != null ? "JSON payload" : "");
 
-            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Response: {method} /api/v1/{routePath} -> {(int)response.StatusCode} {response.StatusCode}" + (!response.IsSuccessStatusCode && !string.IsNullOrWhiteSpace(body) ? $" ({body})" : ""));
+            LogCall(method.Method, $"/api/v1/{routePath}", (int)response.StatusCode, response.StatusCode.ToString(), body);
 
             if (!response.IsSuccessStatusCode)
                 SupabaseAuthManager.HandleUpgradeRequiredResponse(body);
@@ -212,8 +233,6 @@ namespace RustPlusDesk.Services.Cloud
                 url += "?" + queryStr;
             }
 
-            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Request: {method} /api/v1/{routePath}" + (payload != null ? " (with payload)" : ""));
-
             using var request = new HttpRequestMessage(method, url);
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
             if (!string.IsNullOrEmpty(bearerToken))
@@ -225,7 +244,8 @@ namespace RustPlusDesk.Services.Cloud
             using var response = await Http.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
 
-            SupabaseAuthManager.AppendLog($"[Cloud/Debug] API Response: {method} /api/v1/{routePath} -> {(int)response.StatusCode} {response.StatusCode}");
+            // The failure's body is not logged here: the exception carries it to the caller, which logs it.
+            LogCall(method.Method, $"/api/v1/{routePath}", (int)response.StatusCode, response.StatusCode.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

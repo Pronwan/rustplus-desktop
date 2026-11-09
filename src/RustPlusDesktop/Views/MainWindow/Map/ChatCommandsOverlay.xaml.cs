@@ -10,38 +10,20 @@ public partial class ChatCommandsOverlay : UserControl
     {
         InitializeComponent();
 
-        // Ask the central capability service rather than being told from outside. The overlay
-        // is created and shown independently of the connect flow, so pushing state into it
-        // would mean remembering to do so from every call site.
-        Loaded += (_, __) => { ApplyEventCapabilities(); LoadAiPerHour(); };
-        EventCapabilities.Changed += OnCapabilitiesChanged;
-        Unloaded += (_, __) => EventCapabilities.Changed -= OnCapabilitiesChanged;
+        Loaded += (_, __) => { ApplyCloudCodesAvailability(); LoadAiPerHour(); };
+        IsVisibleChanged += (_, __) => { if (IsVisible) ApplyCloudCodesAvailability(); };
     }
 
-    private void OnCapabilitiesChanged() => Dispatcher.Invoke(ApplyEventCapabilities);
-
     /// <summary>
-    /// Patrol Heli and Travelling Vendor have no server-wide audio cue, so on a server without
-    /// event markers those commands can never answer. Hiding the rows is honest; leaving them
-    /// configurable would invite players to set up a command that always replies "unknown".
-    ///
-    /// Hidden rather than deleted on purpose: a server that still sends event markers can still
-    /// answer both, and a player whose profile already has the command configured keeps it.
+    /// Door codes in the cloud are a Cloud 24/7 feature: greyed out without Premium, and a
+    /// choice already made stays visible rather than silently flipping.
     /// </summary>
-    private void ApplyEventCapabilities()
+    private void ApplyCloudCodesAvailability()
     {
-        var vis = EventCapabilities.IsCloudSourced ? Visibility.Collapsed : Visibility.Visible;
-
-        foreach (var element in new UIElement?[]
-                 {
-                     CmdRowHeliLabel, CmdRowHeliPrefix, CmdRowHeliBox,
-                     CmdRowVendorLabel, CmdRowVendorPrefix, CmdRowVendorBox,
-                     CmdRowCargoLabel, CmdRowCargoPrefix, CmdRowCargoBox,
-                     CmdRowDeepSeaLabel, CmdRowDeepSeaPrefix, CmdRowDeepSeaBox,
-                 })
-        {
-            if (element != null) element.Visibility = vis;
-        }
+        bool premium = RustPlusDesk.Services.Auth.SupabaseAuthManager.IsPremium;
+        ChkBaseCodesInCloud.IsEnabled = premium;
+        ChkBaseCodesInCloud.Opacity = premium ? 1 : 0.5;
+        TxtBaseCodesInCloudHint.Opacity = premium ? 1 : 0.5;
     }
 
     public event RoutedEventHandler? CommandsEnabledChanged;

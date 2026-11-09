@@ -8235,4 +8235,34 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} приглашает вас вместе строить «{1}» в Ship Builder.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Отправить в чат команды</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Отправить в чат клана</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Отправить в Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Текст сообщения</value>
+  </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: оповещения о рейдах отправляются в рейд-канал вашего Advanced Discord Bot, ящики с нефтяной вышки и смерти — в его канал событий, даже когда это приложение закрыто. Каналы настраиваются в разделе Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Старый вебхук Discord — используется, только если у вас нет Discord-бота. Очистите поле, чтобы больше его не использовать.</value>
+  </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>Онлайн</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Смерти</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Коды дверей в Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Позволяет облаку отвечать на команду кода, когда приложение закрыто. Коды хранятся в зашифрованном виде на rustplusdesktop.cloud; отключите опцию, чтобы удалить их. Только для Premium.</value>
+  </data>
 </root>
