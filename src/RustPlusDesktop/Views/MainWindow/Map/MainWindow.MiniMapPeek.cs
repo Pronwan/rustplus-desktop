@@ -124,15 +124,12 @@ public partial class MainWindow
             !string.Equals(gesture, _peekGesture, StringComparison.OrdinalIgnoreCase))
             return false;
 
-        AppendLog($"[minimap-peek] key down (peeking={_peeking}, spent={_peekSpent}, hook={_peekHookId != IntPtr.Zero}, sawDown={_asyncKeySawDown})");
-
         // The hotkey is registered with MOD_NOREPEAT, so every one of these is a fresh press. A
         // fresh press while a peek is still running, or still marked as spent, means the release
         // before it never reached us - with the game in front the hook and the key state can both
         // miss it - and the old state would swallow this press and every one after it. Start over.
         if (_peeking || _peekSpent)
         {
-            AppendLog("[minimap-peek] the last release was missed; starting over");
             _peekSpent = false;
             EndMiniMapPeek();
         }
@@ -153,7 +150,6 @@ public partial class MainWindow
         // When the widget overlay or the minimap is not open, hotkey must not bring them back
         if (_deviceOverlay == null || !_deviceOverlay.IsLoaded || _miniMap == null || !_miniMap.IsLoaded || _peeking)
         {
-            AppendLog($"[minimap-peek] not shown (overlay={_deviceOverlay?.IsLoaded == true}, map={_miniMap?.IsLoaded == true}, peeking={_peeking})");
             return;
         }
 
@@ -239,7 +235,6 @@ public partial class MainWindow
                     {
                         if (_peeking)
                         {
-                            AppendLog("[minimap-peek] key up (hook)");
                             EndMiniMapPeek();
                         }
                         else
@@ -275,7 +270,6 @@ public partial class MainWindow
         // 20-second safety limit reached: hide map, keep timer/hook running until key is released
         if (DateTime.UtcNow - _peekStartedUtc >= PeekLimit)
         {
-            AppendLog($"[minimap-peek] held past {PeekLimit.TotalSeconds:0} s, hidden (hook={_peekHookId != IntPtr.Zero}, sawDown={_asyncKeySawDown})");
             _peekSpent = true;
             EndMiniMapPeek(keepWatching: true);
             return;
@@ -298,7 +292,6 @@ public partial class MainWindow
             // Require 3 consecutive ticks (~120ms) of key-up to prevent key bounce from prematurely killing the peek.
             if (_consecutiveUpTicks >= 3)
             {
-                AppendLog("[minimap-peek] key up (key state)");
                 _peekSpent = false;
                 EndMiniMapPeek();
             }
