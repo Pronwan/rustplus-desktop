@@ -1987,8 +1987,6 @@ namespace RustPlusDesk.Services.Auth
                 url += "?" + queryStr;
             }
 
-            AppendLog($"[Cloud/Debug] API Request: {method} /functions/v1/{functionName}" + (payload != null ? " (with payload)" : ""));
-
             var req = new HttpRequestMessage(method, url);
             req.Headers.Add("apikey", DataManager.SUPABASE_ANON_KEY);
             req.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
@@ -2007,7 +2005,8 @@ namespace RustPlusDesk.Services.Auth
             var resp = await Http.SendAsync(req);
             var body = await resp.Content.ReadAsStringAsync();
 
-            AppendLog($"[Cloud/Debug] API Response: {method} /functions/v1/{functionName} -> {(int)resp.StatusCode} {resp.StatusCode}");
+            // Only failures, unless API logging is on (see CloudApiClient.LogEveryCall).
+            Services.Cloud.CloudApiClient.LogCall(method.Method, $"/functions/v1/{functionName}", (int)resp.StatusCode, resp.StatusCode.ToString());
 
             if (!resp.IsSuccessStatusCode)
             {

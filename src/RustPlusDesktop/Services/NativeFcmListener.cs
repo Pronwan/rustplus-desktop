@@ -425,6 +425,11 @@ namespace RustPlusDesk.Services
                             NullIfEmpty(body?.Ip), NonZero(body?.Port)));
                         break;
 
+                    case "team":
+                        // "X is now online" and the like. The team poll already knows, and says it
+                        // in team chat if the user wants that, so the push needs nothing more.
+                        break;
+
                     default:
                         _log($"[fcm-native] Unhandled channel '{data.ChannelId}' | title=\"{data.Title}\"");
                         break;

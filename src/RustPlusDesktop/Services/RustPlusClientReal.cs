@@ -1671,9 +1671,13 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             var (errorCode, errorMessage) = ReadResponseError(resObj);
             if (IsFailedResponse(resObj) || resObj is null)
             {
+                var previousError = LastClanLoadError;
                 LastClanLoadError = errorMessage ?? errorCode;
                 LastClanLoadStatus = IsNoClanError(errorCode, errorMessage) ? ClanLoadStatus.NoClan : ClanLoadStatus.Failed;
-                _log($"[get-clan-info] failed: {LastClanLoadError ?? "unknown error"}");
+                // Clan info is polled every few seconds, and a player without a clan answered
+                // no_clan to every poll - a line each time. Said once, until the answer changes.
+                if (!string.Equals(previousError, LastClanLoadError, StringComparison.Ordinal))
+                    _log($"[get-clan-info] failed: {LastClanLoadError ?? "unknown error"}");
                 return null;
             }
 
