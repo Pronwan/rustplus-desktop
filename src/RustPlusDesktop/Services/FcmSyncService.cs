@@ -17,6 +17,56 @@ namespace RustPlusDesk.Services
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RustPlusDesk", "rustplusjs-config.json");
 
+        private static int s_launchSyncStarted;
+
+        /// <summary>
+        /// Uploads the local Rust+ login once per launch, so the cloud is never left judging a
+        /// stale token. Earlier builds only uploaded on a button press, so a user who renewed
+        /// their login there still has the old, expired token in the cloud: its worker cannot
+        /// use the companion socket and the website says the login expired while this app says
+        /// it is valid. One upload fixes it.
+        ///
+        /// Waits for sign-in and premium (both load after launch), skips an expired local token
+        /// (uploading it changes nothing), and fetches the Cloud 24/7 consent the platform holds,
+        /// which is otherwise only read when the Cloud window opens. The upload itself still
+        /// goes through <see cref="SyncFcmCredentialsAsync"/>, so nothing leaves this PC without
+        /// Cloud 24/7 or Offline Integrations consent.
+        /// </summary>
+        public static async Task SyncOnLaunchAsync()
+        {
+            if (System.Threading.Interlocked.Exchange(ref s_launchSyncStarted, 1) == 1) return;
+
+            try
+            {
+                var token = RustCompanionAuthService.ReadCurrentToken();
+                if (string.IsNullOrWhiteSpace(token)) return;
+
+                var (_, _, _, expiresAt) = RustCompanionAuthService.ParseJwtClaims(token);
+                if (expiresAt.HasValue && expiresAt.Value < DateTime.UtcNow) return;
+
+                for (int i = 0; i < 24 && !(CloudAuthManager.IsAuthenticated && SupabaseAuthManager.IsPremium); i++)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                }
+
+                if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated || !SupabaseAuthManager.IsPremium) return;
+
+                if (!TrackingService.OfflineIntegrationsConsented)
+                {
+                    await CloudSessionsApi.GetOverviewAsync().ConfigureAwait(false);
+                }
+
+                if (await SyncFcmCredentialsAsync().ConfigureAwait(false))
+                {
+                    SupabaseAuthManager.AppendLog("[FcmSync] Launch sync: the cloud has the current Rust+ login.");
+                }
+            }
+            catch (Exception ex)
+            {
+                SupabaseAuthManager.AppendLog($"[FcmSync] Launch sync failed: {ex.Message}");
+            }
+        }
+
         public static async Task<bool> SyncFcmCredentialsAsync()
         {
             // FCM credentials must NOT upload under any circumstances unless user explicitly consents via Offline Integrations or Cloud 24/7
