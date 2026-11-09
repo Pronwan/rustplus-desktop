@@ -19,7 +19,17 @@ namespace RustPlusDesk.Views
         {
             InitializeComponent();
             Loaded += LogicEngineOverlay_Loaded;
+
+            // Typing into a rule saved nothing until the editor was closed with its own X, so a
+            // step's message or wait time never reached Cloud 24/7, which follows every save.
+            // Now leaving a field saves, and so does the editor going away by any route.
+            AddHandler(LostKeyboardFocusEvent, new System.Windows.Input.KeyboardFocusChangedEventHandler((_, _) => SaveSoon()), true);
+            IsVisibleChanged += (_, e) => { if (e.NewValue is false) SaveSoon(); };
         }
+
+        /// <summary>After the binding has written the field's value back, not before.</summary>
+        private void SaveSoon()
+            => Dispatcher.BeginInvoke(new Action(() => _vm?.Save()), System.Windows.Threading.DispatcherPriority.Background);
 
         private void LogicEngineOverlay_Loaded(object sender, RoutedEventArgs e)
         {
