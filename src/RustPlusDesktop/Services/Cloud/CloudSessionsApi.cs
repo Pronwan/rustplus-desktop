@@ -56,7 +56,11 @@ namespace RustPlusDesk.Services.Cloud
             bool GlobalConsent = false,
             string? PreferredServerId = null,
             IReadOnlyList<string>? ActiveServerIds = null,
-            DateTime? ConsentedAt = null);
+            DateTime? ConsentedAt = null,
+            // The Rust+ login the cloud connects with. Expired, only a new Rust+ sign-in here
+            // renews it, and the cloud cannot reach servers that refuse direct connections.
+            bool LoginExpired = false,
+            DateTime? LoginExpiresAt = null);
 
         public sealed record CloudOverview(IReadOnlyList<CloudServer> Servers, CloudPlan Plan);
 
@@ -316,6 +320,14 @@ namespace RustPlusDesk.Services.Cloud
             var preferredServerId = Str(meta, "preferred_server_id");
             PreferredServerId = preferredServerId;
 
+            bool loginExpired = false;
+            DateTime? loginExpiresAt = null;
+            if (meta.TryGetProperty("login", out var login) && login.ValueKind == JsonValueKind.Object)
+            {
+                loginExpired = Bool(login, "expired");
+                loginExpiresAt = Date(login, "expires_at");
+            }
+
             return new CloudPlan(
                 Bool(meta, "access"),
                 Int(meta, "live_used"),
@@ -325,7 +337,9 @@ namespace RustPlusDesk.Services.Cloud
                 globalConsent,
                 preferredServerId,
                 activeIds,
-                Date(meta, "consented_at"));
+                Date(meta, "consented_at"),
+                loginExpired,
+                loginExpiresAt);
         }
 
         private static string? Str(JsonElement e, string name)

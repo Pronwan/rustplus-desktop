@@ -149,6 +149,15 @@ namespace RustPlusDesk.Views.Windows
         {
             ToggleGlobalConsent.IsChecked = plan.GlobalConsent;
 
+            // Only the user can renew this login, and nothing else says the cloud lost it:
+            // sessions on servers that refuse direct connections just stop.
+            LoginExpiredNote.Visibility = plan.LoginExpired ? Visibility.Visible : Visibility.Collapsed;
+            LoginExpiredNote.Text = plan.LoginExpiresAt is DateTime expired
+                ? string.Format(CultureInfo.CurrentCulture,
+                    Str("Cloud247LoginExpiredSince", "Your Rust+ login for the cloud expired on {0}. Log in to Rust+ again in this app so the cloud can keep connecting to your servers."),
+                    expired.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
+                : Str("Cloud247LoginExpired", "Your Rust+ login for the cloud has expired. Log in to Rust+ again in this app so the cloud can keep connecting to your servers.");
+
             GlobalFeatureFlagNote.Visibility = _globalFeatureEnabled ? Visibility.Collapsed : Visibility.Visible;
             GlobalFeatureFlagNote.Text = string.IsNullOrWhiteSpace(_globalFeatureNote)
                 ? "Cloud 24/7 is temporarily disabled by the administrator."

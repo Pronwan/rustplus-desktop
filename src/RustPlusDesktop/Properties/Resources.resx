@@ -8212,6 +8212,12 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="Cloud247NeedsRepair" xml:space="preserve">
     <value>Pairing needs renewing</value>
   </data>
+  <data name="Cloud247LoginExpired" xml:space="preserve">
+    <value>Your Rust+ login for the cloud has expired. Log in to Rust+ again in this app so the cloud can keep connecting to your servers.</value>
+  </data>
+  <data name="Cloud247LoginExpiredSince" xml:space="preserve">
+    <value>Your Rust+ login for the cloud expired on {0}. Log in to Rust+ again in this app so the cloud can keep connecting to your servers.</value>
+  </data>
   <data name="Cloud247OwnerDesktop" xml:space="preserve">
     <value>This app is connected, the cloud is standing by</value>
   </data>
