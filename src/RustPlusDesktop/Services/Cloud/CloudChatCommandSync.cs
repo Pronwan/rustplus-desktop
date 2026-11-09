@@ -43,11 +43,18 @@ namespace RustPlusDesk.Services.Cloud
                 ["pop"] = profile.CmdPop,
                 ["time"] = profile.CmdTime,
                 ["afk"] = profile.CmdAfk,
+                ["online"] = profile.CmdOnline,
+                ["deaths"] = profile.CmdDeaths,
                 ["promote"] = profile.CmdPromote,
                 ["list"] = profile.CmdList,
-                ["upkeep"] = profile.CmdUpkeepDetail,
+                // Its own key: under "upkeep" the cloud answered the detail word with the short form.
+                ["upkeepdetail"] = profile.CmdUpkeepDetail,
                 ["base_codes"] = profile.CmdBaseCodes,
             };
+
+            // The rig answers only where an alarm is set up as its trigger, as in the app.
+            if (profile.AllDevices.Any(d => !string.IsNullOrEmpty(d.OilRigTriggerTarget)))
+                words["oilrig"] = profile.CmdOilRig;
 
             // Only the words the user actually set. Sending empty keys would let a
             // blank command word match an empty message in chat.
@@ -55,10 +62,19 @@ namespace RustPlusDesk.Services.Cloud
                 .Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
                 .ToDictionary(kv => kv.Key, kv => kv.Value!);
 
+            // Switch commands, and the per-cupboard upkeep commands: the cloud tells them apart by
+            // the device they point at.
             var mappings = profile.SwitchCommandMappings
+                .Concat(profile.UpkeepCommandMappings)
                 .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Command) && m.EntityId != 0)
                 .Select(m => new { command = m.Command, entity_id = m.EntityId })
                 .ToList();
+
+            // Door codes only when the user let the cloud answer the code command, and only with
+            // Premium, which is what runs the cloud. Not sending them clears them on the platform.
+            var baseCodes = profile.BaseCodesInCloud && SupabaseAuthManager.IsPremium
+                ? profile.BaseCodes.Where(c => !c.IsEmpty).Select(c => new { label = c.Label ?? "", code = c.Code }).ToList()
+                : null;
 
             // The user's real prefix, not a hard-coded "!". Sending the wrong one
             // left the cloud deaf to the word their team actually types while the
@@ -79,6 +95,7 @@ namespace RustPlusDesk.Services.Cloud
                 use_clan_channel = profile.ChatAlertsUseClanChannel,
                 words = cleaned,
                 device_mappings = mappings,
+                base_codes = baseCodes,
                 alerts = new Dictionary<string, bool>
                 {
                     ["player_online"] = TrackingService.AnnouncePlayerOnline,

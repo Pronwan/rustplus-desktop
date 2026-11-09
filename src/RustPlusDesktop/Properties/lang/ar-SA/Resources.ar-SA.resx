@@ -8144,4 +8144,16 @@
   <data name="CsOfflineLegacyWebhook" xml:space="preserve">
     <value>Webhook قديم لـ Discord - يُستخدم فقط إذا لم يكن لديك بوت Discord. امسحه لإيقاف استخدامه.</value>
   </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>الوفيات</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>رموز الأبواب في Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>يسمح للسحابة بالرد على أمر الرمز عندما يكون هذا التطبيق مغلقًا. تُخزَّن الرموز مشفّرة على rustplusdesktop.cloud، وإيقاف الخيار يحذفها. لمشتركي Premium فقط.</value>
+  </data>
 </root>

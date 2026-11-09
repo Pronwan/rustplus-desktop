@@ -8344,4 +8344,16 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="CsOfflineLegacyWebhook" xml:space="preserve">
     <value>Alter Discord-Webhook - wird nur ohne Discord-Bot verwendet. Leere das Feld, um ihn nicht mehr zu nutzen.</value>
   </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Tode</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Türcodes in Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Erlaubt der Cloud, den Code-Befehl zu beantworten, wenn diese App geschlossen ist. Die Codes werden verschlüsselt auf rustplusdesktop.cloud gespeichert; abschalten entfernt sie wieder. Nur mit Premium.</value>
+  </data>
 </root>

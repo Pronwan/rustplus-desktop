@@ -155,13 +155,13 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdPop)) standardCmds.Add(prefix + profile.CmdPop);
             if (!string.IsNullOrWhiteSpace(profile.CmdTime)) standardCmds.Add(prefix + profile.CmdTime);
             if (!string.IsNullOrWhiteSpace(profile.CmdPromote)) standardCmds.Add(prefix + profile.CmdPromote);
-            if (!string.IsNullOrWhiteSpace(profile.CmdDeepSea)) standardCmds.Add(prefix + profile.CmdDeepSea);
-            if (!string.IsNullOrWhiteSpace(profile.CmdCargo)) standardCmds.Add(prefix + profile.CmdCargo);
-            if (!string.IsNullOrWhiteSpace(profile.CmdOilRig)) standardCmds.Add(prefix + profile.CmdOilRig);
-            if (!string.IsNullOrWhiteSpace(profile.CmdHeli)) standardCmds.Add(prefix + profile.CmdHeli);
-            if (!string.IsNullOrWhiteSpace(profile.CmdVendor)) standardCmds.Add(prefix + profile.CmdVendor);
-            if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
+            if (!string.IsNullOrWhiteSpace(profile.CmdOnline)) standardCmds.Add(prefix + profile.CmdOnline);
             if (!string.IsNullOrWhiteSpace(profile.CmdAfk)) standardCmds.Add(prefix + profile.CmdAfk);
+            if (!string.IsNullOrWhiteSpace(profile.CmdDeaths)) standardCmds.Add(prefix + profile.CmdDeaths);
+            // Only what can answer: the rig needs an alarm set as its trigger, the upkeep detail a
+            // paired TC monitor. Listing them anyway sends people to a command that says nothing.
+            if (!string.IsNullOrWhiteSpace(profile.CmdOilRig) && HasOilRigTrigger(profile)) standardCmds.Add(prefix + profile.CmdOilRig);
+            if (!string.IsNullOrWhiteSpace(profile.CmdUpkeepDetail) && HasStorageMonitor(profile)) standardCmds.Add(prefix + profile.CmdUpkeepDetail);
             standardCmds.Add(prefix + "who");
             // Only advertised once a code exists - listing it on a server with no codes set would
             // send people to a command that answers with nothing.
@@ -173,9 +173,8 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdAi) && IsAiCommandListable(profile, m, channel))
                 standardCmds.Add(prefix + profile.CmdAi);
 
-            string standardMsg = string.Format(Properties.Resources.ChatCmdListHeader, string.Join(", ", standardCmds));
-            if (standardMsg.Length > 128) standardMsg = standardMsg.Substring(0, 125) + "...";
-            _ = Reply(standardMsg);
+            var standardMessages = SplitChatMessages(standardCmds, ", ", string.Format(Properties.Resources.ChatCmdListHeader, ""));
+            foreach (var standardMsg in standardMessages) _ = Reply(standardMsg);
 
             var deviceCmds = new List<string>();
             if (allowSwitches)
@@ -218,9 +217,12 @@ public partial class MainWindow
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(3000);
-                    string devMsg = string.Join(" | ", deviceCmds);
-                    if (devMsg.Length > 128) devMsg = devMsg.Substring(0, 125) + "...";
-                    await Reply(devMsg);
+                    // A long list goes out in parts, not cut off: the rules at the end were the ones lost.
+                    foreach (var devMsg in SplitChatMessages(deviceCmds, " | ", ""))
+                    {
+                        await Reply(devMsg);
+                        await Task.Delay(1500);
+                    }
                 });
             }
 
@@ -304,97 +306,6 @@ public partial class MainWindow
             return;
         }
 
-        // Command: Deep Sea
-        if (cmd == profile.CmdDeepSea.ToLowerInvariant())
-        {
-            if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.DeepSea)) return;
-
-            string msg;
-            if (_deepSeaActive)
-            {
-                if (_deepSeaSpawnTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - _deepSeaSpawnTime.Value;
-                    msg = string.Format(Properties.Resources.ChatCmdDeepSeaActive, FormatAgo(elapsed));
-                }
-                else
-                {
-                    msg = Properties.Resources.ChatCmdDeepSeaActiveMidEvent;
-                }
-            }
-            else if (_deepSeaDespawnTime.HasValue)
-            {
-                var ago = DateTime.UtcNow - _deepSeaDespawnTime.Value;
-                msg = string.Format(Properties.Resources.ChatCmdDeepSeaEndedMinutesAgo, (int)ago.TotalMinutes);
-            }
-            else
-            {
-                msg = Properties.Resources.ChatCmdDeepSeaStatusUnknown;
-            }
-            _ = Reply(msg);
-            AppendLog($"[ChatCommand] DeepSea executed by {m.Author}");
-            return;
-        }
-
-        // Command: Cargo
-        if (cmd == profile.CmdCargo.ToLowerInvariant())
-        {
-            if (!Services.EventCapabilities.IsTrackable(Services.RustEventKind.Cargo)) return;
-
-            string msg = Properties.Resources.ChatCmdCargoNotActive;
-            var activeCargo = _cargoDockStates.Values.FirstOrDefault();
-            if (activeCargo != null)
-            {
-                string harborName = activeCargo.HarborName ?? Properties.Resources.HarborFallback;
-                if (activeCargo.IsDocked && activeCargo.DockTime.HasValue)
-                {
-                    int dockDuration = TrackingService.GetLearnedDockingDuration(profile.Host);
-                    if (dockDuration > 0 && !activeCargo.WasAlreadyDocked)
-                    {
-                        var dockRemain = TimeSpan.FromMinutes(dockDuration) - (DateTime.UtcNow - activeCargo.DockTime.Value);
-                        if (dockRemain.TotalMinutes > 0)
-                            msg = string.Format(Properties.Resources.ChatCmdCargoDockedDeparts, harborName, (int)dockRemain.TotalMinutes);
-                        else
-                            msg = string.Format(Properties.Resources.ChatCmdCargoDockedPreparingDepart, harborName);
-                    }
-                    else
-                    {
-                        msg = string.Format(Properties.Resources.ChatCmdCargoDockedUnknown, harborName);
-                    }
-                }
-                else if (activeCargo.SeenAtEdge)
-                {
-                    // We saw the spawn this session — time estimate is reliable
-                    int fullLife = TrackingService.GetLearnedCargoFullLife(profile.Host);
-                    if (fullLife > 0 && activeCargo.FirstSeen.HasValue)
-                    {
-                        var remain = TimeSpan.FromMinutes(fullLife) - (DateTime.UtcNow - activeCargo.FirstSeen.Value);
-                        if (remain.TotalMinutes > 0)
-                            msg = string.Format(Properties.Resources.ChatCmdCargoActiveLeaves, (int)remain.TotalMinutes);
-                        else
-                            msg = Properties.Resources.ChatCmdCargoActivePreparingLeave;
-                    }
-                    else
-                    {
-                        msg = Properties.Resources.ChatCmdCargoActiveDurationNotLearned;
-                    }
-                }
-                else
-                {
-                    // Mid-connect — we don't know how long it's been on the map
-                    msg = Properties.Resources.ChatCmdCargoActiveMidRoute;
-                }
-            }
-            else if (_cargoLastDespawnUtc.HasValue)
-            {
-                var ago = DateTime.UtcNow - _cargoLastDespawnUtc.Value;
-                msg = string.Format(Properties.Resources.ChatCmdCargoDespawnedMinutesAgo, (int)ago.TotalMinutes);
-            }
-            _ = Reply(msg);
-            AppendLog($"[ChatCommand] Cargo executed by {m.Author}");
-            return;
-        }
-
         // Command: Oil Rig
         if (cmd == profile.CmdOilRig.ToLowerInvariant())
         {
@@ -402,68 +313,45 @@ public partial class MainWindow
             return;
         }
 
-        // Command: Patrol Heli
-        if (cmd == profile.CmdHeli.ToLowerInvariant())
+        // Command: Online - the whole team, which the team panel often cuts off.
+        if (!string.IsNullOrWhiteSpace(profile.CmdOnline) && cmd == profile.CmdOnline.ToLowerInvariant())
         {
-            string msg;
-            var heliMarker = _dynStates.Values.FirstOrDefault(s => s.Type == 8);
-            bool isHeliActive = heliMarker != null;
-            if (heliMarker != null)
-            {
-                string grid = GetGridLabel(heliMarker.LastRealX, heliMarker.LastRealY);
-                if (_heliSpawnTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - _heliSpawnTime.Value;
-                    msg = string.Format(Properties.Resources.ChatCmdHeliActive, FormatAgo(elapsed)) + $" [{grid}]";
-                }
-                else
-                {
-                    msg = Properties.Resources.ChatCmdHeliActiveMidEvent + $" [{grid}]";
-                }
-            }
-            else if (_heliLastEventUtc.HasValue)
-            {
-                var ago = DateTime.UtcNow - _heliLastEventUtc.Value;
-                string reason = _heliLastEventWasCrash ? Properties.Resources.ChatCmdHeliReasonShotDown : Properties.Resources.ChatCmdHeliReasonLeftMap;
-                msg = string.Format(Properties.Resources.ChatCmdHeliNotActiveAgo, reason, FormatAgo(ago));
-            }
-            else
-            {
-                msg = Properties.Resources.ChatCmdHeliStatusUnknown;
-            }
-            _ = Reply(msg);
-            AppendLog($"[ChatCommand] Heli executed by {m.Author}");
+            var members = TeamMembers.ToList();
+            var online = members.Where(t => t.IsOnline).Select(t => t.Name).ToList();
+            var offline = members.Where(t => !t.IsOnline).Select(t => t.Name).ToList();
+            var parts = new List<string>();
+            if (online.Count > 0) parts.Add("Online: " + string.Join(", ", online));
+            if (offline.Count > 0) parts.Add("Offline: " + string.Join(", ", offline));
+            foreach (var msg in SplitChatMessages(parts, " | ", $"Team {online.Count}/{members.Count} online. "))
+                _ = Reply(msg);
+            AppendLog($"[ChatCommand] Online executed by {m.Author}");
             return;
         }
 
-        // Command: Travelling Vendor
-        if (cmd == profile.CmdVendor.ToLowerInvariant())
+        // Command: Deaths - the latest from the death log.
+        if (!string.IsNullOrWhiteSpace(profile.CmdDeaths) && cmd == profile.CmdDeaths.ToLowerInvariant())
         {
-            string msg;
-            bool isVendorActive = _dynStates.Values.Any(s => s.Type == 6);
-            if (isVendorActive)
+            var recent = Services.Deaths.DeathLogStore.LoadEntries(profile.ServerKey)
+                .OrderByDescending(d => d.DiedAt)
+                .Take(5)
+                .ToList();
+            if (recent.Count == 0)
             {
-                if (_vendorSpawnTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - _vendorSpawnTime.Value;
-                    msg = string.Format(Properties.Resources.ChatCmdVendorActive, FormatAgo(elapsed));
-                }
-                else
-                {
-                    msg = Properties.Resources.ChatCmdVendorActiveMidEvent;
-                }
-            }
-            else if (_vendorDespawnTime.HasValue)
-            {
-                var ago = DateTime.UtcNow - _vendorDespawnTime.Value;
-                msg = string.Format(Properties.Resources.ChatCmdVendorDespawnedAgo, FormatAgo(ago));
+                _ = Reply("No recent deaths recorded for your team.");
             }
             else
             {
-                msg = Properties.Resources.ChatCmdVendorStatusUnknown;
+                var nowUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                var parts = recent.Select(d =>
+                {
+                    var ago = Math.Max(0, (nowUnix - d.DiedAt) / 60);
+                    var where = string.IsNullOrWhiteSpace(d.Grid) ? "" : $" ({d.Grid})";
+                    return $"{d.Victim}{where} {(ago < 60 ? $"{ago}m" : $"{ago / 60}h")} ago";
+                });
+                foreach (var msg in SplitChatMessages(parts, " | ", "Recent deaths: "))
+                    _ = Reply(msg);
             }
-            _ = Reply(msg);
-            AppendLog($"[ChatCommand] Vendor executed by {m.Author}");
+            AppendLog($"[ChatCommand] Deaths executed by {m.Author}");
             return;
         }
 
@@ -1240,6 +1128,42 @@ public partial class MainWindow
         return lines.ToString().TrimEnd();
     }
 
+
+    /// <summary>Whether an alarm on this server is set up as an oil rig trigger, so the rig command can answer.</summary>
+    private static bool HasOilRigTrigger(ServerProfile profile)
+        => profile.AllDevices.Any(d => !string.IsNullOrEmpty(d.OilRigTriggerTarget));
+
+    /// <summary>Whether a storage monitor (a TC monitor) is paired, so the upkeep commands can answer.</summary>
+    private static bool HasStorageMonitor(ServerProfile profile)
+        => profile.AllDevices.Any(d => d.Kind is "StorageMonitor" or "Storage Monitor");
+
+    /// <summary>
+    /// Items joined into as few chat messages as fit Rust's 128 characters, the header on the
+    /// first. Cutting one long message off with "..." lost whatever came last.
+    /// </summary>
+    internal static List<string> SplitChatMessages(IEnumerable<string> items, string separator, string header, int max = 128)
+    {
+        var messages = new List<string>();
+        var current = header ?? "";
+        bool empty = true;
+        foreach (var raw in items)
+        {
+            var item = raw.Length > max ? raw.Substring(0, max - 3) + "..." : raw;
+            var next = empty ? current + item : current + separator + item;
+            if (next.Length > max && !empty)
+            {
+                messages.Add(current);
+                current = item;
+            }
+            else
+            {
+                current = next.Length > max ? next.Substring(0, max - 3) + "..." : next;
+            }
+            empty = false;
+        }
+        if (!empty) messages.Add(current);
+        return messages;
+    }
 
     private static string FormatUpkeepMaterialsPer24h(SmartDevice dev, int upkeepSeconds)
     {

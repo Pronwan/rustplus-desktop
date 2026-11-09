@@ -39,5 +39,8 @@ public partial class MainWindow
         if (profile == null || string.IsNullOrWhiteSpace(profile.ServerKey)) return;
 
         _ = CloudAutomationSync.SyncAsync(profile, profile.ServerKey);
+        // The command words and the door-code choice follow every save too, not only a reconnect:
+        // turning "Door codes in Cloud 24/7" off has to take the codes out of the cloud now.
+        _ = CloudChatCommandSync.SyncAsync(profile, profile.ServerKey);
     }
 }

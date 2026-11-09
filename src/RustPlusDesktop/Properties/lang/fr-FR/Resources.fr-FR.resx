@@ -8253,4 +8253,16 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="CsOfflineLegacyWebhook" xml:space="preserve">
     <value>Ancien webhook Discord : utilisé uniquement si tu n'as pas de bot Discord. Vide-le pour ne plus l'utiliser.</value>
   </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>En ligne</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Morts</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Codes de porte dans Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Permet au cloud de répondre à la commande de code quand cette application est fermée. Les codes sont stockés chiffrés sur rustplusdesktop.cloud ; désactive l'option pour les supprimer. Premium uniquement.</value>
+  </data>
 </root>

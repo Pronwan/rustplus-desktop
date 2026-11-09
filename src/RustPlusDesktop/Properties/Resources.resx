@@ -8876,4 +8876,16 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="CsOfflineLegacyWebhook" xml:space="preserve">
     <value>Old Discord webhook - only used if you have no Discord bot. Clear it to stop using it.</value>
   </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Door codes in Cloud 24/7</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>Lets the cloud answer the code command while this app is closed. The codes are stored encrypted on rustplusdesktop.cloud; turn this off to remove them. Premium only.</value>
+  </data>
 </root>

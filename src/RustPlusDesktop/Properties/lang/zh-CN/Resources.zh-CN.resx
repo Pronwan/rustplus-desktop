@@ -8004,4 +8004,16 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="CsOfflineLegacyWebhook" xml:space="preserve">
     <value>旧的 Discord Webhook——仅在你没有 Discord 机器人时使用。清空即可停用。</value>
   </data>
+  <data name="OnlineCommand" xml:space="preserve">
+    <value>在线</value>
+  </data>
+  <data name="DeathsCommand" xml:space="preserve">
+    <value>死亡</value>
+  </data>
+  <data name="BaseCodesInCloud" xml:space="preserve">
+    <value>Cloud 24/7 中的门禁密码</value>
+  </data>
+  <data name="BaseCodesInCloudHint" xml:space="preserve">
+    <value>允许云端在本应用关闭时回答密码命令。密码会加密保存在 rustplusdesktop.cloud 上；关闭此项即可删除。仅限 Premium。</value>
+  </data>
 </root>
