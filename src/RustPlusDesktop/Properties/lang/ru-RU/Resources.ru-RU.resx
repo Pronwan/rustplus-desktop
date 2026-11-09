@@ -8235,4 +8235,16 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} приглашает вас вместе строить «{1}» в Ship Builder.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Отправить в чат команды</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Отправить в чат клана</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Отправить в Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Текст сообщения</value>
+  </data>
 </root>

@@ -101,4 +101,21 @@ public sealed class CloudAutomationSyncTests
 
         CollectionAssert.AreEqual(new[] { "keep" }, ids);
     }
+[TestMethod]
+    public void A_message_step_carries_its_text()
+    {
+        var profile = new ServerProfile
+        {
+            LogicRules = new List<LogicRule>
+            {
+                new() { Id = "r1", Steps = new ObservableCollection<LogicStep> { new() { StepType = "SendClanChat", MessageText = "Base locked down." } } },
+            },
+        };
+
+        var step = Payload(profile).GetProperty("logic").GetProperty("rules")[0].GetProperty("steps")[0];
+
+        Assert.AreEqual("SendClanChat", step.GetProperty("type").GetString());
+        Assert.AreEqual("Base locked down.", step.GetProperty("message_text").GetString());
+    }
 }
+

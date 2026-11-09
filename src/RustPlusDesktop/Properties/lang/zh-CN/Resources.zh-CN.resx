@@ -7986,4 +7986,16 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} 邀请你在 Ship Builder 中一起建造“{1}”。</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>发送到队伍聊天</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>发送到部落聊天</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>发送到 Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>消息内容</value>
+  </data>
 </root>

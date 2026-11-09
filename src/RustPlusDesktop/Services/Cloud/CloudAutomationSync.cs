@@ -163,6 +163,8 @@ namespace RustPlusDesk.Services.Cloud
                 timer_minutes = step.TimerMinutes,
                 timer_target = step.TimerTarget,
                 timer_name = step.TimerName,
+                // SendTeamChat / SendClanChat / SendDiscord
+                message_text = step.MessageText,
                 // CheckAvailability
                 condition_operator = step.ConditionOperator,
                 condition_device_ids = (step.ConditionDeviceIdsCsv ?? "")

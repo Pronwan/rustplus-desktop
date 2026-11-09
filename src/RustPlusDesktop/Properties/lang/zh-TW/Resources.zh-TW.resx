@@ -2105,4 +2105,16 @@
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} 邀請你在 Ship Builder 中一起建造「{1}」。</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>傳送到隊伍聊天</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>傳送到部落聊天</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>傳送到 Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>訊息內容</value>
+  </data>
 </root>

@@ -5834,4 +5834,16 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="UiListenerRunning" xml:space="preserve">
     <value>In esecuzione</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Invia alla chat di squadra</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Invia alla chat del clan</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Invia a Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Testo del messaggio</value>
+  </data>
 </root>

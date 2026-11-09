@@ -8156,4 +8156,16 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0}님이 Ship Builder에서 &quot;{1}&quot;을(를) 함께 건조하자고 초대했습니다.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>팀 채팅으로 보내기</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>클랜 채팅으로 보내기</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Discord로 보내기</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>메시지 내용</value>
+  </data>
 </root>

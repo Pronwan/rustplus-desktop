@@ -9138,6 +9138,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             BuyXForYPanel.Visibility = Visibility.Collapsed;
             DeviceAutomationPanel.Visibility = Visibility.Collapsed;
             LfgPanel.Visibility = Visibility.Collapsed;
+            // Read each time it opens: a bot or webhook set up since then should be offered.
+            _vm.IsLogicDiscordAvailable = IsLogicDiscordAvailable();
             LogicEnginePanel.RefreshListBindings();
             LogicEnginePanel.Visibility = Visibility.Visible;
         }

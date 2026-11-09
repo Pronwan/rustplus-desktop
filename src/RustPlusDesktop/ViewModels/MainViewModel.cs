@@ -728,6 +728,17 @@ public class MainViewModel : INotifyPropertyChanged
     /// <summary>After every save, so the cloud can follow what was edited (see CloudAutomationSync).</summary>
     public event Action? Saved;
 
+    private bool _isLogicDiscordAvailable;
+    /// <summary>
+    /// Whether the Logic Engine offers "Send to Discord": only with somewhere for it to arrive,
+    /// the Advanced Discord Bot or a Discord webhook.
+    /// </summary>
+    public bool IsLogicDiscordAvailable
+    {
+        get => _isLogicDiscordAvailable;
+        set { if (_isLogicDiscordAvailable != value) { _isLogicDiscordAvailable = value; OnPropertyChanged(); } }
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

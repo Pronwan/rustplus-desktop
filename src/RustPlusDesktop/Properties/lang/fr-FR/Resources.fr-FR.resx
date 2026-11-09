@@ -8235,4 +8235,16 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} vous invite à construire « {1} » ensemble dans le Ship Builder.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Envoyer dans le chat d'équipe</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Envoyer dans le chat du clan</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Envoyer sur Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Texte du message</value>
+  </data>
 </root>

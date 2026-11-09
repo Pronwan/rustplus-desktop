@@ -5879,6 +5879,18 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
   <data name="UiStartTimer" xml:space="preserve">
     <value>Timer starten</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>In Team-Chat senden</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>In Clan-Chat senden</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>An Discord senden</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Nachrichtentext</value>
+  </data>
   <data name="UiMinutes" xml:space="preserve">
     <value>Min</value>
   </data>

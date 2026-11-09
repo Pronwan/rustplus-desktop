@@ -277,6 +277,10 @@ namespace RustPlusDesk.Views
                 {
                     await ExecuteStartTimerStepAsync(step);
                 }
+                else if (step.StepType is "SendTeamChat" or "SendClanChat" or "SendDiscord")
+                {
+                    await ExecuteMessageStepAsync(step);
+                }
                 else if (step.StepType == "CheckAvailability")
                 {
                     bool conditionMet = await ExecuteCheckAvailabilityStepAsync(step, rule, cancellationToken);
@@ -556,6 +560,79 @@ namespace RustPlusDesk.Views
                 }
             }
             return conditionMet;
+        }
+
+        /// <summary>
+        /// A rule's own message: feedback once it has done its work. Sent as written, to the channel
+        /// the step names - not through the alert routing, which follows the user's alert settings
+        /// (team or clan, or Discord only) and would put this somewhere the user did not choose.
+        /// A message that does not go out is logged and the rule carries on.
+        /// </summary>
+        private async Task ExecuteMessageStepAsync(LogicStep step)
+        {
+            var text = (step.MessageText ?? "").Trim();
+            if (text.Length == 0) return;
+
+            try
+            {
+                if (step.StepType == "SendDiscord")
+                {
+                    if (!await SendLogicDiscordAsync(text))
+                        AppendLog("[LogicEngine] Send to Discord: no Discord bot or webhook is set up.");
+                    return;
+                }
+
+                // Marked as our own, so it is not forwarded to Discord as if a player had written it.
+                lock (_recentAutomatedMessages) { _recentAutomatedMessages.Add(text); }
+
+                var channel = step.StepType == "SendClanChat" ? ChatChannel.Clan : ChatChannel.Team;
+                if (!await SendChatReliableAsync(text, channel))
+                    AppendLog($"[LogicEngine] {step.StepType}: the message was not sent.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[LogicEngine] {step.StepType} failed: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Where "Send to Discord" can arrive: the Advanced Discord Bot, or a Discord webhook - the
+        /// server's chat alert webhook, or the one raid alerts go to. Without any, the step is not
+        /// offered at all.
+        /// </summary>
+        private bool IsLogicDiscordAvailable()
+            => DiscordBotListenerService.Instance.HasGuild || LogicDiscordWebhook() != null;
+
+        private string? LogicDiscordWebhook()
+        {
+            var profile = _vm?.Selected;
+            if (profile?.DiscordWebhookChatAlertsEnabled == true && !string.IsNullOrWhiteSpace(profile.DiscordWebhookChatAlertsUrl))
+                return profile.DiscordWebhookChatAlertsUrl;
+
+            return string.IsNullOrWhiteSpace(TrackingService.DiscordWebhookUrl) ? null : TrackingService.DiscordWebhookUrl;
+        }
+
+        /// <summary>The bot's events channel first, as the cloud does; a webhook otherwise.</summary>
+        private async Task<bool> SendLogicDiscordAsync(string text)
+        {
+            if (DiscordBotListenerService.Instance.HasGuild)
+            {
+                await DiscordBotListenerService.Instance.SendNotificationAsync("events", text);
+                return true;
+            }
+
+            var webhook = LogicDiscordWebhook();
+            if (webhook == null) return false;
+
+            var payload = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                content = $"**[{_vm?.Selected?.Name ?? "Rust Server"}]** {text}",
+                allowed_mentions = new { parse = Array.Empty<string>() },
+            });
+            using var content = new System.Net.Http.StringContent(payload, System.Text.Encoding.UTF8, "application/json");
+            using var client = new System.Net.Http.HttpClient(new TrafficTrackingHttpMessageHandler("Discord Webhook"));
+            using var response = await client.PostAsync(webhook, content);
+            return response.IsSuccessStatusCode;
         }
 
         private async Task HandleRuleFailureAsync(LogicRule rule, string errorMsg)

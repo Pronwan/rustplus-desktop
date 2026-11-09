@@ -8126,4 +8126,16 @@
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>يدعوك {0} إلى بناء &quot;{1}&quot; معًا في Ship Builder.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>إرسال إلى دردشة الفريق</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>إرسال إلى دردشة العشيرة</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>إرسال إلى Discord</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>نص الرسالة</value>
+  </data>
 </root>

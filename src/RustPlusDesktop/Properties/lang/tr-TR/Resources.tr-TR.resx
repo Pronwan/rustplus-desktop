@@ -7211,4 +7211,16 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} seni Ship Builder&apos;da &quot;{1}&quot; gemisini birlikte inşa etmeye davet ediyor.</value>
   </data>
+  <data name="UiSendTeamChat" xml:space="preserve">
+    <value>Takım Sohbetine Gönder</value>
+  </data>
+  <data name="UiSendClanChat" xml:space="preserve">
+    <value>Klan Sohbetine Gönder</value>
+  </data>
+  <data name="UiSendDiscord" xml:space="preserve">
+    <value>Discord'a Gönder</value>
+  </data>
+  <data name="UiMessageTextPlaceholder" xml:space="preserve">
+    <value>Mesaj metni</value>
+  </data>
 </root>
