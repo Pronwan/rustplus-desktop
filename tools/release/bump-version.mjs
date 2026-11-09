@@ -47,7 +47,9 @@ function setGithubOutput(key, value) {
 function getRepoSlug() {
   const explicit = getArgValue('repo') || process.env.GITHUB_REPOSITORY;
   if (explicit) return explicit;
-  const remoteUrl = run('git config --get remote.origin.url') || run('git config --get remote.remote.url');
+  const remoteUrl = run('git config --get remote.remote.url') ||
+                    run('git config --get remote.upstream.url') ||
+                    run('git config --get remote.origin.url');
   const match = remoteUrl.match(/github\.com[/:]([^/]+)\/([^/.]+)(?:\.git)?/);
   if (match) return `${match[1]}/${match[2]}`;
   return 'Pronwan/rustplus-desktop';
