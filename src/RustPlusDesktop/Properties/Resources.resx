@@ -8870,4 +8870,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} invites you to build &quot;{1}&quot; together in the Ship Builder.</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: raid alerts go to the raid channel of your Advanced Discord Bot, oil rig crates and deaths to its events channel - while this app is closed too. Set the channels up under Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Old Discord webhook - only used if you have no Discord bot. Clear it to stop using it.</value>
+  </data>
 </root>

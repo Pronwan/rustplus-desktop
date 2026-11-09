@@ -668,6 +668,10 @@ namespace RustPlusDesk.Views
 #endif
             
             TxtDiscordWebhookUrl.Text = TrackingService.DiscordWebhookUrl;
+            // Decided on opening, not while typing: clearing the field must not make it vanish mid-edit.
+            PnlLegacyDiscordWebhook.Visibility = string.IsNullOrWhiteSpace(TrackingService.DiscordWebhookUrl)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
             var fcmMention = TrackingService.DiscordWebhookMention ?? "";
             ChkFcmMentionEveryone.IsChecked = fcmMention.Contains("@everyone");
             ChkFcmMentionHere.IsChecked = fcmMention.Contains("@here");

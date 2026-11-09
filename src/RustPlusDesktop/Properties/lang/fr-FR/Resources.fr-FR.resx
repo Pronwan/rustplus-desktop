@@ -8247,4 +8247,10 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>Texte du message</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord : les alertes de raid vont dans le salon raid de ton Advanced Discord Bot, les caisses de plateforme pétrolière et les morts dans son salon événements, même quand cette application est fermée. Configure les salons dans Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Ancien webhook Discord : utilisé uniquement si tu n'as pas de bot Discord. Vide-le pour ne plus l'utiliser.</value>
+  </data>
 </root>

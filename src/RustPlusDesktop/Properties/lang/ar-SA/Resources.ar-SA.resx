@@ -8138,4 +8138,10 @@
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>نص الرسالة</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: تُرسل تنبيهات الغارات إلى قناة الغارات في Advanced Discord Bot، وصناديق منصة النفط وحالات الوفاة إلى قناة الأحداث - حتى عندما يكون هذا التطبيق مغلقًا. اضبط القنوات ضمن Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Webhook قديم لـ Discord - يُستخدم فقط إذا لم يكن لديك بوت Discord. امسحه لإيقاف استخدامه.</value>
+  </data>
 </root>

@@ -146,7 +146,9 @@ public partial class AppSettingsOverlay
         {
             // A saved destination is synced on every edit (TriggerBackgroundFcmSync) and counts as
             // consent (EnsureOfflineIntegrationsConsent), so it is what "active" means here.
-            bool hasDestination = !string.IsNullOrWhiteSpace(TrackingService.DiscordWebhookUrl)
+            // The Discord bot counts too: offline alerts reach it without a webhook.
+            bool hasDestination = DiscordBotListenerService.Instance.HasGuild
+                                  || !string.IsNullOrWhiteSpace(TrackingService.DiscordWebhookUrl)
                                   || !string.IsNullOrWhiteSpace(TrackingService.SmartHomeWebhookUrl);
             if (hasDestination)
                 SetServiceChip(ChipOfflineAlerts, T("CsChipActive", "Active"), ChipTone.Good);

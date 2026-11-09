@@ -8168,4 +8168,10 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>메시지 내용</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: 레이드 알림은 Advanced Discord Bot의 레이드 채널로, 석유 시추선 상자와 사망은 이벤트 채널로 전송됩니다. 이 앱이 닫혀 있어도 마찬가지입니다. 채널은 Discord Bot에서 설정하세요.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>이전 Discord 웹훅 - Discord 봇이 없을 때만 사용됩니다. 더 이상 사용하지 않으려면 비우세요.</value>
+  </data>
 </root>

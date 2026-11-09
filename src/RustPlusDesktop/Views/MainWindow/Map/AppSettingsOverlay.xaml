@@ -1254,13 +1254,19 @@
                                 <Border Style="{StaticResource StepBadge}"><TextBlock Text="2" /></Border>
                                 <StackPanel Grid.Column="1">
                                     <ui:TextBlock Style="{StaticResource ServiceTitle}" FontSize="12" Text="{DynamicResource CsOfflineStep2}" TextWrapping="Wrap" />
-                                    <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource UiDiscordWebhookURLOfflineAlerts}" />
-                                    <ui:TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Padding="6,4" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged" />
-                                    <WrapPanel Margin="0,4,0,0">
-                                        <ui:TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                        <CheckBox x:Name="ChkFcmMentionEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
-                                        <CheckBox x:Name="ChkFcmMentionHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
-                                    </WrapPanel>
+                                    <!-- Discord goes through the Advanced Discord Bot now, closed app or not. -->
+                                    <ui:TextBlock Style="{StaticResource ServiceDescription}" Text="{DynamicResource CsOfflineDiscordViaBot}" TextWrapping="Wrap" Margin="0,2,0,4" />
+                                    <!-- The old webhook: shown only to someone who still has one, so they can see and clear it.
+                                         The cloud uses it only for an owner without a Discord bot. -->
+                                    <StackPanel x:Name="PnlLegacyDiscordWebhook" Visibility="Collapsed">
+                                        <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource CsOfflineLegacyWebhook}" TextWrapping="Wrap" />
+                                        <ui:TextBox x:Name="TxtDiscordWebhookUrl" Height="28" Padding="6,4" VerticalAlignment="Center" TextChanged="TxtDiscordWebhookUrl_TextChanged" />
+                                        <WrapPanel Margin="0,4,0,0">
+                                            <ui:TextBlock Text="{DynamicResource UiOptionalPings}" Foreground="{DynamicResource TextSubtle}" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <CheckBox x:Name="ChkFcmMentionEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
+                                            <CheckBox x:Name="ChkFcmMentionHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Checked="ChkFcmMention_Changed" Unchecked="ChkFcmMention_Changed" />
+                                        </WrapPanel>
+                                    </StackPanel>
                                     <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource UiSmartHomeWebhookURLEGIFTTTAlexaGoogle}" />
                                     <ui:TextBox x:Name="TxtSmartHomeWebhookUrl" Height="28" Padding="6,4" VerticalAlignment="Center" TextChanged="TxtSmartHomeWebhookUrl_TextChanged" />
                                 </StackPanel>

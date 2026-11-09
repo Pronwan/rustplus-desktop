@@ -1489,4 +1489,10 @@
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>訊息內容</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord：突襲警報會傳送到你的 Advanced Discord Bot 的突襲頻道，石油鑽井平台箱子和死亡會傳送到其事件頻道——即使本應用程式已關閉。請在 Discord Bot 中設定頻道。</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>舊的 Discord Webhook——僅在你沒有 Discord 機器人時使用。清空即可停用。</value>
+  </data>
 </root>

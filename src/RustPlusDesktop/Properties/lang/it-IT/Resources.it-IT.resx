@@ -5846,4 +5846,10 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>Testo del messaggio</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: gli avvisi di raid vanno nel canale raid del tuo Advanced Discord Bot, le casse della piattaforma petrolifera e le morti nel suo canale eventi, anche quando questa app è chiusa. Configura i canali in Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Vecchio webhook Discord: usato solo se non hai un bot Discord. Svuotalo per smettere di usarlo.</value>
+  </data>
 </root>

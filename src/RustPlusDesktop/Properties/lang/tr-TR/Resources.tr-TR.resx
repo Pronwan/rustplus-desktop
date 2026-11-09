@@ -7223,4 +7223,10 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>Mesaj metni</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: Baskın uyarıları Advanced Discord Bot'unuzun baskın kanalına, petrol platformu sandıkları ve ölümler etkinlik kanalına gider - bu uygulama kapalıyken de. Kanalları Discord Bot altında ayarlayın.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Eski Discord webhook'u - yalnızca Discord botunuz yoksa kullanılır. Kullanmayı bırakmak için temizleyin.</value>
+  </data>
 </root>

@@ -8247,4 +8247,10 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="UiMessageTextPlaceholder" xml:space="preserve">
     <value>Texto del mensaje</value>
   </data>
+  <data name="CsOfflineDiscordViaBot" xml:space="preserve">
+    <value>Discord: las alertas de asalto van al canal de asaltos de tu Advanced Discord Bot, y las cajas de la plataforma petrolífera y las muertes a su canal de eventos, también con esta aplicación cerrada. Configura los canales en Discord Bot.</value>
+  </data>
+  <data name="CsOfflineLegacyWebhook" xml:space="preserve">
+    <value>Webhook antiguo de Discord: solo se usa si no tienes un bot de Discord. Vacíalo para dejar de usarlo.</value>
+  </data>
 </root>
