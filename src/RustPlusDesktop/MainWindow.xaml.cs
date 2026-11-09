@@ -654,6 +654,9 @@ public partial class MainWindow : WpfUi.FluentWindow
 
             StartPairingSilent(true);
 
+            // Make sure the cloud has the current Rust+ login (consent-gated inside).
+            _ = Task.Run(RustPlusDesk.Services.FcmSyncService.SyncOnLaunchAsync);
+
             // Servers paired before we kept Facepunch's server id can't use the companion socket
             // yet; look their ids up once per launch so they move off direct connections.
             var serversWithoutId = _vm.Servers.Where(s => string.IsNullOrWhiteSpace(s.ServerId)).ToList();
