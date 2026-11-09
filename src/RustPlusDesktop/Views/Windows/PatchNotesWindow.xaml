@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.3.0 RELEASE -->
+                            <!-- v11.3.1 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_3_0"
+                            <Border x:Name="Card_v11_3_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,47 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.3.0 | Custom Keybinds, Smarter Chat Commands &amp; Cloud 24/7 Automations"
+                                            <TextBlock Text="v11.3.1 | Cloud 24/7 Rust+ Login &amp; Server ID Sync"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            This hotfix ensures automatic Rust+ login renewals and launch-time server IDs upload to Cloud 24/7, resolving false login expiration warnings and maintaining seamless background automations.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Cloud Token Renewal Sync:</Run>
+                                        When your Rust+ login token renews automatically or after a new pairing, the updated credentials now sync to the cloud immediately instead of remaining local-only.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server ID Synchronization:</Run>
+                                        Server IDs resolved by the app's launch backfill are uploaded to the cloud, preventing companion socket disconnection while the desktop app is closed.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.3.0 RELEASE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_3_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.3.0 | Custom Keybinds, Smarter Chat Commands &amp; Cloud 24/7 Automations"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 
