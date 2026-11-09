@@ -97,6 +97,10 @@ public partial class MainWindow
             return false;
         }
 
+        // The renewal rewrote the local config, login token included; the cloud only
+        // learns of it through an upload (consent and premium are checked inside).
+        _ = RustPlusDesk.Services.FcmSyncService.SyncFcmCredentialsAsync();
+
         // New credentials only take effect on the next connect.
         Log("[fcm-health] Restarting the listener with the renewed registration …");
         await _pairing.StopAsync().ConfigureAwait(false);
