@@ -1065,7 +1065,60 @@ public class ServerProfile : INotifyPropertyChanged
     public DateTime? WipeTime
     {
         get => _wipeTime;
-        set { _wipeTime = value; OnProp(); }
+        set { _wipeTime = value; OnProp(); PruneRemovedDevices(); }
+    }
+
+    /// <summary>
+    /// Devices the user deleted here, by entity id, with when (UTC).
+    ///
+    /// Facepunch keeps every pairing notification in its history, and the cloud keeps the
+    /// devices it was last told about, so a deleted device kept coming back on the next
+    /// launch's history sync. A pairing is only taken for a device on this list when it
+    /// is newer than the deletion, which is what pairing it again in game produces.
+    /// Entity ids restart after a wipe, so a newer pairing reusing the id is let through.
+    /// </summary>
+    private Dictionary<uint, DateTime> _removedDevices = new();
+    public Dictionary<uint, DateTime> RemovedDevices
+    {
+        get => _removedDevices;
+        set { _removedDevices = value ?? new(); OnProp(); }
+    }
+
+    /// <summary>Remember that the user deleted this device (and its children).</summary>
+    public void MarkDeviceRemoved(SmartDevice device)
+    {
+        if (device == null) return;
+        if (!device.IsGroup && device.EntityId > 0)
+            _removedDevices[device.EntityId] = DateTime.UtcNow;
+        if (device.Children != null)
+            foreach (var child in device.Children)
+                MarkDeviceRemoved(child);
+    }
+
+    /// <summary>
+    /// True when a pairing for <paramref name="entityId"/> made at <paramref name="pairedAtUtc"/>
+    /// is no newer than the user's deletion of that device: a replay of a pairing they undid.
+    /// </summary>
+    public bool IsRemovedDevicePairing(uint entityId, DateTime pairedAtUtc)
+        => _removedDevices.TryGetValue(entityId, out var removedAt) && pairedAtUtc <= removedAt;
+
+    /// <summary>
+    /// True when a pairing made at <paramref name="pairedAtUtc"/> predates this server's
+    /// current wipe. The entity it names no longer exists on the map.
+    /// </summary>
+    public bool IsFromEarlierWipe(DateTime pairedAtUtc)
+        => WipeTime is DateTime wipe && pairedAtUtc < wipe.ToUniversalTime();
+
+    /// <summary>
+    /// Drop deletion records a new wipe made pointless: every pairing they could block
+    /// predates the wipe and is skipped for that reason already.
+    /// </summary>
+    public void PruneRemovedDevices()
+    {
+        if (WipeTime is not DateTime wipe || _removedDevices.Count == 0) return;
+        var cutoff = wipe.ToUniversalTime();
+        foreach (var id in _removedDevices.Where(kv => kv.Value < cutoff).Select(kv => kv.Key).ToList())
+            _removedDevices.Remove(id);
     }
 
     private List<LogicRule> _logicRules = new();

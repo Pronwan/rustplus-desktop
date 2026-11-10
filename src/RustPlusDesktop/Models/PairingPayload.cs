@@ -21,6 +21,21 @@ public class PairingPayload
     public string? NotificationId { get; set; }
     public DateTime? Timestamp { get; set; }
 
+    /// <summary>
+    /// Replayed from Facepunch's notification history rather than pushed just now.
+    /// Its <see cref="Timestamp"/> is when it was really paired, which may be long ago.
+    /// </summary>
+    public bool FromHistory { get; set; }
+
+    /// <summary>
+    /// The user confirmed bringing back a device they had deleted; the deletion record
+    /// must not block this pairing.
+    /// </summary>
+    public bool UserConfirmedRestore { get; set; }
+
+    /// <summary>When this was paired, in UTC; "now" when the push carried no time.</summary>
+    public DateTime PairedAtUtc => Timestamp?.ToUniversalTime() ?? DateTime.UtcNow;
+
 }
 
 

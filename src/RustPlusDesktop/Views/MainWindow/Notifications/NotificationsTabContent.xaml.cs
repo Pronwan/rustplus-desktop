@@ -140,7 +140,7 @@ namespace RustPlusDesk.Views
             NotificationCenterService.PruneDuplicates();
             if (System.Windows.Application.Current.MainWindow is MainWindow mw)
             {
-                await mw.SyncPairingsFromHistoryAsync(showToastIfFound: true);
+                await mw.SyncPairingsFromHistoryAsync(showToastIfFound: true, userInitiated: true);
                 _notificationsView?.Refresh();
             }
         }

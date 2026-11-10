@@ -4314,6 +4314,48 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (changed) _vm.Save();
     }
 
+    /// <summary>
+    /// A pairing the user already undid, or one from a map that has since been wiped.
+    ///
+    /// The history sync judges these before dispatching; this catches the same cases on
+    /// any other route (a queued push, a race with a delete) so none of them can put a
+    /// deleted server or device back. A pairing newer than the deletion is a real re-pair.
+    /// </summary>
+    private bool IsStalePairing(PairingPayload e, out string reason)
+    {
+        reason = "";
+        if (e.UserConfirmedRestore) return false;
+
+        var pairedAt = e.PairedAtUtc;
+        var prof = FindProfileForPairing(e);
+
+        if (prof == null)
+        {
+            if (RemovedServerStore.IsRemovedServerPairing(e, pairedAt))
+            {
+                reason = $"server '{e.ServerName ?? e.Host}' was deleted after this pairing.";
+                return true;
+            }
+            return false;
+        }
+
+        if (!e.EntityId.HasValue) return false;
+        var id = e.EntityId.Value;
+        if (FindDeviceById(prof.Devices, id) != null) return false;
+
+        if (prof.IsRemovedDevicePairing(id, pairedAt))
+        {
+            reason = $"device #{id} was deleted after this pairing.";
+            return true;
+        }
+        if (e.FromHistory && prof.IsFromEarlierWipe(pairedAt))
+        {
+            reason = $"device #{id} was paired before the current wipe.";
+            return true;
+        }
+        return false;
+    }
+
     private void Pairing_Paired(object? sender, PairingPayload e)
     {
         // Key OHNE EntityId: dient nur für „Server-keepalive“-Erkennung
@@ -4346,6 +4388,12 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         _ = Dispatcher.InvokeAsync(async () =>
         {
+            if (IsStalePairing(e, out var staleReason))
+            {
+                AppendLog($"[pairing] Ignored: {staleReason}");
+                return;
+            }
+
             // Add to Notification Center!
             // The thing that was paired is the title, as on the live map; the line under it
             // says what happened.
@@ -4563,6 +4611,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 AppendLog($"[pairing] Pairing updated -> {prof.Name}");
             }
 
+            // Passed IsStalePairing, so this is newer than any deletion of the server.
+            RemovedServerStore.Clear(e.ServerId, e.Host, e.Port);
+
             if (string.IsNullOrWhiteSpace(prof.Description) && !string.IsNullOrWhiteSpace(e.ServerDescription))
             {
                 prof.Description = e.ServerDescription.Trim();
@@ -4624,6 +4675,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         IsMissing = false,
                     };
                     prof.Devices.Add(dev);
+                    // Paired again after a deletion (or confirmed back): no longer removed.
+                    prof.RemovedDevices.Remove(dev.EntityId);
                     AppendLog($"Device added → {dev.Display}");
                     // Any kind counts: switch, alarm or storage monitor.
                     Ach.Unlock(Ach.SmartDevicePaired);
@@ -5029,6 +5082,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             }
 
             if (ReferenceEquals(_vm.Selected, prof)) _vm.Selected = null;
+            // Its old pairing notifications must not recreate it on the next history sync.
+            RemovedServerStore.MarkRemoved(prof);
             _vm.Servers.Remove(prof);
             if (TrackingService.LastSelectedServerKey == prof.MatchKey)
                 TrackingService.LastSelectedServerKey = "";
@@ -7801,39 +7856,97 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    public async Task<int> SyncPairingsFromHistoryAsync(bool showToastIfFound = false)
+    /// <summary>The profile a pairing belongs to: Facepunch's server id first, then host:port.</summary>
+    private ServerProfile? FindProfileForPairing(PairingPayload p)
+        => (!string.IsNullOrWhiteSpace(p.ServerId)
+                ? _vm.Servers.FirstOrDefault(s =>
+                    string.Equals(s.ServerId, p.ServerId, StringComparison.OrdinalIgnoreCase))
+                : null)
+            ?? _vm.Servers.FirstOrDefault(s =>
+                !string.IsNullOrWhiteSpace(p.Host) && p.Host != "companion-socket" &&
+                s.Host.Equals(p.Host, StringComparison.OrdinalIgnoreCase) &&
+                s.Port == p.Port);
+
+    /// <summary>
+    /// Judge one pairing replayed from Facepunch's notification history.
+    ///
+    /// The history keeps every pairing the account ever received. Replaying it blindly
+    /// brought back devices from before a wipe (which no longer exist, so they sat in the
+    /// list as Offline) and devices the user had deleted, on every launch.
+    /// </summary>
+    private HistoryPairingDecision DecideHistoryPairing(PairingPayload p)
+    {
+        var pairedAt = p.PairedAtUtc;
+        var prof = FindProfileForPairing(p);
+
+        if (prof == null)
+        {
+            // Deleted by the user; only a pairing made after that may bring it back.
+            return RemovedServerStore.IsRemovedServerPairing(p, pairedAt)
+                ? HistoryPairingDecision.Skip
+                : HistoryPairingDecision.Import;
+        }
+
+        if (!p.EntityId.HasValue)
+        {
+            if (string.Equals(prof.PlayerToken, p.PlayerToken, StringComparison.Ordinal))
+                return HistoryPairingDecision.AlreadyPaired;
+            // The newest server pairing in the history is older than the wipe, so the token
+            // the profile has came from somewhere newer (a live push, the cloud): keep it.
+            return prof.IsFromEarlierWipe(pairedAt)
+                ? HistoryPairingDecision.Skip
+                : HistoryPairingDecision.Import;
+        }
+
+        var entityId = p.EntityId.Value;
+        if (FindDeviceById(prof.Devices, entityId) != null)
+            return HistoryPairingDecision.AlreadyPaired;
+
+        // Paired on a map that has since been wiped: the entity is gone.
+        if (prof.IsFromEarlierWipe(pairedAt))
+            return HistoryPairingDecision.Skip;
+
+        // Same wipe, but the user deleted it after this pairing. Only a sync the user ran
+        // may bring it back, and only once they confirm.
+        if (prof.IsRemovedDevicePairing(entityId, pairedAt))
+            return HistoryPairingDecision.NeedsConfirmation;
+
+        return HistoryPairingDecision.Import;
+    }
+
+    /// <summary>
+    /// Reconcile pairings Facepunch kept in its notification history.
+    ///
+    /// <paramref name="userInitiated"/> is the Sync button: only then are devices the user
+    /// deleted offered back, and only after they confirm. The launch-time sync never
+    /// restores them.
+    /// </summary>
+    public async Task<int> SyncPairingsFromHistoryAsync(bool showToastIfFound = false, bool userInitiated = false)
     {
         try
         {
             NotificationCenterService.PruneDuplicates();
             AppendLog("🔍 Checking notification history for missed pairings...");
-            int synced = await FacepunchNotificationHistoryService.SyncHistoryPairingsAsync(
+            var result = await FacepunchNotificationHistoryService.SyncHistoryPairingsAsync(
                 payload =>
                 {
                     Dispatcher.Invoke(() => Pairing_Paired(this, payload));
                     return Task.CompletedTask;
                 },
-                payload =>
-                {
-                    var prof = (!string.IsNullOrWhiteSpace(payload.ServerId)
-                            ? _vm.Servers.FirstOrDefault(s =>
-                                string.Equals(s.ServerId, payload.ServerId, StringComparison.OrdinalIgnoreCase))
-                            : null)
-                        ?? _vm.Servers.FirstOrDefault(s =>
-                            !string.IsNullOrWhiteSpace(payload.Host) && payload.Host != "companion-socket" &&
-                            s.Host.Equals(payload.Host, StringComparison.OrdinalIgnoreCase) &&
-                            s.Port == payload.Port);
-
-                    if (prof == null) return false;
-
-                    if (!payload.EntityId.HasValue)
-                    {
-                        return string.Equals(prof.PlayerToken, payload.PlayerToken, StringComparison.Ordinal);
-                    }
-
-                    return prof.Devices != null && prof.Devices.Any(d => d.EntityId == payload.EntityId.Value);
-                },
+                payload => Dispatcher.Invoke(() => DecideHistoryPairing(payload)),
                 AppendLog);
+
+            int synced = result.Imported;
+            if (result.Skipped > 0)
+                AppendLog($"ℹ️ Ignored {result.Skipped} pairing(s) from earlier wipes or deleted servers.");
+
+            if (result.HeldBack.Count > 0)
+            {
+                if (userInitiated)
+                    synced += await Dispatcher.InvokeAsync(() => ConfirmRestoreRemovedDevices(result.HeldBack));
+                else
+                    AppendLog($"ℹ️ {result.HeldBack.Count} device(s) you removed are still in Rust+ history; use Sync Pairings to restore them.");
+            }
 
             if (synced > 0)
             {
@@ -7856,13 +7969,61 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
+    /// <summary>
+    /// Ask before bringing back devices the user deleted that the history still lists for
+    /// the same server and wipe. Returns how many were restored.
+    /// </summary>
+    private int ConfirmRestoreRemovedDevices(IReadOnlyList<PairingPayload> heldBack)
+    {
+        // Re-judge on the UI thread: a live pairing may have resolved some since.
+        var candidates = heldBack
+            .Where(p => DecideHistoryPairing(p) == HistoryPairingDecision.NeedsConfirmation)
+            .GroupBy(p => p.EntityId!.Value)
+            .Select(g => g.OrderByDescending(p => p.PairedAtUtc).First())
+            .ToList();
+        if (candidates.Count == 0) return 0;
+
+        var lines = candidates
+            .GroupBy(p => FindProfileForPairing(p)?.Name ?? p.ServerName ?? p.Host)
+            .SelectMany(g => new[] { $"{g.Key}:" }.Concat(g.Select(p =>
+                $"   • {(string.IsNullOrWhiteSpace(p.EntityName) ? "Smart Device" : p.EntityName)} (#{p.EntityId}), paired {p.PairedAtUtc.ToLocalTime():g}")));
+
+        var answer = MessageBox.Show(
+            $"Rust+ still lists {candidates.Count} device(s) you removed from this wipe:\n\n" +
+            string.Join("\n", lines) +
+            "\n\nRestore them to your device list?",
+            "Restore Removed Devices",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            AppendLog($"[history-sync] User kept {candidates.Count} removed device(s) out.");
+            return 0;
+        }
+
+        int restored = 0;
+        foreach (var p in candidates)
+        {
+            var prof = FindProfileForPairing(p);
+            if (prof == null) continue;
+            prof.RemovedDevices.Remove(p.EntityId!.Value);
+            p.UserConfirmedRestore = true;
+            Pairing_Paired(this, p);
+            restored++;
+        }
+        _vm.Save();
+        AppendLog($"[history-sync] Restored {restored} removed device(s) at the user's request.");
+        return restored;
+    }
+
     public Task<int> SyncPairingsFromFacepunchHistoryAsync(bool showToastIfFound = false)
-        => SyncPairingsFromHistoryAsync(showToastIfFound);
+        => SyncPairingsFromHistoryAsync(showToastIfFound, userInitiated: showToastIfFound);
 
     private async void BtnSyncPairingsFromHistory_Click(object sender, RoutedEventArgs e)
     {
         NotificationCenterService.PruneDuplicates();
-        int count = await SyncPairingsFromHistoryAsync(showToastIfFound: true);
+        int count = await SyncPairingsFromHistoryAsync(showToastIfFound: true, userInitiated: true);
         if (count == 0)
         {
             ShowInfoSnackbarOnMain("History Checked", "No pending server pairings found in notification history.", Wpf.Ui.Controls.ControlAppearance.Secondary);

@@ -696,6 +696,9 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     {
         if (_vm.Selected?.Devices == null || dev == null) return;
 
+        // Facepunch's notification history and the cloud both still list it; without this
+        // the next launch's pairing sync puts it straight back.
+        _vm.Selected.MarkDeviceRemoved(dev);
         RemoveDeviceAndChildrenFromHotkeys(dev);
         RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
         RemoveOwnedOilRigRulesForDevice(dev);
@@ -741,6 +744,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
         foreach (var dev in missing)
         {
+            _vm.Selected.MarkDeviceRemoved(dev);
             RemoveDeviceAndChildrenFromHotkeys(dev);
             RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
             RemoveOwnedOilRigRulesForDevice(dev);
