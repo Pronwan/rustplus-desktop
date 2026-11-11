@@ -882,6 +882,29 @@ public class ServerProfile : INotifyPropertyChanged
         set { _discordWebhookChatAlertsExclusive = value; OnProp(); }
     }
 
+    // Under "Discord only": feedback that normally answers in game, sent to the webhook instead.
+    // For servers without team chat. Off by default, so the switch alone never swallows a reply.
+    private bool _discordOnlyCommandReplies;
+    public bool DiscordOnlyCommandReplies
+    {
+        get => _discordOnlyCommandReplies;
+        set { _discordOnlyCommandReplies = value; OnProp(); }
+    }
+
+    private bool _discordOnlyHotkeys;
+    public bool DiscordOnlyHotkeys
+    {
+        get => _discordOnlyHotkeys;
+        set { _discordOnlyHotkeys = value; OnProp(); }
+    }
+
+    private bool _discordOnlyAutomations;
+    public bool DiscordOnlyAutomations
+    {
+        get => _discordOnlyAutomations;
+        set { _discordOnlyAutomations = value; OnProp(); }
+    }
+
     private bool _timerAlarmEnabled = true;
     public bool TimerAlarmEnabled
     {

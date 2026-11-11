@@ -2135,4 +2135,19 @@
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>允許雲端在本應用程式關閉時回答密碼指令。密碼會加密儲存在 rustplusdesktop.cloud 上；關閉此項即可刪除。僅限 Premium。</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>所有聊天提醒現在只會傳送到 Discord Webhook，不再傳送到遊戲聊天。</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>指令回覆和回饋仍會傳到遊戲聊天。如果伺服器沒有隊伍聊天，可以改為傳送到 Discord：</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>聊天指令的回覆</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>裝置快捷鍵訊息</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Logic Engine 訊息</value>
+  </data>
 </root>

@@ -6750,6 +6750,84 @@
                                                          </MenuItem.Header>
                                                          </MenuItem>
                                                      </MenuItem>
+
+                                                     <!-- Column 5: what "Discord only" means, and the feedback that may follow it there.
+                                                          Shown only while the switch is on. -->
+                                                     <MenuItem Header="{DynamicResource UiDiscordWebhookExclusive}" BorderThickness="1,0,0,0"
+                                                               Visibility="{Binding Selected.DiscordWebhookChatAlertsExclusive, Converter={StaticResource Vis}, FallbackValue=Collapsed}">
+                                                         <MenuItem.Style>
+                                                             <Style TargetType="MenuItem">
+                                                                 <Setter Property="Template">
+                                                                     <Setter.Value>
+                                                                         <ControlTemplate TargetType="MenuItem">
+                                                                             <Border
+                                                                                 BorderBrush="{DynamicResource WhiteA15}"
+                                                                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                                                                 Margin="0"
+                                                                                 Padding="0">
+                                                                                 <StackPanel Width="220">
+                                                                                     <TextBlock
+                                                                                         Text="{TemplateBinding Header}"
+                                                                                         FontSize="11"
+                                                                                         FontWeight="Bold"
+                                                                                         Foreground="{DynamicResource TextSubtle}"
+                                                                                         Opacity="0.8"
+                                                                                         Margin="8,4,8,8" />
+                                                                                     <ItemsPresenter />
+                                                                                 </StackPanel>
+                                                                             </Border>
+                                                                         </ControlTemplate>
+                                                                     </Setter.Value>
+                                                                 </Setter>
+                                                             </Style>
+                                                         </MenuItem.Style>
+
+                                                         <MenuItem StaysOpenOnClick="True" IsEnabled="{Binding Selected, Converter={StaticResource LocalNotNull}}">
+                                                             <MenuItem.Template>
+                                                                 <ControlTemplate TargetType="MenuItem">
+                                                                     <ContentPresenter ContentSource="Header" Margin="8,0,8,4" />
+                                                                 </ControlTemplate>
+                                                             </MenuItem.Template>
+                                                             <MenuItem.Header>
+                                                                 <StackPanel>
+                                                                     <TextBlock
+                                                                         Text="{DynamicResource UiDiscordOnlyNotice}"
+                                                                         TextWrapping="Wrap"
+                                                                         FontSize="11"
+                                                                         FontWeight="SemiBold"
+                                                                         Foreground="{DynamicResource TextPrimary}"
+                                                                         Margin="0,0,0,8" />
+                                                                     <TextBlock
+                                                                         Text="{DynamicResource UiDiscordOnlyFeedbackHint}"
+                                                                         TextWrapping="Wrap"
+                                                                         FontSize="11"
+                                                                         Foreground="{DynamicResource TextSubtle}"
+                                                                         Margin="0,0,0,6" />
+                                                                     <CheckBox
+                                                                         Content="{DynamicResource UiDiscordOnlyCommandReplies}"
+                                                                         Foreground="{DynamicResource TextPrimary}"
+                                                                         FontSize="11"
+                                                                         Margin="0,3,0,3"
+                                                                         Style="{StaticResource DotCheckBox}"
+                                                                         IsChecked="{Binding Selected.DiscordOnlyCommandReplies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                     <CheckBox
+                                                                         Content="{DynamicResource UiDiscordOnlyHotkeys}"
+                                                                         Foreground="{DynamicResource TextPrimary}"
+                                                                         FontSize="11"
+                                                                         Margin="0,3,0,3"
+                                                                         Style="{StaticResource DotCheckBox}"
+                                                                         IsChecked="{Binding Selected.DiscordOnlyHotkeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                     <CheckBox
+                                                                         Content="{DynamicResource UiDiscordOnlyAutomations}"
+                                                                         Foreground="{DynamicResource TextPrimary}"
+                                                                         FontSize="11"
+                                                                         Margin="0,3,0,3"
+                                                                         Style="{StaticResource DotCheckBox}"
+                                                                         IsChecked="{Binding Selected.DiscordOnlyAutomations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                 </StackPanel>
+                                                             </MenuItem.Header>
+                                                         </MenuItem>
+                                                     </MenuItem>
                                                  </ContextMenu>
                                              </ui:Button.ContextMenu>
                                          </ui:Button>

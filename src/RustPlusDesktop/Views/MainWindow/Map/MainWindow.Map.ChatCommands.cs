@@ -68,7 +68,7 @@ public partial class MainWindow
         // forceChannel, so the alert channel setting cannot redirect an answer: asking !boat in
         // team chat while alerts are pointed at the clan used to answer the clan, leaving the
         // person who asked with nothing and telling ninety people about a boat.
-        await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true, forceChannel: channel);
+        await SendTeamChatSafeAsync(text, bypassChatAlertMasterBlock: true, forceChannel: channel, feedback: ChatFeedback.CommandReply);
     }
 
     /// <summary>
@@ -430,7 +430,7 @@ public partial class MainWindow
 
                 if (string.IsNullOrWhiteSpace(name) || !char.IsLetter(name[0]))
                 {
-                    _ = SendTeamChatSafeAsync(Properties.Resources.TimerNameMustStartWithLetter);
+                    _ = SendTeamChatSafeAsync(Properties.Resources.TimerNameMustStartWithLetter, feedback: ChatFeedback.CommandReply);
                     return;
                 }
 

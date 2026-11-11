@@ -8356,4 +8356,19 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Erlaubt der Cloud, den Code-Befehl zu beantworten, wenn diese App geschlossen ist. Die Codes werden verschlüsselt auf rustplusdesktop.cloud gespeichert; abschalten entfernt sie wieder. Nur mit Premium.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>Alle Chat-Alerts gehen jetzt nur noch an den Discord-Webhook, nicht mehr in den Spiel-Chat.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Antworten und Rückmeldungen gehen weiter in den Spiel-Chat. Auf Servern ohne Team-Chat kannst du sie stattdessen an Discord schicken:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Antworten auf Chat-Befehle</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Meldungen der Geräte-Hotkeys</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Nachrichten der Logic Engine</value>
+  </data>
 </root>

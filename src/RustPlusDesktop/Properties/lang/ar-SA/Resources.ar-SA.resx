@@ -8156,4 +8156,19 @@
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>يسمح للسحابة بالرد على أمر الرمز عندما يكون هذا التطبيق مغلقًا. تُخزَّن الرموز مشفّرة على rustplusdesktop.cloud، وإيقاف الخيار يحذفها. لمشتركي Premium فقط.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>تُرسل كل تنبيهات الدردشة الآن إلى Discord Webhook فقط، ولم تعد تُرسل إلى دردشة اللعبة.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>لا تزال الردود والتأكيدات تُرسل إلى دردشة اللعبة. على خادم بلا دردشة فريق، أرسلها إلى Discord بدلًا من ذلك:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>ردود أوامر الدردشة</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>رسائل اختصارات الأجهزة</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>رسائل Logic Engine</value>
+  </data>
 </root>

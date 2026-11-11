@@ -582,6 +582,14 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
+                // "Discord only" with automations sent there: a server without team chat still
+                // hears from its rules, through the chat alert webhook.
+                if (FeedbackGoesToDiscord(_vm?.Selected, ChatFeedback.Automation))
+                {
+                    await SendDiscordWebhookAsync(_vm?.Selected, text);
+                    return;
+                }
+
                 // Marked as our own, so it is not forwarded to Discord as if a player had written it.
                 lock (_recentAutomatedMessages) { _recentAutomatedMessages.Add(text); }
 

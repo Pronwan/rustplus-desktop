@@ -9851,7 +9851,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
-                    _ = SendTeamChatSafeAsync(msg, true, true);
+                    _ = SendTeamChatSafeAsync(msg, true, true, feedback: ChatFeedback.Hotkey);
                 }
             }
         }
@@ -9869,7 +9869,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     string state = desired ? Properties.Resources.StateOn : Properties.Resources.StateOff;
                     string msg = string.Format(Properties.Resources.HotkeyTriggerToggled, dev.PureName, state, await MyPlayerNameOrYouAsync());
-                    _ = SendTeamChatSafeAsync(msg, true, true);
+                    _ = SendTeamChatSafeAsync(msg, true, true, feedback: ChatFeedback.Hotkey);
                 }
 
                 if (_hotkeyOptions.ToggleDelayMs > 0)
