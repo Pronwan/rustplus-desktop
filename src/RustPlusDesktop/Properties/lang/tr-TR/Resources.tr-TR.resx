@@ -7241,4 +7241,19 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Bu uygulama kapalıyken bulutun kod komutunu yanıtlamasına izin verir. Kodlar rustplusdesktop.cloud üzerinde şifreli saklanır; kapatınca silinir. Yalnızca Premium.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>Tüm sohbet uyarıları artık yalnızca Discord webhook'una gider, oyun içi sohbete gitmez.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Yanıtlar ve geri bildirimler yine oyun içi sohbete gider. Takım sohbeti olmayan bir sunucuda bunları Discord'a gönderebilirsin:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Sohbet komutu yanıtları</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Cihaz kısayol mesajları</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Logic Engine mesajları</value>
+  </data>
 </root>

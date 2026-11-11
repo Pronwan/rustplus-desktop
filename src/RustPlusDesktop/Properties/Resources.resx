@@ -8888,4 +8888,19 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Lets the cloud answer the code command while this app is closed. The codes are stored encrypted on rustplusdesktop.cloud; turn this off to remove them. Premium only.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>All chat alerts now go only to the Discord webhook, not to the in-game chat.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Replies and feedback still go to the in-game chat. On a server without team chat, send them to Discord instead:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Chat command replies</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Device hotkey messages</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Logic Engine messages</value>
+  </data>
 </root>

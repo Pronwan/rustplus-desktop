@@ -8265,4 +8265,19 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Позволяет облаку отвечать на команду кода, когда приложение закрыто. Коды хранятся в зашифрованном виде на rustplusdesktop.cloud; отключите опцию, чтобы удалить их. Только для Premium.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>Все оповещения чата теперь отправляются только в Discord-вебхук, а не в игровой чат.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Ответы и подтверждения по-прежнему идут в игровой чат. На сервере без командного чата можно отправлять их в Discord:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Ответы на команды чата</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Сообщения горячих клавиш устройств</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Сообщения Logic Engine</value>
+  </data>
 </root>

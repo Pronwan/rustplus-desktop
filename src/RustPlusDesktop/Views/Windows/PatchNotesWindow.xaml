@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.3.2 HOTFIX -->
+                            <!-- v11.3.3 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_3_2"
+                            <Border x:Name="Card_v11_3_3"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,52 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.3.2 | Launch-Time Cloud Login Synchronization"
+                                            <TextBlock Text="v11.3.3 | Device Controls, Pairing Sync &amp; Discord Feedback"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            This hotfix ensures deleted devices and retired servers stay deleted, brings full controls and toggle switches to devices restored from pairing history, adds Fluent UI confirmations for deleting available devices, and keeps chat commands working properly under Discord-only alert mode.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Pairing Sync &amp; Device Controls:</Run>
+                                        Smart switches and devices restored from history now have working toggles, chat command pills, and correct kinds. Purged or deleted devices remain deleted, with an interactive restore picker.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Fluent UI Confirmations &amp; Device Deletion:</Run>
+                                        Delete responding or missing devices anytime from the list, with modern Fluent UI confirmation dialogs before removing active devices.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Discord-Only Command &amp; Hotkey Feedback:</Run>
+                                        Command replies and hotkey status feedback reliably reach in-game chat even with "Discord only" active, with new options to route feedback to webhooks on servers without team chat.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.3.2 HOTFIX -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_3_2"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.3.2 | Launch-Time Cloud Login Synchronization"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

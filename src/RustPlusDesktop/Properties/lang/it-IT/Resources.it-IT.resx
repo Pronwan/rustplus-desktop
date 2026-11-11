@@ -5864,4 +5864,19 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Permette al cloud di rispondere al comando del codice quando questa app è chiusa. I codici sono salvati cifrati su rustplusdesktop.cloud; disattiva l'opzione per rimuoverli. Solo Premium.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>Tutti gli avvisi della chat vanno ora solo al webhook Discord, non più nella chat di gioco.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Risposte e conferme vanno ancora nella chat di gioco. Su un server senza chat di squadra, inviale invece a Discord:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Risposte ai comandi della chat</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Messaggi dei tasti rapidi dei dispositivi</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Messaggi della Logic Engine</value>
+  </data>
 </root>

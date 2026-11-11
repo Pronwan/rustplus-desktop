@@ -643,7 +643,13 @@ public partial class MainWindow
     /// an answer that appears in a channel nobody asked in leaves the asker staring at silence.
     /// Alerts leave this null and follow the setting.
     /// </param>
-    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false, ChatChannel? forceChannel = null)
+    /// <param name="feedback">
+    /// Feedback to someone who just did something: a chat command's reply, a hotkey's "turned ON".
+    /// "Discord only" is about alerts and does not move it - a reply that went nowhere looked like
+    /// the command was broken. It goes to the webhook instead only where the user chose that for
+    /// its kind, for servers without team chat.
+    /// </param>
+    private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false, ChatChannel? forceChannel = null, ChatFeedback feedback = ChatFeedback.None)
     {
         if (skipDiscordChatForwarding)
         {
@@ -654,14 +660,20 @@ public partial class MainWindow
         }
         if (!bypassChatAlertMasterBlock && !CanSendAutomatedTeamChat()) return;
 
+        if (feedback != ChatFeedback.None && FeedbackGoesToDiscord(_vm?.Selected, feedback))
+        {
+            _ = SendDiscordWebhookAsync(_vm?.Selected, discordText ?? text);
+            return;
+        }
+
         // Discord Webhook Integration (Free Tier)
-        if (!bypassChatAlertMasterBlock && !skipBasicWebhook)
+        if (feedback == ChatFeedback.None && !bypassChatAlertMasterBlock && !skipBasicWebhook)
         {
             _ = SendDiscordWebhookAsync(_vm?.Selected, discordText ?? text);
         }
 
         // If Discord Exclusive (not in-game) is enabled, skip posting to Rust in-game team chat
-        if (_vm?.Selected?.DiscordWebhookChatAlertsExclusive == true)
+        if (feedback == ChatFeedback.None && _vm?.Selected?.DiscordWebhookChatAlertsExclusive == true)
         {
             return;
         }
@@ -680,6 +692,18 @@ public partial class MainWindow
         }
         catch { /* ignore background errors */ }
     }
+
+    private enum ChatFeedback { None, CommandReply, Hotkey, Automation }
+
+    /// <summary>Whether this kind of feedback goes to the Discord webhook instead of the game.</summary>
+    private static bool FeedbackGoesToDiscord(ServerProfile? profile, ChatFeedback feedback)
+        => profile?.DiscordWebhookChatAlertsExclusive == true && feedback switch
+        {
+            ChatFeedback.CommandReply => profile.DiscordOnlyCommandReplies,
+            ChatFeedback.Hotkey => profile.DiscordOnlyHotkeys,
+            ChatFeedback.Automation => profile.DiscordOnlyAutomations,
+            _ => false,
+        };
 
     private async Task SendDiscordWebhookAsync(ServerProfile? profile, string message)
     {

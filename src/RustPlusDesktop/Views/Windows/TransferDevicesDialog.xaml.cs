@@ -283,6 +283,8 @@ public partial class TransferDevicesDialog : FluentWindow
 
         if (deleteSource)
         {
+            // Otherwise the source's old pairing notifications recreate it on the next history sync.
+            RustPlusDesk.Services.RemovedServerStore.MarkRemoved(_source);
             _vm.Servers.Remove(_source);
             var source = _source;
             var remaining = _vm.Servers.ToList();

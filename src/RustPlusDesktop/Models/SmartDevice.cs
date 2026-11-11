@@ -203,8 +203,28 @@ public class SmartDevice : INotifyPropertyChanged
     public string? Kind
     {
         get => _kind;
-        set { if (_kind != value) { _kind = value; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); } }
+        set
+        {
+            var normalized = NormalizeKind(value);
+            if (_kind != normalized) { _kind = normalized; OnProp(); OnProp(nameof(PureName)); OnProp(nameof(DisplayName)); OnProp(nameof(AutomationDisplayName)); }
+        }
     }
+
+    /// <summary>
+    /// Map Facepunch's numeric entity types to the names the rest of the app keys on.
+    ///
+    /// The pairing history API sends <c>entityType</c> as 1, 2 or 3, where the live push is
+    /// translated first. A device restored from that history was saved with Kind "1", which
+    /// nothing recognises: no toggle, no switch command. Normalising here also repairs those
+    /// saved devices the next time the device list loads.
+    /// </summary>
+    public static string? NormalizeKind(string? kind) => kind?.Trim() switch
+    {
+        "1" => "SmartSwitch",
+        "2" => "SmartAlarm",
+        "3" => "StorageMonitor",
+        _ => kind,
+    };
 
     private bool? _isOn;
     public bool? IsOn

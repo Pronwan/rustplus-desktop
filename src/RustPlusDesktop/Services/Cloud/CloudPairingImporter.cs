@@ -235,10 +235,17 @@ namespace RustPlusDesk.Services.Cloud
                     var alias = Str(item, "Alias");
                     var icon = Str(item, "CustomIconShortName");
 
-                    var device = profile.Devices.FirstOrDefault(d => d.EntityId == entityId);
+                    // Searched through groups too: a device the user filed under a group is
+                    // not at the top level, and was added a second time when only that was checked.
+                    var device = FindDevice(profile.Devices, entityId);
 
                     if (device == null)
                     {
+                        // Deleted here. The cloud row lingers when the upload that removes it
+                        // failed or is still pending; pairing it again in game clears the
+                        // record through the pairing push or the history sync.
+                        if (profile.RemovedDevices.ContainsKey(entityId)) continue;
+
                         profile.Devices.Add(new SmartDevice
                         {
                             EntityId = entityId,
@@ -272,6 +279,18 @@ namespace RustPlusDesk.Services.Cloud
             }
 
             return added;
+        }
+
+        private static SmartDevice? FindDevice(IEnumerable<SmartDevice>? devices, uint entityId)
+        {
+            if (devices == null) return null;
+            foreach (var d in devices)
+            {
+                if (!d.IsGroup && d.EntityId == entityId) return d;
+                var nested = FindDevice(d.Children, entityId);
+                if (nested != null) return nested;
+            }
+            return null;
         }
 
         /// <summary>
@@ -328,6 +347,7 @@ namespace RustPlusDesk.Services.Cloud
                 var command = Str(mapping, "command");
 
                 if (entityId == 0 || string.IsNullOrWhiteSpace(command)) continue;
+                if (profile.RemovedDevices.ContainsKey(entityId)) continue;
 
                 var existing = profile.SwitchCommandMappings.FirstOrDefault(m => m.EntityId == entityId);
 

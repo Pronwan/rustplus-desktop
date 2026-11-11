@@ -8265,4 +8265,19 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="BaseCodesInCloudHint" xml:space="preserve">
     <value>Permite que la nube responda al comando de código mientras esta aplicación está cerrada. Los códigos se guardan cifrados en rustplusdesktop.cloud; desactívalo para borrarlos. Solo Premium.</value>
   </data>
+  <data name="UiDiscordOnlyNotice" xml:space="preserve">
+    <value>Todas las alertas de chat van ahora solo al webhook de Discord, ya no al chat del juego.</value>
+  </data>
+  <data name="UiDiscordOnlyFeedbackHint" xml:space="preserve">
+    <value>Las respuestas y confirmaciones siguen yendo al chat del juego. En un servidor sin chat de equipo, envíalas a Discord en su lugar:</value>
+  </data>
+  <data name="UiDiscordOnlyCommandReplies" xml:space="preserve">
+    <value>Respuestas a comandos de chat</value>
+  </data>
+  <data name="UiDiscordOnlyHotkeys" xml:space="preserve">
+    <value>Mensajes de atajos de dispositivos</value>
+  </data>
+  <data name="UiDiscordOnlyAutomations" xml:space="preserve">
+    <value>Mensajes de Logic Engine</value>
+  </data>
 </root>

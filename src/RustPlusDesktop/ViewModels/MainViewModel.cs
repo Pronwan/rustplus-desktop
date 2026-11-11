@@ -489,6 +489,7 @@ public class MainViewModel : INotifyPropertyChanged
             if (_selected != null) TrackingService.LastSelectedServerKey = _selected.MatchKey;
             OnPropertyChanged();                   // "Selected"
             OnPropertyChanged(nameof(CurrentDevices));
+            OnPropertyChanged(nameof(CanDeleteDevice));
             UpdateServerWipe();
         }
     }
@@ -520,6 +521,8 @@ public class MainViewModel : INotifyPropertyChanged
     {
         if (e.PropertyName == nameof(ServerProfile.WipeTime))
             UpdateServerWipe();
+        else if (e.PropertyName == nameof(ServerProfile.HasMissingDevices))
+            OnPropertyChanged(nameof(CanDeleteDevice));
     }
 
     public sealed class StorageSnapshot
@@ -689,8 +692,18 @@ public class MainViewModel : INotifyPropertyChanged
     public SmartDevice? SelectedDevice
     {
         get => _selectedDevice;
-        set { _selectedDevice = value; OnPropertyChanged(); }
+        set
+        {
+            if (_selectedDevice != value)
+            {
+                _selectedDevice = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanDeleteDevice));
+            }
+        }
     }
+
+    public bool CanDeleteDevice => SelectedDevice != null || (Selected?.HasMissingDevices == true);
 
     public void AddServer(ServerProfile p) => Servers.Add(p);
 
@@ -748,6 +761,7 @@ public class MainViewModel : INotifyPropertyChanged
     {
         Selected?.NotifyMissingDevicesChanged();
         OnPropertyChanged(nameof(CurrentDevices));
+        OnPropertyChanged(nameof(CanDeleteDevice));
     }
 
     public void NotifyHotkeysChanged()

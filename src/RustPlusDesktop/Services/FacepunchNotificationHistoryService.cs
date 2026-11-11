@@ -22,6 +22,25 @@ namespace RustPlusDesk.Services
         public int Channel { get; set; }
     }
 
+    /// <summary>What the app makes of one pairing found in the notification history.</summary>
+    public enum HistoryPairingDecision
+    {
+        /// <summary>A pairing the app missed: apply it.</summary>
+        Import,
+        /// <summary>The app already has it.</summary>
+        AlreadyPaired,
+        /// <summary>Never apply: from an earlier wipe, or for a server the user deleted.</summary>
+        Skip,
+        /// <summary>
+        /// A device the user deleted, still in the history for this server and wipe. Only a
+        /// user-run sync may bring it back, and only after the user confirms.
+        /// </summary>
+        NeedsConfirmation,
+    }
+
+    /// <summary>The outcome of one history sync.</summary>
+    public sealed record HistorySyncResult(int Imported, int Skipped, IReadOnlyList<PairingPayload> HeldBack);
+
     /// <summary>
     /// Communicates with Facepunch's companion notification history endpoint (/api/history/read)
     /// to retrieve notifications and pairing requests stored on Facepunch servers.
@@ -100,24 +119,33 @@ namespace RustPlusDesk.Services
         }
 
         /// <summary>
-        /// Reads pairing requests from notification history and dispatches them to the pairing handler.
-        /// Returns the number of pairings processed.
+        /// Reads pairing requests from notification history and dispatches the ones
+        /// <paramref name="decide"/> lets through to the pairing handler.
+        ///
+        /// The history keeps every pairing the account ever received, across wipes and past
+        /// deletions, so each one is judged rather than replayed. Pairings judged
+        /// <see cref="HistoryPairingDecision.NeedsConfirmation"/> are returned undispatched,
+        /// for the caller to offer to the user.
         /// </summary>
-        public static async Task<int> SyncHistoryPairingsAsync(
+        public static async Task<HistorySyncResult> SyncHistoryPairingsAsync(
             Func<PairingPayload, Task> onPairingDispatched,
-            Func<PairingPayload, bool>? isAlreadyPaired = null,
+            Func<PairingPayload, HistoryPairingDecision> decide,
             Action<string>? log = null,
             string? authToken = null,
             CancellationToken ct = default)
         {
             var history = await FetchHistoryAsync(authToken, ct).ConfigureAwait(false);
+            var heldBack = new List<PairingPayload>();
             if (history.Count == 0)
-                return 0;
+                return new HistorySyncResult(0, 0, heldBack);
 
-            int pairedCount = 0;
+            int pairedCount = 0, skipped = 0;
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // Iterate newest to oldest so newest state takes precedence and duplicates are skipped
+            // Newest first, so the dedup below keeps the latest pairing of each server/device
+            // (a re-pair's token, a re-wipe's entity) rather than whichever the API listed first.
+            history.Sort((a, b) => b.Date.CompareTo(a.Date));
+
             foreach (var item in history)
             {
                 if (string.IsNullOrWhiteSpace(item.Data))
@@ -181,9 +209,9 @@ namespace RustPlusDesk.Services
                     }
 
                     string? entityName = root.TryGetProperty("entityName", out var enProp) ? enProp.GetString() : null;
-                    string? entityType = root.TryGetProperty("entityType", out var etProp)
+                    string? entityType = Models.SmartDevice.NormalizeKind(root.TryGetProperty("entityType", out var etProp)
                         ? (etProp.ValueKind == JsonValueKind.String ? etProp.GetString() : etProp.ToString())
-                        : type;
+                        : type);
 
                     // Deduplicate within the history batch: only process newest entry for a given server/entity
                     string dedupKey = $"{id}|{host}:{port}|{entityId}";
@@ -206,16 +234,29 @@ namespace RustPlusDesk.Services
                         EntityName = entityName,
                         EntityType = entityType,
                         NotificationId = item.NotificationId > 0 ? item.NotificationId.ToString(CultureInfo.InvariantCulture) : null,
-                        Timestamp = item.Date
+                        Timestamp = item.Date,
+                        FromHistory = true
                     };
 
-                    if (isAlreadyPaired != null && isAlreadyPaired(payload))
+                    var label = payload.EntityId.HasValue
+                        ? $"device #{payload.EntityId.Value} '{payload.EntityName ?? "?"}' on '{payload.ServerName ?? payload.Host}'"
+                        : $"server '{payload.ServerName ?? payload.Host}'";
+
+                    switch (decide(payload))
                     {
-                        log?.Invoke($"[history-sync] Skipping already paired server/device: '{payload.ServerName ?? payload.Host}'");
-                        continue;
+                        case HistoryPairingDecision.AlreadyPaired:
+                            continue;
+                        case HistoryPairingDecision.Skip:
+                            skipped++;
+                            log?.Invoke($"[history-sync] Ignoring stale pairing for {label} ({item.Date:u}).");
+                            continue;
+                        case HistoryPairingDecision.NeedsConfirmation:
+                            heldBack.Add(payload);
+                            log?.Invoke($"[history-sync] Holding back removed {label}; needs the user's confirmation.");
+                            continue;
                     }
 
-                    log?.Invoke($"[history-sync] Discovered pairing from history: '{payload.ServerName ?? payload.Host}' (ServerId: {payload.ServerId ?? "none"})");
+                    log?.Invoke($"[history-sync] Discovered pairing from history: {label} (ServerId: {payload.ServerId ?? "none"})");
                     await onPairingDispatched(payload).ConfigureAwait(false);
                     pairedCount++;
                 }
@@ -225,7 +266,7 @@ namespace RustPlusDesk.Services
                 }
             }
 
-            return pairedCount;
+            return new HistorySyncResult(pairedCount, skipped, heldBack);
         }
     }
 }
