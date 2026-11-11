@@ -4626,8 +4626,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (e.EntityId.HasValue)
             {
                 // ------- NEU: robuste Kind-Erkennung -------
-                string? kind = e.EntityType;
-                string rawType = (e.EntityType ?? "").Trim();
+                string? kind = SmartDevice.NormalizeKind(e.EntityType);
+                string rawType = (kind ?? "").Trim();
                 string rawName = (e.EntityName ?? "").Trim();
 
                 bool TypeHas(string s) =>
@@ -7983,28 +7983,45 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             .ToList();
         if (candidates.Count == 0) return 0;
 
-        var lines = candidates
-            .GroupBy(p => FindProfileForPairing(p)?.Name ?? p.ServerName ?? p.Host)
-            .SelectMany(g => new[] { $"{g.Key}:" }.Concat(g.Select(p =>
-                $"   • {(string.IsNullOrWhiteSpace(p.EntityName) ? "Smart Device" : p.EntityName)} (#{p.EntityId}), paired {p.PairedAtUtc.ToLocalTime():g}")));
+        // Same picker as the team device import, so the user can choose which ones come back
+        // and check first whether they still exist on the map.
+        var items = candidates
+            .Select(p => new DeviceImportItem
+            {
+                EntityId = p.EntityId!.Value,
+                Kind = SmartDevice.NormalizeKind(p.EntityType),
+                Name = string.IsNullOrWhiteSpace(p.EntityName) ? "Smart Device" : p.EntityName,
+                OwnerName = $"Removed by you • paired {p.PairedAtUtc.ToLocalTime():g}",
+                ServerName = FindProfileForPairing(p)?.Name ?? p.ServerName ?? p.Host ?? "",
+                HistoryPairing = p,
+                IsSelected = true,
+            })
+            .ToList();
 
-        var answer = MessageBox.Show(
-            $"Rust+ still lists {candidates.Count} device(s) you removed from this wipe:\n\n" +
-            string.Join("\n", lines) +
-            "\n\nRestore them to your device list?",
-            "Restore Removed Devices",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var serverNames = items.Select(i => i.ServerName).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList();
+        var dlg = new DeviceImportWindow(
+            items,
+            ProbeRemovedDeviceAsync,
+            $"Source: Rust+ pairing history, devices you removed this wipe on {(serverNames.Count > 0 ? string.Join(", ", serverNames) : "this server")}")
+        {
+            Owner = this,
+        };
 
-        if (answer != MessageBoxResult.Yes)
+        var toRestore = dlg.ShowDialog() == true
+            ? dlg.SelectedItems.Select(i => i.HistoryPairing).OfType<PairingPayload>().ToList()
+            : new List<PairingPayload>();
+
+        if (toRestore.Count == 0)
         {
             AppendLog($"[history-sync] User kept {candidates.Count} removed device(s) out.");
             return 0;
         }
 
         int restored = 0;
-        foreach (var p in candidates)
+        foreach (var p in toRestore)
         {
+            // The dialog was open a while; skip any a live pairing brought back meanwhile.
+            if (DecideHistoryPairing(p) != HistoryPairingDecision.NeedsConfirmation) continue;
             var prof = FindProfileForPairing(p);
             if (prof == null) continue;
             prof.RemovedDevices.Remove(p.EntityId!.Value);
@@ -8015,6 +8032,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _vm.Save();
         AppendLog($"[history-sync] Restored {restored} removed device(s) at the user's request.");
         return restored;
+
+        // Only the connected server can be asked; anything else shows as status unknown.
+        Task<EntityProbeResult> ProbeRemovedDeviceAsync(uint entityId)
+        {
+            var pairing = candidates.First(c => c.EntityId == entityId);
+            var prof = FindProfileForPairing(pairing);
+            if (_rust == null || prof == null || !ReferenceEquals(prof, _connectedProfile))
+                throw new InvalidOperationException("Not connected to that server.");
+            return _rust.ProbeEntityAsync(entityId);
+        }
     }
 
     public Task<int> SyncPairingsFromFacepunchHistoryAsync(bool showToastIfFound = false)

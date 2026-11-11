@@ -19,6 +19,10 @@ namespace RustPlusDesk.Models
 
         public ExportedDeviceDto? OriginalDto { get; init; }
 
+        /// <summary>Set when the row offers back a device the user deleted that Rust+'s
+        /// pairing history still lists; importing it replays this pairing.</summary>
+        public PairingPayload? HistoryPairing { get; init; }
+
         // neu:
         public string ServerName { get; init; } = "";   // Name des aktuellen Server-Profils
 

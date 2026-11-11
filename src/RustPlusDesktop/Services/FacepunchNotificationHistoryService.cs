@@ -209,9 +209,9 @@ namespace RustPlusDesk.Services
                     }
 
                     string? entityName = root.TryGetProperty("entityName", out var enProp) ? enProp.GetString() : null;
-                    string? entityType = root.TryGetProperty("entityType", out var etProp)
+                    string? entityType = Models.SmartDevice.NormalizeKind(root.TryGetProperty("entityType", out var etProp)
                         ? (etProp.ValueKind == JsonValueKind.String ? etProp.GetString() : etProp.ToString())
-                        : type;
+                        : type);
 
                     // Deduplicate within the history batch: only process newest entry for a given server/entity
                     string dedupKey = $"{id}|{host}:{port}|{entityId}";

@@ -105,7 +105,8 @@ namespace RustPlusDesk.Views
 
         public DeviceImportWindow(
             List<DeviceImportItem> devices,
-            Func<uint, Task<EntityProbeResult>> probe)
+            Func<uint, Task<EntityProbeResult>> probe,
+            string? sourceDescription = null)
         {
             InitializeComponent();
 
@@ -136,7 +137,8 @@ namespace RustPlusDesk.Views
             // Generate source description dynamically
             var serverName = Devices.Select(d => d.ServerName).FirstOrDefault(s => !string.IsNullOrEmpty(s)) ?? "Current Server";
             var owners = Devices.Select(d => d.OwnerName).Where(o => !string.IsNullOrEmpty(o)).Distinct().ToList();
-            SourceDescription = $"Source: Cloud sync / local backups for " + (owners.Count > 0 ? string.Join(", ", owners) : "teammates") + $" on {serverName}";
+            SourceDescription = sourceDescription
+                ?? $"Source: Cloud sync / local backups for " + (owners.Count > 0 ? string.Join(", ", owners) : "teammates") + $" on {serverName}";
 
             // Setup collection view filter
             var view = CollectionViewSource.GetDefaultView(Devices);
@@ -175,7 +177,7 @@ namespace RustPlusDesk.Views
                     .ToList();
 
                 // Cache for results
-                var cache = new Dictionary<uint, EntityProbeResult>();
+                var cache = new Dictionary<uint, EntityProbeResult?>();
                 int probedCount = 0;
 
                 IsProbing = true;
@@ -192,9 +194,9 @@ namespace RustPlusDesk.Views
                         : id.ToString();
                     ProbingStatus = $"Probing device #{id} ({deviceName ?? "Unknown"})...";
 
-                    EntityProbeResult result;
+                    EntityProbeResult? result;
 
-                    if (!cache.TryGetValue(id, out result))
+                    if (!cache.TryGetValue(id, out var cachedResult))
                     {
                         try
                         {
@@ -202,7 +204,8 @@ namespace RustPlusDesk.Views
                         }
                         catch
                         {
-                            result = new EntityProbeResult(false, null, null);
+                            // Could not ask (no connection to that server): unknown, not missing.
+                            result = null;
                         }
 
                         cache[id] = result;
@@ -213,8 +216,12 @@ namespace RustPlusDesk.Views
                         if (probedCount % 5 == 0)
                             await Task.Delay(250);
                     }
+                    else
+                    {
+                        result = cachedResult;
+                    }
 
-                    var state = result.Exists ? "ok" : "missing";
+                    var state = result is null ? "err" : result.Value.Exists ? "ok" : "missing";
 
                     foreach (var item in group)
                     {

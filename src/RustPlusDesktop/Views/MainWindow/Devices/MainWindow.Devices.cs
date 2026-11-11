@@ -710,6 +710,24 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         return list;
     }
 
+    /// <summary>
+    /// A yes/no question in the app's Fluent style, owned by and centred on the main window.
+    /// Returns true only for the primary button.
+    /// </summary>
+    private async Task<bool> ConfirmFluentAsync(string title, string message, string primaryText, string closeText)
+    {
+        var box = new WpfUi.MessageBox
+        {
+            Title = title,
+            Content = new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap, MaxWidth = 460 },
+            PrimaryButtonText = primaryText,
+            CloseButtonText = closeText,
+            Owner = this,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        return await box.ShowDialogAsync() == WpfUi.MessageBoxResult.Primary;
+    }
+
     private async Task DeleteSingleDeviceAsync(SmartDevice dev)
     {
         if (_vm.Selected?.Devices == null || dev == null) return;
@@ -720,13 +738,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                 ? $"Are you sure you want to delete '{dev.PureName}' and all its grouped devices?"
                 : $"Are you sure you want to delete '{dev.PureName}' (#{dev.EntityId})?\n\nThis device is still active and responding.";
 
-            var confirm = MessageBox.Show(
-                msg,
-                "Delete Device",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
-
-            if (confirm != MessageBoxResult.Yes) return;
+            if (!await ConfirmFluentAsync("Delete Device", msg, "Delete", "Cancel")) return;
         }
 
         // Facepunch's notification history and the cloud both still list it; without this
@@ -772,13 +784,11 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         var missing = CollectMissingDevices(_vm.Selected.Devices);
         if (missing.Count == 0) return;
 
-        var confirm = MessageBox.Show(
-            $"Are you sure you want to delete {missing.Count} missing device(s) from '{_vm.Selected.Name}'?",
-            "Delete Missing Devices",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-
-        if (confirm != MessageBoxResult.Yes) return;
+        if (!await ConfirmFluentAsync(
+                "Delete Missing Devices",
+                $"Are you sure you want to delete {missing.Count} missing device(s) from '{_vm.Selected.Name}'?",
+                "Delete",
+                "Cancel")) return;
 
         foreach (var dev in missing)
         {
