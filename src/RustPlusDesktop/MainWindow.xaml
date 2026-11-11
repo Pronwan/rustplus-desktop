@@ -1751,11 +1751,11 @@
                                 Margin="0,0,0,0"
                                 Padding="4"
                                 Appearance="Secondary"
-                                AutomationProperties.Name="{DynamicResource UiDeleteMissingDevice}"
+                                AutomationProperties.Name="{DynamicResource Delete}"
                                 Click="BtnDeleteDevice_Click"
                                 Icon="{ui:SymbolIcon Symbol=Delete24}"
-                                IsEnabled="{Binding Selected.HasMissingDevices}"
-                                ToolTip="{DynamicResource DeleteMissingOnly}">
+                                IsEnabled="{Binding CanDeleteDevice}"
+                                ToolTip="{DynamicResource Delete}">
                                 <!-- Neutral until hovered, like the server card's disconnect button. -->
                                 <ui:Button.Style>
                                     <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
@@ -1829,6 +1829,7 @@
                                         ItemsSource="{Binding CurrentDevices}"
                                         ScrollViewer.CanContentScroll="False"
                                         SelectedItemChanged="ListDevices_SelectedItemChanged"
+                                        KeyDown="ListDevices_KeyDown"
                                         VirtualizingPanel.IsVirtualizing="False"
                                         VirtualizingPanel.ScrollUnit="Pixel">
 

@@ -627,11 +627,12 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private async void BtnDeleteDevice_Click(object sender, RoutedEventArgs e)
     {
-        if (ListDevices.SelectedItem is SmartDevice dev && dev.IsMissing)
+        var dev = ListDevices.SelectedItem as SmartDevice ?? _vm?.SelectedDevice;
+        if (dev != null)
         {
             await DeleteSingleDeviceAsync(dev);
         }
-        else if (_vm.Selected?.HasMissingDevices == true)
+        else if (_vm?.Selected?.HasMissingDevices == true)
         {
             await DeleteAllMissingDevicesAsync();
         }
@@ -644,13 +645,30 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
 
     private async void Device_DeleteMissing_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev && dev.IsMissing)
+        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev)
         {
             await DeleteSingleDeviceAsync(dev);
         }
-        else if (ListDevices.SelectedItem is SmartDevice selectedDev && selectedDev.IsMissing)
+        else if (ListDevices.SelectedItem is SmartDevice selectedDev)
         {
             await DeleteSingleDeviceAsync(selectedDev);
+        }
+        else if (_vm?.SelectedDevice is SmartDevice vmDev)
+        {
+            await DeleteSingleDeviceAsync(vmDev);
+        }
+    }
+
+    private async void ListDevices_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Delete)
+        {
+            var dev = ListDevices.SelectedItem as SmartDevice ?? _vm?.SelectedDevice;
+            if (dev != null)
+            {
+                e.Handled = true;
+                await DeleteSingleDeviceAsync(dev);
+            }
         }
     }
 
@@ -696,6 +714,21 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
     {
         if (_vm.Selected?.Devices == null || dev == null) return;
 
+        if (!dev.IsMissing)
+        {
+            string msg = dev.IsGroup
+                ? $"Are you sure you want to delete '{dev.PureName}' and all its grouped devices?"
+                : $"Are you sure you want to delete '{dev.PureName}' (#{dev.EntityId})?\n\nThis device is still active and responding.";
+
+            var confirm = MessageBox.Show(
+                msg,
+                "Delete Device",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+        }
+
         // Facepunch's notification history and the cloud both still list it; without this
         // the next launch's pairing sync puts it straight back.
         _vm.Selected.MarkDeviceRemoved(dev);
@@ -703,6 +736,11 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         RemoveDeviceFromHierarchy(_vm.Selected.Devices, dev);
         RemoveOwnedOilRigRulesForDevice(dev);
         CleanupEmptyGroups(_vm.Selected.Devices);
+
+        if (_vm.SelectedDevice == dev)
+        {
+            _vm.SelectedDevice = null;
+        }
 
         _vm.Selected.SyncChatCommands();
         _vm.Selected.NotifyFlatDevicesChanged();
@@ -1428,13 +1466,18 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
         bool isThisMissing = dev.IsMissing;
 
         if (menuDeleteMissing != null)
-            menuDeleteMissing.Visibility = isThisMissing ? Visibility.Visible : Visibility.Collapsed;
+        {
+            menuDeleteMissing.Visibility = Visibility.Visible;
+            menuDeleteMissing.Header = isThisMissing
+                ? (TryFindResource("UiDeleteMissingDevice") ?? "Delete missing device")
+                : (TryFindResource("Delete") ?? "Delete");
+        }
 
         if (menuDeleteAllMissing != null)
             menuDeleteAllMissing.Visibility = hasAnyMissing ? Visibility.Visible : Visibility.Collapsed;
 
         if (sepMissing != null)
-            sepMissing.Visibility = (isThisMissing || hasAnyMissing) ? Visibility.Visible : Visibility.Collapsed;
+            sepMissing.Visibility = Visibility.Visible;
 
         if (!isAlarm)
         {
