@@ -1660,6 +1660,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         if (!Services.Cloud.CloudAuthManager.IsAuthenticated) return;
 
         AttachCloudPairingAnnouncements();
+        AttachChatAlertsMuteSync();
         AttachBuildInvites();
 
         // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
@@ -1745,14 +1746,48 @@ public partial class MainWindow : WpfUi.FluentWindow
         var me = Services.Cloud.CloudAuthManager.CurrentUser?.Id;
         if (string.IsNullOrWhiteSpace(me) || data["user_id"]?.ToString() != me) return;
 
-        // The same event carries every switch flip and storage reading. A pairing is the
-        // one with no entity (a server) or one marked paired (a device); the rest would
-        // only cost an empty round trip each.
-        bool isPairing = data["entity_id"] == null
-            || (data["device_state"]?["paired"] as Newtonsoft.Json.Linq.JValue)?.Value is true;
-        if (!isPairing) return;
+        if (!IsCloudDeviceListChange(data, Services.Cloud.CloudApiClient.InstanceId)) return;
+
+        // A device deleted on the website: the import removes it here too, but only for the
+        // ids the event named (see CloudPairingImporter.Merge).
+        var serverKey = data["server_key"]?.ToString();
+        if (data["reason"]?.ToString() == "removed" && !string.IsNullOrWhiteSpace(serverKey)
+            && data["entity_ids"] is Newtonsoft.Json.Linq.JArray ids)
+        {
+            lock (_pendingCloudRemovals)
+            {
+                if (!_pendingCloudRemovals.TryGetValue(serverKey!, out var set))
+                    _pendingCloudRemovals[serverKey!] = set = new HashSet<uint>();
+                foreach (var id in ids)
+                    if (uint.TryParse(id.ToString(), out var entityId) && entityId != 0) set.Add(entityId);
+            }
+        }
 
         Dispatcher.BeginInvoke(new Action(TryImportCloudPairings));
+    }
+
+    /// <summary>Website deletions waiting for the next import, by platform server key.</summary>
+    private readonly Dictionary<string, HashSet<uint>> _pendingCloudRemovals = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Whether a devices_changed event on this account's channel is worth an import.
+    ///
+    /// The same event carries every switch flip and storage reading; those name an entity and
+    /// are not a list change. A pairing has no entity (a server) or one marked paired (a device).
+    /// A rename, icon, command or removal made on the website or by the cloud says so in
+    /// <c>reason</c>. This app's own upload comes back with its own instance id as
+    /// <c>origin</c> and is skipped: re-reading what it just sent would only cost a round trip.
+    /// </summary>
+    internal static bool IsCloudDeviceListChange(Newtonsoft.Json.Linq.JObject data, string myInstanceId)
+    {
+        var origin = data["origin"]?.ToString();
+        if (!string.IsNullOrEmpty(origin) && origin == myInstanceId) return false;
+
+        var reason = data["reason"]?.ToString();
+        if (reason is "paired" or "renamed" or "command" or "removed" or "desktop_sync") return true;
+
+        return data["entity_id"] == null
+            || (data["device_state"]?["paired"] as Newtonsoft.Json.Linq.JValue)?.Value is true;
     }
 
     /// <summary>Set while a lost profiles file is still waiting for its servers to come back.</summary>
@@ -1761,7 +1796,31 @@ public partial class MainWindow : WpfUi.FluentWindow
     /// <summary>Merge the platform's pairings into the live server list and save it.</summary>
     internal async Task<Services.Cloud.CloudPairingImporter.ImportResult?> ImportCloudPairingsIntoListAsync(bool full)
     {
-        var result = await Services.Cloud.CloudPairingImporter.ImportIntoAsync(_vm.Servers, _vm.Save, full);
+        Dictionary<string, IReadOnlyCollection<uint>>? removals = null;
+        lock (_pendingCloudRemovals)
+        {
+            if (_pendingCloudRemovals.Count > 0)
+            {
+                removals = _pendingCloudRemovals.ToDictionary(kv => kv.Key, kv => (IReadOnlyCollection<uint>)kv.Value.ToList());
+                _pendingCloudRemovals.Clear();
+            }
+        }
+
+        var result = await Services.Cloud.CloudPairingImporter.ImportIntoAsync(_vm.Servers, _vm.Save, full, removals);
+
+        // The platform could not be asked: keep the deletions for the next attempt.
+        if (result == null && removals != null)
+        {
+            lock (_pendingCloudRemovals)
+            {
+                foreach (var (key, ids) in removals)
+                {
+                    if (!_pendingCloudRemovals.TryGetValue(key, out var set))
+                        _pendingCloudRemovals[key] = set = new HashSet<uint>();
+                    set.UnionWith(ids);
+                }
+            }
+        }
 
         // Load() preselects the first server so the device list has something to show;
         // a list that was empty until now needs the same.
@@ -4587,6 +4646,10 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         PlayerToken = e.PlayerToken,
                         IsAccessDenied = false,
                         UseFacepunchProxy = string.IsNullOrWhiteSpace(e.Host) || e.Host == "companion-socket" || e.Port == 0,
+                        // On for a server paired now, the same as the cloud's default. Set here
+                        // rather than as the field default, so a profile saved before the flag
+                        // existed is not switched on behind its owner's back.
+                        ChatCommandsEnabled = true,
                         Devices = new ObservableCollection<SmartDevice>()
                     };
                     firstServerInList = _vm.Servers.Count == 0;
@@ -6343,12 +6406,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
     private void ChatAnnounce_Toggle(object sender, RoutedEventArgs e)
     {
-        TrackingService.AnnounceSpawnsMaster = ChatAnnounce.IsChecked ?? false;
-        _announceSpawns = TrackingService.AnnounceSpawnsMaster;
-
-        SyncAlertMenuItems();
-        UpdateShopSearchConfig();
-        RequestTeamFeatureMasterSync();
+        // The bell is the chat-alert mute shared with the cloud and `!mute`: off is an open-ended
+        // mute, on ends any mute. ApplyChatAlertsMute also refreshes everything this used to.
+        ApplyChatAlertsMute(!(ChatAnnounce.IsChecked ?? false), null, push: true);
     }
 
     private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
@@ -6439,6 +6499,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         _announceSpawns = TrackingService.AnnounceSpawnsMaster;
         ChatAnnounce.IsChecked = _announceSpawns;
+        UpdateChatAlertsMuteIndicator();
     }
 
     private void BtnClearChatAlertsWebhook_Click(object sender, RoutedEventArgs e)

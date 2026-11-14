@@ -143,6 +143,9 @@ public partial class MainWindow
         // than from the game and works whether or not the socket is up.
         if (await TryHandleAiCommand(profile, m, cmd, prefix, channel, Reply)) return;
 
+        // !mute / !unmute / !device: settings, answered without the game socket.
+        if (await TryHandleManageCommand(profile, m, cmd, prefix, channel, Reply)) return;
+
         if (_rust is not RustPlusClientReal real) return;
 
         // Command: List Commands
