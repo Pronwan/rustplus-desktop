@@ -3205,7 +3205,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         alarmProfile ??= _vm.Servers.FirstOrDefault(p =>
             string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
             || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
-        var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+        var raidServerKey = alarmProfile == null ? "" : alarmProfile.PlatformServerKey;
         var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
             ? _vm.SteamId64
             : alarmProfile?.SteamId64 ?? "";
@@ -3573,7 +3573,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         string.Equals(CleanServerName(p.Name), cleanSrv, StringComparison.OrdinalIgnoreCase)
                         || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
                     
-                    var raidServerKey = alarmProfile == null ? "" : $"{alarmProfile.Host}-{alarmProfile.Port}";
+                    var raidServerKey = alarmProfile == null ? "" : alarmProfile.PlatformServerKey;
                     var raidOwnerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64)
                         ? _vm.SteamId64
                         : alarmProfile?.SteamId64 ?? "";
@@ -5111,7 +5111,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     // the pairing live, so "Restore servers from cloud" brought deleted servers
                     // back. This removes the pairing itself, and queues the delete when it
                     // cannot be sent now.
-                    if (await Services.Cloud.CloudPairingImporter.ForgetServerAsync(prof.Host, prof.Port))
+                    if (await Services.Cloud.CloudPairingImporter.ForgetServerAsync(prof.Host, prof.Port, prof.PlatformServerKey))
                         AppendLog($"[Cloud] Removed server {prof.Name} ({prof.Host}:{prof.Port}) from the cloud.");
                     else
                         AppendLog($"[Cloud] Server {prof.Name} will be removed from the cloud on the next sync.");

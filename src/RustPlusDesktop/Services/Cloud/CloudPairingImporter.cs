@@ -378,7 +378,7 @@ namespace RustPlusDesk.Services.Cloud
         /// Recorded locally first, so a delete that cannot reach the platform now is
         /// retried before the next import instead of being lost.
         /// </summary>
-        public static async Task<bool> ForgetServerAsync(string host, int port)
+        public static async Task<bool> ForgetServerAsync(string host, int port, string? platformKey = null)
         {
             if (string.IsNullOrWhiteSpace(host) || port <= 0) return false;
 
@@ -393,7 +393,7 @@ namespace RustPlusDesk.Services.Cloud
 
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return false;
 
-            return await DeleteOnPlatformAsync(key);
+            return await DeleteOnPlatformAsync(key, platformKey);
         }
 
         /// <summary>
@@ -481,17 +481,19 @@ namespace RustPlusDesk.Services.Cloud
             }
         }
 
-        private static async Task<bool> DeleteOnPlatformAsync(string key)
+        private static async Task<bool> DeleteOnPlatformAsync(string key, string? platformKey = null)
         {
             var sep = key.LastIndexOf(':');
             var host = key[..sep];
             var port = key[(sep + 1)..];
+            // A server without an address is filed under Facepunch's id, not "companion-socket-28082".
+            var serverKey = !string.IsNullOrWhiteSpace(platformKey) ? platformKey : $"{host}-{port}";
 
             try
             {
                 // The server key the pairing was filed under; the route also accepts a
                 // pairing that was never seen and answers 204 either way.
-                await CloudApiClient.CallApiAsync("me/servers/" + Uri.EscapeDataString($"{host}-{port}"), HttpMethod.Delete);
+                await CloudApiClient.CallApiAsync("me/servers/" + Uri.EscapeDataString(serverKey), HttpMethod.Delete);
             }
             catch (Exception ex)
             {

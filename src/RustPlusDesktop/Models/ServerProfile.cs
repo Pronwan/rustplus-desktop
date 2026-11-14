@@ -142,6 +142,22 @@ public class ServerProfile : INotifyPropertyChanged
     /// Uses ServerId if IP/port are not available or host is "companion-socket".
     /// </summary>
     [System.Text.Json.Serialization.JsonIgnore]
+    /// <summary>
+    /// Whether Host/Port is a real address. A server paired since Rust's November 2026 update has
+    /// none: Facepunch sends only its server id, and Host is the "companion-socket" stand-in with
+    /// the default port. Sent to the platform as an address, that stand-in filed every such server
+    /// of every user on one shared row.
+    /// </summary>
+    public bool HasRealAddress => !string.IsNullOrWhiteSpace(Host)
+        && !Host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase)
+        && Port > 0;
+
+    /// <summary>
+    /// The key the platform files this server under: "{host}-{port}" for a real address, otherwise
+    /// Facepunch's server id - the same key the device and overlay sync use.
+    /// </summary>
+    public string PlatformServerKey => HasRealAddress ? $"{Host!.Trim()}-{Port}" : ServerKey;
+
     public string ServerKey
     {
         get
