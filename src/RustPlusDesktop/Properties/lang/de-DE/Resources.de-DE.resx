@@ -8371,4 +8371,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Nachrichten der Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>Auf diesem Server ist kein Oil-Rig-Trigger eingerichtet. Klicke, um zu sehen, wie du einen Smart Alarm als Oil-Rig-Trigger einrichtest.</value>
+  </data>
 </root>

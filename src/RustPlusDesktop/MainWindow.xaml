@@ -6329,32 +6329,11 @@
                                                              Tag="Vendor" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource OilRigCrateStatus}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="OilRig" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource DeepSea}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="DeepSea" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource SmartAlerts}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="SmartAlerts" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource CustomTimerCategory}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="CustomTimer" />
                                                      </MenuItem>
 
                                                      <!-- Column 2: Players -->
@@ -6459,13 +6438,29 @@
                                                                      Tag="Afk_30" />
                                                              </MenuItem>
                                                          </MenuItem>
+                                                         <!-- Smart alarms, oil rig triggers and custom timers do not depend on the event data Rust withdrew, so they
+                                                              live here rather than in the hidden Events column. Tracking is gone. -->
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource AnnounceTracking}"
+                                                             Header="{DynamicResource SmartAlerts}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
-                                                             Tag="AnnounceTracking" />
+                                                             Tag="SmartAlerts" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource OilRigCrateStatus}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="OilRig" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource CustomTimerCategory}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="CustomTimer" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource PlayerDeathSelf}"

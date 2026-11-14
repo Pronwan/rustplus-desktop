@@ -6456,6 +6456,13 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     {
         if (sender is MenuItem mi && mi.Tag is string tag)
         {
+            if (tag == "OilRig" && !(_vm.Selected != null && HasOilRigTrigger(_vm.Selected)))
+            {
+                if (ChatAlertsConfigureButton.ContextMenu is ContextMenu menu) menu.IsOpen = false;
+                _ = StartTutorialAsync("oilrig-crate-alerts");
+                return;
+            }
+
             bool wasMasterEnabled = TrackingService.AnnounceSpawnsMaster;
             bool val = mi.IsChecked;
             switch (tag)
@@ -6755,6 +6762,19 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 mi.IsEnabled = masterOn;
             }
             mi.IsChecked = masterOn && isSelected;
+
+            // Oil rig alerts come from a smart alarm set up as an oil rig trigger, and only from
+            // that. Without one the entry can do nothing, so it looks unavailable - but stays
+            // clickable, to show how to set a trigger up.
+            if (tag == "OilRig")
+            {
+                bool hasTrigger = _vm.Selected != null && HasOilRigTrigger(_vm.Selected);
+                mi.IsCheckable = hasTrigger;
+                mi.IsEnabled = hasTrigger ? masterOn : true;
+                mi.Opacity = hasTrigger ? 1.0 : 0.45;
+                mi.ToolTip = hasTrigger ? null : Properties.Resources.GetString("OilRigTriggerMissingHint");
+                if (!hasTrigger) mi.IsChecked = false;
+            }
         }
 
         if (mi.HasItems)

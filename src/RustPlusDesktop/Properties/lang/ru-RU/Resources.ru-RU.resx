@@ -8280,4 +8280,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Сообщения Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>На этом сервере не настроен триггер нефтяной вышки. Нажмите, чтобы узнать, как сделать умную сигнализацию триггером вышки.</value>
+  </data>
 </root>

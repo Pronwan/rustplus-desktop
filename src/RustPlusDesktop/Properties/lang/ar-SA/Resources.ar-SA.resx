@@ -8171,4 +8171,7 @@
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>رسائل Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>لا يوجد مشغّل لمنصة النفط على هذا الخادم. انقر لترى كيف تجعل إنذارًا ذكيًا مشغّلًا لمنصة النفط.</value>
+  </data>
 </root>

@@ -8280,4 +8280,7 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Messages de la Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>Aucun déclencheur de plateforme pétrolière n'est configuré sur ce serveur. Clique pour voir comment faire d'une alarme intelligente ton déclencheur.</value>
+  </data>
 </root>

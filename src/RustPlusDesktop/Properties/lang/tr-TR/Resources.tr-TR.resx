@@ -7256,4 +7256,7 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Logic Engine mesajları</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>Bu sunucuda petrol platformu tetikleyicisi kurulu değil. Akıllı alarmı nasıl petrol platformu tetikleyicisi yapacağını görmek için tıkla.</value>
+  </data>
 </root>

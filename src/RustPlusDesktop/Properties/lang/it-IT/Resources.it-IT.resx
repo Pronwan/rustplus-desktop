@@ -5879,4 +5879,7 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Messaggi della Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>Su questo server non è impostato alcun trigger della piattaforma petrolifera. Clicca per vedere come trasformare un allarme intelligente nel tuo trigger.</value>
+  </data>
 </root>

@@ -8903,4 +8903,7 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Logic Engine messages</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>No oil rig trigger is set up on this server. Click to see how to make a smart alarm your oil rig trigger.</value>
+  </data>
 </root>
