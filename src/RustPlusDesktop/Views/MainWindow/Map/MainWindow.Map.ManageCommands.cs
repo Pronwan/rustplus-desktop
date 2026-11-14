@@ -290,7 +290,15 @@ public partial class MainWindow
         if (data["origin"]?.ToString() == CloudApiClient.InstanceId) return; // our own change coming back
 
         var muted = data["muted"]?.Type == Newtonsoft.Json.Linq.JTokenType.Boolean && (bool)data["muted"]!;
-        var until = data["muted_until"]?.Type == Newtonsoft.Json.Linq.JTokenType.Null ? null : data["muted_until"]?.ToString();
+        // Newtonsoft turns an ISO timestamp into a Date token; ToString() would then give a
+        // culture-formatted local time that ApplyRemoteMute cannot parse, and the timed mute
+        // would silently become open-ended. Read the instant itself.
+        var untilToken = data["muted_until"];
+        string? until = untilToken == null || untilToken.Type == Newtonsoft.Json.Linq.JTokenType.Null
+            ? null
+            : untilToken.Type == Newtonsoft.Json.Linq.JTokenType.Date
+                ? untilToken.ToObject<DateTime>().ToUniversalTime().ToString("o", CultureInfo.InvariantCulture)
+                : untilToken.ToString();
         Dispatcher.BeginInvoke(new Action(() => ApplyRemoteMute(muted, until)));
     }
 
