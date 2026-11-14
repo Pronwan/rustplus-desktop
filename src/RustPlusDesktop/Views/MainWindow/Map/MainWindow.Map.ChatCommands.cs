@@ -143,6 +143,9 @@ public partial class MainWindow
         // than from the game and works whether or not the socket is up.
         if (await TryHandleAiCommand(profile, m, cmd, prefix, channel, Reply)) return;
 
+        // !mute / !unmute / !device: settings, answered without the game socket.
+        if (await TryHandleManageCommand(profile, m, cmd, prefix, channel, Reply)) return;
+
         if (_rust is not RustPlusClientReal real) return;
 
         // Command: List Commands
@@ -172,6 +175,14 @@ public partial class MainWindow
             // switched off for invites four people to find out by being ignored.
             if (!string.IsNullOrWhiteSpace(profile.CmdAi) && IsAiCommandListable(profile, m, channel))
                 standardCmds.Add(prefix + profile.CmdAi);
+
+            // Settings commands live in team chat only; !device only for the owner.
+            if (channel == ChatChannel.Team)
+            {
+                standardCmds.Add(prefix + "mute");
+                standardCmds.Add(prefix + "unmute");
+                if (IsBotOwner(profile, m)) standardCmds.Add(prefix + "device");
+            }
 
             var standardMessages = SplitChatMessages(standardCmds, ", ", string.Format(Properties.Resources.ChatCmdListHeader, ""));
             foreach (var standardMsg in standardMessages) _ = Reply(standardMsg);
@@ -1130,8 +1141,13 @@ public partial class MainWindow
 
 
     /// <summary>Whether an alarm on this server is set up as an oil rig trigger, so the rig command can answer.</summary>
+    /// <summary>
+    /// Whether a smart alarm is set up as an oil rig trigger on this server. Read from the rules,
+    /// as the device's "Large Oil" badge is: the devices' own copy is filled in later and was
+    /// still empty when the alerts menu asked, so it stayed greyed out next to the badge.
+    /// </summary>
     private static bool HasOilRigTrigger(ServerProfile profile)
-        => profile.AllDevices.Any(d => !string.IsNullOrEmpty(d.OilRigTriggerTarget));
+        => OilRigTriggerRegistry.TargetsForProfile(profile).Count > 0;
 
     /// <summary>Whether a storage monitor (a TC monitor) is paired, so the upkeep commands can answer.</summary>
     private static bool HasStorageMonitor(ServerProfile profile)

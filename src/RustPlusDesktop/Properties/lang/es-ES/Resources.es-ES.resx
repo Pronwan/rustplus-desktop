@@ -8280,4 +8280,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Mensajes de Logic Engine</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>No hay ningún activador de plataforma petrolífera en este servidor. Haz clic para ver cómo convertir una alarma inteligente en tu activador.</value>
+  </data>
 </root>

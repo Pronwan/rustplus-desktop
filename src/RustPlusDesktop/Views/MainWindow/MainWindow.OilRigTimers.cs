@@ -209,7 +209,15 @@ public partial class MainWindow
             }
         }
 
-        string timerText = alarm != null ? alarm.Timestamp.ToLocalTime().ToString("HH:mm:ss") : "—";
+        // A countdown while the crate is being hacked, the time it was triggered afterwards.
+        var remaining = timeLeft.HasValue && timeLeft.Value > TimeSpan.Zero
+            ? timeLeft.Value
+            : alarm != null && isActive
+                ? TimeSpan.FromMinutes(15) - (DateTime.UtcNow - alarm.Timestamp.ToUniversalTime())
+                : (TimeSpan?)null;
+        string timerText = remaining is { } left && left > TimeSpan.Zero
+            ? $"{(int)left.TotalMinutes}:{left.Seconds:D2}"
+            : alarm != null ? alarm.Timestamp.ToLocalTime().ToString("HH:mm:ss") : "—";
         string toolTip = BuildSingleRigAnswer(canonicalRigName, name, alarm);
 
         return new EventDockItem
@@ -325,6 +333,24 @@ public partial class MainWindow
 
         try { ApplyOilRigTriggerBadges(); }
         catch { }
+
+        try { ApplyEventDockVisibility(); }
+        catch { }
+    }
+
+    /// <summary>
+    /// The event dock shows Rust's events where the server still sends them, and the oil rig
+    /// crates wherever a trigger is set up - which since Rust stopped sending events is the one
+    /// thing left in it, so hiding the dock with the events hid the crates too.
+    /// </summary>
+    internal void ApplyEventDockVisibility()
+    {
+        if (EventDock == null) return;
+
+        bool events = _shopDataAvailable && !RustApiFeatures.EventsAndShopsRemoved;
+        bool rigs = _vm?.Selected != null && HasOilRigTrigger(_vm.Selected);
+        EventDock.Visibility = events || rigs ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        if (rigs) RefreshEventDock();
     }
 
     /// <summary>

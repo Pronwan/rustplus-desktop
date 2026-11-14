@@ -80,6 +80,17 @@ public class ServerProfile : INotifyPropertyChanged
     /// port — not even getInfo reports it — so it has to be kept from the pairing that
     /// delivered it. Empty on servers paired before it was captured.
     /// </summary>
+    /// <summary>
+    /// Where a server known only by <see cref="ServerId"/> actually is, as Facepunch's own pushes
+    /// reported it (filled by the cloud pairing import). Display only: it is never used to
+    /// connect, to match a pairing to this profile, or in any key - the server is reached and
+    /// identified by ServerId alone, and Host stays the companion-socket stand-in.
+    /// </summary>
+    public string? ReportedHost { get; set; }
+
+    /// <summary>The port that goes with <see cref="ReportedHost"/>; display only.</summary>
+    public int ReportedPort { get; set; }
+
     private string? _serverId = null;
     public string? ServerId
     {
@@ -142,6 +153,22 @@ public class ServerProfile : INotifyPropertyChanged
     /// Uses ServerId if IP/port are not available or host is "companion-socket".
     /// </summary>
     [System.Text.Json.Serialization.JsonIgnore]
+    /// <summary>
+    /// Whether Host/Port is a real address. A server paired since Rust's November 2026 update has
+    /// none: Facepunch sends only its server id, and Host is the "companion-socket" stand-in with
+    /// the default port. Sent to the platform as an address, that stand-in filed every such server
+    /// of every user on one shared row.
+    /// </summary>
+    public bool HasRealAddress => !string.IsNullOrWhiteSpace(Host)
+        && !Host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase)
+        && Port > 0;
+
+    /// <summary>
+    /// The key the platform files this server under: "{host}-{port}" for a real address, otherwise
+    /// Facepunch's server id - the same key the device and overlay sync use.
+    /// </summary>
+    public string PlatformServerKey => HasRealAddress ? $"{Host!.Trim()}-{Port}" : ServerKey;
+
     public string ServerKey
     {
         get

@@ -1522,4 +1522,7 @@
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Logic Engine 訊息</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>此伺服器尚未設定石油平台觸發器。點擊查看如何將智慧警報設為石油平台觸發器。</value>
+  </data>
 </root>

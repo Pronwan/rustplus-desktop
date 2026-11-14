@@ -134,6 +134,14 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
 
     private async void BtnTutorials_Click(object sender, RoutedEventArgs e) => await ShowTutorialCenterAsync();
 
+    /// <summary>Starts one tutorial directly, from wherever the app points the user to it.</summary>
+    private async Task StartTutorialAsync(string tutorialId)
+    {
+        if (_tutorialService is null) return;
+        TutorialsPagePanel.Visibility = Visibility.Collapsed;
+        await _tutorialService.StartAsync(tutorialId);
+    }
+
 
     private async Task ShowTutorialCenterAsync()
     {

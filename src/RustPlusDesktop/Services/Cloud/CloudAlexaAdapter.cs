@@ -43,7 +43,7 @@ namespace RustPlusDesk.Services.Cloud
             foreach (var server in await FetchPairedServersAsync())
             {
                 if (server.ServerId == activeServerId)
-                    return $"{server.Host}-{server.Port}";
+                    return server.Port > 0 ? $"{server.Host}-{server.Port}" : server.Host;
             }
 
             return null;
@@ -97,12 +97,15 @@ namespace RustPlusDesk.Services.Cloud
         /// </summary>
         public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null)
         {
-            var effectiveKey = !string.IsNullOrWhiteSpace(serverKey) ? serverKey : $"{host}-{port}";
+            // No address for a server paired by Facepunch's id alone: its "companion-socket" host is a
+            // stand-in, and sent as one it lands on a row every such server shares.
+            var realHost = !string.IsNullOrWhiteSpace(host) && !host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase) && port > 0;
+            var effectiveKey = !string.IsNullOrWhiteSpace(serverKey) ? serverKey : (realHost ? $"{host}-{port}" : null);
             var pairBody = await CloudApiClient.CallApiAsync("me/servers", HttpMethod.Post, payload: new
             {
                 server_key = effectiveKey,
-                server_ip = host,
-                server_port = port,
+                server_ip = realHost ? host : null,
+                server_port = realHost ? port : (int?)null,
                 name,
                 player_token = playerToken,
                 steam_id = steamId,
@@ -219,7 +222,14 @@ namespace RustPlusDesk.Services.Cloud
                     ? portEl.GetInt32()
                     : 0;
 
-                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(host) && port > 0)
+                // A server paired without an address is known by its key (Facepunch's id) alone.
+                if (string.IsNullOrEmpty(host) && server.TryGetProperty("server_key", out var keyEl) && keyEl.ValueKind == JsonValueKind.String)
+                {
+                    host = keyEl.GetString();
+                    port = 0;
+                }
+
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(host))
                     servers.Add(new PairedServer(id, host, port));
             }
 

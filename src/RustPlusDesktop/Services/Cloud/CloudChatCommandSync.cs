@@ -38,6 +38,67 @@ namespace RustPlusDesk.Services.Cloud
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return;
             if (profile == null || string.IsNullOrWhiteSpace(serverKey)) return;
 
+            var payload = BuildPayload(profile, serverKey);
+            var signature = System.Text.Json.JsonSerializer.Serialize(payload).GetHashCode();
+
+            lock (LastSent)
+            {
+                if (LastSent.TryGetValue(serverKey, out var previous) && previous == signature)
+                    return;
+            }
+
+            try
+            {
+                await CloudApiClient.CallApiAsync("sync/chat-commands", HttpMethod.Put, payload: payload);
+
+                lock (LastSent)
+                {
+                    LastSent[serverKey] = signature;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Not fatal: the cloud falls back to defaults, which is worse than
+                // matching but far better than refusing to connect over it.
+                SupabaseAuthManager.AppendLog($"[Cloud commands] Could not sync command words: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Whether this profile holds a command change that has not been pushed yet.
+        ///
+        /// A save pushes the words a moment later; an import landing in between would replace
+        /// the user's new word with the cloud's old one. Only meaningful once something was
+        /// pushed this run: before that there is nothing local to protect, and a restore must
+        /// be allowed to fill an empty profile.
+        /// </summary>
+        public static bool HasPendingChanges(ServerProfile profile, string serverKey)
+        {
+            if (profile == null || string.IsNullOrWhiteSpace(serverKey)) return false;
+
+            int previous;
+            lock (LastSent)
+            {
+                if (!LastSent.TryGetValue(serverKey, out previous)) return false;
+            }
+
+            return Signature(profile, serverKey) != previous;
+        }
+
+        /// <summary>Record the profile's current words as pushed, without sending them (tests).</summary>
+        internal static void MarkSent(ServerProfile profile, string serverKey)
+        {
+            lock (LastSent)
+            {
+                LastSent[serverKey] = Signature(profile, serverKey);
+            }
+        }
+
+        private static int Signature(ServerProfile profile, string serverKey)
+            => System.Text.Json.JsonSerializer.Serialize(BuildPayload(profile, serverKey)).GetHashCode();
+
+        private static object BuildPayload(ServerProfile profile, string serverKey)
+        {
             var words = new Dictionary<string, string?>
             {
                 ["pop"] = profile.CmdPop,
@@ -125,29 +186,7 @@ namespace RustPlusDesk.Services.Cloud
                 },
             };
 
-            var signature = System.Text.Json.JsonSerializer.Serialize(payload).GetHashCode();
-
-            lock (LastSent)
-            {
-                if (LastSent.TryGetValue(serverKey, out var previous) && previous == signature)
-                    return;
-            }
-
-            try
-            {
-                await CloudApiClient.CallApiAsync("sync/chat-commands", HttpMethod.Put, payload: payload);
-
-                lock (LastSent)
-                {
-                    LastSent[serverKey] = signature;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Not fatal: the cloud falls back to defaults, which is worse than
-                // matching but far better than refusing to connect over it.
-                SupabaseAuthManager.AppendLog($"[Cloud commands] Could not sync command words: {ex.Message}");
-            }
+            return payload;
         }
 
         /// <summary>Forget what was sent, e.g. after signing out.</summary>

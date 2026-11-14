@@ -89,6 +89,28 @@ if (!baseRef) {
 
 console.log(baseRef ? `Using base ref: ${baseRef}` : 'No previous semver tag found (will analyze history since root).');
 
+// Map git author names and emails to canonical GitHub handles
+const AUTHOR_MAP = {
+  'carsten podszun': 'Pronwan',
+  'carsten.podszun@gmail.com': 'Pronwan',
+  'pronwan': 'Pronwan',
+  'jawad yazbek': 'JawadYzbk',
+  'jawadyazbek313': 'JawadYzbk',
+  'jawadyzbk': 'JawadYzbk',
+  'jawadyazbek@gmail.com': 'JawadYzbk',
+  '87113175+jawadyzbk@users.noreply.github.com': 'JawadYzbk',
+  '8661788+pronwan@users.noreply.github.com': 'Pronwan',
+  '0xsteph': '0xSteph'
+};
+
+function resolveAuthor(name, email) {
+  const cleanName = (name || '').trim().toLowerCase();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  if (AUTHOR_MAP[cleanName]) return AUTHOR_MAP[cleanName];
+  if (cleanEmail && AUTHOR_MAP[cleanEmail]) return AUTHOR_MAP[cleanEmail];
+  return (name || '').trim();
+}
+
 // 4. Fetch commits in range
 function getCommitsInRange(from, to) {
   let range = '';
@@ -108,14 +130,14 @@ function getCommitsInRange(from, to) {
   }
 
   // Format: hash%x1fauthor%x1fsubject%x1fbody%x1e
-  const raw = run(`git log ${range} --pretty=format:"%H%x1f%an%x1f%s%x1f%b%x1e"`);
+  const raw = run(`git log ${range} --pretty=format:"%H%x1f%an%x1f%ae%x1f%s%x1f%b%x1e"`);
   if (!raw) return [];
 
   const commits = [];
   const entries = raw.split('\x1e');
   for (const entry of entries) {
     if (!entry.trim()) continue;
-    const [hash, author, subject, body = ''] = entry.split('\x1f');
+    const [hash, author, authorEmail, subject, body = ''] = entry.split('\x1f');
     if (!hash || !subject) continue;
 
     const trimmedSubject = subject.trim();
@@ -132,7 +154,7 @@ function getCommitsInRange(from, to) {
     commits.push({
       hash: hash.trim(),
       shortHash: hash.trim().slice(0, 7),
-      author: (author || '').trim(),
+      author: resolveAuthor(author, authorEmail),
       subject: trimmedSubject,
       body: body.trim()
     });
@@ -298,7 +320,7 @@ function generateReleaseNotes(version, tag, previousTag, commitList) {
   const authors = new Set();
 
   for (const c of commitList) {
-    if (c.author) authors.add(c.author);
+    if (c.author && !c.author.includes('[bot]') && !c.author.toLowerCase().includes('dependabot') && c.author.toLowerCase() !== 'claude') authors.add(c.author);
 
     const fullText = `${c.subject}\n${c.body}`;
     const isBreaking =

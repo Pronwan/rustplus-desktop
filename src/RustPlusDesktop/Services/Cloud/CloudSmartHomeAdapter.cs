@@ -36,7 +36,7 @@ namespace RustPlusDesk.Services.Cloud
             foreach (var (serverId, host, port) in await FetchPairedServersAsync())
             {
                 if (serverId == activeServerId)
-                    return $"{host}-{port}";
+                    return port > 0 ? $"{host}-{port}" : host;
             }
 
             return null;
@@ -87,8 +87,15 @@ namespace RustPlusDesk.Services.Cloud
                     ? portEl.GetInt32()
                     : 0;
 
-                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(host) && port > 0)
-                    servers.Add((id, host, port));
+                // A server paired without an address is known by its key (Facepunch's id) alone.
+                if (string.IsNullOrEmpty(host) && server.TryGetProperty("server_key", out var keyEl) && keyEl.ValueKind == JsonValueKind.String)
+                {
+                    host = keyEl.GetString();
+                    port = 0;
+                }
+
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(host))
+                    servers.Add((id, host!, port));
             }
 
             return servers;

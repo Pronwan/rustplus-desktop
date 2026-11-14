@@ -5919,6 +5919,7 @@
                                              <CheckBox.Content>
                                                  <Grid Width="32" Height="26">
                                                      <ui:SymbolIcon
+                                                         x:Name="ChatAnnounceIcon"
                                                          HorizontalAlignment="Center"
                                                          VerticalAlignment="Center"
                                                          FontSize="16"
@@ -6057,7 +6058,21 @@
                                                                                           </ui:Button.Icon>
                                                                                       </ui:Button>
                                                                                   </Grid>
-                                                                                 
+
+                                                                                 <!--
+                                                                                     Mute for a while: the same mute as !mute in game, synced with
+                                                                                     the cloud. The bell itself is the open-ended on/off.
+                                                                                 -->
+                                                                                 <WrapPanel Margin="4,0,4,8" Orientation="Horizontal">
+                                                                                     <TextBlock Text="Mute alerts:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource TextSubtle}" />
+                                                                                     <ui:Button Content="15 min" Tag="15m" Click="MuteChatAlertsPreset_Click" Appearance="Secondary" Padding="8,4" Margin="0,0,6,4" />
+                                                                                     <ui:Button Content="1 h" Tag="1h" Click="MuteChatAlertsPreset_Click" Appearance="Secondary" Padding="8,4" Margin="0,0,6,4" />
+                                                                                     <ui:Button Content="8 h" Tag="8h" Click="MuteChatAlertsPreset_Click" Appearance="Secondary" Padding="8,4" Margin="0,0,6,4" />
+                                                                                     <ui:Button Content="Until I unmute" Tag="" Click="MuteChatAlertsPreset_Click" Appearance="Secondary" Padding="8,4" Margin="0,0,6,4" />
+                                                                                     <ui:Button Content="Custom..." Click="MuteChatAlertsCustom_Click" Appearance="Secondary" Padding="8,4" Margin="0,0,6,4" />
+                                                                                     <ui:Button Content="Unmute" Click="UnmuteChatAlerts_Click" Appearance="Primary" Padding="8,4" Margin="0,0,0,4" />
+                                                                                 </WrapPanel>
+
                                                                                  <!-- Horizontal Separator -->
                                                                                  <Border BorderBrush="{DynamicResource WhiteA15}" BorderThickness="0,0,0,1" Margin="0,0,0,10" />
 
@@ -6329,32 +6344,11 @@
                                                              Tag="Vendor" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource OilRigCrateStatus}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="OilRig" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource DeepSea}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
                                                              Tag="DeepSea" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource SmartAlerts}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="SmartAlerts" />
-                                                         <MenuItem
-                                                             Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource CustomTimerCategory}"
-                                                             IsCheckable="True"
-                                                             StaysOpenOnClick="True"
-                                                             Style="{StaticResource DarkMenuItem}"
-                                                             Tag="CustomTimer" />
                                                      </MenuItem>
 
                                                      <!-- Column 2: Players -->
@@ -6459,13 +6453,29 @@
                                                                      Tag="Afk_30" />
                                                              </MenuItem>
                                                          </MenuItem>
+                                                         <!-- Smart alarms, oil rig triggers and custom timers do not depend on the event data Rust withdrew, so they
+                                                              live here rather than in the hidden Events column. Tracking is gone. -->
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
-                                                             Header="{DynamicResource AnnounceTracking}"
+                                                             Header="{DynamicResource SmartAlerts}"
                                                              IsCheckable="True"
                                                              StaysOpenOnClick="True"
                                                              Style="{StaticResource DarkMenuItem}"
-                                                             Tag="AnnounceTracking" />
+                                                             Tag="SmartAlerts" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource OilRigCrateStatus}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="OilRig" />
+                                                         <MenuItem
+                                                             Click="Alert_MenuItem_Click"
+                                                             Header="{DynamicResource CustomTimerCategory}"
+                                                             IsCheckable="True"
+                                                             StaysOpenOnClick="True"
+                                                             Style="{StaticResource DarkMenuItem}"
+                                                             Tag="CustomTimer" />
                                                          <MenuItem
                                                              Click="Alert_MenuItem_Click"
                                                              Header="{DynamicResource PlayerDeathSelf}"

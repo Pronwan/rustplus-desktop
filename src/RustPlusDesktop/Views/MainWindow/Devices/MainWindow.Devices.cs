@@ -1728,6 +1728,10 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
             profile.LogicRules.Add(rule);
         }
 
+        // The trigger is a Logic Engine rule. With the engine left off it stays silent when the rig
+        // is hacked, and having to switch the engine on as well was a step people did not know about.
+        profile.IsLogicEngineActive = true;
+
         RefreshOilRigTimerCapability();
         LogicEnginePanel?.RefreshListBindings();
         _vm?.NotifyDevicesChanged();
@@ -2189,11 +2193,21 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
-        if (skipIfRecentlyChecked
-            && devices.All(d => (DateTime.UtcNow - d.LastPolledAt).TotalSeconds < 15))
+        // After a soft connect the devices are subscribed, and the server pushes every change, so
+        // a full connect over the same socket only asks about those it could not reach - or has
+        // not heard from in a while. Asking about all of them again ran into Rust+'s rate limit
+        // and left them marked unreachable until a manual refresh.
+        if (skipIfRecentlyChecked)
         {
-            AppendLog("Device status refresh skipped; recent check is still fresh.");
-            return;
+            devices = devices
+                .Where(d => d.IsMissing || (DateTime.UtcNow - d.LastPolledAt).TotalMinutes >= 10)
+                .ToList();
+
+            if (devices.Count == 0)
+            {
+                AppendLog("Device status refresh skipped; subscriptions keep the devices up to date.");
+                return;
+            }
         }
 
         AppendLog("Updating Device Status (sequential).");
@@ -2207,7 +2221,9 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
                 await RefreshDeviceStateAsync(device, log: true, forcePull: true, maxRetries: maxRetries);
                 device.LastPolledAt = DateTime.UtcNow;
                 _vm.DeviceStatusProgress++;
-                await Task.Delay(250); // Increased gap to prevent API spam
+                // Rust+ refills about three requests a second per player; four a second emptied the
+                // bucket on a long device list, and every probe after that came back unreachable.
+                await Task.Delay(400);
             }
             catch (Exception ex)
             {

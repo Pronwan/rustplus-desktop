@@ -158,6 +158,8 @@ public class TrackingSettings
     public Dictionary<string, List<HarborInfo>> ServerHarbors { get; set; } = new();
     public Dictionary<string, Dictionary<string, CargoTriggerPoint>> ServerCargoTriggers { get; set; } = new();
     public bool AnnounceSpawnsMaster { get; set; } = false;
+    /// <summary>When a timed chat-alert mute (!mute 15m) ends, UTC; null when not timed.</summary>
+    public DateTime? ChatAlertsMutedUntilUtc { get; set; }
     public bool ChatMasterOfferSoundEnabled { get; set; } = true;
     public bool SaveAlertSelection { get; set; } = true;
     public string LastSeenVersion { get; set; } = "";
@@ -946,6 +948,16 @@ public static class TrackingService
     {
         get => _settings.AnnounceSpawnsMaster;
         set { _settings.AnnounceSpawnsMaster = value; SaveDB(); }
+    }
+
+    /// <summary>
+    /// The end of a timed mute of chat alerts (!mute 15m, synced with the cloud), UTC. The alert
+    /// bell is the mute: while this is set the bell is off, and it turns back on when it passes.
+    /// </summary>
+    public static DateTime? ChatAlertsMutedUntilUtc
+    {
+        get => _settings.ChatAlertsMutedUntilUtc;
+        set { _settings.ChatAlertsMutedUntilUtc = value; SaveDB(); }
     }
 
     public static bool ChatMasterOfferSoundEnabled

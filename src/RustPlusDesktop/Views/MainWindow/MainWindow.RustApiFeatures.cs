@@ -39,8 +39,7 @@ public partial class MainWindow
 
         // Events: hide the events dock, the alerts "Events" column, and the
         // trade/vending alerts item.
-        if (EventDock != null)
-            EventDock.Visibility = Visibility.Collapsed;
+        ApplyEventDockVisibility();
         if (AlertsEventsColumn != null)
             AlertsEventsColumn.Visibility = Visibility.Collapsed;
         if (TradeAlertsMenuItem != null)

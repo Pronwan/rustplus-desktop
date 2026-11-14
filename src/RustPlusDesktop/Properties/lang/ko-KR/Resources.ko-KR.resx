@@ -8201,4 +8201,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiDiscordOnlyAutomations" xml:space="preserve">
     <value>Logic Engine 메시지</value>
   </data>
+  <data name="OilRigTriggerMissingHint" xml:space="preserve">
+    <value>이 서버에는 석유 굴착기 트리거가 설정되어 있지 않습니다. 스마트 알람을 석유 굴착기 트리거로 설정하는 방법을 보려면 클릭하세요.</value>
+  </data>
 </root>

@@ -141,7 +141,7 @@ public partial class MainWindow
         if (AlertsShopsColumn != null) AlertsShopsColumn.Visibility = vis;
         if (TradeAlertsMenuItem != null) TradeAlertsMenuItem.Visibility = vis;
 
-        if (EventDock != null) EventDock.Visibility = vis;
+        ApplyEventDockVisibility();
         if (AlertsEventsColumn != null) AlertsEventsColumn.Visibility = vis;
 
         // Once a server is known not to deliver shops, stop asking altogether. Polling a dead

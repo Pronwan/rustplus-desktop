@@ -189,10 +189,13 @@ namespace RustPlusDesk.Services
                                 // so unlike the Supabase path there is nothing to clear first.
                                 foreach (var p in paired)
                                 {
+                                    // The address only when there is one: the "companion-socket"
+                                    // stand-in sent as one put every such server on one row.
                                     await CloudApiClient.CallApiAsync("me/servers", HttpMethod.Post, payload: new
                                     {
-                                        server_ip = p.Host,
-                                        server_port = p.Port,
+                                        server_key = p.PlatformServerKey,
+                                        server_ip = p.HasRealAddress ? p.Host : null,
+                                        server_port = p.HasRealAddress ? p.Port : (int?)null,
                                         name = p.Name,
                                         player_token = p.PlayerToken,
                                         steam_id = steamId,

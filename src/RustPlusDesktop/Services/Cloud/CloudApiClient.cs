@@ -24,6 +24,13 @@ namespace RustPlusDesk.Services.Cloud
         private static readonly HttpClient Http = new();
 
         /// <summary>
+        /// This run of the app, sent as <c>X-Client-Instance</c>. The platform echoes it back as the
+        /// <c>origin</c> of the devices_changed event an upload causes, which is how the app tells
+        /// its own upload coming back apart from a change made on the website or by the cloud.
+        /// </summary>
+        public static readonly string InstanceId = Guid.NewGuid().ToString("N");
+
+        /// <summary>
         /// GET a public <c>/api/v1</c> route that does not require authentication
         /// (e.g. feature flags, plans). Sends the client-version header and, when
         /// available, the bearer token, but never requires it. Returns the response
@@ -36,6 +43,7 @@ namespace RustPlusDesk.Services.Cloud
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
                 request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+                request.Headers.Add("X-Client-Instance", CloudApiClient.InstanceId);
                 if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
 
@@ -77,6 +85,7 @@ namespace RustPlusDesk.Services.Cloud
 
             using var request = new HttpRequestMessage(HttpMethod.Post, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+            request.Headers.Add("X-Client-Instance", CloudApiClient.InstanceId);
             if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
             request.Content = content;
@@ -114,6 +123,7 @@ namespace RustPlusDesk.Services.Cloud
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
                 request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+                request.Headers.Add("X-Client-Instance", CloudApiClient.InstanceId);
                 if (!string.IsNullOrEmpty(CloudAuthManager.CurrentToken))
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", CloudAuthManager.CurrentToken);
 
@@ -171,6 +181,7 @@ namespace RustPlusDesk.Services.Cloud
             var sw = System.Diagnostics.Stopwatch.StartNew();
             using var request = new HttpRequestMessage(method, CloudBackend.ApiUrl(DataManager.CLOUD_API_BASEURL, routePath));
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+            request.Headers.Add("X-Client-Instance", CloudApiClient.InstanceId);
             if (!string.IsNullOrEmpty(bearerToken))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 
@@ -235,6 +246,7 @@ namespace RustPlusDesk.Services.Cloud
 
             using var request = new HttpRequestMessage(method, url);
             request.Headers.Add("X-Client-Version", Helpers.VersionHelper.GetClientVersion());
+            request.Headers.Add("X-Client-Instance", CloudApiClient.InstanceId);
             if (!string.IsNullOrEmpty(bearerToken))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 
