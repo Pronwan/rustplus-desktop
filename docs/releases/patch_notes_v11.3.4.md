@@ -12,6 +12,10 @@ Hotfix **v11.3.4** fixes Cloud 24/7 for servers paired since Rust's November upd
 * **No duplicate servers or alerts**: A server you paired again is listed once, joined with its old entry. While the app is open, the cloud steps back as it should, so alerts no longer arrive twice.
 * **Existing servers repaired**: Servers that were already mixed up are sorted out on our side. Update the app and open it once, so your devices sync to the right server.
 
+### 💬 Chat Alerts
+
+* **Smart alarm, oil rig and timer alerts are back**: They disappeared from the chat alerts along with Rust's retired events. Oil rig alerts need a smart alarm set up as an oil rig trigger; without one, the entry shows you how.
+
 ---
 
 ### 📥 Download & Update

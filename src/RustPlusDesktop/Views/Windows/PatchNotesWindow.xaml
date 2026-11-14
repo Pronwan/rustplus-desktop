@@ -257,6 +257,11 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Existing Servers Repaired:</Run>
                                         Servers already mixed up are sorted out on our side. Open the app once so your devices sync to the right server.
                                     </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Smart Alarm, Oil Rig &amp; Timer Chat Alerts Are Back:</Run>
+                                        They disappeared from the chat alerts along with Rust's retired events. Oil rig alerts need a smart alarm set up as an oil rig trigger; without one, the entry shows you how.
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
 
