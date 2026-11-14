@@ -267,6 +267,11 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Oil Rig Crates in the Event Dock:</Run>
                                         With an oil rig trigger set up, the event dock shows your crates again: a countdown while one is being hacked, and when it was last triggered. Setting an alarm as an oil rig trigger now also turns the Logic Engine on.
                                     </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No More Rate Limits When Connecting:</Run>
+                                        A full connect no longer asks about every device a second time, and device checks are paced to stay within Rust+'s limits, so devices no longer show as unreachable until you refresh.
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
 

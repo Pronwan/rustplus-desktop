@@ -17,6 +17,10 @@ Hotfix **v11.3.4** fixes Cloud 24/7 for servers paired since Rust's November upd
 * **Smart alarm, oil rig and timer alerts are back**: They disappeared from the chat alerts along with Rust's retired events. Oil rig alerts need a smart alarm set up as an oil rig trigger; without one, the entry shows you how.
 * **Oil rig crates in the event dock**: With an oil rig trigger set up, the event dock shows your crates again, with a countdown while one is being hacked and when it was last triggered. Setting an alarm as an oil rig trigger now also turns the Logic Engine on.
 
+### 🔌 Devices
+
+* **No more rate limits when connecting**: A full connect no longer asks about every device a second time, and device checks stay within Rust+'s limits, so devices no longer show as unreachable until you refresh.
+
 ---
 
 ### 📥 Download & Update
