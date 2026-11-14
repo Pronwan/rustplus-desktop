@@ -1728,6 +1728,10 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
             profile.LogicRules.Add(rule);
         }
 
+        // The trigger is a Logic Engine rule. With the engine left off it stays silent when the rig
+        // is hacked, and having to switch the engine on as well was a step people did not know about.
+        profile.IsLogicEngineActive = true;
+
         RefreshOilRigTimerCapability();
         LogicEnginePanel?.RefreshListBindings();
         _vm?.NotifyDevicesChanged();

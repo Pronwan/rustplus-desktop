@@ -9489,6 +9489,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             return;
         }
 
+        // Up to date on every opening: whether an oil rig trigger exists can change in between.
+        SyncAlertMenuItems();
         cm.PlacementTarget = ChatAlertsConfigureButton;
         cm.IsOpen = true;
     }

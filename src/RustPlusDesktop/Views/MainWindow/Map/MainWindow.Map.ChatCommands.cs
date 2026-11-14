@@ -1130,8 +1130,13 @@ public partial class MainWindow
 
 
     /// <summary>Whether an alarm on this server is set up as an oil rig trigger, so the rig command can answer.</summary>
+    /// <summary>
+    /// Whether a smart alarm is set up as an oil rig trigger on this server. Read from the rules,
+    /// as the device's "Large Oil" badge is: the devices' own copy is filled in later and was
+    /// still empty when the alerts menu asked, so it stayed greyed out next to the badge.
+    /// </summary>
     private static bool HasOilRigTrigger(ServerProfile profile)
-        => profile.AllDevices.Any(d => !string.IsNullOrEmpty(d.OilRigTriggerTarget));
+        => OilRigTriggerRegistry.TargetsForProfile(profile).Count > 0;
 
     /// <summary>Whether a storage monitor (a TC monitor) is paired, so the upkeep commands can answer.</summary>
     private static bool HasStorageMonitor(ServerProfile profile)
