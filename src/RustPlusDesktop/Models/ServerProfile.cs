@@ -80,6 +80,17 @@ public class ServerProfile : INotifyPropertyChanged
     /// port — not even getInfo reports it — so it has to be kept from the pairing that
     /// delivered it. Empty on servers paired before it was captured.
     /// </summary>
+    /// <summary>
+    /// Where a server known only by <see cref="ServerId"/> actually is, as Facepunch's own pushes
+    /// reported it (filled by the cloud pairing import). Display only: it is never used to
+    /// connect, to match a pairing to this profile, or in any key - the server is reached and
+    /// identified by ServerId alone, and Host stays the companion-socket stand-in.
+    /// </summary>
+    public string? ReportedHost { get; set; }
+
+    /// <summary>The port that goes with <see cref="ReportedHost"/>; display only.</summary>
+    public int ReportedPort { get; set; }
+
     private string? _serverId = null;
     public string? ServerId
     {

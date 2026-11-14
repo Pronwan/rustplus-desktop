@@ -34,7 +34,24 @@ namespace RustPlusDesk.Services.Cloud
         /// Sent back as <c>since</c>, so the usual case on launch is an empty reply
         /// rather than re-reading and re-merging every server every time.
         /// </summary>
-        private const string CursorKey = "cloud_pairings_cursor";
+        /// Versioned: before v2 an entry naming its server by Facepunch id alone was skipped
+        /// while the cursor still moved past it, so those pairings were never retried. The
+        /// new key starts empty, which makes the first import after the upgrade a full one.
+        private const string CursorKey = "cloud_pairings_cursor_v2";
+
+        /// <summary>Host and port of a profile for a server known only by Facepunch's id.</summary>
+        internal const string CompanionSocketHost = "companion-socket";
+        internal const int CompanionSocketPort = 28082;
+
+        /// <summary>The cursor of the last import, sent with device uploads as <c>pairings_as_of</c>.</summary>
+        public static string? Cursor
+        {
+            get
+            {
+                var cursor = StorageService.LoadCache<string>(CursorKey);
+                return string.IsNullOrWhiteSpace(cursor) ? null : cursor;
+            }
+        }
 
         /// <summary>
         /// Servers removed in this app whose cloud pairing may still be live.
@@ -78,7 +95,8 @@ namespace RustPlusDesk.Services.Cloud
         /// only says what the profiles file once held, and a lost or reset file holds
         /// nothing, so "only what changed" would bring back nothing.
         /// </summary>
-        public static async Task<ImportResult?> ImportIntoAsync(IList<ServerProfile> profiles, Action save, bool full)
+        public static async Task<ImportResult?> ImportIntoAsync(IList<ServerProfile> profiles, Action save, bool full,
+            IReadOnlyDictionary<string, IReadOnlyCollection<uint>>? removals = null)
         {
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return null;
 
@@ -105,7 +123,7 @@ namespace RustPlusDesk.Services.Cloud
 
             try
             {
-                return Merge(body, profiles, save);
+                return Merge(body, profiles, save, removals);
             }
             catch (Exception ex)
             {
@@ -116,7 +134,12 @@ namespace RustPlusDesk.Services.Cloud
             }
         }
 
-        private static ImportResult Merge(string body, IList<ServerProfile> profiles, Action save)
+        /// <param name="removals">
+        /// Devices the website deleted, by platform server key, from the devices_changed event
+        /// that announced it. Removed here only when the platform's list no longer has them.
+        /// </param>
+        internal static ImportResult Merge(string body, IList<ServerProfile> profiles, Action save,
+            IReadOnlyDictionary<string, IReadOnlyCollection<uint>>? removals = null)
         {
             using var doc = JsonDocument.Parse(body);
             var root = doc.RootElement;
@@ -132,24 +155,40 @@ namespace RustPlusDesk.Services.Cloud
                 var host = Str(entry, "host");
                 var port = Int(entry, "port");
                 var token = Str(entry, "player_token");
+                var serverId = Guid.TryParse(Str(entry, "facepunch_id"), out var fpId) ? fpId.ToString("D") : null;
+                bool hasAddress = !string.IsNullOrWhiteSpace(host) && port > 0
+                    && !host!.Contains(CompanionSocketHost, StringComparison.OrdinalIgnoreCase);
 
-                // A server we cannot dial is not worth a profile row.
-                if (string.IsNullOrWhiteSpace(host) || port <= 0 || string.IsNullOrWhiteSpace(token))
+                // A server we can neither dial nor reach through the companion socket is not
+                // worth a profile row. Since Rust's November 2026 update a pairing names its
+                // server by Facepunch's id alone, which is enough for the socket.
+                if ((!hasAddress && serverId == null) || string.IsNullOrWhiteSpace(token))
                     continue;
 
-                var existing = profiles.FirstOrDefault(p =>
-                    string.Equals(p.Host, host, StringComparison.OrdinalIgnoreCase) && p.Port == port);
+                // By Facepunch's id first: a profile for an id-only server has the placeholder
+                // host, and two such servers would otherwise look like the same one.
+                var existing = (serverId == null ? null : profiles.FirstOrDefault(p =>
+                        string.Equals(p.ServerId, serverId, StringComparison.OrdinalIgnoreCase)))
+                    ?? (hasAddress ? profiles.FirstOrDefault(p =>
+                        string.Equals(p.Host, host, StringComparison.OrdinalIgnoreCase) && p.Port == port) : null);
 
                 if (existing == null)
                 {
                     // Removed here and not yet confirmed gone on the platform.
-                    if (removed.ContainsKey(RemovalKey(host!, port))) continue;
+                    if (hasAddress && removed.ContainsKey(RemovalKey(host!, port))) continue;
+                    if (!hasAddress && RemovedServerStore.IsRemovedServerPairing(
+                            new PairingPayload { ServerId = serverId }, UpdatedAt(entry))) continue;
 
                     existing = new ServerProfile
                     {
-                        Host = host!,
-                        Port = port,
-                        Name = Str(entry, "name") ?? host!,
+                        Host = hasAddress ? host! : CompanionSocketHost,
+                        Port = hasAddress ? port : CompanionSocketPort,
+                        ServerId = serverId,
+                        UseFacepunchProxy = !hasAddress,
+                        // A newly paired server answers chat commands, as the cloud does by
+                        // default. Only for a profile created here: an existing one keeps its choice.
+                        ChatCommandsEnabled = true,
+                        Name = Str(entry, "name") ?? (hasAddress ? host! : "Rust Server"),
                         PlayerToken = token!,
                     };
 
@@ -185,8 +224,29 @@ namespace RustPlusDesk.Services.Cloud
                     updated++;
                 }
 
-                devicesAdded += MergeDevices(existing, entry);
-                MergeChatCommands(existing, entry);
+                // Where an id-only server is, for display. Written to its own fields and nowhere
+                // else: Host, Port and the proxy flag decide how the profile connects and how it is
+                // matched, and an id-only server keeps connecting and matching by ServerId.
+                var reportedHost = Str(entry, "reported_host");
+                var reportedPort = Int(entry, "reported_port");
+                if (!existing.HasRealAddress && !string.IsNullOrWhiteSpace(reportedHost) && reportedPort > 0
+                    && (existing.ReportedHost != reportedHost || existing.ReportedPort != reportedPort))
+                {
+                    existing.ReportedHost = reportedHost;
+                    existing.ReportedPort = reportedPort;
+                    updated++;
+                }
+
+                var serverKey = Str(entry, "server_key");
+                IReadOnlyCollection<uint>? removedHere = null;
+                if (removals != null && serverKey != null) removals.TryGetValue(serverKey, out removedHere);
+
+                var (devAdded, devChanged) = MergeDevices(existing, entry, removedHere);
+                devicesAdded += devAdded;
+                // Renames, icons, removals and command words change the profile too, and were
+                // never saved when they were the only change: the next save of anything else
+                // was what finally wrote them, or the next upload overwrote them.
+                updated += devChanged + MergeChatCommands(existing, entry);
             }
 
             if (added > 0 || updated > 0 || devicesAdded > 0)
@@ -213,12 +273,13 @@ namespace RustPlusDesk.Services.Cloud
         /// rather than the platform winning: without it, a name this app pushed
         /// would come straight back and overwrite a rename made here since.
         /// </summary>
-        private static int MergeDevices(ServerProfile profile, JsonElement entry)
+        private static (int Added, int Changed) MergeDevices(ServerProfile profile, JsonElement entry, IReadOnlyCollection<uint>? removedOnWeb = null)
         {
             if (!entry.TryGetProperty("devices", out var devices) || devices.ValueKind != JsonValueKind.Array)
-                return 0;
+                return (0, 0);
 
-            int added = 0;
+            int added = 0, changed = 0;
+            var inCloud = new HashSet<uint>();
 
             foreach (var group in devices.EnumerateArray())
             {
@@ -229,6 +290,16 @@ namespace RustPlusDesk.Services.Cloud
                 {
                     var entityId = UInt(item, "EntityId");
                     if (entityId == 0) continue;
+                    inCloud.Add(entityId);
+
+                    // A pairing the cloud recorded after the user deleted the device here is the
+                    // device being paired again in game: the deletion no longer applies.
+                    if (profile.RemovedDevices.TryGetValue(entityId, out var removedAt)
+                        && CloudPairedAt(item) is DateTime pairedAt && pairedAt > removedAt)
+                    {
+                        profile.RemovedDevices.Remove(entityId);
+                        changed++;
+                    }
 
                     var name = Str(item, "Name");
                     var kind = Str(item, "Kind");
@@ -261,11 +332,13 @@ namespace RustPlusDesk.Services.Cloud
                     if (!string.IsNullOrWhiteSpace(name) && device.Name != name)
                     {
                         device.Name = name;
+                        changed++;
                     }
 
                     if (Bool(item, "AliasFromWeb") && device.Alias != alias)
                     {
                         device.Alias = alias;
+                        changed++;
                     }
 
                     if (Bool(item, "IconFromWeb") && device.CustomIconShortName != icon)
@@ -274,12 +347,54 @@ namespace RustPlusDesk.Services.Cloud
                         // The id and the short name name the same picture, and a
                         // stale id would win when the icon is resolved.
                         device.CustomIconId = null;
+                        changed++;
                     }
                 }
             }
 
-            return added;
+            // Deleted on the website. Only what the event named and the platform no longer
+            // lists: a device missing from the list for any other reason (an upload still on
+            // its way, an older platform) is left alone, as the merge always has. Recorded as
+            // removed so Facepunch's notification history does not bring it straight back.
+            if (removedOnWeb != null)
+            {
+                foreach (var entityId in removedOnWeb)
+                {
+                    if (entityId == 0 || inCloud.Contains(entityId)) continue;
+                    var device = FindDevice(profile.Devices, entityId);
+                    if (device == null) continue;
+
+                    RemoveDevice(profile.Devices, device);
+                    profile.MarkDeviceRemoved(device);
+                    foreach (var m in profile.SwitchCommandMappings.Where(m => m.EntityId == entityId).ToList())
+                        profile.SwitchCommandMappings.Remove(m);
+                    foreach (var m in profile.UpkeepCommandMappings.Where(m => m.EntityId == entityId).ToList())
+                        profile.UpkeepCommandMappings.Remove(m);
+                    changed++;
+                }
+            }
+
+            return (added, changed);
         }
+
+        private static bool RemoveDevice(IList<SmartDevice>? devices, SmartDevice target)
+        {
+            if (devices == null) return false;
+            if (devices.Remove(target)) return true;
+            foreach (var d in devices)
+                if (RemoveDevice(d.Children, target)) return true;
+            return false;
+        }
+
+        /// <summary>When the cloud recorded a device's pairing (UTC), or null for any other device.</summary>
+        private static DateTime? CloudPairedAt(JsonElement item)
+            => DateTime.TryParse(Str(item, "CloudPairedAt"), CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var parsed) ? parsed : null;
+
+        /// <summary>When a pairing entry last changed (UTC), or now when it does not say.</summary>
+        private static DateTime UpdatedAt(JsonElement entry)
+            => DateTime.TryParse(Str(entry, "updated_at"), CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var parsed) ? parsed : DateTime.UtcNow;
 
         private static SmartDevice? FindDevice(IEnumerable<SmartDevice>? devices, uint entityId)
         {
@@ -302,14 +417,18 @@ namespace RustPlusDesk.Services.Cloud
         /// matched on entity id, because the word is the thing being changed and
         /// matching on it would rename nothing and add a duplicate.
         /// </summary>
-        private static void MergeChatCommands(ServerProfile profile, JsonElement entry)
+        private static int MergeChatCommands(ServerProfile profile, JsonElement entry)
         {
             if (!entry.TryGetProperty("chat_commands", out var chat) || chat.ValueKind != JsonValueKind.Object)
-                return;
+                return 0;
 
+            int changed = 0;
             var prefix = Str(chat, "prefix");
-            if (!string.IsNullOrWhiteSpace(prefix))
+            if (!string.IsNullOrWhiteSpace(prefix) && profile.ChatCommandPrefix != prefix)
+            {
                 profile.ChatCommandPrefix = prefix!;
+                changed++;
+            }
 
             if (chat.TryGetProperty("words", out var words) && words.ValueKind == JsonValueKind.Object)
             {
@@ -339,7 +458,7 @@ namespace RustPlusDesk.Services.Cloud
             }
 
             if (!chat.TryGetProperty("device_mappings", out var mappings) || mappings.ValueKind != JsonValueKind.Array)
-                return;
+                return changed;
 
             foreach (var mapping in mappings.EnumerateArray())
             {
@@ -349,7 +468,9 @@ namespace RustPlusDesk.Services.Cloud
                 if (entityId == 0 || string.IsNullOrWhiteSpace(command)) continue;
                 if (profile.RemovedDevices.ContainsKey(entityId)) continue;
 
-                var existing = profile.SwitchCommandMappings.FirstOrDefault(m => m.EntityId == entityId);
+                // The list carries upkeep words too; a cupboard's word stays an upkeep word.
+                var existing = profile.SwitchCommandMappings.FirstOrDefault(m => m.EntityId == entityId)
+                    ?? profile.UpkeepCommandMappings.FirstOrDefault(m => m.EntityId == entityId);
 
                 if (existing == null)
                 {
@@ -357,14 +478,18 @@ namespace RustPlusDesk.Services.Cloud
                     {
                         EntityId = entityId,
                         Command = command!,
-                        Label = profile.Devices.FirstOrDefault(d => d.EntityId == entityId)?.PureName ?? "",
+                        Label = FindDevice(profile.Devices, entityId)?.PureName ?? "",
                     });
+                    changed++;
                 }
                 else if (!string.Equals(existing.Command, command, StringComparison.Ordinal))
                 {
                     existing.Command = command!;
+                    changed++;
                 }
             }
+
+            return changed;
         }
 
         /// <summary>

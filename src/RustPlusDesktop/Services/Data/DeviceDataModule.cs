@@ -223,7 +223,11 @@ namespace RustPlusDesk.Services.Data
                                 steam_id = steamId.ToString(),
                                 smart_devices = new
                                 {
-                                    device_data = devJson
+                                    device_data = devJson,
+                                    // How far the pairing import has got. A device the cloud
+                                    // paired after this is kept by the platform even though this
+                                    // tree, built before the app imported it, leaves it out.
+                                    pairings_as_of = Cloud.CloudPairingImporter.Cursor,
                                 }
                             };
                             await Auth.SupabaseAuthManager.CallEdgeFunctionAsync("overlay", System.Net.Http.HttpMethod.Post, payload);
