@@ -36,6 +36,10 @@ public partial class MainWindow
         // Settings belong to the team chat, not a clan of strangers.
         if (channel != ChatChannel.Team) return true;
 
+        // Socket callbacks run off the UI thread; settings update the bell and device bindings.
+        if (!Dispatcher.CheckAccess())
+            return await Dispatcher.InvokeAsync(() => TryHandleManageCommand(profile, m, cmd, prefix, channel, reply)).Task.Unwrap();
+
         // The original casing, for a name.
         var text = m.Text.Trim();
         var rest = text.Length > prefix.Length + word.Length ? text[(prefix.Length + word.Length)..].Trim() : "";
@@ -49,12 +53,10 @@ public partial class MainWindow
                     return true;
                 }
                 ApplyChatAlertsMute(true, duration == null ? null : DateTime.UtcNow + duration.Value, push: true);
-                await reply(duration == null ? "Alerts muted until unmuted." : $"Alerts muted for {ChatManageCommands.Describe(duration.Value)}.");
                 return true;
 
             case "unmute":
                 ApplyChatAlertsMute(false, null, push: true);
-                await reply("Alerts unmuted.");
                 return true;
 
             default:
@@ -135,7 +137,13 @@ public partial class MainWindow
             _chatAlertsMuteTimer.Start();
         }
 
-        if (push) _ = PushChatAlertsMuteAsync(muted, muted ? untilUtc : null);
+        if (push)
+        {
+            _ = PushChatAlertsMuteAsync(muted, muted ? untilUtc : null);
+            _ = SendChatCommandResponseAsync(!muted ? "Alerts unmuted."
+                : untilUtc is DateTime expiry ? $"Alerts muted for {ChatManageCommands.Describe(expiry - DateTime.UtcNow)}."
+                : "Alerts muted until unmuted.");
+        }
     }
 
     /// <summary>A preset in the alerts dropdown: "15m", "1h", "8h", or empty for until unmuted.</summary>
@@ -195,6 +203,7 @@ public partial class MainWindow
         {
             // Both sides read the same timestamp, so the platform needs no telling.
             ApplyChatAlertsMute(false, null, push: false);
+            _ = SendChatCommandResponseAsync("Mute expired. Alerts unmuted.");
             AppendLog("[alerts] Timed mute ended; chat alerts are back on.");
             return;
         }
