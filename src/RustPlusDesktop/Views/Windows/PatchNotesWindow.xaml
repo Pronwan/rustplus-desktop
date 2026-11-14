@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.3.4 HOTFIX -->
+                            <!-- v11.4.0 UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_3_4"
+                            <Border x:Name="Card_v11_4_0"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,7 +230,7 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.3.4 | Cloud 24/7 Server Matching"
+                                            <TextBlock Text="v11.4.0 | Cloud Server Matching, Instant Sync &amp; Chat Commands"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
@@ -238,11 +238,26 @@
                                     <!-- Summary Lead Box -->
                                     <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
                                         <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
-                                            Servers paired since Rust's November update no longer get mixed up in Cloud 24/7: each one keeps its own map, devices and connection.
+                                            Servers paired since Rust's November update keep their own map and devices in Cloud 24/7, device edits sync instantly with the website, and chat alerts can now be muted with custom timers directly from the app or in-game team chat.
                                         </TextBlock>
                                     </Border>
 
                                     <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Instant Cloud &amp; Device Sync:</Run>
+                                        Device renames, command words, custom icons and website removals now sync to the cloud 400 ms after saving and update live from website edits, keeping desktop and mobile companions in lockstep.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Shared Chat Alert Mute &amp; Timers:</Run>
+                                        The alert bell in the title bar now syncs with Cloud 24/7. Mute alerts indefinitely or choose timed mutes (15m, 1h, 8h, or custom) with a live remaining-time countdown on the bell.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; In-Game Team Chat Commands:</Run>
+                                        Mute or unmute alerts from team chat with !mute [duration] and !unmute. Manage switches directly in-game using !device &lt;#n|word|name&gt; name|command &lt;value&gt;.
+                                    </TextBlock>
+
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; The Right Server in the Cloud:</Run>
                                         Since Rust's November update, a newly paired server no longer reports its address. Cloud 24/7 now tells such servers apart by their Facepunch id, so you no longer see another server's map, and your devices reach the cloud again.
