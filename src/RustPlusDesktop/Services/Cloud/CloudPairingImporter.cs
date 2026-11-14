@@ -246,7 +246,15 @@ namespace RustPlusDesk.Services.Cloud
                 // Renames, icons, removals and command words change the profile too, and were
                 // never saved when they were the only change: the next save of anything else
                 // was what finally wrote them, or the next upload overwrote them.
-                updated += devChanged + MergeChatCommands(existing, entry);
+                updated += devChanged;
+
+                // A command word edited here and not pushed yet (the push follows the save a
+                // moment later) wins: the platform still holds the old word, and taking it would
+                // undo the edit. The push then settles the platform, and the next import agrees.
+                if (CloudChatCommandSync.HasPendingChanges(existing, existing.ServerKey))
+                    SupabaseAuthManager.AppendLog($"[Cloud pairings] Kept unsent command changes for {existing.Name}; the cloud's copy is older.");
+                else
+                    updated += MergeChatCommands(existing, entry);
             }
 
             if (added > 0 || updated > 0 || devicesAdded > 0)

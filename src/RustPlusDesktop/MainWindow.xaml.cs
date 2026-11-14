@@ -6414,7 +6414,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
     private void SelectAllAlerts_Click(object sender, RoutedEventArgs e)
     {
         SetAllAlerts(true);
-        TrackingService.AnnounceSpawnsMaster = true;
+        SetChatAlertsMaster(true);
         UpdateMasterToggleState();
         SyncAlertMenuItems();
         UpdateShopSearchConfig();
@@ -6426,7 +6426,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         SetAllAlerts(false);
         if (CheckIfAllOff())
         {
-            TrackingService.AnnounceSpawnsMaster = false;
+            SetChatAlertsMaster(false);
         }
 
         UpdateMasterToggleState();
@@ -6563,7 +6563,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (CheckIfAllOff())
             {
-                TrackingService.AnnounceSpawnsMaster = false;
+                SetChatAlertsMaster(false);
             }
 
             UpdateMasterToggleState();
@@ -6889,11 +6889,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             
             if (mi.IsChecked)
             {
-                TrackingService.AnnounceSpawnsMaster = true;
+                SetChatAlertsMaster(true);
             }
             else if (CheckIfAllOff())
             {
-                TrackingService.AnnounceSpawnsMaster = false;
+                SetChatAlertsMaster(false);
             }
 
             UpdateMasterToggleState();

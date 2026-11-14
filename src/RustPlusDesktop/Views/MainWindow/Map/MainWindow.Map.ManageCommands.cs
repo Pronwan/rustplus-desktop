@@ -172,6 +172,18 @@ public partial class MainWindow
         if (ChatAlertsContextMenu != null) ChatAlertsContextMenu.IsOpen = false;
     }
 
+    /// <summary>
+    /// Every local path that turns chat alerts on or off (select all, deselect all, a single
+    /// alert toggle, a trade alert) comes through here, so the cloud and the website hear about
+    /// it like the bell itself: off is an open-ended mute, on ends any mute. Nothing happens
+    /// when the state does not change, so a toggle that leaves alerts on costs no request.
+    /// </summary>
+    internal void SetChatAlertsMaster(bool on)
+    {
+        if (TrackingService.AnnounceSpawnsMaster == on && (on || TrackingService.ChatAlertsMutedUntilUtc == null)) return;
+        ApplyChatAlertsMute(!on, null, push: true);
+    }
+
     private void ChatAlertsMuteTimer_Tick(object? sender, EventArgs e)
     {
         var until = TrackingService.ChatAlertsMutedUntilUtc;

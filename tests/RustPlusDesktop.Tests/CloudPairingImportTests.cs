@@ -166,6 +166,50 @@ public class CloudPairingImportTests
     }
 
     [TestMethod]
+    public void An_unsent_local_command_edit_is_not_overwritten_by_an_import()
+    {
+        var profile = new ServerProfile
+        {
+            Host = "companion-socket", Port = 28082, ServerId = ServerId, PlayerToken = "555",
+            SteamId64 = "76561190000000123",
+            Devices = new ObservableCollection<SmartDevice> { new() { EntityId = 7, Name = "Gate", Kind = "SmartSwitch" } },
+        };
+        profile.SwitchCommandMappings.Clear();
+        profile.SwitchCommandMappings.Add(new ChatCommandMapping { EntityId = 7, Command = "gate" });
+        var cloud = IdOnlyEntry("[{\"EntityId\":7,\"Name\":\"Gate\"}]",
+            "{\"prefix\":\"!\",\"device_mappings\":[{\"command\":\"gate\",\"entity_id\":7}]}");
+
+        // Pushed as "gate", then edited to "door" here; the push has not happened yet.
+        CloudChatCommandSync.MarkSent(profile, profile.ServerKey);
+        profile.SwitchCommandMappings[0].Command = "door";
+        Assert.IsTrue(CloudChatCommandSync.HasPendingChanges(profile, profile.ServerKey));
+
+        CloudPairingImporter.Merge(Body(cloud), new List<ServerProfile> { profile }, () => { });
+        Assert.AreEqual("door", profile.SwitchCommandMappings[0].Command, "the unsent edit wins");
+
+        // Once pushed, the cloud's copy is current again and is taken.
+        CloudChatCommandSync.MarkSent(profile, profile.ServerKey);
+        Assert.IsFalse(CloudChatCommandSync.HasPendingChanges(profile, profile.ServerKey));
+        CloudPairingImporter.Merge(Body(cloud), new List<ServerProfile> { profile }, () => { });
+        Assert.AreEqual("gate", profile.SwitchCommandMappings[0].Command);
+    }
+
+    [TestMethod]
+    public void Every_local_write_of_the_chat_alert_switch_goes_through_the_synced_mute()
+    {
+        // The bell, select all, deselect all and the single alert toggles all flip the same
+        // switch. A direct write would skip the cloud, which would stay muted (or talking).
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "src", "RustPlusDesktop"));
+        var writers = Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            .Where(f => System.Text.RegularExpressions.Regex.IsMatch(File.ReadAllText(f), @"TrackingService\.AnnounceSpawnsMaster\s*=[^=]"))
+            .Select(Path.GetFileName)
+            .ToList();
+
+        CollectionAssert.AreEqual(new[] { "MainWindow.Map.ManageCommands.cs" }, writers);
+    }
+
+    [TestMethod]
     public void Own_uploads_are_ignored_and_website_edits_trigger_an_import()
     {
         const string me = "instance-1";
