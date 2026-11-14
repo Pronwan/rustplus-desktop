@@ -651,6 +651,14 @@ public partial class MainWindow
     /// </param>
     private async Task SendTeamChatSafeAsync(string text, bool bypassChatAlertMasterBlock = false, bool skipDiscordChatForwarding = false, string? discordText = null, bool skipBasicWebhook = false, ChatChannel? forceChannel = null, ChatFeedback feedback = ChatFeedback.None)
     {
+        // The bell / !mute is the one switch for chat alerts. Many alert paths (tracker notices,
+        // timer confirmations, shop rules, the Discord webhook forward) never checked it
+        // themselves, so a mute held while this app was the one sending still let them through.
+        // Replies to the user (commands, hotkeys) and timer firings to a chosen channel stay.
+        if (!bypassChatAlertMasterBlock && feedback == ChatFeedback.None && forceChannel == null
+            && !TrackingService.AnnounceSpawnsMaster)
+            return;
+
         if (skipDiscordChatForwarding)
         {
             lock (_recentAutomatedMessages)
