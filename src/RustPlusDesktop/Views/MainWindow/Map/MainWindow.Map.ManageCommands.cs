@@ -68,11 +68,13 @@ public partial class MainWindow
     /// configuration, not the game - the same rule the cloud applies (where an allow-list on the
     /// platform can widen it).
     /// </summary>
+    private bool IsBotOwner(ServerProfile profile, TeamChatMessage m)
+        => (_mySteamId != 0 && m.SteamId == _mySteamId)
+           || (ulong.TryParse(profile.SteamId64, NumberStyles.None, CultureInfo.InvariantCulture, out var owner) && owner == m.SteamId);
+
     private string HandleDeviceCommand(ServerProfile profile, TeamChatMessage m, string rest, string prefix)
     {
-        bool isOwner = (_mySteamId != 0 && m.SteamId == _mySteamId)
-            || (ulong.TryParse(profile.SteamId64, NumberStyles.None, CultureInfo.InvariantCulture, out var owner) && owner == m.SteamId);
-        if (!isOwner) return "Only the owner of this bot can change devices.";
+        if (!IsBotOwner(profile, m)) return "Only the owner of this bot can change devices.";
 
         var parsed = ChatManageCommands.ParseDevice(rest);
         if (parsed == null)

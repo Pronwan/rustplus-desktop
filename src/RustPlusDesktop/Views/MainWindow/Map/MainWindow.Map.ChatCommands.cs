@@ -176,6 +176,14 @@ public partial class MainWindow
             if (!string.IsNullOrWhiteSpace(profile.CmdAi) && IsAiCommandListable(profile, m, channel))
                 standardCmds.Add(prefix + profile.CmdAi);
 
+            // Settings commands live in team chat only; !device only for the owner.
+            if (channel == ChatChannel.Team)
+            {
+                standardCmds.Add(prefix + "mute");
+                standardCmds.Add(prefix + "unmute");
+                if (IsBotOwner(profile, m)) standardCmds.Add(prefix + "device");
+            }
+
             var standardMessages = SplitChatMessages(standardCmds, ", ", string.Format(Properties.Resources.ChatCmdListHeader, ""));
             foreach (var standardMsg in standardMessages) _ = Reply(standardMsg);
 
