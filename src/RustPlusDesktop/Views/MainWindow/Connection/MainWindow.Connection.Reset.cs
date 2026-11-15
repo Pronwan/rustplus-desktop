@@ -34,6 +34,7 @@ public partial class MainWindow
         // keeps the hold: the lease timer releases it if the reconnect never lands.
         if (!reconnect)
             ReleaseCloudHold();
+        if (!keepMap) _vm.IsFullConnectRequested = false;
 
         // 1) Laufende Polls/Tokens abbrechen
         CancelConnectionPolling();
@@ -251,7 +252,8 @@ public partial class MainWindow
     {
         if (_connectionActionPending || _vm.IsConnectionLoading || _vm.IsInitializing) return;
         _connectionActionPending = true;
-        _vm.IsConnectionLoading = true;
+        _vm.IsFullConnectRequested = true;
+        _vm.IsConnectionLoading = !HasMapImage;
         try
         {
             if (_isSoftConnecting)
@@ -337,7 +339,7 @@ public partial class MainWindow
         _isReconnecting = true;
         var reconnectProfile = _vm.Selected;
         int selectionVersion = _mapSelectionVersion;
-        bool reconnectFull = reconnectProfile?.IsFullConnected == true || _vm.IsInitializing
+        bool reconnectFull = reconnectProfile?.IsFullConnected == true || _vm.IsFullConnectRequested || _vm.IsInitializing
             || (_connectionActionPending && !_isSoftConnecting);
 
         try

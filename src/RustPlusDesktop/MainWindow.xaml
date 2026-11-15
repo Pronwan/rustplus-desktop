@@ -7437,8 +7437,10 @@
                         ClipToBounds="True">
                         <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
 
-                        <Image x:Name="ServerMapTransitionImage" Panel.ZIndex="80" Stretch="Fill"
-                               IsHitTestVisible="False" Visibility="Collapsed" />
+                        <Grid x:Name="ServerMapTransitionLayer" Panel.ZIndex="80" Background="#0B3A4A"
+                              ClipToBounds="True" IsHitTestVisible="False" Visibility="Collapsed">
+                            <Image x:Name="ServerMapTransitionImage" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </Grid>
                         <Border x:Name="ServerSwitchLabel" Panel.ZIndex="81" HorizontalAlignment="Center" VerticalAlignment="Top"
                                 Margin="24" Padding="14,8" MaxWidth="440" CornerRadius="8" IsHitTestVisible="False" Visibility="Collapsed"
                                 Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
@@ -7480,6 +7482,7 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding HasMapImage}" Value="True"><Setter Property="Background" Value="#50101518" /></DataTrigger>
                                     <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                    <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding IsFullConnectRequested}" Value="True" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
                                     <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding Selected.Port}" Value="0" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
                                     <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding Selected.PlayerToken}" Value="offline" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
                                 </Style.Triggers>

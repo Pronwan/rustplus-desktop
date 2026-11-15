@@ -15,6 +15,36 @@ namespace RustPlusDesktop.Tests;
 public class DeviceStartupTests
 {
     [STATestMethod]
+    public async Task FullConnect_RevealsCachedMapBeforeWaitingForPreviousConnection_AndAbortsIfSelectionChanges()
+    {
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        var window = (MainWindow)RuntimeHelpers.GetUninitializedObject(typeof(MainWindow));
+        var vm = (MainViewModel)RuntimeHelpers.GetUninitializedObject(typeof(MainViewModel));
+        var profile = new ServerProfile { Port = 28082, IsConnected = true };
+        typeof(MainViewModel).GetField("_selected", flags)!.SetValue(vm, profile);
+        typeof(MainWindow).GetField("_vm", flags)!.SetValue(window, vm);
+        var pendingReset = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        typeof(MainWindow).GetField("_serverSelectionResetTask", flags)!.SetValue(window, pendingReset.Task);
+        var bitmap = BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0, 0, 0, 255 }, 4);
+        typeof(MainWindow).GetField("_mapBaseBmp", flags)!.SetValue(window, bitmap);
+        vm.HasMapImage = true;
+        vm.IsConnectionLoading = true;
+
+        Task<bool> connect = window.PerformConnectAsync(silent: false);
+
+        Assert.IsFalse(connect.IsCompleted, "Connection work must still be waiting for the previous socket.");
+        Assert.IsTrue(vm.IsFullConnectRequested);
+        Assert.IsFalse(vm.IsMapPreviewVisible, "Full Connect must reveal the map before any network work completes.");
+        Assert.IsFalse(vm.IsConnectionLoading);
+        Assert.IsFalse(profile.IsFullConnected, "Revealing a cache must not claim a live connection.");
+
+        typeof(MainViewModel).GetField("_selected", flags)!.SetValue(vm, new ServerProfile { Port = 28083 });
+        typeof(MainWindow).GetField("_mapSelectionVersion", flags)!.SetValue(window, 1);
+        pendingReset.SetResult();
+        Assert.IsFalse(await connect, "A queued upgrade must not connect a newly selected server.");
+    }
+
+    [STATestMethod]
     public async Task CachePreview_DoesNotFetchMissingOrKnownStaleMaps()
     {
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;

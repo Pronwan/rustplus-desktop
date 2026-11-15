@@ -519,7 +519,8 @@ public partial class MainWindow
         string? customUrl = _vm?.Selected?.CustomMapUrl?.Trim();
         if (!string.IsNullOrWhiteSpace(customUrl))
         {
-            BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey, fallbackKey);
+            BitmapSource? customBmp = await Task.Run(() => TryLoadCustomMapCache(cacheKey, fallbackKey));
+            if (!IsCurrentSelection()) return;
             if (customBmp == null && !cacheOnly)
             {
                 AppendLog($"[custom-map] Downloading custom HD map image from URL: {customUrl}");

@@ -326,6 +326,11 @@ public partial class MainWindow
     {
         _mapBaseBmp = bmp;
         _vm.HasMapImage = true;
+        if (_vm.IsFullConnectRequested)
+        {
+            _vm.IsConnectionLoading = false;
+            _vm.IsBusy = false;
+        }
         if (_mapView != null) _mapView.Visibility = Visibility.Visible;
         _staticMarkers.Clear();            // << keine Testpunkte
 

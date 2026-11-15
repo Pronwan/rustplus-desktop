@@ -24,11 +24,12 @@ public class MapConnectionPreviewTests
         typeof(MainViewModel).GetField("_selected", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(vm, profile);
         var preview = (Viewbox)view.FindName("Preview");
         var placeholder = (Border)view.FindName("MapPlaceholder");
-        foreach (var mode in new[] { "empty", "cached", "devices", "full", "offline" })
+        foreach (var mode in new[] { "empty", "cached", "devices", "opening", "soft-opening", "full", "offline" })
         {
             vm.HasMapImage = mode != "empty";
-            profile.IsConnected = mode is "devices" or "full";
+            profile.IsConnected = mode is "devices" or "soft-opening" or "full";
             profile.IsFullConnected = mode == "full";
+            vm.IsFullConnectRequested = mode is "opening" or "soft-opening";
             profile.Port = mode == "offline" ? 0 : 28082;
             view.DataContext = null;
             view.DataContext = vm;
@@ -40,7 +41,7 @@ public class MapConnectionPreviewTests
             Assert.AreEqual(blurred, vm.IsMapPreviewVisible);
             Assert.AreEqual(blurred, preview.Effect is BlurEffect);
             Assert.AreEqual(!blurred, preview.IsHitTestVisible);
-            Assert.AreEqual(mode is "full" or "offline" ? Visibility.Collapsed : Visibility.Visible, placeholder.Visibility);
+            Assert.AreEqual(mode is "full" or "offline" or "opening" or "soft-opening" ? Visibility.Collapsed : Visibility.Visible, placeholder.Visibility);
             if (mode == "devices")
                 Assert.AreEqual(Visibility.Visible, ((FrameworkElement)view.FindName("MapUiBtnFullConnect")).Visibility);
         }

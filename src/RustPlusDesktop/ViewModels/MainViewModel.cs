@@ -171,7 +171,14 @@ public class MainViewModel : INotifyPropertyChanged
         set { if (_hasMapImage == value) return; _hasMapImage = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsMapPreviewVisible)); }
     }
 
-    public bool IsMapPreviewVisible => HasMapImage && Selected is { IsFullConnected: false } profile
+    private bool _isFullConnectRequested;
+    public bool IsFullConnectRequested
+    {
+        get => _isFullConnectRequested;
+        set { if (_isFullConnectRequested == value) return; _isFullConnectRequested = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsMapPreviewVisible)); }
+    }
+
+    public bool IsMapPreviewVisible => HasMapImage && !IsFullConnectRequested && Selected is { IsFullConnected: false } profile
         && profile.Port != 0 && profile.PlayerToken != "offline";
     public bool IsConnectionLoading
     {
@@ -493,6 +500,7 @@ public class MainViewModel : INotifyPropertyChanged
             if (_selected == value) return;
             if (_selected != null) _selected.PropertyChanged -= SelectedProfile_PropertyChanged;
             _selected = value;
+            IsFullConnectRequested = false;
             if (_selected != null) _selected.PropertyChanged += SelectedProfile_PropertyChanged;
             // Remember this choice so the next startup restores it instead of the first profile.
             if (_selected != null) TrackingService.LastSelectedServerKey = _selected.MatchKey;
