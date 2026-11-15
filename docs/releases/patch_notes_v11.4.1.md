@@ -10,6 +10,10 @@ Update **v11.4.1** lets you set a modded server's upkeep cost and oil rig crate 
 * **Custom oil rig crate timer**: Set how many minutes a hacked crate takes on your server (for example 10 instead of 15). The event dock countdown, `!oilrig` and your oil rig trigger rules follow it.
 * **Synced everywhere**: Modifiers sync with the website and Cloud 24/7, and you can also change them on the website under the server's settings. Servers with custom modifiers show a **MODIFIED** badge in the server list.
 
+### 🔊 Alexa
+
+* **Alexa links the right server again**: Linking Alexa to a server paired since Rust's November update failed with an error, or with several such servers picked the wrong one. Alexa now links the server you selected and finds its devices.
+
 ---
 
 ### 📥 Download & Update
