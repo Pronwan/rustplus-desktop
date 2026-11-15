@@ -2153,4 +2153,49 @@
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>此伺服器尚未設定石油平台觸發器。點擊查看如何將智慧警報設為石油平台觸發器。</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>設定自訂修正值...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>自訂伺服器修正值</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>適用於模組伺服器。Rust+ 依原版費用回報維護時間，並將每個石油平台箱子以 15 分鐘計算，請填入此伺服器的實際數值。會與網站和 Cloud 24/7 同步。</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>自訂維護費用（原版的 %）</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>自訂石油平台箱子計時（分鐘）</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= 原版維護費用的 {0} 倍</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>請輸入 10 至 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>原版（15 分鐘）</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} 分鐘，而非原版的 15 分鐘</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>請輸入 1 至 60 分鐘</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>恢復原版</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>已修改</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>此伺服器使用自訂修正值（維護費用或石油平台箱子計時）。按右鍵即可變更。</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>伺服器修正值已儲存</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}'：維護 {1} %，石油平台箱子 {2} 分鐘。</value>
+  </data>
 </root>

@@ -104,6 +104,14 @@ namespace RustPlusDesk.Services.Cloud
             // straight back by this very call.
             await RetryPendingRemovalsAsync(profiles);
 
+            // Modifiers changed here that did not reach the platform yet go up first, so the
+            // import below does not hand back the platform's older values.
+            if (profiles.Any(p => p.ModifiersPushPending))
+            {
+                await CloudServerModifiersSync.RetryPendingAsync(profiles);
+                save();
+            }
+
             string? cursor = full ? null : StorageService.LoadCache<string>(CursorKey);
 
             string body;
@@ -251,6 +259,10 @@ namespace RustPlusDesk.Services.Cloud
                 // A command word edited here and not pushed yet (the push follows the save a
                 // moment later) wins: the platform still holds the old word, and taking it would
                 // undo the edit. The push then settles the platform, and the next import agrees.
+                // A modded server's upkeep cost and crate time, set on the website.
+                if (CloudServerModifiersSync.Apply(existing, entry))
+                    updated++;
+
                 if (CloudChatCommandSync.HasPendingChanges(existing, existing.ServerKey))
                     SupabaseAuthManager.AppendLog($"[Cloud pairings] Kept unsent command changes for {existing.Name}; the cloud's copy is older.");
                 else

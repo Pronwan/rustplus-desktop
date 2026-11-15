@@ -8283,4 +8283,49 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>На этом сервере не настроен триггер нефтяной вышки. Нажмите, чтобы узнать, как сделать умную сигнализацию триггером вышки.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>Задать свои модификаторы...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>Свои модификаторы сервера</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>Для модовых серверов. Rust+ показывает содержание по ванильной стоимости, а каждый ящик на нефтяной вышке — как 15 минут. Укажите, что на самом деле использует этот сервер. Синхронизируется с сайтом и Cloud 24/7.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>Своё содержание (% от ванили)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>Свой таймер ящика на вышке (минуты)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= {0}× ванильной стоимости содержания</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>Введите от 10 до 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>Ваниль (15 минут)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} мин. вместо ванильных 15</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>Введите от 1 до 60 минут</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>Сбросить на ваниль</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>ИЗМЕНЁН</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>Для этого сервера заданы свои модификаторы (стоимость содержания или таймер ящика на вышке). Щёлкните правой кнопкой, чтобы изменить.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>Модификаторы сервера сохранены</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': содержание {1} %, ящик на вышке {2} мин.</value>
+  </data>
 </root>

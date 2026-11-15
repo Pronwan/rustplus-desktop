@@ -1203,7 +1203,8 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                     {
                         var uiSnap = new StorageSnapshot
                         {
-                            UpkeepSeconds = cached.UpkeepSeconds,
+                            // Rust+ reports vanilla upkeep; a modded server's real cost scales it.
+                            UpkeepSeconds = _vm?.Selected?.ScaleUpkeep(cached.UpkeepSeconds) ?? cached.UpkeepSeconds,
                             IsToolCupboard = cached.IsToolCupboard,
                             SnapshotUtc = cached.SnapshotUtc
                         };
@@ -1710,7 +1711,7 @@ private async void BtnDeviceRefresh_Click(object sender, RoutedEventArgs e)
                     new LogicStep
                     {
                         StepType = "StartTimer",
-                        TimerMinutes = 15,
+                        TimerMinutes = _vm?.Selected?.OilRigCrateMinutes ?? ServerProfile.VanillaOilRigCrateMinutes,
                         TimerTarget = rigTarget,
                         TimerName = "",
                         ShowCrateOnMap = false,
@@ -2503,7 +2504,8 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
 
         var uiSnap = new StorageSnapshot
         {
-            UpkeepSeconds  = snap.UpkeepSeconds,
+            // Rust+ reports vanilla upkeep; a modded server's real cost scales it.
+            UpkeepSeconds  = _vm?.Selected?.ScaleUpkeep(snap.UpkeepSeconds) ?? snap.UpkeepSeconds,
             IsToolCupboard = snap.IsToolCupboard,
             SnapshotUtc    = DateTime.UtcNow
         };

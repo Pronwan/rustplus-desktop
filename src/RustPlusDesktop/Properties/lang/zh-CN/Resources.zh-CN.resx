@@ -8034,4 +8034,49 @@ Rust+ Desktop 会将你的本地应用注册到 FCM，以便在后台接收相�
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>此服务器尚未设置石油平台触发器。点击查看如何将智能警报设为石油平台触发器。</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>设置自定义修正值...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>自定义服务器修正值</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>适用于模组服务器。Rust+ 按原版费用报告维护时间，并将每个石油平台箱子按 15 分钟计算，请填写此服务器的实际数值。会与网站和 Cloud 24/7 同步。</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>自定义维护费用（原版的 %）</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>自定义石油平台箱子计时（分钟）</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= 原版维护费用的 {0} 倍</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>请输入 10 至 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>原版（15 分钟）</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} 分钟，而非原版的 15 分钟</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>请输入 1 至 60 分钟</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>恢复原版</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>已修改</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>此服务器使用自定义修正值（维护费用或石油平台箱子计时）。右键单击可更改。</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>服务器修正值已保存</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}'：维护 {1} %，石油平台箱子 {2} 分钟。</value>
+  </data>
 </root>

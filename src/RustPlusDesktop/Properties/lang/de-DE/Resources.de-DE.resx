@@ -8374,4 +8374,49 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>Auf diesem Server ist kein Oil-Rig-Trigger eingerichtet. Klicke, um zu sehen, wie du einen Smart Alarm als Oil-Rig-Trigger einrichtest.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>Eigene Modifikatoren festlegen...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>Eigene Server-Modifikatoren</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>Für Modded-Server. Rust+ meldet den Upkeep zu Vanilla-Kosten und jede Oil-Rig-Crate mit 15 Minuten. Trage hier ein, was dieser Server wirklich verwendet. Wird mit der Website und Cloud 24/7 synchronisiert.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>Eigener Upkeep (% von Vanilla)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>Eigener Oil-Rig-Crate-Timer (Minuten)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= {0}× Vanilla-Upkeep-Kosten</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>Gib 10 bis 1000 % ein</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>Vanilla (15 Minuten)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} Minuten statt Vanilla 15</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>Gib 1 bis 60 Minuten ein</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>Auf Vanilla zurücksetzen</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>MODIFIED</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>Für diesen Server sind eigene Modifikatoren gesetzt (Upkeep-Kosten oder Oil-Rig-Crate-Timer). Rechtsklick zum Ändern.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>Server-Modifikatoren gespeichert</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': Upkeep {1} %, Oil-Rig-Crate {2} Min.</value>
+  </data>
 </root>

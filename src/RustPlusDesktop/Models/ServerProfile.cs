@@ -932,6 +932,68 @@ public class ServerProfile : INotifyPropertyChanged
         set { _discordOnlyAutomations = value; OnProp(); }
     }
 
+    // ── Server modifiers ─────────────────────────────────────────────────
+    // A modded server's own rates. Rust+ reports a cupboard's protection as vanilla upkeep
+    // costs would buy it, and a modded oil rig crate can open sooner than 15 minutes; neither
+    // can be read from the game, so the user states them. Synced with the platform per pairing.
+
+    public const int VanillaUpkeepPercent = 100;
+    public const int VanillaOilRigCrateMinutes = 15;
+    public const int MinUpkeepPercent = 10;
+    public const int MaxUpkeepPercent = 1000;
+    public const int MinOilRigCrateMinutes = 1;
+    public const int MaxOilRigCrateMinutes = 60;
+
+    private int _upkeepPercent = VanillaUpkeepPercent;
+    /// <summary>Upkeep cost in % of vanilla: 200 for a server with double upkeep, 50 for half.</summary>
+    public int UpkeepPercent
+    {
+        get => _upkeepPercent;
+        set
+        {
+            var v = Math.Clamp(value <= 0 ? VanillaUpkeepPercent : value, MinUpkeepPercent, MaxUpkeepPercent);
+            if (_upkeepPercent == v) return;
+            _upkeepPercent = v;
+            OnProp();
+            OnProp(nameof(HasCustomModifiers));
+        }
+    }
+
+    private int _oilRigCrateMinutes = VanillaOilRigCrateMinutes;
+    /// <summary>Minutes a hacked oil rig crate takes to open on this server.</summary>
+    public int OilRigCrateMinutes
+    {
+        get => _oilRigCrateMinutes;
+        set
+        {
+            var v = Math.Clamp(value <= 0 ? VanillaOilRigCrateMinutes : value, MinOilRigCrateMinutes, MaxOilRigCrateMinutes);
+            if (_oilRigCrateMinutes == v) return;
+            _oilRigCrateMinutes = v;
+            OnProp();
+            OnProp(nameof(HasCustomModifiers));
+        }
+    }
+
+    /// <summary>
+    /// Set when the modifiers were changed here and the platform has not taken them yet, so the
+    /// next pairing import does not put the platform's older values back over them.
+    /// </summary>
+    public bool ModifiersPushPending { get; set; }
+
+    [JsonIgnore]
+    public bool HasCustomModifiers =>
+        UpkeepPercent != VanillaUpkeepPercent || OilRigCrateMinutes != VanillaOilRigCrateMinutes;
+
+    /// <summary>
+    /// Upkeep seconds Rust+ reported (at vanilla costs), as the time this server's real cost
+    /// leaves: halved at 200 %, doubled at 50 %.
+    /// </summary>
+    public int? ScaleUpkeep(int? reportedSeconds)
+    {
+        if (reportedSeconds is not int secs || UpkeepPercent == VanillaUpkeepPercent) return reportedSeconds;
+        return (int)Math.Round(secs * (double)VanillaUpkeepPercent / UpkeepPercent);
+    }
+
     private bool _timerAlarmEnabled = true;
     public bool TimerAlarmEnabled
     {

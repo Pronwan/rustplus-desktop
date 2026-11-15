@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.4.0 UPDATE -->
+                            <!-- v11.4.1 UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_4_0"
+                            <Border x:Name="Card_v11_4_1"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,61 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.4.0 | Cloud Server Matching, Instant Sync &amp; Chat Commands"
+                                            <TextBlock Text="v11.4.1 | Custom Server Modifiers for Modded Servers"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            Playing on a modded server? Right-click it in the server list and choose Set Custom Modifiers... to enter its real upkeep cost and oil rig crate timer. Your upkeep times and crate countdowns then match what the server really does.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Custom Upkeep:</Run>
+                                        Rust+ always reports upkeep at vanilla costs, so on a 2x upkeep server your Tool Cupboard showed twice the time it really has. Enter the server's upkeep in % of vanilla (200 % for 2x upkeep, 50 % for half), and the app shows the real time left, in the device list, the widgets and chat commands like !upkeep. The factor is shown under the field so you can check it.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Custom Oil Rig Crate Timer:</Run>
+                                        Many modded servers open a hacked crate after 10 minutes instead of 15. Set the minutes once, and the event dock countdown, !oilrig and your oil rig trigger rules follow it.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Synced with the Website &amp; Cloud 24/7:</Run>
+                                        The modifiers are saved to your account, used by Cloud 24/7 and the website as well, and can also be changed on the website in the server's settings. A server with custom modifiers shows a MODIFIED badge in the server list; Reset to Vanilla puts it back.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Alexa Links the Right Server Again:</Run>
+                                        Linking Alexa to a server paired since Rust's November update failed with an error, or with several such servers picked the wrong one. Alexa now links the server you selected, so it finds that server's devices.
+                                    </TextBlock>
+
+                                    <views:ImageGallery Margin="0,4,0,4">
+                                        <views:GalleryItem ImagePath="pack://application:,,,/Assets/Screenshots/11.4/server-modifiers.png" Description="Set Custom Modifiers, from right-clicking a server: upkeep in % of vanilla and the oil rig crate timer in minutes"/>
+                                    </views:ImageGallery>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.4.0 UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_4_0"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.4.0 | Cloud Server Matching, Instant Sync &amp; Chat Commands"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

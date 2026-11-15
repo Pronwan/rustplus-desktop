@@ -327,6 +327,14 @@
                                                 <ui:SymbolIcon Symbol="ArrowRight24" Width="13" Height="13" />
                                             </MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem
+                                            Click="Server_SetModifiers_Click"
+                                            Header="{DynamicResource SetCustomModifiers}"
+                                            Tag="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                            <MenuItem.Icon>
+                                                <ui:SymbolIcon Symbol="Options24" Width="13" Height="13" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                         <Separator Style="{StaticResource DarkSeparator}" />
                                         <MenuItem
                                             Click="Server_Delete_Click"
@@ -1109,6 +1117,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock
                                                 Grid.Column="0"
@@ -1116,6 +1125,33 @@
                                                 TextTrimming="CharacterEllipsis"
                                                 VerticalAlignment="Center"
                                                 Foreground="White" />
+                                            <!--  A modded server's own upkeep cost or crate time is set.  -->
+                                            <Border
+                                                Grid.Column="2"
+                                                Margin="4,0,0,0"
+                                                Padding="4,1"
+                                                Background="#332196F3"
+                                                BorderBrush="#642196F3"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                VerticalAlignment="Center"
+                                                ToolTip="{DynamicResource BadgeModifiedHint}">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding HasCustomModifiers}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock
+                                                    Text="{DynamicResource BadgeModified}"
+                                                    FontSize="9.5"
+                                                    FontWeight="Bold"
+                                                    Foreground="#90CAF9" />
+                                            </Border>
                                             <Border
                                                 Grid.Column="1"
                                                 Margin="4,0,0,0"

@@ -38,10 +38,16 @@ public partial class MainWindow
         });
 
         string canonicalRig = CanonicalRigName(label, alarm.Title, alarm.Message);
-        _monumentWatcher.TriggerExternal(canonicalRig, 15 * 60, false);
+        _monumentWatcher.TriggerExternal(canonicalRig, OilRigCrateMinutes * 60, false);
 
         RefreshEventDock();
     }
+
+    /// <summary>
+    /// How long a hacked crate takes on the selected server: 15 minutes, or what its owner set
+    /// for a modded server (right-click the server, Set Custom Modifiers).
+    /// </summary>
+    private int OilRigCrateMinutes => _vm?.Selected?.OilRigCrateMinutes ?? ServerProfile.VanillaOilRigCrateMinutes;
 
     internal void RecordOilRigAlarmDirect(string rigName)
     {
@@ -107,9 +113,9 @@ public partial class MainWindow
         if ((!timeLeft.HasValue || timeLeft.Value <= TimeSpan.Zero) && alarm != null)
         {
             var elapsed = DateTime.UtcNow - alarm.Timestamp.ToUniversalTime();
-            if (elapsed.TotalSeconds >= 0 && elapsed.TotalMinutes < 15)
+            if (elapsed.TotalSeconds >= 0 && elapsed.TotalMinutes < OilRigCrateMinutes)
             {
-                timeLeft = TimeSpan.FromMinutes(15) - elapsed;
+                timeLeft = TimeSpan.FromMinutes(OilRigCrateMinutes) - elapsed;
             }
         }
 
@@ -213,7 +219,7 @@ public partial class MainWindow
         var remaining = timeLeft.HasValue && timeLeft.Value > TimeSpan.Zero
             ? timeLeft.Value
             : alarm != null && isActive
-                ? TimeSpan.FromMinutes(15) - (DateTime.UtcNow - alarm.Timestamp.ToUniversalTime())
+                ? TimeSpan.FromMinutes(OilRigCrateMinutes) - (DateTime.UtcNow - alarm.Timestamp.ToUniversalTime())
                 : (TimeSpan?)null;
         string timerText = remaining is { } left && left > TimeSpan.Zero
             ? $"{(int)left.TotalMinutes}:{left.Seconds:D2}"

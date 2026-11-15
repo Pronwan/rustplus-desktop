@@ -1,0 +1,66 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.Windows.ServerModifiersDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource ServerModifiersTitle}" Width="480" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ExtendsContentIntoTitleBar="True"
+        WindowCornerPreference="Round"
+        WindowBackdropType="Mica"
+        Background="#141820"
+        Foreground="{DynamicResource TextPrimary}">
+
+    <Border BorderBrush="#252F3D" BorderThickness="1" CornerRadius="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ui:TitleBar Grid.Row="0" Height="40" Title="{DynamicResource ServerModifiersTitle}"
+                         ShowMinimize="False" ShowMaximize="False"
+                         Background="Transparent" Foreground="{DynamicResource TextPrimary}">
+                <ui:TitleBar.Icon>
+                    <ui:SymbolIcon Symbol="Options24" />
+                </ui:TitleBar.Icon>
+            </ui:TitleBar>
+
+            <StackPanel Grid.Row="1" Margin="24,10,24,24">
+                <TextBlock x:Name="TxtServerName" FontSize="18" FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource TextPrimary}"/>
+                <TextBlock Margin="0,4,0,16" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" FontSize="12.5"
+                           Text="{DynamicResource ServerModifiersIntro}"/>
+
+                <!-- Custom upkeep -->
+                <TextBlock Text="{DynamicResource ServerModifiersUpkeepLabel}" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                <ui:TextBox x:Name="TxtUpkeep" FontSize="13" PlaceholderText="100"
+                            Icon="{ui:SymbolIcon Symbol=Home24}"
+                            TextChanged="Inputs_TextChanged"/>
+                <TextBlock x:Name="TxtUpkeepHint" Margin="2,4,0,14" FontSize="11.5"
+                           Foreground="{DynamicResource TextSubtle}"/>
+
+                <!-- Custom oil rig crate timer -->
+                <TextBlock Text="{DynamicResource ServerModifiersCrateLabel}" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4"/>
+                <ui:TextBox x:Name="TxtCrate" FontSize="13" PlaceholderText="15"
+                            Icon="{ui:SymbolIcon Symbol=Timer24}"
+                            TextChanged="Inputs_TextChanged"/>
+                <TextBlock x:Name="TxtCrateHint" Margin="2,4,0,0" FontSize="11.5"
+                           Foreground="{DynamicResource TextSubtle}"/>
+
+                <!-- Actions -->
+                <DockPanel Margin="0,22,0,0" LastChildFill="False">
+                    <ui:Button DockPanel.Dock="Left" Content="{DynamicResource ServerModifiersReset}" Appearance="Transparent"
+                               Icon="{ui:SymbolIcon Symbol=ArrowReset24}" Click="Reset_Click"/>
+                    <ui:Button x:Name="BtnSave" DockPanel.Dock="Right" Content="{DynamicResource Save}" Appearance="Primary" MinWidth="110"
+                               Icon="{ui:SymbolIcon Symbol=Save24}" Click="Save_Click" IsDefault="True"/>
+                    <ui:Button DockPanel.Dock="Right" Content="{DynamicResource Cancel}" Appearance="Secondary" MinWidth="92"
+                               Margin="0,0,10,0" Click="Cancel_Click" IsCancel="True"/>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</ui:FluentWindow>

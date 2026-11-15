@@ -309,6 +309,11 @@ namespace RustPlusDesk.Views
             if (profile == null) return;
 
             int minutes = Math.Max(1, step.TimerMinutes);
+            // A modded server's crate time wins over the rule's: rules made before it was set
+            // still carry the vanilla 15 minutes.
+            if (step.IsOilRigTimer && _vm?.Selected is { } rigProfile
+                && rigProfile.OilRigCrateMinutes != ServerProfile.VanillaOilRigCrateMinutes)
+                minutes = rigProfile.OilRigCrateMinutes;
             string? rigName = step.OilRigName;
 
             if (rigName != null)
