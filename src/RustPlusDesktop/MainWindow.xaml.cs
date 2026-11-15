@@ -4481,6 +4481,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             var keyHost = (e.Host ?? "").Trim();
             var keyPort = e.Port;
+            // A pairing since Rust's November update names no address: its host is the
+            // "companion-socket" stand-in and its port only the default 28082. Neither may overwrite
+            // a profile's real address - the port did, and turned "1.2.3.4:28081" into
+            // "1.2.3.4:28082", a server that does not exist, filed in the cloud as a second one.
+            bool pairingHasAddress = keyHost.Length > 0 && keyHost != "companion-socket";
             // PREFER the SteamID from the pairing payload if it exists. 
             // Only fallback to _vm.SteamId64 if the payload is missing it.
             var keySteam = !string.IsNullOrEmpty(e.SteamId64) ? e.SteamId64 : _vm.SteamId64;
@@ -4623,7 +4628,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 {
                     prof = candidateMatch;
                     if (!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket") prof.Host = keyHost;
-                    if (keyPort > 0) prof.Port = keyPort;
+                    if (pairingHasAddress && keyPort > 0) prof.Port = keyPort;
                     prof.PlayerToken = e.PlayerToken;
                     prof.SteamId64 = keySteam;
                     if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
@@ -4662,7 +4667,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 prof.Name = serverName;
                 // Matched by id, the address is the part that may have moved.
                 if (!string.IsNullOrWhiteSpace(keyHost) && keyHost != "companion-socket") prof.Host = keyHost;
-                if (keyPort > 0) prof.Port = keyPort;
+                if (pairingHasAddress && keyPort > 0) prof.Port = keyPort;
                 prof.PlayerToken = e.PlayerToken;
                 prof.SteamId64 = keySteam;
                 if (!string.IsNullOrWhiteSpace(e.ServerId)) prof.ServerId = e.ServerId;
