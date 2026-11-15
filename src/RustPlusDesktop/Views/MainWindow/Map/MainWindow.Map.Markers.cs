@@ -425,23 +425,28 @@ public partial class MainWindow
         await LoadMapAsync();
     }
 
-    private async Task LoadMapAsync()
+    private async Task LoadMapAsync(bool cacheOnly = false)
     {
         if (_rust is not RustPlusClientReal real) return;
 
         var selected    = _vm?.Selected;
-        string host     = real.Host ?? selected?.Host ?? "unknown";
+        int selectionVersion = _mapSelectionVersion;
+        bool IsCurrentSelection() => selectionVersion == _mapSelectionVersion && ReferenceEquals(_vm?.Selected, selected);
+        string host     = selected?.Host ?? real.Host ?? "unknown";
         int    port     = selected?.Port ?? 0;
         string cacheKey = selected?.CacheKey ?? MapCacheKey(host, port, selected?.ServerId);
         string? fallbackKey = (!string.IsNullOrWhiteSpace(host) && port > 0) ? MapCacheKey(host, port) : null;
-        DateTime? currentWipeTime = selected == null ? null : await RefreshProfileWipeTimeAsync(selected);
+        DateTime? currentWipeTime = cacheOnly ? selected?.WipeTime : selected == null ? null : await RefreshProfileWipeTimeAsync(selected);
+        if (!IsCurrentSelection()) return;
 
         RustPlusClientReal.MapWithMonuments? map = null;
 
         // ── Check wipe status on existing caches ─────────────────────────────────────────────
-        var cached = TryLoadMapCache(cacheKey, fallbackKey);
+        var cached = await Task.Run(() => TryLoadMapCache(cacheKey, fallbackKey));
+        if (!IsCurrentSelection()) return;
+        if (cacheOnly && cached != null && IsNewerWipe(currentWipeTime, cached.WipeTime)) return;
         bool isWipe = false;
-        if (cached != null)
+        if (!cacheOnly && cached != null)
         {
             if (IsNewerWipe(currentWipeTime, cached.WipeTime))
             {
@@ -457,6 +462,12 @@ public partial class MainWindow
 
         if (isWipe)
         {
+            StopDynPolling();
+            ResetMapDisplay();
+            _monumentWatcher.Reset();
+            ResetBuildingBlockedZonesForServerChange();
+            ResetCargoPathForServerChange();
+            ResetKeycardsForServerChange();
             DeleteMapCache(cacheKey);
             DeleteCustomMapCache(cacheKey);
             cached = null;
@@ -491,7 +502,9 @@ public partial class MainWindow
         // ── Fetch from server if no valid cache ───────────────────────────────────────────────
         if (map == null)
         {
+            if (cacheOnly) return;
             map = await real.GetMapWithMonumentsAsync();
+            if (!IsCurrentSelection()) return;
             if (map == null) { AppendLog("Map: no data received."); return; }
             if (_vm?.Selected != null && map.WipeTime.HasValue && _vm.Selected.WipeTime != map.WipeTime.Value)
             {
@@ -507,10 +520,11 @@ public partial class MainWindow
         if (!string.IsNullOrWhiteSpace(customUrl))
         {
             BitmapSource? customBmp = TryLoadCustomMapCache(cacheKey, fallbackKey);
-            if (customBmp == null)
+            if (customBmp == null && !cacheOnly)
             {
                 AppendLog($"[custom-map] Downloading custom HD map image from URL: {customUrl}");
                 customBmp = await DownloadCustomImageFromUrlAsync(customUrl);
+                if (!IsCurrentSelection()) return;
                 if (customBmp != null)
                 {
                     AppendLog($"[custom-map] Download successful. Caching custom map image ({cacheKey}).");
@@ -521,7 +535,7 @@ public partial class MainWindow
                     AppendLog("[custom-map] Failed to download image from URL. Falling back to server map.");
                 }
             }
-            else
+            else if (customBmp != null)
             {
                 AppendLog($"[custom-map] Loaded custom HD map image from disk cache ({cacheKey}).");
             }
@@ -541,12 +555,13 @@ public partial class MainWindow
         }
 
         // The image shown when the HD map is not: what the resolution settings measure against.
+        if (!IsCurrentSelection()) return;
         _serverMapPixelSize = map.PixelWidth > 0 && map.PixelHeight > 0
             ? (map.PixelWidth, map.PixelHeight)
             : (map.Bitmap.PixelWidth, map.Bitmap.PixelHeight);
 
         // ── Drop a cached parse of another map, before anything below reads the folder ────────
-        if (_vm?.Selected is { } parsedProfile)
+        if (!cacheOnly && _vm?.Selected is { } parsedProfile)
         {
             var serverMonuments = Map3DLocalBuildService.BuildReferenceMonuments(map.Monuments);
             int parsedWorldSize = map.WorldSize;
@@ -559,6 +574,7 @@ public partial class MainWindow
         // ── Check Generated HD Map Image from MapParser / MapImageRenderer ────────────────
         // Decided afresh on every load: a render shown earlier may have been deleted since, and
         // the server's image laid out without its ocean margin puts every overlay off.
+        if (!IsCurrentSelection()) return;
         _isGeneratedMapActive = false;
         if (_vm?.Selected != null)
         {
@@ -568,12 +584,17 @@ public partial class MainWindow
             string generatedTexPath = System.IO.Path.Combine(preparedFolder, Map3DLocalBuildService.RenderedTextureFileName);
             if (System.IO.File.Exists(generatedTexPath))
             {
-                if (await DecideUseRenderedImageAsync(generatedTexPath))
+                bool useRender = cacheOnly
+                    ? (TrackingService.MapUseRenderedImage ?? _renderedImageDecisionThisSession) == true
+                    : await DecideUseRenderedImageAsync(generatedTexPath);
+                if (!IsCurrentSelection()) return;
+                if (useRender)
                 {
                     try
                     {
                         // The render runs to ~25 MB; decoding it on the UI thread froze the window.
                         var bi = await Task.Run(() => LoadRenderedImage(generatedTexPath));
+                        if (!IsCurrentSelection()) return;
 
                         AppendLog($"[map-render] Using Facepunch HD rendered map image ({bi.PixelWidth}x{bi.PixelHeight}) from {generatedTexPath}.");
                         _isGeneratedMapActive = true;
@@ -594,10 +615,9 @@ public partial class MainWindow
                 }
 
                 // The parsed overlays go with either image; they no longer cost the 90 MB file a read.
-                var preparedProfile = _vm.Selected;
                 _ = Dispatcher.InvokeAsync(async () =>
                 {
-                    if (ReferenceEquals(_vm?.Selected, preparedProfile)) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
+                    if (IsCurrentSelection()) await LoadParsedMapDataAsync(preparedFolder, applyRenderedImage: false);
                 });
             }
             // Without a render the server's own image is used. Parsing scans the game's map
@@ -633,6 +653,7 @@ public partial class MainWindow
 
         await Dispatcher.InvokeAsync(() =>
         {
+            if (!IsCurrentSelection()) return;
             _worldSizeS = map.WorldSize;
 
             double wDip = map.Bitmap.PixelWidth * (96.0 / map.Bitmap.DpiX);
@@ -647,6 +668,7 @@ public partial class MainWindow
             RedrawMapReferenceLayers();
             Dispatcher.InvokeAsync(() =>
             {
+                if (!IsCurrentSelection()) return;
                 RefreshAllOverlayScales();
                 RefreshMonumentOverlayPositions();
                 RedrawDeathPins();
@@ -661,7 +683,6 @@ public partial class MainWindow
                 if (oilRigs.Count > 0)
                     _monumentWatcher.SetMonuments(oilRigs);
             }
-            StartDynPolling();
             SyncAlertMenuItems(); // Refresh arrival warning enabled state now that host is known
 
             Overlay.Width = ImgMap.Width;
@@ -711,7 +732,7 @@ public partial class MainWindow
             LoadCachedKeycardSitesForCurrentServer();
 
             var activeProfile = _vm?.Selected;
-            if (activeProfile != null)
+            if (!cacheOnly && activeProfile != null)
             {
                 CheckAndExecutePendingMapCopy(activeProfile);
             }
@@ -740,6 +761,16 @@ public partial class MainWindow
     }
 
     private bool _v1MarkerResetDone = false;
+    private bool _showingInitialTeamPositions;
+
+    private void ShowInitialTeamPositions()
+    {
+        if (!IsMapLoaded) return;
+        UpdateDynUI(TeamMembers.Where(m => m.SteamId != 0 && m.X.HasValue && m.Y.HasValue)
+            .Select(m => new RustPlusClientReal.DynMarker((uint)m.SteamId, 1, "Player",
+                m.X!.Value, m.Y!.Value, m.Name, m.Name, m.SteamId)).ToList());
+        _showingInitialTeamPositions = true;
+    }
 
     private void StartDynPolling()
     {
@@ -760,6 +791,7 @@ public partial class MainWindow
         foreach (var kv in _dynEls) RemoveFromMapLayers(kv.Value);
         _dynEls.Clear();
         _dynStates.Clear();
+        _showingInitialTeamPositions = false;
         if (clearKnown) _dynKnown.Clear();
     }
 
@@ -1113,6 +1145,13 @@ public partial class MainWindow
             }
 
             _lastDynMarkers = combinedList;
+            if (_showingInitialTeamPositions)
+            {
+                foreach (var el in _dynEls.Values) RemoveFromMapLayers(el);
+                _dynEls.Clear();
+                _dynStates.Clear();
+                _showingInitialTeamPositions = false;
+            }
             UpdateDynUI(combinedList);
             UpdateEventDock(combinedList);
 

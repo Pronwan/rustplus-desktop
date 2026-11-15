@@ -888,6 +888,8 @@ public partial class MainWindow : WpfUi.FluentWindow
                 {
                     var dev = FindDeviceById(_vm.Selected?.Devices, id);
                     if (dev == null) return;
+                    dev.IsMissing = false;
+                    dev.LastPolledAt = DateTime.UtcNow;
 
                     // Kind nur setzen, wenn wir es NOCH NICHT kennen – nie ein SmartAlarm "wegschreiben"
                     if (string.IsNullOrWhiteSpace(dev.Kind) && !string.IsNullOrWhiteSpace(kindFromApi))

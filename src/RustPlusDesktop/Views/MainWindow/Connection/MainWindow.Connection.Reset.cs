@@ -24,7 +24,7 @@ public partial class MainWindow
         _connectionPollingCts = new CancellationTokenSource();
     }
 
-    private async Task HardResetAsync(bool reconnect = false)
+    private async Task HardResetAsync(bool reconnect = false, bool keepMap = false)
     {
         Services.Map.MemoryProbe.Mark("disconnect: start", restart: true);
         _connectedProfile = null;
@@ -105,8 +105,8 @@ public partial class MainWindow
             _vm.BusyText = "";
         }
 
-        ResetMapDisplay();
-        Services.Map.MemoryProbe.Mark("disconnect: map cleared");
+        if (!keepMap) ResetMapDisplay();
+        Services.Map.MemoryProbe.Mark(keepMap ? "disconnect: map retained" : "disconnect: map cleared");
 
         // After the UI on purpose: a socket can take seconds to close, and nothing above needs it.
         // 5) WIRKLICH vom Rust-Server trennen

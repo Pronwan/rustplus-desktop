@@ -19,13 +19,13 @@ public class SidebarConnectionPanelTests
         var status = (TextBlock)view.FindName("TxtServerConnectionState");
         var actions = (StackPanel)view.FindName("SidebarConnectionActions");
         Point? actionPosition = null;
-        foreach (var mode in new[] { "disconnected", "busy", "devices", "full", "connecting", "initializing", "priming", "denied", "offline" })
+        foreach (var mode in new[] { "disconnected", "busy", "devices", "full", "connecting", "initializing", "priming", "checking", "denied", "offline" })
         {
             profile.IsConnected = mode is "devices" or "full";
             profile.IsFullConnected = mode == "full";
             profile.IsAccessDenied = mode == "denied";
             profile.Port = mode == "offline" ? 0 : 28082;
-            view.DataContext = new State { Selected = profile, Servers = new() { profile }, IsBusy = mode == "busy", IsConnectionLoading = mode == "connecting", IsInitializing = mode == "initializing", IsDeviceSubscribePriming = mode == "priming" };
+            view.DataContext = new State { Selected = profile, Servers = new() { profile }, IsBusy = mode == "busy", IsConnectionLoading = mode == "connecting", IsInitializing = mode == "initializing", IsDeviceSubscribePriming = mode == "priming", IsDeviceStatusChecking = mode == "checking" };
             Refresh(view);
             var expected = mode switch
             {
@@ -33,12 +33,12 @@ public class SidebarConnectionPanelTests
                 "connecting" or "priming" => "StatusConnecting", "initializing" => "StatusInitializing", "denied" => "StatusAccessDenied", _ => "StatusDisconnected"
             };
             Assert.AreEqual(expected, status.Text);
-            Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "offline"), actions.IsEnabled);
+            Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "checking" or "offline"), actions.IsEnabled);
             var point = actions.TranslatePoint(new Point(), view);
             actionPosition ??= point;
             Assert.AreEqual(actionPosition.Value, point, "Connection states must not move actions.");
             var list = (ListBox)view.FindName("ListServers");
-            Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming"), list.IsEnabled);
+            Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "checking"), list.IsEnabled);
         }
     }
 
@@ -140,6 +140,7 @@ public class SidebarConnectionPanelTests
         public bool IsConnectionLoading { get; set; }
         public bool IsInitializing { get; set; }
         public bool IsDeviceSubscribePriming { get; set; }
+        public bool IsDeviceStatusChecking { get; set; }
         public int FcmExpiryDays { get; set; } = -1;
         public string FcmExpiryText => "";
         public bool IsPairingRunning { get; set; }
