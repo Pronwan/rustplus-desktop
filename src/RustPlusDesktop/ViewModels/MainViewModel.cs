@@ -186,6 +186,13 @@ public class MainViewModel : INotifyPropertyChanged
         set { _isConnectionLoading = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsGlobalBusyOverlayVisible)); }
     }
 
+    private bool _isSoftConnecting;
+    public bool IsSoftConnecting
+    {
+        get => _isSoftConnecting;
+        set { if (_isSoftConnecting == value) return; _isSoftConnecting = value; OnPropertyChanged(); }
+    }
+
     private bool _isDeviceStatusChecking;
     public bool IsDeviceStatusChecking
     {

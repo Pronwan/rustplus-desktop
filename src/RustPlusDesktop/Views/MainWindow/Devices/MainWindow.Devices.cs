@@ -2159,9 +2159,9 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
     private async Task InitializeDevicesAsync(ServerProfile profile, bool reuseConnection)
     {
-        if (_rust is not RustPlusClientReal real) return;
-        var ct = _connectionPollingCts.Token;
         var devices = profile.AllDevices.ToList();
+        if (devices.Count == 0 || _rust is not RustPlusClientReal real) return;
+        var ct = _connectionPollingCts.Token;
         // Saved timestamps cannot prove freshness on a new socket; subscription pushes can.
         if (!reuseConnection)
             foreach (var device in devices) device.LastPolledAt = DateTime.MinValue;
@@ -2210,8 +2210,6 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             UpdateFullConnectButtonsEnabled();
         }
 
-        if (!skipIfRecentlyChecked) StartProgress(1);
-
         if (_logicEngineRunningAction)
         {
             AppendLog("[LogicEngine] Manual refresh blocked: Logic Engine is executing an action.");
@@ -2223,6 +2221,8 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             AppendLog("No Server Selected.");
             return;
         }
+
+        if (!_vm.Selected.AllDevices.Any()) return;
 
         if (!await EnsureConnectedAsync())
             return;

@@ -15,6 +15,31 @@ namespace RustPlusDesktop.Tests;
 public class DeviceStartupTests
 {
     [STATestMethod]
+    public async Task EmptyDeviceStartup_SkipsSubscriptionsAndStatusChecks_IncludingEmptyGroups()
+    {
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        var window = (MainWindow)RuntimeHelpers.GetUninitializedObject(typeof(MainWindow));
+        var vm = (MainViewModel)RuntimeHelpers.GetUninitializedObject(typeof(MainViewModel));
+        var profile = new ServerProfile { Port = 28082 };
+        typeof(MainViewModel).GetField("_selected", flags)!.SetValue(vm, profile);
+        typeof(MainWindow).GetField("_vm", flags)!.SetValue(window, vm);
+        using var client = new RustPlusClientReal(message => Assert.Fail("Empty device startup accessed the client: " + message));
+        typeof(MainWindow).GetField("_rust", flags)!.SetValue(window, client);
+        var changes = new List<string?>();
+        vm.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+        var initialize = typeof(MainWindow).GetMethod("InitializeDevicesAsync", flags)!;
+
+        await (Task)initialize.Invoke(window, new object[] { profile, false })!;
+        profile.Devices.Add(new SmartDevice { IsGroup = true });
+        await (Task)initialize.Invoke(window, new object[] { profile, false })!;
+
+        Assert.IsFalse(vm.IsDeviceSubscribePriming);
+        Assert.IsFalse(vm.IsDeviceStatusChecking);
+        Assert.IsFalse(changes.Contains(nameof(MainViewModel.IsDeviceSubscribePriming)));
+        Assert.IsFalse(changes.Contains(nameof(MainViewModel.IsDeviceStatusChecking)));
+    }
+
+    [STATestMethod]
     public async Task FullConnect_RevealsCachedMapBeforeWaitingForPreviousConnection_AndAbortsIfSelectionChanges()
     {
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;

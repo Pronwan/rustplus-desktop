@@ -1265,6 +1265,7 @@
                                                         <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="ToolTip" Value="{DynamicResource ConnectDevicesOnlyHint}" /><Setter Property="Foreground" Value="#4FC3F7" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="ToolTip" Value="{DynamicResource LoadMapTeam}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{DynamicResource StatusAccessDeniedHint}" /></DataTrigger>
@@ -7458,7 +7459,7 @@
                             Visibility="{Binding IsConnectionLoading, Converter={StaticResource BoolToVisibility}}">
                             <Border MaxWidth="360" Margin="24" Padding="28"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Background="#11191F" BorderBrush="#405E7480" BorderThickness="1" CornerRadius="14">
+                                    Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1" CornerRadius="16">
                                 <StackPanel>
                                     <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="#F2F5F7"
                                                Text="{Binding BusyText}" TextAlignment="Center" TextWrapping="Wrap"
@@ -7493,7 +7494,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Background="#B81B252D"
-                                BorderBrush="#60FFFFFF"
+                                BorderBrush="#405E7480"
                                 BorderThickness="1"
                                 CornerRadius="16">
                                 <Border.Effect><DropShadowEffect BlurRadius="32" ShadowDepth="8" Opacity="0.3" /></Border.Effect>

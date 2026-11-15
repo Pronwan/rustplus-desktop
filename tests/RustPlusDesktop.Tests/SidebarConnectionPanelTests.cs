@@ -19,18 +19,18 @@ public class SidebarConnectionPanelTests
         var status = (TextBlock)view.FindName("TxtServerConnectionState");
         var actions = (StackPanel)view.FindName("SidebarConnectionActions");
         Point? actionPosition = null;
-        foreach (var mode in new[] { "disconnected", "busy", "devices", "full", "connecting", "initializing", "priming", "checking", "denied", "offline" })
+        foreach (var mode in new[] { "disconnected", "busy", "devices", "full", "connecting", "softconnecting", "initializing", "priming", "checking", "denied", "offline" })
         {
             profile.IsConnected = mode is "devices" or "full";
             profile.IsFullConnected = mode == "full";
             profile.IsAccessDenied = mode == "denied";
             profile.Port = mode == "offline" ? 0 : 28082;
-            view.DataContext = new State { Selected = profile, Servers = new() { profile }, IsBusy = mode == "busy", IsConnectionLoading = mode == "connecting", IsInitializing = mode == "initializing", IsDeviceSubscribePriming = mode == "priming", IsDeviceStatusChecking = mode == "checking" };
+            view.DataContext = new State { Selected = profile, Servers = new() { profile }, IsBusy = mode == "busy", IsConnectionLoading = mode == "connecting", IsSoftConnecting = mode == "softconnecting", IsInitializing = mode == "initializing", IsDeviceSubscribePriming = mode == "priming", IsDeviceStatusChecking = mode == "checking" };
             Refresh(view);
             var expected = mode switch
             {
                 "devices" => "StatusDevicesActive", "full" => "StatusFullyConnected",
-                "connecting" or "priming" => "StatusConnecting", "initializing" => "StatusInitializing", "denied" => "StatusAccessDenied", _ => "StatusDisconnected"
+                "connecting" or "softconnecting" or "priming" => "StatusConnecting", "initializing" => "StatusInitializing", "denied" => "StatusAccessDenied", _ => "StatusDisconnected"
             };
             Assert.AreEqual(expected, status.Text);
             Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "checking" or "offline"), actions.IsEnabled);
@@ -190,6 +190,7 @@ public class SidebarConnectionPanelTests
         public ServerProfile? Selected { get; set; }
         public bool IsBusy { get; set; }
         public bool IsConnectionLoading { get; set; }
+        public bool IsSoftConnecting { get; set; }
         public bool IsInitializing { get; set; }
         public bool IsDeviceSubscribePriming { get; set; }
         public bool IsDeviceStatusChecking { get; set; }

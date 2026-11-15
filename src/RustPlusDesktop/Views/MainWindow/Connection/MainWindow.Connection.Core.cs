@@ -334,10 +334,7 @@ public partial class MainWindow
         _statusCts?.Cancel();
         _statusTimer.Stop();
         _isSoftConnecting = true;
-        _vm.IsDeviceSubscribePriming = true;
-        _vm.DeviceSubscribeMax = Math.Max(1, profile.Devices.Count);
-        _vm.DeviceSubscribeProgress = 0;
-        _vm.DeviceSubscribeText = "Preparing device subscriptions...";
+        _vm.IsSoftConnecting = true;
         RenewConnectionPolling();
         var ct = _connectionPollingCts.Token;
         void CheckConnection()
@@ -427,6 +424,7 @@ public partial class MainWindow
         finally
         {
             _isSoftConnecting = false;
+            _vm.IsSoftConnecting = false;
             _vm.IsDeviceSubscribePriming = false;
             Dispatcher.Invoke(() => {
                 UiBtnConnect.IsEnabled = true;
