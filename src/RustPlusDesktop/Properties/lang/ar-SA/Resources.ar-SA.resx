@@ -8174,4 +8174,49 @@
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>لا يوجد مشغّل لمنصة النفط على هذا الخادم. انقر لترى كيف تجعل إنذارًا ذكيًا مشغّلًا لمنصة النفط.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>تعيين معدّلات مخصصة...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>معدّلات الخادم المخصصة</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>للخوادم المعدّلة. يعرض Rust+ الصيانة بتكاليف اللعبة الأصلية وكل صندوق في منصة النفط بمدة 15 دقيقة، لذا أدخل ما يستخدمه هذا الخادم فعلًا. تتم المزامنة مع الموقع وCloud 24/7.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>صيانة مخصصة (% من الأصلي)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>مؤقت صندوق منصة النفط المخصص (دقائق)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= {0}× تكلفة الصيانة الأصلية</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>أدخل من 10 إلى 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>الأصلي (15 دقيقة)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} دقيقة بدلًا من 15 الأصلية</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>أدخل من 1 إلى 60 دقيقة</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>إعادة إلى الأصلي</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>معدّل</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>يستخدم هذا الخادم معدّلات مخصصة (تكلفة الصيانة أو مؤقت صندوق منصة النفط). انقر بزر الفأرة الأيمن لتغييرها.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>تم حفظ معدّلات الخادم</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': الصيانة {1} %، صندوق منصة النفط {2} دقيقة.</value>
+  </data>
 </root>

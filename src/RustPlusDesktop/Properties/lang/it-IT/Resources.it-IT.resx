@@ -5882,4 +5882,49 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>Su questo server non è impostato alcun trigger della piattaforma petrolifera. Clicca per vedere come trasformare un allarme intelligente nel tuo trigger.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>Imposta modificatori personalizzati...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>Modificatori personalizzati del server</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>Per server moddati. Rust+ indica il mantenimento ai costi vanilla e ogni cassa della piattaforma petrolifera a 15 minuti: inserisci i valori reali di questo server. Sincronizzato con il sito e Cloud 24/7.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>Mantenimento personalizzato (% del vanilla)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>Timer personalizzato della cassa (minuti)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= {0}× il costo di mantenimento vanilla</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>Inserisci da 10 a 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>Vanilla (15 minuti)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} minuti invece dei 15 vanilla</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>Inserisci da 1 a 60 minuti</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>Ripristina vanilla</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>MODIFICATO</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>Questo server usa modificatori personalizzati (costo di mantenimento o timer della cassa). Clic destro per cambiarli.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>Modificatori del server salvati</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': mantenimento {1} %, cassa {2} min.</value>
+  </data>
 </root>

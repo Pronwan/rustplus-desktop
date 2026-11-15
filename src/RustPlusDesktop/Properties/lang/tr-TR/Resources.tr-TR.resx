@@ -7259,4 +7259,49 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>Bu sunucuda petrol platformu tetikleyicisi kurulu değil. Akıllı alarmı nasıl petrol platformu tetikleyicisi yapacağını görmek için tıkla.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>Özel değiştiricileri ayarla...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>Özel sunucu değiştiricileri</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>Modlu sunucular için. Rust+ bakım süresini vanilla maliyetlerle ve her petrol platformu sandığını 15 dakika olarak bildirir; bu sunucunun gerçekte kullandığı değerleri gir. Web sitesi ve Cloud 24/7 ile senkronize edilir.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>Özel bakım (vanilla değerin %'si)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>Özel petrol platformu sandık süresi (dakika)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= vanilla bakım maliyetinin {0} katı</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>%10 ile %1000 arası gir</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>Vanilla (15 dakika)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>Vanilla 15 yerine {0} dakika</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>1 ile 60 dakika arası gir</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>Vanilla'ya sıfırla</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>DEĞİŞTİRİLDİ</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>Bu sunucu özel değiştiriciler kullanıyor (bakım maliyeti veya petrol platformu sandık süresi). Değiştirmek için sağ tıkla.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>Sunucu değiştiricileri kaydedildi</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': bakım %{1}, petrol platformu sandığı {2} dk.</value>
+  </data>
 </root>

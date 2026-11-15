@@ -8906,4 +8906,49 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="OilRigTriggerMissingHint" xml:space="preserve">
     <value>No oil rig trigger is set up on this server. Click to see how to make a smart alarm your oil rig trigger.</value>
   </data>
+  <data name="SetCustomModifiers" xml:space="preserve">
+    <value>Set Custom Modifiers...</value>
+  </data>
+  <data name="ServerModifiersTitle" xml:space="preserve">
+    <value>Custom Server Modifiers</value>
+  </data>
+  <data name="ServerModifiersIntro" xml:space="preserve">
+    <value>For modded servers. Rust+ reports upkeep at vanilla costs and every oil rig crate as 15 minutes, so set what this server really uses. Synced with the website and Cloud 24/7.</value>
+  </data>
+  <data name="ServerModifiersUpkeepLabel" xml:space="preserve">
+    <value>Custom Upkeep (% of vanilla)</value>
+  </data>
+  <data name="ServerModifiersCrateLabel" xml:space="preserve">
+    <value>Custom Oil Rig Crate Timer (minutes)</value>
+  </data>
+  <data name="ServerModifiersUpkeepFactor" xml:space="preserve">
+    <value>= {0}× vanilla upkeep cost</value>
+  </data>
+  <data name="ServerModifiersUpkeepRange" xml:space="preserve">
+    <value>Enter 10 to 1000 %</value>
+  </data>
+  <data name="ServerModifiersCrateVanilla" xml:space="preserve">
+    <value>Vanilla (15 minutes)</value>
+  </data>
+  <data name="ServerModifiersCrateCustom" xml:space="preserve">
+    <value>{0} minutes instead of vanilla 15</value>
+  </data>
+  <data name="ServerModifiersCrateRange" xml:space="preserve">
+    <value>Enter 1 to 60 minutes</value>
+  </data>
+  <data name="ServerModifiersReset" xml:space="preserve">
+    <value>Reset to Vanilla</value>
+  </data>
+  <data name="BadgeModified" xml:space="preserve">
+    <value>MODIFIED</value>
+  </data>
+  <data name="BadgeModifiedHint" xml:space="preserve">
+    <value>This server uses custom modifiers (upkeep cost or oil rig crate timer). Right-click to change them.</value>
+  </data>
+  <data name="ServerModifiersSavedTitle" xml:space="preserve">
+    <value>Server Modifiers Saved</value>
+  </data>
+  <data name="ServerModifiersSavedMessage" xml:space="preserve">
+    <value>'{0}': upkeep {1} %, oil rig crate {2} min.</value>
+  </data>
 </root>

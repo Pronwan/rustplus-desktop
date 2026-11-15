@@ -4777,7 +4777,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                         {
                             var uiSnap = new StorageSnapshot
                             {
-                                UpkeepSeconds = cached.UpkeepSeconds,
+                                // Rust+ reports vanilla upkeep; a modded server's real cost scales it.
+                                UpkeepSeconds = _vm?.Selected?.ScaleUpkeep(cached.UpkeepSeconds) ?? cached.UpkeepSeconds,
                                 IsToolCupboard = cached.IsToolCupboard
                             };
                             foreach (var it in cached.Items) uiSnap.Items.Add(it);
@@ -5061,6 +5062,56 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     }
                 });
             }
+        }
+    }
+
+    /// <summary>
+    /// A modded server's upkeep cost and oil rig crate time. Saved on the profile, sent to the
+    /// platform (website and cloud), and the upkeep shown now redone at the new cost.
+    /// </summary>
+    public async void Server_SetModifiers_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ServerProfile prof) return;
+        var dlg = new Views.Windows.ServerModifiersDialog(prof) { Owner = this };
+        if (dlg.ShowDialog() != true) return;
+        if (prof.UpkeepPercent == dlg.UpkeepPercent && prof.OilRigCrateMinutes == dlg.OilRigCrateMinutes) return;
+
+        prof.UpkeepPercent = dlg.UpkeepPercent;
+        prof.OilRigCrateMinutes = dlg.OilRigCrateMinutes;
+        prof.ModifiersPushPending = true;
+        _vm.Save();
+
+        AppendLog($"[server] Modifiers for '{prof.Name}': upkeep {prof.UpkeepPercent} %, oil rig crate {prof.OilRigCrateMinutes} min.");
+        ShowInfoSnackbar(
+            Properties.Resources.GetString("ServerModifiersSavedTitle"),
+            string.Format(Properties.Resources.GetString("ServerModifiersSavedMessage"), prof.Name, prof.UpkeepPercent, prof.OilRigCrateMinutes),
+            WpfUi.ControlAppearance.Success);
+
+        // The cupboards on screen were scaled at the old cost: read them again from the cache.
+        if (ReferenceEquals(_vm.Selected, prof))
+            RescaleStorageFromCache(prof);
+
+        if (await Services.Cloud.CloudServerModifiersSync.PushAsync(prof))
+            _vm.Save();
+    }
+
+    /// <summary>Puts each storage monitor's cached snapshot back on the device, scaled at the current cost.</summary>
+    private void RescaleStorageFromCache(ServerProfile prof)
+    {
+        if (_rust is not RustPlusClientReal real) return;
+        foreach (var dev in prof.AllDevices)
+        {
+            if (!RustPlusClientReal.IsStorageDevice(dev)) continue;
+            if (!real.TryGetCachedStorage(dev.EntityId, out var cached) || cached == null) continue;
+
+            var uiSnap = new StorageSnapshot
+            {
+                UpkeepSeconds = prof.ScaleUpkeep(cached.UpkeepSeconds),
+                IsToolCupboard = cached.IsToolCupboard,
+                SnapshotUtc = cached.SnapshotUtc
+            };
+            foreach (var it in cached.Items) uiSnap.Items.Add(it);
+            dev.Storage = uiSnap;
         }
     }
 
