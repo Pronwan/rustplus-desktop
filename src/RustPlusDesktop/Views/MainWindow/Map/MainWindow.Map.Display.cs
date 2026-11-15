@@ -128,6 +128,7 @@ public partial class MainWindow
         if (_mapView == null)
         {
             _mapView = new Viewbox { Stretch = Stretch.Uniform, StretchDirection = StretchDirection.Both };
+            _mapView.Style = (Style)FindResource("MapPreviewStyle");
             WebViewHost.Children.Add(_mapView);
             Panel.SetZIndex(_mapView, 0);
         }
@@ -261,6 +262,7 @@ public partial class MainWindow
     private void ResetMapDisplay()
     {
         _mapBaseBmp = null;
+        _vm.HasMapImage = false;
         _isGeneratedMapActive = false;
 
         ImgMap.Source = null;
@@ -303,7 +305,6 @@ public partial class MainWindow
             };
         }
 
-        if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Visible;
         if (_mapView != null) _mapView.Visibility = Visibility.Collapsed;
         ApplyToolCursor();
 
@@ -318,12 +319,13 @@ public partial class MainWindow
     /// <summary>
     /// Indicates whether a map is currently loaded and active in the viewport.
     /// </summary>
-    private bool IsMapLoaded => _mapBaseBmp != null && (MapPlaceholder == null || MapPlaceholder.Visibility != Visibility.Visible);
+    private bool HasMapImage => _mapBaseBmp != null;
+    private bool IsMapLoaded => HasMapImage && !_vm.IsMapPreviewVisible;
 
     private void ShowMapBasic(BitmapSource bmp)
     {
         _mapBaseBmp = bmp;
-        if (MapPlaceholder != null) MapPlaceholder.Visibility = Visibility.Collapsed;
+        _vm.HasMapImage = true;
         if (_mapView != null) _mapView.Visibility = Visibility.Visible;
         _staticMarkers.Clear();            // << keine Testpunkte
 

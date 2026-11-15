@@ -251,6 +251,7 @@ public partial class MainWindow
         if (_isDeletingServer) return;
         if (_isMap3DActive) CloseMap3DView();
         _lastChatTsForCurrentServer = null;
+        BeginServerMapTransition();
 
         Task resetTask = Task.CompletedTask;
         if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))
@@ -261,8 +262,11 @@ public partial class MainWindow
         else ResetMapDisplay();
 
         var cachedMapTask = LoadMapAsync(cacheOnly: true);
-        await resetTask;
         await cachedMapTask;
+        if (selectionVersion != _mapSelectionVersion) return;
+        bool transitionCompleted = HasMapImage;
+        if (transitionCompleted) CompleteServerMapTransition(selectionVersion);
+        await resetTask;
         if (selectionVersion != _mapSelectionVersion) return;
 
         if (_vm.Selected is { } prof)
@@ -277,7 +281,7 @@ public partial class MainWindow
             {
                 await ShowOfflineMapAsync(prof);
             }
-            else if (hasLocalMap && !IsMapLoaded)
+            else if (hasLocalMap && !HasMapImage)
             {
                 if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
                 {
@@ -302,22 +306,21 @@ public partial class MainWindow
                 }
             }
 
-            // Trigger soft connect to devices only if there are any devices to control and this is not a purely offline profile
-            if (!isOfflineOnly && !prof.IsConnected && prof.Devices.Any())
-            {
-                await PerformConnectDevicesOnlyAsync(prof);
-            }
         }
 
+        if (!transitionCompleted) CompleteServerMapTransition(selectionVersion);
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
         UpdateRustMapsUi();
     }
 
-    private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
+    private async Task<bool> PerformConnectDevicesOnlyAsync(ServerProfile profile)
     {
-        if (profile == null) return;
+        if (profile == null) return false;
+        StopTeamPolling();
+        _statusCts?.Cancel();
+        _statusTimer.Stop();
         _isSoftConnecting = true;
         _vm.IsDeviceSubscribePriming = true;
         _vm.DeviceSubscribeMax = Math.Max(1, profile.Devices.Count);
@@ -387,16 +390,19 @@ public partial class MainWindow
             }
 
             AppendLog("Soft-connect complete.");
-
+            return true;
         }
         catch (Exception ex)
         {
+            profile.IsConnected = false;
+            profile.IsFullConnected = false;
             if (RustPlusClientReal.IsAccessDeniedError(ex))
             {
                 profile.IsAccessDenied = true;
                 _vm.Save();
             }
             AppendLog($"Soft-connect failed: {ex.Message}");
+            return false;
         }
         finally
         {
@@ -456,8 +462,11 @@ public partial class MainWindow
                             {
                                 try
                                 {
-                                    await PerformConnectAsync(true, showBusy: false);
-                                    AppendLog("[status-poll] Silent connection refresh complete.");
+                                    if (ct.IsCancellationRequested || !ReferenceEquals(_vm?.Selected, currentSelected)) return;
+                                    bool recovered = currentSelected.IsFullConnected
+                                        ? await PerformConnectAsync(true, showBusy: false)
+                                        : await PerformConnectDevicesOnlyAsync(currentSelected);
+                                    AppendLog(recovered ? "[status-poll] Silent connection refresh complete." : "[status-poll] Silent connection refresh failed.");
                                 }
                                 catch (Exception ex)
                                 {
@@ -509,7 +518,7 @@ public partial class MainWindow
     {
         Services.Map.MemoryProbe.Mark("connect: start", restart: true);
         _ownCloudRestoreReady = false;
-        if (showBusy && IsMapLoaded) _vm.IsConnectionLoading = false;
+        if (showBusy && HasMapImage) _vm.IsConnectionLoading = false;
 
         if (_isSoftConnecting)
         {
@@ -604,12 +613,12 @@ public partial class MainWindow
         }
 
         RenewConnectionPolling();
-        var connectingProfile = _vm.Selected;
+        var connectingProfile = _vm.Selected!;
         var connectionToken = _connectionPollingCts.Token;
         void CheckConnection()
         {
             connectionToken.ThrowIfCancellationRequested();
-            if (!ReferenceEquals(_vm.Selected, connectingProfile)) throw new OperationCanceledException();
+            if (!ReferenceEquals(_vm?.Selected, connectingProfile)) throw new OperationCanceledException();
         }
         ResetBuildingBlockedZonesForServerChange();
         ResetCargoPathForServerChange();
@@ -619,8 +628,8 @@ public partial class MainWindow
         {
             if (showBusy)
             {
-                _vm.IsConnectionLoading = !IsMapLoaded;
-                _vm.IsBusy = !IsMapLoaded;
+                _vm.IsConnectionLoading = !HasMapImage;
+                _vm.IsBusy = !HasMapImage;
                 _vm.BusyText = "Connecting …";
             }
 
@@ -670,7 +679,7 @@ public partial class MainWindow
                 _vm.IsInitializing = true;
             }
 
-            var mapTask = IsMapLoaded ? Task.CompletedTask : LoadMapAsync(cacheOnly: true);
+            var mapTask = HasMapImage ? Task.CompletedTask : LoadMapAsync(cacheOnly: true);
             var teamTask = LoadTeamAsync();
             
             // Rehydrate local cache immediately (sync)
@@ -706,14 +715,14 @@ public partial class MainWindow
             Services.Map.MemoryProbe.Mark("connect: map loaded");
             if (showBusy)
             {
-                _vm!.IsConnectionLoading = !IsMapLoaded;
+                _vm!.IsConnectionLoading = !HasMapImage;
                 _vm.BusyText = "Synchronizing server data…";
             }
 
             await teamTask;
             CheckConnection();
             ShowInitialTeamPositions();
-            if (showBusy && IsMapLoaded)
+            if (showBusy && HasMapImage)
             {
                 _vm!.IsConnectionLoading = false;
                 _vm.BusyText = "";
@@ -722,6 +731,7 @@ public partial class MainWindow
             CheckConnection();
             await LoadMapAsync();
             CheckConnection();
+            if (!HasMapImage) throw new InvalidOperationException("The server did not provide a map. Try connecting again.");
             if (!_showingInitialTeamPositions) ShowInitialTeamPositions();
             if (real != null)
             {
@@ -871,7 +881,9 @@ public partial class MainWindow
                 {
                     ShowInfoSnackbar(
                         Properties.Resources.ConnectionFailedRustPlusUnreachable,
-                        Properties.Resources.ConnectionFailedRustPlusUnreachableComment,
+                        Guid.TryParse(selectedOnError?.ServerId, out _)
+                            ? Properties.Resources.ConnectionFailedRustPlusUnreachableComment
+                            : Properties.Resources.GetString("ConnectionFailedMissingServerIdComment"),
                         WpfUi.ControlAppearance.Danger);
                 }
                 else

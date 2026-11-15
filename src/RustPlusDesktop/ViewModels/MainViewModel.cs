@@ -164,6 +164,15 @@ public class MainViewModel : INotifyPropertyChanged
     }
 
     private bool _isConnectionLoading;
+    private bool _hasMapImage;
+    public bool HasMapImage
+    {
+        get => _hasMapImage;
+        set { if (_hasMapImage == value) return; _hasMapImage = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsMapPreviewVisible)); }
+    }
+
+    public bool IsMapPreviewVisible => HasMapImage && Selected is { IsFullConnected: false } profile
+        && profile.Port != 0 && profile.PlayerToken != "offline";
     public bool IsConnectionLoading
     {
         get => _isConnectionLoading;
@@ -488,6 +497,7 @@ public class MainViewModel : INotifyPropertyChanged
             // Remember this choice so the next startup restores it instead of the first profile.
             if (_selected != null) TrackingService.LastSelectedServerKey = _selected.MatchKey;
             OnPropertyChanged();                   // "Selected"
+            OnPropertyChanged(nameof(IsMapPreviewVisible));
             OnPropertyChanged(nameof(CurrentDevices));
             OnPropertyChanged(nameof(CanDeleteDevice));
             UpdateServerWipe();
@@ -519,6 +529,9 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void SelectedProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(ServerProfile.IsConnected) or nameof(ServerProfile.IsFullConnected)
+            or nameof(ServerProfile.Port) or nameof(ServerProfile.PlayerToken))
+            OnPropertyChanged(nameof(IsMapPreviewVisible));
         if (e.PropertyName == nameof(ServerProfile.WipeTime))
             UpdateServerWipe();
         else if (e.PropertyName == nameof(ServerProfile.HasMissingDevices))

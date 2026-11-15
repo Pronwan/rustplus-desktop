@@ -5049,14 +5049,17 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         {
             AppendLog($"[server] Connection updated for '{prof.Name}' -> {prof.Host}:{prof.Port}");
             ShowInfoSnackbar("Server Connection Updated", $"'{prof.Name}' connection updated to {prof.Host}:{prof.Port}.", WpfUi.ControlAppearance.Success);
-            if (_vm.Selected == prof)
+            if (_vm.Selected == prof && prof.IsConnected)
             {
+                bool reconnectFull = prof.IsFullConnected;
                 _ = Dispatcher.InvokeAsync(async () =>
                 {
                     try
                     {
                         await HardResetAsync(reconnect: false);
-                        await PerformConnectAsync(false);
+                        if (!ReferenceEquals(_vm.Selected, prof)) return;
+                        if (reconnectFull) await PerformConnectAsync(false);
+                        else await PerformConnectDevicesOnlyAsync(prof);
                     }
                     catch (Exception ex)
                     {

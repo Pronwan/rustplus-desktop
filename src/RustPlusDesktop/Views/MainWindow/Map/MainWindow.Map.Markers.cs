@@ -765,7 +765,7 @@ public partial class MainWindow
 
     private void ShowInitialTeamPositions()
     {
-        if (!IsMapLoaded) return;
+        if (!HasMapImage) return;
         UpdateDynUI(TeamMembers.Where(m => m.SteamId != 0 && m.X.HasValue && m.Y.HasValue)
             .Select(m => new RustPlusClientReal.DynMarker((uint)m.SteamId, 1, "Player",
                 m.X!.Value, m.Y!.Value, m.Name, m.Name, m.SteamId)).ToList());

@@ -228,6 +228,25 @@ public partial class MainWindow
 
     private bool _connectionActionPending;
 
+    private void BtnConnectionOptions_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { ContextMenu: { } menu } button)
+        {
+            menu.PlacementTarget = button;
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            menu.IsOpen = true;
+        }
+    }
+
+    private async void BtnConnectDevicesOnly_Click(object sender, RoutedEventArgs e)
+    {
+        if (_connectionActionPending || _isSoftConnecting || _vm.IsConnectionLoading || _vm.IsInitializing
+            || _vm.Selected is not { IsConnected: false, Port: > 0 } profile || profile.PlayerToken == "offline") return;
+        _connectionActionPending = true;
+        try { await PerformConnectDevicesOnlyAsync(profile); }
+        finally { _connectionActionPending = false; }
+    }
+
     private async void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
         if (_connectionActionPending || _vm.IsConnectionLoading || _vm.IsInitializing) return;
@@ -316,6 +335,10 @@ public partial class MainWindow
 
         if (_isReconnecting || _isDeletingServer) return;
         _isReconnecting = true;
+        var reconnectProfile = _vm.Selected;
+        int selectionVersion = _mapSelectionVersion;
+        bool reconnectFull = reconnectProfile?.IsFullConnected == true || _vm.IsInitializing
+            || (_connectionActionPending && !_isSoftConnecting);
 
         try
         {
@@ -345,8 +368,11 @@ public partial class MainWindow
             {
                 AppendLog($"[auto-reconnect] Retrying in {delay / 1000}s...");
                 await Task.Delay(delay);
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, reconnectProfile) || reconnectProfile == null) return;
 
-                bool success = await PerformConnectAsync(true);
+                bool success = reconnectFull
+                    ? await PerformConnectAsync(true)
+                    : await PerformConnectDevicesOnlyAsync(reconnectProfile);
                 if (success)
                 {
                     AppendLog("[auto-reconnect] Reconnected successfully!");

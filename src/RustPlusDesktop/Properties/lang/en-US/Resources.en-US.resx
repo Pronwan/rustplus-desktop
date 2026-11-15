@@ -832,7 +832,31 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
     <value>Initializing...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>Devices active</value>
+    <value>Devices only</value>
+  </data>
+  <data name="ConnectionMode" xml:space="preserve">
+    <value>Connection mode</value>
+  </data>
+  <data name="MapCachedPreview" xml:space="preserve">
+    <value>CACHED MAP PREVIEW</value>
+  </data>
+  <data name="MapSetupHint" xml:space="preserve">
+    <value>Checking devices and verifying the current wipe before live map updates begin.</value>
+  </data>
+  <data name="ConnectionFailedMissingServerIdComment" xml:space="preserve">
+    <value>The direct connection failed. This saved entry currently has no companion server ID, so the companion route could not be tried. Sync pairings to try restoring it; if it is still missing, pair this server again in Rust.</value>
+  </data>
+  <data name="CachedMapConnectHint" xml:space="preserve">
+    <value>This is a saved map preview. Full connect checks the wipe and starts live updates.</value>
+  </data>
+  <data name="SoftConnectMapHint" xml:space="preserve">
+    <value>Your devices, chat and team status are connected. Full connect enables live map updates.</value>
+  </data>
+  <data name="ConnectDevicesOnly" xml:space="preserve">
+    <value>Devices only</value>
+  </data>
+  <data name="ConnectDevicesOnlyHint" xml:space="preserve">
+    <value>Connect devices, chat and team status. Live map polling stays off.</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
     <value>Fully connected</value>
