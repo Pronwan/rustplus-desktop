@@ -46,6 +46,7 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     public event Action<uint, bool, string?>? DeviceStateEvent;
 
     public event Action? ConnectionLost;
+    public event Action? FeatureUnsupported;
     private readonly SemaphoreSlim _rateLimitLock = new(1, 1);
     private int _tokens = 50;
     private DateTime _lastRefill = DateTime.UtcNow;
@@ -4483,6 +4484,9 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         lock (_subscribed) _subscribed.Clear();
         _eventsHooked = false;
 
+        var authToken = RustCompanionAuthService.ReadCurrentToken();
+        var serverId = RustPlusConnectionException.RequireCompanionCredentials(profile.ServerId, authToken);
+        ConnectionFailureKind routeFailure = ConnectionFailureKind.Unavailable;
         async Task<(bool ok, string? err, bool isDenied)> TryAsync(RustPlusConnection connection, string route)
         {
             _api = new RustPlus(connection);
@@ -4505,6 +4509,12 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             catch (Exception ex)
             {
                 _log("ConnectAsync call failed: " + ex.Message);
+                ct.ThrowIfCancellationRequested();
+                if (connection.ServerId != null && RustPlusConnectionException.IsLoginRejection(ex))
+                {
+                    routeFailure = ConnectionFailureKind.SignInRequired;
+                    return (false, "Companion login rejected", false);
+                }
                 if (IsAccessDeniedError(ex))
                 {
                     connectDenied = true;
@@ -4533,59 +4543,42 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 // the same error from an entity request just means that entity is gone.
                 bool isDenied = connectDenied || IsAccessDeniedError(errStr)
                     || string.Equals(errStr.Trim(), "not_found", StringComparison.OrdinalIgnoreCase);
+                routeFailure = isDenied ? ConnectionFailureKind.RePairRequired
+                    : info?.Error == null ? ConnectionFailureKind.Unavailable : RustPlusConnectionException.FromServerError(errStr);
                 return (false, errStr, isDenied);
             }
             catch (Exception ex)
             {
+                ct.ThrowIfCancellationRequested();
+                routeFailure = RustPlusConnectionException.Classify(ex);
                 bool isDenied = connectDenied || IsAccessDeniedError(ex);
                 return (false, ex.Message, isDenied);
             }
         }
 
-        // Facepunch's companion socket first, then the server's app port. Direct connections are
-        // being removed server by server, so the socket is the route that keeps working; it needs
-        // the server's id from a pairing push plus the companion login token. Direct stays as the
-        // fallback for servers paired before we kept the id, while servers still accept it. The old
-        // /game/{ip}/{port} relay is never tried: it answers 418 for every server, which used to be
-        // misread as "player token rejected" and flag healthy servers for re-pairing.
-        var routes = new List<(RustPlusConnection connection, string name)>();
-        var authToken = RustCompanionAuthService.ReadCurrentToken();
-        if (Guid.TryParse(profile.ServerId, out var serverId) && !string.IsNullOrWhiteSpace(authToken))
+        // The companion socket is the supported route; legacy pairings must supply its server ID.
+        var connection = new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken)
         {
-            routes.Add((new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken)
-            {
-                ServerId = serverId,
-                AuthToken = authToken,
-            }, "via companion socket"));
-        }
-        routes.Add((new RustPlusConnection(profile.Host, profile.Port, steamId, playerToken), "direct"));
-
-        bool isDenied = false;
-        foreach (var (connection, name) in routes)
+            ServerId = serverId,
+            AuthToken = authToken,
+        };
+        ct.ThrowIfCancellationRequested();
+        var (ok, err, denied) = await TryAsync(connection, "via companion socket");
+        if (ok)
         {
-            var (ok, err, denied) = await TryAsync(connection, name);
-            if (ok)
-            {
-                _connectionCurrent = connection;
-                HookEventsIfNeeded();
-                return;
-            }
-
-            isDenied |= denied;
-            // 403 at the socket handshake is the companion login, not the player token.
-            var hint = connection.ServerId is not null && (err?.Contains("'403'", StringComparison.Ordinal) ?? false)
-                ? " (Rust+ companion login rejected — sign in again)"
-                : "";
-            _log($"GetInfo ({name}): {err}{hint}");
+            _connectionCurrent = connection;
+            HookEventsIfNeeded();
+            return;
         }
 
-        if (isDenied)
+        _log($"GetInfo (via companion socket): {err}");
+        if (denied)
         {
             _log("[connect] Rust+ Access Denied: Player token rejected. Server needs re-pairing from in-game.");
             throw new RustPlusAccessDeniedException("Rust+ Access Denied: Player token rejected. Server needs re-pairing from in-game.");
         }
 
-        throw new InvalidOperationException("Rust+ is unreachable.");
+        throw new RustPlusConnectionException(routeFailure, routeFailure == ConnectionFailureKind.Unavailable ? "Rust+ is unreachable." : "Rust+ connection rejected.");
     }
 
     public static bool IsAccessDeniedError(Exception? ex)
@@ -4631,6 +4624,15 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         {
             if (_api is not null)
             {
+                // Closing our own socket must not start the server-loss recovery loop.
+                try
+                {
+                    var ev = _api.GetType().GetEvent("Disconnected");
+                    if (ev?.EventHandlerType != null)
+                        ev.RemoveEventHandler(_api, Delegate.CreateDelegate(ev.EventHandlerType, this,
+                            GetType().GetMethod(nameof(Api_OnDisconnected), BindingFlags.NonPublic | BindingFlags.Instance)!));
+                }
+                catch { }
                 // Try graceful disconnect first
                 var mDisconnect = _api.GetType().GetMethod("DisconnectAsync", Type.EmptyTypes);
                 if (mDisconnect != null)
@@ -6128,6 +6130,8 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         if (errorProp != null)
         {
             var errorMsg = errorProp.ToString() ?? "Unknown error";
+            if (string.Equals(TryGetStringProp(errorProp, "Message", "Error") ?? errorMsg, "unhandled", StringComparison.OrdinalIgnoreCase))
+                FeatureUnsupported?.Invoke();
             _log($"[ERROR] Response contains error: {errorMsg}");
             return false;
         }

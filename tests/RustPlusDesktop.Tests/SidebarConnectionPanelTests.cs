@@ -30,7 +30,7 @@ public class SidebarConnectionPanelTests
             var expected = mode switch
             {
                 "devices" => "StatusDevicesActive", "full" => "StatusFullyConnected",
-                "connecting" or "softconnecting" or "priming" => "StatusConnecting", "initializing" => "StatusInitializing", "denied" => "StatusAccessDenied", _ => "StatusDisconnected"
+                "connecting" or "softconnecting" or "priming" => "StatusConnecting", "initializing" => "StatusInitializing", "denied" => profile.ConnectionIssueTitle, _ => "StatusDisconnected"
             };
             Assert.AreEqual(expected, status.Text);
             Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "checking" or "offline"), actions.IsEnabled);
@@ -40,6 +40,27 @@ public class SidebarConnectionPanelTests
             var list = (ListBox)view.FindName("ListServers");
             Assert.AreEqual(mode is not ("connecting" or "initializing" or "priming" or "checking"), list.IsEnabled);
         }
+    }
+
+    [STATestMethod]
+    public void ConnectionIssues_ShowPersistentReasonAndRecoveryAction_SeparateFromMode()
+    {
+        var view = LoadPanels();
+        var profile = new ServerProfile { Name = "Test", Port = 28082 };
+        foreach (var kind in Enum.GetValues<ConnectionFailureKind>())
+        {
+            profile.ConnectionFailure = kind;
+            view.DataContext = new State { Selected = profile, Servers = new() { profile } };
+            Refresh(view);
+            Assert.AreEqual(Visibility.Visible, ((Border)view.FindName("ConnectionIssuePanel")).Visibility);
+            Assert.AreEqual(profile.ConnectionIssueTitle, ((TextBlock)view.FindName("TxtServerConnectionState")).Text);
+            Assert.AreEqual(profile.ConnectionRecoveryAction, ((Wpf.Ui.Controls.Button)view.FindName("SidebarConnectionRecoveryButton")).Content);
+        }
+        profile.IsReconnecting = true;
+        profile.ConnectionFailure = ConnectionFailureKind.Unavailable;
+        Refresh(view);
+        Assert.AreEqual("ConnectionReconnecting", ((TextBlock)view.FindName("TxtServerConnectionState")).Text);
+        Assert.IsFalse(((Wpf.Ui.Controls.Button)view.FindName("SidebarConnectionRecoveryButton")).IsEnabled);
     }
 
     [STATestMethod]
@@ -180,7 +201,7 @@ public class SidebarConnectionPanelTests
         var result = (StackPanel)XamlReader.Parse(host.ToString().Replace("http://schemas.lepo.co/wpfui/2022/xaml", "clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui")
             .Replace("clr-namespace:RustPlusDesk.Converters\"", "clr-namespace:RustPlusDesk.Converters;assembly=RustPlusDesk\"")
             .Replace("clr-namespace:RustPlusDesk.Controls.Menus\"", "clr-namespace:RustPlusDesk.Controls.Menus;assembly=RustPlusDesk\""));
-        foreach (var key in new[] { "StatusDisconnected", "StatusDevicesActive", "StatusFullyConnected", "StatusConnecting", "StatusInitializing", "StatusAccessDenied", "UiPairingListener", "PairingIdle", "UiListenerRunning" }) result.Resources[key] = key;
+        foreach (var key in new[] { "StatusDisconnected", "StatusDevicesActive", "StatusFullyConnected", "StatusConnecting", "StatusInitializing", "StatusAccessDenied", "ConnectionReconnecting", "UiPairingListener", "PairingIdle", "UiListenerRunning" }) result.Resources[key] = key;
         return result;
     }
 

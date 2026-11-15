@@ -325,7 +325,7 @@ public partial class MainWindow
     }
 
     private Task<bool> PerformConnectDevicesOnlyAsync(ServerProfile profile) =>
-        _isSoftConnecting && _softConnectTask != null ? _softConnectTask : _softConnectTask = ConnectDevicesOnlyCoreAsync(profile);
+        _softConnectTask is { IsCompleted: false } ? _softConnectTask : _softConnectTask = RunConnectionAttemptsAsync(full: false);
 
     private async Task<bool> ConnectDevicesOnlyCoreAsync(ServerProfile profile)
     {
@@ -356,6 +356,8 @@ public partial class MainWindow
             if (_rust is RustPlusClientReal real)
             {
                 real.EnsureEventsHooked();
+                real.FeatureUnsupported -= OnFeatureUnsupported;
+                real.FeatureUnsupported += OnFeatureUnsupported;
                 real.StorageSnapshotReceived -= OnStorageSnapshot;
                 real.StorageSnapshotReceived += OnStorageSnapshot;
                 
@@ -411,13 +413,7 @@ public partial class MainWindow
         catch (Exception ex)
         {
             if (ct.IsCancellationRequested || !ReferenceEquals(_vm.Selected, profile)) return false;
-            profile.IsConnected = false;
-            profile.IsFullConnected = false;
-            if (RustPlusClientReal.IsAccessDeniedError(ex))
-            {
-                profile.IsAccessDenied = true;
-                _vm.Save();
-            }
+            RecordConnectionFailure(profile, ex);
             AppendLog($"Soft-connect failed: {ex.Message}");
             return false;
         }
@@ -472,7 +468,7 @@ public partial class MainWindow
                     if (serverStatusFailCount >= 5)
                     {
                         serverStatusFailCount = 0;
-                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true) && _vm?.Selected?.IsAccessDenied != true)
+                        if (!_isReconnecting && _connectionAttemptsActive == 0 && !_isSoftConnecting && !(_vm?.IsBusy == true) && !currentSelected.HasConnectionIssue)
                         {
                             AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
                             
@@ -532,7 +528,10 @@ public partial class MainWindow
         catch (Exception ex) { AppendLog($"{logTag} prime error: {ex.Message}"); }
     }
 
-    internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
+    internal Task<bool> PerformConnectAsync(bool silent, bool showBusy = true) =>
+        RunConnectionAttemptsAsync(full: true, silent, showBusy);
+
+    private async Task<bool> PerformConnectOnceAsync(bool silent, bool showBusy = true)
     {
         Services.Map.MemoryProbe.Mark("connect: start", restart: true);
         _ownCloudRestoreReady = false;
@@ -545,7 +544,7 @@ public partial class MainWindow
         await _serverSelectionResetTask;
         if (requestedSelectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, requestedProfile)) return false;
 
-        if (_isSoftConnecting)
+        if (_softConnectTask is { IsCompleted: false })
         {
             AppendLog("[connect] Soft-connect in progress, waiting for completion to prevent socket conflict...");
             if (_softConnectTask != null) await _softConnectTask;
@@ -659,7 +658,7 @@ public partial class MainWindow
 
             if (!alreadySoftConnected)
             {
-                AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
+                AppendLog($"Connecting to {_vm.Selected.Name} via Rust+ companion …");
                 await _rust.ConnectAsync(connectingProfile, connectionToken);
                 AppendLog("Connected.");
                 Services.Map.MemoryProbe.Mark("connect: socket open");
@@ -691,6 +690,8 @@ public partial class MainWindow
                 real.ClanChanged += OnClanChangedReal;
 
                 real.EnsureEventsHooked();
+                real.FeatureUnsupported -= OnFeatureUnsupported;
+                real.FeatureUnsupported += OnFeatureUnsupported;
             }
 
             _lastChatTsForCurrentServer = null;
@@ -875,18 +876,9 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            var selectedOnError = connectingProfile;
             if (connectionToken.IsCancellationRequested || !ReferenceEquals(_vm.Selected, connectingProfile)) return false;
             _vm.IsFullConnectRequested = false;
-            bool isAccessDenied = ex is RustPlusAccessDeniedException || RustPlusClientReal.IsAccessDeniedError(ex);
-            if (selectedOnError != null)
-            {
-                selectedOnError.IsConnected = false;
-                selectedOnError.IsFullConnected = false;
-                selectedOnError.IsAccessDenied = isAccessDenied;
-                _vm.NotifyDevicesChanged();
-                _vm.Save();
-            }
+            RecordConnectionFailure(connectingProfile, ex);
             if (showBusy)
             {
                 _vm.IsInitializing = false;
@@ -895,32 +887,6 @@ public partial class MainWindow
                 _vm.BusyText = "";
             }
             AppendLog("Error: " + ex.Message);
-            if (!silent)
-            {
-                if (isAccessDenied)
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.ConnectionFailedAccessDenied,
-                        Properties.Resources.ConnectionFailedAccessDeniedComment,
-                        WpfUi.ControlAppearance.Danger);
-                }
-                else if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.ConnectionFailedRustPlusUnreachable,
-                        Guid.TryParse(selectedOnError?.ServerId, out _)
-                            ? Properties.Resources.ConnectionFailedRustPlusUnreachableComment
-                            : Properties.Resources.GetString("ConnectionFailedMissingServerIdComment"),
-                        WpfUi.ControlAppearance.Danger);
-                }
-                else
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.SnackbarTitleConnection,
-                        $"{Properties.Resources.ErrorPrefix}{ex.Message}",
-                        WpfUi.ControlAppearance.Danger);
-                }
-            }
             return false;
         }
 
@@ -944,11 +910,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            if (RustPlusClientReal.IsAccessDeniedError(ex))
-            {
-                _vm.Selected.IsAccessDenied = true;
-                _vm.Save();
-            }
+            RecordConnectionFailure(_vm.Selected, ex);
             AppendLog("Connect failed: " + ex.Message);
             return false;
         }

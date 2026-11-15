@@ -34,7 +34,17 @@ public partial class MainWindow
         // keeps the hold: the lease timer releases it if the reconnect never lands.
         if (!reconnect)
             ReleaseCloudHold();
-        if (!keepMap) _vm.IsFullConnectRequested = false;
+        if (!keepMap)
+        {
+            _connectionRecoveryVersion++;
+            _vm.IsFullConnectRequested = false;
+            foreach (var profile in _vm.Servers)
+            {
+                profile.ConnectionFailure = null;
+                profile.IsReconnecting = false;
+                profile.WantsFullConnection = false;
+            }
+        }
 
         // 1) Laufende Polls/Tokens abbrechen
         CancelConnectionPolling();
@@ -335,11 +345,19 @@ public partial class MainWindow
             return;
         }
 
-        if (_isReconnecting || _isDeletingServer) return;
+        if (_isDeletingServer || _connectedProfile == null || !ReferenceEquals(_connectedProfile, _vm.Selected)) return;
+        if (_connectionAttemptsActive > 0)
+        {
+            _connectedProfile.IsConnected = false;
+            _connectedProfile.ConnectionFailure = Models.ConnectionFailureKind.Unavailable;
+            CancelConnectionPolling();
+            return;
+        }
+        if (_isReconnecting || _connectionActionPending) return;
         _isReconnecting = true;
         var reconnectProfile = _vm.Selected;
         int selectionVersion = _mapSelectionVersion;
-        bool reconnectFull = reconnectProfile?.IsFullConnected == true || _vm.IsFullConnectRequested || _vm.IsInitializing
+        bool reconnectFull = reconnectProfile?.WantsFullConnection == true || reconnectProfile?.IsFullConnected == true || _vm.IsFullConnectRequested || _vm.IsInitializing
             || (_connectionActionPending && !_isSoftConnecting);
 
         try
@@ -364,25 +382,13 @@ public partial class MainWindow
             Dispatcher.Invoke(() => ChkShops.IsChecked = false);
             AppendLog("[auto-reconnect] Connection lost detected. Starting recovery...");
 
-            int delay = 2000;
-            int maxDelay = 60000;
-            while (_isReconnecting)
-            {
-                AppendLog($"[auto-reconnect] Retrying in {delay / 1000}s...");
-                await Task.Delay(delay);
-                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, reconnectProfile) || reconnectProfile == null) return;
-
-                bool success = reconnectFull
-                    ? await PerformConnectAsync(true)
-                    : await PerformConnectDevicesOnlyAsync(reconnectProfile);
-                if (success)
-                {
-                    AppendLog("[auto-reconnect] Reconnected successfully!");
-                    return;
-                }
-
-                delay = Math.Min(delay * 2, maxDelay);
-            }
+            if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, reconnectProfile) || reconnectProfile == null) return;
+            if (reconnectProfile.HasConnectionIssue && !RustPlusConnectionException.CanRetry(reconnectProfile.ConnectionFailure)) return;
+            reconnectProfile.IsReconnecting = true;
+            bool success = reconnectFull
+                ? await PerformConnectAsync(true)
+                : await PerformConnectDevicesOnlyAsync(reconnectProfile);
+            AppendLog(success ? "[auto-reconnect] Reconnected successfully." : "[auto-reconnect] Paused; use the connection recovery action.");
         }
         catch (Exception ex)
         {

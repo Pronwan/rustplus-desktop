@@ -49,6 +49,7 @@ public class DeviceStartupTests
         typeof(MainViewModel).GetField("_selected", flags)!.SetValue(vm, profile);
         typeof(MainWindow).GetField("_vm", flags)!.SetValue(window, vm);
         var pendingReset = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        typeof(MainWindow).GetField("_connectionRecoveryHooksAdded", flags)!.SetValue(window, true);
         typeof(MainWindow).GetField("_serverSelectionResetTask", flags)!.SetValue(window, pendingReset.Task);
         var bitmap = BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0, 0, 0, 255 }, 4);
         typeof(MainWindow).GetField("_mapBaseBmp", flags)!.SetValue(window, bitmap);

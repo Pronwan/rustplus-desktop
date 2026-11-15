@@ -1268,7 +1268,9 @@
                                                         <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{DynamicResource StatusAccessDeniedHint}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FFB454" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource ConnectionReconnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
@@ -1339,11 +1341,19 @@
                                         </ui:Button>
                                     </StackPanel>
                                 </Grid>
-                                <TextBlock Margin="0,6,0,0" FontSize="11" TextWrapping="Wrap" Foreground="#FF8A80" Text="{DynamicResource StatusAccessDeniedHint}">
-                                    <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers>
-                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
-                                    </Style.Triggers></Style></TextBlock.Style>
-                                </TextBlock>
+                                <Border x:Name="ConnectionIssuePanel" Margin="0,6,0,0" Padding="10" CornerRadius="8"
+                                        Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1"
+                                        Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueTitle}" FontWeight="SemiBold" Foreground="#FFB454" FontSize="11" />
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueDescription}" TextWrapping="Wrap" Margin="0,4,0,8" FontSize="11" Foreground="{DynamicResource TextSecondary}" />
+                                        <ui:Button x:Name="SidebarConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click" Appearance="Secondary" Padding="8,4" HorizontalAlignment="Left">
+                                            <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                            </Style.Triggers></Style></ui:Button.Style>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Border>
                                                     <Border x:Name="PairingListenerPanel" Margin="0,4,0,0" Padding="0,4,0,0" Background="Transparent"
                                 BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
                             <Grid x:Name="PairingServiceControls">
@@ -7520,6 +7530,7 @@
                                         <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="{DynamicResource ReadyToExploreMap}" /><Style.Triggers>
                                             <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /></DataTrigger>
                                             <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /></DataTrigger>
                                         </Style.Triggers></Style></TextBlock.Style>
                                     </TextBlock>
                                     <TextBlock
@@ -7532,10 +7543,14 @@
                                             <DataTrigger Binding="{Binding HasMapImage}" Value="True"><Setter Property="Text" Value="{DynamicResource CachedMapConnectHint}" /></DataTrigger>
                                             <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource SoftConnectMapHint}" /></DataTrigger>
                                             <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource MapSetupHint}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
                                         </Style.Triggers></Style></TextBlock.Style>
                                     </TextBlock>
 
                                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <StackPanel.Style><Style TargetType="StackPanel"><Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                        </Style.Triggers></Style></StackPanel.Style>
                                         <ui:Button
                                             x:Name="MapUiBtnConnect"
                                             Padding="16,8"
@@ -7570,6 +7585,13 @@
                                         </ui:Button>
                                     </StackPanel>
 
+                                    <ui:Button x:Name="MapConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click"
+                                               Appearance="Primary" HorizontalAlignment="Center" Padding="16,8"
+                                               Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
+                                        <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                        </Style.Triggers></Style></ui:Button.Style>
+                                    </ui:Button>
                                 </StackPanel>
                             </Border>
                         </Border>

@@ -74,8 +74,8 @@ public class ServerProfile : INotifyPropertyChanged
     /// <summary>
     /// Facepunch's id for this server, a GUID carried as "id" in every pairing push.
     ///
-    /// Facepunch is removing direct connections to a server's app.port and the old
-    /// companion /game/{ip}/{port} relay already answers 418, so the one route left is
+    /// Direct connections to a server's app.port are no longer supported and the old
+    /// companion /game/{ip}/{port} relay answers 418, so the supported route is
     /// companion-rust.facepunch.com/socket/{ServerId}. It cannot be derived from host and
     /// port — not even getInfo reports it — so it has to be kept from the pairing that
     /// delivered it. Empty on servers paired before it was captured.
@@ -100,6 +100,8 @@ public class ServerProfile : INotifyPropertyChanged
             if (_serverId != value)
             {
                 _serverId = value;
+                if (ConnectionFailure == ConnectionFailureKind.MissingCompanionId && Guid.TryParse(value, out var id) && id != Guid.Empty)
+                    ConnectionFailure = null;
                 OnProp();
                 OnProp(nameof(MatchKey));
             }
@@ -220,6 +222,42 @@ public class ServerProfile : INotifyPropertyChanged
     }
 
     private bool _isAccessDenied;
+    private ConnectionFailureKind? _connectionFailure;
+    [JsonIgnore]
+    public ConnectionFailureKind? ConnectionFailure
+    {
+        get => _connectionFailure;
+        set
+        {
+            if (_connectionFailure == value) return;
+            _connectionFailure = value;
+            _isAccessDenied = value == ConnectionFailureKind.RePairRequired;
+            OnProp();
+            OnProp(nameof(IsAccessDenied));
+            OnProp(nameof(HasConnectionIssue));
+            OnProp(nameof(ConnectionIssueTitle));
+            OnProp(nameof(ConnectionIssueDescription));
+            OnProp(nameof(ConnectionRecoveryAction));
+        }
+    }
+
+    [JsonIgnore] public bool HasConnectionIssue => ConnectionFailure.HasValue;
+    [JsonIgnore] public string ConnectionIssueTitle => ConnectionFailure is { } kind ? Properties.Resources.GetString($"Connection{kind}Title") : "";
+    [JsonIgnore] public string ConnectionIssueDescription => ConnectionFailure is { } kind ? Properties.Resources.GetString($"Connection{kind}Description") : "";
+    [JsonIgnore] public string ConnectionRecoveryAction => Properties.Resources.GetString(ConnectionFailure switch
+    {
+        ConnectionFailureKind.SignInRequired => "ConnectionSignInAction",
+        ConnectionFailureKind.RePairRequired or ConnectionFailureKind.MissingCompanionId => "ConnectionRePairAction",
+        _ => "ConnectionRetryAction"
+    });
+    private bool _isReconnecting;
+    [JsonIgnore]
+    public bool IsReconnecting
+    {
+        get => _isReconnecting;
+        set { if (_isReconnecting == value) return; _isReconnecting = value; OnProp(); }
+    }
+    [JsonIgnore] public bool WantsFullConnection { get; set; }
 
     /// <summary>
     /// Deliberately not persisted. This describes the last connection attempt, not the server,
@@ -237,6 +275,8 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isAccessDenied != value)
             {
                 _isAccessDenied = value;
+                if (value) ConnectionFailure = ConnectionFailureKind.RePairRequired;
+                else if (ConnectionFailure == ConnectionFailureKind.RePairRequired) ConnectionFailure = null;
                 OnProp();
             }
         }
@@ -251,7 +291,7 @@ public class ServerProfile : INotifyPropertyChanged
             if (_isConnected != value)
             {
                 _isConnected = value; 
-                if (value) IsAccessDenied = false;
+                if (value) { IsAccessDenied = false; ConnectionFailure = null; }
                 OnProp();
                 OnProp(nameof(IsFullConnected));
                 if (!value) IsFullConnected = false; 
