@@ -474,9 +474,7 @@ if (shouldUpdateFiles && nextVersion !== currentCsprojVersion) {
   let currentChangelog = '';
   if (existsSync(changelogPath)) {
     currentChangelog = readFileSync(changelogPath, 'utf-8');
-    if (currentChangelog.startsWith('# Changelog\n')) {
-      currentChangelog = currentChangelog.replace('# Changelog\n\n', '');
-    }
+    currentChangelog = currentChangelog.replace(/^# Changelog\r?\n\r?\n(All notable changes to Rust\+ Desktop are documented in this file\.\r?\n\r?\n)?/, '');
   }
 
   const fullChangelog = `# Changelog\n\nAll notable changes to Rust+ Desktop are documented in this file.\n\n${releaseNotesMarkdown}${currentChangelog}`;

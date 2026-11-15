@@ -18,9 +18,7 @@ All notable changes to Rust+ Desktop are documented in this file.
 Special thanks to: @Pronwan
 
 **Full Changelog**: https://github.com/Pronwan/rustplus-desktop/compare/v11.4.0...v11.4.1
-# Changelog
 
-All notable changes to Rust+ Desktop are documented in this file.
 
 ## [11.4.0](https://github.com/Pronwan/rustplus-desktop/releases/tag/v11.4.0) (2026-11-14)
 
