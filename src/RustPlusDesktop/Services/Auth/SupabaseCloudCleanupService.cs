@@ -68,9 +68,13 @@ namespace RustPlusDesk.Services.Auth
 
             try
             {
+                // By the key the platform files each server under. A server paired by Facepunch's
+                // id alone has the shared "companion-socket" stand-in for an address: listed by
+                // that, the platform found none of them and purged them all as orphaned.
                 var activeKeys = activeServers
                     .Where(s => !string.IsNullOrWhiteSpace(s.Host) && s.Port > 0)
-                    .Select(s => $"{s.Host}-{s.Port}")
+                    .Select(s => s.PlatformServerKey)
+                    .Where(k => !string.IsNullOrWhiteSpace(k))
                     .Distinct()
                     .ToList();
 

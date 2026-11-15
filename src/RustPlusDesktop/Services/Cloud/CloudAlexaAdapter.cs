@@ -95,7 +95,7 @@ namespace RustPlusDesk.Services.Cloud
         /// the same rust_servers row the device/overlay sync files under; sending only
         /// ip+port can create a second row and split the token from the devices.
         /// </summary>
-        public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null)
+        public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null, string? facepunchId = null)
         {
             // No address for a server paired by Facepunch's id alone: its "companion-socket" host is a
             // stand-in, and sent as one it lands on a row every such server shares.
@@ -109,6 +109,9 @@ namespace RustPlusDesk.Services.Cloud
                 name,
                 player_token = playerToken,
                 steam_id = steamId,
+                // Facepunch's id, which names a server that has no address: without it (and
+                // without a key) the platform cannot tell which server this is and refuses it.
+                facepunch_id = string.IsNullOrWhiteSpace(facepunchId) ? null : facepunchId,
             });
 
             return ExtractServerId(pairBody);
@@ -118,9 +121,9 @@ namespace RustPlusDesk.Services.Cloud
         /// Pair the server (idempotent) and point Alexa at it. Returns false when the
         /// pairing response carried no server id to link.
         /// </summary>
-        public static async Task<bool> LinkServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null)
+        public static async Task<bool> LinkServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null, string? facepunchId = null)
         {
-            var serverId = await PairServerAsync(steamId, host, port, name, playerToken, serverKey);
+            var serverId = await PairServerAsync(steamId, host, port, name, playerToken, serverKey, facepunchId);
             if (serverId == null) return false;
 
             await CloudApiClient.CallApiAsync("me/alexa", HttpMethod.Put, payload: new

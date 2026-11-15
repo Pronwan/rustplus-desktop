@@ -2126,10 +2126,14 @@ namespace RustPlusDesk.Views
                 {
                     if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
                     {
+                        // Keyed like the platform keys it: a server paired by Facepunch's id alone
+                        // has the shared "companion-socket" stand-in for an address, not its own.
+                        string where = s.HasRealAddress ? $"{s.Host}:{s.Port}" : "";
                         CmbAlexaServer.Items.Add(new ComboBoxItem
                         {
-                            Content = string.IsNullOrEmpty(s.Name) ? $"{s.Host}:{s.Port}" : $"{s.Name} ({s.Host}:{s.Port})",
-                            Tag = $"{s.Host}-{s.Port}"
+                            Content = string.IsNullOrEmpty(s.Name) ? (where.Length > 0 ? where : s.PlatformServerKey)
+                                : where.Length > 0 ? $"{s.Name} ({where})" : s.Name,
+                            Tag = s.PlatformServerKey
                         });
                     }
                 }
@@ -2291,7 +2295,7 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
-                var serverProfile = vm.Servers.FirstOrDefault(s => $"{s.Host}-{s.Port}" == serverKey);
+                var serverProfile = vm.Servers.FirstOrDefault(s => s.PlatformServerKey == serverKey);
                 if (serverProfile != null)
                 {
                     if (Services.Cloud.CloudBackend.UsePlatform)
@@ -2303,7 +2307,9 @@ namespace RustPlusDesk.Views
                             serverProfile.Host,
                             serverProfile.Port,
                             serverProfile.Name,
-                            serverProfile.PlayerToken);
+                            serverProfile.PlayerToken,
+                            serverProfile.PlatformServerKey,
+                            serverProfile.ServerId);
                     }
                     else
                     {
