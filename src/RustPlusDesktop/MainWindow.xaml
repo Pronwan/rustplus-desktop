@@ -1346,7 +1346,7 @@
                                         Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
                                     <StackPanel>
                                         <TextBlock Text="{Binding Selected.ConnectionIssueTitle}" FontWeight="SemiBold" Foreground="#FFB454" FontSize="11" />
-                                        <TextBlock Text="{Binding Selected.ConnectionIssueDescription}" TextWrapping="Wrap" Margin="0,4,0,8" FontSize="11" Foreground="{DynamicResource TextSecondary}" />
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueDescription}" TextWrapping="Wrap" Margin="0,4,0,8" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
                                         <ui:Button x:Name="SidebarConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click" Appearance="Secondary" Padding="8,4" HorizontalAlignment="Left">
                                             <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
                                                 <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
