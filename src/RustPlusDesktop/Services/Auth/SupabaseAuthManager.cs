@@ -2154,15 +2154,32 @@ namespace RustPlusDesk.Services.Auth
 
         public static void AppendLog(string msg)
         {
-            if (Application.Current != null)
+            try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                var app = Application.Current;
+                if (app?.Dispatcher is not { } dispatcher) return;
+
+                if (dispatcher.CheckAccess())
                 {
-                    if (Application.Current.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                    if (app.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
                     {
                         mainWin.AppendLog(msg);
                     }
-                });
+                }
+                else if (!dispatcher.HasShutdownStarted && !dispatcher.HasShutdownFinished)
+                {
+                    dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if (Application.Current?.MainWindow is RustPlusDesk.Views.MainWindow mainWin)
+                        {
+                            mainWin.AppendLog(msg);
+                        }
+                    }));
+                }
+            }
+            catch
+            {
+                // Never let logging failure crash or block callers
             }
         }
     }
