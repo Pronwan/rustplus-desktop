@@ -26,14 +26,24 @@ public class DiscordBotListenerService
 
     private bool _isListening;
     private bool _isNotificationMaster;
+    private DateTime? _masterUntilUtc;
+
+    /// <summary>
+    /// Master as the platform sees it: until the last heartbeat's master lease runs out. The
+    /// heartbeat stops when the server connection drops, the platform lets the master lapse and
+    /// the cloud posts the alerts instead - an app still posting its own then (an FCM alarm needs
+    /// no server connection) put the alert in Discord twice.
+    /// </summary>
+    private bool IsMasterNow => _isNotificationMaster && (_masterUntilUtc is not { } until || DateTime.UtcNow < until);
     private List<string> _teamSteamIds = new();
     private static readonly ConcurrentDictionary<string, DateTime> InvalidChannelUntilUtc = new();
 
     private DiscordBotListenerService() { }
 
-    public async Task UpdateSubscriptionStateAsync(bool isMaster, List<string> teamSteamIds)
+    public async Task UpdateSubscriptionStateAsync(bool isMaster, List<string> teamSteamIds, DateTime? masterUntilUtc = null)
     {
         _isNotificationMaster = isMaster;
+        _masterUntilUtc = masterUntilUtc;
 
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown)
         {
@@ -620,7 +630,7 @@ public class DiscordBotListenerService
 
     public async Task SendNotificationAsync(string notificationType, string message)
     {
-        if (!_isNotificationMaster || !_isListening || _teamSteamIds.Count == 0) return;
+        if (!IsMasterNow || !_isListening || _teamSteamIds.Count == 0) return;
 
         await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
     }
@@ -635,10 +645,10 @@ public class DiscordBotListenerService
     {
         Log(
             $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
-            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, isNotificationMaster={_isNotificationMaster}, "
+            + $"ownerSteamId='{ownerSteamId}', isListening={_isListening}, isNotificationMaster={IsMasterNow}, "
             + $"teamCount={_teamSteamIds.Count}, IsPremium={SupabaseAuthManager.IsPremium}.");
 
-        if (_isNotificationMaster && _isListening && _teamSteamIds.Count > 0)
+        if (IsMasterNow && _isListening && _teamSteamIds.Count > 0)
         {
             await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds, fallbackType);
             return;

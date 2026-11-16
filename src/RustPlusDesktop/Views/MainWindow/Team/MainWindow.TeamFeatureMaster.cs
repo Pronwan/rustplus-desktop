@@ -268,6 +268,9 @@ public partial class MainWindow
 
     private void NotifyTeamFeatureServerDisconnected(int sessionId)
     {
+        // The next heartbeat goes out at once on reconnect, so the master is taken back without
+        // waiting out the interval - the platform let it lapse while the connection was down.
+        _lastHeartbeatTime = DateTime.MinValue;
         _ = NotifyTeamFeatureServerDisconnectedAsync(sessionId);
     }
 
@@ -359,7 +362,8 @@ public partial class MainWindow
             : "";
 
         var teamSteamIds = TeamMembers.Select(tm => tm.SteamId.ToString()).ToList();
-        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds);
+        _ = DiscordBotListenerService.Instance.UpdateSubscriptionStateAsync(_isChatFeatureMaster, teamSteamIds,
+            _isChatFeatureMaster ? state!.ExpiresAt?.ToUniversalTime() : null);
 
         var currentMasterId = hasActiveMaster ? state!.MasterSteamId : null;
         if (_isChatFeatureMaster && TeamMembers.Count > 1 && (!previousIsMaster || _lastKnownTeamFeatureMasterId != currentMasterId))
