@@ -21,16 +21,16 @@ public partial class MainWindow
     /// </summary>
     private void HandleStandardServerAlert(AlarmNotification n, string cleanSrv)
     {
-        // The plugin's own title may say "You're getting raided!" for what the owner calls a
-        // notice, so only its text is shown, under our own label.
-        var text = string.IsNullOrWhiteSpace(n.Message) ? (n.Title ?? "") : n.Message;
-        AppendLog($"[alarm] Server alert from '{cleanSrv}' treated as a standard alert: \"{text}\"");
+        var title = ServerAlertTitle(n.Title, n.Message);
+        var text = (n.Message ?? "").Trim();
+        var notice = title.Length > 0 && text.Length > 0 ? $"{title}: {text}" : title.Length > 0 ? title : text;
+        AppendLog($"[alarm] Server alert from '{cleanSrv}' treated as a standard alert: \"{notice}\"");
 
         try
         {
             ShowInfoSnackbar(
                 Properties.Resources.GetString("UiServerAlertSnackTitle") ?? "Server alert",
-                text,
+                notice,
                 WpfUi.ControlAppearance.Info,
                 WpfUi.SymbolRegular.Info24);
         }
@@ -44,24 +44,43 @@ public partial class MainWindow
             || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
         var ownerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64) ? _vm.SteamId64 : profile?.SteamId64 ?? "";
 
-        _ = SendDiscordWebhookAsync(profile, $"🔔 Server Alert: {text}");
+        _ = SendDiscordWebhookAsync(profile, $"🔔 Server Alert: {notice}");
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             profile?.PlatformServerKey ?? "",
             ownerSteamId,
-            $"🔔 **Server Alert**: {text}" + ServerNameSubtext(cleanSrv),
+            ServerAlertDiscordText(asRaid: false, n.Title, n.Message, cleanSrv),
             "server_alert",
             fallbackType: "events");
     }
 
     /// <summary>
-    /// The server's name as a short grey Discord line under a server alert, as the cloud posts it:
-    /// on modded servers the full name runs to a paragraph.
+    /// A server alert for Discord, as the cloud posts it. Our own label first, so it reads the
+    /// same on every server and says how the owner classed it; then the plugin's title, which may
+    /// carry what the alert is about ("Cargo ship spawned"), and its text; then the server's name
+    /// as one short grey line - on modded servers the full name runs to a paragraph.
     /// </summary>
-    internal static string ServerNameSubtext(string? server)
+    internal static string ServerAlertDiscordText(bool asRaid, string? title, string? message, string? server)
     {
-        var clean = Regex.Replace(server ?? "", @"\s+", " ").Trim();
-        if (clean.Length == 0 || clean == "-") return "";
-        if (clean.Length > 45) clean = clean[..44].TrimEnd() + "…";
-        return "\n-# " + clean;
+        var label = asRaid ? "🚨 **Alarm**" : "🔔 **Server Alert**";
+        var t = ServerAlertTitle(title, message);
+        var body = (message ?? "").Trim();
+
+        var text = label + (t.Length > 0 ? $" – {t}" : "") + (body.Length > 0 ? $"\n{body}" : "");
+
+        var name = Regex.Replace(server ?? "", @"\s+", " ").Trim();
+        if (name.Length > 0 && name != "-")
+        {
+            if (name.Length > 45) name = name[..44].TrimEnd() + "…";
+            text += "\n-# " + name;
+        }
+        return text;
+    }
+
+    /// <summary>The plugin's title when it says something the text does not, else empty.</summary>
+    private static string ServerAlertTitle(string? title, string? message)
+    {
+        var t = (title ?? "").Trim();
+        if (t.Length == 0 || t == "Rust+ Notification") return "";
+        return string.Equals(t, (message ?? "").Trim(), StringComparison.OrdinalIgnoreCase) ? "" : t;
     }
 }
