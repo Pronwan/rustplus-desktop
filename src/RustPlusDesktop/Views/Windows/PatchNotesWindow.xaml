@@ -254,11 +254,6 @@
                                     </TextBlock>
 
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Automatic Connect Works Again:</Run>
-                                        The automatic soft connect to your server works again.
-                                    </TextBlock>
-
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Calmer Reconnects:</Run>
                                         When Rust+ cannot be reached, the app tries again a limited number of times and shows Reconnecting... or Rust+ unavailable, instead of retrying without end. If a saved server has no companion server ID, it tells you to sync your pairings or pair the server again in game.
                                     </TextBlock>
