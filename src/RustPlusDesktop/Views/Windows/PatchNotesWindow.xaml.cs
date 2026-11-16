@@ -44,7 +44,8 @@ namespace RustPlusDesk.Views
             _allVersions.Clear();
             _allVersions.AddRange(new[]
             {
-                new PatchVersionNavModel { Version = "v11.4.1", Title = "Custom Server Modifiers for Modded Servers", Category = "Update", IsLatest = true, TargetCardName = "Card_v11_4_1" },
+                new PatchVersionNavModel { Version = "v11.4.2", Title = "Instant Map Previews, Clearer Connections & Server Alerts", Category = "Update", IsLatest = true, TargetCardName = "Card_v11_4_2" },
+                new PatchVersionNavModel { Version = "v11.4.1", Title = "Custom Server Modifiers for Modded Servers", Category = "Update", TargetCardName = "Card_v11_4_1" },
                 new PatchVersionNavModel { Version = "v11.4.0", Title = "Cloud Server Matching, Instant Sync & Chat Commands", Category = "Update", TargetCardName = "Card_v11_4_0" },
                 new PatchVersionNavModel { Version = "v11.3.3", Title = "Device Controls, Pairing Sync & Discord Feedback", Category = "Hotfix", TargetCardName = "Card_v11_3_3" },
                 new PatchVersionNavModel { Version = "v11.3.2", Title = "Launch-Time Cloud Login Synchronization", Category = "Hotfix", TargetCardName = "Card_v11_3_2" },
