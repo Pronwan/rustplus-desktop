@@ -9,7 +9,6 @@ Update **v11.4.1** lets you set a modded server's upkeep cost and oil rig crate 
 * **Custom upkeep**: Right-click a server and choose **Set Custom Modifiers...** On a server with 2x upkeep, enter 200 %; on one with half upkeep, 50 %. Rust+ always reports upkeep at vanilla costs, so your Tool Cupboards now show the time they really have left, in the app, in chat commands and on the website.
 * **Custom oil rig crate timer**: Set how many minutes a hacked crate takes on your server (for example 10 instead of 15). The event dock countdown, `!oilrig` and your oil rig trigger rules follow it.
 * **Synced everywhere**: Modifiers sync with the website and Cloud 24/7, and you can also change them on the website under the server's settings. Servers with custom modifiers show a **MODIFIED** badge in the server list.
-* **Server Alerts channel (Premium)**: Alerts a modded server sends on its own, such as "Wall destroyed at R9", now also reach Discord through Cloud 24/7 while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid channel as before.
 
 ### 🔊 Alexa
 

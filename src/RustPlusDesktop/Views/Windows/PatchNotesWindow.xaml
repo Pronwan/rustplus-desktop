@@ -257,12 +257,6 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Synced with the Website &amp; Cloud 24/7:</Run>
                                         The modifiers are saved to your account, used by Cloud 24/7 and the website as well, and can also be changed on the website in the server's settings. A server with custom modifiers shows a MODIFIED badge in the server list; Reset to Vanilla puts it back.
                                     </TextBlock>
-
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Alerts Channel (Premium):</Run>
-                                        Alerts a modded server sends on its own, such as "Wall destroyed at R9", now also reach Discord through Cloud 24/7 while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid channel as before.
-                                    </TextBlock>
-
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Alexa Links the Right Server Again:</Run>
                                         Linking Alexa to a server paired since Rust's November update failed with an error, or with several such servers picked the wrong one. Alexa now links the server you selected, so it finds that server's devices.
