@@ -8367,4 +8367,7 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>Alerta del servidor</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: caja abierta hace {1}</value>
+  </data>
 </root>

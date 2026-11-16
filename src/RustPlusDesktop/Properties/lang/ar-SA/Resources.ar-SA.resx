@@ -8258,4 +8258,7 @@
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>تنبيه الخادم</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: فُتح الصندوق قبل {1}</value>
+  </data>
 </root>

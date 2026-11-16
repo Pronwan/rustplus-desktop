@@ -1044,8 +1044,11 @@ public partial class MainWindow
     }
 
     /// <summary>Formats a TimeSpan as a human-readable "1h 23m" or "45m" string for event dock tooltips.</summary>
+    /// <summary>"14m", "1h 14m", "10d 3h": short enough to read in chat at any length.</summary>
     private static string FormatAgo(TimeSpan ts)
     {
+        if (ts.TotalDays >= 1)
+            return string.Format(Properties.Resources.GetString("AgoDaysHours") ?? "{0}d {1}h", (int)ts.TotalDays, ts.Hours);
         if (ts.TotalHours >= 1)
             return string.Format(Properties.Resources.AgoHoursMinutes, (int)ts.TotalHours, ts.Minutes);
         return string.Format(Properties.Resources.AgoMinutes, (int)ts.TotalMinutes);

@@ -8288,4 +8288,7 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>서버 알림</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: {1} 전에 상자 열림</value>
+  </data>
 </root>

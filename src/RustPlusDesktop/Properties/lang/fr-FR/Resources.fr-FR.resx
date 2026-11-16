@@ -8367,4 +8367,7 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>Alerte serveur</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0} : caisse ouverte il y a {1}</value>
+  </data>
 </root>

@@ -9030,4 +9030,10 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>Server alert</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: crate unlocked {1} ago</value>
+  </data>
+  <data name="AgoDaysHours" xml:space="preserve">
+    <value>{0}d {1}h</value>
+  </data>
 </root>

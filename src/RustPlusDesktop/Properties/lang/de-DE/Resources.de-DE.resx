@@ -8458,4 +8458,7 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>Server-Alert</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: Crate vor {1} geöffnet</value>
+  </data>
 </root>

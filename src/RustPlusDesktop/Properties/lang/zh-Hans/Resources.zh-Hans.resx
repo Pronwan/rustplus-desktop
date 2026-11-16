@@ -1861,4 +1861,7 @@
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>服务器警报</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}：箱子已于 {1} 前解锁</value>
+  </data>
 </root>

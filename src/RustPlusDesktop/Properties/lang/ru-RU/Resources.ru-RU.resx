@@ -8367,4 +8367,7 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="UiServerAlertSnackTitle" xml:space="preserve">
     <value>Оповещение сервера</value>
   </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: ящик открылся {1} назад</value>
+  </data>
 </root>
