@@ -8249,4 +8249,13 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': 유지비 {1} %, 석유 굴착기 상자 {2}분.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>서버 알림 채널 ID (모드 서버)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>선택 사항 (비워 두면 레이드 채널로 전송)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>모드 서버가 직접 보내는 알림입니다. 예: 벽 파괴, 유지비, 이벤트. 비워 두면 레이드 채널로 전송됩니다.</value>
+  </data>
 </root>

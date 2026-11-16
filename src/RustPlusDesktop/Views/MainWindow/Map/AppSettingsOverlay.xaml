@@ -1458,6 +1458,21 @@
                                         <CheckBox x:Name="ChkChannelRaidHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                     </WrapPanel>
 
+                                    <!--  Server Alerts: what a modded server sends on its own (a plugin's "Wall destroyed
+                                          at R9", upkeep, events). Optional; empty sends them to the raid channel.  -->
+                                    <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource UiServerAlertsChannelID}" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                        <ui:TextBox x:Name="TxtChannelServerAlert" Height="28" Padding="6,3" ToolTip="{DynamicResource UiChannelID}"
+                                                    PlaceholderText="{DynamicResource UiServerAlertsChannelPlaceholder}" />
+                                        <CheckBox x:Name="ChkServerAlertTTS" Grid.Column="1" Content="{DynamicResource UiTTS}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <WrapPanel Margin="0,2,0,0">
+                                        <CheckBox x:Name="ChkChannelServerAlertEveryone" Content="{DynamicResource UiEveryone}" Foreground="{DynamicResource TextSubtle}" FontSize="11" Margin="0,0,12,0" />
+                                        <CheckBox x:Name="ChkChannelServerAlertHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
+                                    </WrapPanel>
+                                    <ui:TextBlock Text="{DynamicResource UiServerAlertsChannelHint}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+
                                     <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource UiEventsAlertsChannelID}" />
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>

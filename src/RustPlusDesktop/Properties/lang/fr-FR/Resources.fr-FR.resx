@@ -8328,4 +8328,13 @@ Ferme cet aperçu quand le panneau te convient.</value>
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}' : entretien {1} %, caisse {2} min.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>ID du salon des alertes serveur (serveurs moddés)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Facultatif (vide : envoyées dans le salon des raids)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Alertes qu'un serveur moddé envoie lui-même, comme des murs détruits, l'entretien ou des événements. Laissez vide pour les envoyer dans le salon des raids.</value>
+  </data>
 </root>

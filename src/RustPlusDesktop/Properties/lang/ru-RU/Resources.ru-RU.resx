@@ -8328,4 +8328,13 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': содержание {1} %, ящик на вышке {2} мин.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>ID канала оповещений сервера (модовые серверы)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Необязательно (если пусто — в канал рейдов)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Оповещения, которые модовый сервер отправляет сам: разрушенные стены, содержание, события. Оставьте пустым, чтобы отправлять их в канал рейдов.</value>
+  </data>
 </root>

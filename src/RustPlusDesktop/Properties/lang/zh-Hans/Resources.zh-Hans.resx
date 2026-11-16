@@ -1822,4 +1822,13 @@
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}'：维护 {1} %，石油平台箱子 {2} 分钟。</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>服务器警报频道 ID（模组服务器）</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>可选（留空则发送到突袭频道）</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>模组服务器自行发送的警报，例如墙体被摧毁、维护费或活动。留空则发送到突袭频道。</value>
+  </data>
 </root>

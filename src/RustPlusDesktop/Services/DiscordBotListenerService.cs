@@ -625,7 +625,13 @@ public class DiscordBotListenerService
         await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
     }
 
-    public async Task SendRaidNotificationAsync(string serverKey, string ownerSteamId, string message)
+    /// <summary>
+    /// A raid alarm (or an offline death) for the team's raid channel. <paramref name="notificationType"/>
+    /// is "server_alert" for an alert a modded server sends itself: the platform posts that to
+    /// the owner's Server Alerts channel, or to the raid channel when none is set.
+    /// </summary>
+    public async Task SendRaidNotificationAsync(string serverKey, string ownerSteamId, string message,
+        string notificationType = "raid")
     {
         Log(
             $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
@@ -634,7 +640,7 @@ public class DiscordBotListenerService
 
         if (_isNotificationMaster && _isListening && _teamSteamIds.Count > 0)
         {
-            await SendNotificationToOwnersAsync("raid", message, _teamSteamIds);
+            await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
             return;
         }
 
@@ -655,7 +661,7 @@ public class DiscordBotListenerService
         }
 
         Log($"[DiscordBotListener] Sending raid notification via local fallback for {serverKey}.");
-        await SendNotificationToOwnersAsync("raid", message, new List<string> { ownerSteamId });
+        await SendNotificationToOwnersAsync(notificationType, message, new List<string> { ownerSteamId });
     }
 
     private static async Task SendNotificationToOwnersAsync(

@@ -7304,4 +7304,13 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': bakım %{1}, petrol platformu sandığı {2} dk.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>Sunucu Uyarıları Kanal ID (modlu sunucular)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>İsteğe bağlı (boşsa baskın kanalına gider)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Modlu bir sunucunun kendi gönderdiği uyarılar; yıkılan duvarlar, bakım veya etkinlikler gibi. Baskın kanalına göndermek için boş bırakın.</value>
+  </data>
 </root>

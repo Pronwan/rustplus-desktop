@@ -1731,6 +1731,7 @@ namespace RustPlusDesk.Views
                 }
 
                 await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelRaidEveryone, ChkChannelRaidHere));
+                await SaveChannelAsync("server_alert", TxtChannelServerAlert.Text, ChkServerAlertTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelServerAlertEveryone, ChkChannelServerAlertHere));
                 await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelEventsEveryone, ChkChannelEventsHere));
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
                 await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
@@ -1793,7 +1794,12 @@ namespace RustPlusDesk.Views
                         ChkChannelRaidEveryone.IsChecked = false;
                         ChkChannelRaidHere.IsChecked = false;
                         ChkRaidTTS.IsChecked = false;
-                        
+
+                        TxtChannelServerAlert.Text = string.Empty;
+                        ChkChannelServerAlertEveryone.IsChecked = false;
+                        ChkChannelServerAlertHere.IsChecked = false;
+                        ChkServerAlertTTS.IsChecked = false;
+
                         TxtChannelEvents.Text = string.Empty;
                         ChkChannelEventsEveryone.IsChecked = false;
                         ChkChannelEventsHere.IsChecked = false;
@@ -1818,6 +1824,12 @@ namespace RustPlusDesk.Views
                                     ChkChannelRaidEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
                                     ChkChannelRaidHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkRaidTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                                case "server_alert":
+                                    TxtChannelServerAlert.Text = ch.ChannelId;
+                                    ChkChannelServerAlertEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelServerAlertHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkServerAlertTTS.IsChecked = ch.TtsEnabled;
                                     break;
                                 case "events":
                                     TxtChannelEvents.Text = ch.ChannelId;

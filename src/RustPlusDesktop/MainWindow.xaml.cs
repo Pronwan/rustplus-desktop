@@ -3274,10 +3274,14 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         string alarmAlert = AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName);
 
         _ = SendDiscordWebhookAsync(alarmProfile, alarmAlert);
+        // A Smart Alarm names its entity; an alert a modded server's plugin sends on the alarm
+        // channel ("Wall destroyed at R9") names none. Those go to the Server Alerts channel,
+        // which the platform answers with the raid channel when the owner has not set one.
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             raidServerKey,
             raidOwnerSteamId,
-            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}");
+            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}",
+            n.EntityId.HasValue ? "raid" : "server_alert");
 
         // Send smart alert to team chat if setting and master switch are enabled
         if (_vm.Selected?.IsFullConnected == true

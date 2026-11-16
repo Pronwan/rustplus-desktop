@@ -5927,4 +5927,13 @@ Puoi trovare maggiori informazioni sul sito ufficiale del server:
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': mantenimento {1} %, cassa {2} min.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>ID canale avvisi server (server moddati)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Facoltativo (se vuoto, vanno nel canale raid)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Avvisi che un server moddato invia da solo, come muri distrutti, upkeep o eventi. Lascia vuoto per inviarli al canale raid.</value>
+  </data>
 </root>

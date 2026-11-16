@@ -8419,4 +8419,13 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': Upkeep {1} %, Oil-Rig-Crate {2} Min.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>Kanal-ID für Server-Alerts (Modded-Server)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Optional (leer: Server-Alerts gehen in den Raid-Kanal)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Meldungen, die ein Modded-Server selbst schickt, etwa zerstörte Wände, Upkeep oder Events. Leer lassen, um sie in den Raid-Kanal zu schicken.</value>
+  </data>
 </root>

@@ -8328,4 +8328,13 @@ Cierra esta vista previa cuando el panel te guste.</value>
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': mantenimiento {1} %, caja {2} min.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>ID del canal de alertas del servidor (servidores modded)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Opcional (si está vacío, van al canal de raids)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Alertas que un servidor modded envía por su cuenta, como muros destruidos, mantenimiento o eventos. Déjalo vacío para enviarlas al canal de raids.</value>
+  </data>
 </root>

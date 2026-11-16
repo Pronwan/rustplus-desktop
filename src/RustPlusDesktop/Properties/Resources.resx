@@ -8991,4 +8991,13 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="ConnectionRetryAction" xml:space="preserve"><value>Retry</value></data>
   <data name="ConnectionMissingCompanionIdTitle" xml:space="preserve"><value>Server pairing needs updating</value></data>
   <data name="ConnectionMissingCompanionIdDescription" xml:space="preserve"><value>This saved pairing has no companion ID. In Rust, open Esc → Rust+ → Pair with Server to refresh this server pairing.</value></data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>Server Alerts Channel ID (modded servers)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Optional (sends server alerts to the raid channel if empty)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Alerts a modded server sends on its own, such as walls destroyed, upkeep or events. Leave empty to send them to the raid channel.</value>
+  </data>
 </root>
