@@ -1,6 +1,6 @@
 # 🚀 Rust+ Desktop v11.4.2 — Instant Map Previews, Clearer Connections & Server Alerts
 
-Update **v11.4.2** is a hotfix for connecting and switching servers: your saved map shows right away, the connection card tells you what each mode does, and reconnects stop retrying endlessly.
+Update **v11.4.2** is a hotfix for connecting and switching servers: your saved map shows right away, the connection card tells you what each mode does, and a lost connection comes back on its own.
 
 ---
 
@@ -8,7 +8,7 @@ Update **v11.4.2** is a hotfix for connecting and switching servers: your saved 
 
 * **Saved map shows instantly**: When you open or switch to a server, its saved map appears at once as a cached preview, while the app connects your devices and checks the current wipe.
 * **Clearer connection modes**: The connection card now explains each mode. **Devices only** connects your devices, chat and team status without live map updates; **Full connect** adds live map updates.
-* **Calmer reconnects**: When Rust+ can't be reached, the app tries again a limited number of times instead of retrying without end. If a saved server has no companion server ID, it tells you to sync your pairings or pair the server again in game.
+* **Calmer reconnects**: When Rust+ can't be reached, the app keeps trying in the background, at first after a few seconds and then once a minute, and stops where trying again cannot help. If a saved server has no companion server ID, it tells you to sync your pairings or pair the server again in game.
 * **Device progress only when needed**: The device progress bar only shows while devices are really being loaded.
 
 ### 🚨 Alerts & Discord Bot
