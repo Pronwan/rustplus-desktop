@@ -623,6 +623,10 @@ public partial class MainWindow
             }
             // Without a render the server's own image is used. Parsing scans the game's map
             // files, so it only runs when the user asks for it (3D map, Parse, or an import).
+
+            // A parse cached by an older MapParser is redone from its own map file (no scan), so
+            // what the parser now produces, such as the cargo route, reaches maps parsed before.
+            _ = RefreshOutdatedParseAsync(preparedFolder, _vm.Selected);
         }
 
         // The server's image at the economy size, decoded again from the disk cache at that width.

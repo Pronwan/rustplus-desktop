@@ -896,6 +896,33 @@ namespace RustPlusDesk.Views
         }
 
         /// <summary>
+        /// Redoes a cached parse from an older MapParser in the background, from the map file it was
+        /// made from, then reloads everything it feeds. Until then the overlays show the earlier parse.
+        /// </summary>
+        private async Task RefreshOutdatedParseAsync(string folderPath, ServerProfile profile)
+        {
+            int selectionVersion = _mapSelectionVersion;
+            try
+            {
+                var outcome = await Task.Run(() => Map3DLocalBuildService.RefreshOutdatedParseAsync(folderPath));
+                if (outcome == Map3DLocalBuildService.ParseRefreshOutcome.NotNeeded) return;
+                if (outcome == Map3DLocalBuildService.ParseRefreshOutcome.Failed)
+                {
+                    AppendLog("[map-cache] The cached map parse is from an older MapParser and could not be redone; keeping it for now.");
+                    return;
+                }
+
+                AppendLog("[map-cache] The cached map parse was from an older MapParser; parsed its map file again.");
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, profile)) return;
+                await LoadParsedMapDataAsync(folderPath, applyRenderedImage: false);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[map-cache] Redoing the cached map parse failed: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Everything a parsed map file feeds, in one place.
         ///
         /// Both entry points - opening the 3D view and parsing for a heatmap - need
