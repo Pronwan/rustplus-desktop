@@ -412,8 +412,9 @@ namespace RustPlusDesk.Services
                             title,
                             NullIfEmpty(message.PersistentId),
                             alarmAt,
-                            ImageOf(body)));
-                        _log($"[fcm-native] Alarm | {body?.Name ?? "-"} | {device} | \"{msg}\" " +
+                            ImageOf(body),
+                            IsServerAlert: string.IsNullOrWhiteSpace(body?.Type)));
+                        _log($"[fcm-native] {(string.IsNullOrWhiteSpace(body?.Type) ? "Server alert" : "Alarm")} | {body?.Name ?? "-"} | {device} | \"{msg}\" " +
                              $"| sent {alarmAt:HH:mm:ss} ({(int)(DateTime.Now - alarmAt).TotalSeconds}s ago)");
                         break;
 

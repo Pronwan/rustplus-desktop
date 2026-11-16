@@ -8332,9 +8332,39 @@ Ferme cet aperçu quand le panneau te convient.</value>
     <value>ID du salon des alertes serveur (serveurs moddés)</value>
   </data>
   <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
-    <value>Facultatif (vide : envoyées dans le salon des raids)</value>
+    <value>Facultatif (vide : salon des raids ou des événements, voir alertes des serveurs moddés)</value>
   </data>
   <data name="UiServerAlertsChannelHint" xml:space="preserve">
-    <value>Alertes qu'un serveur moddé envoie lui-même, comme des murs détruits, l'entretien ou des événements. Laissez vide pour les envoyer dans le salon des raids.</value>
+    <value>Alertes qu'un serveur moddé envoie lui-même, comme des murs détruits, l'entretien ou des événements. Un salon indiqué ici les reçoit toujours ; vide, elles vont dans le salon des raids ou des événements selon le réglage des alertes des serveurs moddés.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Alertes des serveurs moddés</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Traiter les alertes des serveurs moddés</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Alertes qu'un serveur moddé envoie lui-même, comme « Wall destroyed at R9 ». Désactivé : elles sont ignorées et seulement conservées dans votre historique de notifications.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Traiter comme alerte de raid</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Fenêtre d'alarme et son, salon des raids sur Discord, appel Telegram et webhook domotique quand l'app est fermée.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Traiter comme alerte normale</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>Un court message dans l'app, salon des événements sur Discord, aucun appel.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Synchronisé avec le site web et Cloud 24/7.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Réglages des alertes des serveurs moddés</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Alerte serveur</value>
   </data>
 </root>

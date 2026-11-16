@@ -628,6 +628,46 @@
                 </ui:Card>
                 </StackPanel>
 
+                <!-- Modded Server Alerts Section: a server's own alerts on the alarm channel. One setting
+                     for the account, synced with the website and Cloud 24/7. -->
+                <StackPanel x:Name="SectionServerAlerts">
+                <ui:TextBlock Text="{DynamicResource UiServerAlertsTitle}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
+                <ui:Card Style="{StaticResource SettingsNativeCard}">
+                    <StackPanel>
+                        <Grid MinHeight="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                <ui:TextBlock Text="{DynamicResource UiServerAlertsEnable}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                <ui:TextBlock Text="{DynamicResource UiServerAlertsEnableHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:ToggleSwitch Grid.Column="1" x:Name="ChkServerAlertsEnabled" AutomationProperties.Name="{DynamicResource UiServerAlertsEnable}" VerticalAlignment="Center" Checked="OnServerAlertSettingChanged" Unchecked="OnServerAlertSettingChanged" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <StackPanel x:Name="PanelServerAlertMode" Margin="0,4,0,4">
+                            <RadioButton x:Name="RbServerAlertAsRaid" GroupName="ServerAlertMode" Checked="OnServerAlertSettingChanged">
+                                <StackPanel>
+                                    <ui:TextBlock Text="{DynamicResource UiServerAlertsAsRaid}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                    <ui:TextBlock Text="{DynamicResource UiServerAlertsAsRaidHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton x:Name="RbServerAlertAsStandard" GroupName="ServerAlertMode" Checked="OnServerAlertSettingChanged" Margin="0,8,0,0">
+                                <StackPanel>
+                                    <ui:TextBlock Text="{DynamicResource UiServerAlertsAsStandard}" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
+                                    <ui:TextBlock Text="{DynamicResource UiServerAlertsAsStandardHint}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+
+                        <ui:TextBlock Text="{DynamicResource UiServerAlertsSynced}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,6,0,0" />
+                    </StackPanel>
+                </ui:Card>
+                </StackPanel>
+
                 <!-- Notification Center Section -->
                 <StackPanel x:Name="SectionNotifications">
                 <ui:TextBlock Text="{DynamicResource NotificationCenterSettings}" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
@@ -1472,6 +1512,8 @@
                                         <CheckBox x:Name="ChkChannelServerAlertHere" Content="{DynamicResource UiHere}" Foreground="{DynamicResource TextSubtle}" FontSize="11" />
                                     </WrapPanel>
                                     <ui:TextBlock Text="{DynamicResource UiServerAlertsChannelHint}" Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                    <ui:Button Content="{DynamicResource UiServerAlertsOpenSettings}" Appearance="Transparent" Padding="0,2" FontSize="11"
+                                               Foreground="{DynamicResource Accent}" HorizontalAlignment="Left" Click="BtnOpenServerAlertSettings_Click" />
 
                                     <ui:TextBlock Style="{StaticResource FieldLabel}" Text="{DynamicResource UiEventsAlertsChannelID}" />
                                     <Grid>

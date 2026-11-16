@@ -1663,6 +1663,7 @@ public partial class MainWindow : WpfUi.FluentWindow
 
         AttachCloudPairingAnnouncements();
         AttachChatAlertsMuteSync();
+        Services.Cloud.ServerAlertSettingsSync.Attach(AppendLog);
         AttachBuildInvites();
 
         // Interlocked rather than a bool: ContentRendered and AuthenticationChanged
@@ -3060,7 +3061,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
         // FUZZY MATCH: If we couldn't map the device via ID (e.g. generic FCM push without ID),
         // we try to find a matching server and check if it has exactly one Smart Alarm.
-        if (dev == null)
+        // A server's own alert belongs to no Smart Alarm, so it is never matched to one.
+        if (dev == null && !n.IsServerAlert)
         {
             // 1) Try to find the specific server profile first
             var profile = _vm.Servers.FirstOrDefault(s => 
@@ -3094,7 +3096,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
 
         // Metadaten cachen (FCM liefert Text, WS liefert ID)
-        if (source == "FCM" && n.Message != "Alarm activated!")
+        if (source == "FCM" && n.Message != "Alarm activated!" && !n.IsServerAlert)
         {
             uint? tid = n.EntityId;
             // Falls FCM keine ID hat, versuchen wir sie über den letzten WS-Event dieses Servers zu finden
@@ -3203,6 +3205,22 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         };
         NotificationCenterService.AddNotification(notif);
 
+        // Modded Server Alerts, the account's setting: off keeps them in the notification centre
+        // only; as a standard alert they get a short notice and the events channel, not a raid.
+        if (n.IsServerAlert)
+        {
+            if (!TrackingService.ServerAlertsEnabled)
+            {
+                AppendLog($"[alarm] Server alert from '{cleanSrv}' ignored: Modded Server Alerts are off.");
+                return;
+            }
+            if (!TrackingService.ServerAlertsAsRaid)
+            {
+                HandleStandardServerAlert(n, cleanSrv);
+                return;
+            }
+        }
+
         if (n.EntityId.HasValue)
         {
             // Dedup primär über ID (ignoriere Server-Namensunterschiede wie ANSI-Farben)
@@ -3274,14 +3292,15 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         string alarmAlert = AlertTemplateService.GetFormattedAlert("AlertAlarmTriggered", alarmName);
 
         _ = SendDiscordWebhookAsync(alarmProfile, alarmAlert);
-        // A Smart Alarm names its entity; an alert a modded server's plugin sends on the alarm
-        // channel ("Wall destroyed at R9") names none. Those go to the Server Alerts channel,
-        // which the platform answers with the raid channel when the owner has not set one.
+        // An alert a modded server's plugin sends on the alarm channel ("Wall destroyed at R9")
+        // goes to the Server Alerts channel, which the platform answers with the raid channel
+        // when the owner has not set one (it reaches here only when treated as a raid).
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             raidServerKey,
             raidOwnerSteamId,
             $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}",
-            n.EntityId.HasValue ? "raid" : "server_alert");
+            n.IsServerAlert ? "server_alert" : "raid",
+            n.IsServerAlert ? "raid" : null);
 
         // Send smart alert to team chat if setting and master switch are enabled
         if (_vm.Selected?.IsFullConnected == true

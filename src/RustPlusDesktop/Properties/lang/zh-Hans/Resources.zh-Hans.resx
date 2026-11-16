@@ -1826,9 +1826,39 @@
     <value>服务器警报频道 ID（模组服务器）</value>
   </data>
   <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
-    <value>可选（留空则发送到突袭频道）</value>
+    <value>可选（留空：突袭或活动频道，见模组服务器警报）</value>
   </data>
   <data name="UiServerAlertsChannelHint" xml:space="preserve">
-    <value>模组服务器自行发送的警报，例如墙体被摧毁、维护费或活动。留空则发送到突袭频道。</value>
+    <value>模组服务器自行发送的警报，例如墙体被摧毁、维护费或活动。此处设置的频道始终接收；留空时，根据模组服务器警报的设置发送到突袭或活动频道。</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>模组服务器警报</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>处理模组服务器警报</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>模组服务器自行发送的警报，例如 "Wall destroyed at R9"。关闭：将被忽略，仅保留在通知历史中。</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>作为突袭警报处理</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>警报窗口和声音，Discord 突袭频道，应用关闭时的 Telegram 呼叫和智能家居 Webhook。</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>作为普通警报处理</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>应用内简短提示，Discord 活动频道，不呼叫。</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>与网站和 Cloud 24/7 同步。</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>模组服务器警报设置</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>服务器警报</value>
   </data>
 </root>

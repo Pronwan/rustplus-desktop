@@ -631,7 +631,7 @@ public class DiscordBotListenerService
     /// the owner's Server Alerts channel, or to the raid channel when none is set.
     /// </summary>
     public async Task SendRaidNotificationAsync(string serverKey, string ownerSteamId, string message,
-        string notificationType = "raid")
+        string notificationType = "raid", string? fallbackType = null)
     {
         Log(
             $"[DiscordBotListener] Raid notification requested: serverKey='{serverKey}', "
@@ -640,7 +640,7 @@ public class DiscordBotListenerService
 
         if (_isNotificationMaster && _isListening && _teamSteamIds.Count > 0)
         {
-            await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds);
+            await SendNotificationToOwnersAsync(notificationType, message, _teamSteamIds, fallbackType);
             return;
         }
 
@@ -661,13 +661,14 @@ public class DiscordBotListenerService
         }
 
         Log($"[DiscordBotListener] Sending raid notification via local fallback for {serverKey}.");
-        await SendNotificationToOwnersAsync(notificationType, message, new List<string> { ownerSteamId });
+        await SendNotificationToOwnersAsync(notificationType, message, new List<string> { ownerSteamId }, fallbackType);
     }
 
     private static async Task SendNotificationToOwnersAsync(
         string notificationType,
         string message,
-        List<string> ownerSteamIds)
+        List<string> ownerSteamIds,
+        string? fallbackType = null)
     {
         if (SupabaseAuthManager.IsUpgradeRequiredSnackbarShown) return;
 
@@ -679,7 +680,7 @@ public class DiscordBotListenerService
 
         if (CloudBackend.UsePlatform)
         {
-            await SendNotificationViaApiAsync(notificationType, message, ownerSteamIds);
+            await SendNotificationViaApiAsync(notificationType, message, ownerSteamIds, fallbackType);
             return;
         }
 
@@ -813,7 +814,8 @@ public class DiscordBotListenerService
     private static async Task SendNotificationViaApiAsync(
         string notificationType,
         string message,
-        List<string> ownerSteamIds)
+        List<string> ownerSteamIds,
+        string? fallbackType = null)
     {
         try
         {
@@ -824,6 +826,8 @@ public class DiscordBotListenerService
                     notification_type = notificationType,
                     message,
                     steam_ids = ownerSteamIds,
+                    // A server alert's channel when no Server Alerts channel is set: raid or events.
+                    fallback_type = fallbackType,
                 });
 
             using var doc = JsonDocument.Parse(body);

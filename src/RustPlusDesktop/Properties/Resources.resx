@@ -8995,9 +8995,39 @@ The answer itself was unaffected. If the model name is the problem, change it un
     <value>Server Alerts Channel ID (modded servers)</value>
   </data>
   <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
-    <value>Optional (sends server alerts to the raid channel if empty)</value>
+    <value>Optional (empty: raid or events channel, see Modded Server Alerts)</value>
   </data>
   <data name="UiServerAlertsChannelHint" xml:space="preserve">
-    <value>Alerts a modded server sends on its own, such as walls destroyed, upkeep or events. Leave empty to send them to the raid channel.</value>
+    <value>Alerts a modded server sends on its own, such as walls destroyed, upkeep or events. A channel set here always gets them; left empty, they go to the raid or the events channel, depending on how you treat Modded Server Alerts.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Modded Server Alerts</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Handle modded server alerts</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Alerts a modded server sends on its own, such as "Wall destroyed at R9". Off: they are ignored and only kept in your notification history.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Treat as raid alert</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Alarm window and sound, raid channel in Discord, Telegram call and smart-home webhook while the app is closed.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Treat as standard alert</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>A short notice in the app, events channel in Discord, no call.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Synced with the website and Cloud 24/7.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Modded Server Alerts settings</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Server alert</value>
   </data>
 </root>

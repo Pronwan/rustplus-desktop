@@ -8332,9 +8332,39 @@ Cierra esta vista previa cuando el panel te guste.</value>
     <value>ID del canal de alertas del servidor (servidores modded)</value>
   </data>
   <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
-    <value>Opcional (si está vacío, van al canal de raids)</value>
+    <value>Opcional (vacío: canal de raids o de eventos, ver alertas de servidores modded)</value>
   </data>
   <data name="UiServerAlertsChannelHint" xml:space="preserve">
-    <value>Alertas que un servidor modded envía por su cuenta, como muros destruidos, mantenimiento o eventos. Déjalo vacío para enviarlas al canal de raids.</value>
+    <value>Alertas que un servidor modded envía por su cuenta, como muros destruidos, mantenimiento o eventos. Un canal indicado aquí siempre las recibe; si está vacío, van al canal de raids o de eventos según cómo trates las alertas de servidores modded.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Alertas de servidores modded</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Procesar alertas de servidores modded</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Alertas que un servidor modded envía por su cuenta, como "Wall destroyed at R9". Desactivado: se ignoran y solo quedan en tu historial de notificaciones.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Tratar como alerta de raid</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Ventana de alarma y sonido, canal de raids en Discord, llamada de Telegram y webhook de hogar inteligente con la app cerrada.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Tratar como alerta normal</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>Un aviso breve en la app, canal de eventos en Discord, sin llamada.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Sincronizado con la web y Cloud 24/7.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Ajustes de alertas de servidores modded</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Alerta del servidor</value>
   </data>
 </root>

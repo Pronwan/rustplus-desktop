@@ -152,6 +152,10 @@ public class TrackingSettings
     public bool GenericAlarmOverlayEnabled { get; set; } = true;
     public bool GenericAlarmAudioEnabled { get; set; } = true;
     public string GenericAlarmAudioFilePath { get; set; } = string.Empty;
+    /// <summary>Modded Server Alerts: a server's own alerts on the alarm channel. Synced with the account.</summary>
+    public bool ServerAlertsEnabled { get; set; } = true;
+    /// <summary>Treat them as a raid (alarm window, raid channel) rather than as a standard alert.</summary>
+    public bool ServerAlertsAsRaid { get; set; } = true;
     public Dictionary<string, int> LearnedDockingDurations { get; set; } = new();
     public Dictionary<string, int> LearnedCargoFullLifeMinutes { get; set; } = new();
     public Dictionary<string, int> LearnedCargoTravelMinutes { get; set; } = new();
@@ -1057,6 +1061,20 @@ public static class TrackingService
         get => _settings.AnnounceSmartAlerts;
         set { _settings.AnnounceSmartAlerts = value; SaveDB(); }
     }
+    /// <summary>Raised when the Modded Server Alerts setting changes, here or from the account.</summary>
+    public static event Action? ServerAlertSettingsChanged;
+
+    public static bool ServerAlertsEnabled => _settings.ServerAlertsEnabled;
+    public static bool ServerAlertsAsRaid => _settings.ServerAlertsAsRaid;
+
+    public static void SetServerAlertSettings(bool enabled, bool asRaid)
+    {
+        _settings.ServerAlertsEnabled = enabled;
+        _settings.ServerAlertsAsRaid = asRaid;
+        SaveDB();
+        try { ServerAlertSettingsChanged?.Invoke(); } catch { }
+    }
+
     public static bool GenericAlarmPopupEnabled
     {
         get => _settings.GenericAlarmPopupEnabled;
