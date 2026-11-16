@@ -264,8 +264,18 @@
                                     </TextBlock>
 
                                     <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
-                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Alerts Channel (Premium):</Run>
-                                        Alerts a modded server sends on its own, such as "Wall destroyed at R9", now also reach Discord through Cloud 24/7 while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid channel as before.
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Modded Server Alerts:</Run>
+                                        Alerts a modded server sends on its own, such as "Wall destroyed at R9", have their own setting under Settings &gt; Alerts, synced with the website and Cloud 24/7. Treat them as a raid alert (alarm window, raid channel, Telegram call) or as a standard alert (a short notice, events channel, no call), or turn them off.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Alerts in Discord (Premium):</Run>
+                                        Server alerts now also reach your Discord bot while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid or events channel, depending on the setting above.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No More Missing Discord Alerts (Premium):</Run>
+                                        If a teammate on the free plan had the app open while yours was closed, raid alerts did not reach your Discord bot. The cloud now posts them in that case.
                                     </TextBlock>
                                 </StackPanel>
                             </Border>

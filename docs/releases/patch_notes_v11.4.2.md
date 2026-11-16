@@ -11,9 +11,11 @@ Update **v11.4.2** is a hotfix for connecting and switching servers: your saved 
 * **Calmer reconnects**: When Rust+ can't be reached, the app tries again a limited number of times instead of retrying without end. If a saved server has no companion server ID, it tells you to sync your pairings or pair the server again in game.
 * **Device progress only when needed**: The device progress bar only shows while devices are really being loaded.
 
-### 💬 Discord Bot
+### 🚨 Alerts & Discord Bot
 
-* **Server Alerts channel (Premium)**: Alerts a modded server sends on its own, such as "Wall destroyed at R9", now also reach Discord through Cloud 24/7 while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid channel as before.
+* **Modded Server Alerts**: Alerts a modded server sends on its own, such as "Wall destroyed at R9", have their own setting under **Settings > Alerts**, synced with the website and Cloud 24/7. Treat them as a **raid alert** (alarm window, raid channel, Telegram call) or as a **standard alert** (a short notice, events channel, no call), or turn them off.
+* **Server Alerts in Discord (Premium)**: Server alerts now also reach your Discord bot while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid or events channel, depending on the setting above.
+* **No more missing Discord alerts (Premium)**: If a teammate on the free plan had the app open while yours was closed, raid alerts did not reach your Discord bot. The cloud now posts them in that case.
 
 ---
 
