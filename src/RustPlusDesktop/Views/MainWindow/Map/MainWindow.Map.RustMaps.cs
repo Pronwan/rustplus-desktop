@@ -95,20 +95,22 @@ namespace RustPlusDesk.Views
 
             RustMapsOverlay.Visibility = Visibility.Visible;
 
-            if (isPlaceholder)
+            // A RustMaps link always wins: a live server keeps the path of its parsed map file too,
+            // so a local file alone does not make it an offline map. A refetch keeps the old link usable.
+            if (!string.IsNullOrEmpty(profile.RustMapsMapId))
             {
-                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiOfflineMap");
-                BtnOpenRustMaps.IsEnabled = false;
+                TxtRustMapsStatus.Text = "RustMaps";
+                BtnOpenRustMaps.IsEnabled = true;
             }
             else if (_isRustMapsSearching)
             {
                 TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("UiSearching");
                 BtnOpenRustMaps.IsEnabled = false;
             }
-            else if (!string.IsNullOrEmpty(profile.RustMapsMapId))
+            else if (isPlaceholder)
             {
-                TxtRustMapsStatus.Text = "RustMaps";
-                BtnOpenRustMaps.IsEnabled = true;
+                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiOfflineMap");
+                BtnOpenRustMaps.IsEnabled = false;
             }
             else
             {
