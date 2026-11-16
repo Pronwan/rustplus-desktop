@@ -3298,7 +3298,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             raidServerKey,
             raidOwnerSteamId,
-            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}",
+            $"\uD83D\uDEA8 **{dev?.PureName ?? n.DeviceName ?? "Smart Alarm"}**: {n.Message}"
+                + (n.IsServerAlert ? ServerNameSubtext(cleanSrv) : ""),
             n.IsServerAlert ? "server_alert" : "raid",
             n.IsServerAlert ? "raid" : null);
 

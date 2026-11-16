@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using WpfUi = Wpf.Ui.Controls;
@@ -20,14 +21,16 @@ public partial class MainWindow
     /// </summary>
     private void HandleStandardServerAlert(AlarmNotification n, string cleanSrv)
     {
-        var title = string.IsNullOrWhiteSpace(n.Title) ? cleanSrv : n.Title!;
-        AppendLog($"[alarm] Server alert from '{cleanSrv}' treated as a standard alert: \"{title}: {n.Message}\"");
+        // The plugin's own title may say "You're getting raided!" for what the owner calls a
+        // notice, so only its text is shown, under our own label.
+        var text = string.IsNullOrWhiteSpace(n.Message) ? (n.Title ?? "") : n.Message;
+        AppendLog($"[alarm] Server alert from '{cleanSrv}' treated as a standard alert: \"{text}\"");
 
         try
         {
             ShowInfoSnackbar(
                 Properties.Resources.GetString("UiServerAlertSnackTitle") ?? "Server alert",
-                $"{title}: {n.Message}",
+                text,
                 WpfUi.ControlAppearance.Info,
                 WpfUi.SymbolRegular.Info24);
         }
@@ -41,12 +44,24 @@ public partial class MainWindow
             || string.Equals(p.Host, cleanSrv, StringComparison.OrdinalIgnoreCase));
         var ownerSteamId = !string.IsNullOrWhiteSpace(_vm.SteamId64) ? _vm.SteamId64 : profile?.SteamId64 ?? "";
 
-        _ = SendDiscordWebhookAsync(profile, $"🔔 {title}: {n.Message}");
+        _ = SendDiscordWebhookAsync(profile, $"🔔 Server Alert: {text}");
         _ = DiscordBotListenerService.Instance.SendRaidNotificationAsync(
             profile?.PlatformServerKey ?? "",
             ownerSteamId,
-            $"🔔 **{title}**: {n.Message}",
+            $"🔔 **Server Alert**: {text}" + ServerNameSubtext(cleanSrv),
             "server_alert",
             fallbackType: "events");
+    }
+
+    /// <summary>
+    /// The server's name as a short grey Discord line under a server alert, as the cloud posts it:
+    /// on modded servers the full name runs to a paragraph.
+    /// </summary>
+    internal static string ServerNameSubtext(string? server)
+    {
+        var clean = Regex.Replace(server ?? "", @"\s+", " ").Trim();
+        if (clean.Length == 0 || clean == "-") return "";
+        if (clean.Length > 45) clean = clean[..44].TrimEnd() + "…";
+        return "\n-# " + clean;
     }
 }
