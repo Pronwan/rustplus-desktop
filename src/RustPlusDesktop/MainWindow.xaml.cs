@@ -2086,10 +2086,15 @@ public partial class MainWindow : WpfUi.FluentWindow
         LoadChatHistory(srv);
         LoadClanChatHistory(srv);
         
+        // A reconnect to the same server runs through here too. The oil rig timers belong to the
+        // server, not to the connection: an alarm that fires while the app is disconnected starts
+        // a timer and triggers the reconnect, and resetting here wiped that timer a second later,
+        // so its 10- and 5-minute reminders never came. A wipe resets them on its own.
+        var sameServer = _lastChatProfile != null && _lastChatProfile.CacheKey == srv.CacheKey;
         _lastChatProfile = srv;
 
         // Reset state for specific server logic
-        _monumentWatcher.Reset();
+        if (!sameServer) _monumentWatcher.Reset();
         _deepSeaActive = false;
         _firstShopPollDone = false;
         ResetShopDataAvailability();
