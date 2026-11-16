@@ -385,10 +385,46 @@ public partial class MainWindow
             if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, reconnectProfile) || reconnectProfile == null) return;
             if (reconnectProfile.HasConnectionIssue && !RustPlusConnectionException.CanRetry(reconnectProfile.ConnectionFailure)) return;
             reconnectProfile.IsReconnecting = true;
+            int recovery = _connectionRecoveryVersion;
+            bool StillWanted() => selectionVersion == _mapSelectionVersion && recovery == _connectionRecoveryVersion
+                && ReferenceEquals(_vm?.Selected, reconnectProfile) && !_isDeletingServer;
+
             bool success = reconnectFull
                 ? await PerformConnectAsync(true)
                 : await PerformConnectDevicesOnlyAsync(reconnectProfile);
-            AppendLog(success ? "[auto-reconnect] Reconnected successfully." : "[auto-reconnect] Paused; use the connection recovery action.");
+
+            // One failed attempt is not the end of it. A lost socket raises no second event, so
+            // stopping here left the app offline until something else woke it: a Facepunch 521
+            // at 19:05 kept it away for 27 minutes, and an oil rig alarm was what brought it back.
+            // Only what retrying can fix is retried; a re-pair or a sign-in waits for the user,
+            // and disconnecting or picking another server ends it.
+            for (int round = 0; !success; round++)
+            {
+                if (!StillWanted()) return;
+                var failure = reconnectProfile.ConnectionFailure;
+                if (failure != null && !RustPlusConnectionException.CanRetry(failure))
+                {
+                    AppendLog("[auto-reconnect] Paused; use the connection recovery action.");
+                    return;
+                }
+
+                int seconds = AutoReconnectDelaysSeconds[Math.Min(round, AutoReconnectDelaysSeconds.Length - 1)];
+                AppendLog($"[auto-reconnect] Still unreachable; next try in {seconds}s.");
+                reconnectProfile.IsReconnecting = true;
+                await Task.Delay(TimeSpan.FromSeconds(seconds));
+
+                if (!StillWanted()) return;
+                // The recovery button, or the network coming back, may have connected meanwhile.
+                if (reconnectProfile.IsConnected) return;
+                if (_connectionAttemptsActive > 0 || _connectionActionPending) continue;
+
+                reconnectProfile.IsReconnecting = true;
+                success = reconnectFull
+                    ? await PerformConnectAsync(true)
+                    : await PerformConnectDevicesOnlyAsync(reconnectProfile);
+            }
+
+            AppendLog("[auto-reconnect] Reconnected successfully.");
         }
         catch (Exception ex)
         {
@@ -397,6 +433,10 @@ public partial class MainWindow
         finally
         {
             _isReconnecting = false;
+            if (reconnectProfile != null) reconnectProfile.IsReconnecting = false;
         }
     }
+
+    /// <summary>Waits between automatic reconnects: quick at first, then once a minute.</summary>
+    private static readonly int[] AutoReconnectDelaysSeconds = { 15, 30, 60 };
 }
