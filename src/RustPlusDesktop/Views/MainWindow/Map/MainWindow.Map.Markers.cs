@@ -56,7 +56,6 @@ public partial class MainWindow
     private DateTime? _vendorDespawnTime;
     private bool _vendorMidEvent;
     private int _pollFailCount = 0;
-    private bool _isAutoReconnecting = false;
 
     private class HeliCrashSite
     {
@@ -1177,17 +1176,14 @@ public partial class MainWindow
         {
             _pollFailCount++;
             OnApiPollTimeout();
-            // After 5 consecutive failures the WebSocket is likely dead — auto-reconnect
-            if (_pollFailCount >= 5 && !_isAutoReconnecting && _vm?.Selected != null)
+            // After 5 consecutive failures the WebSocket is likely dead. It is handled as a lost
+            // connection, so it gets the same retries: a single reconnect here gave up after three
+            // quick tries and left the app offline while the server was down.
+            if (_pollFailCount >= 5 && _vm?.Selected != null)
             {
-                _isAutoReconnecting = true;
                 _pollFailCount = 0;
                 AppendLog("[AutoReconnect] Connection lost — reconnecting...");
-                _ = Dispatcher.InvokeAsync(async () =>
-                {
-                    await PerformConnectAsync(true);
-                    _isAutoReconnecting = false;
-                });
+                OnConnectionLost();
             }
         }
         finally
