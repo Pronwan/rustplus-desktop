@@ -1051,28 +1051,34 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
     private async Task HandleDeviceToggleAsync(object sender, bool on, bool ignoreGlobalBusy = false)
     {
         if (_suppressToggleHandler) return;
+        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
+        if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) return;
 
+        // The switch is bound two-way, so the click has already set dev.IsOn. A click that is
+        // not sent must take that back, or the list shows a state the server never got.
         if (_logicEngineRunningAction)
         {
             AppendLog("[LogicEngine] Manual toggle blocked: Logic Engine is executing an action.");
+            RevertSkippedToggle(dev, on);
             return;
         }
 
         if (_deviceAutomationRunningAction)
         {
             AppendLog("[DeviceAutomation] Manual toggle blocked while an automation action is running.");
+            RevertSkippedToggle(dev, on);
             return;
         }
 
-        if ((sender as FrameworkElement)?.DataContext is not SmartDevice dev) return;
-        if (!string.Equals(dev.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase)) return;
-
-        // Lock erst NACH erfolgreichem Connect setzen? → dein Flow kann bleiben,
-        // ABER ganz wichtig: Timeout um das Toggle, damit der Task nicht hängt.
-        if (!ignoreGlobalBusy && _globalToggleBusy) return;
+        if (!ignoreGlobalBusy && _globalToggleBusy)
+        {
+            RevertSkippedToggle(dev, on);
+            return;
+        }
         if (!TryMarkToggleBusy(dev.EntityId))
         {
             AppendLog($"(skip) Toggle #{dev.EntityId} already in progress");
+            RevertSkippedToggle(dev, on);
             return;
         }
 
@@ -1086,7 +1092,11 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         bool success = false;
         try
         {
-            if (!await EnsureConnectedAsync()) return;
+            if (!await EnsureConnectedAsync())
+            {
+                RevertSkippedToggle(dev, on);
+                return;
+            }
 
             if ((DateTime.UtcNow - _lastPairingPingAt).TotalMilliseconds < 1200)
             {
@@ -1114,9 +1124,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                     {
                         AppendLog($"Device #{dev.EntityId}: Switching failed after {attempts} attempts – {ex.Message}");
                         dev.IsMissing = true;
-                        
-                        // Health check: Trigger a direct probe to confirm if it's really missing
-                        _ = Task.Run(async () => await RefreshDeviceStateAsync(dev));
+                        // The verify below probes the device and restores the real state.
                     }
                     else
                     {
@@ -1136,13 +1144,90 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             
             UnmarkToggleBusy(dev.EntityId);
             dev.IsToggleBusy = false;
-            
+
             // Release global lock after a small cooldown to prevent spamming different switches
             if (!ignoreGlobalBusy)
             {
                 _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
             }
+
+            VerifyToggleSoon(dev);
         }
+    }
+
+    private void RevertSkippedToggle(SmartDevice dev, bool clicked)
+    {
+        // Deferred, because WPF is still inside the binding update that set the clicked value.
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, () =>
+        {
+            if (dev.IsOn != clicked) return;
+            _suppressToggleHandler = true;
+            dev.IsOn = !clicked;
+            _suppressToggleHandler = false;
+        });
+        VerifyToggleSoon(dev);
+    }
+
+    private static readonly TimeSpan ToggleVerifyDelay = TimeSpan.FromMilliseconds(1500);
+    private readonly Dictionary<uint, CancellationTokenSource> _toggleVerify = new();
+    private readonly SemaphoreSlim _toggleVerifyGate = new(1, 1);
+
+    /// <summary>
+    /// Asks the server for the switch's real state once the clicking has stopped. A burst of
+    /// clicks can leave the list out of step with the game, and an unchanged switch sends no
+    /// broadcast that would put it right, so only a probe can. Each click restarts the wait,
+    /// so a burst costs one request.
+    /// </summary>
+    private void VerifyToggleSoon(SmartDevice dev)
+    {
+        var id = dev.EntityId;
+        var cts = new CancellationTokenSource();
+        if (_toggleVerify.Remove(id, out var previous)) previous.Cancel();
+        _toggleVerify[id] = cts;
+        var profile = _vm.Selected;
+        var connection = _connectionPollingCts.Token;
+
+        Dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                while (true)
+                {
+                    await Task.Delay(ToggleVerifyDelay, cts.Token);
+                    if (!dev.IsToggleBusy) break;
+                }
+                if (connection.IsCancellationRequested || !ReferenceEquals(_vm.Selected, profile)) return;
+                if (profile?.IsConnected != true) return;
+
+                // A group hotkey verifies every switch it touched; one probe at a time keeps
+                // that inside Rust+'s rate limit.
+                EntityProbeResult r;
+                await _toggleVerifyGate.WaitAsync(cts.Token);
+                try { r = await ProbeWithRetryAsync(id, log: false, maxAttempts: 1); }
+                finally
+                {
+                    _ = Task.Delay(400).ContinueWith(_ => _toggleVerifyGate.Release());
+                }
+                if (cts.IsCancellationRequested || dev.IsToggleBusy || !r.Exists || r.IsOn is not bool actual) return;
+
+                dev.IsMissing = false;
+                dev.LastPolledAt = DateTime.UtcNow;
+                if (dev.IsOn == actual) return;
+
+                AppendLog($"[verify] #{id} is {(actual ? "ON" : "OFF")} in game; list corrected.");
+                _suppressToggleHandler = true;
+                dev.IsOn = actual;
+                _suppressToggleHandler = false;
+                _vm.NotifyDevicesChanged();
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex) { AppendLog($"[verify] #{id} probe failed: {ex.Message}"); }
+            finally
+            {
+                if (_toggleVerify.TryGetValue(id, out var current) && current == cts) _toggleVerify.Remove(id);
+                cts.Dispose();
+            }
+        });
     }
 
     private bool _globalToggleBusy = false;
@@ -2472,6 +2557,11 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             dev = FindDeviceById(_vm?.Selected?.Devices, entityId);
 
         if (dev == null)
+            return;
+
+        // A snapshot says nothing about a switch's or alarm's state. Counting it as a poll
+        // made the startup refresh skip every switch, so a wrong on/off survived restarts.
+        if (!RustPlusClientReal.IsStorageDevice(dev) && !string.IsNullOrWhiteSpace(dev.Kind))
             return;
 
         dev.IsMissing = false;

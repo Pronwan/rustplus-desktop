@@ -1068,9 +1068,20 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
                 var payload = TryGetProp(entityInfoOrInfo, "Payload");
                 payload = payload != null ? UnpackAnyRecursive(payload) ?? payload : entityInfoOrInfo;
 
-                var typeStr =
-                       TryReadStringN(entityInfoOrInfo, "Type", "EntityType")
-                    ?? TryReadStringN(payload, "Type", "EntityType");
+                // The protobuf type is an enum (Switch, Alarm, StorageMonitor), not a string.
+                // Read as a string it came back null, and every switch's and alarm's entity
+                // info was then parsed as an empty storage snapshot.
+                static string? ReadType(object? o)
+                {
+                    foreach (var n in new[] { "Type", "EntityType" })
+                    {
+                        var v = Prop(o, n);
+                        if (v is string s && !string.IsNullOrWhiteSpace(s)) return s;
+                        if (v is Enum e) return e.ToString();
+                    }
+                    return null;
+                }
+                var typeStr = ReadType(entityInfoOrInfo) ?? ReadType(payload);
 
                 if (typeStr != null)
                 {
@@ -1246,6 +1257,13 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
     public static bool IsStorageDevice(SmartDevice d)
     {
         var k = d.Kind ?? string.Empty;
+
+        // A switch or alarm is never storage, even if a stray snapshot got attached to it.
+        // Treating one as storage sent its refresh down the storage path, which never reads
+        // the on/off state.
+        if (k.Equals("SmartSwitch", StringComparison.OrdinalIgnoreCase) ||
+            k.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase))
+            return false;
 
         return
             k.Equals("StorageMonitor", StringComparison.OrdinalIgnoreCase) ||
