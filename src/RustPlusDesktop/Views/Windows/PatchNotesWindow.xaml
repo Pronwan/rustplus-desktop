@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.4.2 UPDATE -->
+                            <!-- v11.4.3 HOTFIX -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_4_2"
+                            <Border x:Name="Card_v11_4_3"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,35 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.4.2 | Instant Map Previews, Clearer Connections &amp; Server Alerts"
+                                            <TextBlock Text="v11.4.3 | Correct Switch States"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Correct Switch States:</Run>
+                                        After a few quick clicks on a smart switch, the device list could show it on while it was off in game, and neither Refresh nor a restart fixed it. The list now checks the real state after you click, and Refresh and startup read it correctly again.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.4.2 UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_4_2"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.4.2 | Instant Map Previews, Clearer Connections &amp; Server Alerts"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 
