@@ -3112,7 +3112,9 @@
                                                                  VerticalAlignment="Center"
                                                                  IsChecked="{Binding IsOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                  Checked="DeviceToggle_Checked"
-                                                                 Unchecked="DeviceToggle_Unchecked">
+                                                                 Unchecked="DeviceToggle_Unchecked"
+                                                                 PreviewMouseLeftButtonDown="DeviceToggle_PreviewMouseDown"
+                                                                 PreviewKeyDown="DeviceToggle_PreviewKeyDown">
                                                                  <ui:ToggleSwitch.Style>
                                                                      <Style TargetType="ui:ToggleSwitch" BasedOn="{StaticResource {x:Type ui:ToggleSwitch}}">
                                                                          <Setter Property="Visibility" Value="Collapsed" />

@@ -585,6 +585,7 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
                     
                     using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                     await _rust.ToggleSmartSwitchAsync(sw.EntityId, targetOn, cts.Token);
+                    VerifyToggleSoon(sw);
                     
                     await Task.Delay(800); 
                 }
@@ -1155,8 +1156,31 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         }
     }
 
+    // Set just before a click or key on a list switch flips it. Code that sets IsOn (Logic
+    // Engine, automations, chat commands) flips the bound switch too, and must not be undone.
+    private (uint id, DateTime at) _userToggleIntent;
+
+    private void DeviceToggle_PreviewMouseDown(object sender, MouseButtonEventArgs e) => MarkUserToggleIntent(sender);
+
+    private void DeviceToggle_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key is Key.Space or Key.Enter) MarkUserToggleIntent(sender);
+    }
+
+    private void MarkUserToggleIntent(object sender)
+    {
+        if ((sender as FrameworkElement)?.DataContext is SmartDevice dev)
+            _userToggleIntent = (dev.EntityId, DateTime.UtcNow);
+    }
+
+    private bool IsUserToggle(SmartDevice dev) =>
+        _userToggleIntent.id == dev.EntityId && DateTime.UtcNow - _userToggleIntent.at < TimeSpan.FromSeconds(2);
+
     private void RevertSkippedToggle(SmartDevice dev, bool clicked)
     {
+        VerifyToggleSoon(dev);
+        if (!IsUserToggle(dev)) return;
+
         // Deferred, because WPF is still inside the binding update that set the clicked value.
         Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, () =>
         {
@@ -1165,7 +1189,6 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             dev.IsOn = !clicked;
             _suppressToggleHandler = false;
         });
-        VerifyToggleSoon(dev);
     }
 
     private static readonly TimeSpan ToggleVerifyDelay = TimeSpan.FromMilliseconds(1500);
@@ -1180,6 +1203,11 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
     /// </summary>
     private void VerifyToggleSoon(SmartDevice dev)
     {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => VerifyToggleSoon(dev));
+            return;
+        }
         var id = dev.EntityId;
         var cts = new CancellationTokenSource();
         if (_toggleVerify.Remove(id, out var previous)) previous.Cancel();
