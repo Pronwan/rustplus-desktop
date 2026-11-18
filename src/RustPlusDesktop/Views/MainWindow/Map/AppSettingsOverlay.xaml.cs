@@ -163,6 +163,7 @@ namespace RustPlusDesk.Views
                 Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
                 Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
                 Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
+                Section("server-alerts", "alerts", T("UiServerAlertsTitle", "Modded Server Alerts"), "modded server alerts plugin wall destroyed raid standard generic alarm discord events telegram", SectionServerAlerts),
                 Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
                 Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance hd map resolution ram memory economy", SectionMapPerformance),
                 Section("team-markers", "map", T("TeamMarkersSettings", "Map Markers"), "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
@@ -764,6 +765,8 @@ namespace RustPlusDesk.Views
             TxtOfflineDeathSoundPath.Text = string.IsNullOrEmpty(TrackingService.OfflineDeathSoundPath) ? Properties.Resources.DefaultSoundLabel : System.IO.Path.GetFileName(TrackingService.OfflineDeathSoundPath);
             ChkOfflineDeathSoundLoop.IsChecked = TrackingService.OfflineDeathSoundLoopEnabled;
             ChkOfflineDeathDiscord.IsChecked = TrackingService.OfflineDeathDiscordEnabled;
+
+            LoadServerAlertSettings();
 
             // Notification Center Settings
             ChkNotificationsToast.IsChecked = TrackingService.NotificationsToastEnabled;
@@ -1731,6 +1734,7 @@ namespace RustPlusDesk.Views
                 }
 
                 await SaveChannelAsync("raid", TxtChannelRaid.Text, ChkRaidTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelRaidEveryone, ChkChannelRaidHere));
+                await SaveChannelAsync("server_alert", TxtChannelServerAlert.Text, ChkServerAlertTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelServerAlertEveryone, ChkChannelServerAlertHere));
                 await SaveChannelAsync("events", TxtChannelEvents.Text, ChkEventsTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelEventsEveryone, ChkChannelEventsHere));
                 await SaveChannelAsync("chat", TxtChannelChat.Text, ChkChatTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelChatEveryone, ChkChannelChatHere));
                 await SaveChannelAsync("shop", TxtChannelShop.Text, ChkShopTTS.IsChecked == true, GetMentionFromCheckboxes(ChkChannelShopEveryone, ChkChannelShopHere));
@@ -1745,6 +1749,53 @@ namespace RustPlusDesk.Views
             {
                 BtnSaveChannels.IsEnabled = true;
             }
+        }
+
+        // ---- Modded Server Alerts ------------------------------------------------------------
+
+        private bool _loadingServerAlertSettings;
+        private bool _serverAlertSettingsHooked;
+
+        private void LoadServerAlertSettings()
+        {
+            if (!_serverAlertSettingsHooked)
+            {
+                _serverAlertSettingsHooked = true;
+                // Changed on the website or another PC: show it here as well.
+                TrackingService.ServerAlertSettingsChanged += () => Dispatcher.BeginInvoke(new Action(LoadServerAlertSettings));
+            }
+
+            _loadingServerAlertSettings = true;
+            try
+            {
+                ChkServerAlertsEnabled.IsChecked = TrackingService.ServerAlertsEnabled;
+                RbServerAlertAsRaid.IsChecked = TrackingService.ServerAlertsAsRaid;
+                RbServerAlertAsStandard.IsChecked = !TrackingService.ServerAlertsAsRaid;
+                PanelServerAlertMode.IsEnabled = TrackingService.ServerAlertsEnabled;
+                PanelServerAlertMode.Opacity = TrackingService.ServerAlertsEnabled ? 1.0 : 0.5;
+            }
+            finally
+            {
+                _loadingServerAlertSettings = false;
+            }
+        }
+
+        private void OnServerAlertSettingChanged(object sender, RoutedEventArgs e)
+        {
+            if (_loadingServerAlertSettings || ChkServerAlertsEnabled == null || RbServerAlertAsRaid == null) return;
+
+            bool enabled = ChkServerAlertsEnabled.IsChecked == true;
+            bool asRaid = RbServerAlertAsStandard?.IsChecked != true;
+            if (enabled == TrackingService.ServerAlertsEnabled && asRaid == TrackingService.ServerAlertsAsRaid) return;
+
+            TrackingService.SetServerAlertSettings(enabled, asRaid);
+            _ = Services.Cloud.ServerAlertSettingsSync.PushAsync(line => ParentWindow?.AppendLog(line));
+        }
+
+        private void BtnOpenServerAlertSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSettingsCategory("alerts", "server-alerts");
+            ScrollToSettingsElement(SectionServerAlerts);
         }
 
         private string GetMentionFromCheckboxes(System.Windows.Controls.CheckBox everyone, System.Windows.Controls.CheckBox here)
@@ -1793,7 +1844,12 @@ namespace RustPlusDesk.Views
                         ChkChannelRaidEveryone.IsChecked = false;
                         ChkChannelRaidHere.IsChecked = false;
                         ChkRaidTTS.IsChecked = false;
-                        
+
+                        TxtChannelServerAlert.Text = string.Empty;
+                        ChkChannelServerAlertEveryone.IsChecked = false;
+                        ChkChannelServerAlertHere.IsChecked = false;
+                        ChkServerAlertTTS.IsChecked = false;
+
                         TxtChannelEvents.Text = string.Empty;
                         ChkChannelEventsEveryone.IsChecked = false;
                         ChkChannelEventsHere.IsChecked = false;
@@ -1818,6 +1874,12 @@ namespace RustPlusDesk.Views
                                     ChkChannelRaidEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
                                     ChkChannelRaidHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
                                     ChkRaidTTS.IsChecked = ch.TtsEnabled;
+                                    break;
+                                case "server_alert":
+                                    TxtChannelServerAlert.Text = ch.ChannelId;
+                                    ChkChannelServerAlertEveryone.IsChecked = ch.MentionText?.Contains("@everyone") ?? false;
+                                    ChkChannelServerAlertHere.IsChecked = ch.MentionText?.Contains("@here") ?? false;
+                                    ChkServerAlertTTS.IsChecked = ch.TtsEnabled;
                                     break;
                                 case "events":
                                     TxtChannelEvents.Text = ch.ChannelId;

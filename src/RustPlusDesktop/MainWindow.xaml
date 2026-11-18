@@ -36,6 +36,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/MainWindow/SharedResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="MapPreviewStyle" TargetType="Viewbox">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsMapPreviewVisible}" Value="True">
+                        <Setter Property="IsHitTestVisible" Value="False" />
+                        <Setter Property="Effect"><Setter.Value><BlurEffect Radius="16" RenderingBias="Performance" /></Setter.Value></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
             <!--  Left edge of overlays that start beside the rail; MainWindow.RailLabels.cs keeps it equal to the rail width.  -->
             <Thickness x:Key="RailInset">64,0,0,0</Thickness>
@@ -1106,10 +1114,28 @@
                                 SelectedItem="{Binding Selected, Mode=TwoWay}"
                                 SelectionChanged="ListServers_SelectionChanged">
 
-                                <ListBox.Style><Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}"><Style.Triggers>
+                                <ListBox.Style><Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBox">
+                                                <Border x:Name="ServerListSurface" Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                                    <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
+                                                        <ItemsPresenter />
+                                                    </ScrollViewer>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsEnabled" Value="False"><Setter TargetName="ServerListSurface" Property="Opacity" Value="0.65" /></Trigger>
+                                                    <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="ServerListSurface" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
 <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
 <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
 <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+<DataTrigger Binding="{Binding IsDeviceStatusChecking}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
 </Style.Triggers></Style></ListBox.Style>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -1185,7 +1211,7 @@
 
 
                                 <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
+                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                                         <Setter Property="Height" Value="28" />
                                         <Setter Property="Margin" Value="0" />
                                         <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}" />
@@ -1236,12 +1262,15 @@
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}" /><Setter Property="Text" Value="{DynamicResource StatusDisconnected}" /><Setter Property="Foreground" Value="#EF5350" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="ToolTip" Value="{DynamicResource ConnectDevicesOnlyHint}" /><Setter Property="Foreground" Value="#4FC3F7" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="ToolTip" Value="{DynamicResource LoadMapTeam}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
                                                         <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusAccessDenied}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{DynamicResource StatusAccessDeniedHint}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FFB454" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource ConnectionReconnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
@@ -1253,13 +1282,36 @@
                                                 <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                                 <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                                 <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDeviceStatusChecking}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                                 <DataTrigger Binding="{Binding Selected.Port}" Value="0"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                                 <DataTrigger Binding="{Binding Selected.PlayerToken}" Value="offline"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                             </Style.Triggers></Style>
                                         </StackPanel.Style>
+                                        <ui:Button x:Name="UiBtnConnectionOptions" Width="20" Height="24" Padding="0" Margin="0,0,2,0"
+                                                   Appearance="Transparent" Click="BtnConnectionOptions_Click"
+                                                   ToolTip="{DynamicResource ConnectionMode}" AutomationProperties.Name="{DynamicResource ConnectionMode}">
+                                            <ui:Button.ContextMenu>
+                                                <ContextMenu Style="{StaticResource DarkContextMenu}"
+                                                             DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="{DynamicResource FullConnect}" Click="BtnConnect_Click" ToolTip="{DynamicResource LoadMapTeam}">
+                                                        <MenuItem.Style><Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"><Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                        </Style.Triggers></Style></MenuItem.Style>
+                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="Play20" /></MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem Header="{DynamicResource ConnectDevicesOnly}" Click="BtnConnectDevicesOnly_Click" ToolTip="{DynamicResource ConnectDevicesOnlyHint}">
+                                                        <MenuItem.Style><Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"><Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                                        </Style.Triggers></Style></MenuItem.Style>
+                                                        <MenuItem.Icon><ui:SymbolIcon Symbol="Connector24" /></MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </ui:Button.ContextMenu>
+                                            <ui:SymbolIcon Symbol="ChevronDown20" FontSize="12" />
+                                        </ui:Button>
                                         <Grid Width="24" Height="24" Margin="0,0,2,0">
                                             <ui:Button x:Name="UiBtnConnect" Width="24" Height="24" Padding="0" Appearance="Transparent" Click="BtnConnect_Click"
-                                                       ToolTip="{DynamicResource Connect}" AutomationProperties.Name="{DynamicResource Connect}" tutorials:Tutorial.TargetId="Servers.Connect">
+                                                       ToolTip="{DynamicResource FullConnect}" AutomationProperties.Name="{DynamicResource FullConnect}" tutorials:Tutorial.TargetId="Servers.Connect">
                                                 <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
                                                     <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Visibility" Value="Hidden" /></DataTrigger>
                                                 </Style.Triggers></Style></ui:Button.Style>
@@ -1289,11 +1341,19 @@
                                         </ui:Button>
                                     </StackPanel>
                                 </Grid>
-                                <TextBlock Margin="0,6,0,0" FontSize="11" TextWrapping="Wrap" Foreground="#FF8A80" Text="{DynamicResource StatusAccessDeniedHint}">
-                                    <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers>
-                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
-                                    </Style.Triggers></Style></TextBlock.Style>
-                                </TextBlock>
+                                <Border x:Name="ConnectionIssuePanel" Margin="0,6,0,0" Padding="10" CornerRadius="8"
+                                        Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1"
+                                        Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueTitle}" FontWeight="SemiBold" Foreground="#FFB454" FontSize="11" />
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueDescription}" TextWrapping="Wrap" Margin="0,4,0,8" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                        <ui:Button x:Name="SidebarConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click" Appearance="Secondary" Padding="8,4" HorizontalAlignment="Left">
+                                            <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                            </Style.Triggers></Style></ui:Button.Style>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Border>
                                                     <Border x:Name="PairingListenerPanel" Margin="0,4,0,0" Padding="0,4,0,0" Background="Transparent"
                                 BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
                             <Grid x:Name="PairingServiceControls">
@@ -1632,6 +1692,107 @@
                             </Border>
                         </Grid>
 
+                        <Border
+                            x:Name="DeviceSubscriptionProgress"
+                            DockPanel.Dock="Top"
+                            Margin="0,0,0,8"
+                            Padding="12"
+                            Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Visibility="{Binding IsDeviceSubscribePriming, Converter={StaticResource BoolToVisibility}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextPrimary}"
+                                    Text="{Binding DeviceSubscribeText}"
+                                    TextTrimming="CharacterEllipsis" />
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="11"
+                                    Foreground="{DynamicResource TextSubtle}"
+                                    Text="{Binding DeviceSubscribeProgressText}" />
+
+                                <ProgressBar
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Height="6"
+                                    Margin="0,8,0,0"
+                                    Minimum="0"
+                                    Maximum="{Binding DeviceSubscribeMax}"
+                                    Value="{Binding DeviceSubscribeProgress}"
+                                    Foreground="{DynamicResource Accent}" />
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            x:Name="DeviceStatusProgressPanel"
+                            DockPanel.Dock="Top"
+                            Margin="0,0,0,8"
+                            Padding="12"
+                            Background="{DynamicResource SurfaceAlt}"
+                            BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Visibility="{Binding IsDeviceStatusChecking, Converter={StaticResource BoolToVisibility}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextPrimary}"
+                                    Text="{Binding DeviceStatusText}"
+                                    TextTrimming="CharacterEllipsis" />
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="11"
+                                    Foreground="{DynamicResource TextSubtle}"
+                                    Text="{Binding DeviceStatusProgressText}" />
+
+                                <ProgressBar
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Height="6"
+                                    Margin="0,8,0,0"
+                                    Minimum="0"
+                                    Maximum="{Binding DeviceStatusMax}"
+                                    Value="{Binding DeviceStatusProgress}"
+                                    Foreground="{DynamicResource Accent}" />
+                            </Grid>
+                        </Border>
                         <!-- Device actions -->
                         <Border
                             x:Name="DevicesActionBar"
@@ -7287,6 +7448,20 @@
                         ClipToBounds="True">
                         <Rectangle x:Name="SplashBgColor" Fill="#0B3A4A" />
 
+                        <Grid x:Name="ServerMapTransitionLayer" Panel.ZIndex="80" Background="#0B3A4A"
+                              ClipToBounds="True" IsHitTestVisible="False" Visibility="Collapsed">
+                            <Image x:Name="ServerMapTransitionImage" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </Grid>
+                        <Border x:Name="ServerSwitchLabel" Panel.ZIndex="81" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                Margin="24" Padding="14,8" MaxWidth="440" CornerRadius="8" IsHitTestVisible="False" Visibility="Collapsed"
+                                Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                            <TextBlock Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="{Binding Selected.Name}" /><Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=BtnAbbreviateNames}" Value="True"><Setter Property="Text" Value="{DynamicResource UiSERVERHIDDEN}" /></DataTrigger>
+                                </Style.Triggers></Style></TextBlock.Style>
+                            </TextBlock>
+                        </Border>
+
                         <Grid
                             x:Name="MapConnectionLoader"
                             Panel.ZIndex="90"
@@ -7294,7 +7469,7 @@
                             Visibility="{Binding IsConnectionLoading, Converter={StaticResource BoolToVisibility}}">
                             <Border MaxWidth="360" Margin="24" Padding="28"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Background="#11191F" BorderBrush="#405E7480" BorderThickness="1" CornerRadius="14">
+                                    Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1" CornerRadius="16">
                                 <StackPanel>
                                     <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="#F2F5F7"
                                                Text="{Binding BusyText}" TextAlignment="Center" TextWrapping="Wrap"
@@ -7313,50 +7488,75 @@
                             x:Name="MapPlaceholder"
                             Panel.ZIndex="50"
                             Cursor="Arrow">
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/Assets/Images/map-connect-backdrop.png"
-                                            Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Center" />
-                            </Border.Background>
+                            <Border.Style><Style TargetType="Border">
+                                <Setter Property="Background"><Setter.Value><ImageBrush ImageSource="pack://application:,,,/Assets/Images/map-connect-backdrop.png" Stretch="UniformToFill" /></Setter.Value></Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasMapImage}" Value="True"><Setter Property="Background" Value="#50101518" /></DataTrigger>
+                                    <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                    <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding IsFullConnectRequested}" Value="True" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
+                                    <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding Selected.Port}" Value="0" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
+                                    <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasMapImage}" Value="True" /><Condition Binding="{Binding Selected.PlayerToken}" Value="offline" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style></Border.Style>
                             <Border
+                                x:Name="MapConnectCard"
                                 Padding="24"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Background="#40101518"
-                                BorderBrush="#66FFFFFF"
+                                Background="#B81B252D"
+                                BorderBrush="#405E7480"
                                 BorderThickness="1"
                                 CornerRadius="16">
+                                <Border.Effect><DropShadowEffect BlurRadius="32" ShadowDepth="8" Opacity="0.3" /></Border.Effect>
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
                                 <StackPanel MaxWidth="320">
+                                    <TextBlock Text="{DynamicResource MapCachedPreview}" Foreground="#9DDDE8" FontSize="10" FontWeight="SemiBold"
+                                               TextAlignment="Center" Margin="0,0,0,12" Visibility="{Binding IsMapPreviewVisible, Converter={StaticResource BoolToVisibility}}" />
                                     <TextBlock
                                         FontSize="20"
                                         FontWeight="SemiBold"
                                         Foreground="White"
-                                        Text="{DynamicResource ReadyToExploreMap}"
                                         TextAlignment="Center"
-                                        TextWrapping="Wrap" />
+                                        TextWrapping="Wrap">
+                                        <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="{DynamicResource ReadyToExploreMap}" /><Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /></DataTrigger>
+                                        </Style.Triggers></Style></TextBlock.Style>
+                                    </TextBlock>
                                     <TextBlock
                                         Margin="0,10,0,24"
                                         FontSize="13"
                                         Foreground="#D9FFFFFF"
-                                        Text="{DynamicResource ConnectToLoadMap}"
                                         TextAlignment="Center"
-                                        TextWrapping="Wrap" />
+                                        TextWrapping="Wrap">
+                                        <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="{DynamicResource ConnectToLoadMap}" /><Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasMapImage}" Value="True"><Setter Property="Text" Value="{DynamicResource CachedMapConnectHint}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource SoftConnectMapHint}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource MapSetupHint}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
+                                        </Style.Triggers></Style></TextBlock.Style>
+                                    </TextBlock>
 
                                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <StackPanel.Style><Style TargetType="StackPanel"><Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                        </Style.Triggers></Style></StackPanel.Style>
                                         <ui:Button
                                             x:Name="MapUiBtnConnect"
                                             Padding="16,8"
                                             Appearance="Primary"
                                             Click="BtnConnect_Click"
-                                            Content="{DynamicResource Connect}"
+                                            Content="{DynamicResource FullConnect}"
                                             Icon="{ui:SymbolIcon Symbol=PlugConnected20}"
                                             Visibility="{Binding Selected.IsConnected, Converter={StaticResource BoolToVisibilityInv}}" />
 
@@ -7385,103 +7585,13 @@
                                         </ui:Button>
                                     </StackPanel>
 
-                                    <Border
-                                        Margin="0,16,0,0"
-                                        Padding="12"
-                                        Background="{DynamicResource SurfaceAlt}"
-                                        BorderBrush="{DynamicResource CardBorder}"
-                                        BorderThickness="1"
-                                        CornerRadius="8"
-                                        Visibility="{Binding IsDeviceSubscribePriming, Converter={StaticResource BoolToVisibility}}">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="SemiBold"
-                                                Foreground="{DynamicResource TextPrimary}"
-                                                Text="{Binding DeviceSubscribeText}"
-                                                TextTrimming="CharacterEllipsis" />
-
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="1"
-                                                Margin="10,0,0,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="{DynamicResource TextSubtle}"
-                                                Text="{Binding DeviceSubscribeProgressText}" />
-
-                                            <ProgressBar
-                                                Grid.Row="1"
-                                                Grid.ColumnSpan="2"
-                                                Height="6"
-                                                Margin="0,8,0,0"
-                                                Minimum="0"
-                                                Maximum="{Binding DeviceSubscribeMax}"
-                                                Value="{Binding DeviceSubscribeProgress}"
-                                                Foreground="{DynamicResource Accent}" />
-                                        </Grid>
-                                    </Border>
-
-                                    <Border
-                                        Margin="0,8,0,0"
-                                        Padding="12"
-                                        Background="{DynamicResource SurfaceAlt}"
-                                        BorderBrush="{DynamicResource CardBorder}"
-                                        BorderThickness="1"
-                                        CornerRadius="8"
-                                        Visibility="{Binding IsDeviceStatusChecking, Converter={StaticResource BoolToVisibility}}">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="SemiBold"
-                                                Foreground="{DynamicResource TextPrimary}"
-                                                Text="{Binding DeviceStatusText}"
-                                                TextTrimming="CharacterEllipsis" />
-
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="1"
-                                                Margin="10,0,0,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="11"
-                                                Foreground="{DynamicResource TextSubtle}"
-                                                Text="{Binding DeviceStatusProgressText}" />
-
-                                            <ProgressBar
-                                                Grid.Row="1"
-                                                Grid.ColumnSpan="2"
-                                                Height="6"
-                                                Margin="0,8,0,0"
-                                                Minimum="0"
-                                                Maximum="{Binding DeviceStatusMax}"
-                                                Value="{Binding DeviceStatusProgress}"
-                                                Foreground="{DynamicResource Accent}" />
-                                        </Grid>
-                                    </Border>
+                                    <ui:Button x:Name="MapConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click"
+                                               Appearance="Primary" HorizontalAlignment="Center" Padding="16,8"
+                                               Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
+                                        <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
+                                        </Style.Triggers></Style></ui:Button.Style>
+                                    </ui:Button>
                                 </StackPanel>
                             </Border>
                         </Border>

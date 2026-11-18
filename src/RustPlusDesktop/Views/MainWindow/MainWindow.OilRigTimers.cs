@@ -128,7 +128,13 @@ public partial class MainWindow
 
         if (alarm != null)
         {
-            return $"{label}: {alarm.Timestamp.ToLocalTime():g}";
+            // How long ago the crate unlocked, not the trigger's clock time: the PC answering may
+            // sit in another time zone than the teammate reading it. The cloud says it the same way.
+            var unlockedAgo = DateTime.UtcNow - alarm.Timestamp.ToUniversalTime() - TimeSpan.FromMinutes(OilRigCrateMinutes);
+            return string.Format(
+                Properties.Resources.GetString("ChatCmdOilRigCrateUnlockedAgo") ?? "{0}: crate unlocked {1} ago",
+                label,
+                FormatAgo(unlockedAgo < TimeSpan.Zero ? TimeSpan.Zero : unlockedAgo));
         }
 
         return $"{label}: {Properties.Resources.GetString("CodeUiNone") ?? "None"}";

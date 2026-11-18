@@ -8419,4 +8419,46 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': Upkeep {1} %, Oil-Rig-Crate {2} Min.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>Kanal-ID für Server-Alerts (Modded-Server)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Optional (leer: Raid- oder Events-Kanal, siehe Modded-Server-Alerts)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Meldungen, die ein Modded-Server selbst schickt, etwa zerstörte Wände, Upkeep oder Events. Ein hier eingetragener Kanal bekommt sie immer; leer gehen sie je nach Einstellung der Modded-Server-Alerts in den Raid- oder den Events-Kanal.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Modded-Server-Alerts</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Modded-Server-Alerts verarbeiten</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Meldungen, die ein Modded-Server selbst schickt, etwa „Wall destroyed at R9“. Aus: Sie werden ignoriert und nur im Benachrichtigungsverlauf gespeichert.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Als Raid-Alarm behandeln</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Alarmfenster und Ton, Raid-Kanal in Discord, Telegram-Anruf und Smart-Home-Webhook bei geschlossener App.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Als normalen Alert behandeln</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>Kurzer Hinweis in der App, Events-Kanal in Discord, kein Anruf.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Wird mit der Website und Cloud 24/7 synchronisiert.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Einstellungen für Modded-Server-Alerts</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Server-Alert</value>
+  </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: Crate vor {1} geöffnet</value>
+  </data>
 </root>

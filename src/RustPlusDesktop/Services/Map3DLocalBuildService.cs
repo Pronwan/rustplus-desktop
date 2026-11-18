@@ -120,6 +120,9 @@ public static class Map3DLocalBuildService
         if (pickedMapPath == null) DiscardParseOfAnotherMap(folder, referenceMonuments, worldSize);
         if (!forceReparse && TryLoadReusableResult(folder, manifestPath, pickedMapPath, out var cached))
         {
+            // A parse from an older MapParser is redone from the same map file before it is reused.
+            await RefreshOutdatedParseAsync(folder, ct).ConfigureAwait(false);
+
             texturePath = await EnsureRenderedTextureAsync(null, cached.SelectedMapFile, folder, ct).ConfigureAwait(false);
             if (texturePath == null && pendingTexturePath != null)
             {
@@ -843,10 +846,105 @@ public static class Map3DLocalBuildService
 
     private static void CopyParserOutput(string fromDir, string toDir)
     {
-        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json", "map_texture.png", RenderedTextureFileName })
+        // The parser's stamp goes last: a copy cut short leaves the folder looking outdated, not current.
+        foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json", "map_texture.png", RenderedTextureFileName, ParserVersionFileName })
         {
             string from = Path.Combine(fromDir, name);
             if (File.Exists(from)) File.Copy(from, Path.Combine(toDir, name), overwrite: true);
+        }
+    }
+
+    /// <summary>
+    /// The MapParser version stamp. The parser writes it beside every parse, and ships it beside
+    /// MapParser.dll; a cached parse whose stamp differs from the parser's came from another version.
+    /// </summary>
+    internal const string ParserVersionFileName = "parser_cache.version";
+
+    public enum ParseRefreshOutcome { NotNeeded, Refreshed, Failed }
+
+    // One re-parse at a time: connecting and opening the 3D view can both ask for the same folder.
+    private static readonly SemaphoreSlim ParseRefreshGate = new(1, 1);
+
+    /// <summary>The version of the MapParser this app runs, or null when it cannot be told.</summary>
+    internal static string? CurrentParserVersion(string? parserAssembly)
+    {
+        string? directory = parserAssembly == null ? null : Path.GetDirectoryName(parserAssembly);
+        return directory == null ? null : ReadParserVersion(Path.Combine(directory, ParserVersionFileName));
+    }
+
+    private static string? ReadParserVersion(string path)
+    {
+        try
+        {
+            if (!File.Exists(path)) return null;
+            string version = File.ReadAllText(path).Trim();
+            return version.Length > 0 ? version : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// True when <paramref name="folder"/> holds a parse from another MapParser version: its stamp
+    /// differs, or it has none (it was cached before stamps were kept). False when there is no parse,
+    /// or the app's own parser version is unknown, since then nothing would be gained by parsing again.
+    /// </summary>
+    internal static bool IsParseOutdated(string folder, string? currentVersion)
+    {
+        if (currentVersion == null || !File.Exists(Path.Combine(folder, "map_data.json"))) return false;
+        return ReadParserVersion(Path.Combine(folder, ParserVersionFileName)) != currentVersion;
+    }
+
+    /// <summary>
+    /// Parses the map file of an outdated cached parse again, so it carries what the current MapParser
+    /// produces (the cargo route, for one). It is the map already chosen for this folder, so nothing is
+    /// verified again, and the map images stay: only the parse output is replaced.
+    /// </summary>
+    public static async Task<ParseRefreshOutcome> RefreshOutdatedParseAsync(string folder, CancellationToken ct = default)
+    {
+        string? parserPath = MapParserHost.ResolveParserAssembly();
+        string? currentVersion = CurrentParserVersion(parserPath);
+        if (parserPath == null || !IsParseOutdated(folder, currentVersion)) return ParseRefreshOutcome.NotNeeded;
+
+        await ParseRefreshGate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
+            // Another caller may have refreshed it while this one waited.
+            if (!IsParseOutdated(folder, currentVersion)) return ParseRefreshOutcome.NotNeeded;
+
+            // Only a parse whose map file is still the one it was made from can be redone.
+            string manifestPath = Path.Combine(folder, "map3d_manifest.json");
+            if (!TryLoadReusableResult(folder, manifestPath, null, out var cached)) return ParseRefreshOutcome.NotNeeded;
+
+            string attempt = PrepareAttemptDirectory(folder, cached.SelectedMapFile);
+            try
+            {
+                var parse = await RunParserAsync(parserPath, cached.SelectedMapFile, attempt, ct, skipImage: true).ConfigureAwait(false);
+                if (!parse.Success || ReadParserVersion(Path.Combine(attempt, ParserVersionFileName)) != currentVersion)
+                    return ParseRefreshOutcome.Failed;
+
+                foreach (var name in new[] { "map_data.json", "map_resolved.json", "map_raw.json", ParserVersionFileName })
+                {
+                    string from = Path.Combine(attempt, name);
+                    if (File.Exists(from)) File.Copy(from, Path.Combine(folder, name), overwrite: true);
+                }
+                return ParseRefreshOutcome.Refreshed;
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                // A viewer holding a file open; the stamp was not copied, so the next load tries again.
+                return ParseRefreshOutcome.Failed;
+            }
+            finally
+            {
+                try { Directory.Delete(attempt, recursive: true); } catch { }
+            }
+        }
+        finally
+        {
+            ParseRefreshGate.Release();
         }
     }
 

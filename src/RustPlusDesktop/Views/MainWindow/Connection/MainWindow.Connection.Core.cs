@@ -3,7 +3,6 @@ using Microsoft.Web.WebView2.Wpf;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,6 +19,8 @@ namespace RustPlusDesk.Views;
 public partial class MainWindow
 {
     private bool _isSoftConnecting = false;
+    private Task<bool>? _softConnectTask;
+    private Task _serverSelectionResetTask = Task.CompletedTask;
 
     /// <summary>
     /// The server this app told the cloud it is driving, so it can hand it back.
@@ -155,8 +156,7 @@ public partial class MainWindow
     {
         void Apply()
         {
-            bool canFullConnect = !_isSoftConnecting
-                                  && !_vm.IsDeviceStatusChecking
+            bool canFullConnect = !_vm.IsFullConnectRequested
                                   && _vm.Selected?.IsConnected == true
                                   && _vm.Selected?.IsFullConnected != true;
             UiBtnFullConnect.IsEnabled = canFullConnect;
@@ -248,16 +248,23 @@ public partial class MainWindow
 
     private async void ListServers_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        _mapSelectionVersion++;
+        int selectionVersion = ++_mapSelectionVersion;
         if (_isDeletingServer) return;
         if (_isMap3DActive) CloseMap3DView();
         _lastChatTsForCurrentServer = null;
+        BeginServerMapTransition();
+        _vm.IsFullConnectRequested = false;
+        CancelConnectionPolling();
+        ResetMapDisplay();
+        Task resetTask = _serverSelectionResetTask = ResetServerSelectionConnectionAsync(_serverSelectionResetTask, _softConnectTask);
 
-        if (_vm.Servers.Any(s => s.IsConnected || s.IsFullConnected))
-        {
-            AppendLog("Server selection changed. Disconnecting from previous server...");
-            await HardResetAsync(reconnect: false);
-        }
+        var cachedMapTask = LoadMapAsync(cacheOnly: true);
+        await cachedMapTask;
+        if (selectionVersion != _mapSelectionVersion) return;
+        bool transitionCompleted = HasMapImage;
+        if (transitionCompleted) await CompleteServerMapTransitionAsync(selectionVersion);
+        await resetTask;
+        if (selectionVersion != _mapSelectionVersion) return;
 
         if (_vm.Selected is { } prof)
         {
@@ -271,7 +278,7 @@ public partial class MainWindow
             {
                 await ShowOfflineMapAsync(prof);
             }
-            else if (hasLocalMap)
+            else if (hasLocalMap && !HasMapImage)
             {
                 if (!string.IsNullOrEmpty(prof.LocalMapImagePath) && File.Exists(prof.LocalMapImagePath))
                 {
@@ -296,44 +303,63 @@ public partial class MainWindow
                 }
             }
 
-            // Trigger soft connect to devices only if there are any devices to control and this is not a purely offline profile
-            if (!isOfflineOnly && !prof.IsConnected && prof.Devices.Any())
-            {
-                await PerformConnectDevicesOnlyAsync(prof);
-            }
         }
 
+        if (!transitionCompleted) await CompleteServerMapTransitionAsync(selectionVersion);
+        if (selectionVersion != _mapSelectionVersion) return;
         HydrateSteamUiFromStorage();
         RegisterAllHotkeys();
         ActivateHotkeysForCurrentServer();
         UpdateRustMapsUi();
+
+        if (!_vm.IsFullConnectRequested && _vm.Selected is { Port: > 0, IsConnected: false } selected
+            && selected.PlayerToken != "offline")
+            await PerformConnectDevicesOnlyAsync(selected);
     }
 
-    private async Task PerformConnectDevicesOnlyAsync(ServerProfile profile)
+    private async Task ResetServerSelectionConnectionAsync(Task previousReset, Task<bool>? previousSoftConnect)
     {
-        if (profile == null) return;
+        await previousReset;
+        if (previousSoftConnect != null) await previousSoftConnect;
+        await HardResetAsync(reconnect: false, keepMap: true);
+    }
+
+    private Task<bool> PerformConnectDevicesOnlyAsync(ServerProfile profile) =>
+        _softConnectTask is { IsCompleted: false } ? _softConnectTask : _softConnectTask = RunConnectionAttemptsAsync(full: false);
+
+    private async Task<bool> ConnectDevicesOnlyCoreAsync(ServerProfile profile)
+    {
+        if (profile == null) return false;
+        StopTeamPolling();
+        _statusCts?.Cancel();
+        _statusTimer.Stop();
         _isSoftConnecting = true;
-        _vm.IsDeviceSubscribePriming = true;
-        _vm.DeviceSubscribeMax = Math.Max(1, profile.Devices.Count);
-        _vm.DeviceSubscribeProgress = 0;
-        _vm.DeviceSubscribeText = "Preparing device subscriptions...";
-        Dispatcher.Invoke(() => {
-            UiBtnFullConnect.IsEnabled = false;
-            UiBtnConnect.IsEnabled = false;
-            MapUiBtnFullConnect.IsEnabled = false;
-            MapUiBtnConnect.IsEnabled = false;
-        });
+        _vm.IsSoftConnecting = true;
+        RenewConnectionPolling();
+        var ct = _connectionPollingCts.Token;
+        void CheckConnection()
+        {
+            ct.ThrowIfCancellationRequested();
+            if (!ReferenceEquals(_vm.Selected, profile)) throw new OperationCanceledException();
+        }
         try
         {
             AppendLog($"Soft-connecting to {profile.Name} (Devices Only)...");
-            await _rust.ConnectAsync(profile);
+            await _rust.ConnectAsync(profile, ct);
+            CheckConnection();
+            _connectedProfile = profile;
             profile.IsConnected = true;
             profile.IsFullConnected = false;
             profile.IsAccessDenied = false;
+            UpdateFullConnectButtonsEnabled();
 
             if (_rust is RustPlusClientReal real)
             {
                 real.EnsureEventsHooked();
+                real.FeatureUnsupported -= OnFeatureUnsupported;
+                real.FeatureUnsupported += OnFeatureUnsupported;
+                real.StorageSnapshotReceived -= OnStorageSnapshot;
+                real.StorageSnapshotReceived += OnStorageSnapshot;
                 
                 // Hook local handlers
                 real.ConnectionLost -= OnConnectionLost;
@@ -346,31 +372,17 @@ public partial class MainWindow
                 real.ClanChanged += OnClanChangedReal;
                 try { await real.PrimeTeamChatAsync(); }
                 catch (Exception ex) { AppendLog("[chat] prime error: " + ex.Message); }
+                CheckConnection();
                 try { await real.PrimeClanChatAsync(); }
                 catch (Exception ex) { AppendLog("[clan] prime error: " + ex.Message); }
+                CheckConnection();
 
                 // Discord interactions depend on team-master state, even during soft connect.
                 await LoadTeamAsync();
+                CheckConnection();
+                await InitializeDevicesAsync(profile, reuseConnection: false);
+                CheckConnection();
                 StartTeamPolling();
-
-                var allIds = profile.Devices.Select(d => d.EntityId).Distinct().ToList();
-                if (allIds.Any())
-                {
-                    _vm.DeviceSubscribeMax = allIds.Count;
-                    _vm.DeviceSubscribeProgress = 0;
-                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            _vm.DeviceSubscribeMax = total;
-                            _vm.DeviceSubscribeProgress = done;
-                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
-                        });
-                    });
-                }
-                
-                // Refresh device status in the background so Full Connect can be used once subscriptions are ready.
-                _ = RefreshAllDevicesStatusAsync(maxRetries: 1);
             }
             
             // Start the server status loop (players/time) even for soft connect
@@ -395,20 +407,20 @@ public partial class MainWindow
             }
 
             AppendLog("Soft-connect complete.");
-
+            return true;
         }
+        catch (OperationCanceledException) { return false; }
         catch (Exception ex)
         {
-            if (RustPlusClientReal.IsAccessDeniedError(ex))
-            {
-                profile.IsAccessDenied = true;
-                _vm.Save();
-            }
+            if (ct.IsCancellationRequested || !ReferenceEquals(_vm.Selected, profile)) return false;
+            RecordConnectionFailure(profile, ex);
             AppendLog($"Soft-connect failed: {ex.Message}");
+            return false;
         }
         finally
         {
             _isSoftConnecting = false;
+            _vm.IsSoftConnecting = false;
             _vm.IsDeviceSubscribePriming = false;
             Dispatcher.Invoke(() => {
                 UiBtnConnect.IsEnabled = true;
@@ -456,7 +468,7 @@ public partial class MainWindow
                     if (serverStatusFailCount >= 5)
                     {
                         serverStatusFailCount = 0;
-                        if (!_isReconnecting && !_isSoftConnecting && !(_vm?.IsBusy == true) && _vm?.Selected?.IsAccessDenied != true)
+                        if (!_isReconnecting && _connectionAttemptsActive == 0 && !_isSoftConnecting && !(_vm?.IsBusy == true) && !currentSelected.HasConnectionIssue)
                         {
                             AppendLog("[status-poll] Connection seems dead (status failed 5 times). Refreshing connection silently...");
                             
@@ -464,8 +476,11 @@ public partial class MainWindow
                             {
                                 try
                                 {
-                                    await PerformConnectAsync(true, showBusy: false);
-                                    AppendLog("[status-poll] Silent connection refresh complete.");
+                                    if (ct.IsCancellationRequested || !ReferenceEquals(_vm?.Selected, currentSelected)) return;
+                                    bool recovered = currentSelected.IsFullConnected
+                                        ? await PerformConnectAsync(true, showBusy: false)
+                                        : await PerformConnectDevicesOnlyAsync(currentSelected);
+                                    AppendLog(recovered ? "[status-poll] Silent connection refresh complete." : "[status-poll] Silent connection refresh failed.");
                                 }
                                 catch (Exception ex)
                                 {
@@ -513,31 +528,33 @@ public partial class MainWindow
         catch (Exception ex) { AppendLog($"{logTag} prime error: {ex.Message}"); }
     }
 
-    internal async Task<bool> PerformConnectAsync(bool silent, bool showBusy = true)
+    internal Task<bool> PerformConnectAsync(bool silent, bool showBusy = true) =>
+        RunConnectionAttemptsAsync(full: true, silent, showBusy);
+
+    private async Task<bool> PerformConnectOnceAsync(bool silent, bool showBusy = true)
     {
         Services.Map.MemoryProbe.Mark("connect: start", restart: true);
         _ownCloudRestoreReady = false;
+        var requestedProfile = _vm.Selected;
+        int requestedSelectionVersion = _mapSelectionVersion;
+        if (requestedProfile == null) return false;
+        _vm.IsFullConnectRequested = true;
+        if (showBusy && HasMapImage) _vm.IsConnectionLoading = false;
 
-        if (_isSoftConnecting)
+        await _serverSelectionResetTask;
+        if (requestedSelectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, requestedProfile)) return false;
+
+        if (_softConnectTask is { IsCompleted: false })
         {
             AppendLog("[connect] Soft-connect in progress, waiting for completion to prevent socket conflict...");
-            int waitMs = 0;
-            while (_isSoftConnecting && waitMs < 8000)
-            {
-                await Task.Delay(250);
-                waitMs += 250;
-            }
-            if (_isSoftConnecting)
-            {
-                AppendLog("[connect] Soft-connect is taking too long. Continuing full connect anyway.");
-            }
-            else
-            {
-                AppendLog("[connect] Soft-connect finished. Proceeding with full connect.");
-            }
+            if (_softConnectTask != null) await _softConnectTask;
+            if (requestedSelectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, requestedProfile)) return false;
+            AppendLog("[connect] Soft-connect finished. Proceeding with full connect.");
         }
 
         bool alreadySoftConnected = _vm.Selected != null && _vm.Selected.IsConnected && !_vm.Selected.IsFullConnected;
+        _statusCts?.Cancel();
+        _statusTimer.Stop();
 
         if (!silent)
         {
@@ -570,7 +587,7 @@ public partial class MainWindow
             }
             else
             {
-                await HardResetAsync(reconnect: false);
+                await HardResetAsync(reconnect: false, keepMap: true);
                 _shopTimer?.Stop();
                 _shopTimer = null;
                 StopDynPolling();
@@ -611,6 +628,7 @@ public partial class MainWindow
             }
         }
 
+        if (requestedSelectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, requestedProfile)) return false;
         if (_vm.Selected is null)
         {
             if (!silent) ShowInfoSnackbar(Properties.Resources.SnackbarTitleConnection, Properties.Resources.PleaseSelectServerFirst, WpfUi.ControlAppearance.Info);
@@ -618,6 +636,13 @@ public partial class MainWindow
         }
 
         RenewConnectionPolling();
+        var connectingProfile = _vm.Selected!;
+        var connectionToken = _connectionPollingCts.Token;
+        void CheckConnection()
+        {
+            connectionToken.ThrowIfCancellationRequested();
+            if (!ReferenceEquals(_vm?.Selected, connectingProfile)) throw new OperationCanceledException();
+        }
         ResetBuildingBlockedZonesForServerChange();
         ResetCargoPathForServerChange();
         ResetKeycardsForServerChange();
@@ -626,15 +651,15 @@ public partial class MainWindow
         {
             if (showBusy)
             {
-                _vm.IsConnectionLoading = true;
-                _vm.IsBusy = true;
+                _vm.IsConnectionLoading = !HasMapImage;
+                _vm.IsBusy = !HasMapImage;
                 _vm.BusyText = "Connecting …";
             }
 
             if (!alreadySoftConnected)
             {
-                AppendLog($"Connecting to ws://{_vm.Selected.Host}:{_vm.Selected.Port} …");
-                await _rust.ConnectAsync(_vm.Selected);
+                AppendLog($"Connecting to {_vm.Selected.Name} via Rust+ companion …");
+                await _rust.ConnectAsync(connectingProfile, connectionToken);
                 AppendLog("Connected.");
                 Services.Map.MemoryProbe.Mark("connect: socket open");
             }
@@ -642,9 +667,10 @@ public partial class MainWindow
             {
                 AppendLog("Reusing existing soft-connection for full connect.");
             }
-            _connectedProfile = _vm.Selected;
-
-            TrackingService.StartPolling(_vm.Selected.Host ?? "", _vm.Selected.Port, _vm.Selected.Name ?? "", _vm.Selected.BattleMetricsId);
+            CheckConnection();
+            _connectedProfile = connectingProfile;
+            _connectedProfile.IsConnected = true;
+            _connectedProfile.IsFullConnected = false;
 
             // ConnectAsync returns once the server has answered a request, so the socket is ready.
             var real = _rust as RustPlusClientReal;
@@ -664,6 +690,8 @@ public partial class MainWindow
                 real.ClanChanged += OnClanChangedReal;
 
                 real.EnsureEventsHooked();
+                real.FeatureUnsupported -= OnFeatureUnsupported;
+                real.FeatureUnsupported += OnFeatureUnsupported;
             }
 
             _lastChatTsForCurrentServer = null;
@@ -676,32 +704,15 @@ public partial class MainWindow
                 _vm.IsInitializing = true;
             }
 
-            var mapTask = LoadMapAsync();
-            var initTasks = new List<Task>
-            {
-                mapTask,
-                UpdateServerStatusAsync(),
-                LoadTeamAsync()
-            };
-
-            // Nothing above needs the chat history, so it no longer holds the map back.
-            if (real != null)
-            {
-                initTasks.Add(PrimeChatAsync(real.PrimeTeamChatAsync, "[chat]"));
-                initTasks.Add(PrimeChatAsync(real.PrimeClanChatAsync, "[clan]"));
-            }
+            var mapTask = HasMapImage ? Task.CompletedTask : LoadMapAsync(cacheOnly: true);
+            var teamTask = LoadTeamAsync();
             
             // Rehydrate local cache immediately (sync)
-            RehydrateDevicesFromStorageInto(_vm.Selected);
+            if (!alreadySoftConnected) RehydrateDevicesFromStorageInto(_vm.Selected);
 
             RehydrateCamerasFromStorageInto(_vm.Selected);
             SwitchCameraSourceTo(_vm.Selected);
             
-            // Start probing device kinds in parallel (optimized in MainWindow.Devices.cs)
-            initTasks.Add(PrimeDeviceKindsAsync());
-
-
-
             ClearUserOverlayElements();
             _visibleOverlayOwners.Add(_mySteamId);
 
@@ -728,9 +739,32 @@ public partial class MainWindow
             await mapTask;
             Services.Map.MemoryProbe.Mark("connect: map loaded");
             if (showBusy)
-                _vm!.BusyText = "Synchronizing server data…";
+            {
+                _vm!.IsConnectionLoading = !HasMapImage;
+                _vm.BusyText = "Synchronizing server data…";
+            }
 
-            await Task.WhenAll(initTasks);
+            await teamTask;
+            CheckConnection();
+            ShowInitialTeamPositions();
+            if (showBusy && HasMapImage)
+            {
+                _vm!.IsConnectionLoading = false;
+                _vm.BusyText = "";
+            }
+            await InitializeDevicesAsync(connectingProfile, reuseConnection: alreadySoftConnected);
+            CheckConnection();
+            await LoadMapAsync();
+            CheckConnection();
+            if (!HasMapImage) throw new InvalidOperationException("The server did not provide a map. Try connecting again.");
+            if (!_showingInitialTeamPositions) ShowInitialTeamPositions();
+            if (real != null)
+            {
+                await Task.WhenAll(
+                    PrimeChatAsync(real.PrimeTeamChatAsync, "[chat]"),
+                    PrimeChatAsync(real.PrimeClanChatAsync, "[clan]"));
+            }
+            CheckConnection();
             Services.Map.MemoryProbe.Mark("connect: server data loaded");
             
             // Rebuild team bar and subscription dock with loaded team data, and fetch restored teammate overlays
@@ -762,6 +796,7 @@ public partial class MainWindow
             connectedProfile.IsConnected = true;
             connectedProfile.IsFullConnected = true;
             connectedProfile.IsAccessDenied = false;
+            TrackingService.StartPolling(connectedProfile.Host ?? "", connectedProfile.Port, connectedProfile.Name ?? "", connectedProfile.BattleMetricsId);
 
             _vm.NotifyDevicesChanged();
             _ = SearchRustMapsAsync(false, connectedProfile.WipeTime);
@@ -813,66 +848,37 @@ public partial class MainWindow
                 _ = Services.Cloud.CloudAutomationSync.SyncAsync(connectedProfile, connectedKey);
             }
 
-            // Prime subscriptions for all devices to receive real-time updates.
-            if (real != null && connectedProfile.Devices?.Any() == true)
-            {
-                try
-                {
-                    _vm.IsDeviceSubscribePriming = true;
-                    var allIds = connectedProfile.Devices.Select(d => d.EntityId).Distinct().ToList();
-                    _vm.DeviceSubscribeMax = allIds.Count;
-                    _vm.DeviceSubscribeProgress = 0;
-                    using var primeCts = CancellationTokenSource.CreateLinkedTokenSource(_connectionPollingCts.Token);
-                    primeCts.CancelAfter(TimeSpan.FromSeconds(10));
-                    await real.PrimeSubscriptionsAsync(allIds, (done, total, id) =>
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            _vm.DeviceSubscribeMax = total;
-                            _vm.DeviceSubscribeProgress = done;
-                            _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
-                        });
-                    }, primeCts.Token);
-                    _vm.IsDeviceSubscribePriming = false;
-                    AppendLog("Device subscription priming finished.");
-                }
-                catch (Exception ex)
-                {
-                    _vm.IsDeviceSubscribePriming = false;
-                    AppendLog("PrimeSubscriptions Error: " + ex.Message);
-                }
-            }
-
-            // Finally, refresh all device statuses to ensure the UI reflects the current server state
-            _ = RefreshAllDevicesStatusAsync(maxRetries: 1, skipIfRecentlyChecked: true);
-
             _statusCts?.Cancel();
             _statusCts = new CancellationTokenSource();
             _ = PollServerStatusLoopAsync(_statusCts.Token);
             _statusTimer.Start();
 
             StartTeamPolling();
+            StartDynPolling();
             Services.Map.MemoryProbe.Mark("connect: finished");
             if (_overlayToolsVisible)
             {
                 RebuildOverlayTeamBar();
             }
 
-            // Removed redundant 2s delayed RefreshAllDevicesStatusAsync to avoid 'demoted' logs.
-            // Core device status is already fetched during PrimeDeviceKindsAsync.
+        }
+        catch (OperationCanceledException) when (connectionToken.IsCancellationRequested || !ReferenceEquals(_vm.Selected, connectingProfile))
+        {
+            if (showBusy && connectionToken == _connectionPollingCts.Token && ReferenceEquals(_vm.Selected, connectingProfile))
+            {
+                _vm.IsFullConnectRequested = false;
+                _vm.IsInitializing = false;
+                _vm.IsBusy = false;
+                _vm.IsConnectionLoading = false;
+                _vm.BusyText = "";
+            }
+            return false;
         }
         catch (Exception ex)
         {
-            var selectedOnError = _vm.Selected;
-            bool isAccessDenied = ex is RustPlusAccessDeniedException || RustPlusClientReal.IsAccessDeniedError(ex);
-            if (selectedOnError != null)
-            {
-                selectedOnError.IsConnected = false;
-                selectedOnError.IsFullConnected = false;
-                selectedOnError.IsAccessDenied = isAccessDenied;
-                _vm.NotifyDevicesChanged();
-                _vm.Save();
-            }
+            if (connectionToken.IsCancellationRequested || !ReferenceEquals(_vm.Selected, connectingProfile)) return false;
+            _vm.IsFullConnectRequested = false;
+            RecordConnectionFailure(connectingProfile, ex);
             if (showBusy)
             {
                 _vm.IsInitializing = false;
@@ -881,30 +887,6 @@ public partial class MainWindow
                 _vm.BusyText = "";
             }
             AppendLog("Error: " + ex.Message);
-            if (!silent)
-            {
-                if (isAccessDenied)
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.ConnectionFailedAccessDenied,
-                        Properties.Resources.ConnectionFailedAccessDeniedComment,
-                        WpfUi.ControlAppearance.Danger);
-                }
-                else if (ex.Message != null && (ex.Message.Contains("nicht erreichbar") || ex.Message.Contains("unreachable")))
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.ConnectionFailedRustPlusUnreachable,
-                        Properties.Resources.ConnectionFailedRustPlusUnreachableComment,
-                        WpfUi.ControlAppearance.Danger);
-                }
-                else
-                {
-                    ShowInfoSnackbar(
-                        Properties.Resources.SnackbarTitleConnection,
-                        $"{Properties.Resources.ErrorPrefix}{ex.Message}",
-                        WpfUi.ControlAppearance.Danger);
-                }
-            }
             return false;
         }
 
@@ -928,11 +910,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            if (RustPlusClientReal.IsAccessDeniedError(ex))
-            {
-                _vm.Selected.IsAccessDenied = true;
-                _vm.Save();
-            }
+            RecordConnectionFailure(_vm.Selected, ex);
             AppendLog("Connect failed: " + ex.Message);
             return false;
         }

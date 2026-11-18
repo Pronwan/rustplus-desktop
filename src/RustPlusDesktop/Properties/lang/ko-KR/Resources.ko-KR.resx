@@ -8249,4 +8249,46 @@ Rust+ Desktop은 로컬 앱을 FCM에 등록하여 백그라운드에서 동일�
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': 유지비 {1} %, 석유 굴착기 상자 {2}분.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>서버 알림 채널 ID (모드 서버)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>선택 사항 (비우면 레이드 또는 이벤트 채널, 모드 서버 알림 참조)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>모드 서버가 직접 보내는 알림입니다. 예: 벽 파괴, 유지비, 이벤트. 여기에 지정한 채널은 항상 받으며, 비워 두면 모드 서버 알림 설정에 따라 레이드 또는 이벤트 채널로 전송됩니다.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>모드 서버 알림</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>모드 서버 알림 처리</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>모드 서버가 직접 보내는 알림입니다. 예: "Wall destroyed at R9". 끄면 무시되고 알림 기록에만 남습니다.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>레이드 알림으로 처리</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>경보 창과 소리, Discord 레이드 채널, 앱이 닫혀 있을 때 Telegram 전화와 스마트홈 웹훅.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>일반 알림으로 처리</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>앱에서 짧은 알림, Discord 이벤트 채널, 전화 없음.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>웹사이트 및 Cloud 24/7과 동기화됩니다.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>모드 서버 알림 설정</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>서버 알림</value>
+  </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: {1} 전에 상자 열림</value>
+  </data>
 </root>

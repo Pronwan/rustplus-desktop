@@ -102,4 +102,47 @@ public class Map3DCacheReuseTests
         Assert.IsTrue(Map3DLocalBuildService.TryLoadReusableResult(_folder, ManifestPath, null, out var cached));
         Assert.IsNull(cached.TextureSha256);
     }
+
+    private void WriteParseStamp(string version) =>
+        File.WriteAllText(Path.Combine(_folder, Map3DLocalBuildService.ParserVersionFileName), version + "\n");
+
+    [TestMethod]
+    public void ParseWithoutStamp_IsOutdated()
+    {
+        // Parses cached before stamps were kept, such as every route drawn around oil rigs.
+        Assert.IsTrue(Map3DLocalBuildService.IsParseOutdated(_folder, "parser-v28"));
+    }
+
+    [TestMethod]
+    public void ParseStamp_IsOutdatedOnlyWhenItDiffers()
+    {
+        WriteParseStamp("parser-v28");
+        Assert.IsFalse(Map3DLocalBuildService.IsParseOutdated(_folder, "parser-v28"));
+
+        WriteParseStamp("parser-v27");
+        Assert.IsTrue(Map3DLocalBuildService.IsParseOutdated(_folder, "parser-v28"));
+    }
+
+    [TestMethod]
+    public void UnknownParserVersionOrNoParse_IsNeverOutdated()
+    {
+        WriteParseStamp("parser-v27");
+        Assert.IsFalse(Map3DLocalBuildService.IsParseOutdated(_folder, null), "without the parser's own stamp, a reparse proves nothing");
+
+        File.Delete(Path.Combine(_folder, "map_data.json"));
+        Assert.IsFalse(Map3DLocalBuildService.IsParseOutdated(_folder, "parser-v28"), "nothing parsed, nothing to redo");
+    }
+
+    [TestMethod]
+    public void CurrentParserVersion_IsReadBesideTheParser()
+    {
+        string parserDir = Path.Combine(_folder, "MapParser");
+        Directory.CreateDirectory(parserDir);
+        string parser = Path.Combine(parserDir, "MapParser.dll");
+        Assert.IsNull(Map3DLocalBuildService.CurrentParserVersion(parser));
+        Assert.IsNull(Map3DLocalBuildService.CurrentParserVersion(null));
+
+        File.WriteAllText(Path.Combine(parserDir, Map3DLocalBuildService.ParserVersionFileName), " parser-v28 \r\n");
+        Assert.AreEqual("parser-v28", Map3DLocalBuildService.CurrentParserVersion(parser));
+    }
 }

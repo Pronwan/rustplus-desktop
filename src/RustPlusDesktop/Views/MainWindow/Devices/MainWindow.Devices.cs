@@ -1242,6 +1242,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                         if (rStor.Exists)
                         {
                             dev.IsMissing = false;
+                            dev.LastPolledAt = DateTime.UtcNow;
                         }
                         else
                         {
@@ -1289,6 +1290,7 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
             }
 
             dev.IsMissing = !r.Exists;
+            if (r.Exists) dev.LastPolledAt = DateTime.UtcNow;
 
             _suppressToggleHandler = true;
             if ((dev.Kind ?? r.Kind)?.Equals("SmartAlarm", StringComparison.OrdinalIgnoreCase) == true)
@@ -2155,10 +2157,48 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         }
     }
 
-    private int _refreshAllBusy = 0;
-    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3, bool skipIfRecentlyChecked = false)
+    private async Task InitializeDevicesAsync(ServerProfile profile, bool reuseConnection)
     {
-        if (Interlocked.Exchange(ref _refreshAllBusy, 1) == 1) return;
+        var devices = profile.AllDevices.ToList();
+        if (devices.Count == 0 || _rust is not RustPlusClientReal real) return;
+        var ct = _connectionPollingCts.Token;
+        // Saved timestamps cannot prove freshness on a new socket; subscription pushes can.
+        if (!reuseConnection)
+            foreach (var device in devices) device.LastPolledAt = DateTime.MinValue;
+        var ids = devices.Select(d => d.EntityId).Distinct().ToList();
+        try
+        {
+            _vm.IsDeviceSubscribePriming = ids.Count > 0;
+            _vm.DeviceSubscribeMax = Math.Max(1, ids.Count);
+            _vm.DeviceSubscribeProgress = 0;
+            _vm.DeviceSubscribeText = "Preparing device subscriptions...";
+            await real.PrimeSubscriptionsAsync(ids, (done, total, id) => Dispatcher.Invoke(() =>
+            {
+                if (ct.IsCancellationRequested || !ReferenceEquals(_vm.Selected, profile)) return;
+                _vm.DeviceSubscribeMax = total;
+                _vm.DeviceSubscribeProgress = done;
+                _vm.DeviceSubscribeText = $"Subscribing device #{id}...";
+            }), ct);
+        }
+        finally
+        {
+            _vm.IsDeviceSubscribePriming = false;
+        }
+        ct.ThrowIfCancellationRequested();
+        if (!ReferenceEquals(_vm.Selected, profile)) throw new OperationCanceledException();
+        await RefreshAllDevicesStatusAsync(maxRetries: 1, skipIfRecentlyChecked: true, ct: ct);
+    }
+
+    internal static bool NeedsDeviceStatusRefresh(SmartDevice device, DateTime now) =>
+        !device.IsGroup && (device.IsMissing || string.IsNullOrWhiteSpace(device.Kind)
+            || device.LastPolledAt > now || now - device.LastPolledAt >= TimeSpan.FromMinutes(10));
+
+    private readonly SemaphoreSlim _refreshAllLock = new(1, 1);
+    private int _refreshAllBusy;
+    private async Task RefreshAllDevicesStatusAsync(int maxRetries = 3, bool skipIfRecentlyChecked = false, CancellationToken ct = default)
+    {
+        await _refreshAllLock.WaitAsync(ct);
+        Interlocked.Exchange(ref _refreshAllBusy, 1);
         try
         {
         void StartProgress(int max)
@@ -2169,8 +2209,6 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             _vm.DeviceStatusText = RustPlusDesk.Properties.Resources.GetString("CodeUiCheckingDevices");
             UpdateFullConnectButtonsEnabled();
         }
-
-        if (!skipIfRecentlyChecked) StartProgress(1);
 
         if (_logicEngineRunningAction)
         {
@@ -2184,10 +2222,13 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             return;
         }
 
+        if (!_vm.Selected.AllDevices.Any()) return;
+
         if (!await EnsureConnectedAsync())
             return;
 
-        var devices = _vm.Selected.AllDevices.ToList();
+        var profile = _vm.Selected;
+        var devices = profile.AllDevices.Where(d => !d.IsGroup).ToList();
         if (devices.Count == 0)
         {
             AppendLog("No Devices Available.");
@@ -2201,7 +2242,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         if (skipIfRecentlyChecked)
         {
             devices = devices
-                .Where(d => d.IsMissing || (DateTime.UtcNow - d.LastPolledAt).TotalMinutes >= 10)
+                .Where(d => NeedsDeviceStatusRefresh(d, DateTime.UtcNow))
                 .ToList();
 
             if (devices.Count == 0)
@@ -2216,16 +2257,24 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
 
         foreach (var device in devices)
         {
+            ct.ThrowIfCancellationRequested();
+            if (!ReferenceEquals(_vm.Selected, profile)) return;
+            if (skipIfRecentlyChecked && !NeedsDeviceStatusRefresh(device, DateTime.UtcNow))
+            {
+                _vm.DeviceStatusProgress++;
+                continue;
+            }
             try
             {
                 _vm.DeviceStatusText = string.Format(Properties.Resources.GetString("FormatCheckingDevice"), device.EntityId, device.DisplayName);
                 await RefreshDeviceStateAsync(device, log: true, forcePull: true, maxRetries: maxRetries);
-                device.LastPolledAt = DateTime.UtcNow;
+                ct.ThrowIfCancellationRequested();
                 _vm.DeviceStatusProgress++;
                 // Rust+ refills about three requests a second per player; four a second emptied the
                 // bucket on a long device list, and every probe after that came back unreachable.
-                await Task.Delay(400);
+                await Task.Delay(400, ct);
             }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
             catch (Exception ex)
             {
                 _vm.DeviceStatusProgress++;
@@ -2241,6 +2290,7 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
             _vm.IsDeviceStatusChecking = false;
             UpdateFullConnectButtonsEnabled();
             Interlocked.Exchange(ref _refreshAllBusy, 0);
+            _refreshAllLock.Release();
         }
 
     }
@@ -2406,82 +2456,6 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
         public object ConvertBack(object v, Type t, object p, CultureInfo c) => Binding.DoNothing;
     }
 
-    private async Task PrimeDeviceKindsAsync()
-    {
-        if (_vm?.Selected?.Devices == null || _vm.Selected.Devices.Count == 0) return;
-
-        // Collect devices that actually need probing (no kind yet and NOT in storage cache)
-        var toProbe = _vm.Selected.Devices.Where(d => 
-            string.IsNullOrEmpty(d.Kind) && 
-            !d.IsGroup && 
-            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
-        ).ToList();
-
-        // Check if some devices can be identified from cache without probing
-        if (_rust is RustPlusClientReal real)
-        {
-            foreach (var d in _vm.Selected.Devices.Where(d => string.IsNullOrEmpty(d.Kind) && !d.IsGroup).ToList())
-            {
-                if (real.TryGetCachedStorage(d.EntityId, out _))
-                {
-                    d.Kind = "StorageMonitor"; // If it's in the storage cache, it's definitely a storage monitor
-                }
-            }
-        }
-
-        // Re-calculate toProbe after identifying devices from cache
-        toProbe = _vm.Selected.Devices.Where(d => 
-            string.IsNullOrEmpty(d.Kind) && 
-            !d.IsGroup && 
-            (_rust is not RustPlusClientReal rpc || !rpc.TryGetCachedStorage(d.EntityId, out _))
-        ).ToList();
-
-        if (toProbe.Count == 0) return;
-
-        AppendLog($"[prime] probing {toProbe.Count} device kinds (parallel) …");
-        
-        // Limit concurrency to 3 simultaneous probes to avoid overwhelming the socket
-        using var semaphore = new SemaphoreSlim(3);
-        var tasks = toProbe.Select(async d =>
-        {
-            await semaphore.WaitAsync();
-            try
-            {
-                var r = await ProbeWithRetryAsync(d.EntityId, false);
-                if (!string.IsNullOrWhiteSpace(r.Kind))
-                    d.Kind = r.Kind;
-                d.IsMissing = !r.Exists;
-                
-                // Update state immediately from probe — only when it actually differs
-                // to avoid overwriting a state the user just set manually.
-                // Use Dispatcher.Invoke so that the UI-thread-only _suppressToggleHandler
-                // flag is set and cleared on the correct thread (parallel tasks run off-thread).
-                if (r.Exists && r.IsOn.HasValue && r.IsOn != d.IsOn)
-                {
-                    await Dispatcher.InvokeAsync(() =>
-                    {
-                        _suppressToggleHandler = true;
-                        d.IsOn = r.IsOn;
-                        _suppressToggleHandler = false;
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[prime] #{d.EntityId} err: {ex.Message}");
-            }
-            finally
-            {
-                semaphore.Release();
-                await Task.Delay(150);
-            }
-        });
-
-
-        await Task.WhenAll(tasks);
-        _vm?.NotifyDevicesChanged();
-    }
-
 // kommt aus RustPlusClientReal.StorageSnapshotReceived
     private void OnStorageSnapshot(uint entityId, StorageSnapshot snap)
 {
@@ -2501,6 +2475,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
             return;
 
         dev.IsMissing = false;
+        dev.LastPolledAt = DateTime.UtcNow;
 
         var uiSnap = new StorageSnapshot
         {

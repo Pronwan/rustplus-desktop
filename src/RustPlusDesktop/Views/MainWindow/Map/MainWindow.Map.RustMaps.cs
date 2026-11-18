@@ -95,20 +95,22 @@ namespace RustPlusDesk.Views
 
             RustMapsOverlay.Visibility = Visibility.Visible;
 
-            if (isPlaceholder)
+            // A RustMaps link always wins: a live server keeps the path of its parsed map file too,
+            // so a local file alone does not make it an offline map. A refetch keeps the old link usable.
+            if (!string.IsNullOrEmpty(profile.RustMapsMapId))
             {
-                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiOfflineMap");
-                BtnOpenRustMaps.IsEnabled = false;
+                TxtRustMapsStatus.Text = "RustMaps";
+                BtnOpenRustMaps.IsEnabled = true;
             }
             else if (_isRustMapsSearching)
             {
                 TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("UiSearching");
                 BtnOpenRustMaps.IsEnabled = false;
             }
-            else if (!string.IsNullOrEmpty(profile.RustMapsMapId))
+            else if (isPlaceholder)
             {
-                TxtRustMapsStatus.Text = "RustMaps";
-                BtnOpenRustMaps.IsEnabled = true;
+                TxtRustMapsStatus.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiOfflineMap");
+                BtnOpenRustMaps.IsEnabled = false;
             }
             else
             {
@@ -891,6 +893,33 @@ namespace RustPlusDesk.Views
                 _isMap3DActive = false;
                 RestoreMap2DAfterFailedOpen();
             });
+        }
+
+        /// <summary>
+        /// Redoes a cached parse from an older MapParser in the background, from the map file it was
+        /// made from, then reloads everything it feeds. Until then the overlays show the earlier parse.
+        /// </summary>
+        private async Task RefreshOutdatedParseAsync(string folderPath, ServerProfile profile)
+        {
+            int selectionVersion = _mapSelectionVersion;
+            try
+            {
+                var outcome = await Task.Run(() => Map3DLocalBuildService.RefreshOutdatedParseAsync(folderPath));
+                if (outcome == Map3DLocalBuildService.ParseRefreshOutcome.NotNeeded) return;
+                if (outcome == Map3DLocalBuildService.ParseRefreshOutcome.Failed)
+                {
+                    AppendLog("[map-cache] The cached map parse is from an older MapParser and could not be redone; keeping it for now.");
+                    return;
+                }
+
+                AppendLog("[map-cache] The cached map parse was from an older MapParser; parsed its map file again.");
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm?.Selected, profile)) return;
+                await LoadParsedMapDataAsync(folderPath, applyRenderedImage: false);
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[map-cache] Redoing the cached map parse failed: {ex.Message}");
+            }
         }
 
         /// <summary>

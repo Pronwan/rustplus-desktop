@@ -7304,4 +7304,43 @@ Panel istediğin gibi göründüğünde bu önizlemeyi kapat.</value>
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': bakım %{1}, petrol platformu sandığı {2} dk.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>Sunucu Uyarıları Kanal ID (modlu sunucular)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>İsteğe bağlı (boşsa: baskın veya etkinlik kanalı, bkz. Modlu Sunucu Uyarıları)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Modlu bir sunucunun kendi gönderdiği uyarılar; yıkılan duvarlar, bakım veya etkinlikler gibi. Burada belirtilen kanal bunları her zaman alır; boşsa, Modlu Sunucu Uyarıları ayarına göre baskın veya etkinlik kanalına gider.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Modlu Sunucu Uyarıları</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Modlu sunucu uyarılarını işle</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Modlu bir sunucunun kendi gönderdiği uyarılar, örneğin "Wall destroyed at R9". Kapalı: yok sayılır ve yalnızca bildirim geçmişinde tutulur.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Baskın uyarısı olarak işle</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Alarm penceresi ve ses, Discord'da baskın kanalı, uygulama kapalıyken Telegram araması ve akıllı ev webhook'u.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Normal uyarı olarak işle</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>Uygulamada kısa bir bildirim, Discord'da etkinlik kanalı, arama yok.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Web sitesi ve Cloud 24/7 ile senkronize edilir.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Modlu sunucu uyarıları ayarları</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Sunucu uyarısı</value>
+  </data>
 </root>

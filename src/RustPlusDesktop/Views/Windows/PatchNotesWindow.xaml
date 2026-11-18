@@ -214,9 +214,9 @@
                         <StackPanel x:Name="PatchNotesContent">
 
                             <!-- ============================================== -->
-                            <!-- v11.4.1 UPDATE -->
+                            <!-- v11.4.2 UPDATE -->
                             <!-- ============================================== -->
-                            <Border x:Name="Card_v11_4_1"
+                            <Border x:Name="Card_v11_4_2"
                                     Background="{DynamicResource SurfaceAlt}"
                                     BorderBrush="{DynamicResource Accent}"
                                     BorderThickness="1.5"
@@ -230,8 +230,72 @@
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
                                                 <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
                                             </Border>
-                                            <TextBlock Text="v11.4.1 | Custom Server Modifiers for Modded Servers"
+                                            <TextBlock Text="v11.4.2 | Instant Map Previews, Clearer Connections &amp; Server Alerts"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Summary Lead Box -->
+                                    <Border Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="20" Foreground="{DynamicResource TextPrimary}">
+                                            A hotfix for connecting and switching servers: your saved map shows right away, the connection card tells you what each mode does, and reconnects stop retrying endlessly. Premium players on modded servers can also send the server's own alerts to a Discord channel of their own.
+                                        </TextBlock>
+                                    </Border>
+
+                                    <!-- Points -->
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Saved Map Shows Instantly:</Run>
+                                        When you open or switch to a server, its saved map appears at once as a Cached Map Preview, while the app connects your devices and checks the current wipe. You no longer wait for the devices before you see a map.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Clearer Connection Modes:</Run>
+                                        The connection card now explains each mode. Devices only connects your devices, chat and team status without live map updates; Full connect adds live map updates once the wipe is checked.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Calmer Reconnects:</Run>
+                                        When Rust+ cannot be reached, the app shows Reconnecting... or Rust+ unavailable and keeps trying in the background, at first after a few seconds and then once a minute, and stops where trying again cannot help. If a saved server has no companion server ID, it tells you to sync your pairings or pair the server again in game.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Device Progress Only When Needed:</Run>
+                                        The device progress bar now only shows while devices are really being loaded.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Modded Server Alerts:</Run>
+                                        Alerts a modded server sends on its own, such as "Wall destroyed at R9", have their own setting under Settings &gt; Alerts, synced with the website and Cloud 24/7. Treat them as a raid alert (alarm window, raid channel, Telegram call) or as a standard alert (a short notice, events channel, no call), or turn them off.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Server Alerts in Discord (Premium):</Run>
+                                        Server alerts now also reach your Discord bot while the app is closed. In the Discord Bot settings you can give them their own channel; left empty, they go to your raid or events channel, depending on the setting above.
+                                    </TextBlock>
+
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; No More Missing Discord Alerts (Premium):</Run>
+                                        If a teammate on the free plan had the app open while yours was closed, raid alerts did not reach your Discord bot. The cloud now posts them in that case.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- ============================================== -->
+                            <!-- v11.4.1 UPDATE -->
+                            <!-- ============================================== -->
+                            <Border x:Name="Card_v11_4_1"
+                                    Background="{DynamicResource SurfaceAlt}"
+                                    BorderBrush="{DynamicResource CardBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,0,0,16">
+                                <StackPanel>
+                                    <!-- Header Banner -->
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="v11.4.1 | Custom Server Modifiers for Modded Servers"
+                                                       FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Grid>
 

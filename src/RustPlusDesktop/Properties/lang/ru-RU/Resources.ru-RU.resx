@@ -8328,4 +8328,46 @@ Rust+ Desktop регистрирует локальное приложение �
   <data name="ServerModifiersSavedMessage" xml:space="preserve">
     <value>'{0}': содержание {1} %, ящик на вышке {2} мин.</value>
   </data>
+  <data name="UiServerAlertsChannelID" xml:space="preserve">
+    <value>ID канала оповещений сервера (модовые серверы)</value>
+  </data>
+  <data name="UiServerAlertsChannelPlaceholder" xml:space="preserve">
+    <value>Необязательно (если пусто — канал рейдов или событий, см. оповещения модовых серверов)</value>
+  </data>
+  <data name="UiServerAlertsChannelHint" xml:space="preserve">
+    <value>Оповещения, которые модовый сервер отправляет сам: разрушенные стены, содержание, события. Указанный здесь канал получает их всегда; если пусто, они идут в канал рейдов или событий в зависимости от настройки оповещений модовых серверов.</value>
+  </data>
+  <data name="UiServerAlertsTitle" xml:space="preserve">
+    <value>Оповещения модовых серверов</value>
+  </data>
+  <data name="UiServerAlertsEnable" xml:space="preserve">
+    <value>Обрабатывать оповещения модовых серверов</value>
+  </data>
+  <data name="UiServerAlertsEnableHint" xml:space="preserve">
+    <value>Оповещения, которые модовый сервер отправляет сам, например «Wall destroyed at R9». Выключено: они игнорируются и сохраняются только в истории уведомлений.</value>
+  </data>
+  <data name="UiServerAlertsAsRaid" xml:space="preserve">
+    <value>Считать оповещением о рейде</value>
+  </data>
+  <data name="UiServerAlertsAsRaidHint" xml:space="preserve">
+    <value>Окно тревоги и звук, канал рейдов в Discord, звонок Telegram и вебхук умного дома при закрытом приложении.</value>
+  </data>
+  <data name="UiServerAlertsAsStandard" xml:space="preserve">
+    <value>Считать обычным оповещением</value>
+  </data>
+  <data name="UiServerAlertsAsStandardHint" xml:space="preserve">
+    <value>Короткое уведомление в приложении, канал событий в Discord, без звонка.</value>
+  </data>
+  <data name="UiServerAlertsSynced" xml:space="preserve">
+    <value>Синхронизируется с сайтом и Cloud 24/7.</value>
+  </data>
+  <data name="UiServerAlertsOpenSettings" xml:space="preserve">
+    <value>Настройки оповещений модовых серверов</value>
+  </data>
+  <data name="UiServerAlertSnackTitle" xml:space="preserve">
+    <value>Оповещение сервера</value>
+  </data>
+  <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
+    <value>{0}: ящик открылся {1} назад</value>
+  </data>
 </root>

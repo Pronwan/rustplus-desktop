@@ -56,6 +56,26 @@ public class DevicesPanelTests
         Assert.IsNull(search.Resources[typeof(TextBlock)], "No nudge transforms on the search text.");
     }
 
+    [STATestMethod]
+    public void DeviceSetupProgress_IsInDevices_AndVisibleOnlyWhileItsPhaseRuns()
+    {
+        var view = LoadPanel();
+        foreach (var (subscribing, checking) in new[] { (false, false), (true, false), (false, true) })
+        {
+            view.DataContext = new State { IsDeviceSubscribePriming = subscribing, IsDeviceStatusChecking = checking };
+            Refresh(view, 280);
+            Assert.AreEqual(subscribing ? Visibility.Visible : Visibility.Collapsed,
+                ((Border)view.FindName("DeviceSubscriptionProgress")).Visibility);
+            Assert.AreEqual(checking ? Visibility.Visible : Visibility.Collapsed,
+                ((Border)view.FindName("DeviceStatusProgressPanel")).Visibility);
+        }
+        string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../.."));
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var map = XDocument.Load(Path.Combine(root, "src/RustPlusDesktop/MainWindow.xaml"))
+            .Descendants().Single(e => (string?)e.Attribute(x + "Name") == "MapPlaceholder");
+        Assert.IsFalse(map.Descendants().Attributes().Any(a => a.Value.Contains("IsDeviceSubscribePriming") || a.Value.Contains("IsDeviceStatusChecking")));
+    }
+
     internal static void Refresh(FrameworkElement view, double width)
     {
         view.Measure(new Size(width, 700));
@@ -79,6 +99,8 @@ public class DevicesPanelTests
             dock.Elements(wpf + "Grid").First(),
             dock.Descendants(wpf + "Grid").First(g => g.Elements().Any(e => Name(e) == "TxtDeviceFilter")),
             dock.Elements(wpf + "Border").Single(e => Name(e) == "DevicesActionBar"),
+            dock.Elements(wpf + "Border").Single(e => Name(e) == "DeviceSubscriptionProgress"),
+            dock.Elements(wpf + "Border").Single(e => Name(e) == "DeviceStatusProgressPanel"),
         }.Select(e => new XElement(e)).ToArray();
         foreach (var part in parts)
         {
@@ -95,6 +117,8 @@ public class DevicesPanelTests
         var dictionary = theme.Element(wpf + "ResourceDictionary")!;
         dictionary.Elements(wpf + "SolidColorBrush").Remove();
         dictionary.Add(tokens);
+        XNamespace converters = "clr-namespace:RustPlusDesk.Converters;assembly=RustPlusDesk";
+        dictionary.Add(new XElement(converters + "BoolToVisibilityConverter", new XAttribute(x + "Key", "BoolToVisibility")));
         var host = new XElement(wpf + "StackPanel", new XAttribute("xmlns", wpf.NamespaceName), new XAttribute(XNamespace.Xmlns + "x", x.NamespaceName),
             new XAttribute(XNamespace.Xmlns + "ui", "http://schemas.lepo.co/wpfui/2022/xaml"), new XAttribute("Background", "#181B1F"), theme, parts);
         var view = (StackPanel)XamlReader.Parse(host.ToString().Replace("http://schemas.lepo.co/wpfui/2022/xaml", "clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"));
@@ -116,5 +140,15 @@ public class DevicesPanelTests
     {
         public Selection Selected { get; set; } = new();
         public System.Collections.ObjectModel.ObservableCollection<object> CurrentDevices { get; } = new();
+        public bool IsDeviceSubscribePriming { get; set; }
+        public bool IsDeviceStatusChecking { get; set; }
+        public int DeviceSubscribeMax => 9;
+        public int DeviceSubscribeProgress { get; set; } = 4;
+        public string DeviceSubscribeProgressText => "4 / 9";
+        public string DeviceSubscribeText => "Subscribing device #2400320...";
+        public int DeviceStatusMax => 9;
+        public int DeviceStatusProgress { get; set; } = 4;
+        public string DeviceStatusProgressText => "4 / 9";
+        public string DeviceStatusText => "Checking device #2400320...";
     }
 }

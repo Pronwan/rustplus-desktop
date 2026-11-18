@@ -832,7 +832,31 @@ Rust+ Desktop registers your local app with FCM so it can receive those same Rus
     <value>Initializing...</value>
   </data>
   <data name="StatusDevicesActive" xml:space="preserve">
-    <value>Devices active</value>
+    <value>Devices only</value>
+  </data>
+  <data name="ConnectionMode" xml:space="preserve">
+    <value>Connection mode</value>
+  </data>
+  <data name="MapCachedPreview" xml:space="preserve">
+    <value>CACHED MAP PREVIEW</value>
+  </data>
+  <data name="MapSetupHint" xml:space="preserve">
+    <value>Checking devices and verifying the current wipe before live map updates begin.</value>
+  </data>
+  <data name="ConnectionFailedMissingServerIdComment" xml:space="preserve">
+    <value>The direct connection failed. This saved entry currently has no companion server ID, so the companion route could not be tried. Sync pairings to try restoring it; if it is still missing, pair this server again in Rust.</value>
+  </data>
+  <data name="CachedMapConnectHint" xml:space="preserve">
+    <value>This is a saved map preview. Full connect checks the wipe and starts live updates.</value>
+  </data>
+  <data name="SoftConnectMapHint" xml:space="preserve">
+    <value>Your devices, chat and team status are connected. Full connect enables live map updates.</value>
+  </data>
+  <data name="ConnectDevicesOnly" xml:space="preserve">
+    <value>Devices only</value>
+  </data>
+  <data name="ConnectDevicesOnlyHint" xml:space="preserve">
+    <value>Connect devices, chat and team status. Live map polling stays off.</value>
   </data>
   <data name="StatusFullyConnected" xml:space="preserve">
     <value>Fully connected</value>
@@ -6739,4 +6763,20 @@ You can find more information on the server's official website:
   <data name="BuildInviteMessageShipNamed" xml:space="preserve">
     <value>{0} invites you to build &quot;{1}&quot; together in the Ship Builder.</value>
   </data>
+  <data name="ConnectionReconnecting" xml:space="preserve"><value>Reconnecting…</value></data>
+  <data name="ConnectionUnavailableTitle" xml:space="preserve"><value>Rust+ unavailable</value></data>
+  <data name="ConnectionUnavailableDescription" xml:space="preserve"><value>Unable to reach Rust+. The server, your network, or the companion service may be unavailable. Check your connection and retry.</value></data>
+  <data name="ConnectionServerErrorTitle" xml:space="preserve"><value>Server error</value></data>
+  <data name="ConnectionServerErrorDescription" xml:space="preserve"><value>The Rust server returned an error. You can retry the connection.</value></data>
+  <data name="ConnectionUnsupportedTitle" xml:space="preserve"><value>Feature unavailable</value></data>
+  <data name="ConnectionUnsupportedDescription" xml:space="preserve"><value>This Rust server does not support the requested feature. Other connected features can still work.</value></data>
+  <data name="ConnectionRePairRequiredTitle" xml:space="preserve"><value>Re-pair needed</value></data>
+  <data name="ConnectionRePairRequiredDescription" xml:space="preserve"><value>The server rejected your pairing. In Rust, open Esc → Rust+ → Pair with Server, then retry here.</value></data>
+  <data name="ConnectionSignInRequiredTitle" xml:space="preserve"><value>Sign in again</value></data>
+  <data name="ConnectionSignInRequiredDescription" xml:space="preserve"><value>Your Rust+ companion login is missing or was rejected. Sign in again; this is separate from pairing an individual server.</value></data>
+  <data name="ConnectionSignInAction" xml:space="preserve"><value>Sign in again</value></data>
+  <data name="ConnectionRePairAction" xml:space="preserve"><value>How to re-pair</value></data>
+  <data name="ConnectionRetryAction" xml:space="preserve"><value>Retry</value></data>
+  <data name="ConnectionMissingCompanionIdTitle" xml:space="preserve"><value>Server pairing needs updating</value></data>
+  <data name="ConnectionMissingCompanionIdDescription" xml:space="preserve"><value>This saved pairing has no companion ID. In Rust, open Esc → Rust+ → Pair with Server to refresh this server pairing.</value></data>
 </root>
