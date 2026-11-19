@@ -88,5 +88,12 @@ if (-not (Test-Path $outputDir)) {
     New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
 }
 
-[System.IO.File]::WriteAllText($outputPath, $code)
-Write-Host "Generated obfuscated secrets successfully at $outputPath"
+# Leave the file's content alone when unchanged so the C# compile stays incremental.
+if ((Test-Path $outputPath) -and ([System.IO.File]::ReadAllText($outputPath) -ceq $code)) {
+    # Touch only so the MSBuild Inputs/Outputs check sees the output as newer than .env.
+    (Get-Item $outputPath).LastWriteTimeUtc = [DateTime]::UtcNow
+    Write-Host "Obfuscated secrets unchanged at $outputPath"
+} else {
+    [System.IO.File]::WriteAllText($outputPath, $code)
+    Write-Host "Generated obfuscated secrets successfully at $outputPath"
+}
