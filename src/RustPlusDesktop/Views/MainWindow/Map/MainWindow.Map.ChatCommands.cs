@@ -550,6 +550,7 @@ public partial class MainWindow
                             await real.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
                             toggledNames.Add(dev.PureName ?? dev.EntityId.ToString());
                             dev.IsOn = targetOn;
+                            VerifyToggleSoon(dev);
                             await Task.Delay(800);
                         }
                         catch (Exception ex)
@@ -766,6 +767,7 @@ public partial class MainWindow
             {
                 device.IsOn = state;
                 device.IsMissing = false;
+                VerifyToggleSoon(device);
             }
             return true;
         }
@@ -806,6 +808,7 @@ public partial class MainWindow
             // Toggle: invert current state
             bool newState = !(dev.IsOn ?? false);
             await _rust.ToggleSmartSwitchAsync(dev.EntityId, newState);
+            VerifyToggleSoon(dev);
             string label = dev.Alias ?? dev.Name ?? dev.EntityId.ToString();
             AppendLog($"[DiscordBotListener] Toggled {label} → {(newState ? "ON" : "OFF")}");
             return (true, $"{(newState ? "✅" : "⛔")} **{label}** turned **{(newState ? "ON" : "OFF")}**");

@@ -132,6 +132,7 @@ public partial class MainWindow
                     using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
                     await _rust.ToggleSmartSwitchAsync(decision.Target.EntityId, decision.State, cts.Token);
                     decision.Target.IsOn = decision.State;
+                    VerifyToggleSoon(decision.Target);
                     decision.Rule.LastAppliedState = decision.State;
                     AppendLog($"[DeviceAutomation] '{decision.Rule.Name}' set {decision.Target.DisplayName} {(decision.State ? "ON" : "OFF")}.");
                     await Task.Delay(800);

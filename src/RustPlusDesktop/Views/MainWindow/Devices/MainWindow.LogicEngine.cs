@@ -413,6 +413,7 @@ namespace RustPlusDesk.Views
                         cts.CancelAfter(TimeSpan.FromSeconds(5));
                         await _rust.ToggleSmartSwitchAsync(sw.EntityId, targetOn, cts.Token);
                         sw.IsOn = targetOn;
+                        VerifyToggleSoon(sw);
                         await Task.Delay(800, cancellationToken); // Wait between toggle calls
                     }
                 }
@@ -440,6 +441,7 @@ namespace RustPlusDesk.Views
                     cts.CancelAfter(TimeSpan.FromSeconds(5));
                     await _rust.ToggleSmartSwitchAsync(dev.EntityId, targetOn, cts.Token);
                     dev.IsOn = targetOn;
+                    VerifyToggleSoon(dev);
                     await Task.Delay(800, cancellationToken);
                 }
                 finally

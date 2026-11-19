@@ -12,4 +12,15 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
 
+  <!--
+    Debug-only: skip work that only matters for shipped output. Release (what CI builds and
+    publishes) is untouched. A WPF project compiles twice per build (the _wpftmp markup pass,
+    then the real compile), so every second shaved off Csc is paid for twice.
+  -->
+  <PropertyGroup Condition="'$(Configuration)' != 'Release' And '$(ContinuousIntegrationBuild)' != 'true'">
+    <RunAnalyzers>false</RunAnalyzers>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
 </Project>

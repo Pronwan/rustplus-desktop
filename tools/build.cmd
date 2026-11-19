@@ -8,18 +8,23 @@ if not exist ".env" (
     goto failed
 )
 
-if not exist "src\RustPlusDesktop\Features\GeneticsLab\node_modules" (
-    echo Installing Genetics Lab dependencies...
-    call npm --prefix "src\RustPlusDesktop\Features\GeneticsLab" ci
-    if errorlevel 1 goto failed
-)
+REM Incremental: the csproj builds Genetics Lab (npm ci + vite) only when its sources changed,
+REM and regenerates secrets / re-publishes MapParser only when their inputs changed.
+REM   (default)  build only the app project (skips the test project)
+REM   --all       build the whole solution
+REM   --clean     force a full, non-incremental rebuild
+set "BUILD_TARGET=src\RustPlusDesktop\RustPlusDesk.csproj"
+set "BUILD_ARGS=--configuration Debug --nologo -v:minimal -m"
+:parse
+if "%~1"=="" goto run
+if /i "%~1"=="--all" set "BUILD_TARGET=RustPlusDesk.sln"
+if /i "%~1"=="--clean" set "BUILD_ARGS=%BUILD_ARGS% --no-incremental"
+shift
+goto parse
 
-echo Building Genetics Lab...
-call npm --prefix "src\RustPlusDesktop\Features\GeneticsLab" run build
-if errorlevel 1 goto failed
-
+:run
 echo Building RustPlus Desktop...
-call dotnet build "RustPlusDesk.sln" --configuration Debug --nologo
+call dotnet build "%BUILD_TARGET%" %BUILD_ARGS%
 if errorlevel 1 goto failed
 
 echo.
