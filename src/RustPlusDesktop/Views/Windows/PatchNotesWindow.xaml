@@ -240,6 +240,10 @@
                                         <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Correct Switch States:</Run>
                                         After a few quick clicks on a smart switch, the device list could show it on while it was off in game, and neither Refresh nor a restart fixed it. The list now checks the real state after you click, and Refresh and startup read it correctly again.
                                     </TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="19">
+                                        <Run FontWeight="Bold" Foreground="{DynamicResource TextPrimary}">&#x2022; Builders Sanctuary 3D Bases:</Run>
+                                        Updated relay endpoints to api.sanc.gg to ensure reliable base imports on the 3D map.
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
 
