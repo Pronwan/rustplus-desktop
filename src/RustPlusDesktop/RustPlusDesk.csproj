@@ -386,6 +386,10 @@
   <!-- WebView2 serves these from disk. -->
   <Target Name="StageMapParserViewerRuntime" DependsOnTargets="BuildMapParserRuntime">
     <Error Condition="!Exists('$(MapParserViewerDistDir)index.html') Or !Exists('$(MapParserViewerDistDir)modules\glbWorker.js')" Text="MapParser's compiled viewer or GLB worker is missing. Rebuild the MapParser runtime." />
+    <!-- BuildMapParserRuntime is incremental, so a lite build can reuse a publish dir an earlier full
+         build filled (CI runs `dotnet test` with the default, then the lite publish). Its RemoveDir only
+         runs when the target does, so drop the models here on every lite build. -->
+    <RemoveDir Directories="$(MapParserPublishDir)Rust_Assets\FP\assets" Condition="'$(IncludeRustModels)' == 'false' And Exists('$(MapParserPublishDir)Rust_Assets\FP\assets')" />
     <ItemGroup>
       <MapParserViewerFiles Include="$(MapParserViewerDistDir)**\*" />
       <MapParserViewerSupport Include="$(MapParserSourceDir)style.css;$(MapParserSourceDir)tailwind-local.css;$(MapParserSourceDir)prefabs_map.json;$(MapParserSourceDir)monument_bounds.json;$(MapParserSourceDir)monument_metadata.json;$(MapParserSourceDir)building_block_ORIGINAL_REDDIT.json;$(MapParserSourceDir)draco_decoder.wasm" />

@@ -235,7 +235,7 @@ jobs:
           }
 
       - name: Test desktop app
-        run: dotnet test tests/RustPlusDesktop.Tests/RustPlusDesktop.Tests.csproj --configuration "${{ env.CONFIGURATION }}" -p:SkipGeneticsLabBuild=true
+        run: dotnet test tests/RustPlusDesktop.Tests/RustPlusDesktop.Tests.csproj --configuration "${{ env.CONFIGURATION }}" -p:SkipGeneticsLabBuild=true -p:IncludeRustModels=${{ inputs.lite_build && 'false' || 'true' }}
 
       - name: Publish Windows app
         run: >
@@ -252,6 +252,21 @@ jobs:
           -p:GenerateDocumentationFile=false
           -p:SkipGeneticsLabBuild=true
           -p:IncludeRustModels=${{ inputs.lite_build && 'false' || 'true' }}
+
+      # A lite package must not carry the 3D models (~430 MB): 11.4.3 shipped them because the
+      # incremental MapParser build reused a publish dir the test build had filled.
+      - name: Check the lite package has no models
+        if: ${{ inputs.lite_build }}
+        shell: pwsh
+        run: |
+          $models = Join-Path "${{ env.PUBLISH_DIR }}" "MapParser/Rust_Assets/FP/assets"
+          $files = @(if (Test-Path -LiteralPath $models) { Get-ChildItem -LiteralPath $models -File -Recurse })
+          if ($files.Count -gt 0) {
+            $mb = [math]::Round(($files | Measure-Object Length -Sum).Sum / 1MB)
+            throw "Lite build contains $($files.Count) model files ($mb MB) under MapParser/Rust_Assets/FP/assets."
+          }
+          $total = [math]::Round((Get-ChildItem -LiteralPath "${{ env.PUBLISH_DIR }}" -File -Recurse | Measure-Object Length -Sum).Sum / 1MB)
+          Write-Host "Lite publish is $total MB with no models."
 
       - name: Build Velopack release
         shell: pwsh
