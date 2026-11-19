@@ -9,13 +9,13 @@ namespace RustPlusDesk.Views;
 
 public partial class MainWindow
 {
-    // The 3D viewer's Bases browser reads Archipel (api.archipel.gg), which sends no CORS headers
+    // The 3D viewer's Bases browser reads Archipel (api.sanc.gg), which sends no CORS headers
     // for https://rustplus3d.local, so the app relays requests via an unmapped API origin.
     // WebView2 does not fire WebResourceRequested for virtual-host folder mappings.
     // Only the public, read-only browsing and build-data endpoints pass.
     private static readonly HttpClient _archipelHttpClient = new(new Services.TrafficTrackingHttpMessageHandler("Archipel"))
     {
-        BaseAddress = new Uri("https://api.archipel.gg/"),
+        BaseAddress = new Uri("https://api.sanc.gg/"),
         Timeout = TimeSpan.FromSeconds(25)
     };
 
