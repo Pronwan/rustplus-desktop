@@ -28,9 +28,10 @@
          swaps MenuFlyoutBackground for a translucent tint. Everything below is
          written for the opaque fallback, which is what Windows 10 keeps.
 
-         The open animation also lives in menus:MenuFlyout — Windows slides the
-         whole menu window up into place, and a template can only move content
-         inside a window already sized to it.
+         The open animation also lives in menus:MenuFlyout. Windows slides the
+         whole menu window out of the point it was invoked from, and the acrylic
+         belongs to that window, so moving content inside it would leave the
+         blur behind. Don't add opening animations or a PopupAnimation here.
          ============================================================ -->
 
     <SolidColorBrush x:Key="MenuFlyoutBackground" Color="#F51E2026" />

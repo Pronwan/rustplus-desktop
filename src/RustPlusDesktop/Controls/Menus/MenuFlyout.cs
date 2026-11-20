@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace RustPlusDesk.Controls.Menus;
@@ -24,10 +23,12 @@ namespace RustPlusDesk.Controls.Menus;
 ///    for on that window's handle. Windows 11 only — Windows 10 keeps the
 ///    opaque surface the dictionary ships with.
 ///
-/// 3. The open animation. Windows slides a menu up into place, and doing that
-///    inside the template would only slide the content within a window already
-///    sized to it, clipping the bottom rows. The whole popup window has to move,
-///    so the animation runs on the Popup's own offset from out here.
+/// 3. The open animation. Windows slides a menu a few pixels out from where it
+///    was invoked. The acrylic belongs to the popup window, not to anything
+///    the template draws, so sliding content inside it would leave the blur
+///    sitting still. The whole window has to move; <see cref="PopupEntrance"/>
+///    does that in step with the compositor rather than through the Popup's
+///    offset, which re-ran WPF placement every frame and stuttered.
 /// </summary>
 public static class MenuFlyout
 {
@@ -55,6 +56,14 @@ public static class MenuFlyout
         if (_initialized) return;
         _initialized = true;
 
+        // A ContextMenu's popup picks up the system menu animation through this
+        // key: a 150 ms linear fade of the content that the acrylic behind it
+        // does not share, so the blur pops in and the text drifts in after it.
+        // The entrance below replaces it. Application resources are searched
+        // before system ones, so this wins for every context menu.
+        if (Application.Current is { } app)
+            app.Resources[SystemParameters.MenuPopupAnimationKey] = PopupAnimation.None;
+
         // Loaded runs before the popup's first frame, so the acrylic is in place
         // by the time anything is painted. Opened is the backstop for menus whose
         // handle is not up yet at Loaded.
@@ -75,20 +84,24 @@ public static class MenuFlyout
         if (sender is not ContextMenu menu) return;
         ApplyAcrylic(PresentationSource.FromVisual(menu) as HwndSource);
         ScheduleIconGutter(menu);
-        SlideOpen(menu);
     }
 
     private static void OnContextMenuOpened(object sender, RoutedEventArgs e)
     {
         if (sender is not ContextMenu menu) return;
+
+        // Opened is raised right after the popup window is shown and before
+        // WPF renders into it, the only point where the first visible frame
+        // can still be placed at the start of the slide.
+        if (menu.Parent is Popup popup) BeginEntrance(popup, menu, horizontal: false);
+
         ApplyAcrylic(PresentationSource.FromVisual(menu) as HwndSource);
         ScheduleIconGutter(menu);
-        SlideOpen(menu);
     }
 
     private static void OnContextMenuClosed(object sender, RoutedEventArgs e)
     {
-        if (sender is ContextMenu menu) menu.SetValue(AnimatedProperty, false);
+        if (sender is ContextMenu { Parent: Popup popup }) CancelEntrance(popup);
     }
 
     private static void OnSubmenuOpened(object sender, RoutedEventArgs e)
@@ -99,17 +112,38 @@ public static class MenuFlyout
 
         ScheduleIconGutter(item);
 
-        if (item.Template?.FindName("PART_Popup", item) is Popup popup)
-        {
-            Slide(popup);
+        if (item.Template?.FindName("PART_Popup", item) is not Popup popup) return;
 
-            item.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
-            {
-                if (popup.Child is Visual child)
-                    ApplyAcrylic(PresentationSource.FromVisual(child) as HwndSource);
-            }));
-        }
+        // SubmenuOpened is raised from the IsSubmenuOpen change callback, before
+        // the template's IsOpen binding has caught up, so the window does not
+        // exist yet. Its own Opened event is where it does.
+        if ((bool)popup.GetValue(SubmenuHookedProperty)) return;
+
+        popup.SetValue(SubmenuHookedProperty, true);
+        popup.Opened += OnSubmenuPopupOpened;
+        popup.Closed += OnSubmenuPopupClosed;
+
+        // Backstop for a template whose popup somehow opened first. Only on the
+        // first hook-up: after that the Opened handler covers it, and starting a
+        // second entrance would read the parked position as the resting one.
+        if (popup.IsOpen) OnSubmenuPopupOpened(popup, EventArgs.Empty);
     }
+
+    private static void OnSubmenuPopupOpened(object? sender, EventArgs e)
+    {
+        if (sender is not Popup { Child: FrameworkElement child } popup) return;
+        BeginEntrance(popup, child, horizontal: true);
+        ApplyAcrylic(PresentationSource.FromVisual(child) as HwndSource);
+    }
+
+    private static void OnSubmenuPopupClosed(object? sender, EventArgs e)
+    {
+        if (sender is Popup popup) CancelEntrance(popup);
+    }
+
+    private static readonly DependencyProperty SubmenuHookedProperty =
+        DependencyProperty.RegisterAttached(
+            "SubmenuHooked", typeof(bool), typeof(MenuFlyout), new PropertyMetadata(false));
 
     /// <summary>
     /// Containers are generated lazily, and data-bound items get their Icon set
@@ -145,62 +179,133 @@ public static class MenuFlyout
 
     // ── Open animation ──────────────────────────────────────────────────────
 
-    /// <summary>How far below its resting place a menu starts, in DIPs.</summary>
-    private const double SlideDistance = 14;
+    // Windows 11 menus come out of the point they were invoked from: a menu that
+    // opens below the cursor drops down into place, one flipped above it rises,
+    // and a submenu slides out sideways from its parent. Short distance, Fluent
+    // decelerate curve, so nearly all the travel is over in the first few
+    // frames and the rest is a soft landing.
 
-    private static readonly Duration SlideDuration = new(TimeSpan.FromMilliseconds(170));
+    /// <summary>Start offset of a context menu, in DIPs.</summary>
+    private const double MenuSlideDistance = 16;
+
+    /// <summary>Start offset of a submenu, in DIPs. Shorter, since it starts right next to its parent.</summary>
+    private const double SubmenuSlideDistance = 10;
+
+    /// <summary>Fluent's "normal" duration. The decelerate curve front-loads it.</summary>
+    private static readonly TimeSpan SlideDuration = TimeSpan.FromMilliseconds(250);
+
+    private static readonly DependencyProperty EntranceProperty =
+        DependencyProperty.RegisterAttached(
+            "Entrance", typeof(PopupEntrance), typeof(MenuFlyout), new PropertyMetadata(null));
 
     /// <summary>
-    /// Guards against animating twice for one opening: Loaded and Opened both
-    /// fire, and Loaded is the one early enough to catch the first frame.
+    /// Off when Windows has animation effects turned off, or the user asked the
+    /// app for fewer effects. Both mean motion is unwelcome, so the menu just
+    /// appears.
     /// </summary>
-    private static readonly DependencyProperty AnimatedProperty =
-        DependencyProperty.RegisterAttached(
-            "Animated", typeof(bool), typeof(MenuFlyout), new PropertyMetadata(false));
-
-    private static void SlideOpen(ContextMenu menu)
+    private static bool AnimationsEnabled
     {
-        if ((bool)menu.GetValue(AnimatedProperty)) return;
-
-        // A ContextMenu does not own its popup — WPF makes one and parents the
-        // menu to it, which is the only handle we get on the window to move.
-        if (LogicalTreeHelper.GetParent(menu) is not Popup popup) return;
-
-        menu.SetValue(AnimatedProperty, true);
-        Slide(popup);
-    }
-
-    private static void Slide(Popup popup)
-    {
-        // FillBehavior.Stop hands the offset back to whatever set it — the
-        // submenu template's own -4, or the placement WPF computed — instead of
-        // leaving an animation pinned over it for the life of the popup.
-        var resting = popup.VerticalOffset;
-
-        var slide = new DoubleAnimation
+        get
         {
-            From = resting + SlideDistance,
-            To = resting,
-            Duration = SlideDuration,
-            FillBehavior = FillBehavior.Stop,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
-        };
+            if (!SystemParameters.ClientAreaAnimation || !SystemParameters.MenuAnimation) return false;
 
-        popup.BeginAnimation(Popup.VerticalOffsetProperty, slide);
-
-        // Short enough to only soften the leading edge of the slide rather than
-        // read as a fade of its own. Drop it for a bare slide.
-        if (popup.Child is UIElement child)
-        {
-            child.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation
+            try
             {
-                From = 0,
-                To = 1,
-                Duration = new Duration(TimeSpan.FromMilliseconds(70)),
-                FillBehavior = FillBehavior.Stop,
-            });
+                return !Services.TrackingService.ReduceUiEffects;
+            }
+            catch
+            {
+                return true;
+            }
         }
     }
+
+    private static void BeginEntrance(Popup popup, FrameworkElement content, bool horizontal)
+    {
+        CancelEntrance(popup);
+
+        if (!AnimationsEnabled) return;
+        if (PresentationSource.FromVisual(content) is not HwndSource source) return;
+        if (!GetWindowRect(source.Handle, out var rect)) return;
+
+        var dpi = VisualTreeHelper.GetDpi(content);
+        int fromX = 0, fromY = 0;
+
+        if (horizontal)
+        {
+            // Sideways out of the parent item, toward the side it opened on.
+            var distance = (int)Math.Round(SubmenuSlideDistance * dpi.DpiScaleX);
+            // The submenu template leaves PlacementTarget unset, so the popup
+            // places itself against its visual parent, the parent item's grid.
+            var anchor = popup.PlacementTarget ?? VisualTreeHelper.GetParent(popup) as UIElement;
+            var openedLeft = anchor is UIElement parent
+                             && PresentationSource.FromVisual(parent) != null
+                             && rect.Left < parent.PointToScreen(new Point(0, 0)).X;
+            fromX = openedLeft ? distance : -distance;
+        }
+        else
+        {
+            // Down out of the anchor, or up out of it when there was no room below.
+            var distance = (int)Math.Round(MenuSlideDistance * dpi.DpiScaleY);
+            fromY = OpenedAboveAnchor(popup, rect) ? distance : -distance;
+        }
+
+        var entrance = PopupEntrance.Begin(source, fromX, fromY, SlideDuration);
+        if (entrance != null) popup.SetValue(EntranceProperty, entrance);
+    }
+
+    private static void CancelEntrance(Popup popup)
+    {
+        if (popup.GetValue(EntranceProperty) is PopupEntrance entrance)
+        {
+            entrance.Cancel();
+            popup.ClearValue(EntranceProperty);
+        }
+    }
+
+    /// <summary>
+    /// Whether WPF flipped the menu above its anchor, which is the cursor for a
+    /// right-click and the target element for a menu placed against one.
+    /// </summary>
+    private static bool OpenedAboveAnchor(Popup popup, RECT rect)
+    {
+        double anchorY;
+
+        if (popup.Placement is PlacementMode.Mouse or PlacementMode.MousePoint && GetCursorPos(out var cursor))
+        {
+            anchorY = cursor.Y;
+        }
+        else if (popup.PlacementTarget is FrameworkElement target && PresentationSource.FromVisual(target) != null)
+        {
+            anchorY = target.PointToScreen(new Point(0, target.ActualHeight / 2)).Y;
+        }
+        else
+        {
+            return false;
+        }
+
+        return (rect.Top + rect.Bottom) / 2.0 < anchorY;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int Left, Top, Right, Bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct POINT
+    {
+        public int X, Y;
+    }
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetCursorPos(out POINT point);
 
     // ── Acrylic ─────────────────────────────────────────────────────────────
 
