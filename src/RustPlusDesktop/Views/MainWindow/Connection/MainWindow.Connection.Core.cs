@@ -63,20 +63,84 @@ public partial class MainWindow
         {
             Interval = TimeSpan.FromSeconds(30)
         };
+        _cloudHeldMissedChecks = 0;
         _cloudLeaseHeartbeatTimer.Tick += (s, e) =>
         {
             if (IsStillConnectedToHeldServer())
             {
-                _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(_cloudHeldServerKey!);
+                _cloudHeldMissedChecks = 0;
+                RenewCloudHold();
+                return;
             }
-            else
+
+            // A reconnect looks exactly like a disconnect for a few seconds. Handing the
+            // server back on the first miss let the cloud answer during every blip, and both
+            // answered once the socket came back. Two misses is still inside the lease
+            // (2 x 30s < 90s), so the cloud never waits on a server nobody here is driving
+            // for longer than the lease would have made it wait anyway.
+            if (++_cloudHeldMissedChecks >= CloudHoldMissesBeforeRelease)
             {
-                // Not connected to it any more: hand it back now rather than let the
-                // cloud wait out the lease on a server nobody here is driving.
                 ReleaseCloudHold();
             }
         };
         _cloudLeaseHeartbeatTimer.Start();
+    }
+
+    private const int CloudHoldMissesBeforeRelease = 2;
+    private int _cloudHeldMissedChecks;
+    private int _cloudTakeoverFailures;
+    private bool _cloudTakeoverRetryPending;
+
+    /// <summary>
+    /// Tell the cloud this app still drives the held server, retrying soon if that fails.
+    ///
+    /// A takeover that was skipped (cloud sign-in not ready yet) or refused leaves the cloud
+    /// free to answer, and waiting for the next thirty-second tick is exactly the window in
+    /// which both answered. So a failure retries after 5s, then 10s, then 20s, capped at the
+    /// tick itself.
+    /// </summary>
+    private async void RenewCloudHold()
+    {
+        var key = _cloudHeldServerKey;
+        if (string.IsNullOrWhiteSpace(key)) return;
+
+        bool ok;
+        try
+        {
+            ok = await Services.Cloud.CloudSessionsApi.TakeoverAsync(key);
+        }
+        catch
+        {
+            ok = false;
+        }
+
+        if (!string.Equals(key, _cloudHeldServerKey, StringComparison.OrdinalIgnoreCase)) return;
+
+        if (ok)
+        {
+            _cloudTakeoverFailures = 0;
+            return;
+        }
+
+        if (_cloudTakeoverRetryPending) return;
+
+        var delaySeconds = Math.Min(5 * (1 << Math.Min(_cloudTakeoverFailures, 3)), 30);
+        _cloudTakeoverFailures++;
+        _cloudTakeoverRetryPending = true;
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+        }
+        finally
+        {
+            _cloudTakeoverRetryPending = false;
+        }
+
+        if (IsStillConnectedToHeldServer()
+            && string.Equals(key, _cloudHeldServerKey, StringComparison.OrdinalIgnoreCase))
+        {
+            RenewCloudHold();
+        }
     }
 
     private void StopCloudLeaseHeartbeatTimer()
@@ -103,7 +167,8 @@ public partial class MainWindow
 
         _cloudHeldServerKey = serverKey;
         _cloudHeldProfile = connected;
-        _ = Services.Cloud.CloudSessionsApi.TakeoverAsync(serverKey!);
+        _cloudTakeoverFailures = 0;
+        RenewCloudHold();
         StartCloudLeaseHeartbeatTimer();
     }
 
