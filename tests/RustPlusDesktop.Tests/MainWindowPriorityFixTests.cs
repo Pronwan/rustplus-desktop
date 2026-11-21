@@ -38,6 +38,27 @@ public sealed class MainWindowPriorityFixTests
         Assert.AreEqual(Visibility.Collapsed, shortcut.Visibility);
     }
 
+    [STATestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void ServerDeleteConfirmation_RespectsPrivacyMode(bool privacyMode)
+    {
+        var window = (MainWindow)RuntimeHelpers.GetUninitializedObject(typeof(MainWindow));
+        var confirmation = new TextBlock();
+        var overlay = new Grid { Visibility = Visibility.Collapsed };
+        SetField(window, "TxtDeleteConfirmation", confirmation);
+        SetField(window, "DeleteConfirmationOverlay", overlay);
+        SetField(window, "ServerDeleteCancelButton", new Wpf.Ui.Controls.Button());
+        SetField(window, "_abbreviateNames", privacyMode);
+        var profile = new ServerProfile { Name = "Private Server 48291" };
+
+        window.Server_Delete_Click(new Button { Tag = profile }, new RoutedEventArgs());
+
+        Assert.AreEqual(Visibility.Visible, overlay.Visibility);
+        Assert.AreEqual(!privacyMode, confirmation.Text.Contains(profile.Name, StringComparison.Ordinal));
+        Assert.AreSame(profile, typeof(MainWindow).GetField("_serverToDelete", Fields)!.GetValue(window));
+    }
+
     private static void SetField(MainWindow window, string name, object value) =>
         typeof(MainWindow).GetField(name, Fields)!.SetValue(window, value);
 }

@@ -5207,7 +5207,9 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (_isDeletingServer) return;
         _serverDeletePreviousFocus = Keyboard.FocusedElement;
         _serverToDelete = prof;
-        TxtDeleteConfirmation.Text = string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
+        TxtDeleteConfirmation.Text = _abbreviateNames
+            ? Properties.Resources.DeleteServerConfirm
+            : string.Format(Properties.Resources.DeleteServerConfirmFormatted, prof.Name);
         DeleteConfirmationOverlay.Visibility = Visibility.Visible;
         ServerDeleteCancelButton.Focus();
     }
