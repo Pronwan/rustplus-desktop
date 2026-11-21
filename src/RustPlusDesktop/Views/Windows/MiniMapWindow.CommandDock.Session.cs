@@ -83,7 +83,7 @@ namespace RustPlusDesk
             stack.Children.Add(new TextBlock
             {
                 Text = glyph,
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = style.Size(11),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Foreground = style.TextSub,

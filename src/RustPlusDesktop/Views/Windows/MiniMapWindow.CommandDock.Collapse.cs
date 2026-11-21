@@ -30,7 +30,7 @@ namespace RustPlusDesk
             var glyph = new TextBlock
             {
                 Text = collapsed ? GlyphExpand : GlyphCollapse,
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = style.Size(18),
                 Foreground = style.TextMain,
                 Effect = style.TextShadow,

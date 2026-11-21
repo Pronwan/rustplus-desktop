@@ -1140,7 +1140,7 @@ namespace RustPlusDesk
 
             var glyph = new TextBlock
             {
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = Sized(14),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 2),
@@ -1247,7 +1247,7 @@ namespace RustPlusDesk
 
             var icon = new TextBlock
             {
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 3),
@@ -1532,7 +1532,7 @@ namespace RustPlusDesk
             };
             var glyph = new TextBlock
             {
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 Text = "\uE945",              // lightning bolt: the rule launcher
                 FontSize = style.Icon(17),
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -1746,7 +1746,7 @@ namespace RustPlusDesk
                 Child = new TextBlock
                 {
                     Text = "\uE711",  // cancel
-                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                    FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                     FontSize = 9,
                     Foreground = System.Windows.Media.Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
@@ -1773,7 +1773,7 @@ namespace RustPlusDesk
                 Child = new TextBlock
                 {
                     Text = "\uE713",  // settings
-                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                    FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                     FontSize = 9,
                     Foreground = System.Windows.Media.Brushes.Black,
                     HorizontalAlignment = HorizontalAlignment.Center,

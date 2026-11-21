@@ -100,7 +100,7 @@
                             Visibility="Collapsed"
                             IsHitTestVisible="False">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="12" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" Margin="0,0,4,0" VerticalAlignment="Center"/>
                             <TextBlock x:Name="TxtServerTime" Text="{Binding ServerTime}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -113,7 +113,7 @@
                             Visibility="Collapsed"
                             IsHitTestVisible="False">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="&#xE716;" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="&#xE716;" Margin="0,0,4,0" VerticalAlignment="Center"/>
                             <TextBlock x:Name="TxtServerPop" Text="{Binding ServerPlayers}" FontSize="12" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -167,7 +167,7 @@
                     <!--  Grip dots, the usual sign for "this is draggable".  -->
                     <TextBlock x:Name="DockGrip"
                                Text="&#xE700;"
-                               FontFamily="Segoe MDL2 Assets"
+                               FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                FontSize="13"
                                Foreground="#99FFFFFF"
                                HorizontalAlignment="Left"
@@ -199,7 +199,7 @@
                                    Foreground="White"
                                    Click="BtnLockDock_Click">
                             <TextBlock x:Name="LockGlyph"
-                                       FontFamily="Segoe MDL2 Assets"
+                                       FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                        FontSize="14"
                                        Text="&#xE72E;"/>
                         </ui:Button>

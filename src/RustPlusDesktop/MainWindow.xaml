@@ -7643,7 +7643,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" ToolTip="{Binding TimeUntilNextPhase}" />
+                                                <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <StackPanel Grid.Column="2" Margin="16,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
                                                     <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="{DynamicResource TextMutedBrush}" Symbol="People20" />
@@ -8454,7 +8454,7 @@
                                                 <TextBlock
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
-                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                     FontSize="14"
                                                     Foreground="{DynamicResource TextMutedBrush}"
                                                     Text="&#xE77B;">
@@ -8511,7 +8511,7 @@
                                                 x:Name="IconFollow"
                                                 Margin="4,0,0,0"
                                                 VerticalAlignment="Center"
-                                                FontFamily="Segoe MDL2 Assets"
+                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                 FontSize="11"
                                                 Foreground="{DynamicResource TextMutedBrush}"
                                                 Text="&#xE70D;" />
@@ -8545,7 +8545,7 @@
                                         ToolTip="{DynamicResource UiToggleMonumentList}">
                                         <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
                                             <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
+                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                 FontSize="14"
                                                 Foreground="{DynamicResource TextMutedBrush}"
                                                 Text="&#xE707;" 
@@ -9232,7 +9232,7 @@
                                             <TextBlock
                                                 Margin="0,0,6,0"
                                                 VerticalAlignment="Center"
-                                                FontFamily="Segoe MDL2 Assets"
+                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                 FontSize="12"
                                                 Text="&#xE721;" />
                                             <TextBlock
@@ -10210,7 +10210,7 @@
                                             <TextBlock
                                                 Margin="0,0,6,0"
                                                 VerticalAlignment="Center"
-                                                FontFamily="Segoe MDL2 Assets"
+                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                                 FontSize="12"
                                                 Text="&#xE8F2;" />
                                             <TextBlock
@@ -10456,7 +10456,7 @@
                                         Visibility="Collapsed"
                                         Click="BtnPremiumInfoMap_Click"
                                         ToolTip="{DynamicResource PremiumFeatures}">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="15" Foreground="#e03131" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE946;" FontSize="15" Foreground="#e03131" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
 
                                     <Button
@@ -10467,7 +10467,7 @@
                                         Visibility="Collapsed"
                                         Click="BtnAdminPanel_Click"
                                         ToolTip="{DynamicResource UiAdminPanel}">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA18;" FontSize="15" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xEA18;" FontSize="15" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
                                 </StackPanel>
 
@@ -10479,10 +10479,10 @@
                                 <!-- First-run hint: the core "you can still navigate" message -->
                                 <Border x:Name="OverlayPanHint" Visibility="Collapsed" Margin="0,8,0,0" Padding="10,6" HorizontalAlignment="Center" Background="#CC0E639C" CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="14" Foreground="White" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE946;" FontSize="14" Foreground="White" VerticalAlignment="Center" />
                                         <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" FontSize="11" Text="Right-drag or hold Space to pan while a tool is active. Ctrl+Z to undo." />
                                         <Button Margin="12,0,0,0" Padding="0" Width="18" Height="18" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="DismissPanHint_Click" ToolTip="Dismiss">
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE711;" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Button>
                                     </StackPanel>
                                 </Border>
@@ -10726,11 +10726,11 @@
                                                FontSize="13" FontWeight="SemiBold" />
                                     <Button Grid.Column="1" Style="{StaticResource RouteIconBtn}"
                                             Click="BtnRouteAdd_Click" ToolTip="{DynamicResource RoutesAdd}">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="14" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE710;" FontSize="14" />
                                     </Button>
                                     <Button Grid.Column="2" Style="{StaticResource RouteIconBtn}"
                                             Click="BtnRoutesClose_Click" ToolTip="{DynamicResource RoutesClose}">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" />
                                     </Button>
                                 </Grid>
 
@@ -10767,13 +10767,13 @@
                                                             <Button Style="{StaticResource RouteIconBtn}" Width="24" Height="24"
                                                                     Tag="{Binding}" Click="BtnRouteVisibility_Click"
                                                                     ToolTip="{DynamicResource RoutesToggleVisible}">
-                                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="{Binding EyeGlyph}"
+                                                                <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="{Binding EyeGlyph}"
                                                                            FontSize="13" Opacity="{Binding EyeOpacity}" />
                                                             </Button>
                                                             <Button Style="{StaticResource RouteIconBtn}" Width="24" Height="24"
                                                                     Tag="{Binding}" Click="BtnRouteDelete_Click"
                                                                     ToolTip="{DynamicResource RoutesDelete}">
-                                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" />
+                                                                <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" />
                                                             </Button>
                                                         </StackPanel>
                                                     </Grid>
@@ -10825,7 +10825,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="CheckBox">
                                                 <Border x:Name="box" Width="16" Height="16" CornerRadius="4" Background="#18FFFFFF" BorderBrush="#4DFFFFFF" BorderThickness="1.2">
-                                                    <TextBlock x:Name="chk" FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="11" Foreground="#0C0D11" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+                                                    <TextBlock x:Name="chk" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE73E;" FontSize="11" Foreground="#0C0D11" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="box" Property="BorderBrush" Value="#8060CDFF" /></Trigger>
@@ -10918,11 +10918,11 @@
                                 <!--  Header  -->
                                 <Grid Margin="14,11,10,9">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
                                         <TextBlock Margin="9,0,0,0" VerticalAlignment="Center" FontSize="13.5" FontWeight="SemiBold" Foreground="White" Text="Layers" />
                                     </StackPanel>
                                     <Button Style="{StaticResource LyrIconBtn}" HorizontalAlignment="Right" Click="CloseLayersPanel_Click" ToolTip="Close">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE711;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
                                 </Grid>
 
@@ -10930,7 +10930,7 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="13,0,13,9">
                                     <Button Style="{StaticResource LyrChip}" Margin="0,0,6,0" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
                                             <TextBlock Margin="6,0,0,0" FontSize="11" FontWeight="SemiBold" Foreground="White" Text="Group" />
                                         </StackPanel>
                                     </Button>
@@ -10959,7 +10959,7 @@
                                                                     </Border>
                                                                 </StackPanel>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Width="22" Height="20" HorizontalAlignment="Right" Click="LayerGroupToggle_Click" ToolTip="Show / hide this group">
-                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="11" Foreground="#8A929C" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="11" Foreground="#8A929C" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </Grid>
                                                         </DataTemplate>
@@ -10983,13 +10983,13 @@
                                                             <TextBlock Grid.Column="2" Margin="9,0" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
                                                             <StackPanel Grid.Column="3" Orientation="Horizontal">
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerVisibility_Click" ToolTip="Show / hide">
-                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#9AA0A8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#9AA0A8" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerEditText_Click" ToolTip="Edit text" Visibility="{Binding IsText, Converter={StaticResource BoolToVisibility}}">
-                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE70F;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerDelete_Click" ToolTip="Delete">
-                                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" Foreground="#E08585" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" Foreground="#E08585" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </StackPanel>
                                                         </Grid>

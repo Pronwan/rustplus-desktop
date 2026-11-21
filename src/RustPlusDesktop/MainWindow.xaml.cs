@@ -146,7 +146,7 @@ public partial class MainWindow : WpfUi.FluentWindow
         // Build dynamic menu
         MenuFollowPlayer.Items.Clear();
 
-        var miMe = new MenuItem { Header = Properties.Resources.FollowMe, Icon = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "\uE77B" } };
+        var miMe = new MenuItem { Header = Properties.Resources.FollowMe, Icon = new TextBlock { FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"), Text = "\uE77B" } };
         miMe.Click += (s, ev) => StartFollowing(_mySteamId, "Me");
         MenuFollowPlayer.Items.Add(miMe);
 

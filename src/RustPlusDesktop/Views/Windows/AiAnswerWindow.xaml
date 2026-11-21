@@ -54,7 +54,7 @@
                         Width="22" Height="22" CornerRadius="4"
                         Background="#30FFFFFF" Cursor="Hand"
                         MouseLeftButtonUp="BtnCopy_Click">
-                    <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                    <TextBlock Text="&#xE8C8;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="11"
                                Foreground="{DynamicResource TextPrimary}"
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
@@ -63,7 +63,7 @@
                         Width="22" Height="22" CornerRadius="4" Margin="4,0,0,0"
                         Background="#30FFFFFF" Cursor="Hand"
                         MouseLeftButtonUp="BtnClose_Click">
-                    <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                    <TextBlock Text="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="11"
                                Foreground="{DynamicResource TextPrimary}"
                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>

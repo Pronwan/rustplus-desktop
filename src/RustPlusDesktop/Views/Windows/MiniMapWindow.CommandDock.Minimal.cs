@@ -141,7 +141,7 @@ namespace RustPlusDesk
 
             var glyph = new TextBlock
             {
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = style.Size(13 * grow),
                 Margin = new Thickness(0, 0, 5, 0),
                 VerticalAlignment = VerticalAlignment.Center,
@@ -195,7 +195,7 @@ namespace RustPlusDesk
             row.Children.Add(new TextBlock
             {
                 Text = "",   // people
-                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
                 FontSize = style.Size(13 * grow),
                 Margin = new Thickness(0, 0, 5, 0),
                 Foreground = style.TextSub,

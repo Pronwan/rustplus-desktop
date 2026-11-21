@@ -47,7 +47,7 @@
                 BorderThickness="1,0,1,1"
                 Cursor="Hand">
             <TextBlock Text="&#xE70D;"
-                       FontFamily="Segoe MDL2 Assets"
+                       FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                        FontSize="10"
                        Foreground="#DD3FD7FF"
                        HorizontalAlignment="Center"
@@ -80,7 +80,7 @@
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="&#xE700;"
-                               FontFamily="Segoe MDL2 Assets"
+                               FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                FontSize="13"
                                Foreground="#99FFFFFF"
                                VerticalAlignment="Center"
@@ -110,7 +110,7 @@
                             VerticalAlignment="Center"
                             Cursor="Arrow">
                     <TextBlock Text="&#xE71E;"
-                               FontFamily="Segoe MDL2 Assets"
+                               FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                FontSize="12"
                                Foreground="#99FFFFFF"
                                VerticalAlignment="Center"
@@ -151,7 +151,7 @@
                                Foreground="White"
                                Click="BtnLock_Click">
                         <TextBlock x:Name="LockGlyph"
-                                   FontFamily="Segoe MDL2 Assets"
+                                   FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                    FontSize="14"
                                    Text="&#xE72E;"/>
                     </ui:Button>
@@ -199,7 +199,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="HintGlyph"
-                               FontFamily="Segoe MDL2 Assets"
+                               FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                FontSize="14"
                                Foreground="#FF3FD7FF"
                                VerticalAlignment="Top"
