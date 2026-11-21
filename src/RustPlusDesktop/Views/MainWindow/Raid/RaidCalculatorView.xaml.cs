@@ -14,6 +14,7 @@ public partial class RaidCalculatorView : UserControl
 {
     private readonly RaidCalculatorViewModel _viewModel = new();
     private bool _initialized;
+    private bool _compactLayout;
 
     public RaidCalculatorView()
     {
@@ -36,27 +37,60 @@ public partial class RaidCalculatorView : UserControl
         if (e.WidthChanged) ApplyResponsiveLayout(e.NewSize.Width);
     }
 
-    /// <summary>
-    /// Reflows the three panels (catalog | plan | shopping list) for the current width.
-    /// Wide keeps all three; medium narrows the side rails; narrow drops the shopping list,
-    /// then the catalog — so the plan always keeps usable width instead of squeezing to nothing.
-    /// </summary>
     private void ApplyResponsiveLayout(double width)
     {
-        if (CatalogColumn is null) return; // template not applied yet
+        if (PlanPanel is null) return; // XAML is still loading.
 
-        bool showShopping = width >= 900;
-        bool showCatalog = width >= 680;
-        bool roomy = width >= 1080;
-
-        ShoppingPanel.Visibility = showShopping ? Visibility.Visible : Visibility.Collapsed;
-        ShoppingColumn.Width = showShopping ? new GridLength(roomy ? 300 : 272) : new GridLength(0);
-        ShoppingSpacer.Width = showShopping ? new GridLength(10) : new GridLength(0);
-
-        CatalogPanel.Visibility = showCatalog ? Visibility.Visible : Visibility.Collapsed;
-        CatalogColumn.Width = showCatalog ? new GridLength(roomy ? 330 : 292) : new GridLength(0);
-        CatalogSpacer.Width = showCatalog ? new GridLength(10) : new GridLength(0);
+        _compactLayout = ArrangePanes(width, CompactPaneTabs, CatalogColumn, ShoppingColumn,
+            CatalogSpacer, ShoppingSpacer, CatalogPanel, ShoppingPanel);
+        UpdatePaneVisibility();
     }
+
+    internal static bool ArrangePanes(double width, FrameworkElement tabs, ColumnDefinition catalogColumn,
+        ColumnDefinition shoppingColumn, ColumnDefinition catalogSpacer, ColumnDefinition shoppingSpacer,
+        Border catalog, Border shopping)
+    {
+        bool compact = width < 900;
+        bool roomy = width >= 1080;
+        tabs.Visibility = compact ? Visibility.Visible : Visibility.Collapsed;
+        // Every compact pane occupies the plan column; the wide rails keep their original widths.
+        catalogColumn.Width = new GridLength(compact ? 0 : roomy ? 330 : 292);
+        shoppingColumn.Width = new GridLength(compact ? 0 : roomy ? 300 : 272);
+        catalogSpacer.Width = shoppingSpacer.Width = new GridLength(compact ? 0 : 10);
+        Grid.SetColumn(catalog, compact ? 2 : 0);
+        Grid.SetColumn(shopping, compact ? 2 : 4);
+        return compact;
+    }
+
+    internal void RevealTutorialTarget(string? targetId) => SelectTutorialPane(targetId, CatalogTab, PlanTab);
+
+    internal static void SelectTutorialPane(string? targetId, RadioButton catalog, RadioButton plan)
+    {
+        switch (targetId)
+        {
+            case "Raid.Search":
+                catalog.IsChecked = true;
+                break;
+            case "Raid.Plan" or "Raid.Methods":
+                plan.IsChecked = true;
+                break;
+        }
+    }
+
+    private void CompactPane_Checked(object sender, RoutedEventArgs e)
+    {
+        if (_compactLayout) UpdatePaneVisibility();
+    }
+
+    private void UpdatePaneVisibility()
+    {
+        CatalogPanel.Visibility = PaneVisibility(_compactLayout, CatalogTab.IsChecked);
+        PlanPanel.Visibility = PaneVisibility(_compactLayout, PlanTab.IsChecked);
+        ShoppingPanel.Visibility = PaneVisibility(_compactLayout, ShoppingTab.IsChecked);
+    }
+
+    internal static Visibility PaneVisibility(bool compact, bool? selected) =>
+        !compact || selected == true ? Visibility.Visible : Visibility.Collapsed;
 
     private void AddTarget_Click(object sender, RoutedEventArgs e)
     {

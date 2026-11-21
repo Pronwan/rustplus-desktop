@@ -26,6 +26,37 @@
             <Setter Property="CornerRadius" Value="12" />
         </Style>
 
+        <Style x:Key="RaidPaneTab" TargetType="RadioButton">
+            <Setter Property="MinHeight" Value="34" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Background" Value="{DynamicResource SurfaceAlt}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+            <Setter Property="ToolTip" Value="{Binding Content, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="TabBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="7">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{TemplateBinding Content}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource RaidAccentSoft}" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!--  Hero stat tile with a soft entrance pop.  -->
         <Style x:Key="RaidStatTile" TargetType="Border">
             <Setter Property="CornerRadius" Value="12" />
@@ -218,6 +249,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -282,8 +314,19 @@
             </Border>
         </Grid>
 
+        <!--  Compact navigation stays separate from the panes so their controls are never reparented.  -->
+        <UniformGrid x:Name="CompactPaneTabs" Grid.Row="2" Columns="3" Margin="0,0,0,10" Visibility="Collapsed"
+                     KeyboardNavigation.DirectionalNavigation="Cycle">
+            <RadioButton x:Name="CatalogTab" Style="{StaticResource RaidPaneTab}" Margin="0,0,6,0"
+                         Content="{DynamicResource UiSearchTargets}" Checked="CompactPane_Checked" />
+            <RadioButton x:Name="PlanTab" Style="{StaticResource RaidPaneTab}" Margin="0,0,6,0" IsChecked="True"
+                         Content="{DynamicResource UiRaidPlan}" Checked="CompactPane_Checked" />
+            <RadioButton x:Name="ShoppingTab" Style="{StaticResource RaidPaneTab}"
+                         Content="{DynamicResource UiRaidSummary}" Checked="CompactPane_Checked" />
+        </UniformGrid>
+
         <!--  ============ MAIN CONTENT ============  -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="CatalogColumn" Width="330" />
                 <ColumnDefinition x:Name="CatalogSpacer" Width="10" />
@@ -378,7 +421,7 @@
             </Border>
 
             <!--  Plan  -->
-            <Border Grid.Column="2" Style="{StaticResource RaidPanel}" Padding="12" tutorials:Tutorial.TargetId="Raid.Plan">
+            <Border x:Name="PlanPanel" Grid.Column="2" Style="{StaticResource RaidPanel}" Padding="12" tutorials:Tutorial.TargetId="Raid.Plan">
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
                     <DockPanel Margin="2,0,2,10" LastChildFill="True">

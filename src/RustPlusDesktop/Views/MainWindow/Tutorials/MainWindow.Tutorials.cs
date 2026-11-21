@@ -185,7 +185,11 @@ public partial class MainWindow : ITutorialContext, ITutorialNavigationCoordinat
                 case "team": MainTabs.SelectedItem = TabTeam; SetSidebarExpanded(true); break;
                 case "cameras": MainTabs.SelectedItem = CamerasTabItem; SetSidebarExpanded(true); break;
                 case "notifications": MainTabs.SelectedItem = NotificationsTab; SetSidebarExpanded(true); break;
-                case "raid": MainTabs.SelectedItem = RaidCalculatorTab; SetSidebarExpanded(true); break;
+                case "raid":
+                    MainTabs.SelectedItem = RaidCalculatorTab;
+                    SetSidebarExpanded(true);
+                    (RaidCalculatorPanel.Child as RaidCalculatorView)?.RevealTutorialTarget(step.TargetId);
+                    break;
                 case "recycler": MainTabs.SelectedItem = RecyclerCalculatorTab; SetSidebarExpanded(true); break;
                 case "logic":
                     MainTabs.SelectedItem = DevicesTabItem;
