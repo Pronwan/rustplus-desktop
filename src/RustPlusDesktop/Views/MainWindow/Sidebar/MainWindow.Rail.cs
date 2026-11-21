@@ -405,7 +405,7 @@ public partial class MainWindow
         c.Node.Expanded = !c.Node.Expanded;
         if (_railLayout is not null) TrackingService.SaveRailLayout(_railLayout);
 
-        if (TrackingService.ReduceUiEffects)
+        if (TrackingService.ReduceUiEffects || !Helpers.Motion.Enabled)
         {
             ApplyFolderStateInstant(c);
         }
@@ -440,25 +440,25 @@ public partial class MainWindow
             c.CollapsedVisual.IsHitTestVisible = false;
             c.IsAnimating = true;
 
-            var easeOut = new CubicEase { EasingMode = EasingMode.EaseOut };
-            var heightAnim = new DoubleAnimation(startHeight, targetHeight, new Duration(TimeSpan.FromMilliseconds(220)))
+            var easeOut = Helpers.Motion.Enter;
+            var heightAnim = new DoubleAnimation(startHeight, targetHeight, Helpers.Motion.For(Helpers.Motion.Normal))
             {
                 EasingFunction = easeOut
             };
-            var trayOpacityAnim = new DoubleAnimation(c.Tray.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(180)))
+            var trayOpacityAnim = new DoubleAnimation(c.Tray.Opacity, 1.0, Helpers.Motion.For(Helpers.Motion.Fast))
             {
                 EasingFunction = easeOut
             };
-            var slideAnim = new DoubleAnimation(c.TrayTransform.Y, 0.0, new Duration(TimeSpan.FromMilliseconds(220)))
+            var slideAnim = new DoubleAnimation(c.TrayTransform.Y, 0.0, Helpers.Motion.For(Helpers.Motion.Normal))
             {
                 EasingFunction = easeOut
             };
 
-            var fadeOutCollapsed = new DoubleAnimation(c.CollapsedVisual.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(120)));
-            var fadeInExpanded = new DoubleAnimation(c.ExpandedVisual.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(160)));
+            var fadeOutCollapsed = new DoubleAnimation(c.CollapsedVisual.Opacity, 0.0, Helpers.Motion.For(Helpers.Motion.Faster));
+            var fadeInExpanded = new DoubleAnimation(c.ExpandedVisual.Opacity, 1.0, Helpers.Motion.For(Helpers.Motion.Fast));
 
-            var bgAnim = new ColorAnimation(c.ContainerBackgroundBrush.Color, Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(200)));
-            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(200)));
+            var bgAnim = new ColorAnimation(c.ContainerBackgroundBrush.Color, Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF), Helpers.Motion.For(Helpers.Motion.Fast));
+            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), Helpers.Motion.For(Helpers.Motion.Fast));
 
             heightAnim.Completed += (_, _) =>
             {
@@ -513,25 +513,25 @@ public partial class MainWindow
             c.CollapsedVisual.IsHitTestVisible = false;
             c.IsAnimating = true;
 
-            var easeInOut = new CubicEase { EasingMode = EasingMode.EaseInOut };
-            var heightAnim = new DoubleAnimation(startHeight, 0.0, new Duration(TimeSpan.FromMilliseconds(200)))
+            var easeInOut = Helpers.Motion.PointToPoint;
+            var heightAnim = new DoubleAnimation(startHeight, 0.0, Helpers.Motion.For(Helpers.Motion.Fast))
             {
                 EasingFunction = easeInOut
             };
-            var trayOpacityAnim = new DoubleAnimation(c.Tray.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(150)))
+            var trayOpacityAnim = new DoubleAnimation(c.Tray.Opacity, 0.0, Helpers.Motion.For(Helpers.Motion.Faster))
             {
                 EasingFunction = easeInOut
             };
-            var slideAnim = new DoubleAnimation(c.TrayTransform.Y, -16.0, new Duration(TimeSpan.FromMilliseconds(200)))
+            var slideAnim = new DoubleAnimation(c.TrayTransform.Y, -16.0, Helpers.Motion.For(Helpers.Motion.Fast))
             {
                 EasingFunction = easeInOut
             };
 
-            var fadeOutExpanded = new DoubleAnimation(c.ExpandedVisual.Opacity, 0.0, new Duration(TimeSpan.FromMilliseconds(120)));
-            var fadeInCollapsed = new DoubleAnimation(c.CollapsedVisual.Opacity, 1.0, new Duration(TimeSpan.FromMilliseconds(160)));
+            var fadeOutExpanded = new DoubleAnimation(c.ExpandedVisual.Opacity, 0.0, Helpers.Motion.For(Helpers.Motion.Faster));
+            var fadeInCollapsed = new DoubleAnimation(c.CollapsedVisual.Opacity, 1.0, Helpers.Motion.For(Helpers.Motion.Fast));
 
-            var bgAnim = new ColorAnimation(c.ContainerBackgroundBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(180)));
-            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), new Duration(TimeSpan.FromMilliseconds(180)));
+            var bgAnim = new ColorAnimation(c.ContainerBackgroundBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), Helpers.Motion.For(Helpers.Motion.Fast));
+            var borderAnim = new ColorAnimation(c.ContainerBorderBrush.Color, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), Helpers.Motion.For(Helpers.Motion.Fast));
 
             heightAnim.Completed += (_, _) =>
             {

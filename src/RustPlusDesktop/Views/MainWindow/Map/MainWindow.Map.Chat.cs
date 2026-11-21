@@ -1232,7 +1232,7 @@ public partial class MainWindow
         ChatContentBorder.Visibility = Visibility.Visible;
         ChatContentBorder.Opacity = 0;
 
-        var fade = new System.Windows.Media.Animation.DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
+        var fade = new System.Windows.Media.Animation.DoubleAnimation(0, 1, Helpers.Motion.For(Helpers.Motion.Fast)) { EasingFunction = Helpers.Motion.Enter };
         var sb = new System.Windows.Media.Animation.Storyboard();
         sb.Children.Add(fade);
         System.Windows.Media.Animation.Storyboard.SetTarget(fade, ChatContentBorder);
@@ -1277,7 +1277,7 @@ public partial class MainWindow
     {
         if (ChatContentBorder.Visibility == Visibility.Collapsed) return;
 
-        var fade = new System.Windows.Media.Animation.DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150));
+        var fade = new System.Windows.Media.Animation.DoubleAnimation(1, 0, Helpers.Motion.For(Helpers.Motion.Fast)) { EasingFunction = Helpers.Motion.Exit };
         var sb = new System.Windows.Media.Animation.Storyboard();
         sb.Children.Add(fade);
         System.Windows.Media.Animation.Storyboard.SetTarget(fade, ChatContentBorder);
