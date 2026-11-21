@@ -95,19 +95,6 @@ namespace RustPlusDesk.Views
             return false;
         }
 
-        // Custom colors matching HTML premium styles
-        private static readonly Brush ActiveAccentBg = new SolidColorBrush(Color.FromArgb(38, 0, 173, 239)); // rgba(0, 173, 239, .15)
-        private static readonly Brush ActiveAccentBorder = new SolidColorBrush(Color.FromRgb(0, 173, 239)); // #00adef
-        private static readonly Brush ActiveAccentText = new SolidColorBrush(Color.FromRgb(0, 173, 239));
-
-        private static readonly Brush ActiveRedBg = new SolidColorBrush(Color.FromArgb(26, 239, 83, 80)); // rgba(239, 83, 80, .1)
-        private static readonly Brush ActiveRedBorder = new SolidColorBrush(Color.FromRgb(239, 83, 80)); // #ef5350
-        private static readonly Brush ActiveRedText = new SolidColorBrush(Color.FromRgb(239, 83, 80));
-
-        private static readonly Brush InactiveBg = new SolidColorBrush(Color.FromArgb(13, 255, 255, 255)); // rgba(255, 255, 255, .05)
-        private static readonly Brush InactiveBorder = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255)); // rgba(255, 255, 255, .08)
-        private static readonly Brush InactiveText = new SolidColorBrush(Color.FromArgb(153, 236, 239, 241)); // rgba(236, 239, 241, .6)
-
         // Category loading and mapping cache
         private static bool _categoriesLoaded = false;
         private static readonly Dictionary<string, string> _shortNameToCategory = new(StringComparer.OrdinalIgnoreCase);
@@ -696,20 +683,24 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void ApplyToggleButtonStyle(Button btn, bool isOn, bool isRed)
+        private void ApplyToggleButtonStyle(Button btn, bool isOn, bool isRed) =>
+            SetStateBrushes(btn, isOn ? (isRed ? StateTone.Danger : StateTone.Accent) : StateTone.Off);
+
+        private enum StateTone { Off, Accent, Danger, Success }
+
+        // On/off colors come from the shared tokens, so the pills use the app's one accent.
+        private static void SetStateBrushes(Control control, StateTone tone)
         {
-            if (isOn)
+            var (fill, stroke, text) = tone switch
             {
-                btn.Background = isRed ? ActiveRedBg : ActiveAccentBg;
-                btn.BorderBrush = isRed ? ActiveRedBorder : ActiveAccentBorder;
-                btn.Foreground = isRed ? ActiveRedText : ActiveAccentText;
-            }
-            else
-            {
-                btn.Background = InactiveBg;
-                btn.BorderBrush = InactiveBorder;
-                btn.Foreground = InactiveText;
-            }
+                StateTone.Accent => ("AccentTintBrush", "Accent", "Accent"),
+                StateTone.Danger => ("DangerTintBrush", "DangerBrush", "DangerBrush"),
+                StateTone.Success => ("SuccessTintBrush", "StatusSuccess", "StatusSuccess"),
+                _ => ("FillControl", "StrokeSubtle", "TextSecondary"),
+            };
+            control.SetResourceReference(BackgroundProperty, fill);
+            control.SetResourceReference(BorderBrushProperty, stroke);
+            control.SetResourceReference(ForegroundProperty, text);
         }
 
         // Action Tool Buttons clicks
@@ -733,7 +724,7 @@ namespace RustPlusDesk.Views
 
             // Expand Alerts panel
             BrdAlertListContainer.Visibility = Visibility.Visible;
-            TxtAlertArrow.Text = "▲";
+            TxtAlertArrow.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronUp16;
 
             var rule = new MainWindow.ShopAlertRule
             {
@@ -768,12 +759,11 @@ namespace RustPlusDesk.Views
             RefreshAlertListUI();
             
             // Visual alert flash effect
-            var prevBg = BtnShopAddAlert.Background;
-            BtnShopAddAlert.Background = ActiveAccentBg;
+            BtnShopAddAlert.SetResourceReference(BackgroundProperty, "AccentTintBrush");
             Dispatcher.InvokeAsync(async () =>
             {
                 await System.Threading.Tasks.Task.Delay(300);
-                BtnShopAddAlert.Background = prevBg;
+                BtnShopAddAlert.ClearValue(BackgroundProperty); // back to the style's own fill
             });
         }
 
@@ -840,12 +830,12 @@ namespace RustPlusDesk.Views
             if (BrdAlertListContainer.Visibility == Visibility.Collapsed)
             {
                 BrdAlertListContainer.Visibility = Visibility.Visible;
-                TxtAlertArrow.Text = "▲";
+                TxtAlertArrow.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronUp16;
             }
             else
             {
                 BrdAlertListContainer.Visibility = Visibility.Collapsed;
-                TxtAlertArrow.Text = "▼";
+                TxtAlertArrow.Symbol = Wpf.Ui.Controls.SymbolRegular.ChevronDown16;
             }
         }
 
@@ -1043,14 +1033,15 @@ namespace RustPlusDesk.Views
 
         private void ShowEmptyMessage(string message)
         {
-            ShopSearchResultsContainer.Children.Add(new TextBlock
+            var text = new TextBlock
             {
                 Text = message,
-                Foreground = InactiveText,
                 FontSize = 12,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(0, 30, 0, 0)
-            });
+            };
+            text.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
+            ShopSearchResultsContainer.Children.Add(text);
         }
 
         // Custom programmatic Alert rules list builder
@@ -1063,14 +1054,15 @@ namespace RustPlusDesk.Views
             var rules = _mainWindow.GetAlertRulesList();
             if (rules == null || !rules.Any())
             {
-                LstItemAlerts.Items.Add(new TextBlock
+                var empty = new TextBlock
                 {
                     Text = "No alerts configured yet.",
-                    Foreground = InactiveText,
-                    FontSize = 11,
+                    FontSize = 12,
                     FontStyle = FontStyles.Italic,
                     Padding = new Thickness(6, 4, 6, 4)
-                });
+                };
+                empty.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
+                LstItemAlerts.Items.Add(empty);
                 return;
             }
 
@@ -1079,13 +1071,13 @@ namespace RustPlusDesk.Views
                 // Sleek translucent card container
                 var cardBorder = new Border
                 {
-                    Background = new SolidColorBrush(Color.FromArgb(12, 255, 255, 255)),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(16, 255, 255, 255)),
                     BorderThickness = new Thickness(1),
-                    CornerRadius = new CornerRadius(6),
                     Padding = new Thickness(8, 5, 8, 5),
                     Margin = new Thickness(0, 0, 0, 4)
                 };
+                cardBorder.SetResourceReference(Border.BackgroundProperty, "FillControl");
+                cardBorder.SetResourceReference(Border.CornerRadiusProperty, "RadiusControl");
+                cardBorder.SetResourceReference(Border.BorderBrushProperty, "StrokeSubtle");
 
                 var grid = new Grid();
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Query + Mode
@@ -1107,22 +1099,22 @@ namespace RustPlusDesk.Views
                     MaxWidth = 120,
                     ToolTip = rule.QueryText
                 });
-                textStack.Children.Add(new TextBlock
+                var modeText = new TextBlock
                 {
                     Text = $"  {modeStr}",
-                    Foreground = new SolidColorBrush(Color.FromRgb(100, 181, 246)), // Soft bright blue badge
-                    FontSize = 9,
-                    FontWeight = FontWeights.Bold,
+                    FontSize = 12,
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(4, 0, 0, 0)
-                });
+                };
+                modeText.SetResourceReference(TextBlock.ForegroundProperty, "Accent");
+                textStack.Children.Add(modeText);
                 Grid.SetColumn(textStack, 0);
                 grid.Children.Add(textStack);
 
                 // 💬 Chat toggle button
                 var btnChat = new Button
                 {
-                    Content = "💬",
+                    Content = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Chat16, FontSize = 14 },
                     Style = (Style)FindResource("AlertActionButton"),
                     ToolTip = "Send to team chat"
                 };
@@ -1140,7 +1132,7 @@ namespace RustPlusDesk.Views
                 // 🔊 Sound alert toggle button
                 var btnSound = new Button
                 {
-                    Content = "🔊",
+                    Content = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Speaker216, FontSize = 14 },
                     Style = (Style)FindResource("AlertActionButton"),
                     ToolTip = "Play sound alert"
                 };
@@ -1157,7 +1149,7 @@ namespace RustPlusDesk.Views
                 // 💾 Persistent save toggle button
                 var btnSave = new Button
                 {
-                    Content = "💾",
+                    Content = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Save16, FontSize = 14 },
                     Style = (Style)FindResource("AlertActionButton"),
                     ToolTip = rule.IsSaved ? "Saved (click to unsave)" : "Save alert"
                 };
@@ -1175,11 +1167,11 @@ namespace RustPlusDesk.Views
                 // 🗑 Delete alert button
                 var btnDel = new Button
                 {
-                    Content = "🗑",
+                    Content = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Delete16, FontSize = 14 },
                     Style = (Style)FindResource("AlertActionButton"),
-                    Foreground = new SolidColorBrush(Color.FromRgb(239, 83, 80)),
                     ToolTip = "Remove Alert"
                 };
+                btnDel.SetResourceReference(ForegroundProperty, "DangerBrush");
                 btnDel.Click += (s, ev) =>
                 {
                     _mainWindow.RemoveAlertRule(rule);
@@ -1193,26 +1185,7 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private void ApplyAlertBtnStyle(Button btn, bool isOn, bool isGreen)
-        {
-            if (isOn)
-            {
-                btn.Background = isGreen 
-                    ? new SolidColorBrush(Color.FromArgb(30, 102, 187, 106)) // rgba(102, 187, 106, .12)
-                    : ActiveAccentBg;
-                btn.BorderBrush = isGreen 
-                    ? new SolidColorBrush(Color.FromRgb(102, 187, 106)) 
-                    : ActiveAccentBorder;
-                btn.Foreground = isGreen 
-                    ? new SolidColorBrush(Color.FromRgb(102, 187, 106)) 
-                    : ActiveAccentText;
-            }
-            else
-            {
-                btn.Background = InactiveBg;
-                btn.BorderBrush = InactiveBorder;
-                btn.Foreground = InactiveText;
-            }
-        }
+        private void ApplyAlertBtnStyle(Button btn, bool isOn, bool isGreen) =>
+            SetStateBrushes(btn, isOn ? (isGreen ? StateTone.Success : StateTone.Accent) : StateTone.Off);
     }
 }

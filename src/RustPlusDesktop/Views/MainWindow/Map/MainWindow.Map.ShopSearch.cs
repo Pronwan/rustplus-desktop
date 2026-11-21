@@ -32,40 +32,21 @@ public partial class MainWindow
         IEnumerable<RustPlusClientReal.ShopOrder> offers,
         bool compact)
     {
-        // 1. High-End Linear Gradient Background (Slate to Dark Carbon)
-        var glassyBg = new LinearGradientBrush
-        {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(0, 1)
-        };
-        glassyBg.GradientStops.Add(new GradientStop(Color.FromRgb(45, 50, 60), 0.0)); // Slate
-        glassyBg.GradientStops.Add(new GradientStop(Color.FromRgb(29, 32, 38), 1.0)); // Charcoal
-
-        var defaultBorderBrush = new SolidColorBrush(Color.FromArgb(38, 255, 255, 255)); // rgba(255, 255, 255, 0.15)
-        var hoverBorderBrush = new SolidColorBrush(Color.FromRgb(0, 173, 239)); // Electric Blue #00adef
-
+        // Shared surface and stroke tokens: the card reads as part of the panel, not a separate theme.
         var card = new Border
         {
-            Background       = glassyBg,
-            BorderBrush      = defaultBorderBrush,
             BorderThickness  = new Thickness(1),
-            CornerRadius     = new CornerRadius(10),
             Padding          = new Thickness(10),
             Margin           = new Thickness(0, 0, 0, 8),
             Cursor           = Cursors.Hand
         };
+        card.SetResourceReference(Border.BackgroundProperty, "SurfaceAlt");
+        card.SetResourceReference(Border.CornerRadiusProperty, "RadiusOverlay");
+        card.SetResourceReference(Border.BorderBrushProperty, "StrokeSubtle");
 
-        // Reactive Pointer Highlights (Hover states)
-        card.MouseEnter += (sender, e) =>
-        {
-            card.BorderBrush = hoverBorderBrush;
-            card.BorderThickness = new Thickness(1.2);
-        };
-        card.MouseLeave += (sender, e) =>
-        {
-            card.BorderBrush = defaultBorderBrush;
-            card.BorderThickness = new Thickness(1.0);
-        };
+        // Hover only changes the stroke color; a constant thickness keeps the content from shifting.
+        card.MouseEnter += (sender, e) => card.SetResourceReference(Border.BorderBrushProperty, "Accent");
+        card.MouseLeave += (sender, e) => card.SetResourceReference(Border.BorderBrushProperty, "StrokeSubtle");
 
         var root = new StackPanel { Orientation = Orientation.Vertical };
         card.Child = root;
@@ -76,33 +57,33 @@ public partial class MainWindow
         // Shop Name
         var shopTitle = CleanLabel(s.Label) ?? Properties.Resources.ShopWord;
         
-        head.Children.Add(new TextBlock
+        var titleText = new TextBlock
         {
             Text       = shopTitle,
-            Foreground = SearchText,
-            FontWeight = FontWeights.Bold,
-            FontSize   = compact ? 13 : 15,
+            FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
-        });
+        };
+        titleText.SetResourceReference(TextBlock.ForegroundProperty, "TextPrimary");
+        titleText.SetResourceReference(TextBlock.FontSizeProperty, compact ? "TypeBody" : "TypeSubtitle");
+        head.Children.Add(titleText);
 
         // Grid coordinates badge pill
         var gridBadge = new Border
         {
-            Background = new SolidColorBrush(Color.FromArgb(20, 0, 173, 239)), // semi-transparent accent
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 0, 173, 239)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
             Padding = new Thickness(6, 1, 6, 1),
             Margin = new Thickness(8, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center
         };
-        gridBadge.Child = new TextBlock
+        gridBadge.SetResourceReference(Border.BackgroundProperty, "AccentTintBrush");
+        gridBadge.SetResourceReference(Border.CornerRadiusProperty, "RadiusControl");
+        var gridText = new TextBlock
         {
             Text = GetGridLabel(s) ?? "",
-            Foreground = new SolidColorBrush(Color.FromRgb(0, 173, 239)),
-            FontSize = 10,
-            FontWeight = FontWeights.Bold
+            FontWeight = FontWeights.SemiBold
         };
+        gridText.SetResourceReference(TextBlock.ForegroundProperty, "Accent");
+        gridText.SetResourceReference(TextBlock.FontSizeProperty, "TypeCaption");
+        gridBadge.Child = gridText;
         head.Children.Add(gridBadge);
         
         root.Children.Add(head);
@@ -124,10 +105,10 @@ public partial class MainWindow
         var rowBorder = new Border
         {
             Padding = new Thickness(8, 5, 8, 5),
-            Margin = new Thickness(0, 2, 0, 2),
-            CornerRadius = new CornerRadius(6),
-            Background = new SolidColorBrush(Color.FromArgb(10, 255, 255, 255))
+            Margin = new Thickness(0, 2, 0, 2)
         };
+        rowBorder.SetResourceReference(Border.CornerRadiusProperty, "RadiusControl");
+        rowBorder.SetResourceReference(Border.BackgroundProperty, "FillControl");
 
         var g = new Grid { Opacity = outOfStock ? 0.65 : 1.0 };
         g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // 0: Item Icon
@@ -151,50 +132,47 @@ public partial class MainWindow
         var lt = new TextBlock 
         { 
             Text = name, 
-            Foreground = SearchText, 
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeights.SemiBold,
-            FontSize = 12
+            VerticalAlignment = VerticalAlignment.Center
         };
+        lt.SetResourceReference(TextBlock.ForegroundProperty, "TextPrimary");
+        lt.SetResourceReference(TextBlock.FontSizeProperty, "TypeBody");
         nameStack.Children.Add(lt);
 
         // Stock label directly below name, matching its association with item sold
         var stockPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 0) };
-        stockPanel.Children.Add(new TextBlock
+        // Stock is quiet secondary text; only "out of stock" earns a status color.
+        var stockText = new TextBlock
         {
-            Text = outOfStock ? "📦 Out of stock" : $"📦 Stock: {o.Stock}",
-            Foreground = outOfStock 
-                ? new SolidColorBrush(Color.FromRgb(239, 83, 80)) 
-                : new SolidColorBrush(Color.FromRgb(102, 187, 106)),
-            FontSize = 9.5,
-            FontWeight = FontWeights.Bold
-        });
+            Text = outOfStock ? "Out of stock" : $"Stock: {o.Stock}"
+        };
+        stockText.SetResourceReference(TextBlock.ForegroundProperty, outOfStock ? "DangerBrush" : "TextSecondary");
+        stockText.SetResourceReference(TextBlock.FontSizeProperty, "TypeCaption");
+        stockPanel.Children.Add(stockText);
         nameStack.Children.Add(stockPanel);
         Grid.SetColumn(nameStack, 1);
         g.Children.Add(nameStack);
 
         // 2: Dynamic Transaction Flow indicator & Currency (Aligned beautifully at the right)
         var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        right.Children.Add(new TextBlock 
-        { 
-            Text = " →  ", 
-            Foreground = new SolidColorBrush(Color.FromRgb(138, 162, 178)), 
-            FontWeight = FontWeights.Bold,
-            FontSize = 12
-        });
+        var arrowText = new TextBlock { Text = " →  " };
+        arrowText.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
+        arrowText.SetResourceReference(TextBlock.FontSizeProperty, "TypeBody");
+        right.Children.Add(arrowText);
         
         var ci = new Image { Width = 14, Height = 14, Margin = new Thickness(0, 0, 4, 0) };
         RenderOptions.SetBitmapScalingMode(ci, BitmapScalingMode.HighQuality);
         BindIcon(ci, o.CurrencyShortName, o.CurrencyItemId);
         right.Children.Add(ci);
         
-        right.Children.Add(new TextBlock
+        var priceText = new TextBlock
         {
             Text       = $"{o.CurrencyAmount} {ResolveItemName(o.CurrencyItemId, o.CurrencyShortName)}",
-            Foreground = SearchText,
             FontWeight = FontWeights.SemiBold,
-            FontSize   = 12
-        });
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        priceText.SetResourceReference(TextBlock.ForegroundProperty, "TextPrimary");
+        priceText.SetResourceReference(TextBlock.FontSizeProperty, "TypeBody");
+        right.Children.Add(priceText);
         Grid.SetColumn(right, 2);
         g.Children.Add(right);
 
@@ -241,73 +219,43 @@ public partial class MainWindow
             _ = InitEmbeddedShopSearchAsync();
             UpdateShopPollingWarning();
             
-            var scaleTrans = new ScaleTransform(1, 0.85);
-            var translateTrans = new TranslateTransform(0, 40);
-            var transformGroup = new TransformGroup();
-            transformGroup.Children.Add(scaleTrans);
-            transformGroup.Children.Add(translateTrans);
-            
-            ShopSearchContent.RenderTransform = transformGroup;
+            // Fluent entrance: a short rise into place with the "fast in, slow to rest" curve.
+            // No vertical squash; the panel keeps its shape and only moves and fades.
+            var rise = new TranslateTransform(0, 16);
+            ShopSearchContent.RenderTransform = rise;
             ShopSearchContent.Visibility = Visibility.Visible;
             ShopSearchContent.Opacity = 0;
 
-            var sb = new System.Windows.Media.Animation.Storyboard();
-            var fade = new System.Windows.Media.Animation.DoubleAnimation(1, TimeSpan.FromMilliseconds(250)) { EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut } };
-            var scale = new System.Windows.Media.Animation.DoubleAnimation(1, TimeSpan.FromMilliseconds(300)) { EasingFunction = new System.Windows.Media.Animation.BackEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut, Amplitude = 0.2 } };
-            var slide = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(250)) { EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut } };
-
-            System.Windows.Media.Animation.Storyboard.SetTarget(fade, ShopSearchContent);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(scale, scaleTrans);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(scale, new PropertyPath("ScaleY"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(slide, translateTrans);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(slide, new PropertyPath("Y"));
-
-            sb.Children.Add(fade);
-            sb.Children.Add(scale);
-            sb.Children.Add(slide);
-            sb.Completed += (s, e) =>
+            var fade = new System.Windows.Media.Animation.DoubleAnimation(1, Helpers.Motion.For(Helpers.Motion.Fast)) { EasingFunction = Helpers.Motion.Enter };
+            var slide = new System.Windows.Media.Animation.DoubleAnimation(0, Helpers.Motion.For(Helpers.Motion.Normal)) { EasingFunction = Helpers.Motion.Enter };
+            slide.Completed += (s, e) =>
             {
                 ShopSearchContent.Opacity = 1.0;
                 ShopSearchContent.RenderTransform = null; // Completely clear transforms to prevent subpixel layout flickering when typing/focusing
                 ShopSearchContent.BeginAnimation(UIElement.OpacityProperty, null);
             };
-            sb.Begin();
+            ShopSearchContent.BeginAnimation(UIElement.OpacityProperty, fade);
+            rise.BeginAnimation(TranslateTransform.YProperty, slide);
         }
         else
         {
-            var scaleTrans = new ScaleTransform(1, 1);
-            var translateTrans = new TranslateTransform(0, 0);
-            var transformGroup = new TransformGroup();
-            transformGroup.Children.Add(scaleTrans);
-            transformGroup.Children.Add(translateTrans);
-            
-            ShopSearchContent.RenderTransform = transformGroup;
+            // Fluent exit: shorter than the entrance, accelerating away, always with a fade.
+            var drop = new TranslateTransform(0, 0);
+            ShopSearchContent.RenderTransform = drop;
 
-            var sb = new System.Windows.Media.Animation.Storyboard();
-            var fade = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(200));
-            var scale = new System.Windows.Media.Animation.DoubleAnimation(0.85, TimeSpan.FromMilliseconds(200));
-            var slide = new System.Windows.Media.Animation.DoubleAnimation(40, TimeSpan.FromMilliseconds(200));
-
-            System.Windows.Media.Animation.Storyboard.SetTarget(fade, ShopSearchContent);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(fade, new PropertyPath("Opacity"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(scale, scaleTrans);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(scale, new PropertyPath("ScaleY"));
-            System.Windows.Media.Animation.Storyboard.SetTarget(slide, translateTrans);
-            System.Windows.Media.Animation.Storyboard.SetTargetProperty(slide, new PropertyPath("Y"));
-
-            sb.Children.Add(fade);
-            sb.Children.Add(scale);
-            sb.Children.Add(slide);
-            sb.Completed += (s, e) =>
+            var fade = new System.Windows.Media.Animation.DoubleAnimation(0, Helpers.Motion.For(Helpers.Motion.Fast)) { EasingFunction = Helpers.Motion.Exit };
+            var slide = new System.Windows.Media.Animation.DoubleAnimation(8, Helpers.Motion.For(Helpers.Motion.Fast)) { EasingFunction = Helpers.Motion.Exit };
+            slide.Completed += (s, e) =>
             {
                 ShopSearchContent.Visibility = Visibility.Collapsed;
                 ShopSearchContent.RenderTransform = null;
+                ShopSearchContent.BeginAnimation(UIElement.OpacityProperty, null);
+                ShopSearchContent.Opacity = 1.0;
             };
-            sb.Begin();
+            ShopSearchContent.BeginAnimation(UIElement.OpacityProperty, fade);
+            drop.BeginAnimation(TranslateTransform.YProperty, slide);
         }
     }
-
     private void BtnCloseShopSearch_Click(object sender, RoutedEventArgs e)
     {
         ToggleShopSearch();

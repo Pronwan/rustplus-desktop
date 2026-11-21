@@ -1256,13 +1256,13 @@ public partial class MainWindow : WpfUi.FluentWindow
                 var tb = new TextBlock { Text = cc.Name, Width = 100, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);
 
-                var btnRename = new Button { Content = "Abc", ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
+                var btnRename = new Button { Content = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Rename20, FontSize = 16 }, ToolTip = "Rename", Width = 28, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Foreground = Brushes.LightGray, Tag = cc };
                 btnRename.Click += CustomCrosshairRename_Click;
 
-                var btnEdit = new Button { Content = "\u270F\uFE0F", ToolTip = "Edit", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnEdit = new Button { Content = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Edit20, FontSize = 16 }, ToolTip = "Edit", Foreground = Brushes.LightGray, Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnEdit.Click += CustomCrosshairEdit_Click;
                 
-                var btnDelete = new Button { Content = "\uD83D\uDDD1\uFE0F", ToolTip = "Delete", Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
+                var btnDelete = new Button { Content = new WpfUi.SymbolIcon { Symbol = WpfUi.SymbolRegular.Delete20, FontSize = 16 }, ToolTip = "Delete", Foreground = Brushes.LightGray, Width = 24, Height = 24, Margin = new Thickness(0, 0, 5, 0), Background = Brushes.Transparent, BorderThickness = new Thickness(0), Tag = cc };
                 btnDelete.Click += CustomCrosshairDelete_Click;
 
                 sp.Children.Add(btnRename);

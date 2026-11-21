@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:helpers="clr-namespace:RustPlusDesk.Helpers"
     mc:Ignorable="d"
     d:DesignHeight="540"
     d:DesignWidth="400"
@@ -15,11 +16,11 @@
     <UserControl.Resources>
         <!-- Style 1: Glassy Pill/Capsule Button (Filters) -->
         <Style x:Key="GlassyPillButton" TargetType="Button">
-            <Setter Property="Background" Value="#12FFFFFF" />
-            <Setter Property="BorderBrush" Value="#16FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource FillControl}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#CCECEFF1" />
-            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Height" Value="28" />
             <Setter Property="Padding" Value="12,0" />
@@ -31,18 +32,18 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="14"
+                                CornerRadius="{DynamicResource RadiusControl}"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="btnBorder" Property="Background" Value="#25FFFFFF"/>
-                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="#40FFFFFF"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource FillControlHover}"/>
+                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="{DynamicResource StrokeStrong}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="btnBorder" Property="Background" Value="#1AFFFFFF"/>
+                                <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource FillControlPressed}"/>
                                 <Setter TargetName="btnBorder" Property="BorderThickness" Value="1.2"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -53,11 +54,11 @@
 
         <!-- Style 2: Cohesive Action Toolbar Button with Dynamic Hover Expansion -->
         <Style x:Key="ActionToolbarButton" TargetType="Button">
-            <Setter Property="Background" Value="#0FFFFFFF" />
-            <Setter Property="BorderBrush" Value="#10FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource FillControl}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#E0ECEFF1" />
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeBody}" />
             <Setter Property="Height" Value="36" />
             <Setter Property="MinWidth" Value="36" />
             <Setter Property="Padding" Value="10,0" />
@@ -70,19 +71,19 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8"
+                                CornerRadius="{DynamicResource RadiusControl}"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="btnBorder" Property="Background" Value="#22FFFFFF"/>
-                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="#00adef"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource FillControlHover}"/>
+                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="btnBorder" Property="Background" Value="#15FFFFFF"/>
-                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="#00adef"/>
+                                <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource FillControlPressed}"/>
+                                <Setter TargetName="btnBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -95,7 +96,7 @@
             <Setter Property="MaxWidth" Value="0"/>
             <Setter Property="Opacity" Value="0"/>
             <Setter Property="Margin" Value="0"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
@@ -104,23 +105,23 @@
                             <Storyboard Timeline.DesiredFrameRate="120">
                                 <DoubleAnimation Storyboard.TargetProperty="MaxWidth"
                                                  To="100"
-                                                 Duration="0:0:0.25">
+                                                 Duration="0:0:0.167">
                                     <DoubleAnimation.EasingFunction>
-                                        <CircleEase EasingMode="EaseOut"/>
+                                        <helpers:CubicBezierEase X1="0" Y1="0" X2="0" Y2="1"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                  To="1"
-                                                 Duration="0:0:0.2">
+                                                 Duration="0:0:0.167">
                                     <DoubleAnimation.EasingFunction>
-                                        <QuadraticEase EasingMode="EaseOut"/>
+                                        <helpers:CubicBezierEase X1="0" Y1="0" X2="0" Y2="1"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                     To="4,0,0,0"
-                                                    Duration="0:0:0.25">
+                                                    Duration="0:0:0.167">
                                     <ThicknessAnimation.EasingFunction>
-                                        <CircleEase EasingMode="EaseOut"/>
+                                        <helpers:CubicBezierEase X1="0" Y1="0" X2="0" Y2="1"/>
                                     </ThicknessAnimation.EasingFunction>
                                 </ThicknessAnimation>
                             </Storyboard>
@@ -131,23 +132,23 @@
                             <Storyboard Timeline.DesiredFrameRate="120">
                                 <DoubleAnimation Storyboard.TargetProperty="MaxWidth"
                                                  To="0"
-                                                 Duration="0:0:0.2">
+                                                 Duration="0:0:0.083">
                                     <DoubleAnimation.EasingFunction>
-                                        <CircleEase EasingMode="EaseIn"/>
+                                        <helpers:CubicBezierEase X1="1" Y1="0" X2="1" Y2="1"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                  To="0"
-                                                 Duration="0:0:0.15">
+                                                 Duration="0:0:0.083">
                                     <DoubleAnimation.EasingFunction>
-                                        <QuadraticEase EasingMode="EaseIn"/>
+                                        <helpers:CubicBezierEase X1="1" Y1="0" X2="1" Y2="1"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                     To="0"
-                                                    Duration="0:0:0.2">
+                                                    Duration="0:0:0.083">
                                     <ThicknessAnimation.EasingFunction>
-                                        <CircleEase EasingMode="EaseIn"/>
+                                        <helpers:CubicBezierEase X1="1" Y1="0" X2="1" Y2="1"/>
                                     </ThicknessAnimation.EasingFunction>
                                 </ThicknessAnimation>
                             </Storyboard>
@@ -159,11 +160,11 @@
 
         <!-- Style 4: Alert Row Action Button -->
         <Style x:Key="AlertActionButton" TargetType="Button">
-            <Setter Property="Background" Value="#12FFFFFF" />
-            <Setter Property="BorderBrush" Value="#16FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource FillControl}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="#CCECEFF1" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="Height" Value="20" />
             <Setter Property="Padding" Value="5,1" />
             <Setter Property="Cursor" Value="Hand" />
@@ -175,7 +176,7 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4"
+                                CornerRadius="{DynamicResource RadiusControl}"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -205,10 +206,10 @@
 
             <!-- Magnified Glassy Search Box inside capsule Border -->
             <Border Grid.Column="0"
-                    Background="#1A1D24"
-                    BorderBrush="{DynamicResource WhiteA25}"
+                    Background="{DynamicResource FillInset}"
+                    BorderBrush="{DynamicResource StrokeDefault}"
                     BorderThickness="1"
-                    CornerRadius="8"
+                    CornerRadius="{DynamicResource RadiusControl}"
                     Height="36"
                     Margin="0,0,6,0"
                     VerticalAlignment="Center">
@@ -223,8 +224,8 @@
                         Icon="Search24"
                         Background="Transparent"
                         BorderThickness="0"
-                        Foreground="White"
-                        FontSize="13.5"
+                        Foreground="{DynamicResource TextPrimary}"
+                        FontSize="{DynamicResource TypeBody}"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         Padding="6,0,6,0" />
@@ -240,10 +241,10 @@
                         MaxHeight="300"
                         PopupAnimation="Fade">
                         <Border
-                            Background="#16191E"
-                            BorderBrush="#35FFFFFF"
+                            Background="{DynamicResource Surface}"
+                            BorderBrush="{DynamicResource StrokeDefault}"
                             BorderThickness="1"
-                            CornerRadius="6">
+                            CornerRadius="{DynamicResource RadiusOverlay}">
                             <ListBox
                                 x:Name="LstAutocomplete"
                                 Background="Transparent"
@@ -261,9 +262,9 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <Image Grid.Column="0" Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                <TextBlock Grid.Column="1" Text="{Binding Display}" Foreground="White" FontSize="11" VerticalAlignment="Center" />
-                                                <Border Grid.Column="2" Margin="6,0,0,0" Padding="4,1" CornerRadius="3" Background="#3000ADEF" Visibility="{Binding CategoryBadgeVisibility}">
-                                                    <TextBlock Text="CATEGORY" Foreground="#00ADEF" FontSize="8.5" FontWeight="Bold" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Display}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeBody}" VerticalAlignment="Center" />
+                                                <Border Grid.Column="2" Margin="6,0,0,0" Padding="4,1" CornerRadius="{DynamicResource RadiusControl}" Background="{DynamicResource AccentTintBrush}" Visibility="{Binding CategoryBadgeVisibility}">
+                                                    <TextBlock Text="Category" Foreground="{DynamicResource Accent}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                                                 </Border>
                                             </Grid>
                                         </Border>
@@ -284,7 +285,7 @@
                     ToolTip="{DynamicResource UiFindProfitableShopTrades}"
                     AutomationProperties.Name="{DynamicResource UiFindProfitableShopTrades}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#x1F4B0;" FontSize="14" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="Money20" FontSize="16" VerticalAlignment="Center" />
                         <TextBlock Text="{DynamicResource UiProfit}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
@@ -296,7 +297,7 @@
                     ToolTip="{DynamicResource UiFindWhereToBuyAnItem}"
                     AutomationProperties.Name="{DynamicResource UiFindWhereToBuyAnItem}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#x1F50D;" FontSize="14" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="ShoppingBag20" FontSize="16" VerticalAlignment="Center" />
                         <TextBlock Text="{DynamicResource UiBuyX}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
@@ -309,7 +310,7 @@
                     ToolTip="{DynamicResource UiCreateAShopAlert}"
                     AutomationProperties.Name="{DynamicResource UiCreateAShopAlert}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#x1F514;" FontSize="14" VerticalAlignment="Center" />
+                        <ui:SymbolIcon Symbol="Alert20" FontSize="16" VerticalAlignment="Center" />
                         <TextBlock Text="{DynamicResource UiAlert}" Style="{StaticResource HoverTextOnlyOnParentHover}"/>
                     </StackPanel>
                 </Button>
@@ -325,8 +326,8 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiShowShopsThatSellItem}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="💰 " FontSize="11" VerticalAlignment="Center" />
-                    <TextBlock Text="{DynamicResource AlertShopSells}" FontSize="11" VerticalAlignment="Center" />
+                    <ui:SymbolIcon Symbol="Money20" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopSells}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -337,8 +338,8 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiShowShopsThatBuyItem}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🛒 " FontSize="11" VerticalAlignment="Center" />
-                    <TextBlock Text="{DynamicResource AlertShopBuys}" FontSize="11" VerticalAlignment="Center" />
+                    <ui:SymbolIcon Symbol="Cart20" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource AlertShopBuys}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -349,8 +350,8 @@
                 Margin="0,0,6,6"
                 ToolTip="{DynamicResource UiDonTShowOffersWithoutStock}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="👁 " FontSize="11" VerticalAlignment="Center" />
-                    <TextBlock Text="{DynamicResource UiHide0Stock}" FontSize="11" VerticalAlignment="Center" />
+                    <ui:SymbolIcon Symbol="EyeOff20" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{DynamicResource UiHide0Stock}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
 
@@ -361,8 +362,8 @@
                 Margin="0,0,0,6"
                 ToolTip="Hide shops inside Outpost, Bandit Town, Fishing Villages &amp; Monuments">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🏛 " FontSize="11" VerticalAlignment="Center" />
-                    <TextBlock Text="Hide Monuments" FontSize="11" VerticalAlignment="Center" />
+                    <ui:SymbolIcon Symbol="BuildingBank20" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock Text="Hide Monuments" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
         </WrapPanel>
@@ -375,7 +376,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiSortBy}" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbSort" SelectionChanged="CmbSort_SelectionChanged" Height="34">
                     <ComboBoxItem Content="{DynamicResource UiDefault}" Tag="default" IsSelected="True"/>
                     <ComboBoxItem Content="{DynamicResource UiPriceLowToHigh}" Tag="price_asc"/>
@@ -386,7 +387,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                <TextBlock Text="Category" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
+                <TextBlock Text="Category" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbCategory" SelectionChanged="CmbCategory_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -403,7 +404,7 @@
         <!-- Row 3: Payment Resource Filter -->
         <Grid Grid.Row="3" Margin="10,0,10,10">
             <StackPanel>
-                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="#80ECEFF1" FontSize="11" Margin="2,0,0,4"/>
+                <TextBlock Text="{DynamicResource UiPaymentResource}" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="2,0,0,4"/>
                 <ComboBox x:Name="CmbResource" SelectionChanged="CmbResource_SelectionChanged" Height="34">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -421,10 +422,10 @@
         <Border
             Grid.Row="4"
             Margin="10,2,10,2"
-            Background="#12151B"
-            BorderBrush="{DynamicResource WhiteA25}"
+            Background="{DynamicResource FillInset}"
+            BorderBrush="{DynamicResource StrokeDefault}"
             BorderThickness="1"
-            CornerRadius="6"
+            CornerRadius="{DynamicResource RadiusControl}"
             Cursor="Hand"
             Padding="0"
             MouseDown="AlertHdr_MouseDown">
@@ -438,7 +439,7 @@
                 <Border
                     Grid.Column="0"
                     Width="4"
-                    Background="#FFB74D"
+                    Background="{DynamicResource StatusWarning}"
                     CornerRadius="3,0,0,3"
                     Height="24"
                     VerticalAlignment="Stretch" />
@@ -446,14 +447,14 @@
                 <Border Grid.Column="1" Padding="10,5">
                     <Grid>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🚨 " FontSize="12" VerticalAlignment="Center" />
-                            <TextBlock Text="{DynamicResource UiActiveItemAlerts}" FontWeight="Bold" Foreground="#ECEFF1" FontSize="12.5" VerticalAlignment="Center" />
+                            <ui:SymbolIcon Symbol="AlertUrgent20" FontSize="16" Margin="0,0,6,0" Foreground="{DynamicResource StatusWarning}" VerticalAlignment="Center" />
+                            <TextBlock Text="{DynamicResource UiActiveItemAlerts}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeBody}" VerticalAlignment="Center" />
                         </StackPanel>
-                        <TextBlock
+                        <ui:SymbolIcon
                             x:Name="TxtAlertArrow"
-                            Text="▼"
-                            Foreground="#CCECEFF1"
-                            FontSize="11"
+                            Symbol="ChevronDown16"
+                            FontSize="16"
+                            Foreground="{DynamicResource TextSecondary}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center" />
                     </Grid>
@@ -466,10 +467,10 @@
             x:Name="BrdAlertListContainer"
             Grid.Row="5"
             Margin="10,0,10,4"
-            Background="#0D1015"
-            BorderBrush="{DynamicResource WhiteA20}"
+            Background="{DynamicResource FillInset}"
+            BorderBrush="{DynamicResource StrokeDefault}"
             BorderThickness="1,0,1,1"
-            CornerRadius="0,0,6,6"
+            CornerRadius="0,0,4,4"
             Visibility="Collapsed">
             <ListBox
                 x:Name="LstItemAlerts"
