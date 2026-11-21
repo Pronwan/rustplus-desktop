@@ -7714,7 +7714,8 @@
                                                             Grid.Column="2"
                                                             Padding="5,2"
                                                             Appearance="Transparent"
-                                                            Click="BtnShowOnline_Click"
+                                                            Click="BtnViewPlayers_Click"
+                                                            Visibility="Collapsed"
                                                             Content="{DynamicResource UiViewPlayers}"
                                                             FontSize="11"
                                                             ToolTip="{DynamicResource ShowOnlinePlayers}" />

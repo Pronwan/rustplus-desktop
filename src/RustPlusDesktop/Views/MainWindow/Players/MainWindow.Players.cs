@@ -30,6 +30,7 @@ public partial class MainWindow
     public void ApplyPlayersTabVisibility()
     {
         bool show = TrackingService.ShowPlayersTab;
+        BtnShowOnline.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
 
         // If the tab is being hidden while it is the current selection, fall back to Devices
         // before the rail is rebuilt (the Players rail entry is about to disappear).
@@ -238,13 +239,18 @@ public partial class MainWindow
         RefreshOnlinePlayersList();
     }
 
+    private void BtnViewPlayers_Click(object sender, RoutedEventArgs e)
+    {
+        if (!TrackingService.ShowPlayersTab) return;
+
+        CloseLeftPanelOverlays();
+        MainTabs.SelectedItem = PlayersTabItem;
+        SetSidebarExpanded(true);
+        BtnShowOnline_Click(sender, e);
+    }
+
     public async void BtnShowOnline_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button b && b.Name == "BtnShowOnline")
-        {
-            MainTabs.SelectedIndex = 3; // Players tab
-        }
-
         if (_vm.Selected == null || string.IsNullOrEmpty(_vm.Selected.Host))
         {
             if (PlayersTab == null) return;
