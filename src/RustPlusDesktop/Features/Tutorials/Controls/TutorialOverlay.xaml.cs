@@ -270,7 +270,7 @@ public partial class TutorialOverlay : UserControl, ITutorialPresenter
         if (SystemParameters.ClientAreaAnimation && _host != null)
         {
             _host.Opacity = 0;
-            _host.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(180)));
+            _host.BeginAnimation(OpacityProperty, new DoubleAnimation(1, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast)));
         }
     }
 

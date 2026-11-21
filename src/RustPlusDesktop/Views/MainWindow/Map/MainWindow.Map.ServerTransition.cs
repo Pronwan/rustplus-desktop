@@ -66,7 +66,7 @@ public partial class MainWindow
             return;
         }
         var completion = _serverMapTransitionCompletion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        var fade = new DoubleAnimation(0, TimeSpan.FromMilliseconds(220))
+        var fade = new DoubleAnimation(0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Normal))
         {
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
         };
@@ -82,7 +82,7 @@ public partial class MainWindow
             completion.TrySetResult();
         };
         ServerMapTransitionLayer.BeginAnimation(UIElement.OpacityProperty, fade);
-        var labelFade = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
+        var labelFade = new DoubleAnimation(0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast));
         labelFade.Completed += (_, _) =>
         {
             if (selectionVersion == _mapSelectionVersion) ServerSwitchLabel.Visibility = Visibility.Collapsed;

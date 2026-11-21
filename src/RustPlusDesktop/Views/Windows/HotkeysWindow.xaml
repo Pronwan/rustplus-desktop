@@ -34,7 +34,7 @@
                                 </DoubleAnimation>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                  To="1"
-                                                 Duration="0:0:0.2">
+                                                 Duration="0:0:0.167">
                                     <DoubleAnimation.EasingFunction>
                                         <QuadraticEase EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -54,21 +54,21 @@
                             <Storyboard Timeline.DesiredFrameRate="120">
                                 <DoubleAnimation Storyboard.TargetProperty="MaxWidth"
                                                  To="0"
-                                                 Duration="0:0:0.2">
+                                                 Duration="0:0:0.167">
                                     <DoubleAnimation.EasingFunction>
                                         <CircleEase EasingMode="EaseIn"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                  To="0"
-                                                 Duration="0:0:0.15">
+                                                 Duration="0:0:0.167">
                                     <DoubleAnimation.EasingFunction>
                                         <QuadraticEase EasingMode="EaseIn"/>
                                     </DoubleAnimation.EasingFunction>
                                 </DoubleAnimation>
                                 <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                     To="0"
-                                                    Duration="0:0:0.2">
+                                                    Duration="0:0:0.167">
                                     <ThicknessAnimation.EasingFunction>
                                         <CircleEase EasingMode="EaseIn"/>
                                     </ThicknessAnimation.EasingFunction>

@@ -8672,11 +8672,11 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         var slide = new TranslateTransform();
         container.RenderTransform = slide;
 
-        var fade = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(180)));
+        var fade = new DoubleAnimation(1, 0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast));
         Storyboard.SetTarget(fade, container);
         Storyboard.SetTargetProperty(fade, new PropertyPath(UIElement.OpacityProperty));
 
-        var move = new DoubleAnimation(0, 40, new Duration(TimeSpan.FromMilliseconds(180)))
+        var move = new DoubleAnimation(0, 40, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast))
         {
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
         };

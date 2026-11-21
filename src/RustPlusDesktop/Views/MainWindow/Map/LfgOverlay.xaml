@@ -87,11 +87,11 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
-                                                             To="1.1" Duration="0:0:0.14">
+                                                             To="1.1" Duration="0:0:0.167">
                                                 <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
-                                                             To="1.1" Duration="0:0:0.14">
+                                                             To="1.1" Duration="0:0:0.167">
                                                 <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
                                         </Storyboard>
@@ -101,9 +101,9 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
-                                                             To="1" Duration="0:0:0.18" />
+                                                             To="1" Duration="0:0:0.167" />
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
-                                                             To="1" Duration="0:0:0.18" />
+                                                             To="1" Duration="0:0:0.167" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>
@@ -142,11 +142,11 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
-                                                             To="1.1" Duration="0:0:0.14">
+                                                             To="1.1" Duration="0:0:0.167">
                                                 <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
-                                                             To="1.1" Duration="0:0:0.14">
+                                                             To="1.1" Duration="0:0:0.167">
                                                 <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
                                         </Storyboard>
@@ -156,9 +156,9 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleX"
-                                                             To="1" Duration="0:0:0.18" />
+                                                             To="1" Duration="0:0:0.167" />
                                             <DoubleAnimation Storyboard.TargetName="TabScale" Storyboard.TargetProperty="ScaleY"
-                                                             To="1" Duration="0:0:0.18" />
+                                                             To="1" Duration="0:0:0.167" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>

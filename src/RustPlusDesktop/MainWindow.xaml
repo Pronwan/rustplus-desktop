@@ -164,10 +164,10 @@
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetName="Card"
                                                  Storyboard.TargetProperty="Opacity"
-                                                 From="0" To="1" Duration="0:0:0.22"/>
+                                                 From="0" To="1" Duration="0:0:0.25"/>
                                 <DoubleAnimation Storyboard.TargetName="CardSlide"
                                                  Storyboard.TargetProperty="X"
-                                                 From="40" To="0" Duration="0:0:0.28">
+                                                 From="40" To="0" Duration="0:0:0.25">
                                     <DoubleAnimation.EasingFunction>
                                         <CubicEase EasingMode="EaseOut"/>
                                     </DoubleAnimation.EasingFunction>
@@ -7939,9 +7939,9 @@
                                                                             <EventTrigger.Actions>
                                                                                 <BeginStoryboard Name="HoverOn">
                                                                                     <Storyboard>
-                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0.18" Duration="0:0:0.15" />
-                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05" Duration="0:0:0.15" />
-                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05" Duration="0:0:0.15" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0.18" Duration="0:0:0.167" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05" Duration="0:0:0.167" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05" Duration="0:0:0.167" />
                                                                                     </Storyboard>
                                                                                 </BeginStoryboard>
                                                                             </EventTrigger.Actions>
@@ -7950,9 +7950,9 @@
                                                                             <EventTrigger.Actions>
                                                                                 <BeginStoryboard Name="HoverOff">
                                                                                     <Storyboard>
-                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
-                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.0" Duration="0:0:0.2" />
-                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.0" Duration="0:0:0.2" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="HoverGlow" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.167" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.0" Duration="0:0:0.167" />
+                                                                                        <DoubleAnimation Storyboard.TargetName="IconContent" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.0" Duration="0:0:0.167" />
                                                                                     </Storyboard>
                                                                                 </BeginStoryboard>
                                                                             </EventTrigger.Actions>

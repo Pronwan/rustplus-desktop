@@ -2783,7 +2783,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
         if (Root != null)
         {
             Root.Effect = blur;
-            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, TimeSpan.FromMilliseconds(200))
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 10, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast))
             {
                 EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
             };
@@ -2795,7 +2795,7 @@ private void DeviceRow_Click(object sender, MouseButtonEventArgs e)
     {
         if (Root != null && Root.Effect is System.Windows.Media.Effects.BlurEffect blur)
         {
-            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, TimeSpan.FromMilliseconds(150))
+            var anim = new System.Windows.Media.Animation.DoubleAnimation(0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast))
             {
                 EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseIn }
             };

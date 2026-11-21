@@ -1441,7 +1441,7 @@ public partial class MainWindow
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
                             lb.Visibility = Visibility.Visible;
-                            lb.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200)));
+                            lb.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0, 1, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast)));
                         }
                     }
                 };
@@ -1449,7 +1449,7 @@ public partial class MainWindow
                     var items = stack.Children.OfType<Border>().Select(b => b.Child).OfType<Grid>().ToList();
                     foreach (var item in items) {
                         foreach (var lb in item.Children.OfType<TextBlock>()) {
-                            var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
+                            var anim = new DoubleAnimation(0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast));
                             var targetLb = lb;
                             anim.Completed += (s2, e2) => targetLb.Visibility = Visibility.Collapsed;
                             lb.BeginAnimation(UIElement.OpacityProperty, anim);

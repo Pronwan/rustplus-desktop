@@ -137,7 +137,7 @@ namespace RustPlusDesk.Views.Windows
             if (!IsVisible) Show();
 
             BeginAnimation(OpacityProperty,
-                new System.Windows.Media.Animation.DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
+                new System.Windows.Media.Animation.DoubleAnimation(0, 1, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast)));
         }
 
         private void FadeOut()

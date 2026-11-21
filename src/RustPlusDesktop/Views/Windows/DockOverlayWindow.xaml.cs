@@ -239,7 +239,7 @@ namespace RustPlusDesk.Views.Windows
             var brush = new SolidColorBrush(Colors.White);
             LockGlyph.Foreground = brush;
             brush.BeginAnimation(SolidColorBrush.ColorProperty,
-                new ColorAnimation(Color.FromRgb(0x3F, 0xD7, 0xFF), TimeSpan.FromMilliseconds(280))
+                new ColorAnimation(Color.FromRgb(0x3F, 0xD7, 0xFF), RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Normal))
                 {
                     AutoReverse = true,
                     RepeatBehavior = new RepeatBehavior(4),
@@ -363,7 +363,7 @@ namespace RustPlusDesk.Views.Windows
             }));
 
             HintBubble.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(160)) { FillBehavior = FillBehavior.HoldEnd });
+                new DoubleAnimation(1.0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast)) { FillBehavior = FillBehavior.HoldEnd });
 
             _hintTimer?.Stop();
             _hintTimer = new System.Windows.Threading.DispatcherTimer { Interval = duration };
@@ -377,7 +377,7 @@ namespace RustPlusDesk.Views.Windows
             _hintTimer = null;
 
             HintBubble?.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(0.0, TimeSpan.FromMilliseconds(320)) { FillBehavior = FillBehavior.HoldEnd });
+                new DoubleAnimation(0.0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Normal)) { FillBehavior = FillBehavior.HoldEnd });
         }
 
         public void SetZoom(double zoom)
@@ -658,7 +658,7 @@ namespace RustPlusDesk.Views.Windows
             if (!any) return;
 
             PreviewLayer.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(160)) { FillBehavior = FillBehavior.HoldEnd });
+                new DoubleAnimation(1.0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Fast)) { FillBehavior = FillBehavior.HoldEnd });
         }
 
         public void HidePreview()
@@ -666,7 +666,7 @@ namespace RustPlusDesk.Views.Windows
             if (PreviewLayer == null) return;
 
             PreviewLayer.BeginAnimation(UIElement.OpacityProperty,
-                new DoubleAnimation(0.0, TimeSpan.FromMilliseconds(220)) { FillBehavior = FillBehavior.HoldEnd });
+                new DoubleAnimation(0.0, RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Normal)) { FillBehavior = FillBehavior.HoldEnd });
         }
     }
 }

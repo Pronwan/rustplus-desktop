@@ -512,7 +512,7 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#7F8A96" Duration="0:0:0.08"/>
+                               To="#7F8A96" Duration="0:0:0.083"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
@@ -536,22 +536,22 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#62D38B" Duration="0:0:0.08"/>
+                               To="#62D38B" Duration="0:0:0.083"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.10"/>
+                                Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.083"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.10"/>
+                                Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.083"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Indeterminate">
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Circle"
                                Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)"
-                               To="#62D38B" Duration="0:0:0.08"/>
+                               To="#62D38B" Duration="0:0:0.083"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.10"/>
+                                Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.083"/>
                                             <DoubleAnimation Storyboard.TargetName="DotScale"
-                                Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.10"/>
+                                Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.083"/>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
