@@ -323,7 +323,10 @@
 
   <!-- Proprietary Private Submodule Reference (when present) -->
   <ItemGroup Condition="Exists('$(AuthSubmoduleProjectPath)')">
-    <ProjectReference Include="$(AuthSubmoduleProjectPath)" />
+    <!-- The release's -p:Version would otherwise stamp the app version into RustPlus.Auth.dll and
+         change its hash every release; see Directory.Build.props for why that matters. -->
+    <ProjectReference Include="$(AuthSubmoduleProjectPath)"
+                      GlobalPropertiesToRemove="Version;VersionPrefix;VersionSuffix;AssemblyVersion;FileVersion;InformationalVersion;PackageVersion" />
     <Compile Remove="Services\Auth\IRustCompanionAuthProvider.cs" />
   </ItemGroup>
 

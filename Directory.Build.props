@@ -23,4 +23,29 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <!--
+    RustPlus.Auth.dll must come out byte-identical from release to release until its own code
+    changes. It ships unsigned, and Smart App Control judges an unsigned file by the reputation of
+    its exact hash: every new hash starts from zero and can be blocked (0x800711C7). It used to
+    carry the app version and a commit id, so each release made it a stranger again.
+
+    So: a version of its own that only moves when its code does, no source revision, and build
+    paths mapped away. RustPlusDesk.csproj also keeps the release's -p:Version off this project.
+    Bump AuthAssemblyVersion only together with a change to the auth code.
+  -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'RustPlus.Auth'">
+    <AuthAssemblyVersion>1.0.0</AuthAssemblyVersion>
+    <Version>$(AuthAssemblyVersion)</Version>
+    <AssemblyVersion>$(AuthAssemblyVersion).0</AssemblyVersion>
+    <FileVersion>$(AuthAssemblyVersion).0</FileVersion>
+    <InformationalVersion>$(AuthAssemblyVersion)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- Source Link writes the git commit into the PDB, and the DLL carries the PDB's id, so the
+         DLL changed with every commit of whichever repository it was built in. -->
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildProjectDirectory)=/_/RustPlus.Auth</PathMap>
+  </PropertyGroup>
+
 </Project>

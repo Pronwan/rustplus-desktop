@@ -76,6 +76,27 @@ jobs:
           token: ${{ secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
           path: vendor/MapParser
 
+      # RustPlus.Auth.dll ships unsigned, and Smart App Control judges it by its exact hash, so a
+      # new hash can get it blocked (0x800711C7). Directory.Build.props makes its build
+      # deterministic; this also reuses the released DLL while the auth source is unchanged, so a
+      # newer compiler from the floating SDK cannot change its bytes either.
+      - name: Fingerprint the RustPlus.Auth source
+        id: auth_src
+        if: ${{ hashFiles('vendor/RustPlus.Auth/RustPlus.Auth.csproj') != '' }}
+        shell: pwsh
+        run: |
+          $tree = git -C vendor/RustPlus.Auth rev-parse 'HEAD^{tree}'
+          if ($LASTEXITCODE -ne 0 -or -not $tree) { Write-Host "No git tree for RustPlus.Auth; it will be rebuilt."; exit 0 }
+          "tree=$tree" >> $env:GITHUB_OUTPUT
+
+      - name: Restore the released RustPlus.Auth.dll
+        id: auth_cache
+        if: ${{ steps.auth_src.outputs.tree != '' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/auth-cache
+          key: rustplus-auth-${{ steps.auth_src.outputs.tree }}-${{ hashFiles('Directory.Build.props') }}
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -252,6 +273,41 @@ jobs:
           -p:GenerateDocumentationFile=false
           -p:SkipGeneticsLabBuild=true
           -p:IncludeRustModels=${{ inputs.lite_build && 'false' || 'true' }}
+
+      - name: Keep RustPlus.Auth.dll identical to the last release
+        if: ${{ steps.auth_src.outputs.tree != '' }}
+        shell: pwsh
+        run: |
+          $published = Join-Path "${{ env.PUBLISH_DIR }}" "RustPlus.Auth.dll"
+          $cached = "artifacts/auth-cache/RustPlus.Auth.dll"
+          if (-not (Test-Path $published)) { throw "RustPlus.Auth.dll is missing from the publish output." }
+
+          if ("${{ steps.auth_cache.outputs.cache-hit }}" -eq "true" -and (Test-Path $cached)) {
+            $newHash = (Get-FileHash $published -Algorithm SHA256).Hash
+            $oldHash = (Get-FileHash $cached -Algorithm SHA256).Hash
+            $newVer = [Reflection.AssemblyName]::GetAssemblyName((Resolve-Path $published)).Version
+            $oldVer = [Reflection.AssemblyName]::GetAssemblyName((Resolve-Path $cached)).Version
+            if ($newHash -eq $oldHash) {
+              Write-Host "RustPlus.Auth.dll rebuilt byte-identical ($newHash)."
+            } elseif ($newVer -ne $oldVer) {
+              # The app was compiled against $newVer; swapping in another identity would break loading.
+              Write-Warning "Cached RustPlus.Auth.dll is $oldVer but the build is $newVer; shipping the new build."
+            } else {
+              Copy-Item $cached $published -Force
+              Write-Host "Auth source unchanged: shipping the released RustPlus.Auth.dll ($oldHash) instead of the rebuild ($newHash)."
+            }
+          } else {
+            New-Item -ItemType Directory -Force -Path (Split-Path $cached) | Out-Null
+            Copy-Item $published $cached -Force
+            Write-Host "Auth source changed or not cached: shipping the new build ($((Get-FileHash $published -Algorithm SHA256).Hash))."
+          }
+
+      - name: Save RustPlus.Auth.dll for later releases
+        if: ${{ steps.auth_src.outputs.tree != '' && steps.auth_cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/auth-cache
+          key: rustplus-auth-${{ steps.auth_src.outputs.tree }}-${{ hashFiles('Directory.Build.props') }}
 
       # A lite package must not carry the 3D models (~430 MB): 11.4.3 shipped them because the
       # incremental MapParser build reused a publish dir the test build had filled.
