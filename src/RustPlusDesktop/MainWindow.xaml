@@ -6065,11 +6065,6 @@
                                                                      <Trigger Property="IsChecked" Value="True">
                                                                          <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
                                                                          <Setter Property="Foreground" Value="White" />
-                                                                         <Setter TargetName="Bd" Property="Effect">
-                                                                             <Setter.Value>
-                                                                                 <DropShadowEffect BlurRadius="8" Color="#60CDFF" Opacity="0.3" ShadowDepth="0" />
-                                                                             </Setter.Value>
-                                                                         </Setter>
                                                                      </Trigger>
                                                                      <Trigger Property="IsMouseOver" Value="True">
                                                                          <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />

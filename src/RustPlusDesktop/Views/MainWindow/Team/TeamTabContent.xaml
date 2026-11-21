@@ -141,11 +141,6 @@
                                                             <Trigger Property="IsChecked" Value="True">
                                                                 <Setter TargetName="Bd" Property="Background" Value="#3D4B5C" />
                                                                 <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
-                                                                <Setter TargetName="Bd" Property="Effect">
-                                                                    <Setter.Value>
-                                                                        <DropShadowEffect BlurRadius="4" Color="#60CDFF" Opacity="0.3" ShadowDepth="0" />
-                                                                    </Setter.Value>
-                                                                </Setter>
                                                             </Trigger>
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter TargetName="Bd" Property="BorderBrush" Value="#60FFFFFF" />

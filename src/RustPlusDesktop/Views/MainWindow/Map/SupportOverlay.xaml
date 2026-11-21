@@ -114,11 +114,7 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <Ellipse Width="7" Height="7" Fill="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,7,0" Visibility="{Binding UnreadVisibility}">
-                                                        <Ellipse.Effect>
-                                                            <DropShadowEffect Color="#60CDFF" BlurRadius="6" ShadowDepth="0" Opacity="0.8" />
-                                                        </Ellipse.Effect>
-                                                    </Ellipse>
+                                                    <Ellipse Width="7" Height="7" Fill="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,7,0" Visibility="{Binding UnreadVisibility}" />
                                                     <TextBlock Text="{Binding Subject}" Foreground="{DynamicResource TextPrimary}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                                 </StackPanel>
                                                 <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
