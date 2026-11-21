@@ -25,6 +25,9 @@ public partial class MainWindow
     {
         if (Interlocked.Exchange(ref _fcmHealthChecked, 1) == 1) return;
 
+        // The check names RustPlus.Auth types; with that DLL blocked there is nothing to check.
+        if (!RustPlusAuthAssembly.IsAvailable) return;
+
         _ = Task.Run(async () =>
         {
             try

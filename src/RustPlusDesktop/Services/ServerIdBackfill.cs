@@ -45,7 +45,7 @@ public static class ServerIdBackfill
         var missing = profiles.Where(p => string.IsNullOrWhiteSpace(p.ServerId)).ToList();
         if (missing.Count == 0) return 0;
 
-        var authToken = RustCompanionAuthService.ReadCurrentToken();
+        var authToken = RustPlusAuthAssembly.TryReadCurrentToken();
         if (string.IsNullOrWhiteSpace(authToken)) return 0;
 
         int filled = 0;

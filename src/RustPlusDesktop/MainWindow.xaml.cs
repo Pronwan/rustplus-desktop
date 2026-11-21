@@ -652,6 +652,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                 SetSidebarExpanded(true);
             }
 
+            WarnIfRustPlusAuthBlocked();
             StartPairingSilent(true);
 
             // Make sure the cloud has the current Rust+ login (consent-gated inside).
@@ -7985,7 +7986,63 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             await StartPairingListenerUiWithEdgeAsync(); // der Edge-Flow aus voriger Antwort
     }
 
+    // These menu handlers only check RustPlus.Auth.dll and hand over: their bodies name its types,
+    // which cannot even be compiled when Smart App Control blocked it, so a try/catch in them
+    // would never run and the click would end in the crash dialog.
     private async void BtnCheckTokenStatus_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureRustPlusAuthAvailable()) return;
+        await CheckTokenStatusCoreAsync();
+    }
+
+    private async void BtnLogoutThisDevice_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureRustPlusAuthAvailable()) return;
+        await LogoutThisDeviceCoreAsync();
+    }
+
+    private async void BtnLogoutAllDevices_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureRustPlusAuthAvailable()) return;
+        await LogoutAllDevicesCoreAsync();
+    }
+
+    /// <summary>True when RustPlus.Auth.dll loads; otherwise logs why and tells the user.</summary>
+    private bool EnsureRustPlusAuthAvailable()
+    {
+        if (RustPlusAuthAssembly.IsAvailable) return true;
+
+        AppendLog("[auth] " + RustPlusAuthAssembly.UnavailableReason);
+        MessageBox.Show(
+            RustPlusAuthAssembly.IsBlockedByPolicy ? RustPlusAuthAssembly.BlockedDialogText : RustPlusAuthAssembly.UnavailableReason,
+            "Rust+ login unavailable", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    /// <summary>
+    /// Says once per run, at start-up, that Windows blocked RustPlus.Auth.dll. Without this the user
+    /// only saw "Pairing error" and servers that would not connect. Probes off the UI thread: the
+    /// Smart App Control check behind a load can take a while.
+    /// </summary>
+    private void WarnIfRustPlusAuthBlocked()
+    {
+        _ = Task.Run(() =>
+        {
+            if (RustPlusAuthAssembly.IsAvailable) return;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                AppendLog("[auth] " + RustPlusAuthAssembly.UnavailableReason);
+                if (RustPlusAuthAssembly.IsBlockedByPolicy)
+                {
+                    MessageBox.Show(this, RustPlusAuthAssembly.BlockedDialogText,
+                        "Windows blocked a RustPlus Desktop file", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }));
+        });
+    }
+
+    private async Task CheckTokenStatusCoreAsync()
     {
         AppendLog("🔍 Checking Rust+ companion token status with Facepunch...");
         try
@@ -8229,7 +8286,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private async void BtnLogoutThisDevice_Click(object sender, RoutedEventArgs e)
+    private async Task LogoutThisDeviceCoreAsync()
     {
         var ask = MessageBox.Show(
             "Unregister this desktop app from Facepunch push notifications and delete local credentials?\n\nYou will need to pair again to receive notifications.",
@@ -8255,7 +8312,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
     }
 
-    private async void BtnLogoutAllDevices_Click(object sender, RoutedEventArgs e)
+    private async Task LogoutAllDevicesCoreAsync()
     {
         var ask = MessageBox.Show(
             "⚠️ GLOBAL LOGOUT / INVALIDATE:\n\nThis will invalidate your Rust+ token on Facepunch servers across ALL devices (including mobile phones and other PCs).\n\nAre you sure you want to proceed?",

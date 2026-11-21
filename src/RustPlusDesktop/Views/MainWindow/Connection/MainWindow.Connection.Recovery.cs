@@ -57,24 +57,34 @@ public partial class MainWindow
         _vm.NotifyDevicesChanged();
     }
 
+    // Apart from the click handler because the auth provider's type lives in RustPlus.Auth.dll:
+    // naming it in the handler made every recovery click fail when Windows blocked that DLL.
+    private async Task SignInAndReconnectAsync(ServerProfile profile)
+    {
+        await _pairing.StopAsync();
+        _listenerStarting = false;
+        if (await CompanionAuthManager.Provider.RunRegistrationFlowAsync(AppendLog))
+        {
+            _vm.NotifyFcmChanged();
+            StartPairingSilent(false);
+            if (ReferenceEquals(_vm.Selected, profile))
+                await RunConnectionAttemptsAsync(profile.WantsFullConnection, silent: false);
+        }
+    }
+
     private async void BtnConnectionRecovery_Click(object sender, RoutedEventArgs e)
     {
         if (_vm.Selected is not { } profile || _connectionActionPending || _connectionAttemptsActive > 0) return;
+        if (profile.ConnectionFailure == ConnectionFailureKind.AuthBlocked)
+        {
+            // Retrying cannot help while Windows blocks the DLL; once it allows it, connect again.
+            if (!EnsureRustPlusAuthAvailable()) return;
+        }
         if (profile.ConnectionFailure == ConnectionFailureKind.SignInRequired)
         {
+            if (!EnsureRustPlusAuthAvailable()) return;
             _connectionActionPending = true;
-            try
-            {
-                await _pairing.StopAsync();
-                _listenerStarting = false;
-                if (await CompanionAuthManager.Provider.RunRegistrationFlowAsync(AppendLog))
-                {
-                    _vm.NotifyFcmChanged();
-                    StartPairingSilent(false);
-                    if (ReferenceEquals(_vm.Selected, profile))
-                        await RunConnectionAttemptsAsync(profile.WantsFullConnection, silent: false);
-                }
-            }
+            try { await SignInAndReconnectAsync(profile); }
             catch (Exception error) { AppendLog("[connection] Sign-in failed: " + error.Message); }
             finally { _connectionActionPending = false; }
             return;

@@ -4502,7 +4502,12 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         lock (_subscribed) _subscribed.Clear();
         _eventsHooked = false;
 
-        var authToken = RustCompanionAuthService.ReadCurrentToken();
+        // Naming RustCompanionAuthService here made this whole method fail to compile when Smart
+        // App Control blocked RustPlus.Auth.dll; say so instead of claiming the login is missing.
+        if (!RustPlusAuthAssembly.IsAvailable)
+            throw new RustPlusConnectionException(ConnectionFailureKind.AuthBlocked,
+                RustPlusAuthAssembly.UnavailableReason ?? "RustPlus.Auth.dll is unavailable.");
+        var authToken = RustPlusAuthAssembly.TryReadCurrentToken();
         var serverId = RustPlusConnectionException.RequireCompanionCredentials(profile.ServerId, authToken);
         ConnectionFailureKind routeFailure = ConnectionFailureKind.Unavailable;
         async Task<(bool ok, string? err, bool isDenied)> TryAsync(RustPlusConnection connection, string route)

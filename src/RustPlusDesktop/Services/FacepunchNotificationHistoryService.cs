@@ -65,7 +65,7 @@ namespace RustPlusDesk.Services
         /// </summary>
         public static async Task<List<FacepunchNotificationItem>> FetchHistoryAsync(string? authToken = null, CancellationToken ct = default)
         {
-            authToken ??= RustCompanionAuthService.ReadCurrentToken();
+            authToken ??= RustPlusAuthAssembly.TryReadCurrentToken();
             if (string.IsNullOrWhiteSpace(authToken))
                 return new List<FacepunchNotificationItem>();
 

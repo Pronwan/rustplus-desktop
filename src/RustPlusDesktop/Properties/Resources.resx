@@ -8982,6 +8982,8 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="ConnectionServerErrorDescription" xml:space="preserve"><value>The Rust server returned an error. You can retry the connection.</value></data>
   <data name="ConnectionUnsupportedTitle" xml:space="preserve"><value>Feature unavailable</value></data>
   <data name="ConnectionUnsupportedDescription" xml:space="preserve"><value>This Rust server does not support the requested feature. Other connected features can still work.</value></data>
+  <data name="ConnectionAuthBlockedTitle" xml:space="preserve"><value>Blocked by Windows</value></data>
+  <data name="ConnectionAuthBlockedDescription" xml:space="preserve"><value>Windows Smart App Control blocked RustPlus.Auth.dll, so the Rust+ login cannot be read. Stay online and restart the app; reinstall the latest version if it persists.</value></data>
   <data name="ConnectionRePairRequiredTitle" xml:space="preserve"><value>Re-pair needed</value></data>
   <data name="ConnectionRePairRequiredDescription" xml:space="preserve"><value>The server rejected your pairing. In Rust, open Esc → Rust+ → Pair with Server, then retry here.</value></data>
   <data name="ConnectionSignInRequiredTitle" xml:space="preserve"><value>Sign in again</value></data>

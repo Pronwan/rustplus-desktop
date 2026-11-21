@@ -38,10 +38,13 @@ namespace RustPlusDesk.Services
 
             try
             {
-                var token = RustCompanionAuthService.ReadCurrentToken();
+                // Through the wrappers: naming RustCompanionAuthService here made this whole method
+                // fail to compile when Smart App Control blocked RustPlus.Auth.dll, before the
+                // catch below could see it.
+                var token = RustPlusAuthAssembly.TryReadCurrentToken();
                 if (string.IsNullOrWhiteSpace(token)) return;
 
-                var (_, _, _, expiresAt) = RustCompanionAuthService.ParseJwtClaims(token);
+                var expiresAt = RustPlusAuthAssembly.TryGetTokenExpiry(token);
                 if (expiresAt.HasValue && expiresAt.Value < DateTime.UtcNow) return;
 
                 for (int i = 0; i < 24 && !(CloudAuthManager.IsAuthenticated && SupabaseAuthManager.IsPremium); i++)

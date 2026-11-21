@@ -71,11 +71,19 @@ namespace RustPlusDesk.Services
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RustPlusDesk", "fcm-persistent-ids.json");
 
+        // The private StartAsync names RustPlus.Auth types, so it cannot even be compiled when
+        // Smart App Control blocked that DLL. Check here, where nothing names them, and fail with
+        // the reason instead of a bare FileLoadException.
         public Task StartAsync(CancellationToken ct = default) =>
-            StartAsync(null, null, ct);
+            RustPlusAuthAssembly.IsAvailable
+                ? StartAsync(null, null, ct)
+                : Task.FromException(RustPlusAuthAssembly.CreateUnavailableException());
 
         public Task StartAsyncUsingEdge(CancellationToken ct = default)
         {
+            if (!RustPlusAuthAssembly.IsAvailable)
+                return Task.FromException(RustPlusAuthAssembly.CreateUnavailableException());
+
             var edge = ChromiumBrowserLocator.FindEdge();
             if (edge is not null)
                 return StartAsync(edge, "Microsoft Edge", ct);

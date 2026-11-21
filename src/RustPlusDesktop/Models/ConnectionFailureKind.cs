@@ -7,5 +7,7 @@ public enum ConnectionFailureKind
     ServerError,
     Unsupported,
     RePairRequired,
-    SignInRequired
+    SignInRequired,
+    /// <summary>Windows Application Control blocked RustPlus.Auth.dll, so the login cannot be read.</summary>
+    AuthBlocked
 }
