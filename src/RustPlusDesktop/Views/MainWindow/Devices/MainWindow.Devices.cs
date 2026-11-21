@@ -1,3 +1,4 @@
+using RustPlusDesk.Helpers;
 using RustPlusDesk.Models;
 using RustPlusDesk.Services.Data;
 using RustPlusDesk.Services;
@@ -560,56 +561,83 @@ private void ListDevices_SelectedItemChanged(object sender, RoutedPropertyChange
         return highBit | randomBits;
     }
 
+    private readonly DeviceGroupToggle _deviceGroupToggle = new();
+
     private async void GroupToggle_Click(object sender, RoutedEventArgs e)
     {
+        if (sender is not Button { Tag: SmartDevice { IsGroup: true } group } || _vm.Selected is not { } profile)
+            return;
+
+        var client = _rust;
+        var connection = _connectionPollingCts.Token;
+        int selectionVersion = _mapSelectionVersion;
+        var groupName = group.PureName;
+        bool IsCurrent() => !connection.IsCancellationRequested && selectionVersion == _mapSelectionVersion
+            && ReferenceEquals(_vm.Selected, profile) && ReferenceEquals(_rust, client)
+            && profile.IsConnected && !_isDeletingServer;
+
+        bool IsBusy(SmartDevice device)
+        {
+            if (_logicEngineRunningAction || _deviceAutomationRunningAction) return true;
+            lock (_toggleBusy)
+                return _toggleBusy.TryGetValue(device.EntityId, out var since) && DateTime.UtcNow - since <= ToggleBusyTTL;
+        }
+
+        bool sentPrevious = false;
+        async Task<bool> TryToggleAsync(SmartDevice device, bool on)
+        {
+            // Keep commands serial and give the companion API breathing room after each attempt.
+            if (sentPrevious) await Task.Delay(800, connection);
+            if (!IsCurrent() || device.IsMissing || device.IsToggleBusy || IsBusy(device)) return false;
+            if (!TryMarkToggleBusy(device.EntityId)) return false;
+            sentPrevious = true;
+            try
+            {
+                device.IsToggleBusy = true;
+                AppendLog($"[group/toggle] Sending {(on ? "ON" : "OFF")} to #{device.EntityId} ({device.Name})...");
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(connection);
+                timeout.CancelAfter(TimeSpan.FromSeconds(5));
+                await client.ToggleSmartSwitchAsync(device.EntityId, on, timeout.Token);
+                return true;
+            }
+            finally
+            {
+                // A connection reset clears the shared busy table; don't remove a new server's lock.
+                if (!connection.IsCancellationRequested) UnmarkToggleBusy(device.EntityId);
+                device.IsToggleBusy = false;
+                if (IsCurrent()) VerifyToggleSoon(device);
+            }
+        }
+
         try
         {
-            if (sender is Button btn && btn.Tag is SmartDevice groupDev && groupDev.IsGroup && groupDev.Children != null)
-            {
-                AppendLog($"[group/toggle] Toggling group '{groupDev.Alias}'...");
-                var switches = GetSwitchesRecursive(groupDev.Children);
-                AppendLog($"[group/toggle] Found {switches.Count} switches in group.");
-                
-                if (!switches.Any()) return;
+            var result = await _deviceGroupToggle.RunAsync(group, IsBusy, TryToggleAsync, IsCurrent,
+                onFailure: (device, error) => AppendLog($"[group/toggle] #{device.EntityId} failed: {error.Message}"));
+            if (result == null) return; // A second click on this group does not start another batch.
 
-                if (!await EnsureConnectedAsync()) return;
-
-                bool targetOn = !switches.First().IsOn.GetValueOrDefault(false);
-                AppendLog($"[group/toggle] Target state: {(targetOn ? "ON" : "OFF")}");
-                
-                foreach (var sw in switches)
-                {
-                    if (sw.IsOn == targetOn) continue;
-                    
-                    AppendLog($"[group/toggle] Switching #{sw.EntityId} ({sw.Name})...");
-                    
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                    await _rust.ToggleSmartSwitchAsync(sw.EntityId, targetOn, cts.Token);
-                    VerifyToggleSoon(sw);
-                    
-                    await Task.Delay(800); 
-                }
-                AppendLog("[group/toggle] Group toggle complete.");
-            }
+            var message = result is { Changed: 0, Unchanged: 0, Skipped: 0, Failed: 0, Interrupted: 0 }
+                ? string.Format(Loc.Text("DeviceGroupToggleEmpty", "{0} has no smart switches."), groupName)
+                : string.Format(Loc.Text("DeviceGroupToggleSummary", "{0}: {1} changed, {2} already set, {3} skipped (missing or busy), {4} failed."),
+                    groupName, result.Changed, result.Unchanged, result.Skipped, result.Failed);
+            if (result.Interrupted > 0)
+                message += " " + string.Format(Loc.Text("DeviceGroupToggleInterrupted",
+                    "{0} not completed because the server connection changed or was unavailable."), result.Interrupted);
+            AppendLog($"[group/toggle] {message}");
+            var appearance = result.Failed > 0 || result.Skipped > 0 || result.Interrupted > 0
+                ? WpfUi.ControlAppearance.Caution : WpfUi.ControlAppearance.Info;
+            ShowInfoSnackbar(Properties.Resources.DevicesTab, message, appearance);
         }
         catch (Exception ex)
         {
             AppendLog($"[group/toggle] Error: {ex.Message}");
+            ShowInfoSnackbar(Properties.Resources.DevicesTab,
+                string.Format(Loc.Text("DeviceGroupToggleFailed", "Could not toggle {0}."), groupName),
+                WpfUi.ControlAppearance.Caution);
         }
     }
 
-    private List<SmartDevice> GetSwitchesRecursive(IEnumerable<SmartDevice> devices)
-    {
-        var list = new List<SmartDevice>();
-        foreach (var d in devices)
-        {
-            if (d.IsGroup && d.Children != null)
-                list.AddRange(GetSwitchesRecursive(d.Children));
-            else if (string.Equals(d.Kind, "SmartSwitch", StringComparison.OrdinalIgnoreCase) || string.Equals(d.Kind, "Smart Switch", StringComparison.OrdinalIgnoreCase))
-                list.Add(d);
-        }
-        return list;
-    }
+    private List<SmartDevice> GetSwitchesRecursive(IEnumerable<SmartDevice> devices) =>
+        DeviceGroupToggle.GetSwitches(devices).ToList();
 
     private SmartDevice? FindDeviceById(IEnumerable<SmartDevice>? devices, uint id)
     {

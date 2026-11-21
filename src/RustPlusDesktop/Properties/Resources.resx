@@ -8377,6 +8377,18 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="DevicesShowHow" xml:space="preserve">
     <value>Show me how</value>
   </data>
+  <data name="DeviceGroupToggleSummary" xml:space="preserve">
+    <value>{0}: {1} changed, {2} already set, {3} skipped (missing or busy), {4} failed.</value>
+  </data>
+  <data name="DeviceGroupToggleInterrupted" xml:space="preserve">
+    <value>{0} not completed because the server connection changed or was unavailable.</value>
+  </data>
+  <data name="DeviceGroupToggleEmpty" xml:space="preserve">
+    <value>{0} has no smart switches.</value>
+  </data>
+  <data name="DeviceGroupToggleFailed" xml:space="preserve">
+    <value>Could not toggle {0}.</value>
+  </data>
   <data name="TeamSoloTitle" xml:space="preserve">
     <value>Playing solo</value>
   </data>
