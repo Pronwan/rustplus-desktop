@@ -20,6 +20,7 @@ namespace RustPlusDesk.Views
         private const string VirtualHost = "geneticslab.rustplus";
 
         private WebView2? _webView;
+        private CoreWebView2? _core;
         // The Genetics Lab build the WebView is mapped to; see GeneticsLabContentService.
         private GeneticsLabContent? _content;
         // Version of the build the current page replaced, handed to the page for "What's new".
@@ -29,7 +30,17 @@ namespace RustPlusDesk.Views
         private bool _pageShowsUpdates;
         private bool _isInitialized;
         private bool _isInitializing;
-        private static CoreWebView2Environment? _sharedEnvironment;
+        // A failure stays on screen until Retry, so reopening the workspace cannot hide it.
+        private bool _loadFailed;
+        // Bumped whenever the browser is torn down, so a slow initialisation from before cannot
+        // attach itself to (or report a failure over) a newer attempt.
+        private int _browserAttempt;
+        // The page navigation being waited on; about:blank on teardown is not one of them.
+        private ulong? _navigationId;
+        private CoreWebView2Environment? _environment;
+        private readonly Func<GeneticsLabContent?> _resolveContent;
+        private readonly Func<WebView2, Task> _ensureCoreAsync;
+        private readonly Func<Task>? _tryDownloadMissingContentAsync;
         private volatile bool _performanceModeEnabled;
         // The high-priority/anti-throttling performance boost is only justified while the
         // scanner is actually running. Calculations (tab visible but not scanning) must run
@@ -74,13 +85,22 @@ namespace RustPlusDesk.Views
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr handle);
 
-        public GeneticsLabTabContent()
+        public GeneticsLabTabContent() : this(GeneticsLabContentService.Instance.ResolveContent)
         {
+        }
+
+        internal GeneticsLabTabContent(Func<GeneticsLabContent?> resolveContent, Func<WebView2, Task>? ensureCoreAsync = null)
+        {
+            _resolveContent = resolveContent;
+            _ensureCoreAsync = ensureCoreAsync ?? EnsureCoreAsync;
+            if (ensureCoreAsync == null)
+                _tryDownloadMissingContentAsync = async () => await GeneticsLabContentService.Instance.CheckForUpdatesAsync(force: true, default);
+
             InitializeComponent();
             Loaded += GeneticsLabTabContent_Loaded;
             IsVisibleChanged += GeneticsLabTabContent_IsVisibleChanged;
 
-            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            if (ensureCoreAsync == null && !System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
                 GeneticsLabContentService.Instance.StatusChanged += ContentService_StatusChanged;
                 // Genetics Lab updates on its own schedule, independent of desktop releases. Check
@@ -99,16 +119,23 @@ namespace RustPlusDesk.Views
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (!_isInitialized) return;
-                PostUpdateStatusToPage(status);
-                UpdateReadyButton.Visibility = status?.State == "ready" && !_pageShowsUpdates
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
+                // A queued notification can arrive after a reload already selected that build.
+                RefreshUpdateStatus(GeneticsLabContentService.Instance.Status);
             }));
+        }
+
+        private void RefreshUpdateStatus(GeneticsLabUpdateStatus? status)
+        {
+            PostUpdateStatusToPage(status);
+            UpdateReadyButton.Visibility = status?.State == "ready" && !_pageShowsUpdates &&
+                GeneticsLabContentService.Instance.FindNewerThan(_content) != null
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void PostUpdateStatusToPage(GeneticsLabUpdateStatus? status)
         {
-            if (status == null || _webView?.CoreWebView2 == null) return;
+            if (status == null || _core == null) return;
             // A "ready" build the page is already running is not news.
             if (status.State == "ready" && GeneticsLabContentService.Instance.FindNewerThan(_content) == null) return;
 
@@ -125,7 +152,7 @@ namespace RustPlusDesk.Views
         {
             try
             {
-                _webView?.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(message));
+                _core?.PostWebMessageAsJson(JsonSerializer.Serialize(message));
             }
             catch (Exception ex)
             {
@@ -135,7 +162,7 @@ namespace RustPlusDesk.Views
 
         private async void GeneticsLabTabContent_Loaded(object sender, RoutedEventArgs e)
         {
-            await EnsureWebViewAsync();
+            if (IsVisible) await EnsureWebViewAsync();
             UpdatePerformanceMode();
         }
 
@@ -155,20 +182,21 @@ namespace RustPlusDesk.Views
             UpdatePerformanceMode();
         }
 
-        private async Task EnsureWebViewAsync()
+        internal async Task EnsureWebViewAsync(bool recoverMissingContent = false)
         {
-            // Loaded and IsVisibleChanged can both land before the first initialisation finishes,
-            // and two of these in flight would build two browsers and leak the first.
-            if (_isInitialized || _isInitializing) return;
+            // Loaded and IsVisibleChanged can both arrive before initialization finishes. Also,
+            // minimizing/reopening the workspace must not silently dismiss an actionable failure.
+            if (_webView != null || _isInitializing || _loadFailed) return;
 
             _isInitializing = true;
+            int attempt = ++_browserAttempt;
             try
             {
-                await InitializeWebViewAsync();
+                await InitializeWebViewAsync(attempt, recoverMissingContent);
             }
             finally
             {
-                _isInitializing = false;
+                if (attempt == _browserAttempt) _isInitializing = false;
             }
         }
 
@@ -181,6 +209,7 @@ namespace RustPlusDesk.Views
 
         private void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
+            if (!ReferenceEquals(sender, _core) || _core == null) return;
             try
             {
                 using JsonDocument doc = JsonDocument.Parse(e.WebMessageAsJson);
@@ -221,74 +250,147 @@ namespace RustPlusDesk.Views
             }
         }
 
-        private async Task InitializeWebViewAsync()
+        private enum LoadFailure { MissingContent, Runtime, Navigation }
+
+        private static bool HasEntryPoint(GeneticsLabContent? content) =>
+            content != null && File.Exists(Path.Combine(content.Folder, "index.html"));
+
+        // Hidden, not Collapsed: the browser's window still gets built and sized while it loads,
+        // but it cannot cover the WPF overlay (an HWND always draws above WPF content).
+        private void ShowLoading()
         {
+            WebViewHost.Visibility = Visibility.Hidden;
+            FailurePanel.Visibility = Visibility.Collapsed;
+            LoadingOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void ShowPage()
+        {
+            FailurePanel.Visibility = Visibility.Collapsed;
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+            WebViewHost.Visibility = Visibility.Visible;
+        }
+
+        private void ShowFailure(LoadFailure failure, string? diagnostic = null)
+        {
+            System.Diagnostics.Debug.WriteLine($"[GeneticsLab] {failure}: {diagnostic}");
+            ShutdownWebView();
+            _loadFailed = true;
+            (FailureTitle.Text, FailureMessage.Text) = failure switch
+            {
+                LoadFailure.MissingContent => ("Genetics Lab files are missing",
+                    "Connect to the internet and retry to download the files. If that doesn't work, reinstall RustPlus Desktop."),
+                LoadFailure.Runtime => ("Genetics Lab couldn't start its browser",
+                    "Install or repair the Microsoft Edge WebView2 Runtime, then retry. If it's already installed, restarting RustPlus Desktop may help."),
+                _ => ("Genetics Lab couldn't load its page",
+                    "Retry to reopen Genetics Lab. If it still won't load, repair or reinstall RustPlus Desktop.")
+            };
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+            WebViewHost.Visibility = Visibility.Collapsed;
+            FailurePanel.Visibility = Visibility.Visible;
+        }
+
+        private async void Retry_Click(object sender, RoutedEventArgs e) => await RetryAsync();
+
+        private async Task RetryAsync()
+        {
+            ShutdownWebView();
+            await EnsureWebViewAsync(recoverMissingContent: true);
+            UpdatePerformanceMode();
+        }
+
+        private async Task EnsureCoreAsync(WebView2 browser)
+        {
+            string webViewDataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RustPlusDesk",
+                "WebView2_GeneticsLab");
+
+            Directory.CreateDirectory(webViewDataFolder);
+
+            var envOptions = new CoreWebView2EnvironmentOptions(
+                additionalBrowserArguments: "--autoplay-policy=no-user-gesture-required " +
+                                            "--disable-background-timer-throttling " +
+                                            "--disable-backgrounding-occluded-windows " +
+                                            "--disable-renderer-backgrounding " +
+                                            "--disable-background-media-suspend " +
+                                            "--disable-features=CalculateNativeWinOcclusion " +
+                                            "--force-high-performance-gpu " +
+                                            "--disable-gpu-vsync");
+
+            CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(
+                userDataFolder: webViewDataFolder,
+                options: envOptions);
+            if (!ReferenceEquals(browser, _webView)) return;
+
+            _environment = environment;
+            await browser.EnsureCoreWebView2Async(environment);
+            if (!ReferenceEquals(browser, _webView))
+                throw new OperationCanceledException("Genetics Lab was closed while its browser started.");
+        }
+
+        private async Task InitializeWebViewAsync(int attempt, bool recoverMissingContent)
+        {
+            ShowLoading();
+            LoadFailure failure = LoadFailure.MissingContent;
             try
             {
-                // The newest of the bundled build and the last update downloaded (GitHub or the hosted site).
-                _content = GeneticsLabContentService.Instance.ResolveContent();
+                // Resolve again on retry; the updater or a repair may have restored the files.
+                _content = _resolveContent();
+                if (!HasEntryPoint(_content) && recoverMissingContent && _tryDownloadMissingContentAsync != null)
+                {
+                    if (_content != null) GeneticsLabContentService.Instance.ReleaseContent(_content);
+                    _content = null;
+                    await _tryDownloadMissingContentAsync();
+                    if (attempt != _browserAttempt) return;
+                    _content = _resolveContent();
+                }
 
-                string webViewDataFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "RustPlusDesk",
-                    "WebView2_GeneticsLab");
+                if (_content is not { } content || !HasEntryPoint(content))
+                {
+                    ShowFailure(failure);
+                    return;
+                }
 
-                Directory.CreateDirectory(webViewDataFolder);
-
-                var envOptions = new CoreWebView2EnvironmentOptions(
-                    additionalBrowserArguments: "--autoplay-policy=no-user-gesture-required " +
-                                                "--disable-background-timer-throttling " +
-                                                "--disable-backgrounding-occluded-windows " +
-                                                "--disable-renderer-backgrounding " +
-                                                "--disable-background-media-suspend " +
-                                                "--disable-features=CalculateNativeWinOcclusion " +
-                                                "--force-high-performance-gpu " +
-                                                "--disable-gpu-vsync");
-
-                _sharedEnvironment ??= await CoreWebView2Environment.CreateAsync(
-                    userDataFolder: webViewDataFolder,
-                    options: envOptions);
-
-                LoadingOverlay.Visibility = Visibility.Visible;
-
-                _webView = new WebView2
+                failure = LoadFailure.Runtime;
+                var browser = new WebView2
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch
                 };
-                WebViewHost.Children.Add(_webView);
+                _webView = browser;
+                WebViewHost.Children.Add(browser);
 
-                await _webView.EnsureCoreWebView2Async(_sharedEnvironment);
-                _webView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
-                _sharedEnvironment.ProcessInfosChanged += SharedEnvironment_ProcessInfosChanged;
+                await _ensureCoreAsync(browser);
+                if (attempt != _browserAttempt) return;
+
+                CoreWebView2 core = _core = browser.CoreWebView2;
+                core.WebMessageReceived += OnWebMessageReceived;
+                core.NavigationStarting += GeneticsWebView_NavigationStarting;
+                core.NavigationCompleted += GeneticsWebView_NavigationCompleted;
+                core.ProcessFailed += GeneticsWebView_ProcessFailed;
+                if (_environment != null)
+                    _environment.ProcessInfosChanged += SharedEnvironment_ProcessInfosChanged;
                 RefreshWebViewProcessIds();
 
-                if (_content != null)
-                {
-                    _webView.NavigationCompleted += GeneticsWebView_NavigationCompleted;
-                    await NavigateToContentAsync(_content);
-                }
-                else
-                {
-                    LoadingOverlay.Visibility = Visibility.Collapsed;
-                }
+                failure = LoadFailure.Navigation;
+                await NavigateToContentAsync(browser, content);
+                if (attempt != _browserAttempt) return;
 
+                // The page itself is still loading; NavigationCompleted reveals it or reports a failure.
                 _isInitialized = true;
+                UpdatePerformanceMode();
                 GeneticsLabContentService.Instance.CheckForUpdatesInBackground();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[GeneticsLab] Failed to initialize WebView2: {ex.Message}");
-                LoadingOverlay.Visibility = Visibility.Collapsed;
-                // A half-built browser must not be left parented and unreachable; the next open
-                // would add a second one beside it.
-                ShutdownWebView();
+                if (attempt == _browserAttempt) ShowFailure(failure, ex.Message);
             }
         }
 
-        private async Task NavigateToContentAsync(GeneticsLabContent content)
+        private async Task NavigateToContentAsync(WebView2 browser, GeneticsLabContent content)
         {
-            CoreWebView2 core = _webView!.CoreWebView2;
+            CoreWebView2 core = browser.CoreWebView2;
 
             // Hashed JS/CSS names change with their content, but images and OCR files keep their
             // names across builds, so a cached response could outlive the build it came from. The
@@ -314,12 +416,44 @@ namespace RustPlusDesk.Views
             core.Navigate($"https://{VirtualHost}/index.html{build}");
         }
 
+        private void GeneticsWebView_NavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            if (!ReferenceEquals(sender, _core)) return;
+            if (Uri.TryCreate(e.Uri, UriKind.Absolute, out var uri) &&
+                string.Equals(uri.Host, VirtualHost, StringComparison.OrdinalIgnoreCase))
+            {
+                _navigationId = e.NavigationId;
+            }
+        }
+
         private async void GeneticsWebView_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            LoadingOverlay.Visibility = Visibility.Collapsed;
+            if (!ReferenceEquals(sender, _core) || e.NavigationId != _navigationId) return;
+
+            if (!e.IsSuccess)
+            {
+                ShowFailure(LoadFailure.Navigation, e.WebErrorStatus.ToString());
+                return;
+            }
+
+            ShowPage();
             if (_performanceModeEnabled)
             {
                 await KeepWebViewActiveAsync();
+            }
+        }
+
+        // The browser or the page's renderer is gone: the WebView is blank and will not recover on
+        // its own. GPU and utility processes restart by themselves and are left alone.
+        private void GeneticsWebView_ProcessFailed(object? sender, CoreWebView2ProcessFailedEventArgs e)
+        {
+            if (!ReferenceEquals(sender, _core)) return;
+            if (e.ProcessFailedKind is CoreWebView2ProcessFailedKind.BrowserProcessExited
+                or CoreWebView2ProcessFailedKind.RenderProcessExited)
+            {
+                ShowFailure(e.ProcessFailedKind == CoreWebView2ProcessFailedKind.BrowserProcessExited
+                    ? LoadFailure.Runtime
+                    : LoadFailure.Navigation, e.ProcessFailedKind.ToString());
             }
         }
 
@@ -334,7 +468,7 @@ namespace RustPlusDesk.Views
 
         private void RefreshWebViewProcessIds()
         {
-            _webViewProcessIds = _sharedEnvironment?.GetProcessInfos()
+            _webViewProcessIds = _environment?.GetProcessInfos()
                 .Select(process => process.ProcessId)
                 .ToArray() ?? Array.Empty<int>();
         }
@@ -440,30 +574,38 @@ namespace RustPlusDesk.Views
         /// <summary>Reloads the page, switching to a newer Genetics Lab build if one was installed.</summary>
         public async void Reload()
         {
+            // No browser to reload: a failed or half-built start. Rebuild it instead of doing nothing.
+            if (_webView is not { CoreWebView2: not null } browser)
+            {
+                await RetryAsync();
+                return;
+            }
+
             try
             {
-                if (_webView?.CoreWebView2 == null) return;
-
                 GeneticsLabContent? newer = GeneticsLabContentService.Instance.FindNewerThan(_content);
                 if (newer != null)
                 {
                     GeneticsLabContent? previous = _content;
-                    _content = GeneticsLabContentService.Instance.ResolveContent();
-                    if (_content != null)
+                    GeneticsLabContent? next = GeneticsLabContentService.Instance.ResolveContent();
+                    if (HasEntryPoint(next))
                     {
-                        LoadingOverlay.Visibility = Visibility.Visible;
-                        await NavigateToContentAsync(_content);
+                        _content = next;
+                        ShowLoading();
+                        await NavigateToContentAsync(browser, next!);
                         if (previous != null) GeneticsLabContentService.Instance.ReleaseContent(previous);
                         UpdateReadyButton.Visibility = Visibility.Collapsed;
                         return;
                     }
+                    if (next != null) GeneticsLabContentService.Instance.ReleaseContent(next);
                 }
 
-                _webView.CoreWebView2.Reload();
+                ShowLoading();
+                browser.CoreWebView2.Reload();
             }
-            catch
+            catch (Exception ex)
             {
-                // ignore
+                ShowFailure(LoadFailure.Navigation, ex.Message);
             }
         }
 
@@ -521,26 +663,36 @@ namespace RustPlusDesk.Views
             _isScannerActive = false;
             SetPerformanceMode(false);
 
-            if (_sharedEnvironment != null)
+            // Any initialisation still in flight now belongs to a browser that is gone.
+            _browserAttempt++;
+            _isInitializing = false;
+            _loadFailed = false;
+            _navigationId = null;
+
+            if (_environment != null)
             {
-                try { _sharedEnvironment.ProcessInfosChanged -= SharedEnvironment_ProcessInfosChanged; } catch { }
+                try { _environment.ProcessInfosChanged -= SharedEnvironment_ProcessInfosChanged; } catch { }
+            }
+
+            if (_core != null)
+            {
+                try
+                {
+                    _core.WebMessageReceived -= OnWebMessageReceived;
+                    _core.NavigationStarting -= GeneticsWebView_NavigationStarting;
+                    _core.NavigationCompleted -= GeneticsWebView_NavigationCompleted;
+                    _core.ProcessFailed -= GeneticsWebView_ProcessFailed;
+                    // Unloads the page before the control goes, so the scanner's screen capture
+                    // and the audio context are released by the page's own teardown rather than
+                    // being cut off with the process.
+                    _core.Navigate("about:blank");
+                }
+                catch { }
+                _core = null;
             }
 
             if (_webView != null)
             {
-                try
-                {
-                    _webView.NavigationCompleted -= GeneticsWebView_NavigationCompleted;
-                    if (_webView.CoreWebView2 != null)
-                    {
-                        _webView.CoreWebView2.WebMessageReceived -= OnWebMessageReceived;
-                        // Unloads the page before the control goes, so the scanner's screen capture
-                        // and the audio context are released by the page's own teardown rather than
-                        // being cut off with the process.
-                        _webView.CoreWebView2.Navigate("about:blank");
-                    }
-                }
-                catch { }
 
                 try { WebViewHost.Children.Remove(_webView); } catch { }
                 try { _webView.Dispose(); } catch { }
@@ -556,8 +708,10 @@ namespace RustPlusDesk.Views
             PatchNotesButton.Visibility = Visibility.Collapsed;
 
             _webViewProcessIds = Array.Empty<int>();
-            _sharedEnvironment = null;
+            _environment = null;
             _isInitialized = false;
+            FailurePanel.Visibility = Visibility.Collapsed;
+            WebViewHost.Visibility = Visibility.Hidden;
             LoadingOverlay.Visibility = Visibility.Visible;
 
             ReclaimProcessMemory();

@@ -41,13 +41,26 @@
                 <!-- The WebView2 is created in code and parented here, so closing can dispose it
                      outright and reopening can build a fresh one. A disposed WebView2 cannot be
                      revived, so it cannot be a fixed child declared in XAML. -->
-                <Grid x:Name="WebViewHost" />
+                <!-- HWND-hosted WebView2 cannot be covered by a WPF overlay. -->
+                <Grid x:Name="WebViewHost" Visibility="Collapsed" />
 
                 <!-- Loading / Fallback Overlay -->
                 <Border x:Name="LoadingOverlay" Background="#FF121418" Visibility="Visible">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ui:ProgressRing IsIndeterminate="{Binding IsVisible, RelativeSource={RelativeSource Self}}" Width="48" Height="48" Margin="0,0,0,16" />
                         <TextBlock Text="Loading Genetics Lab..." FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="FailurePanel" Background="#FF121418" Visibility="Collapsed" Padding="24">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
+                        <TextBlock x:Name="FailureTitle" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}" TextAlignment="Center" TextWrapping="Wrap"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <TextBlock x:Name="FailureMessage" Margin="0,8,0,16" Foreground="{DynamicResource TextMutedBrush}"
+                                   TextAlignment="Center" TextWrapping="Wrap" />
+                        <ui:Button x:Name="RetryButton" Content="Retry" Appearance="Primary" HorizontalAlignment="Center"
+                                   Click="Retry_Click" AutomationProperties.Name="Retry loading Genetics Lab" />
                     </StackPanel>
                 </Border>
             </Grid>
