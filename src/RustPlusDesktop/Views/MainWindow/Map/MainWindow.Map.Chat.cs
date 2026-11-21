@@ -1284,7 +1284,7 @@ public partial class MainWindow
         {
             ChatContentBorder.Visibility = Visibility.Collapsed;
             if (ChatErrorBox != null) ChatErrorBox.Visibility = Visibility.Collapsed;
-            if (ChatSearchPanel != null) ChatSearchPanel.Visibility = Visibility.Collapsed;
+            CloseChatSearch();
             if (ChatQuickCommandsDrawer != null) ChatQuickCommandsDrawer.Visibility = Visibility.Collapsed;
             UpdateUnreadBadges();
         };
@@ -1498,8 +1498,14 @@ public partial class MainWindow
         }
         else if (isVis)
         {
-            TxtChatSearch?.Clear();
+            CloseChatSearch();
         }
+    }
+
+    private void CloseChatSearch()
+    {
+        if (ChatSearchPanel != null) ChatSearchPanel.Visibility = Visibility.Collapsed;
+        TxtChatSearch?.Clear();
     }
 
     private void TxtChatSearch_TextChanged(object sender, TextChangedEventArgs e)
