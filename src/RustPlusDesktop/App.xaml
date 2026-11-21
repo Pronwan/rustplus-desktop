@@ -9,6 +9,8 @@
                 <!-- Wpf.Ui (WPF-UI lepo.co): WinUI 3 Fluent controls -->
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
+                <!-- Shared type, shape, color-role and motion tokens. -->
+                <ResourceDictionary Source="Views/Themes/DesignTokens.xaml" />
                 <!-- Last, so the app's menu styles win over the WPF-UI implicit ones. -->
                 <ResourceDictionary Source="Views/Themes/MenuFlyout.xaml" />
                 <ResourceDictionary Source="Views/Themes/PanelHeader.xaml" />

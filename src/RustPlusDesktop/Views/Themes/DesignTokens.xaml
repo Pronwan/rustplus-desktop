@@ -1,0 +1,41 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+        Design tokens: the few values every surface should share.
+        Follows Windows 11 Fluent guidance (Microsoft Learn: Typography, Geometry, Timing and easing).
+        Colors build on the palette in App.xaml; reference everything here with DynamicResource.
+    -->
+
+    <!-- Type ramp. 12 is the smallest size for regular text; use SemiBold for titles, Regular for the rest. -->
+    <sys:Double x:Key="TypeCaption">12</sys:Double>
+    <sys:Double x:Key="TypeBody">14</sys:Double>
+    <sys:Double x:Key="TypeSubtitle">16</sys:Double>
+    <sys:Double x:Key="TypeTitle">20</sys:Double>
+    <sys:Double x:Key="TypeDisplay">28</sys:Double>
+
+    <!-- Shape. 4 for controls inside a page (buttons, inputs, list rows), 8 for containers and overlays. -->
+    <CornerRadius x:Key="RadiusControl">4</CornerRadius>
+    <CornerRadius x:Key="RadiusOverlay">8</CornerRadius>
+    <CornerRadius x:Key="RadiusOverlayTop">8,8,0,0</CornerRadius>
+
+    <!-- Color roles on top of the App.xaml palette. -->
+    <SolidColorBrush x:Key="FillControl" Color="#0FFFFFFF" />
+    <SolidColorBrush x:Key="FillControlHover" Color="#18FFFFFF" />
+    <SolidColorBrush x:Key="FillControlPressed" Color="#0AFFFFFF" />
+    <SolidColorBrush x:Key="FillInset" Color="#14171C" />
+    <SolidColorBrush x:Key="SurfaceOverlay" Color="#F2181B1F" />
+    <SolidColorBrush x:Key="StrokeSubtle" Color="#1AFFFFFF" />
+    <SolidColorBrush x:Key="StrokeDefault" Color="#28FFFFFF" />
+    <SolidColorBrush x:Key="StrokeStrong" Color="#40FFFFFF" />
+    <SolidColorBrush x:Key="TextSecondary" Color="#A3ADBD" />
+    <SolidColorBrush x:Key="StatusWarning" Color="#F2C14E" />
+    <SolidColorBrush x:Key="StatusSuccess" Color="#6CCB8A" />
+
+    <!-- Motion (see Helpers/Motion.cs for code-driven animation). -->
+    <Duration x:Key="MotionFaster">0:0:0.083</Duration>
+    <Duration x:Key="MotionFast">0:0:0.167</Duration>
+    <Duration x:Key="MotionNormal">0:0:0.25</Duration>
+</ResourceDictionary>
