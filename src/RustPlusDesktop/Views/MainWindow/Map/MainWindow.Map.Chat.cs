@@ -751,6 +751,7 @@ public partial class MainWindow
         }
 
         if (_rust is not RustPlusClientReal real) return false;
+        var profile = _vm?.Selected;
 
         if (text == null)
         {
@@ -809,9 +810,13 @@ public partial class MainWindow
         lock (pending) { pending.Remove(trackKey); }
         if (sentOk)
         {
-            string myName = _vm?.Selected?.Name ?? "Me";
-            var selfMsg = new TeamChatMessage(DateTime.UtcNow, myName, _mySteamId, text);
-            AppendChatIfNew(selfMsg, channel, isHistorical: false);
+            // A late echo fallback must not write the old server's message into the new history.
+            if (ReferenceEquals(profile, _vm?.Selected) && ReferenceEquals(real, _rust))
+            {
+                string myName = profile?.Name ?? "Me";
+                var selfMsg = new TeamChatMessage(DateTime.UtcNow, myName, _mySteamId, text);
+                AppendChatIfNew(selfMsg, channel, isHistorical: false);
+            }
             return true;
         }
 
@@ -1030,8 +1035,6 @@ public partial class MainWindow
         }
 
         _activeChatChannel = channel;
-        TxtChatInput?.Clear();
-        if (ChatErrorBox != null) ChatErrorBox.Visibility = Visibility.Collapsed;
 
         // Reset unread count for the active channel
         if (channel == ChatChannel.Team) _unreadTeamCount = 0;
@@ -1296,55 +1299,73 @@ public partial class MainWindow
         CloseChatOverlay();
     }
 
+    private readonly MainChatComposerState _chatComposer = new();
+    private bool _restoringChatDraft;
+
+    private MainChatComposerState.Destination CurrentChatDestination() => new(_activeChatChannel,
+        _activeChatChannel == ChatChannel.Global
+            ? Services.Cloud.CloudAuthManager.CurrentUser?.Id ?? ""
+            : _vm?.Selected?.CacheKey ?? "");
+
+    private bool IsChatComposerRestricted(MainChatComposerState.Destination destination) =>
+        destination.Lane == ChatChannel.Global && (!GlobalLaneAvailable || Services.Social.GlobalChatFeed.Sanction != null);
+
+    private void RefreshChatComposer(bool restoreDraft = false)
+    {
+        if (TxtChatInput == null || BtnSendChat == null) return;
+        var destination = CurrentChatDestination();
+        if (restoreDraft)
+        {
+            string draft = _chatComposer.Draft(destination);
+            if (TxtChatInput.Text != draft)
+            {
+                _restoringChatDraft = true;
+                try { TxtChatInput.Text = draft; }
+                finally { _restoringChatDraft = false; }
+            }
+        }
+        bool enabled = _chatComposer.CanCompose(destination, IsChatComposerRestricted(destination));
+        TxtChatInput.IsEnabled = enabled;
+        BtnSendChat.IsEnabled = enabled;
+        // Back to the resource reference, not a copied string, so a language change still updates it.
+        if (_chatComposer.IsSending(destination)) BtnSendChat.Content = "…";
+        else BtnSendChat.SetResourceReference(ContentControl.ContentProperty, "Send");
+        if (ChatErrorBox != null && ChatErrorText != null)
+        {
+            string? error = _chatComposer.Error(destination);
+            ChatErrorText.Text = error ?? "";
+            ChatErrorBox.Visibility = error == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
     private async Task SendChatInputAsync()
     {
-        var text = TxtChatInput.Text.Trim();
-        if (string.IsNullOrEmpty(text)) return;
-
-        if (ChatErrorBox != null) ChatErrorBox.Visibility = Visibility.Collapsed;
-
+        var draft = TxtChatInput.Text;
+        var text = draft.Trim();
+        var destination = CurrentChatDestination();
+        if (text.Length == 0 || IsChatComposerRestricted(destination) || !_chatComposer.TryBegin(destination)) return;
+        _chatComposer.SetDraft(destination, draft);
+        RefreshChatComposer();
+        bool sent = false;
+        string? error = null;
         try
         {
-            BtnSendChat.IsEnabled = false;
-            TxtChatInput.IsEnabled = false;
-            var oldContent = BtnSendChat.Content;
-            BtnSendChat.Content = "...";
-
-            // The room is not a Rust channel: it has no server to confirm against and its refusals
-            // are its own, so it does not go through the reliable-send path.
-            bool confirmed = _activeChatChannel == ChatChannel.Global
-                ? await SendGlobalChatAsync(text)
-                : await SendChatReliableAsync(text, _activeChatChannel);
-
-            if (confirmed)
+            if (destination.Lane == ChatChannel.Global)
+                (sent, error) = await SendGlobalChatAsync(text, destination);
+            else
             {
-                TxtChatInput.Clear();
-            }
-            else if (_activeChatChannel != ChatChannel.Global)
-            {
-                // The global path has already said which refusal this was; a generic line after it
-                // would overwrite the specific one.
-                if (ChatErrorBox != null && ChatErrorText != null)
-                {
-                    ChatErrorBox.Visibility = Visibility.Visible;
-                    ChatErrorText.Text = Properties.Resources.MessageNotSentError;
-                }
+                sent = await SendChatReliableAsync(text, destination.Lane);
+                if (!sent) error = Properties.Resources.MessageNotSentError;
             }
         }
         catch (Exception ex)
         {
-            if (ChatErrorBox != null && ChatErrorText != null)
-            {
-                ChatErrorBox.Visibility = Visibility.Visible;
-                ChatErrorText.Text = Properties.Resources.ErrorPrefix + ex.Message;
-            }
+            error = Properties.Resources.ErrorPrefix + ex.Message;
         }
         finally
         {
-            BtnSendChat.IsEnabled = true;
-            TxtChatInput.IsEnabled = true;
-            BtnSendChat.Content = Properties.Resources.Send;
-            TxtChatInput.Focus();
+            _chatComposer.Complete(destination, draft, sent, error);
+            if (destination == CurrentChatDestination()) RefreshChatComposer(restoreDraft: true);
         }
     }
 
@@ -1369,6 +1390,9 @@ public partial class MainWindow
 
     private void TxtChatInput_TextChanged(object sender, TextChangedEventArgs e)
     {
+        if (!_restoringChatDraft && TxtChatInput != null)
+            _chatComposer.SetDraft(CurrentChatDestination(), TxtChatInput.Text);
+
         if (TxtChatCharCount != null && TxtChatInput != null)
         {
             int len = TxtChatInput.Text.Length;

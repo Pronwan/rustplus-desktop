@@ -142,6 +142,7 @@ public partial class MainWindow
         // The ticker is another door to the same room, so it opens and closes with this one.
         _socialAvailable = visible;
         ApplyGlobalChatTickerVisibility();
+        if (_activeChatChannel == ChatChannel.Global) RefreshChatComposer(restoreDraft: true);
 
         // The divider above it goes too. The one below stays, so the rule between the tools and
         // the pin/settings pair survives the button disappearing from between them.

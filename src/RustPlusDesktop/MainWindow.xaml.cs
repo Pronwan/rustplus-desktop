@@ -603,6 +603,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             if (e.PropertyName == nameof(MainViewModel.Selected))
             {
                 SwitchCameraSourceTo(_vm.Selected);
+                RefreshChatComposer(restoreDraft: true);
                 LogicEnginePanel?.RefreshListBindings();
                 DeviceAutomationPanel?.RefreshListBindings();
                 RefreshCurrentHotkeyBindings();
@@ -1912,6 +1913,7 @@ public partial class MainWindow : WpfUi.FluentWindow
             UpdateCloudSyncUI();
             _ = RefreshPlayerWipeTrackerCapabilitiesAsync();
             _ = RefreshSocialAvailabilityAsync();
+            RefreshChatComposer(restoreDraft: true);
         }
 
         if (Dispatcher.CheckAccess())

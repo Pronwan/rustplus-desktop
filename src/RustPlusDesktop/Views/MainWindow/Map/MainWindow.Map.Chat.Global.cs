@@ -255,39 +255,29 @@ public partial class MainWindow
     /// mode, a profanity warning, a mute. Each of those is said in the bar that already explains a
     /// failed send.
     /// </summary>
-    private async Task<bool> SendGlobalChatAsync(string text)
+    private async Task<(bool Sent, string? Error)> SendGlobalChatAsync(string text, MainChatComposerState.Destination destination)
     {
         Ach.Unlock(Ach.GlobalChat);
-        var replyToId = _globalReplyTarget?.Id;
-
-        var outcome = await SocialApi.PostChatAsync(text, replyToId: replyToId).ConfigureAwait(true);
+        var reply = _globalReplyTarget;
+        var outcome = await SocialApi.PostChatAsync(text, replyToId: reply?.Id).ConfigureAwait(true);
 
         if (outcome.Result == ChatPostResult.Ok)
         {
-            // The broadcast brings the line back with its server id and timestamp, and the feed
-            // appends it. Echoing it locally first would show it twice.
-            ClearGlobalReplyTarget();
-            return true;
+            // The broadcast supplies the echo. Don't clear a reply selected after this send started.
+            if (destination == CurrentChatDestination() && ReferenceEquals(_globalReplyTarget, reply)) ClearGlobalReplyTarget();
+            return (true, null);
         }
 
-        // Slow mode is a wait, not a failure, so the bar counts it down instead of the error box
-        // stating it once.
-        if (outcome.Result == ChatPostResult.SlowMode && outcome.RemainingSeconds > 0)
+        if (destination == CurrentChatDestination())
         {
-            StartGlobalSlowModeCountdown(outcome.RemainingSeconds);
-            return false;
+            if (outcome.Result == ChatPostResult.SlowMode && outcome.RemainingSeconds > 0)
+            {
+                StartGlobalSlowModeCountdown(outcome.RemainingSeconds);
+                return (false, null);
+            }
+            UpdateGlobalChatState();
         }
-
-        if (ChatErrorBox != null && ChatErrorText != null)
-        {
-            ChatErrorBox.Visibility = Visibility.Visible;
-            ChatErrorText.Text = DescribeGlobalChatRefusal(outcome);
-        }
-
-        // A refused line usually means the room's view of this account has changed — a fresh
-        // timeout, slow mode switched on — so the bars are re-read rather than left stale.
-        UpdateGlobalChatState();
-        return false;
+        return (false, DescribeGlobalChatRefusal(outcome));
     }
 
     /// <summary>
@@ -372,11 +362,12 @@ public partial class MainWindow
         {
             TxtChatInput.PlaceholderText = Properties.Resources.GetString("ChatPlaceholder");
             TxtChatInput.MaxLength = Math.Max(1, GlobalChatFeed.MaxLength(GlobalChatFeed.DefaultRoom));
+            RefreshChatComposer(restoreDraft: true);
+            ShowGlobalReplyBar();
             return;
         }
 
-        // Leaving the room takes its bars, its pending reply and its colour picker with it.
-        ClearGlobalReplyTarget();
+        // Room-only bars are hidden outside the room; the reply stays with its draft.
         UpdateGlobalChatState();
         UpdateGlobalNameColorButton();
 

@@ -286,8 +286,7 @@ public partial class MainWindow
         if (sanction is null)
         {
             GlobalChatSilencedBar.Visibility = Visibility.Collapsed;
-            if (TxtChatInput != null) TxtChatInput.IsEnabled = true;
-            if (BtnSendChat != null) BtnSendChat.IsEnabled = true;
+            RefreshChatComposer();
             return;
         }
 
@@ -301,8 +300,7 @@ public partial class MainWindow
                 sanction.Reason);
 
         GlobalChatSilencedBar.Visibility = Visibility.Visible;
-        if (TxtChatInput != null) TxtChatInput.IsEnabled = false;
-        if (BtnSendChat != null) BtnSendChat.IsEnabled = false;
+        RefreshChatComposer();
     }
 
     /// <summary>
