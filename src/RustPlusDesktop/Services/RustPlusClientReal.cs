@@ -826,7 +826,11 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
             if (tsUtc == default || tsUtc < new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
                 tsUtc = DateTime.UtcNow;
 
-            TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text));
+            // Seconds, untouched: the library builds Time from unix seconds as UTC, so this is
+            // the server's own value - the one the cloud hears for the same message.
+            long? serverTime = unix.HasValue && unix.Value > 0 && unix.Value < 100_000_000_000 ? unix.Value : null;
+
+            TeamChatReceived?.Invoke(this, new TeamChatMessage(tsUtc, author, steamId, text, ServerTime: serverTime));
         }
         catch
         {

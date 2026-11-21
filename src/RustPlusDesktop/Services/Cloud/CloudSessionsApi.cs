@@ -233,11 +233,64 @@ namespace RustPlusDesk.Services.Cloud
         /// one heartbeat, which is not worth blocking a connect over.
         /// Only sends takeover if the server has been consented and enrolled in Cloud 24/7.
         /// </summary>
-        public static async Task TakeoverAsync(string serverKey)
+        public static async Task<bool> TakeoverAsync(string serverKey)
         {
-            if (string.IsNullOrWhiteSpace(serverKey)) return;
+            if (string.IsNullOrWhiteSpace(serverKey)) return false;
 
-            await PostAsync("client/cloud/takeover", serverKey: serverKey);
+            // The result matters to the lease timer: a takeover that was skipped (not signed
+            // in yet) or refused leaves the cloud free to answer, so it is retried soon
+            // rather than at the next thirty-second tick.
+            return await PostAsync("client/cloud/takeover", serverKey: serverKey);
+        }
+
+        /// <summary>How long the app waits for a chat claim before answering anyway.</summary>
+        private static readonly TimeSpan ChatClaimTimeout = TimeSpan.FromMilliseconds(1500);
+
+        /// <summary>
+        /// Ask the platform whether this app may answer one chat command.
+        ///
+        /// The app and the cloud can both hear the same team message, and the lease that
+        /// decides between them can lapse for a few seconds - then both answered. Each now
+        /// claims the message itself and only the first claim answers. Fails open: if the
+        /// platform cannot be asked, or does not answer in time, the app answers as it
+        /// always did, so the platform being down never silences the desktop.
+        /// </summary>
+        /// <param name="serverTime">The server's own timestamp for the message, in unix seconds.</param>
+        public static async Task<bool> ClaimChatReplyAsync(string? serverKey, ulong senderSteamId, string message, long serverTime)
+        {
+            if (string.IsNullOrWhiteSpace(serverKey) || serverTime <= 0 || senderSteamId == 0) return true;
+            if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return true;
+
+            try
+            {
+                var call = CloudApiClient.TryCallApiAsync("client/cloud/chat-claim", HttpMethod.Post, payload: new
+                {
+                    server_key = serverKey,
+                    desktop_session_id = DesktopSessionId,
+                    sender_steam_id = senderSteamId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    message,
+                    time = serverTime,
+                    channel = "team",
+                });
+
+                var (status, body) = await call.WaitAsync(ChatClaimTimeout).ConfigureAwait(false);
+                if (status < 200 || status >= 300) return true;
+
+                using var doc = JsonDocument.Parse(body);
+                if (doc.RootElement.TryGetProperty("data", out var data)
+                    && data.TryGetProperty("claimed", out var claimed)
+                    && claimed.ValueKind == JsonValueKind.False)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch
+            {
+                // Timed out, unreachable or unreadable: answer, as before this existed.
+                return true;
+            }
         }
 
         /// <summary>

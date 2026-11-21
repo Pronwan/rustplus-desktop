@@ -137,6 +137,18 @@ public partial class MainWindow
         // if two people did, they can sort it out between themselves.
         if (channel != ChatChannel.Clan && !CanProcessLocalChatCommands(isPromoteCommand)) return;
 
+        // The cloud can hear this same message, and the lease that keeps it quiet while this
+        // app is connected can lapse for a few seconds - then both answered. Claim the message
+        // itself first: whichever of us claims it answers, the other stays silent. Once per
+        // message, before any side effect, so a toggle cannot fire twice either. Team only:
+        // the cloud never answers the clan. Fails open, so a platform outage costs nothing.
+        if (channel == ChatChannel.Team && m.ServerTime is long serverTime
+            && !await Services.Cloud.CloudSessionsApi.ClaimChatReplyAsync(profile.ServerKey, m.SteamId, m.Text, serverTime))
+        {
+            AppendLog($"[ChatCommand] '{cmd}' from {m.Author} already answered by Cloud 24/7");
+            return;
+        }
+
         _lastChatCommandTime = DateTime.UtcNow;
 
         // Before the client check below, because this one answers from the companion rather
