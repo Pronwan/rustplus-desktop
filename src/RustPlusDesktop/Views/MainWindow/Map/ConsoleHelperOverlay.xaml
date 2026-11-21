@@ -62,11 +62,11 @@
                         <TextBlock Text="{Binding Title}" Foreground="{StaticResource ConText}"
                                    FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap" />
                         <TextBlock Grid.Column="1" Text="{Binding Group}" Foreground="{StaticResource ConMuted}"
-                                   FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                   FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="8,0,0,0" />
                     </Grid>
 
                     <TextBlock Text="{Binding Description}" Foreground="{StaticResource ConMuted}"
-                               FontSize="11" TextWrapping="Wrap" Margin="0,4,0,8" />
+                               FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Margin="0,4,0,8" />
 
                     <!-- Parameters, only rendered when the command has any -->
                     <ItemsControl ItemsSource="{Binding Params}" Margin="0,0,0,8"
@@ -79,7 +79,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Label}" Foreground="{StaticResource ConMuted}"
-                                               FontSize="11" VerticalAlignment="Center" />
+                                               FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
 
                                     <!-- Item picker. The result list is laid out inline rather than in a
                                          popup: a WPF popup opens with a valid handle and the right size
@@ -95,7 +95,7 @@
                                                         PlaceholderText="{DynamicResource ConsoleHelperSearchItem}"
                                                         VerticalAlignment="Center" />
                                             <TextBlock Grid.Column="1" Text="{Binding ItemDisplay}"
-                                                       Foreground="{StaticResource ConAccent}" FontSize="11"
+                                                       Foreground="{StaticResource ConAccent}" FontSize="{DynamicResource TypeCaption}"
                                                        VerticalAlignment="Center" Margin="8,0,0,0"
                                                        MaxWidth="150" TextTrimming="CharacterEllipsis"
                                                        ToolTip="{Binding ItemDisplay}" />
@@ -157,7 +157,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{DynamicResource ConsoleHelperKey}" Foreground="{StaticResource ConMuted}"
-                                   FontSize="11" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                   FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="0,0,6,0" />
 
                         <ui:Button Grid.Column="1" MinWidth="72" Padding="8,4"
                                    Click="BtnCaptureKey_Click" Tag="{Binding}"
@@ -247,7 +247,7 @@
                             <Border Background="#22FF9C6C" BorderBrush="#55FF9C6C" BorderThickness="1"
                                     CornerRadius="6" Padding="10,8" Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource ConsoleHelperAdminNote}"
-                                           Foreground="{StaticResource ConText}" FontSize="11" TextWrapping="Wrap" />
+                                           Foreground="{StaticResource ConText}" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" />
                             </Border>
 
                             <TextBlock Text="{DynamicResource ConsoleHelperMostUseful}" Style="{StaticResource ConSectionTitle}"

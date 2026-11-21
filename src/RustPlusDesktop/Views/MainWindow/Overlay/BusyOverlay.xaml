@@ -78,7 +78,7 @@
         </StackPanel>
         <Border Margin="12" Padding="9,4" CornerRadius="9" Background="#CC11191F"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <TextBlock x:Name="VersionText" Foreground="#F2F5F7" FontSize="11" />
+            <TextBlock x:Name="VersionText" Foreground="#F2F5F7" FontSize="{DynamicResource TypeCaption}" />
         </Border>
     </Grid>
 </UserControl>

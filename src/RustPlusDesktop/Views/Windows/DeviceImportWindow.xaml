@@ -117,7 +117,7 @@
                                    Text="{Binding ProbingProgressText}" 
                                    Foreground="{DynamicResource TextSubtle}" 
                                    VerticalAlignment="Center"
-                                   FontSize="11"/>
+                                   FontSize="{DynamicResource TypeCaption}"/>
 
                         <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" 
                                      Height="6" 
@@ -245,7 +245,7 @@
                                                         <ui:SymbolIcon Symbol="Person20" FontSize="12" Foreground="{DynamicResource TextSubtle}" Margin="0,0,4,0" VerticalAlignment="Center"/>
                                                         <TextBlock Text="{Binding Tagline}"
                                                                    Foreground="{DynamicResource TextSubtle}"
-                                                                   FontSize="11"
+                                                                   FontSize="{DynamicResource TypeCaption}"
                                                                    VerticalAlignment="Center"/>
                                                     </StackPanel>
 
@@ -256,7 +256,7 @@
                                                         <ui:SymbolIcon Symbol="Warning20" FontSize="12" Foreground="#E8A33D" Margin="0,0,4,0" VerticalAlignment="Center"/>
                                                         <TextBlock Text="{DynamicResource ImportFromPreviousWipe}"
                                                                    Foreground="#E8A33D"
-                                                                   FontSize="11"
+                                                                   FontSize="{DynamicResource TypeCaption}"
                                                                    TextWrapping="Wrap"
                                                                    VerticalAlignment="Center"/>
                                                     </StackPanel>
@@ -319,7 +319,7 @@
                                                         </ui:SymbolIcon>
                                                         
                                                         <TextBlock Text="{Binding ExtraInfo}"
-                                                                   FontSize="11"
+                                                                   FontSize="{DynamicResource TypeCaption}"
                                                                    FontWeight="Medium"
                                                                    VerticalAlignment="Center">
                                                             <TextBlock.Style>

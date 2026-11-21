@@ -90,7 +90,7 @@
                                    Margin="0,0,10,0"/>
                         <ui:Button Appearance="Secondary"
                                    Padding="6,3"
-                                   FontSize="11"
+                                   FontSize="{DynamicResource TypeCaption}"
                                    Cursor="Hand"
                                    Click="BtnCopyAddress_Click">
                             <StackPanel Orientation="Horizontal">
@@ -100,7 +100,7 @@
                         </ui:Button>
                         <ui:Button Appearance="Secondary"
                                    Padding="6,3"
-                                   FontSize="11"
+                                   FontSize="{DynamicResource TypeCaption}"
                                    Cursor="Hand"
                                    Margin="6,0,0,0"
                                    Click="BtnEditConnection_Click">
@@ -123,7 +123,7 @@
                         <Border Grid.Column="0" Margin="0,0,6,0" Background="#0FFFFFFF" BorderBrush="{DynamicResource WhiteA1A}" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="People24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="{DynamicResource Players}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Players}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtPlayers" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
@@ -132,7 +132,7 @@
                         <Border Grid.Column="1" Margin="3,0,3,0" Background="#0FFFFFFF" BorderBrush="{DynamicResource WhiteA1A}" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="Clock24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="{DynamicResource Queue}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Queue}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtQueue" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
@@ -141,7 +141,7 @@
                         <Border Grid.Column="2" Margin="6,0,0,0" Background="#0FFFFFFF" BorderBrush="{DynamicResource WhiteA1A}" BorderThickness="1" CornerRadius="8" Padding="10">
                             <StackPanel HorizontalAlignment="Center">
                                 <ui:SymbolIcon Symbol="CalendarClock24" Filled="True" Foreground="{DynamicResource Accent}" Margin="0,0,0,4"/>
-                                <TextBlock Text="{DynamicResource UiWipeCycle}" FontSize="11" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource UiWipeCycle}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center"/>
                                 <TextBlock x:Name="TxtWipe" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>

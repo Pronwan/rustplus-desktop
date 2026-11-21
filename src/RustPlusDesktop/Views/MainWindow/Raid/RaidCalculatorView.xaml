@@ -284,7 +284,7 @@
                     <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
                     <Image Source="{Binding SulfurIcon}" Width="40" Height="40" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
                     <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource RaidSulfur}" Text="TOTAL SULFUR" />
+                        <TextBlock FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{StaticResource RaidSulfur}" Text="TOTAL SULFUR" />
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontSize="30" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Text="{Binding TotalSulfurText}" />
                             <TextBlock Margin="7,0,0,5" VerticalAlignment="Bottom" FontSize="13" Foreground="{DynamicResource TextSubtle}" Text="sulfur" />
@@ -295,7 +295,7 @@
 
             <Border Grid.Column="2" Style="{StaticResource RaidStatTile}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="RAID ITEMS" />
+                    <TextBlock FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="RAID ITEMS" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="26" FontWeight="Bold" Foreground="{DynamicResource Accent}" Text="{Binding TotalRaidItemsText}" />
                         <TextBlock Margin="7,0,0,4" VerticalAlignment="Bottom" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="to craft" />
@@ -305,7 +305,7 @@
 
             <Border Grid.Column="4" Style="{StaticResource RaidStatTile}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="BENCH REQUIRED" />
+                    <TextBlock FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="BENCH REQUIRED" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="26" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Text="{Binding HighestWorkbench}" />
                         <TextBlock Margin="7,0,0,4" VerticalAlignment="Bottom" FontSize="12" Foreground="{DynamicResource TextSubtle}" Text="workbench tier" />
@@ -367,7 +367,7 @@
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding}" FontSize="11.5" Foreground="{DynamicResource TextPrimary}" />
+                                <TextBlock Text="{Binding}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextPrimary}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -404,7 +404,7 @@
                                                        Text="{Binding CardTitle}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
                                                        TextAlignment="Center" TextWrapping="Wrap" MaxHeight="34" ToolTip="{Binding CardTitle}" />
                                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CardMeta}"
-                                                       FontSize="11" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
+                                                       FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
                                         </Grid>
                                     </Button>
                                 </DataTemplate>
@@ -434,7 +434,7 @@
                         </WrapPanel>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource UiRaidPlan}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{Binding PlanCountCaption}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Text="{Binding PlanCountCaption}" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                         <Popup IsOpen="{Binding IsChecked, ElementName=SmartMixButton}" Placement="Bottom" PlacementTarget="{Binding ElementName=SmartMixButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
                             <Border Width="270" MaxHeight="410" Margin="0,4,0,0" Padding="8" Background="#FF24272D" BorderBrush="#FF454A54" BorderThickness="1" CornerRadius="8">
@@ -483,7 +483,7 @@
                                                 </Border>
                                                 <StackPanel Grid.Column="1" Margin="7,0" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock FontSize="11" Foreground="{DynamicResource TextSubtle}"><Run Text="{Binding Category, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding HealthText, Mode=OneWay}" /></TextBlock>
+                                                    <TextBlock FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}"><Run Text="{Binding Category, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding HealthText, Mode=OneWay}" /></TextBlock>
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                                                     <Button Style="{StaticResource RaidIconButton}" Click="Decrement_Click" ToolTip="{DynamicResource UiDecreaseQuantity}" AutomationProperties.Name="{DynamicResource UiDecreaseTargetQuantity}"><ui:SymbolIcon Symbol="Subtract20" FontSize="15" Foreground="{DynamicResource TextPrimary}" /></Button>
@@ -545,8 +545,8 @@
                                                     <Border Padding="7,2" Margin="0,0,6,0" CornerRadius="5" Background="{StaticResource RaidBestSoft}" BorderBrush="#5566BB6A" BorderThickness="1"
                                                             Visibility="{Binding IsUsingCheapest, Converter={StaticResource RaidBoolToVisibility}}">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <ui:SymbolIcon Symbol="Checkmark16" FontSize="11" Foreground="{StaticResource RaidBest}" VerticalAlignment="Center" />
-                                                            <TextBlock Margin="4,0,0,0" FontSize="11" FontWeight="Bold" Foreground="{StaticResource RaidBest}" Text="CHEAPEST BOOM" />
+                                                            <ui:SymbolIcon Symbol="Checkmark16" FontSize="{DynamicResource TypeCaption}" Foreground="{StaticResource RaidBest}" VerticalAlignment="Center" />
+                                                            <TextBlock Margin="4,0,0,0" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="{StaticResource RaidBest}" Text="CHEAPEST BOOM" />
                                                         </StackPanel>
                                                     </Border>
                                                     <!--  Nudge with a one-click switch to the cheapest method  -->
@@ -561,15 +561,15 @@
                                                             </ControlTemplate>
                                                         </Button.Template>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <ui:SymbolIcon Symbol="ArrowSwap16" FontSize="11" Foreground="{StaticResource RaidSulfur}" VerticalAlignment="Center" />
-                                                            <TextBlock Margin="4,0,0,0" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource RaidSulfur}" Text="{Binding CostComparisonText}" />
+                                                            <ui:SymbolIcon Symbol="ArrowSwap16" FontSize="{DynamicResource TypeCaption}" Foreground="{StaticResource RaidSulfur}" VerticalAlignment="Center" />
+                                                            <TextBlock Margin="4,0,0,0" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{StaticResource RaidSulfur}" Text="{Binding CostComparisonText}" />
                                                         </StackPanel>
                                                     </Button>
                                                 </StackPanel>
                                                 <StackPanel Margin="0,5,0,0" Visibility="{Binding DataContext.ShowDetails, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource RaidBoolToVisibility}}">
-                                                    <TextBlock Text="{Binding SelectedMethod.CostText}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
-                                                    <TextBlock Margin="0,2,0,0" Text="{Binding SelectedMethod.DamageText}" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                                    <TextBlock Margin="0,2,0,0" Text="{Binding MethodWarning}" FontSize="11" Foreground="#FFFFC857" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding SelectedMethod.CostText}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" />
+                                                    <TextBlock Margin="0,2,0,0" Text="{Binding SelectedMethod.DamageText}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                                    <TextBlock Margin="0,2,0,0" Text="{Binding MethodWarning}" FontSize="{DynamicResource TypeCaption}" Foreground="#FFFFC857" TextWrapping="Wrap" />
                                                 </StackPanel>
                                             </StackPanel>
                                         </Grid>
@@ -586,7 +586,7 @@
                 <Grid>
                     <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
                     <TextBlock FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource UiRaidSummary}" />
-                    <TextBlock Grid.Row="1" Margin="0,4,0,10" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiRaidItemsAndRawCraftingIngredients}" TextWrapping="Wrap" />
+                    <TextBlock Grid.Row="1" Margin="0,4,0,10" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiRaidItemsAndRawCraftingIngredients}" TextWrapping="Wrap" />
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <StackPanel Margin="0,28,0,0" HorizontalAlignment="Center"
@@ -595,7 +595,7 @@
                                 <TextBlock Margin="0,8,0,2" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="{DynamicResource UiNothingToTotalYet}" />
                                 <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiAddATargetToSeeRaidCosts}" />
                             </StackPanel>
-                            <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiBOOMREQUIRED}"
+                            <TextBlock Margin="0,0,0,8" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiBOOMREQUIRED}"
                                        Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
                             <ItemsControl ItemsSource="{Binding BoomTotals}" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}">
                                 <ItemsControl.ItemTemplate>
@@ -610,7 +610,7 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                             <Border Height="1" Margin="0,6,0,10" Background="{DynamicResource WhiteA22}" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
-                            <TextBlock Margin="0,0,0,8" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiRAWRESOURCES}"
+                            <TextBlock Margin="0,0,0,8" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiRAWRESOURCES}"
                                        Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}" />
                             <ItemsControl ItemsSource="{Binding ResourceTotals}" Visibility="{Binding HasPlan, Converter={StaticResource RaidBoolToVisibility}}">
                                 <ItemsControl.ItemTemplate>
@@ -628,10 +628,10 @@
                     </ScrollViewer>
                     <StackPanel Grid.Row="3">
                         <Border Margin="0,8,0,0" Padding="8" Background="#1AFFC857" CornerRadius="6" Visibility="{Binding HasUnavailableCosts, Converter={StaticResource RaidBoolToVisibility}}">
-                            <TextBlock FontSize="11" Foreground="#FFFFD782" Text="{DynamicResource UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D}" TextWrapping="Wrap" />
+                            <TextBlock FontSize="{DynamicResource TypeCaption}" Foreground="#FFFFD782" Text="{DynamicResource UiSomeSelectedMethodsHaveNoCraftingCostInTheDatasetTheirReso6911DDF87D}" TextWrapping="Wrap" />
                         </Border>
-                        <TextBlock Margin="0,8,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D}" TextWrapping="Wrap" />
-                        <TextBlock Margin="0,8,0,0" FontSize="11" Foreground="#FFFFC857" Text="{Binding StatusMessage}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+                        <TextBlock Margin="0,8,0,0" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource UiGunpowderExplosivesTimingAndCookedOreConversionsAreShownOnF8080FA30D}" TextWrapping="Wrap" />
+                        <TextBlock Margin="0,8,0,0" FontSize="{DynamicResource TypeCaption}" Foreground="#FFFFC857" Text="{Binding StatusMessage}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
                     </StackPanel>
                 </Grid>
             </Border>

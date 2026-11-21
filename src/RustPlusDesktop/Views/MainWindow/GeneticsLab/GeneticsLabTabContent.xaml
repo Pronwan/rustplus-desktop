@@ -23,7 +23,7 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <ui:SymbolIcon Symbol="LeafTwo24" FontSize="22" Foreground="{DynamicResource Accent}" Margin="0,0,8,0" VerticalAlignment="Center" />
                 <TextBlock FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="Genetics Lab" VerticalAlignment="Center" />
-                <TextBlock Margin="10,2,0,0" FontSize="11" Foreground="{DynamicResource TextSubtle}" Text="Rust Plant Genetics &amp; Crossbreeding Calculator" VerticalAlignment="Center" />
+                <TextBlock Margin="10,2,0,0" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Text="Rust Plant Genetics &amp; Crossbreeding Calculator" VerticalAlignment="Center" />
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">

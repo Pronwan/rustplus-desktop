@@ -36,7 +36,7 @@
                         Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon x:Name="KindIcon" Symbol="CameraDome24" FontSize="13" Foreground="#8AB4F8" Margin="0,0,6,0"/>
-                        <TextBlock x:Name="TxtKind" FontSize="11" FontWeight="SemiBold" Foreground="#8AB4F8" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtKind" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="#8AB4F8" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </ui:TitleBar.Header>

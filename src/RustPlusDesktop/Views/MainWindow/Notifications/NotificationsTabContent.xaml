@@ -419,7 +419,7 @@
                                         </Image>
                                         <Border Style="{StaticResource KindBadge}">
                                             <Grid>
-                                                <ui:SymbolIcon FontSize="11" Foreground="White" Style="{StaticResource KindGlyph}" />
+                                                <ui:SymbolIcon FontSize="{DynamicResource TypeCaption}" Foreground="White" Style="{StaticResource KindGlyph}" />
                                                 <Path Width="10" Height="10" Fill="White" Style="{StaticResource KindSkull}" />
                                             </Grid>
                                         </Border>

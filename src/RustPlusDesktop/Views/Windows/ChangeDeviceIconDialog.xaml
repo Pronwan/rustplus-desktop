@@ -29,7 +29,7 @@
                  <!-- Header -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,12">
                     <TextBlock x:Name="TxtTitle" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
-                    <TextBlock x:Name="TxtSubtitle" FontSize="11" Foreground="#88FFFFFF" Margin="0,2,0,0"/>
+                    <TextBlock x:Name="TxtSubtitle" FontSize="{DynamicResource TypeCaption}" Foreground="#88FFFFFF" Margin="0,2,0,0"/>
                 </StackPanel>
                 
                 <!-- Search Box -->

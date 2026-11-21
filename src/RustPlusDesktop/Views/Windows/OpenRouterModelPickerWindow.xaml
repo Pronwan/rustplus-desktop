@@ -70,7 +70,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Provider:" VerticalAlignment="Center" FontSize="11" Margin="0,0,6,0" Foreground="{DynamicResource TextSubtle}" />
+                <TextBlock Text="Provider:" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Margin="0,0,6,0" Foreground="{DynamicResource TextSubtle}" />
                 <ComboBox x:Name="CmbProviderFilter" MinWidth="130" MinHeight="32" Padding="8,4" VerticalContentAlignment="Center" SelectionChanged="CmbProviderFilter_SelectionChanged" />
             </StackPanel>
         </Grid>
@@ -158,17 +158,17 @@
                                                 </Border>
                                             </StackPanel>
 
-                                            <TextBlock Text="{Binding Id}" FontFamily="Consolas, monospace" FontSize="11"
+                                            <TextBlock Text="{Binding Id}" FontFamily="Consolas, monospace" FontSize="{DynamicResource TypeCaption}"
                                                        Foreground="{DynamicResource Accent}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
 
                                             <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                                <TextBlock Text="{Binding ContextSummary}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
-                                                <TextBlock Text="{Binding PricingSummary}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding ContextSummary}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
+                                                <TextBlock Text="{Binding PricingSummary}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </StackPanel>
 
                                         <ui:Button Grid.Column="1" Content="Select" Appearance="Secondary" VerticalAlignment="Center"
-                                                   Padding="8,4" FontSize="11" Tag="{Binding Id}" Click="BtnSelectModel_Click" />
+                                                   Padding="8,4" FontSize="{DynamicResource TypeCaption}" Tag="{Binding Id}" Click="BtnSelectModel_Click" />
                                     </Grid>
                                 </ui:Card>
                             </DataTemplate>
@@ -188,7 +188,7 @@
                     <StackPanel x:Name="PanelNoSelection" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
                         <ui:SymbolIcon Symbol="DocumentSearch24" FontSize="32" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,8" />
                         <TextBlock Text="Select a model to view its full details, context size, and pricing"
-                                   Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="220" />
+                                   Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="220" />
                     </StackPanel>
 
                     <!-- Active Model Details View -->
@@ -198,7 +198,7 @@
                             <TextBlock x:Name="TxtDetailName" Text="Model Name" FontWeight="Bold" FontSize="15"
                                        Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
 
-                            <TextBlock x:Name="TxtDetailProvider" Text="Provider: OpenAI" FontSize="11"
+                            <TextBlock x:Name="TxtDetailProvider" Text="Provider: OpenAI" FontSize="{DynamicResource TypeCaption}"
                                        Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,8" />
 
                             <!-- Model ID with Copy -->
@@ -208,7 +208,7 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtDetailId" Text="model/id" FontFamily="Consolas, monospace" FontSize="11"
+                                    <TextBlock x:Name="TxtDetailId" Text="model/id" FontFamily="Consolas, monospace" FontSize="{DynamicResource TypeCaption}"
                                                Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                                     <ui:Button Grid.Column="1" x:Name="BtnCopyId" Icon="{ui:SymbolIcon Symbol=Copy24}"
                                                ToolTip="Copy model ID" Appearance="Transparent" Padding="4,2" Click="BtnCopyId_Click" />
@@ -218,51 +218,51 @@
                             <!-- Status & Capability Badges -->
                             <WrapPanel Margin="0,0,0,12">
                                 <Border x:Name="BadgeFree" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#2622C55E">
-                                    <TextBlock Text="🎁 100% FREE" FontWeight="Bold" FontSize="11" Foreground="#22C55E" />
+                                    <TextBlock Text="🎁 100% FREE" FontWeight="Bold" FontSize="{DynamicResource TypeCaption}" Foreground="#22C55E" />
                                 </Border>
                                 <Border x:Name="BadgePaid" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#26EAB308">
-                                    <TextBlock Text="💳 PAID MODEL" FontWeight="Bold" FontSize="11" Foreground="#EAB308" />
+                                    <TextBlock Text="💳 PAID MODEL" FontWeight="Bold" FontSize="{DynamicResource TypeCaption}" Foreground="#EAB308" />
                                 </Border>
                                 <Border x:Name="BadgeVision" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="#263B82F6">
-                                    <TextBlock Text="👁️ Vision / Screenshots" FontWeight="SemiBold" FontSize="11" Foreground="#60A5FA" />
+                                    <TextBlock Text="👁️ Vision / Screenshots" FontWeight="SemiBold" FontSize="{DynamicResource TypeCaption}" Foreground="#60A5FA" />
                                 </Border>
                                 <Border x:Name="BadgeTextOnly" Margin="0,0,6,6" Padding="8,3" CornerRadius="4" Background="{DynamicResource SubtleFillColorSecondaryBrush}">
-                                    <TextBlock Text="💬 Text Only" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                                    <TextBlock Text="💬 Text Only" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
                                 </Border>
                             </WrapPanel>
 
                             <!-- Specifications Card -->
                             <ui:Card Margin="0,0,0,10" Padding="12,10">
                                 <StackPanel>
-                                    <TextBlock Text="SPECIFICATIONS" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
+                                    <TextBlock Text="SPECIFICATIONS" FontWeight="Bold" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
                                     
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Context Window:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailContext" Text="128,000 tokens" FontWeight="SemiBold" FontSize="11"
+                                        <TextBlock Text="Context Window:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailContext" Text="128,000 tokens" FontWeight="SemiBold" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Max Output Tokens:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailMaxOutput" Text="8,192 tokens" FontWeight="SemiBold" FontSize="11"
+                                        <TextBlock Text="Max Output Tokens:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailMaxOutput" Text="8,192 tokens" FontWeight="SemiBold" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Modality:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailModality" Text="text->text" FontSize="11"
+                                        <TextBlock Text="Modality:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailModality" Text="text->text" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2" x:Name="RowTokenizer">
-                                        <TextBlock Text="Tokenizer:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailTokenizer" Text="Llama3" FontSize="11"
+                                        <TextBlock Text="Tokenizer:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailTokenizer" Text="Llama3" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Moderated:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailModerated" Text="No" FontSize="11"
+                                        <TextBlock Text="Moderated:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailModerated" Text="No" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
                                 </StackPanel>
@@ -271,31 +271,31 @@
                             <!-- Pricing Card -->
                             <ui:Card Margin="0,0,0,10" Padding="12,10">
                                 <StackPanel>
-                                    <TextBlock Text="PRICING (PER 1M TOKENS)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
+                                    <TextBlock Text="PRICING (PER 1M TOKENS)" FontWeight="Bold" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" />
 
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Prompt (Input):" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailPromptPrice" Text="$0.15" FontWeight="SemiBold" FontSize="11"
+                                        <TextBlock Text="Prompt (Input):" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailPromptPrice" Text="$0.15" FontWeight="SemiBold" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2">
-                                        <TextBlock Text="Completion (Output):" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailCompletionPrice" Text="$0.60" FontWeight="SemiBold" FontSize="11"
+                                        <TextBlock Text="Completion (Output):" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailCompletionPrice" Text="$0.60" FontWeight="SemiBold" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
 
                                     <Grid Margin="0,2" x:Name="RowImagePrice">
-                                        <TextBlock Text="Image Input:" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
-                                        <TextBlock x:Name="TxtDetailImagePrice" Text="$0.00" FontSize="11"
+                                        <TextBlock Text="Image Input:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
+                                        <TextBlock x:Name="TxtDetailImagePrice" Text="$0.00" FontSize="{DynamicResource TypeCaption}"
                                                    HorizontalAlignment="Right" Foreground="{DynamicResource TextPrimary}" />
                                     </Grid>
                                 </StackPanel>
                             </ui:Card>
 
                             <!-- Description -->
-                            <TextBlock Text="DESCRIPTION" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" />
-                            <TextBlock x:Name="TxtDetailDescription" Text="Model description text here..." FontSize="11"
+                            <TextBlock Text="DESCRIPTION" FontWeight="Bold" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" />
+                            <TextBlock x:Name="TxtDetailDescription" Text="Model description text here..." FontSize="{DynamicResource TypeCaption}"
                                        Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,14" />
 
                             <!-- Primary Action Button -->
@@ -316,7 +316,7 @@
 
             <TextBlock x:Name="TxtStatus"
                        VerticalAlignment="Center"
-                       FontSize="11"
+                       FontSize="{DynamicResource TypeCaption}"
                        Foreground="{DynamicResource TextSubtle}"
                        Text="Loaded models" />
 

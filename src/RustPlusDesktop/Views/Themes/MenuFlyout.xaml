@@ -202,7 +202,7 @@
                     Grid.Column="2"
                     Margin="16,0,4,0"
                     VerticalAlignment="Center"
-                    FontSize="11"
+                    FontSize="{DynamicResource TypeCaption}"
                     Foreground="{DynamicResource TextSubtle}"
                     Text="{TemplateBinding InputGestureText}" />
             </Grid>

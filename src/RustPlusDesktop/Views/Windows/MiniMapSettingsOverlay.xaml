@@ -30,12 +30,12 @@
                            Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
             </Grid>
 
-            <TextBlock Text="Display" FontSize="11" Margin="0,0,0,4"/>
+            <TextBlock Text="Display" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,4"/>
             <ComboBox x:Name="CmbMonitor" AutomationProperties.Name="Display for this window"
                       SelectionChanged="CmbMonitor_SelectionChanged" Margin="0,0,0,12"/>
 
             <!-- Shape ComboBox -->
-            <TextBlock Text="{DynamicResource Shape}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock Text="{DynamicResource Shape}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <ComboBox x:Name="CmbShape" SelectionChanged="CmbShape_SelectionChanged" Margin="0,0,0,12">
                 <ComboBoxItem Content="{DynamicResource Circle}"/>
                 <ComboBoxItem Content="{DynamicResource Square}"/>
@@ -43,18 +43,18 @@
             </ComboBox>
 
             <!-- Opacity Slider -->
-            <TextBlock x:Name="LblOpacity" Text="{DynamicResource UiOpacity100}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblOpacity" Text="{DynamicResource UiOpacity100}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliOpacity" Minimum="0.2" Maximum="1.0" Value="1.0" ValueChanged="SliOpacity_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
 
             <!-- Size Slider -->
-            <TextBlock x:Name="LblSize" Text="{DynamicResource UiSize100SHIFTMousewheel}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblSize" Text="{DynamicResource UiSize100SHIFTMousewheel}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliSize" Minimum="160" Maximum="800" Value="260" ValueChanged="SliSize_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="10"/>
 
             <!--  Widget zoom. Not the map's size above: this is the pitch of the whole grid,
                   so the tiles and everything in them grow together. The one setting that helps
                   on a 4K panel, where a one-cell button is very small and font scale only grew
                   the text inside a box that stayed put.  -->
-            <TextBlock x:Name="LblGridZoom" Text="{DynamicResource CommandDockGridZoom}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblGridZoom" Text="{DynamicResource CommandDockGridZoom}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <Slider x:Name="SliGridZoom" Minimum="0.75" Maximum="2.5" Value="1.0" ValueChanged="SliGridZoom_ValueChanged" Margin="0,0,0,12" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
 
             <!-- Show Server Time CheckBox -->
@@ -67,7 +67,7 @@
                   independently; turning the texture off leaves a transparent, frameless
                   window with only the layers still on.  -->
             <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
-            <TextBlock Text="{DynamicResource MiniMapLayers}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" FontWeight="SemiBold"/>
+            <TextBlock Text="{DynamicResource MiniMapLayers}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,6" FontWeight="SemiBold"/>
             <StackPanel>
                 <CheckBox x:Name="ChkLayerTexture"  Content="{DynamicResource MiniMapLayerTexture}"  Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
                 <CheckBox x:Name="ChkLayerGrid"     Content="{DynamicResource MiniMapLayerGrid}"     Checked="ChkLayer_Changed" Unchecked="ChkLayer_Changed" Style="{StaticResource DotCheckBox}" Margin="0,0,0,4"/>
@@ -88,8 +88,8 @@
                   dock over the game and hides it again on release — the same bargain the
                   game's own map makes, where looking at it costs you the view.  -->
             <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
-            <TextBlock Text="{DynamicResource MiniMapPeekHotkey}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
-            <ui:Button x:Name="BtnPeekHotkey" HorizontalAlignment="Stretch" FontSize="11"
+            <TextBlock Text="{DynamicResource MiniMapPeekHotkey}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <ui:Button x:Name="BtnPeekHotkey" HorizontalAlignment="Stretch" FontSize="{DynamicResource TypeCaption}"
                        Appearance="Secondary" Click="BtnPeekHotkey_Click" Margin="0,0,0,4"/>
             <TextBlock x:Name="LblPeekHint" Text="{DynamicResource MiniMapPeekHotkeyHint}" FontSize="10"
                        Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,4"/>
@@ -97,7 +97,7 @@
             <!--  Where a newly added tile lands. Dragging overrules this and reaches every side
                   of the map, including left of it and above it.  -->
             <Separator Background="{DynamicResource CardBorder}" Margin="0,12,0,8"/>
-            <TextBlock x:Name="LblGrowth" Text="{DynamicResource CommandDockGrowth}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LblGrowth" Text="{DynamicResource CommandDockGrowth}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <ComboBox x:Name="CmbGrowth" SelectionChanged="CmbGrowth_SelectionChanged">
                 <ComboBoxItem Content="{DynamicResource CommandDockGrowDown}"/>
                 <ComboBoxItem Content="{DynamicResource CommandDockGrowRight}"/>

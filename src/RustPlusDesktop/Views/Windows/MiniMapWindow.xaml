@@ -177,7 +177,7 @@
 
                     <TextBlock x:Name="DockTitleText"
                                Text="{DynamicResource CommandDockTitle}"
-                               FontSize="11"
+                               FontSize="{DynamicResource TypeCaption}"
                                FontWeight="SemiBold"
                                Foreground="#99FFFFFF"
                                HorizontalAlignment="Left"

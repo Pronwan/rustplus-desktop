@@ -74,12 +74,12 @@
                                             <Run Text=" "/>
                                             <Run Text="{Binding AttackerName}" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"/>
                                         </TextBlock>
-                                        <TextBlock Text="{Binding ServerName}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="{Binding ServerName}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
 
                                     <TextBlock Grid.Column="1" 
                                                Text="{Binding Timestamp, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" 
-                                               FontSize="11" 
+                                               FontSize="{DynamicResource TypeCaption}" 
                                                Foreground="{DynamicResource TextSubtle}" 
                                                VerticalAlignment="Center" />
                                 </Grid>

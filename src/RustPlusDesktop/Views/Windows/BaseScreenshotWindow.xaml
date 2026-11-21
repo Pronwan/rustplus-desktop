@@ -41,7 +41,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="TxtImageInfo" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontStyle="Italic"/>
+                <TextBlock x:Name="TxtImageInfo" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" FontStyle="Italic"/>
                 <ui:Button x:Name="BtnSave" Grid.Column="1" Content="{DynamicResource Save}" Appearance="Primary" Width="100" Height="32" Margin="0,0,8,0" Click="BtnSave_Click" IsEnabled="False"/>
                 <ui:Button x:Name="BtnCancel" Grid.Column="2" Content="{DynamicResource Cancel}" Appearance="Secondary" Width="100" Height="32" Click="BtnCancel_Click"/>
             </Grid>

@@ -35,7 +35,7 @@
                            Icon="{ui:SymbolIcon Symbol=Dismiss24}"/>
             </Grid>
 
-            <TextBlock Text="{DynamicResource CommandDockDisplay}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
+            <TextBlock Text="{DynamicResource CommandDockDisplay}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,4" FontWeight="SemiBold"/>
             <ComboBox x:Name="CmbMonitor" SelectionChanged="CmbMonitor_SelectionChanged" Margin="0,0,0,12"/>
 
             <!--
@@ -47,7 +47,7 @@
                 settings and get them back the moment the switch goes off again.
             -->
             <Separator Background="{DynamicResource CardBorder}" Margin="0,4,0,8"/>
-            <TextBlock Text="{DynamicResource CommandDockGlobalLook}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,2" FontWeight="SemiBold"/>
+            <TextBlock Text="{DynamicResource CommandDockGlobalLook}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,0,0,2" FontWeight="SemiBold"/>
             <TextBlock Text="{DynamicResource CommandDockGlobalLookHint}" FontSize="10" Foreground="{DynamicResource TextSubtle}" TextWrapping="Wrap" Margin="0,0,0,8"/>
 
             <CheckBox x:Name="ChkGlobalOpacity" Content="{DynamicResource CommandDockGlobalOpacity}" Style="{StaticResource DotCheckBox}"
@@ -67,7 +67,7 @@
             <WrapPanel x:Name="ColorSwatches" Margin="0,0,0,10"/>
 
             <Separator Background="{DynamicResource CardBorder}" Margin="0,4,0,8"/>
-            <ui:Button x:Name="BtnReset" HorizontalAlignment="Stretch" FontSize="11"
+            <ui:Button x:Name="BtnReset" HorizontalAlignment="Stretch" FontSize="{DynamicResource TypeCaption}"
                        Appearance="Secondary" Click="BtnReset_Click"
                        Content="{DynamicResource CommandDockResetLook}"/>
         </StackPanel>

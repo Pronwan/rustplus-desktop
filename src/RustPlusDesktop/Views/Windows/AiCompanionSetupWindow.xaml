@@ -67,7 +67,7 @@
                         <ui:SymbolIcon Symbol="Sparkle24" FontSize="26" Foreground="{DynamicResource Accent}" HorizontalAlignment="Left" />
                         <TextBlock x:Name="TxtRailTitle" FontSize="15" FontWeight="SemiBold" Margin="0,6,0,0"
                                    Foreground="{DynamicResource TextPrimary}" />
-                        <TextBlock x:Name="TxtRailSubtitle" FontSize="11" Foreground="{DynamicResource TextSubtle}" />
+                        <TextBlock x:Name="TxtRailSubtitle" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
                     </StackPanel>
                     <StackPanel x:Name="StepRail" DockPanel.Dock="Top" />
                     <TextBlock x:Name="TxtRailFoot" DockPanel.Dock="Bottom" FontSize="10" TextWrapping="Wrap" LineHeight="15"
@@ -94,7 +94,7 @@
                                         <TextBlock x:Name="TxtPrivacyTitle" FontWeight="SemiBold" VerticalAlignment="Center"
                                                    Foreground="{DynamicResource TextPrimary}" />
                                     </StackPanel>
-                                    <TextBlock x:Name="TxtPrivacyBody" FontSize="11" TextWrapping="Wrap" LineHeight="17"
+                                    <TextBlock x:Name="TxtPrivacyBody" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" LineHeight="17"
                                                Foreground="{DynamicResource TextSubtle}" />
                                     <CheckBox x:Name="ChkPolicy" Margin="0,12,0,0" Checked="OnPolicyToggled" Unchecked="OnPolicyToggled" />
                                 </StackPanel>
@@ -133,7 +133,7 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:SymbolIcon Symbol="Info24" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Top"
                                                    Foreground="{DynamicResource Accent}" />
-                                    <TextBlock x:Name="TxtCostNote" Grid.Column="1" FontSize="11" TextWrapping="Wrap" LineHeight="17"
+                                    <TextBlock x:Name="TxtCostNote" Grid.Column="1" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" LineHeight="17"
                                                Foreground="{DynamicResource TextPrimary}" />
                                 </Grid>
                             </Border>
@@ -155,7 +155,7 @@
                                 </Grid.ColumnDefinitions>
                                 <ui:SymbolIcon x:Name="KeyCheckIcon" Symbol="Info16" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Top"
                                                Foreground="{DynamicResource TextSubtle}" />
-                                <TextBlock x:Name="TxtKeyCheck" Grid.Column="1" FontSize="11" TextWrapping="Wrap"
+                                <TextBlock x:Name="TxtKeyCheck" Grid.Column="1" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap"
                                            Foreground="{DynamicResource TextSubtle}" />
                             </Grid>
                         </StackPanel>
@@ -175,7 +175,7 @@
                                 <ui:Button x:Name="BtnBrowseModels" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Search24}"
                                            Height="34" Padding="12,0" Margin="6,0,0,0" Click="BtnBrowseModels_Click" />
                             </Grid>
-                            <TextBlock x:Name="TxtModelNote" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,16" Foreground="{DynamicResource TextSubtle}" />
+                            <TextBlock x:Name="TxtModelNote" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Margin="0,0,0,16" Foreground="{DynamicResource TextSubtle}" />
 
                             <ui:Button x:Name="BtnRunTest" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=PlugConnected24}"
                                        Height="36" Padding="16,0" HorizontalAlignment="Left" Click="BtnRunTest_Click" />
@@ -192,7 +192,7 @@
                                     </Grid>
                                     <StackPanel Grid.Column="1">
                                         <TextBlock x:Name="TxtTestResultTitle" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource TextPrimary}" />
-                                        <TextBlock x:Name="TxtTestResultBody" FontSize="11" TextWrapping="Wrap" LineHeight="17" Margin="0,4,0,0"
+                                        <TextBlock x:Name="TxtTestResultBody" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" LineHeight="17" Margin="0,4,0,0"
                                                    Foreground="{DynamicResource TextSubtle}" />
                                         <StackPanel x:Name="TestFixes" Margin="0,8,0,0" />
                                         <WrapPanel x:Name="TestActions" Margin="0,6,0,0" />
@@ -215,7 +215,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
                                             <TextBlock x:Name="TxtHotkeyLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock x:Name="TxtHotkey" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                            <TextBlock x:Name="TxtHotkey" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
                                         </StackPanel>
                                         <ui:Button x:Name="BtnHotkey" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Keyboard24}"
                                                    Height="32" Padding="12,0" Click="BtnHotkey_Click" />
@@ -227,7 +227,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
                                             <TextBlock x:Name="TxtTextAnswersLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock x:Name="TxtTextAnswersHint" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                            <TextBlock x:Name="TxtTextAnswersHint" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
                                         </StackPanel>
                                         <ui:ToggleSwitch x:Name="ChkTextAnswers" Grid.Column="1" VerticalAlignment="Center" Checked="OnAnswerModeChanged" Unchecked="OnAnswerModeChanged" />
                                     </Grid>
@@ -238,7 +238,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
                                             <TextBlock x:Name="TxtVoiceAnswersLabel" FontWeight="Medium" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock x:Name="TxtVoiceAnswersHint" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
+                                            <TextBlock x:Name="TxtVoiceAnswersHint" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Foreground="{DynamicResource TextSubtle}" />
                                         </StackPanel>
                                         <ui:ToggleSwitch x:Name="ChkVoiceAnswers" Grid.Column="1" VerticalAlignment="Center" Checked="OnAnswerModeChanged" Unchecked="OnAnswerModeChanged" />
                                     </Grid>
@@ -249,7 +249,7 @@
                             <StackPanel x:Name="HowToSteps" />
 
                             <Border Style="{StaticResource SetupNote}">
-                                <TextBlock x:Name="TxtFinishNote" FontSize="11" TextWrapping="Wrap" LineHeight="17" Foreground="{DynamicResource TextSubtle}" />
+                                <TextBlock x:Name="TxtFinishNote" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" LineHeight="17" Foreground="{DynamicResource TextSubtle}" />
                             </Border>
                         </StackPanel>
                     </Grid>
@@ -263,7 +263,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TxtFooterHint" VerticalAlignment="Center" FontSize="11" TextWrapping="Wrap" Margin="0,0,12,0"
+            <TextBlock x:Name="TxtFooterHint" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Margin="0,0,12,0"
                        Foreground="{DynamicResource TextSubtle}" />
             <ui:Button x:Name="BtnBack" Grid.Column="1" Appearance="Secondary" Height="34" Padding="18,0" Margin="0,0,8,0" Click="BtnBack_Click" />
             <ui:Button x:Name="BtnNext" Grid.Column="2" Appearance="Primary" Height="34" Padding="22,0" Click="BtnNext_Click" />

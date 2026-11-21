@@ -79,7 +79,7 @@
                                                TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding EarnedText}"
                                                Margin="0,2,0,0"
-                                               FontSize="11"
+                                               FontSize="{DynamicResource TypeCaption}"
                                                Foreground="{DynamicResource TextSubtle}"
                                                Visibility="{Binding EarnedTextVisibility}" />
                                 </StackPanel>

@@ -79,7 +79,7 @@
                 </ui:Button>
                 <TextBlock
                     Margin="0,20,0,0"
-                    FontSize="11"
+                    FontSize="{DynamicResource TypeCaption}"
                     Foreground="{DynamicResource TextCaption}"
                     Text="{DynamicResource RequiresSteamLogin}"
                     TextAlignment="Center" />

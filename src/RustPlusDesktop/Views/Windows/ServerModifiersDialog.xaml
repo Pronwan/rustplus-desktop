@@ -39,7 +39,7 @@
                 <ui:TextBox x:Name="TxtUpkeep" FontSize="13" PlaceholderText="100"
                             Icon="{ui:SymbolIcon Symbol=Home24}"
                             TextChanged="Inputs_TextChanged"/>
-                <TextBlock x:Name="TxtUpkeepHint" Margin="2,4,0,14" FontSize="11.5"
+                <TextBlock x:Name="TxtUpkeepHint" Margin="2,4,0,14" FontSize="{DynamicResource TypeCaption}"
                            Foreground="{DynamicResource TextSubtle}"/>
 
                 <!-- Custom oil rig crate timer -->
@@ -48,7 +48,7 @@
                 <ui:TextBox x:Name="TxtCrate" FontSize="13" PlaceholderText="15"
                             Icon="{ui:SymbolIcon Symbol=Timer24}"
                             TextChanged="Inputs_TextChanged"/>
-                <TextBlock x:Name="TxtCrateHint" Margin="2,4,0,0" FontSize="11.5"
+                <TextBlock x:Name="TxtCrateHint" Margin="2,4,0,0" FontSize="{DynamicResource TypeCaption}"
                            Foreground="{DynamicResource TextSubtle}"/>
 
                 <!-- Actions -->

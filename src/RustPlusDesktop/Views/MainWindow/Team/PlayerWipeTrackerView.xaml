@@ -28,7 +28,7 @@
 
         <Style x:Key="MetricLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
@@ -103,7 +103,7 @@
             <Setter Property="BorderThickness" Value="0,0,0,1" />
             <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
             <Setter Property="Padding" Value="8,6" />
-            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="Template">
@@ -247,7 +247,7 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel VerticalAlignment="Center">
                                         <TextBlock Text="Activity over the wipe" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                        <TextBlock x:Name="RibbonSpanText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11.5" Margin="0,2,0,0" />
+                                        <TextBlock x:Name="RibbonSpanText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="{DynamicResource TypeCaption}" Margin="0,2,0,0" />
                                     </StackPanel>
                                     <ui:Button Grid.Column="1" x:Name="ToggleUnknownButton" Content="Show unknown" Appearance="Secondary" Click="ToggleUnknown_Click" Margin="0,0,10,0" VerticalAlignment="Center"
                                                ToolTip="Unknown = gaps where Rust+ could not see the player. Hidden by default so real activity stays readable." />
@@ -255,7 +255,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Ellipse x:Name="StatusChipDot" Width="9" Height="9" Fill="{DynamicResource StateUnknown}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                             <TextBlock x:Name="StatusChipText" Text="No data" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                            <TextBlock x:Name="StatusChipSubText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                            <TextBlock x:Name="StatusChipSubText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="8,0,0,0" />
                                         </StackPanel>
                                     </Border>
                                 </Grid>
@@ -414,7 +414,7 @@
                             </Grid>
                             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#DD10151C" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="12">
                                 <StackPanel>
-                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="11" FontWeight="Bold" />
+                                    <TextBlock Text="ROUTE REPLAY" Foreground="{DynamicResource Accent}" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" />
                                     <TextBlock x:Name="ReplayStateText" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,3,0,0" />
                                 </StackPanel>
                             </Border>
@@ -477,7 +477,7 @@
                                 <Border Grid.Column="3" Background="#FFB340" />
                                 <Border Grid.Column="4" Background="#FF5A36" CornerRadius="0,3,3,0" />
                             </Grid>
-                            <TextBlock x:Name="HeatmapText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11.5" Margin="0,10,0,0" />
+                            <TextBlock x:Name="HeatmapText" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="{DynamicResource TypeCaption}" Margin="0,10,0,0" />
                             <ui:Button x:Name="HeatmapToggleMonumentsButton" Content="Hide monuments" Icon="{ui:SymbolIcon Symbol=Building24}" Appearance="Secondary" Click="ToggleMonuments_Click" Margin="0,16,0,0" HorizontalAlignment="Stretch" ToolTip="Toggle monument markers on the map" />
                         </StackPanel>
                     </ui:Card>
@@ -520,7 +520,7 @@
                     </ui:Card>
 
                     <Border Grid.Row="1" Background="#1260CDFF" BorderBrush="#2560CDFF" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,0,8">
-                        <TextBlock Text="Cyan is Player A · Amber is Player B. Comparison overlays only recorded coordinates and leaves missing periods blank." FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="Cyan is Player A · Amber is Player B. Comparison overlays only recorded coordinates and leaves missing periods blank." FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </Border>
 
                     <ui:Card Grid.Row="2" Padding="6"
@@ -663,11 +663,11 @@
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding ServerName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
                                                     <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                                        <TextBlock Text="{Binding WipeDateShortFormatted}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                                        <TextBlock Text=" · " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                                        <TextBlock Text="{Binding PlayerCountFormatted}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                                        <TextBlock Text=" · " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                                        <TextBlock Text="{Binding StoredSizeFormatted}" FontSize="11" Foreground="{DynamicResource Accent}" FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding WipeDateShortFormatted}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Text=" · " FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        <TextBlock Text="{Binding PlayerCountFormatted}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Text=" · " FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                                        <TextBlock Text="{Binding StoredSizeFormatted}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource Accent}" FontWeight="SemiBold" />
                                                     </StackPanel>
                                                 </StackPanel>
                                             </Grid>
@@ -705,11 +705,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="SERVER" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="SERVER" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock x:Name="ArchiveServerNameText" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                             </StackPanel>
                                             <Border Grid.Column="1" Background="#1A60CDFF" BorderBrush="#3360CDFF" BorderThickness="1" CornerRadius="12" Padding="8,3" VerticalAlignment="Top">
-                                                <TextBlock Text="Cloud Backup" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
+                                                <TextBlock Text="Cloud Backup" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource Accent}" />
                                             </Border>
                                         </Grid>
 
@@ -731,28 +731,28 @@
                                             <!-- Wipe Start -->
                                             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
                                                 <ui:SymbolIcon Symbol="CalendarLtr24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="Wipe Started:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="Wipe Started:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ArchiveWipeDateText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,0,8" />
 
                                             <!-- Activity Window -->
                                             <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
                                                 <ui:SymbolIcon Symbol="Timer24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="Observed Range:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="Observed Range:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ArchiveObservedRangeText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,8" />
 
                                             <!-- Players Backed Up -->
                                             <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,8">
                                                 <ui:SymbolIcon Symbol="People24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="Tracked Players:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="Tracked Players:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <TextBlock Grid.Row="2" Grid.Column="1" x:Name="ArchivePlayersText" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,0,8" />
 
                                             <!-- Storage Size -->
                                             <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Margin="0,0,14,0">
                                                 <ui:SymbolIcon Symbol="Database24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="Cloud Storage:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="Cloud Storage:" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <TextBlock Grid.Row="3" Grid.Column="1" x:Name="ArchiveStorageText" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
                                         </Grid>
@@ -771,7 +771,7 @@
                                     <StackPanel HorizontalAlignment="Center">
                                         <ui:SymbolIcon Symbol="CloudSync24" FontSize="32" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8" />
                                         <TextBlock Text="No archive selected" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
-                                        <TextBlock Text="Pick a cloud archive from the list on the left to view its wipe summary." FontSize="11.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap" TextAlignment="Center" />
+                                        <TextBlock Text="Pick a cloud archive from the list on the left to view its wipe summary." FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap" TextAlignment="Center" />
                                     </StackPanel>
                                 </Border>
 

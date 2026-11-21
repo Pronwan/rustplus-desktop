@@ -67,7 +67,7 @@
                             <ui:SymbolIcon Symbol="Warning24" Foreground="#FF6262" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="18"/>
                             <TextBlock Text="{DynamicResource ResetDataWarning}" 
                                        Foreground="#FF6D6D" 
-                                       FontSize="11" 
+                                       FontSize="{DynamicResource TypeCaption}" 
                                        FontWeight="SemiBold" 
                                        VerticalAlignment="Center"
                                        TextWrapping="Wrap"/>

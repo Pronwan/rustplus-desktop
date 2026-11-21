@@ -23,7 +23,7 @@
         <TextBlock Grid.Row="1"
                    Margin="16,4,16,12"
                    TextWrapping="Wrap"
-                   FontSize="11"
+                   FontSize="{DynamicResource TypeCaption}"
                    Foreground="{DynamicResource TextSubtle}"
                    Text="{DynamicResource AiHistoryIntro}" />
 
@@ -39,7 +39,7 @@
 
             <TextBlock x:Name="TxtFooter"
                        VerticalAlignment="Center"
-                       FontSize="11"
+                       FontSize="{DynamicResource TypeCaption}"
                        Foreground="{DynamicResource TextSubtle}" />
 
             <ui:Button Grid.Column="1"

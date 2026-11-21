@@ -30,11 +30,11 @@
                            Foreground="{DynamicResource TextPrimary}" />
             </Border>
 
-            <TextBlock x:Name="TxtWarning" Text="" Foreground="#FFFFB86C" FontSize="11"
+            <TextBlock x:Name="TxtWarning" Text="" Foreground="#FFFFB86C" FontSize="{DynamicResource TypeCaption}"
                        TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed" />
 
             <TextBlock Text="{DynamicResource ConsoleHelperMouseHint}"
-                       Foreground="{DynamicResource TextSubtle}" FontSize="11"
+                       Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}"
                        TextWrapping="Wrap" Margin="0,0,0,6" />
 
             <ComboBox x:Name="CmbMouse" Margin="0,0,0,14"

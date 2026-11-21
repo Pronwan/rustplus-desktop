@@ -39,7 +39,7 @@
                           MaxHeight="290">
                 <StackPanel>
                     <TextBlock x:Name="EmptyNotice" Visibility="Collapsed" Margin="4,10"
-                               Text="No matches" Foreground="#7E8B9F" FontSize="11"
+                               Text="No matches" Foreground="#7E8B9F" FontSize="{DynamicResource TypeCaption}"
                                HorizontalAlignment="Center"/>
 
                     <ItemsControl x:Name="EmojiList">
@@ -76,9 +76,9 @@
                                         </Grid>
 
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
-                                            <TextBlock Text="{Binding Tag}" Foreground="#E4E9F2" FontSize="11"
+                                            <TextBlock Text="{Binding Tag}" Foreground="#E4E9F2" FontSize="{DynamicResource TypeCaption}"
                                                        FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding DisplayName}" Foreground="#7E8B9F" FontSize="11"
+                                            <TextBlock Text="{Binding DisplayName}" Foreground="#7E8B9F" FontSize="{DynamicResource TypeCaption}"
                                                        TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </Grid>

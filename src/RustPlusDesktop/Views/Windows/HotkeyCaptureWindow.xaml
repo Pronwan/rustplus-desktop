@@ -55,7 +55,7 @@
             <!-- Footer Instructions -->
             <TextBlock Grid.Row="2" x:Name="TxtFooter" 
                        Text="{DynamicResource UiPressESCToCancelEnterToSave}"
-                       FontSize="11" 
+                       FontSize="{DynamicResource TypeCaption}" 
                        Foreground="{DynamicResource TextSubtle}"
                        HorizontalAlignment="Center"/>
         </Grid>

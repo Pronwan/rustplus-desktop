@@ -160,14 +160,14 @@
 
                 <!-- Sign In Panel -->
                 <StackPanel x:Name="PanelSignIn">
-                    <TextBlock x:Name="LblSignInEmail" Text="{DynamicResource EmailAddressLabel}" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="LblSignInEmail" Text="{DynamicResource EmailAddressLabel}" Foreground="#AAA" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,4"/>
                     <TextBox x:Name="TxtSignInEmail" Style="{StaticResource AuthField}" Margin="0,0,0,12"/>
                     
                     <Grid Margin="0,0,0,4">
-                        <TextBlock x:Name="LblSignInPassword" Text="{DynamicResource PasswordLabel}" Foreground="#AAA" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="LblSignInPassword" Text="{DynamicResource PasswordLabel}" Foreground="#AAA" FontSize="{DynamicResource TypeCaption}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
                             <Hyperlink Foreground="#888" TextDecorations="None" Click="LnkForgotPassword_Click">
-                                <Run x:Name="TxtForgotPassword" Text="{DynamicResource UiForgotPassword}" FontSize="11"/>
+                                <Run x:Name="TxtForgotPassword" Text="{DynamicResource UiForgotPassword}" FontSize="{DynamicResource TypeCaption}"/>
                             </Hyperlink>
                         </TextBlock>
                     </Grid>
@@ -180,11 +180,11 @@
 
                 <!-- Sign Up Panel -->
                 <StackPanel x:Name="PanelSignUp" Visibility="Collapsed">
-                    <TextBlock x:Name="LblSignUpEmail" Text="{DynamicResource EmailAddressLabel}" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="LblSignUpEmail" Text="{DynamicResource EmailAddressLabel}" Foreground="#AAA" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,4"/>
                     <TextBox x:Name="TxtSignUpEmail" Style="{StaticResource AuthField}" Margin="0,0,0,12"/>
-                    <TextBlock x:Name="LblSignUpPassword" Text="{DynamicResource PasswordMinCharsLabel}" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="LblSignUpPassword" Text="{DynamicResource PasswordMinCharsLabel}" Foreground="#AAA" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,4"/>
                     <PasswordBox x:Name="PwdSignUp" Style="{StaticResource AuthPassword}" Margin="0,0,0,12"/>
-                    <TextBlock x:Name="LblConfirmPassword" Text="{DynamicResource ConfirmPasswordLabel}" Foreground="#AAA" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="LblConfirmPassword" Text="{DynamicResource ConfirmPasswordLabel}" Foreground="#AAA" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,4"/>
                     <PasswordBox x:Name="PwdSignUpConfirm" Style="{StaticResource AuthPassword}" Margin="0,0,0,16"/>
                     <Button x:Name="BtnSignUp" Content="{DynamicResource EmailCreateAccountButton}" Style="{StaticResource PrimaryBtn}"
                             HorizontalAlignment="Stretch" Click="BtnSignUp_Click"/>
@@ -215,7 +215,7 @@
                                    Text="{DynamicResource EmailConfirmationSentMessage}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,8,0"/>
-                            <TextBlock x:Name="TxtPollCount" Text="{DynamicResource EmailWaitingForConfirmation}" Foreground="#888" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtPollCount" Text="{DynamicResource EmailWaitingForConfirmation}" Foreground="#888" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center"/>
                         </StackPanel>
                         <Button x:Name="BtnCancelPolling" Content="{DynamicResource Cancel}" Style="{StaticResource GhostBtn}"
                                 HorizontalAlignment="Left" Click="BtnCancelPolling_Click"/>
@@ -226,7 +226,7 @@
             <!-- Footer -->
             <Border Padding="20,12,20,20">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock x:Name="TxtProblems" Text="{DynamicResource EmailProblemsPrefix}" Foreground="#666" FontSize="11"/>
+                    <TextBlock x:Name="TxtProblems" Text="{DynamicResource EmailProblemsPrefix}" Foreground="#666" FontSize="{DynamicResource TypeCaption}"/>
                     <TextBlock>
                         <Hyperlink NavigateUri="https://www.rustplusdesktop.cloud"
                                    RequestNavigate="Hyperlink_RequestNavigate"

@@ -53,7 +53,7 @@
                             <TextBlock Text="Allows RustPlus Desktop Cloud daemons to monitor your active Rust server(s) 24/7 when this desktop app is closed."
                                        TextWrapping="Wrap" FontSize="12.5" LineHeight="18" Foreground="#94A3B8"/>
                             <TextBlock Text="⚠️ Note: Cloud 24/7 is an experimental and time-limited feature that may be modified or removed at any time."
-                                       TextWrapping="Wrap" FontSize="11.5" FontWeight="Medium" Foreground="#F59E0B" Margin="0,4,0,0"/>
+                                       TextWrapping="Wrap" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium" Foreground="#F59E0B" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -104,7 +104,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <ui:SymbolIcon Grid.Column="0" Symbol="LockClosed24" FontSize="14" Foreground="#38BDF8" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock Grid.Column="1" Text="All credentials and pairing tokens are encrypted at rest at the database level." TextWrapping="Wrap" FontSize="11.5" LineHeight="16" Foreground="#94A3B8"/>
+                            <TextBlock Grid.Column="1" Text="All credentials and pairing tokens are encrypted at rest at the database level." TextWrapping="Wrap" FontSize="{DynamicResource TypeCaption}" LineHeight="16" Foreground="#94A3B8"/>
                         </Grid>
 
                         <!-- Guarantee 2: Account Isolation -->
@@ -114,7 +114,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <ui:SymbolIcon Grid.Column="0" Symbol="PersonLock24" FontSize="14" Foreground="#38BDF8" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock Grid.Column="1" Text="Credentials and telemetry are strictly bound exclusively to your user account and never shared with anyone else." TextWrapping="Wrap" FontSize="11.5" LineHeight="16" Foreground="#94A3B8"/>
+                            <TextBlock Grid.Column="1" Text="Credentials and telemetry are strictly bound exclusively to your user account and never shared with anyone else." TextWrapping="Wrap" FontSize="{DynamicResource TypeCaption}" LineHeight="16" Foreground="#94A3B8"/>
                         </Grid>
 
                         <!-- Guarantee 3: Revocation -->
@@ -124,7 +124,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <ui:SymbolIcon Grid.Column="0" Symbol="DismissCircle24" FontSize="14" Foreground="#F43F5E" Margin="0,2,10,0" VerticalAlignment="Top"/>
-                            <TextBlock Grid.Column="1" Text="You can revoke consent at any time from this window to instantly terminate all cloud workers." TextWrapping="Wrap" FontSize="11.5" LineHeight="16" Foreground="#94A3B8"/>
+                            <TextBlock Grid.Column="1" Text="You can revoke consent at any time from this window to instantly terminate all cloud workers." TextWrapping="Wrap" FontSize="{DynamicResource TypeCaption}" LineHeight="16" Foreground="#94A3B8"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -141,7 +141,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Do you want to enable Cloud 24/7 and sync your credentials?" 
-                           FontSize="11.5" Foreground="#64748B" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
+                           FontSize="{DynamicResource TypeCaption}" Foreground="#64748B" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
 
                 <ui:Button Grid.Column="1" Content="Decline" Appearance="Secondary" Padding="20,8" Margin="0,0,10,0" Click="BtnDecline_Click" Cursor="Hand"/>
                 <ui:Button Grid.Column="2" Content="Accept &amp; Enable" Appearance="Primary" Padding="24,8" Click="BtnAccept_Click" Cursor="Hand">

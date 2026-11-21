@@ -12,7 +12,7 @@
         <!-- Section label above a field -->
         <Style x:Key="SupLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,0,0,6" />
         </Style>
@@ -117,7 +117,7 @@
                                                     <Ellipse Width="7" Height="7" Fill="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,7,0" Visibility="{Binding UnreadVisibility}" />
                                                     <TextBlock Text="{Binding Subject}" Foreground="{DynamicResource TextPrimary}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                                 </StackPanel>
-                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="8,0,0,0" />
                                             </Grid>
 
                                             <!-- Row 1: Badges + Chevron -->
@@ -129,17 +129,17 @@
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <!-- Category Pill -->
                                                     <Border Background="#12FFFFFF" BorderBrush="#1CFFFFFF" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="0,0,6,0">
-                                                        <TextBlock Text="{Binding CategoryLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="Medium" />
+                                                        <TextBlock Text="{Binding CategoryLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium" />
                                                     </Border>
                                                     <!-- Status Pill -->
                                                     <Border Background="{Binding StatusBackground}" BorderBrush="{Binding StatusBackground}" BorderThickness="1" CornerRadius="4" Padding="7,2">
-                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="11" FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="{Binding StatusForeground}" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" />
                                                     </Border>
                                                     <!-- Ticket reference: tells apart tickets that share a subject. -->
-                                                    <TextBlock Text="{Binding Reference}" Foreground="{DynamicResource TextCaption}" FontSize="11" FontFamily="Consolas"
+                                                    <TextBlock Text="{Binding Reference}" Foreground="{DynamicResource TextCaption}" FontSize="{DynamicResource TypeCaption}" FontFamily="Consolas"
                                                                VerticalAlignment="Center" Margin="8,0,0,0" ToolTip="{Binding Id}" />
                                                 </StackPanel>
-                                                <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="#44FFFFFF" FontSize="11" VerticalAlignment="Center" />
+                                                <ui:SymbolIcon Grid.Column="1" Symbol="ChevronRight24" Foreground="#44FFFFFF" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                                             </Grid>
                                         </Grid>
                                     </Border>
@@ -193,7 +193,7 @@
                                             <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="8,6">
                                                 <StackPanel Orientation="Horizontal">
                                                     <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" MaxWidth="130" TextTrimming="CharacterEllipsis" />
                                                 </StackPanel>
                                             </Border>
                                             <!-- Delete button -->
@@ -210,7 +210,7 @@
                             <!-- Attach File Button & Count -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,14" VerticalAlignment="Center">
                                 <ui:Button x:Name="BtnComposeAttach" Content="{DynamicResource SupportAttachFiles}" Icon="{ui:SymbolIcon Attach24}" Appearance="Secondary" Height="32" Padding="12,4" Click="ComposeAttach_Click" />
-                                <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{DynamicResource TextSubtle}" FontSize="11.5" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                <TextBlock x:Name="ComposeAttachCount" Text="" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="10,0,0,0" />
                             </StackPanel>
 
                             <!-- Appeal Checkbox -->
@@ -224,7 +224,7 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <ui:SymbolIcon Symbol="Warning24" Foreground="#FFEF5350" FontSize="15" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="1" x:Name="ComposeError" Foreground="#FFFCE8E8" FontSize="11.5" TextWrapping="Wrap" LineHeight="16" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" x:Name="ComposeError" Foreground="#FFFCE8E8" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" LineHeight="16" VerticalAlignment="Center" />
                                 </Grid>
                             </Border>
 
@@ -250,7 +250,7 @@
                         <ui:Button Content="{DynamicResource SupportBackToTickets}" Icon="{ui:SymbolIcon ArrowLeft24}" Appearance="Transparent" HorizontalAlignment="Left" Padding="6,4" Margin="0,0,0,8" Click="ThreadBack_Click" />
                         <TextBlock x:Name="ThreadSubject" Foreground="{DynamicResource TextPrimary}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" LineHeight="20" />
                         <Border Background="#10FFFFFF" BorderBrush="#18FFFFFF" BorderThickness="1" CornerRadius="4" Padding="8,3" Margin="0,6,0,0" HorizontalAlignment="Left">
-                            <TextBlock x:Name="ThreadStatus" Foreground="{DynamicResource TextSubtle}" FontSize="11" FontWeight="Medium" />
+                            <TextBlock x:Name="ThreadStatus" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium" />
                         </Border>
                     </StackPanel>
 
@@ -270,7 +270,7 @@
                                                 
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                     <Border Width="20" Height="20" CornerRadius="10" Background="{Binding BadgeBackground}" Margin="0,0,6,0" VerticalAlignment="Center">
-                                                        <ui:SymbolIcon Symbol="{Binding BadgeSymbol}" FontSize="11" Foreground="{Binding BadgeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        <ui:SymbolIcon Symbol="{Binding BadgeSymbol}" FontSize="{DynamicResource TypeCaption}" Foreground="{Binding BadgeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                     </Border>
                                                     <TextBlock Text="{Binding Author}" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
                                                     <Border Visibility="{Binding StaffTagVisibility}" Background="#2260CDFF" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
@@ -278,7 +278,7 @@
                                                     </Border>
                                                 </StackPanel>
                                                 
-                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="11" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding When}" Foreground="{DynamicResource TextCaption}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                                             </Grid>
 
                                             <!-- Message Text Body -->
@@ -302,7 +302,7 @@
                                                                         <Image Source="{Binding Thumb}" Stretch="Uniform" />
                                                                         <Border Background="#88000000" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Padding="4,2">
                                                                             <StackPanel Orientation="Horizontal">
-                                                                                <ui:SymbolIcon Symbol="Eye24" FontSize="11" Foreground="#EEFFFFFF" VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                                                <ui:SymbolIcon Symbol="Eye24" FontSize="{DynamicResource TypeCaption}" Foreground="#EEFFFFFF" VerticalAlignment="Center" Margin="0,0,3,0" />
                                                                                 <TextBlock Text="View" FontSize="10" FontWeight="SemiBold" Foreground="#EEFFFFFF" VerticalAlignment="Center" />
                                                                             </StackPanel>
                                                                         </Border>
@@ -312,8 +312,8 @@
                                                                 <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="10,6">
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11.5" VerticalAlignment="Center" MaxWidth="170" TextTrimming="CharacterEllipsis" />
-                                                                        <TextBlock Text="{Binding SizeLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" MaxWidth="170" TextTrimming="CharacterEllipsis" />
+                                                                        <TextBlock Text="{Binding SizeLabel}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" Margin="6,0,0,0" />
                                                                     </StackPanel>
                                                                 </Border>
                                                             </Grid>
@@ -344,7 +344,7 @@
                                         <Border Visibility="{Binding ChipVisibility}" Background="#161B24" BorderBrush="#25FFFFFF" BorderThickness="1" CornerRadius="6" Padding="8,5">
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon Symbol="Attach24" Foreground="{DynamicResource Accent}" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="11" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" MaxWidth="120" TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </Border>
                                         <ui:Button Tag="{Binding}" Click="RemoveReplyAttachment_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="18" Height="18" Margin="0,-6,-6,0" ToolTip="{DynamicResource SupportRemove}">

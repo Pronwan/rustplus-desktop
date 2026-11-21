@@ -198,7 +198,7 @@
                                         Grid.Column="1"
                                         Margin="0,0,8,0"
                                         VerticalAlignment="Center"
-                                        FontSize="11"
+                                        FontSize="{DynamicResource TypeCaption}"
                                         Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                         Text="{Binding PlayTimeStr}" />
                                     <ui:Button
@@ -210,7 +210,7 @@
                                         Appearance="Secondary"
                                         Click="BtnTrackPlayer_Click"
                                         Content="{DynamicResource Track}"
-                                        FontSize="11"
+                                        FontSize="{DynamicResource TypeCaption}"
                                         Tag="{Binding}" />
                                 </Grid>
                                 <DataTemplate.Triggers>

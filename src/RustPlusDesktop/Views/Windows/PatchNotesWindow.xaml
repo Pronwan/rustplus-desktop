@@ -41,9 +41,9 @@
                         <TextBlock Text="{DynamicResource PatchNotesHeader}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="4" Padding="6,1" Margin="0,0,6,0">
-                                <TextBlock Text="{Binding CurrentVersionFormatted, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                <TextBlock Text="{Binding CurrentVersionFormatted, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="White"/>
                             </Border>
-                            <TextBlock Text="Changelog &amp; Release Archive" FontSize="11" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Changelog &amp; Release Archive" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -129,19 +129,19 @@
                         <ComboBoxItem Tag="All" IsSelected="True">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Layer24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource Accent}"/>
-                                <TextBlock Text="All Releases" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                                <TextBlock Text="All Releases" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem Tag="Major">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Sparkle24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource BrandOrangeBrush}"/>
-                                <TextBlock Text="Major Updates" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                                <TextBlock Text="Major Updates" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem Tag="Hotfix">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Wrench24" Margin="0,0,8,0" FontSize="14" Foreground="{DynamicResource Accent}"/>
-                                <TextBlock Text="Hotfixes Only" VerticalAlignment="Center" FontSize="11" FontWeight="Medium"/>
+                                <TextBlock Text="Hotfixes Only" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="Medium"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
@@ -194,7 +194,7 @@
                                             </Grid>
 
                                             <!-- Version Headline -->
-                                            <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="11" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxHeight="32"/>
+                                            <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxHeight="32"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -228,7 +228,7 @@
                                     <Grid Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Border Background="{DynamicResource BrandOrangeBrush}" CornerRadius="6" Padding="8,3" Margin="0,0,10,0">
-                                                <TextBlock Text="LATEST RELEASE" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                                <TextBlock Text="LATEST RELEASE" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="White"/>
                                             </Border>
                                             <TextBlock Text="v11.4.3 | Correct Switch States"
                                                        FontWeight="Bold" FontSize="18" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" TextWrapping="Wrap"/>

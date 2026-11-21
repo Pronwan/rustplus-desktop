@@ -25,7 +25,7 @@
         <!-- Typography & Cell Styles -->
         <Style x:Key="ColHeader" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
@@ -337,7 +337,7 @@
                         <StackPanel>
                             <StackPanel x:Name="SparklineHost" Orientation="Horizontal" Height="50"
                                         Margin="4,6,4,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
-                            <TextBlock Text="Oldest → Today" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="4,6,0,0" />
+                            <TextBlock Text="Oldest → Today" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="4,6,0,0" />
                         </StackPanel>
                     </ui:Card>
 
@@ -482,7 +482,7 @@
 
                         <!--  These names were typed by hand, in the sense that somebody pressed  -->
                         <!--  a button to keep each one. Taking them back out belongs here too.   -->
-                        <ui:Button Margin="12,0,0,0" Padding="8,2" FontSize="11"
+                        <ui:Button Margin="12,0,0,0" Padding="8,2" FontSize="{DynamicResource TypeCaption}"
                                    Appearance="Secondary" VerticalAlignment="Center"
                                    Click="ClearKillers_Click"
                                    Content="{DynamicResource DeathStatsKillersClear}" />
@@ -622,9 +622,9 @@
                                                 <Border Grid.Column="3" Background="{DynamicResource ControlFillColorSecondaryBrush}"
                                                         BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                                                         CornerRadius="4" Padding="6,1" HorizontalAlignment="Left">
-                                                    <TextBlock Text="{Binding Grid}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                    <TextBlock Text="{Binding Grid}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
-                                                <TextBlock Grid.Column="4" Text="{Binding Died}" Style="{StaticResource Cell}" TextAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11.5" />
+                                                <TextBlock Grid.Column="4" Text="{Binding Died}" Style="{StaticResource Cell}" TextAlignment="Right" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="{DynamicResource TypeCaption}" />
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

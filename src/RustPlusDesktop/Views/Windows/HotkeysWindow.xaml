@@ -259,16 +259,16 @@
                                             <!-- Sub-info: ID & Status -->
                                             <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                                                 <TextBlock Text="{DynamicResource UiID}"
-                                                           FontSize="11" 
+                                                           FontSize="{DynamicResource TypeCaption}" 
                                                            Foreground="{DynamicResource TextSubtle}"/>
                                                 <TextBlock Text="{Binding EntityId}" 
-                                                           FontSize="11" 
+                                                           FontSize="{DynamicResource TypeCaption}" 
                                                            Foreground="{DynamicResource TextSubtle}"
                                                            Margin="0,0,12,0"/>
                                                 
                                                 <!-- Status label with color triggers -->
                                                 <TextBlock Text="{Binding Status}" 
-                                                           FontSize="11" 
+                                                           FontSize="{DynamicResource TypeCaption}" 
                                                            FontWeight="SemiBold">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
@@ -312,7 +312,7 @@
                                                            Foreground="{DynamicResource TextPrimary}"
                                                            VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Hotkey}" 
-                                                       FontSize="11" 
+                                                       FontSize="{DynamicResource TypeCaption}" 
                                                        FontWeight="SemiBold" 
                                                        Foreground="{DynamicResource TextPrimary}"
                                                        VerticalAlignment="Center"/>

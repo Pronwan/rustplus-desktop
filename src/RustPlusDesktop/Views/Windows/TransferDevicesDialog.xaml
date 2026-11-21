@@ -56,7 +56,7 @@
                         <DataTemplate>
                             <StackPanel Margin="0,3">
                                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="White" FontSize="13"/>
-                                <TextBlock Foreground="#9AA0A6" FontSize="11">
+                                <TextBlock Foreground="#9AA0A6" FontSize="{DynamicResource TypeCaption}">
                                     <TextBlock.Inlines>
                                         <Run Text="{Binding Host, Mode=OneWay}"/>
                                         <Run Text=":"/>

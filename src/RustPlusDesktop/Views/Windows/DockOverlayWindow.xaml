@@ -87,14 +87,14 @@
                                Margin="0,0,8,0"/>
                     <TextBlock x:Name="TitleText"
                                Text="{DynamicResource CommandDockTitle}"
-                               FontSize="11"
+                               FontSize="{DynamicResource TypeCaption}"
                                FontWeight="SemiBold"
                                Foreground="#CCFFFFFF"
                                VerticalAlignment="Center"/>
                     <!--  Replaces the title while unlocked. Arranging is a mode, and a mode
                           nobody can see is one people get stuck in.  -->
                     <TextBlock x:Name="EditText"
-                               FontSize="11"
+                               FontSize="{DynamicResource TypeCaption}"
                                FontWeight="SemiBold"
                                Foreground="#FF3FD7FF"
                                VerticalAlignment="Center"
@@ -124,7 +124,7 @@
                             VerticalAlignment="Center"
                             ValueChanged="SliZoom_ValueChanged"/>
                     <TextBlock x:Name="LblZoom"
-                               FontSize="11"
+                               FontSize="{DynamicResource TypeCaption}"
                                Foreground="#CCFFFFFF"
                                VerticalAlignment="Center"
                                Margin="8,0,0,0"
@@ -140,7 +140,7 @@
                     <ui:Button x:Name="BtnDone"
                                Padding="12,3"
                                Margin="0,0,6,0"
-                               FontSize="11"
+                               FontSize="{DynamicResource TypeCaption}"
                                Appearance="Primary"
                                Visibility="Collapsed"
                                Click="BtnLock_Click"/>

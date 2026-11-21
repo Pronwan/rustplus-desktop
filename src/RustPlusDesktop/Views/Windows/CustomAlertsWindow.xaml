@@ -5,7 +5,7 @@
         Background="Transparent">
     <StackPanel>
         <TextBlock Text="{DynamicResource CustomAlertsDesc}"
-                   Foreground="{DynamicResource TextSubtle}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,16"/>
+                   Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Margin="0,0,0,16"/>
 
         <ItemsControl x:Name="AlertsItemsControl">
                         <ItemsControl.ItemTemplate>
@@ -27,7 +27,7 @@
                                         <!-- Text Fields and Variable details -->
                                         <StackPanel Grid.Column="0" Margin="0,0,16,0">
                                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,8" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Description}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="0,2,0,8" TextWrapping="Wrap"/>
                                             
                                             <ui:TextBox Text="{Binding CurrentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                         Background="#11FFFFFF" 
@@ -40,7 +40,7 @@
                                                         AcceptsReturn="False"
                                                         AutomationProperties.Name="{Binding Name}"/>
 
-                                            <TextBlock Text="{Binding Variables}" FontSize="11" Foreground="{DynamicResource TextSubtle}" Margin="2,6,0,0" />
+                                            <TextBlock Text="{Binding Variables}" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" Margin="2,6,0,0" />
                                         </StackPanel>
 
                                         <!-- Actions Row -->
