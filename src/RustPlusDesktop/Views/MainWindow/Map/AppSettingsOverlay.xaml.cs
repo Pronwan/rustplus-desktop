@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,8 @@ namespace RustPlusDesk.Views
         public MainWindow? ParentWindow { get; set; }
         private bool _isSettingsInitialized = false;
         private IReadOnlyList<SettingsSectionDefinition> _settingsSections = Array.Empty<SettingsSectionDefinition>();
+        // Every indexable control, including ones that are hidden right now: availability and
+        // titles are read at search time, so a control that appears later becomes findable.
         private IReadOnlyList<SettingsOptionDefinition> _settingsOptions = Array.Empty<SettingsOptionDefinition>();
         private string _activeSettingsCategory = "general";
         private bool _isShowingSearchResults;
@@ -33,9 +36,12 @@ namespace RustPlusDesk.Views
         {
             public required string Id { get; init; }
             public required string Category { get; init; }
-            public required string Title { get; init; }
+            public required string TitleKey { get; init; }
+            public required string TitleFallback { get; init; }
             public required string Keywords { get; init; }
             public required FrameworkElement Element { get; init; }
+
+            public string Title => T(TitleKey, TitleFallback);
         }
 
         private sealed class SettingsSearchResult
@@ -46,14 +52,29 @@ namespace RustPlusDesk.Views
             public required string Title { get; init; }
         }
 
+        // Text is computed on read so a language change (or a relabelled control) is searched as shown.
         private sealed class SettingsOptionDefinition
         {
-            public required string SectionId { get; init; }
-            public required string SectionTitle { get; init; }
-            public required string Category { get; init; }
-            public required string Title { get; init; }
-            public required string SearchText { get; init; }
+            public required SettingsSectionDefinition Section { get; init; }
             public required FrameworkElement Target { get; init; }
+
+            private bool IsSection => ReferenceEquals(Target, Section.Element);
+            public string SectionId => Section.Id;
+            public string SectionTitle => Section.Title;
+            public string Category => Section.Category;
+            public string Title => IsSection ? Section.Title : GetControlTitle((Control)Target);
+            public string OwnText => IsSection ? $"{Section.Title} {Section.Keywords}" : $"{Title} {Target.ToolTip}";
+
+            // A control matches when every term is in its own text or its section title, and at
+            // least one is in its own text: "behavior tray" finds the tray switch, while the
+            // section title alone finds only the section.
+            public bool Matches(string query)
+            {
+                if (IsSection) return SettingsSearchMatcher.Matches(query, OwnText);
+                return SettingsSearchMatcher.Matches(query, OwnText, SectionTitle)
+                       && query.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                           .Any(term => OwnText.Contains(term, StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         private sealed class SettingsOptionResult
@@ -94,6 +115,7 @@ namespace RustPlusDesk.Views
             InitializeComponent();
             InitializeSettingsNavigation();
             Loaded += AppSettingsOverlay_Loaded;
+            Unloaded += (_, __) => App.CultureChanged -= RefreshSettingsSearchLanguage;
             IsVisibleChanged += AppSettingsOverlay_IsVisibleChanged;
 
             Loaded += (_, __) => ApplyEventCapabilities();
@@ -160,65 +182,84 @@ namespace RustPlusDesk.Views
         {
             _settingsSections = new[]
             {
-                Section("general", "general", T("General", "General"), "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
-                Section("behavior", "general", T("Behavior", "Behavior"), "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
-                Section("offline-death", "alerts", T("OfflineDeathNotifications", "Offline Death Notifications"), "offline death raid alerts sound loop discord log", SectionOfflineDeath),
-                Section("server-alerts", "alerts", T("UiServerAlertsTitle", "Modded Server Alerts"), "modded server alerts plugin wall destroyed raid standard generic alarm discord events telegram", SectionServerAlerts),
-                Section("notifications", "alerts", T("NotificationCenterSettings", "Notification Center"), "toast sound alerts retention days muted servers notification center", SectionNotifications),
-                Section("map-performance", "map", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance hd map resolution ram memory economy", SectionMapPerformance),
-                Section("team-markers", "map", T("TeamMarkersSettings", "Map Markers"), "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
-                Section("3d-map", "map", T("ThreeDMapSectionTitle", "3D Map"), "3d map delete data parse manually quality", SectionThreeDMap),
+                Section("general", "general", "General", "General", "language startup launch windows minimized auto connect server auto update velopack background patch", SectionGeneral),
+                Section("behavior", "general", "Behavior", "Behavior", "tray closing streamer privacy background tracking console cloud sync upload", SectionBehavior),
+                Section("offline-death", "alerts", "OfflineDeathNotifications", "Offline Death Notifications", "offline death raid alerts sound loop discord log", SectionOfflineDeath),
+                Section("server-alerts", "alerts", "UiServerAlertsTitle", "Modded Server Alerts", "modded server alerts plugin wall destroyed raid standard generic alarm discord events telegram", SectionServerAlerts),
+                Section("notifications", "alerts", "NotificationCenterSettings", "Notification Center", "toast sound alerts retention days muted servers notification center", SectionNotifications),
+                Section("map-performance", "map", "UiMapPerformanceQuality", "Map Performance & Quality", "image scaling quality gpu bitmap cache rendering scale anti aliasing performance hd map resolution ram memory economy", SectionMapPerformance),
+                Section("team-markers", "map", "TeamMarkersSettings", "Map Markers", "map team profile player direction arrows death markers count limit wipe streamer icon scale", SectionTeamMarkers),
+                Section("3d-map", "map", "ThreeDMapSectionTitle", "3D Map", "3d map delete data parse manually quality", SectionThreeDMap),
                 // Connected Services, in page order. The keywords keep the old section and card names
                 // ("Cloud Account & Sync", "Basic Discord Integration", ...) findable after the rename.
-                Section("cloud", "connected", T("CsCloudAccountTitle", "RustPlus Desktop account"), "cloud account sync discord email login sign in supporter tier plan usage limits overlay devices bases upgrade backend service", SectionCloud),
-                Section("steam", "connected", T("CsRustPlusAccountTitle", "Rust+ companion (Steam)"), "steam account rust+ companion pairing facepunch fcm token manage", SectionSteamAccount),
-                Section("cloud-features", "connected", T("CsCloudFeaturesTitle", "Cloud features"), "cloud 24/7 247 experimental compare features global chat ticker room", SectionCloudFeatures),
-                Section("offline-alerts", "connected", T("CsOfflineGroupTitle", "Alerts while the app is closed"), "offline cloud alerts discord webhook telegram calls callmebot phone call raid death fcm sync smart home ifttt", SectionOfflineAlerts),
-                Section("discord", "connected", T("CsDiscordGroupTitle", "Discord"), "basic discord integration webhook chat alerts tts advanced discord bot integration invite guild server id commands roles channels", SectionDiscord),
-                Section("smart-home", "connected", T("CsSmartHomeGroupTitle", "Smart home"), "alexa smart home amazon pin home assistant token rest switch configuration yaml", SectionSmartHome),
-                Section("wipe-tracker", "connected", T("CsWipeTrackerTitle", "Player Wipe Tracker"), "player wipe tracker team snapshots cloud backup", SectionWipeTracker),
-                Section("chat-commands", "chat-commands", T("ChatCommandsSettings", "Chat Commands"), "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
-                Section("alert-templates", "alert-templates", T("CustomAlertsHeader", "Chat Alert Templates"), "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
-                Section("ai-companion", "ai-companion", T("AiCompanionTitle", "AI Companion"), "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
-                Section("maintenance", "system", T("MaintenanceTitle", "Maintenance"), "reset app data backup restore maintenance", SectionMaintenance),
-                Section("credits", "system", T("CreditsTitle", "Credits"), "credits rustmaps icons legal", SectionCredits)
+                Section("cloud", "connected", "CsCloudAccountTitle", "RustPlus Desktop account", "cloud account sync discord email login sign in supporter tier plan usage limits overlay devices bases upgrade backend service", SectionCloud),
+                Section("steam", "connected", "CsRustPlusAccountTitle", "Rust+ companion (Steam)", "steam account rust+ companion pairing facepunch fcm token manage", SectionSteamAccount),
+                Section("cloud-features", "connected", "CsCloudFeaturesTitle", "Cloud features", "cloud 24/7 247 experimental compare features global chat ticker room", SectionCloudFeatures),
+                Section("offline-alerts", "connected", "CsOfflineGroupTitle", "Alerts while the app is closed", "offline cloud alerts discord webhook telegram calls callmebot phone call raid death fcm sync smart home ifttt", SectionOfflineAlerts),
+                Section("discord", "connected", "CsDiscordGroupTitle", "Discord", "basic discord integration webhook chat alerts tts advanced discord bot integration invite guild server id commands roles channels", SectionDiscord),
+                Section("smart-home", "connected", "CsSmartHomeGroupTitle", "Smart home", "alexa smart home amazon pin home assistant token rest switch configuration yaml", SectionSmartHome),
+                Section("wipe-tracker", "connected", "CsWipeTrackerTitle", "Player Wipe Tracker", "player wipe tracker team snapshots cloud backup", SectionWipeTracker),
+                Section("chat-commands", "chat-commands", "ChatCommandsSettings", "Chat Commands", "chat team commands prefix delay population time promote cargo oil rig heli vendor upkeep afk timers switches logic rules", SectionChatCommands),
+                Section("alert-templates", "alert-templates", "CustomAlertsHeader", "Chat Alert Templates", "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
+                Section("ai-companion", "ai-companion", "AiCompanionTitle", "AI Companion", "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
+                Section("maintenance", "system", "MaintenanceTitle", "Maintenance", "reset app data backup restore maintenance", SectionMaintenance),
+                Section("credits", "system", "CreditsTitle", "Credits", "credits rustmaps icons legal", SectionCredits)
             };
 
             ShowSettingsCategoryList();
         }
 
-        private static SettingsSectionDefinition Section(string id, string category, string title, string keywords, FrameworkElement element) =>
-            new() { Id = id, Category = category, Title = title, Keywords = keywords, Element = element };
+        private static SettingsSectionDefinition Section(string id, string category, string titleKey, string titleFallback, string keywords, FrameworkElement element) =>
+            new() { Id = id, Category = category, TitleKey = titleKey, TitleFallback = titleFallback, Keywords = keywords, Element = element };
 
         private void BuildSettingsOptionIndex()
         {
             _settingsOptions = _settingsSections
-                .SelectMany(section => new[]
-                    {
-                        new SettingsOptionDefinition
-                        {
-                            SectionId = section.Id,
-                            SectionTitle = section.Title,
-                            Category = section.Category,
-                            Title = section.Title,
-                            SearchText = $"{section.Title} {section.Keywords}",
-                            Target = section.Element
-                        }
-                    }
+                .SelectMany(section => new[] { new SettingsOptionDefinition { Section = section, Target = section.Element } }
                     .Concat(EnumerateControls(section.Element)
-                    .Where(IsSearchableSettingControl)
-                    .Select(control => new SettingsOptionDefinition
-                    {
-                        SectionId = section.Id,
-                        SectionTitle = section.Title,
-                        Category = section.Category,
-                        Title = GetControlTitle(control),
-                        SearchText = $"{GetControlTitle(control)} {control.ToolTip} {section.Title}",
-                        Target = control
-                    })))
-                .Where(option => option.Title.Length > 1)
+                        .Where(IsSearchableSettingControl)
+                        .Select(control => new SettingsOptionDefinition { Section = section, Target = control })))
+                .ToList();
+        }
+
+        /// <summary>
+        /// Current matches, without controls the user could not reach right now: anything hidden
+        /// or disabled between the control and its section. The section's own visibility is
+        /// ignored (it is only collapsed because another category is open), and so is a closed
+        /// card, whose content is not hidden, just folded away until the result is opened.
+        /// </summary>
+        private List<SettingsOptionDefinition> FindAvailableSettings(string query, string? category = null)
+        {
+            if (_settingsOptions.Count == 0) BuildSettingsOptionIndex();
+            return _settingsOptions
+                .Where(option => category == null || option.Category == category)
+                .Where(IsSettingAvailable)
+                .Where(option => option.Title.Length > 1 && option.Matches(query))
                 .DistinctBy(option => $"{option.SectionId}|{option.Title}", StringComparer.OrdinalIgnoreCase)
                 .ToList();
+        }
+
+        private static bool IsSettingAvailable(SettingsOptionDefinition option)
+        {
+            for (DependencyObject? element = option.Target;
+                 element != null && !ReferenceEquals(element, option.Section.Element);
+                 element = GetSettingsParent(element))
+            {
+                if (element is UIElement { Visibility: not Visibility.Visible } or UIElement { IsEnabled: false }) return false;
+            }
+            return true;
+        }
+
+        /// <summary>The language changed: the result list and headings are re-read in it.</summary>
+        private void RefreshSettingsSearchLanguage()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!string.IsNullOrWhiteSpace(SettingsSearchBox.Text))
+                    SettingsSearchBox_TextChanged(SettingsSearchBox, null!);
+                else if (SettingsDetailPage.Visibility == Visibility.Visible)
+                    ShowSettingsCategory(_activeSettingsCategory);
+            }));
         }
 
         private static bool IsSearchableSettingControl(Control control) =>
@@ -376,8 +417,7 @@ namespace RustPlusDesk.Views
         private void HighlightMatchingSettings(string query, string category)
         {
             ClearSettingsHighlights();
-            var targets = _settingsOptions
-                .Where(option => option.Category == category && SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+            var targets = FindAvailableSettings(query, category)
                 .Select(option => option.Target)
                 .Distinct()
                 .ToList();
@@ -471,14 +511,15 @@ namespace RustPlusDesk.Views
 
         private static (string Title, string Description) GetSettingsCategoryText(string category) => category switch
         {
-            "alerts" => ("Alerts", "Notifications, sounds, and offline death alerts"),
-            "map" => ("Map", "Performance, markers, and 3D map data"),
-            "connected" => ("Connected Services", T("CsCategoryDesc", "Your accounts, alerts while the app is closed, Discord, and smart home")),
+            // The same keys the category list shows, so a result's breadcrumb reads like the list.
+            "alerts" => (T("Alerts", "Alerts"), T("UiNotificationsSoundsAndOfflineDeath", "Notifications, sounds, and offline death alerts")),
+            "map" => (T("UiMap", "Map"), T("UiPerformanceMarkersAnd3DData", "Performance, markers, and 3D map data")),
+            "connected" => (T("UiConnectedServices", "Connected Services"), T("CsCategoryDesc", "Your accounts, alerts while the app is closed, Discord, and smart home")),
             "chat-commands" => (T("ChatCommandsSettings", "Chat Commands"), "Team chat commands and device bindings"),
             "alert-templates" => (T("CustomAlertsHeader", "Chat Alert Templates"), T("CustomAlertsDesc", "Customize automated chat alert messages")),
             "ai-companion" => (T("AiCompanionTitle", "AI Companion"), T("AiCompanionCategoryDesc", "Voice and text companion, provider, hotkey, and appearance")),
-            "system" => ("System", "Maintenance, backup, reset, and application information"),
-            _ => ("General", "Language, startup, and application behavior")
+            "system" => (T("UiSystem", "System"), T("UiMaintenanceBackupResetAndCredits", "Maintenance, backup, reset, and application information")),
+            _ => (T("General", "General"), T("UiLanguageStartupAndAppBehavior", "Language, startup, and application behavior"))
         };
 
         private void SettingsBack_Click(object sender, RoutedEventArgs e)
@@ -550,21 +591,16 @@ namespace RustPlusDesk.Views
             }
             _isShowingSearchResults = true;
 
-            if (_settingsOptions.Count == 0)
-            {
-                BuildSettingsOptionIndex();
-            }
-
-            var matches = _settingsOptions
-                .Where(option => SettingsSearchMatcher.Matches(query, option.Title, option.SearchText))
+            var matches = FindAvailableSettings(query)
                 .OrderBy(option => option.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
-                .ThenBy(option => option.Title)
+                .ThenBy(option => option.Title, StringComparer.CurrentCultureIgnoreCase)
                 .ToList();
             SettingsSearchResults.ItemsSource = matches.Select(option => CreateSettingsOptionResult(option, query)).ToList();
             SettingsDetailTitle.Text = RustPlusDesk.Properties.Resources.GetString("CodeUiSearchResults");
+            // Count and query only: no per-language plural rules are needed for this line.
             SettingsDetailSubtitle.Text = matches.Count == 0
-                ? $"No settings found for “{query}”"
-                : $"{matches.Count} setting{(matches.Count == 1 ? "" : "s")} found for “{query}”";
+                ? RustPlusDesk.Properties.Resources.GetString("CodeUiNoResultsFoundMatchingFilter")
+                : string.Format(CultureInfo.CurrentCulture, "{0:N0} · “{1}”", matches.Count, query);
             SettingsCategoryPage.Visibility = Visibility.Collapsed;
             SettingsDetailPage.Visibility = Visibility.Visible;
             SettingsSectionList.Visibility = Visibility.Collapsed;
@@ -620,6 +656,8 @@ namespace RustPlusDesk.Views
 
         private void AppSettingsOverlay_Loaded(object sender, RoutedEventArgs e)
         {
+            App.CultureChanged -= RefreshSettingsSearchLanguage;
+            App.CultureChanged += RefreshSettingsSearchLanguage;
             if (_isSettingsInitialized) return;
             
             PopulateLanguages();
