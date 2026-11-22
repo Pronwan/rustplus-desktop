@@ -539,6 +539,13 @@ public static class SocialApi
     /// there is nothing to show right now.
     /// </summary>
     public static async Task<System.Collections.Generic.List<Models.BlockedPlayer>> GetBlocksAsync()
+        => (await TryGetBlocksAsync().ConfigureAwait(false)).Blocks;
+
+    /// <summary>
+    /// The same read, saying whether it worked. The block list screen needs the difference: "you
+    /// have blocked nobody" and "the list could not be loaded" are not the same thing to show.
+    /// </summary>
+    public static async Task<(System.Collections.Generic.List<Models.BlockedPlayer> Blocks, bool Ok)> TryGetBlocksAsync()
     {
         var result = new System.Collections.Generic.List<Models.BlockedPlayer>();
 
@@ -550,7 +557,7 @@ public static class SocialApi
             using var doc = JsonDocument.Parse(body);
 
             if (!doc.RootElement.TryGetProperty("data", out var rows) || rows.ValueKind != JsonValueKind.Array)
-                return result;
+                return (result, false);
 
             foreach (var row in rows.EnumerateArray())
             {
@@ -571,10 +578,10 @@ public static class SocialApi
         }
         catch
         {
-            // Deliberately quiet.
+            return (result, false);
         }
 
-        return result;
+        return (result, true);
     }
 
     /// <summary>Takes somebody off the list. The server treats a repeat as already done.</summary>

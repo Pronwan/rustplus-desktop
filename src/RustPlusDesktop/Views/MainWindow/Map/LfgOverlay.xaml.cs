@@ -917,6 +917,7 @@ public partial class LfgOverlay : UserControl
 
         await SocialApi.BlockAsync(thread.CounterpartId).ConfigureAwait(true);
         await LoadInboxAsync().ConfigureAwait(true);
+        ShowBlockedToast(thread.CounterpartId, thread.CounterpartName);
     }
 
     private void MenuReport_Click(object sender, RoutedEventArgs e)
@@ -971,7 +972,7 @@ public partial class LfgOverlay : UserControl
         ReportError.Visibility = Visibility.Collapsed;
         ReportForm.Visibility = Visibility.Visible;
         ReportDone.Visibility = Visibility.Collapsed;
-        ReportSheet.Visibility = Visibility.Visible;
+        ShowPane(ReportSheet);
     }
 
     /// <summary>
@@ -1032,7 +1033,7 @@ public partial class LfgOverlay : UserControl
 
     private void BtnReportCancel_Click(object sender, RoutedEventArgs e)
     {
-        ReportSheet.Visibility = Visibility.Collapsed;
+        HidePane(ReportSheet);
         _reportTarget = null;
     }
 
@@ -1047,7 +1048,7 @@ public partial class LfgOverlay : UserControl
 
         await SocialApi.BlockAsync(target.UserId).ConfigureAwait(true);
 
-        ReportSheet.Visibility = Visibility.Collapsed;
+        HidePane(ReportSheet);
         _reportTarget = null;
 
         // Their lines, their listing and their thread all go, and the server filters all three.
@@ -1121,8 +1122,8 @@ public partial class LfgOverlay : UserControl
                 var fadeIn = new DoubleAnimation
                 {
                     To = 1.0,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                    Duration = Helpers.Motion.For(Helpers.Motion.Normal),
+                    EasingFunction = Helpers.Motion.Enter
                 };
                 BtnScrollToBottom.BeginAnimation(UIElement.OpacityProperty, fadeIn);
             }
@@ -1134,8 +1135,8 @@ public partial class LfgOverlay : UserControl
                 var fadeOut = new DoubleAnimation
                 {
                     To = 0.0,
-                    Duration = TimeSpan.FromMilliseconds(160),
-                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                    Duration = Helpers.Motion.For(Helpers.Motion.Fast),
+                    EasingFunction = Helpers.Motion.Exit
                 };
                 fadeOut.Completed += (s, e) =>
                 {
@@ -1370,7 +1371,11 @@ public partial class LfgOverlay : UserControl
 
             bool closeInTime = curr.SentAt.HasValue && prev.SentAt.HasValue && Math.Abs((curr.SentAt.Value - prev.SentAt.Value).TotalMinutes) < 5;
 
-            curr.ShowHeader = !(sameSender && closeInTime);
+            // A day divider sits between lines on different days; the line under it starts afresh
+            // with its own name and avatar even when it follows the same sender minutes later.
+            bool sameDay = Converters.ChatDayDivider.IsSameLocalDay(curr, prev);
+
+            curr.ShowHeader = !(sameSender && closeInTime && sameDay);
         }
     }
 
@@ -1580,454 +1585,6 @@ public partial class LfgOverlay : UserControl
     private void BtnChatRulesCancel_Click(object sender, RoutedEventArgs e)
         => ChatRulesPanel.Visibility = Visibility.Collapsed;
 
-    // ── Friends ─────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Who the pending request is for, when the sheet was opened from somebody's chat line.
-    ///
-    /// The card above the form shows their name and face; this is the id it stands for. Held
-    /// here rather than in the text box because the text box is what the user can see, and an
-    /// id belongs to the person it identifies, not to whoever happens to be adding them.
-    /// </summary>
-    private string? _friendTargetSteamId;
-
-    private List<Models.Friend> _allFriends = new();
-    private List<Models.Friend> _allIncoming = new();
-    private List<Models.Friend> _allOutgoing = new();
-
-    private async void BtnFriends_Click(object sender, RoutedEventArgs e)
-    {
-        AddFriendSheet.Visibility = Visibility.Collapsed;
-        FriendsSheet.Visibility = Visibility.Visible;
-        TxtFriendSearch.Text = "";
-
-        await LoadFriendsAsync().ConfigureAwait(true);
-    }
-
-    private void BtnFriendsClose_Click(object sender, RoutedEventArgs e)
-        => FriendsSheet.Visibility = Visibility.Collapsed;
-
-    private void BtnOpenAddFriend_Click(object sender, RoutedEventArgs e)
-    {
-        FriendsSheet.Visibility = Visibility.Collapsed;
-        OpenAddFriendManual();
-    }
-
-    private void OpenAddFriendManual()
-    {
-        ClearFriendTarget();
-        TxtFriendMessage.Text = "";
-        FriendsNotice.Visibility = Visibility.Collapsed;
-        AddFriendSheet.Visibility = Visibility.Visible;
-        TxtFriendSteamId.Focus();
-    }
-
-    private void BtnAddFriendClose_Click(object sender, RoutedEventArgs e)
-        => AddFriendSheet.Visibility = Visibility.Collapsed;
-
-    private void TxtFriendSearch_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        ApplyFriendFilter();
-    }
-
-    private void ApplyFriendFilter()
-    {
-        var query = TxtFriendSearch?.Text?.Trim() ?? "";
-
-        if (string.IsNullOrEmpty(query))
-        {
-            FriendList.ItemsSource = _allFriends;
-            FriendsSearchEmptyNotice.Visibility = Visibility.Collapsed;
-            FriendsEmptyNotice.Visibility = _allFriends.Count == 0 && _allIncoming.Count == 0
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            return;
-        }
-
-        var filtered = _allFriends
-            .Where(f => (f.DisplayName?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
-                     || (f.SteamId?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
-                     || (f.WhereLabel?.Contains(query, StringComparison.OrdinalIgnoreCase) == true))
-            .ToList();
-
-        FriendList.ItemsSource = filtered;
-        FriendsEmptyNotice.Visibility = Visibility.Collapsed;
-        FriendsSearchEmptyNotice.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    /// <summary>
-    /// Reads the list and the requests on both sides.
-    ///
-    /// Called whether or not the sheet is open, because the badge on the button has to be right
-    /// before somebody opens it - the same reason the unread count moved out of the panel.
-    /// </summary>
-    private async Task LoadFriendsAsync()
-    {
-        var list = await SocialApi.GetFriendsAsync().ConfigureAwait(true);
-
-        _allFriends = list.Friends;
-        _allIncoming = list.Incoming;
-        _allOutgoing = list.Outgoing;
-
-        FriendRequestList.ItemsSource = _allIncoming;
-        FriendOutgoingList.ItemsSource = _allOutgoing;
-
-        FriendsIncomingHeading.Visibility = _allIncoming.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        FriendsOutgoingHeading.Visibility = _allOutgoing.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-
-        ApplyFriendFilter();
-        ShowFriendRequests(_allIncoming.Count);
-    }
-
-    private void ShowFriendRequests(int count)
-    {
-        FriendsBadge.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        FriendsBadgeText.Text = count > 9 ? "9+" : count.ToString();
-    }
-
-    private async void BtnFriendAdd_Click(object sender, RoutedEventArgs e)
-    {
-        var steamId = _friendTargetSteamId ?? TxtFriendSteamId.Text?.Trim() ?? "";
-        var message = TxtFriendMessage.Text?.Trim() ?? "";
-
-        if (steamId.Length == 0 || message.Length == 0) return;
-
-        if (SocialFriends.IsSelf(steamId))
-        {
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorNotFound");
-            FriendsNotice.Visibility = Visibility.Visible;
-            return;
-        }
-
-        if (SocialFriends.IsFriend(steamId))
-        {
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
-            FriendsNotice.Visibility = Visibility.Visible;
-            return;
-        }
-
-        if (SocialFriends.HasPendingRequest(steamId))
-        {
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
-            FriendsNotice.Visibility = Visibility.Visible;
-            return;
-        }
-
-        BtnFriendAdd.IsEnabled = false;
-        FriendsNotice.Visibility = Visibility.Collapsed;
-
-        try
-        {
-            var result = await SocialApi.AddFriendAsync(steamId, message).ConfigureAwait(true);
-
-            if (result == SocialApi.FriendRequestResult.Ok)
-            {
-                ClearFriendTarget();
-                TxtFriendMessage.Text = "";
-
-                // Green rather than red: this one is not a refusal.
-                FriendsNotice.Foreground = (System.Windows.Media.Brush)FindResource("LfgMuted");
-                FriendsNotice.Text = Properties.Resources.GetString("FriendsSent");
-                FriendsNotice.Visibility = Visibility.Visible;
-
-                await LoadFriendsAsync().ConfigureAwait(true);
-                return;
-            }
-
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-
-            FriendsNotice.Text = Properties.Resources.GetString(result switch
-            {
-                SocialApi.FriendRequestResult.NotFound => "FriendsErrorNotFound",
-                SocialApi.FriendRequestResult.Pending => "FriendsErrorPending",
-                SocialApi.FriendRequestResult.AlreadyFriends => "FriendsErrorAlready",
-                SocialApi.FriendRequestResult.Declined => "FriendsErrorDeclined",
-                SocialApi.FriendRequestResult.Refused => "FriendsErrorRefused",
-                _ => "FriendsErrorFailed",
-            });
-
-            FriendsNotice.Visibility = Visibility.Visible;
-        }
-        finally
-        {
-            BtnFriendAdd.IsEnabled = true;
-        }
-    }
-
-    private async void BtnFriendAccept_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-
-        await SocialApi.AcceptFriendAsync(friend.Id).ConfigureAwait(true);
-        await LoadFriendsAsync().ConfigureAwait(true);
-    }
-
-    private async void BtnFriendDecline_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-
-        await SocialApi.DeclineFriendAsync(friend.Id).ConfigureAwait(true);
-        await LoadFriendsAsync().ConfigureAwait(true);
-    }
-
-    private async void BtnFriendWithdraw_Click(object sender, RoutedEventArgs e)
-        => await RemoveFriendshipAsync(sender);
-
-    private async void MenuFriendRemove_Click(object sender, RoutedEventArgs e)
-        => await RemoveFriendshipAsync(sender);
-
-    private async Task RemoveFriendshipAsync(object sender)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-
-        await SocialApi.RemoveFriendAsync(friend.Id).ConfigureAwait(true);
-        await LoadFriendsAsync().ConfigureAwait(true);
-    }
-
-    /// <summary>Clicking a friend writes to them, which is the thing you want nine times in ten.</summary>
-    private async void Friend_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        => await MessageFriendAsync(sender);
-
-    private async void MenuFriendMessage_Click(object sender, RoutedEventArgs e)
-        => await MessageFriendAsync(sender);
-
-    private async Task MessageFriendAsync(object sender)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-        if (string.IsNullOrWhiteSpace(friend.UserId)) return;
-
-        FriendsSheet.Visibility = Visibility.Collapsed;
-
-        // The same route a listing takes, so there is one way into a conversation rather than two
-        // that drift apart.
-        await OpenConversationWithAsync(new Models.LfgEntry
-        {
-            UserId = friend.UserId,
-            DisplayName = friend.DisplayName,
-            AvatarUrl = friend.AvatarUrl,
-            SteamId = friend.SteamId,
-        }).ConfigureAwait(true);
-    }
-
-    private void MenuFriendProfile_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-
-        FriendsSheet.Visibility = Visibility.Collapsed;
-
-        OpenProfileSheet(new Models.LfgEntry
-        {
-            UserId = friend.UserId,
-            DisplayName = friend.DisplayName,
-            AvatarUrl = friend.AvatarUrl,
-            SteamId = friend.SteamId,
-        });
-    }
-
-    private async void MenuFriendBlock_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.Friend friend) return;
-        if (string.IsNullOrWhiteSpace(friend.UserId)) return;
-
-        // Blocking somebody you had as a friend ends the friendship too. Leaving the row behind
-        // would be a friends list containing somebody you cannot reach.
-        await SocialApi.RemoveFriendAsync(friend.Id).ConfigureAwait(true);
-        await SocialApi.BlockAsync(friend.UserId).ConfigureAwait(true);
-
-        await LoadFriendsAsync().ConfigureAwait(true);
-        await LoadInboxAsync().ConfigureAwait(true);
-    }
-
-    private void ChatAddFriend_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.ChatLine line) return;
-        if (!SocialFriends.CanBeFriended(line.SteamId, line.SenderId)) return;
-        _ = StartFriendRequestAsync(line.SteamId, line.SenderName, line.AvatarUrl);
-    }
-
-    /// <summary>
-    /// Opens the friends sheet for somebody, from outside this panel.
-    ///
-    /// The global chat lane in the team-chat window offers the same action, and a second friends
-    /// sheet built over there would be a second one to keep true. It opens this panel instead.
-    /// </summary>
-    public void StartFriendRequestFor(string? steamId, string? name = null, string? avatarUrl = null)
-    {
-        if (!SocialFriends.CanBeFriended(steamId)) return;
-        ShowPublicRoom();
-        _ = StartFriendRequestAsync(steamId, name, avatarUrl);
-    }
-
-    /// <summary>
-    /// Opens the report sheet for a line, from outside this panel.
-    ///
-    /// Reporting asks for a reason and optionally a note — the reporter's account of what happened
-    /// is the part a moderator actually reads, and a one-click report that sends neither is worth
-    /// less to them than no report at all.
-    /// </summary>
-    public void StartReportFor(Models.ChatLine line)
-    {
-        if (line.SenderId is null) return;
-
-        ShowPublicRoom();
-        OpenReport(new ReportTarget(line.SenderId, line.SenderName, line.Id, line.Body));
-    }
-
-    private void ThreadAddFriend_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.SocialThread thread) return;
-        if (!SocialFriends.CanBeFriended(thread.CounterpartSteamId, thread.CounterpartId)) return;
-        _ = StartFriendRequestAsync(thread.CounterpartSteamId, thread.CounterpartName, thread.AvatarUrl);
-    }
-
-    /// <summary>
-    /// Opens the friends sheet already aimed at somebody, so the one message they get is all
-    /// that is left to write. Somebody who has no Steam id on their account cannot be added, and
-    /// the empty field says so more plainly than a refusal afterwards would.
-    /// </summary>
-    private async Task StartFriendRequestAsync(string? steamId, string? name = null, string? avatarUrl = null)
-    {
-        FriendsSheet.Visibility = Visibility.Collapsed;
-        AddFriendSheet.Visibility = Visibility.Visible;
-        FriendsNotice.Visibility = Visibility.Collapsed;
-
-        await LoadFriendsAsync().ConfigureAwait(true);
-
-        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.IsFriend(steamId))
-        {
-            ClearFriendTarget();
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorAlready");
-            FriendsNotice.Visibility = Visibility.Visible;
-            return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(steamId) && SocialFriends.HasPendingRequest(steamId))
-        {
-            ClearFriendTarget();
-            FriendsNotice.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x8A));
-            FriendsNotice.Text = Properties.Resources.GetString("FriendsErrorPending");
-            FriendsNotice.Visibility = Visibility.Visible;
-            return;
-        }
-
-        ShowFriendTarget(steamId, name, avatarUrl);
-        TxtFriendMessage.Text = "";
-        TxtFriendMessage.Focus();
-    }
-
-    /// <summary>
-    /// Puts the person on the card and takes the id off the screen.
-    ///
-    /// Without a name there is nothing to put on the card, and falling back to the id field is
-    /// the only way such a request can still be sent — every caller here has a name, so that is
-    /// a path for somebody we genuinely know nothing about rather than the ordinary case.
-    /// </summary>
-    private void ShowFriendTarget(string? steamId, string? name, string? avatarUrl)
-    {
-        if (string.IsNullOrWhiteSpace(steamId) || string.IsNullOrWhiteSpace(name))
-        {
-            ClearFriendTarget();
-            TxtFriendSteamId.Text = steamId ?? "";
-            return;
-        }
-
-        _friendTargetSteamId = steamId.Trim();
-
-        FriendTargetName.Text = name;
-        FriendTargetAvatar.ImageSource = LoadAvatar(avatarUrl);
-
-        FriendTargetCard.Visibility = Visibility.Visible;
-
-        // Collapsed rather than disabled: a greyed-out box still shows what is in it.
-        TxtFriendSteamId.Text = "";
-        TxtFriendSteamId.Visibility = Visibility.Collapsed;
-    }
-
-    /// <summary>Back to the plain id field, with nothing of the last person left behind.</summary>
-    private void ClearFriendTarget()
-    {
-        _friendTargetSteamId = null;
-
-        FriendTargetCard.Visibility = Visibility.Collapsed;
-        FriendTargetName.Text = "";
-        FriendTargetAvatar.ImageSource = null;
-
-        TxtFriendSteamId.Text = "";
-        TxtFriendSteamId.Visibility = Visibility.Visible;
-    }
-
-    /// <summary>
-    /// The avatar, or nothing. Frozen so it can be handed straight to the brush, and http only:
-    /// a url from the server is still a url somebody else wrote.
-    /// </summary>
-    private static ImageSource? LoadAvatar(string? url)
-    {
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return null;
-        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) return null;
-
-        try
-        {
-            var image = new System.Windows.Media.Imaging.BitmapImage();
-            image.BeginInit();
-            image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-            image.UriSource = uri;
-            image.EndInit();
-            if (image.CanFreeze) image.Freeze();
-
-            return image;
-        }
-        catch
-        {
-            // A face that will not load is not a reason to lose the request.
-            return null;
-        }
-    }
-
-    // ── The block list ──────────────────────────────────────────────────────
-
-    private async void BtnBlocks_Click(object sender, RoutedEventArgs e)
-    {
-        BlocksSheet.Visibility = Visibility.Visible;
-        await LoadBlocksAsync().ConfigureAwait(true);
-    }
-
-    private void BtnBlocksClose_Click(object sender, RoutedEventArgs e)
-        => BlocksSheet.Visibility = Visibility.Collapsed;
-
-    private async Task LoadBlocksAsync()
-    {
-        var blocks = await SocialApi.GetBlocksAsync().ConfigureAwait(true);
-
-        BlockList.ItemsSource = blocks;
-        BlocksEmptyNotice.Visibility = blocks.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    private async void BtnUnblock_Click(object sender, RoutedEventArgs e)
-    {
-        if ((sender as FrameworkElement)?.Tag is not Models.BlockedPlayer blocked) return;
-
-        if (sender is System.Windows.Controls.Control button) button.IsEnabled = false;
-
-        await SocialApi.UnblockAsync(blocked.UserId).ConfigureAwait(true);
-        await LoadBlocksAsync().ConfigureAwait(true);
-
-        // Both directions come back at once: their lines reappear in the room, their listing in
-        // the board. Reloading here rather than on close means the change is visible where it
-        // was made.
-        await ReloadChatAsync().ConfigureAwait(true);
-        await LoadListingsAsync().ConfigureAwait(true);
-    }
-
     // ── The Steam profile behind a listing ──────────────────────────────────
 
     private Models.LfgEntry? _profileEntry;
@@ -2085,7 +1642,13 @@ public partial class LfgOverlay : UserControl
         // it answers. A card that waits on a network call feels broken on a slow connection.
         BtnProfileSteam.IsEnabled = !string.IsNullOrWhiteSpace(entry.SteamId);
         BtnProfileCopy.IsEnabled = !string.IsNullOrWhiteSpace(entry.SteamId);
-        ProfileSheet.Visibility = Visibility.Visible;
+
+        // Reporting is about an account, so it needs one, and nobody reports themselves.
+        BtnProfileReport.Visibility = !string.IsNullOrWhiteSpace(entry.UserId)
+            && !SocialFriends.IsSelf(entry.SteamId, entry.UserId)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        ShowPane(ProfileSheet);
 
         var profile = await Services.Social.SteamProfileService.GetAsync(entry.SteamId).ConfigureAwait(true);
 
@@ -2135,14 +1698,14 @@ public partial class LfgOverlay : UserControl
         {
             Text = Properties.Resources.GetString(labelKey) + "  ",
             Foreground = (System.Windows.Media.Brush)FindResource("LfgMuted"),
-            FontSize = 11,
+            FontSize = (double)FindResource("TypeCaption"),
         });
 
         row.Children.Add(new TextBlock
         {
             Text = value,
             Foreground = (System.Windows.Media.Brush)FindResource("LfgText"),
-            FontSize = 11,
+            FontSize = (double)FindResource("TypeCaption"),
             TextWrapping = TextWrapping.Wrap,
         });
 
@@ -2186,9 +1749,16 @@ public partial class LfgOverlay : UserControl
         try { Clipboard.SetText(steamId); } catch { }
     }
 
+    private void BtnProfileReport_Click(object sender, RoutedEventArgs e)
+    {
+        if (_profileEntry is not { UserId: { Length: > 0 } userId } entry) return;
+
+        OpenReport(new ReportTarget(userId, entry.DisplayName, null, null));
+    }
+
     private void BtnProfileClose_Click(object sender, RoutedEventArgs e)
     {
-        ProfileSheet.Visibility = Visibility.Collapsed;
+        HidePane(ProfileSheet);
         _profileEntry = null;
     }
 
@@ -2396,12 +1966,12 @@ public partial class LfgOverlay : UserControl
         {
             var anim = new System.Windows.Media.Animation.ColorAnimation
             {
-                From = Color.FromArgb(0x55, 0x38, 0xBD, 0xF8),
+                From = Color.FromArgb(0x40, 0x60, 0xCD, 0xFF),
                 To = Colors.Transparent,
                 Duration = TimeSpan.FromMilliseconds(1600),
                 EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
             };
-            var brush = new SolidColorBrush(Color.FromArgb(0x55, 0x38, 0xBD, 0xF8));
+            var brush = new SolidColorBrush(Color.FromArgb(0x40, 0x60, 0xCD, 0xFF));
             border.Background = brush;
             brush.BeginAnimation(SolidColorBrush.ColorProperty, anim);
         }
@@ -2520,6 +2090,7 @@ public partial class LfgOverlay : UserControl
         await SocialApi.BlockAsync(line.SenderId).ConfigureAwait(true);
         // Their lines disappear on the next read, since the server filters both directions.
         await ReloadChatAsync().ConfigureAwait(true);
+        ShowBlockedToast(line.SenderId, line.SenderName);
     }
 
     private void ChatReport_Click(object sender, RoutedEventArgs e)
