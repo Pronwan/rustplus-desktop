@@ -213,6 +213,10 @@ namespace RustPlusDesk.Services.Cloud
             if (!response.IsSuccessStatusCode)
                 SupabaseAuthManager.HandleUpgradeRequiredResponse(body);
 
+            // The session check reads /me itself; anything else refused with 401 asks it to look again soon.
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && routePath != "me")
+                CloudAuthManager.InvalidateValidation(bearerToken);
+
             return ((int)response.StatusCode, body);
         }
 
@@ -262,6 +266,8 @@ namespace RustPlusDesk.Services.Cloud
             if (!response.IsSuccessStatusCode)
             {
                 SupabaseAuthManager.HandleUpgradeRequiredResponse(body);
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    CloudAuthManager.InvalidateValidation(bearerToken);
                 throw new CloudApiException((int) response.StatusCode, routePath, DescribeError(body));
             }
 

@@ -92,7 +92,7 @@ namespace RustPlusDesk.Services.Cloud
             if (TokenExpiresAt.HasValue && TokenExpiresAt.Value <= DateTime.UtcNow)
             {
                 SupabaseAuthManager.AppendLog("[Cloud/Auth] Desktop token expired; signing out.");
-                Logout();
+                ExpireSession();
                 return false;
             }
 
@@ -111,7 +111,7 @@ namespace RustPlusDesk.Services.Cloud
                 if (status == 401 || status == 403)
                 {
                     SupabaseAuthManager.AppendLog($"[Cloud/Auth] Desktop token rejected ({status}); signing out.");
-                    Logout();
+                    ExpireSession();
                     return false;
                 }
 
@@ -189,6 +189,66 @@ namespace RustPlusDesk.Services.Cloud
             });
         }
 
+        /// <summary>
+        /// Sign out because the server no longer accepts the token, and tell the user
+        /// to sign in again. A logout the user chose goes through <see cref="Logout"/>.
+        /// </summary>
+        private static void ExpireSession()
+        {
+            Logout();
+            SupabaseAuthManager.AppendLog("[Cloud/Auth] Account session expired. Please sign in again.");
+            ShowSessionExpiredPrompt();
+        }
+
+        /// <summary>Set once the expiry prompt is on screen; cleared by the next sign-in.</summary>
+        private static bool _expiredPromptShown;
+
+        /// <summary>
+        /// Ask the user to sign in again. At startup the session check can finish before
+        /// the main window is up, so it waits for the window instead of dropping the prompt.
+        /// </summary>
+        private static void ShowSessionExpiredPrompt(int attempt = 0)
+        {
+            if (_expiredPromptShown) return;
+
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (_expiredPromptShown || IsAuthenticated) return;
+
+                if (Application.Current.MainWindow is not RustPlusDesk.Views.MainWindow { IsLoaded: true } mainWin)
+                {
+                    if (attempt < 60)
+                        _ = Task.Delay(TimeSpan.FromSeconds(1))
+                            .ContinueWith(_ => ShowSessionExpiredPrompt(attempt + 1));
+                    return;
+                }
+
+                _expiredPromptShown = true;
+                try
+                {
+                    mainWin.UpdateCloudSyncUI();
+                    new RustPlusDesk.Views.Windows.CloudLoginPromptWindow(mainWin, sessionExpired: true) { Owner = mainWin }
+                        .ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    SupabaseAuthManager.AppendLog($"[Cloud/Auth] Could not show the sign-in prompt: {ex.Message}");
+                }
+            }));
+        }
+
+        /// <summary>
+        /// An API call other than the session check was refused with 401. Drop the cached
+        /// validation so the next keep-alive tick (within a minute) asks the server again.
+        /// It only resets the timestamp: calling the check from inside an API call would
+        /// deadlock, since the check itself makes an API call under its lock.
+        /// </summary>
+        internal static void InvalidateValidation(string? token)
+        {
+            if (!string.IsNullOrEmpty(token) && token == CurrentToken)
+                _lastValidatedUtc = DateTime.MinValue;
+        }
+
         public static void Logout()
         {
             TeamSyncWebSocketService.Shutdown();
@@ -247,6 +307,7 @@ namespace RustPlusDesk.Services.Cloud
                 Persist();
 
                 SupabaseAuthManager.AppendLog($"[Cloud/Auth] Signed in as {CurrentUser?.Email ?? CurrentUser?.Id ?? "user"}.");
+                _expiredPromptShown = false;
                 TeamSyncWebSocketService.Initialize();
                 AuthenticationChanged?.Invoke();
                 _ = CloudConsentService.BackfillLocalConsentsAsync();
