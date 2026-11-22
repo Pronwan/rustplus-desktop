@@ -6549,6 +6549,21 @@ You can find more information on the server&apos;s official website:
   <data name="SocialSectionSupporter" xml:space="preserve">
     <value>Supporter chat</value>
   </data>
+  <data name="SocialSectionChatShort" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="SocialSectionSupporterShort" xml:space="preserve">
+    <value>Supporter</value>
+  </data>
+  <data name="SocialSectionLfgShort" xml:space="preserve">
+    <value>LFG</value>
+  </data>
+  <data name="LfgTabTeamsShort" xml:space="preserve">
+    <value>Teams</value>
+  </data>
+  <data name="LfgTabPlayersShort" xml:space="preserve">
+    <value>Players</value>
+  </data>
   <data name="SocialSectionInbox" xml:space="preserve">
     <value>Inbox</value>
   </data>
@@ -6886,13 +6901,13 @@ You can find more information on the server&apos;s official website:
     <value>No tickets yet.</value>
   </data>
   <data name="SupportCategory" xml:space="preserve">
-    <value>CATEGORY</value>
+    <value>Category</value>
   </data>
   <data name="SupportSubject" xml:space="preserve">
-    <value>SUBJECT</value>
+    <value>Subject</value>
   </data>
   <data name="SupportDetails" xml:space="preserve">
-    <value>DETAILS</value>
+    <value>Details</value>
   </data>
   <data name="SupportRemove" xml:space="preserve">
     <value>Remove</value>
@@ -6962,6 +6977,60 @@ You can find more information on the server&apos;s official website:
   </data>
   <data name="SupportAttachmentTooLarge" xml:space="preserve">
     <value>Not attached — {0} is larger than {1} MB.</value>
+  </data>
+  <data name="SupportNoTicketsBody" xml:space="preserve">
+    <value>When you contact support, your conversations show up here.</value>
+  </data>
+  <data name="SupportSelectTicketTitle" xml:space="preserve">
+    <value>Select a ticket</value>
+  </data>
+  <data name="SupportSelectTicketBody" xml:space="preserve">
+    <value>Choose a conversation from the list to read and reply.</value>
+  </data>
+  <data name="SupportLoadingTickets" xml:space="preserve">
+    <value>Loading tickets…</value>
+  </data>
+  <data name="SupportTicketLoadFailed" xml:space="preserve">
+    <value>Couldn&apos;t open this ticket</value>
+  </data>
+  <data name="SupportTicketLoadFailedBody" xml:space="preserve">
+    <value>Check your connection and try again.</value>
+  </data>
+  <data name="SupportRetry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="SupportStaffBadge" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="SupportYou" xml:space="preserve">
+    <value>You</value>
+  </data>
+  <data name="SupportNewTicketHint" xml:space="preserve">
+    <value>Tell us what&apos;s going on. We&apos;ll reply right here.</value>
+  </data>
+  <data name="SupportSubjectHelp" xml:space="preserve">
+    <value>A short summary, like &quot;Smart alarm notifications stopped&quot;.</value>
+  </data>
+  <data name="SupportDetailsHelp" xml:space="preserve">
+    <value>What happened, what you expected, and the steps to make it happen again.</value>
+  </data>
+  <data name="SupportSubjectRequired" xml:space="preserve">
+    <value>Add a subject.</value>
+  </data>
+  <data name="SupportDetailsRequired" xml:space="preserve">
+    <value>Add a few details.</value>
+  </data>
+  <data name="SupportAttachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="SupportAttachHint" xml:space="preserve">
+    <value>Screenshots, logs or crash dumps, up to 10 MB each.</value>
+  </data>
+  <data name="SupportSending" xml:space="preserve">
+    <value>Sending…</value>
+  </data>
+  <data name="SupportSendHint" xml:space="preserve">
+    <value>Ctrl+Enter to send</value>
   </data>
   <data name="PurgeOrphanedCloudDataNothingToDo" xml:space="preserve">
     <value>Nothing to clean up — every server with cloud data is still in your list.</value>
@@ -9049,5 +9118,182 @@ The answer itself was unaffected. If the model name is the problem, change it un
   </data>
   <data name="AgoDaysHours" xml:space="preserve">
     <value>{0}d {1}h</value>
+  </data>
+  <data name="FriendsSectionRequests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="FriendsSectionOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="FriendsOnlineNow" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="FriendsPlayingOn" xml:space="preserve">
+    <value>Playing on {0}</value>
+  </data>
+  <data name="FriendsPlayingOnTeam" xml:space="preserve">
+    <value>Playing on {0} · team of {1}</value>
+  </data>
+  <data name="FriendsRequestIncoming" xml:space="preserve">
+    <value>Wants to be your friend</value>
+  </data>
+  <data name="FriendsRequestOutgoing" xml:space="preserve">
+    <value>Waiting for them to answer</value>
+  </data>
+  <data name="FriendsSummary" xml:space="preserve">
+    <value>{0} online · {1} friends</value>
+  </data>
+  <data name="FriendsBack" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="FriendsMore" xml:space="preserve">
+    <value>More actions</value>
+  </data>
+  <data name="FriendsViewProfile" xml:space="preserve">
+    <value>View profile</value>
+  </data>
+  <data name="FriendsReport" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="FriendsRemoveAction" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="FriendsRemoveConfirm" xml:space="preserve">
+    <value>Remove {0} from your friends?</value>
+  </data>
+  <data name="FriendsBlockConfirm" xml:space="preserve">
+    <value>Block {0}?</value>
+  </data>
+  <data name="FriendsBlockAction" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="FriendsBlockAlsoRemove" xml:space="preserve">
+    <value>Also remove from my friends</value>
+  </data>
+  <data name="FriendsConfirmCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FriendsLoading" xml:space="preserve">
+    <value>Loading friends…</value>
+  </data>
+  <data name="FriendsLoadError" xml:space="preserve">
+    <value>Couldn’t load your friends</value>
+  </data>
+  <data name="FriendsLoadErrorShort" xml:space="preserve">
+    <value>Couldn’t refresh the list.</value>
+  </data>
+  <data name="FriendsLoadErrorBody" xml:space="preserve">
+    <value>Check your connection and try again.</value>
+  </data>
+  <data name="FriendsRetry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="FriendsEmptyTitle" xml:space="preserve">
+    <value>No friends yet</value>
+  </data>
+  <data name="FriendsEmptyBody" xml:space="preserve">
+    <value>Add people you play with to see when they are online and message them directly.</value>
+  </data>
+  <data name="FriendsNoSearchBody" xml:space="preserve">
+    <value>Try a different name, Steam ID or server.</value>
+  </data>
+  <data name="FriendsAddChange" xml:space="preserve">
+    <value>Choose someone else</value>
+  </data>
+  <data name="FriendsAddInputLabel" xml:space="preserve">
+    <value>Steam ID or profile link</value>
+  </data>
+  <data name="FriendsAddInputPlaceholder" xml:space="preserve">
+    <value>7656119… or steamcommunity.com/profiles/…</value>
+  </data>
+  <data name="FriendsAddHint" xml:space="preserve">
+    <value>Names are not unique, so friends are added by Steam ID. Paste the 17-digit number or a steamcommunity.com/profiles link.</value>
+  </data>
+  <data name="FriendsAddValid" xml:space="preserve">
+    <value>Looks like a valid Steam ID.</value>
+  </data>
+  <data name="FriendsAddDigits" xml:space="preserve">
+    <value>{0} of 17 digits</value>
+  </data>
+  <data name="FriendsAddVanity" xml:space="preserve">
+    <value>Custom profile links can’t be looked up here. Open the profile in Steam and copy the 17-digit number or the /profiles/ link from its address bar.</value>
+  </data>
+  <data name="FriendsAddInvalid" xml:space="preserve">
+    <value>That doesn’t look like a Steam ID or profile link.</value>
+  </data>
+  <data name="FriendsAddSteamProfile" xml:space="preserve">
+    <value>Steam profile</value>
+  </data>
+  <data name="FriendsAddSuggestions" xml:space="preserve">
+    <value>People you’ve talked to</value>
+  </data>
+  <data name="FriendsAddMessageLabel" xml:space="preserve">
+    <value>Introduction</value>
+  </data>
+  <data name="FriendsAddMessageHelp" xml:space="preserve">
+    <value>Required. It is the only message they get with your request.</value>
+  </data>
+  <data name="FriendsAddSentTitle" xml:space="preserve">
+    <value>Request sent</value>
+  </data>
+  <data name="FriendsAddAnother" xml:space="preserve">
+    <value>Add another</value>
+  </data>
+  <data name="FriendsAddDone" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="FriendsErrorSelf" xml:space="preserve">
+    <value>That is your own Steam ID.</value>
+  </data>
+  <data name="FriendsSuggestFromMessages" xml:space="preserve">
+    <value>From your messages</value>
+  </data>
+  <data name="FriendsSuggestFromRoom" xml:space="preserve">
+    <value>From the public room</value>
+  </data>
+  <data name="FriendsActionFailed" xml:space="preserve">
+    <value>That didn’t go through.</value>
+  </data>
+  <data name="FriendsAccepted" xml:space="preserve">
+    <value>You and {0} are now friends.</value>
+  </data>
+  <data name="FriendsDeclined" xml:space="preserve">
+    <value>Request declined.</value>
+  </data>
+  <data name="FriendsWithdrawn" xml:space="preserve">
+    <value>Request cancelled.</value>
+  </data>
+  <data name="FriendsRemoved" xml:space="preserve">
+    <value>{0} was removed from your friends.</value>
+  </data>
+  <data name="FriendsBlockedToast" xml:space="preserve">
+    <value>{0} blocked.</value>
+  </data>
+  <data name="FriendsUnblocked" xml:space="preserve">
+    <value>{0} unblocked.</value>
+  </data>
+  <data name="FriendsUndo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="FriendsDismiss" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="BlocksSearchPlaceholder" xml:space="preserve">
+    <value>Search blocked players...</value>
+  </data>
+  <data name="BlocksEmptyTitle" xml:space="preserve">
+    <value>No blocked players</value>
+  </data>
+  <data name="BlocksNoMatch" xml:space="preserve">
+    <value>No blocked player matches that.</value>
+  </data>
+  <data name="BlocksLoading" xml:space="preserve">
+    <value>Loading blocked players…</value>
+  </data>
+  <data name="BlocksLoadError" xml:space="preserve">
+    <value>Couldn’t load your block list</value>
+  </data>
+  <data name="BlocksCount" xml:space="preserve">
+    <value>{0} blocked</value>
   </data>
 </root>

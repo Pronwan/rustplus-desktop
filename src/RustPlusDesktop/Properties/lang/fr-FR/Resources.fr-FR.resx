@@ -6634,13 +6634,13 @@ Vous pouvez trouver plus d'informations sur le site officiel du serveur :
     <value>Aucun ticket pour l’instant.</value>
   </data>
   <data name="SupportCategory" xml:space="preserve">
-    <value>CATÉGORIE</value>
+    <value>Catégorie</value>
   </data>
   <data name="SupportSubject" xml:space="preserve">
-    <value>OBJET</value>
+    <value>Objet</value>
   </data>
   <data name="SupportDetails" xml:space="preserve">
-    <value>DÉTAILS</value>
+    <value>Détails</value>
   </data>
   <data name="SupportRemove" xml:space="preserve">
     <value>Retirer</value>

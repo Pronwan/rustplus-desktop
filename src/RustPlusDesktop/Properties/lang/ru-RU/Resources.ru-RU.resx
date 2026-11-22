@@ -6634,13 +6634,13 @@ Rust+ Desktop регистрирует локальное приложение �
     <value>Пока нет обращений.</value>
   </data>
   <data name="SupportCategory" xml:space="preserve">
-    <value>КАТЕГОРИЯ</value>
+    <value>Категория</value>
   </data>
   <data name="SupportSubject" xml:space="preserve">
-    <value>ТЕМА</value>
+    <value>Тема</value>
   </data>
   <data name="SupportDetails" xml:space="preserve">
-    <value>ПОДРОБНОСТИ</value>
+    <value>Подробности</value>
   </data>
   <data name="SupportRemove" xml:space="preserve">
     <value>Убрать</value>

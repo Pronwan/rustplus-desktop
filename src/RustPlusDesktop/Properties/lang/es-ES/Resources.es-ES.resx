@@ -6634,13 +6634,13 @@ Puedes encontrar más información en el sitio web oficial del servidor:
     <value>Aún no hay tickets.</value>
   </data>
   <data name="SupportCategory" xml:space="preserve">
-    <value>CATEGORÍA</value>
+    <value>Categoría</value>
   </data>
   <data name="SupportSubject" xml:space="preserve">
-    <value>ASUNTO</value>
+    <value>Asunto</value>
   </data>
   <data name="SupportDetails" xml:space="preserve">
-    <value>DETALLES</value>
+    <value>Detalles</value>
   </data>
   <data name="SupportRemove" xml:space="preserve">
     <value>Quitar</value>

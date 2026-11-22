@@ -6739,13 +6739,13 @@ Weitere Informationen finden Sie auf der offiziellen Website des Servers:
     <value>Noch keine Tickets.</value>
   </data>
   <data name="SupportCategory" xml:space="preserve">
-    <value>KATEGORIE</value>
+    <value>Kategorie</value>
   </data>
   <data name="SupportSubject" xml:space="preserve">
-    <value>BETREFF</value>
+    <value>Betreff</value>
   </data>
   <data name="SupportDetails" xml:space="preserve">
-    <value>DETAILS</value>
+    <value>Details</value>
   </data>
   <data name="SupportRemove" xml:space="preserve">
     <value>Entfernen</value>
