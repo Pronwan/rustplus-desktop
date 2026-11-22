@@ -30,21 +30,10 @@ public partial class SupportOverlay : UserControl
     /// <summary>Raised with the count of the user's tickets that have unread activity, for the rail badge.</summary>
     public event Action<int>? TicketsUnreadChanged;
 
-    private static readonly Brush CardBrush = MakeBrush("#FF141820");
-    private static readonly Brush CardBorderBrush = MakeBrush("#22FFFFFF");
-    private static readonly Brush StaffBrush = MakeBrush("#FF162438");
-    private static readonly Brush StaffBorderBrush = MakeBrush("#354B78");
-    private static readonly Brush InternalBrush = MakeBrush("#FF2D2214");
-    private static readonly Brush InternalBorderBrush = MakeBrush("#45E8A33C");
-
-    private static readonly Brush UserBadgeBg = MakeBrush("#1CFFFFFF");
-    private static readonly Brush UserBadgeFg = MakeBrush("#D0D8E4");
-    private static readonly Brush StaffBadgeBg = MakeBrush("#2260CDFF");
-    private static readonly Brush StaffBadgeFg = MakeBrush("#60CDFF");
-    private static readonly Brush InternalBadgeBg = MakeBrush("#30E8A33C");
-    private static readonly Brush InternalBadgeFg = MakeBrush("#FFBE5C");
-
     private static readonly IReadOnlyList<string> FallbackCategories = new[] { "appeal", "bug", "feature", "help", "other" };
+
+    /// <summary>What the conversation side shows. With the list beside it, List means "nothing picked".</summary>
+    private enum PaneView { List, Compose, Thread, ThreadLoading, ThreadError }
 
     private readonly ObservableCollection<TicketVm> _tickets = new();
     private readonly ObservableCollection<MessageVm> _messages = new();
@@ -55,6 +44,16 @@ public partial class SupportOverlay : UserControl
     private AppealableSanction? _appealable;
     private string? _openTicketId;
     private bool _busy;
+
+    private PaneView _view = PaneView.List;
+    private bool _listLoading;
+    private string? _failedTicketId;
+
+    /// <summary>Below this width the composer drops its keyboard hint so attach and send keep their room.</summary>
+    private const double ComposerHintMinWidth = 400;
+
+    /// <summary>Bumped on every open, so a slow answer for a ticket the user has left is dropped.</summary>
+    private int _openVersion;
 
     /// <summary>Paths auto-attached for a bug report, tracked so switching category can drop them.</summary>
     private readonly List<string> _autoDiagnostics = new();
@@ -72,6 +71,11 @@ public partial class SupportOverlay : UserControl
         ThreadMessages.ItemsSource = _messages;
         ComposeAttachments.ItemsSource = _composeAttachments;
         ReplyAttachments.ItemsSource = _replyAttachments;
+
+        _replyAttachments.CollectionChanged += (_, _) => UpdateReplyState();
+        SizeChanged += (_, _) => UpdateReplyHint();
+        ApplyLayout();
+        UpdateReplyState();
     }
 
     /// <summary>Reloads the list and drops the user back on it.</summary>
@@ -85,20 +89,46 @@ public partial class SupportOverlay : UserControl
 
     private async Task LoadTicketsAsync()
     {
-        var rows = await SupportApi.GetTicketsAsync().ConfigureAwait(true);
-        _tickets.Clear();
-        foreach (var t in rows)
-            _tickets.Add(new TicketVm(t));
-        TicketsEmpty.Visibility = _tickets.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        // The spinner only covers a first load; a reload keeps the rows already on screen.
+        if (_tickets.Count == 0) SetListLoading(true);
+        IReadOnlyList<TicketSummary> rows;
+        try
+        {
+            rows = await SupportApi.GetTicketsAsync().ConfigureAwait(true);
+        }
+        finally
+        {
+            SetListLoading(false);
+        }
+        ApplyTickets(rows);
 
         // Keep the rail badge in step whenever the list is (re)loaded - including right after a
         // ticket is opened and marked read, which is when the count should drop.
         TicketsUnreadChanged?.Invoke(rows.Count(t => t.HasUnread));
     }
 
+    private void ApplyTickets(IReadOnlyList<TicketSummary> rows)
+    {
+        _tickets.Clear();
+        foreach (var t in rows)
+            _tickets.Add(new TicketVm(t));
+        ApplyLayout();
+    }
+
+    private void SetListLoading(bool loading)
+    {
+        _listLoading = loading;
+        ApplyLayout();
+    }
+
     private async Task LoadMetaAsync()
     {
         var meta = await SupportApi.GetMetaAsync().ConfigureAwait(true);
+        ApplyMeta(meta);
+    }
+
+    private void ApplyMeta(TicketMeta meta)
+    {
         _categories = meta.Categories.Count > 0 ? meta.Categories : FallbackCategories;
         _appealable = meta.Appealable;
 
@@ -113,25 +143,63 @@ public partial class SupportOverlay : UserControl
 
     // ── View switching ──────────────────────────────────────────────────────
 
-    private void ShowTicketsList()
+    private void ShowTicketsList() => ShowView(PaneView.List);
+
+    private void ShowCompose() => ShowView(PaneView.Compose);
+
+    private void ShowThread() => ShowView(PaneView.Thread);
+
+    private void ShowView(PaneView view)
     {
-        TicketsView.Visibility = Visibility.Visible;
-        ComposeView.Visibility = Visibility.Collapsed;
-        ThreadView.Visibility = Visibility.Collapsed;
+        var changed = view != _view;
+        _view = view;
+        ApplyLayout();
+        if (changed) AnimateIn(ElementFor(view));
     }
 
-    private void ShowCompose()
+    private FrameworkElement ElementFor(PaneView view) => view switch
     {
-        TicketsView.Visibility = Visibility.Collapsed;
-        ComposeView.Visibility = Visibility.Visible;
-        ThreadView.Visibility = Visibility.Collapsed;
-    }
+        PaneView.Compose => ComposeView,
+        PaneView.Thread => ThreadView,
+        PaneView.ThreadLoading => DetailLoading,
+        PaneView.ThreadError => DetailError,
+        _ => TicketsView,
+    };
 
-    private void ShowThread()
+    /// <summary>
+    /// One pane at a time - the sidebar column is too narrow for two: the list, a conversation or
+    /// the form, each with a way back. Also picks which of the list's own states - rows, empty,
+    /// loading - is showing.
+    /// </summary>
+    private void ApplyLayout()
     {
-        TicketsView.Visibility = Visibility.Collapsed;
-        ComposeView.Visibility = Visibility.Collapsed;
-        ThreadView.Visibility = Visibility.Visible;
+        var empty = !_listLoading && _tickets.Count == 0;
+
+        TicketsView.Visibility = _view == PaneView.List ? Visibility.Visible : Visibility.Collapsed;
+        TicketsScroll.Visibility = _tickets.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        TicketsLoading.Visibility = _listLoading && _tickets.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        TicketsEmpty.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+
+        ComposeView.Visibility = _view == PaneView.Compose ? Visibility.Visible : Visibility.Collapsed;
+        ThreadView.Visibility = _view == PaneView.Thread ? Visibility.Visible : Visibility.Collapsed;
+        DetailLoading.Visibility = _view == PaneView.ThreadLoading ? Visibility.Visible : Visibility.Collapsed;
+        DetailError.Visibility = _view == PaneView.ThreadError ? Visibility.Visible : Visibility.Collapsed;
+
+        // The empty state carries its own "New ticket" button, and the form is already open in
+        // Compose; the header button would only repeat them.
+        BtnNewTicket.Visibility = (empty && _view == PaneView.List) || _view == PaneView.Compose ? Visibility.Collapsed : Visibility.Visible;
+    }
+    /// <summary>A short fade and rise as a pane comes in. Skipped when Windows animations are off.</summary>
+    private static void AnimateIn(FrameworkElement element)
+    {
+        if (!RustPlusDesk.Helpers.Motion.Enabled) return;
+
+        var duration = RustPlusDesk.Helpers.Motion.For(RustPlusDesk.Helpers.Motion.Normal);
+        var ease = RustPlusDesk.Helpers.Motion.Enter;
+        var shift = new TranslateTransform(0, 8);
+        element.RenderTransform = shift;
+        element.BeginAnimation(OpacityProperty, new System.Windows.Media.Animation.DoubleAnimation(0, 1, duration) { EasingFunction = ease });
+        shift.BeginAnimation(TranslateTransform.YProperty, new System.Windows.Media.Animation.DoubleAnimation(8, 0, duration) { EasingFunction = ease });
     }
 
     // ── Handlers ────────────────────────────────────────────────────────────
@@ -149,7 +217,33 @@ public partial class SupportOverlay : UserControl
         UpdateComposeAttachHint();
         ComposeAppeal.IsChecked = false;
         ComposeError.Visibility = Visibility.Collapsed;
+        SetFieldError(ComposeSubject, ComposeSubjectHelp, ComposeSubjectInvalid, false);
+        SetFieldError(ComposeBody, ComposeBodyHelp, ComposeBodyInvalid, false);
         ShowCompose();
+    }
+
+    /// <summary>
+    /// Shows or clears a field's inline error: the message replaces the helper line under the
+    /// field and the field's border turns to the danger colour.
+    /// </summary>
+    private static void SetFieldError(Control field, FrameworkElement help, FrameworkElement error, bool invalid)
+    {
+        error.Visibility = invalid ? Visibility.Visible : Visibility.Collapsed;
+        help.Visibility = invalid ? Visibility.Collapsed : Visibility.Visible;
+        if (invalid) field.SetResourceReference(BorderBrushProperty, "DangerBrush");
+        else field.ClearValue(BorderBrushProperty);
+    }
+
+    private void ComposeSubject_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (ComposeSubjectInvalid.Visibility == Visibility.Visible && !string.IsNullOrWhiteSpace(ComposeSubject.Text))
+            SetFieldError(ComposeSubject, ComposeSubjectHelp, ComposeSubjectInvalid, false);
+    }
+
+    private void ComposeBody_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (ComposeBodyInvalid.Visibility == Visibility.Visible && !string.IsNullOrWhiteSpace(ComposeBody.Text))
+            SetFieldError(ComposeBody, ComposeBodyHelp, ComposeBodyInvalid, false);
     }
 
     /// <summary>The category slug currently picked, or empty.</summary>
@@ -233,8 +327,11 @@ public partial class SupportOverlay : UserControl
         var body = ComposeBody.Text?.Trim() ?? "";
         if (subject.Length == 0 || body.Length == 0)
         {
-            ComposeError.Text = RustPlusDesk.Helpers.Loc.Text("SupportNeedSubjectAndDetail", "A subject and some detail are needed.");
-            ComposeError.Visibility = Visibility.Visible;
+            // Said at the field that needs it, and focus goes to the first one.
+            SetFieldError(ComposeSubject, ComposeSubjectHelp, ComposeSubjectInvalid, subject.Length == 0);
+            SetFieldError(ComposeBody, ComposeBodyHelp, ComposeBodyInvalid, body.Length == 0);
+            ComposeError.Visibility = Visibility.Collapsed;
+            (subject.Length == 0 ? ComposeSubject : ComposeBody).Focus();
             return;
         }
 
@@ -248,6 +345,8 @@ public partial class SupportOverlay : UserControl
 
         _busy = true;
         BtnComposeSubmit.IsEnabled = false;
+        BtnComposeSubmit.Content = RustPlusDesk.Helpers.Loc.Text("SupportSending", "Sending…");
+        ComposeError.Visibility = Visibility.Collapsed;
         try
         {
             RecordLocalUploads(_composeAttachments);
@@ -266,10 +365,11 @@ public partial class SupportOverlay : UserControl
         {
             _busy = false;
             BtnComposeSubmit.IsEnabled = true;
+            BtnComposeSubmit.SetResourceReference(ContentProperty, "SupportSubmit");
         }
     }
 
-    private async void TicketRow_Click(object sender, MouseButtonEventArgs e)
+    private async void TicketRow_Click(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement fe && fe.Tag is string id)
             await OpenTicketAsync(id).ConfigureAwait(true);
@@ -278,12 +378,52 @@ public partial class SupportOverlay : UserControl
     /// <summary>Opens a ticket's thread. Public so the notification bell can jump straight to one.</summary>
     public async Task OpenTicketAsync(string id)
     {
-        var detail = await SupportApi.GetTicketAsync(id).ConfigureAwait(true);
-        if (detail == null) return;
+        var version = ++_openVersion;
 
+        // Moving to another ticket shows a spinner in its place; re-reading the open one (after a
+        // reply) keeps the thread on screen until the new copy arrives.
+        var switching = _view != PaneView.Thread || _openTicketId != id;
+        if (switching)
+        {
+            _openTicketId = id;
+            ShowView(PaneView.ThreadLoading);
+        }
+
+        var detail = await SupportApi.GetTicketAsync(id).ConfigureAwait(true);
+        if (version != _openVersion) return; // the user has moved on
+
+        if (detail == null)
+        {
+            if (switching) ShowThreadError(id);
+            return;
+        }
+
+        ApplyTicketDetail(id, detail);
+        await SupportApi.MarkTicketReadAsync(id).ConfigureAwait(true);
+        await LoadTicketsAsync().ConfigureAwait(true);
+    }
+
+    private void ShowThreadError(string id)
+    {
+        _failedTicketId = id;
+        _openTicketId = id;
+        ShowView(PaneView.ThreadError);
+    }
+
+    private async void ThreadRetry_Click(object sender, RoutedEventArgs e)
+    {
+        if (_failedTicketId is { } id)
+            await OpenTicketAsync(id).ConfigureAwait(true);
+    }
+
+    private void ApplyTicketDetail(string id, TicketDetail detail)
+    {
         _openTicketId = id;
         ThreadSubject.Text = detail.Subject;
-        ThreadStatus.Text = $"{TicketVm.CategoryLabelFor(detail.Category)} · {TicketVm.StatusLabelFor(detail.Status)}";
+        ThreadSubject.ToolTip = detail.Subject; // the header shows at most two lines
+        ThreadHeader.DataContext = new TicketVm(new TicketSummary(
+            detail.Id, detail.Category, detail.Status, detail.Resolution, detail.Subject, false, detail.CreatedAt));
+        ThreadStatus.Text = TicketVm.CategoryLabelFor(detail.Category);
 
         // Before the thumbnails start loading, point any attachment this client uploaded at its
         // local file, so its image renders inline without a server fetch.
@@ -302,7 +442,7 @@ public partial class SupportOverlay : UserControl
 
         // Resolved or closed locks the thread for the filer - the conversation is over; more to
         // say is a new ticket.
-        var locked = detail.Status is "closed" or "resolved";
+        var locked = TicketPresentation.IsLocked(detail.Status);
         ReplyBar.Visibility = locked ? Visibility.Collapsed : Visibility.Visible;
         ThreadClosed.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
         ThreadClosed.Text = detail.Status == "resolved"
@@ -310,10 +450,12 @@ public partial class SupportOverlay : UserControl
             : RustPlusDesk.Helpers.Loc.Text("SupportTicketClosed", "This ticket is closed.");
         ReplyBox.Text = "";
         _replyAttachments.Clear();
+        SetReplyError(null);
 
         ShowThread();
-        await SupportApi.MarkTicketReadAsync(id).ConfigureAwait(true);
-        await LoadTicketsAsync().ConfigureAwait(true);
+
+        // The newest message is the one to read: land on it once the thread has laid out.
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() => ThreadScroll.ScrollToEnd()));
     }
 
     private void ThreadBack_Click(object sender, RoutedEventArgs e) => ShowTicketsList();
@@ -325,7 +467,41 @@ public partial class SupportOverlay : UserControl
         foreach (var path in accepted)
             _replyAttachments.Add(new AttachmentPickVm(path));
 
-        if (rejected.Count > 0) ThreadStatus.Text = TooLargeMessage(rejected);
+        SetReplyError(rejected.Count > 0 ? TooLargeMessage(rejected) : null);
+    }
+
+    /// <summary>A problem with the reply, shown inside the composer; null clears it.</summary>
+    private void SetReplyError(string? message)
+    {
+        ReplyError.Text = message ?? "";
+        ReplyError.Visibility = message == null ? Visibility.Collapsed : Visibility.Visible;
+        UpdateReplyHint();
+    }
+
+    /// <summary>The Ctrl+Enter hint shows only when there is no error to show and room to spare.</summary>
+    private void UpdateReplyHint()
+        => ReplyHint.Visibility = ReplyError.Visibility != Visibility.Visible && ActualWidth >= ComposerHintMinWidth
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+    private void ReplyBox_TextChanged(object sender, TextChangedEventArgs e) => UpdateReplyState();
+
+    /// <summary>Send is only live with something to send, and not while a reply is going out.</summary>
+    private void UpdateReplyState()
+    {
+        var hasContent = !string.IsNullOrWhiteSpace(ReplyBox.Text) || _replyAttachments.Count > 0;
+        BtnReplySend.IsEnabled = !_busy && hasContent;
+        ReplyPlaceholder.Visibility = string.IsNullOrEmpty(ReplyBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>Ctrl+Enter sends; Enter alone starts a new line.</summary>
+    private void ReplyBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            e.Handled = true;
+            if (BtnReplySend.IsEnabled) ReplySend_Click(BtnReplySend, new RoutedEventArgs());
+        }
     }
 
     private void RemoveReplyAttachment_Click(object sender, RoutedEventArgs e)
@@ -342,6 +518,9 @@ public partial class SupportOverlay : UserControl
 
         _busy = true;
         BtnReplySend.IsEnabled = false;
+        BtnReplySend.Content = RustPlusDesk.Helpers.Loc.Text("SupportSending", "Sending…");
+        ReplyBox.IsReadOnly = true;
+        SetReplyError(null);
         try
         {
             RecordLocalUploads(_replyAttachments);
@@ -353,11 +532,17 @@ public partial class SupportOverlay : UserControl
                 _replyAttachments.Clear();
                 await OpenTicketAsync(_openTicketId).ConfigureAwait(true);
             }
+            else
+            {
+                SetReplyError(RustPlusDesk.Helpers.Loc.Text("SupportSendFailed", "That could not be sent. Try again in a moment."));
+            }
         }
         finally
         {
             _busy = false;
-            BtnReplySend.IsEnabled = true;
+            ReplyBox.IsReadOnly = false;
+            BtnReplySend.SetResourceReference(ContentProperty, "SupportSend");
+            UpdateReplyState();
         }
     }
 
@@ -494,13 +679,6 @@ public partial class SupportOverlay : UserControl
                 SupportApi.SeedAttachmentCache(a.Id, a.Name, localPath);
     }
 
-    private static Brush MakeBrush(string hex)
-    {
-        var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!;
-        brush.Freeze();
-        return brush;
-    }
-
     private static bool IsImageMime(string? mime) =>
         mime != null && (mime.StartsWith("image/", StringComparison.OrdinalIgnoreCase) || mime.Contains("png") || mime.Contains("jpeg") || mime.Contains("webp"));
 
@@ -599,55 +777,41 @@ public partial class SupportOverlay : UserControl
 
     // ── View models ─────────────────────────────────────────────────────────
 
-    // Status palette: each state reads at a glance with clean translucent tints.
-    private static readonly Brush StatusOpenBg = MakeBrush("#223B82F6");
-    private static readonly Brush StatusOpenFg = MakeBrush("#FF60A5FA");
-    private static readonly Brush StatusProgBg = MakeBrush("#25F59E0B");
-    private static readonly Brush StatusProgFg = MakeBrush("#FFFBBF24");
-    private static readonly Brush StatusWaitBg = MakeBrush("#25A855F7");
-    private static readonly Brush StatusWaitFg = MakeBrush("#FFC084FC");
-    private static readonly Brush StatusDoneBg = MakeBrush("#2210B981");
-    private static readonly Brush StatusDoneFg = MakeBrush("#FF34D399");
-    private static readonly Brush StatusClosedBg = MakeBrush("#14FFFFFF");
-    private static readonly Brush StatusClosedFg = MakeBrush("#FF94A3B8");
-
     public sealed class TicketVm
     {
         public string Id { get; }
         public string Subject { get; }
         public string CategoryLabel { get; }
         public string StatusLabel { get; }
-        public Brush StatusBackground { get; }
-        public Brush StatusForeground { get; }
+
+        /// <summary>The status pill's colour family (see <see cref="TicketTone"/>), as text for XAML triggers.</summary>
+        public string Tone { get; }
+
         public string When { get; }
+        public string WhenFull { get; }
+        public bool IsUnread { get; }
         public Visibility UnreadVisibility { get; }
 
-        /// <summary>
-        /// Short, stable tag from the ticket id ("#3F9A1C"). Subjects are free text and often
-        /// repeat ("Help me"), so the list needs something that tells two tickets apart. Taken
-        /// from the end of the id: ids are time-ordered, so tickets opened together share a prefix.
-        /// </summary>
+        /// <summary>Short, stable tag from the ticket id ("#3F9A1C"); see <see cref="TicketPresentation.Reference"/>.</summary>
         public string Reference { get; }
+
+        /// <summary>What a screen reader announces for the row.</summary>
+        public string AccessibleName { get; }
 
         public TicketVm(TicketSummary t)
         {
             Id = t.Id;
             Subject = t.Subject;
-            var idChars = new string((t.Id ?? "").Where(char.IsLetterOrDigit).TakeLast(6).ToArray());
-            Reference = idChars.Length == 0 ? "" : "#" + idChars.ToUpperInvariant();
+            Reference = TicketPresentation.Reference(t.Id);
             CategoryLabel = CategoryLabelFor(t.Category);
             StatusLabel = StatusLabelFor(t.Status);
-            (StatusBackground, StatusForeground) = t.Status switch
-            {
-                "open" => (StatusOpenBg, StatusOpenFg),
-                "in_progress" => (StatusProgBg, StatusProgFg),
-                "awaiting_user" => (StatusWaitBg, StatusWaitFg),
-                "resolved" => (StatusDoneBg, StatusDoneFg),
-                "closed" => (StatusClosedBg, StatusClosedFg),
-                _ => (StatusClosedBg, StatusClosedFg),
-            };
-            When = t.LastActivityAt?.LocalDateTime.ToString("g") ?? "";
+            Tone = TicketPresentation.ToneFor(t.Status).ToString();
+            var now = DateTimeOffset.Now;
+            When = TicketPresentation.ListTime(t.LastActivityAt, now, System.Globalization.CultureInfo.CurrentUICulture);
+            WhenFull = TicketPresentation.FullTime(t.LastActivityAt, now, System.Globalization.CultureInfo.CurrentUICulture);
+            IsUnread = t.HasUnread;
             UnreadVisibility = t.HasUnread ? Visibility.Visible : Visibility.Collapsed;
+            AccessibleName = string.Join(", ", new[] { Subject, StatusLabel, CategoryLabel, Reference, When }.Where(s => !string.IsNullOrEmpty(s)));
         }
 
         public static string CategoryLabelFor(string c) => c switch
@@ -675,46 +839,39 @@ public partial class SupportOverlay : UserControl
         public string Author { get; }
         public string Body { get; }
         public string When { get; }
-        public Brush Background { get; }
-        public Brush MessageBorderBrush { get; }
-        public Brush BadgeBackground { get; }
-        public Brush BadgeForeground { get; }
+        public string WhenFull { get; }
+
+        /// <summary>"user", "staff" or "internal": picks the side and surface in the thread.</summary>
+        public string Role { get; }
+
         public Wpf.Ui.Controls.SymbolRegular BadgeSymbol { get; }
         public Visibility StaffTagVisibility { get; }
         public Visibility BodyVisibility { get; }
         public ObservableCollection<MessageAttachmentVm> Attachments { get; } = new();
+        public Visibility AttachmentsVisibility => Attachments.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         public MessageVm(TicketMessage m, string ticketId)
         {
             var isInternal = m.Kind == "internal";
             Author = isInternal ? (m.AuthorName ?? "Staff") + " · internal" : (m.AuthorName ?? "Staff");
             Body = m.Body;
-            When = m.CreatedAt?.LocalDateTime.ToString("g") ?? "";
+            (When, WhenFull) = Times(m.CreatedAt);
 
             if (isInternal)
             {
-                Background = InternalBrush;
-                MessageBorderBrush = InternalBorderBrush;
-                BadgeBackground = InternalBadgeBg;
-                BadgeForeground = InternalBadgeFg;
+                Role = "internal";
                 BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.LockClosed24;
                 StaffTagVisibility = Visibility.Collapsed;
             }
             else if (m.IsStaff)
             {
-                Background = StaffBrush;
-                MessageBorderBrush = StaffBorderBrush;
-                BadgeBackground = StaffBadgeBg;
-                BadgeForeground = StaffBadgeFg;
+                Role = "staff";
                 BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.ShieldPerson20;
                 StaffTagVisibility = Visibility.Visible;
             }
             else
             {
-                Background = CardBrush;
-                MessageBorderBrush = CardBorderBrush;
-                BadgeBackground = UserBadgeBg;
-                BadgeForeground = UserBadgeFg;
+                Role = "user";
                 BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.Person20;
                 StaffTagVisibility = Visibility.Collapsed;
             }
@@ -740,23 +897,27 @@ public partial class SupportOverlay : UserControl
             }
         }
 
-        private MessageVm(string author, string body, string when)
+        private MessageVm(string author, string body, DateTimeOffset? createdAt)
         {
             Author = author;
             Body = body;
-            When = when;
-            Background = CardBrush;
-            MessageBorderBrush = CardBorderBrush;
-            BadgeBackground = UserBadgeBg;
-            BadgeForeground = UserBadgeFg;
+            (When, WhenFull) = Times(createdAt);
+            Role = "user";
             BadgeSymbol = Wpf.Ui.Controls.SymbolRegular.Person20;
             StaffTagVisibility = Visibility.Collapsed;
             BodyVisibility = Visibility.Visible;
         }
 
+        private static (string Short, string Full) Times(DateTimeOffset? at)
+        {
+            var now = DateTimeOffset.Now;
+            var culture = System.Globalization.CultureInfo.CurrentUICulture;
+            return (TicketPresentation.MessageTime(at, now, culture), TicketPresentation.FullTime(at, now, culture));
+        }
+
         public static MessageVm Original(TicketDetail d, string ticketId)
         {
-            var vm = new MessageVm("You", d.Body, d.CreatedAt?.LocalDateTime.ToString("g") ?? "");
+            var vm = new MessageVm(RustPlusDesk.Helpers.Loc.Text("SupportYou", "You"), d.Body, d.CreatedAt);
             foreach (var a in d.Attachments)
                 vm.Attachments.Add(new MessageAttachmentVm(ticketId, a));
 
