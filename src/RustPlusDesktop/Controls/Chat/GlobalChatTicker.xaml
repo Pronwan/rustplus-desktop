@@ -21,8 +21,8 @@
     -->
     <Border x:Name="Strip"
             Height="30"
-            Background="#12161C"
-            BorderBrush="#1F2430"
+            Background="{DynamicResource FillInset}"
+            BorderBrush="{DynamicResource StrokeSubtle}"
             BorderThickness="0,1,0,0"
             Cursor="Hand"
             MouseLeftButtonUp="Strip_MouseLeftButtonUp">
@@ -48,18 +48,18 @@
                     Margin="0,0,10,0"
                     Padding="6,1"
                     VerticalAlignment="Center"
-                    Background="#1A4CC38A"
-                    BorderBrush="#334CC38A"
+                    Background="{DynamicResource SuccessTintBrush}"
+                    BorderBrush="{DynamicResource StrokeSubtle}"
                     BorderThickness="1"
-                    CornerRadius="7"
+                    CornerRadius="{DynamicResource RadiusControl}"
                     Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <Ellipse Width="6" Height="6" Margin="0,0,5,0" VerticalAlignment="Center" Fill="#4CC38A" />
+                    <Ellipse Width="6" Height="6" Margin="0,0,5,0" VerticalAlignment="Center" Fill="{DynamicResource AccentGreen}" />
                     <TextBlock x:Name="OnlineText"
                                FontSize="{DynamicResource TypeCaption}"
                                FontWeight="SemiBold"
                                VerticalAlignment="Center"
-                               Foreground="#7FDCB0" />
+                               Foreground="{DynamicResource SuccessTextBrush}" />
                 </StackPanel>
             </Border>
 
@@ -82,13 +82,13 @@
                     Margin="10,0,2,0"
                     Padding="6,1"
                     VerticalAlignment="Center"
-                    Background="#FF3FD7FF"
-                    CornerRadius="7"
+                    Background="{DynamicResource Accent}"
+                    CornerRadius="{DynamicResource RadiusControl}"
                     Visibility="Collapsed">
                 <TextBlock x:Name="UnseenText"
-                           FontSize="10"
+                           FontSize="{DynamicResource TypeBadge}"
                            FontWeight="Bold"
-                           Foreground="#FF0A0D14" />
+                           Foreground="{DynamicResource SurfaceDeepBrush}" />
             </Border>
 
             <!--

@@ -1059,8 +1059,8 @@
                             </StackPanel>
                         </Border>
 
-                        <Border x:Name="ServerConnectionPanel" Padding="8,4" Background="{DynamicResource SurfaceAlt}"
-                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="10">
+                        <Border x:Name="ServerConnectionPanel" Padding="10,6" Background="{DynamicResource FillControl}"
+                                BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}">
                             <StackPanel>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -1068,7 +1068,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="SidebarServerName" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+                                    <TextBlock x:Name="SidebarServerName" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"
                                                TextTrimming="CharacterEllipsis" Margin="0,0,8,0" Foreground="{DynamicResource TextPrimary}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -1098,7 +1098,7 @@
                                         <ui:SymbolIcon Symbol="MoreHorizontal24" FontSize="14" />
                                     </ui:Button>
                                 </Grid>
-                        <StackPanel x:Name="PanelServerArea" Visibility="Collapsed">
+                        <StackPanel x:Name="PanelServerArea" Visibility="Collapsed" Margin="0,6,0,0">
 
                         <Grid x:Name="ServerListGrid">
                             <ListBox
@@ -1106,10 +1106,12 @@
                                 tutorials:Tutorial.TargetId="Servers.List"
                                 MinHeight="60"
                                 MaxHeight="170"
-                                Padding="0"
+                                Padding="2"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                Foreground="White"
+                                Foreground="{DynamicResource TextPrimary}"
+                                Background="{DynamicResource FillInset}"
+                                BorderBrush="{DynamicResource StrokeSubtle}"
                                 ItemsSource="{Binding Servers}"
                                 SelectedItem="{Binding Selected, Mode=TwoWay}"
                                 SelectionChanged="ListServers_SelectionChanged">
@@ -1119,7 +1121,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="ListBox">
                                                 <Border x:Name="ServerListSurface" Background="{TemplateBinding Background}"
-                                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource RadiusCard}">
                                                     <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
                                                         <ItemsPresenter />
                                                     </ScrollViewer>
@@ -1150,16 +1152,14 @@
                                                 Text="{Binding Name}"
                                                 TextTrimming="CharacterEllipsis"
                                                 VerticalAlignment="Center"
-                                                Foreground="White" />
+                                                Foreground="{DynamicResource TextPrimary}" />
                                             <!--  A modded server's own upkeep cost or crate time is set.  -->
                                             <Border
                                                 Grid.Column="2"
                                                 Margin="4,0,0,0"
-                                                Padding="4,1"
-                                                Background="#332196F3"
-                                                BorderBrush="#642196F3"
-                                                BorderThickness="1"
-                                                CornerRadius="4"
+                                                Padding="5,1"
+                                                Background="{DynamicResource InfoTintBrush}"
+                                                CornerRadius="{DynamicResource RadiusControl}"
                                                 VerticalAlignment="Center"
                                                 ToolTip="{DynamicResource BadgeModifiedHint}">
                                                 <Border.Style>
@@ -1174,18 +1174,16 @@
                                                 </Border.Style>
                                                 <TextBlock
                                                     Text="{DynamicResource BadgeModified}"
-                                                    FontSize="9.5"
-                                                    FontWeight="Bold"
-                                                    Foreground="#90CAF9" />
+                                                    FontSize="{DynamicResource TypeBadge}"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource InfoBlueBrush}" />
                                             </Border>
                                             <Border
                                                 Grid.Column="1"
                                                 Margin="4,0,0,0"
-                                                Padding="4,1"
-                                                Background="#33EF5350"
-                                                BorderBrush="{DynamicResource DangerBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="4"
+                                                Padding="5,1"
+                                                Background="{DynamicResource DangerTintBrush}"
+                                                CornerRadius="{DynamicResource RadiusControl}"
                                                 VerticalAlignment="Center"
                                                 ToolTip="{DynamicResource StatusAccessDeniedHint}">
                                                 <Border.Style>
@@ -1200,9 +1198,9 @@
                                                 </Border.Style>
                                                 <TextBlock
                                                     Text="{DynamicResource BadgeNeedsRePairing}"
-                                                    FontSize="10"
-                                                    FontWeight="Bold"
-                                                    Foreground="#FF8A80" />
+                                                    FontSize="{DynamicResource TypeBadge}"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StatusDangerText}" />
                                             </Border>
                                         </Grid>
                                     </DataTemplate>
@@ -1212,7 +1210,7 @@
 
                                 <ListBox.ItemContainerStyle>
                                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                                        <Setter Property="Height" Value="28" />
+                                        <Setter Property="Height" Value="30" />
                                         <Setter Property="Margin" Value="0" />
                                         <Setter Property="ContextMenu" Value="{StaticResource ServerCtx}" />
                                     </Style>
@@ -1222,9 +1220,9 @@
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="12"
+                                FontSize="{DynamicResource TypeCaption}"
                                 FontStyle="Italic"
-                                Foreground="{StaticResource TextSubtle}"
+                                Foreground="{DynamicResource TextSubtle}"
                                 IsHitTestVisible="False"
                                 Text="{DynamicResource NoServersPaired}">
                                 <TextBlock.Style>
@@ -1244,7 +1242,7 @@
                         </StackPanel>
 
 
-                                <Grid x:Name="SidebarConnectionRow" Margin="0,2,0,0" tutorials:Tutorial.TargetId="Servers.ConnectionStatus">
+                                <Grid x:Name="SidebarConnectionRow" Margin="0,4,0,0" tutorials:Tutorial.TargetId="Servers.ConnectionStatus">
                                     <Grid.Style>
                                         <Style TargetType="Grid">
                                             <Setter Property="Visibility" Value="Visible" />
@@ -1255,22 +1253,22 @@
                                     </Grid.Style>
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                     <DockPanel VerticalAlignment="Center" Margin="0,0,8,0">
-                                        <Ellipse x:Name="StatusDot" Width="7" Height="7" Margin="0,0,6,0" Fill="{Binding Foreground, ElementName=TxtServerConnectionState}" />
-                                        <TextBlock x:Name="TxtServerConnectionState" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"
+                                        <Ellipse x:Name="StatusDot" Width="7" Height="7" Margin="0,0,7,0" Fill="{Binding Foreground, ElementName=TxtServerConnectionState}" />
+                                        <TextBlock x:Name="TxtServerConnectionState" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" VerticalAlignment="Center"
                                                    TextTrimming="CharacterEllipsis">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
-                                                    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}" /><Setter Property="Text" Value="{DynamicResource StatusDisconnected}" /><Setter Property="Foreground" Value="#EF5350" />
+                                                    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}" /><Setter Property="Text" Value="{DynamicResource StatusDisconnected}" /><Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="ToolTip" Value="{DynamicResource ConnectDevicesOnlyHint}" /><Setter Property="Foreground" Value="#4FC3F7" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="ToolTip" Value="{DynamicResource LoadMapTeam}" /><Setter Property="Foreground" Value="#66BB6A" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FFB454" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource ConnectionReconnecting}" /><Setter Property="Foreground" Value="#FFCA28" /></DataTrigger>
-                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="#FF7043" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusDevicesActive}" /><Setter Property="ToolTip" Value="{DynamicResource ConnectDevicesOnlyHint}" /><Setter Property="Foreground" Value="{DynamicResource Accent}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusFullyConnected}" /><Setter Property="ToolTip" Value="{DynamicResource LoadMapTeam}" /><Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsDeviceSubscribePriming}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusConnecting}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsInitializing}" Value="True"><Setter Property="Text" Value="{DynamicResource StatusInitializing}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="Text" Value="{DynamicResource ConnectionReconnecting}" /><Setter Property="Foreground" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                                        <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Text" Value="{Binding Selected.ConnectionIssueTitle}" /><Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" /><Setter Property="ToolTip" Value="{Binding Selected.ConnectionIssueDescription}" /></DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
@@ -1341,21 +1339,21 @@
                                         </ui:Button>
                                     </StackPanel>
                                 </Grid>
-                                <Border x:Name="ConnectionIssuePanel" Margin="0,6,0,0" Padding="10" CornerRadius="8"
-                                        Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1"
+                                <Border x:Name="ConnectionIssuePanel" Margin="0,6,0,0" Padding="10" CornerRadius="{DynamicResource RadiusCard}"
+                                        Background="{DynamicResource FillInset}" BorderBrush="{DynamicResource StrokeDefault}" BorderThickness="1"
                                         Visibility="{Binding Selected.HasConnectionIssue, Converter={StaticResource BoolToVisibility}}">
                                     <StackPanel>
-                                        <TextBlock Text="{Binding Selected.ConnectionIssueTitle}" FontWeight="SemiBold" Foreground="#FFB454" FontSize="{DynamicResource TypeCaption}" />
+                                        <TextBlock Text="{Binding Selected.ConnectionIssueTitle}" FontWeight="SemiBold" Foreground="{DynamicResource StatusWarning}" FontSize="{DynamicResource TypeCaption}" />
                                         <TextBlock Text="{Binding Selected.ConnectionIssueDescription}" TextWrapping="Wrap" Margin="0,4,0,8" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSubtle}" />
-                                        <ui:Button x:Name="SidebarConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click" Appearance="Secondary" Padding="8,4" HorizontalAlignment="Left">
+                                        <ui:Button x:Name="SidebarConnectionRecoveryButton" Content="{Binding Selected.ConnectionRecoveryAction}" Click="BtnConnectionRecovery_Click" Appearance="Secondary" Padding="10,5" HorizontalAlignment="Left">
                                             <ui:Button.Style><Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}"><Style.Triggers>
                                                 <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="IsEnabled" Value="False" /></DataTrigger>
                                             </Style.Triggers></Style></ui:Button.Style>
                                         </ui:Button>
                                     </StackPanel>
                                 </Border>
-                                                    <Border x:Name="PairingListenerPanel" Margin="0,4,0,0" Padding="0,4,0,0" Background="Transparent"
-                                BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,1,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
+                                <Border x:Name="PairingListenerPanel" Margin="0,4,0,0" Padding="0,4,0,0" Background="Transparent"
+                                        BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,1,0,0" tutorials:Tutorial.TargetId="Servers.PairingService">
                             <Grid x:Name="PairingServiceControls">
                                 <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
@@ -1402,7 +1400,7 @@
                                 </Grid.Resources>
                                 <TextBlock Text="{DynamicResource UiPairingListener}" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextSubtle}" Margin="0,0,8,0" />
                                 <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
-                                    <Ellipse Width="7" Height="7" Margin="0,0,5,0">
+                                    <Ellipse Width="7" Height="7" Margin="0,0,6,0">
                                         <Ellipse.Style><Style TargetType="Ellipse"><Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" /><Style.Triggers>
                                             <DataTrigger Binding="{Binding IsPairingFaulted}" Value="True"><Setter Property="Fill" Value="{DynamicResource DangerBrush}" /></DataTrigger>
                                             <DataTrigger Binding="{Binding IsPairingRunning}" Value="True"><Setter Property="Fill" Value="{DynamicResource SuccessBrush}" /></DataTrigger>
@@ -1410,12 +1408,12 @@
                                         </Style.Triggers></Style></Ellipse.Style>
                                     </Ellipse>
                                     <Grid ToolTip="{DynamicResource UiPairingListenerHelp}">
-                                        <TextBlock Text="{DynamicResource UiListenerRunning}" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource SuccessTextBrush}" TextTrimming="CharacterEllipsis">
+                                        <TextBlock Text="{DynamicResource UiListenerRunning}" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource SuccessTextBrush}" TextTrimming="CharacterEllipsis">
                                             <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers>
                                                 <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding IsPairingRunning}" Value="True" /><Condition Binding="{Binding IsPairingBusy}" Value="False" /><Condition Binding="{Binding IsPairingFaulted}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Visible" /></MultiDataTrigger>
                                             </Style.Triggers></Style></TextBlock.Style>
                                         </TextBlock>
-                                        <TextBlock x:Name="TxtPairingState" Text="{DynamicResource PairingIdle}" FontSize="10" TextTrimming="CharacterEllipsis">
+                                        <TextBlock x:Name="TxtPairingState" Text="{DynamicResource PairingIdle}" FontSize="{DynamicResource TypeCaption}" TextTrimming="CharacterEllipsis">
                                             <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextSubtle}" /><Style.Triggers>
                                                 <MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding IsPairingRunning}" Value="True" /><Condition Binding="{Binding IsPairingBusy}" Value="False" /><Condition Binding="{Binding IsPairingFaulted}" Value="False" /></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Collapsed" /></MultiDataTrigger>
                                                 <DataTrigger Binding="{Binding IsPairingBusy}" Value="True"><Setter Property="Foreground" Value="{DynamicResource WarnOrangeBrush}" /></DataTrigger>
@@ -1798,12 +1796,12 @@
                             x:Name="DevicesActionBar"
                             tutorials:Tutorial.TargetId="Devices.Actions"
                             Margin="0,10,0,0"
-                            Padding="6"
+                            Padding="6,5"
                             DockPanel.Dock="Bottom"
-                            Background="{DynamicResource SurfaceAlt}"
-                            BorderBrush="{DynamicResource CardBorder}"
+                            Background="{DynamicResource FillInset}"
+                            BorderBrush="{DynamicResource StrokeSubtle}"
                             BorderThickness="1"
-                            CornerRadius="8">
+                            CornerRadius="{DynamicResource RadiusCard}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -1820,10 +1818,10 @@
                             <ui:Button
                                 x:Name="BtnHotkeys"
                                 Grid.Column="0"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 Width="34"
                                 Height="34"
-                                Margin="0,0,8,0"
+                                Margin="0,0,6,0"
                                 Padding="4"
                                 HorizontalAlignment="Left"
                                 AutomationProperties.Name="{DynamicResource Hotkeys}"
@@ -1843,7 +1841,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Icon="{ui:SymbolIcon Symbol=Info24, Filled=True}"
-                                Foreground="#e03131"
+                                Foreground="{DynamicResource DangerBrush}"
                                 Visibility="Collapsed"
                                 Click="BtnPremiumInfoDevices_Click"
                                 ToolTip="{DynamicResource PremiumFeatures}" />
@@ -1855,7 +1853,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource ImportDevices}"
                                 Click="BtnDevicesImport_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowDownload24}"
@@ -1867,7 +1865,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource CloudSync}"
                                 Click="BtnDevicesExport_Click"
                                 Icon="{ui:SymbolIcon Symbol=Cloud24}"
@@ -1880,7 +1878,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource UiLogicEngine}"
                                 Click="BtnLogicEngine_Click"
                                 ToolTip="{DynamicResource UiLogicEngine}">
@@ -1908,7 +1906,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource UiDeviceAutomation}"
                                 Click="BtnDeviceAutomation_Click"
                                 ToolTip="{DynamicResource UiDeviceAutomation}">
@@ -1935,7 +1933,7 @@
                                 Height="34"
                                 Margin="0,0,4,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource UiRefreshDeviceStates}"
                                 Click="BtnDeviceRefresh_Click"
                                 Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}"
@@ -1947,7 +1945,7 @@
                                 Height="34"
                                 Margin="0,0,0,0"
                                 Padding="4"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 AutomationProperties.Name="{DynamicResource Delete}"
                                 Click="BtnDeleteDevice_Click"
                                 Icon="{ui:SymbolIcon Symbol=Delete24}"
@@ -1965,9 +1963,9 @@
                                 </ui:Button.Style>
                                 <ui:Button.ContextMenu>
                                     <ContextMenu Style="{StaticResource DarkContextMenu}">
-                                        <MenuItem Click="BtnDeleteAllMissingDevices_Click" Header="Delete all missing devices" Foreground="IndianRed">
+                                        <MenuItem Click="BtnDeleteAllMissingDevices_Click" Header="Delete all missing devices" Foreground="{DynamicResource DangerBrush}">
                                             <MenuItem.Icon>
-                                                <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource DangerBrush}" Width="13" Height="13" />
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>
@@ -1992,9 +1990,9 @@
                                             x:Name="TxtDeviceFilter"
                                             tutorials:Tutorial.TargetId="Devices.Search"
                                             Grid.Column="0"
-                                            Height="30"
+                                            Height="32"
                                             Margin="0,0,8,0"
-                                            Padding="8,0"
+                                            Padding="10,0"
                                             VerticalContentAlignment="Center"
                                             FontSize="{DynamicResource TypeCaption}"
                                             PlaceholderText="{DynamicResource UiSearchDevices}" />
@@ -2003,7 +2001,7 @@
                                             x:Name="CmbDeviceTypeFilter"
                                             tutorials:Tutorial.TargetId="Devices.TypeFilter"
                                             Grid.Column="1"
-                                            Height="30"
+                                            Height="32"
                                             Padding="8,0"
                                             VerticalContentAlignment="Center"
                                             FontSize="{DynamicResource TypeCaption}"
@@ -2019,12 +2017,13 @@
                                         x:Name="ListDevices"
                                         tutorials:Tutorial.TargetId="Devices.List"
                                         Grid.Row="1"
-                                        Margin="-20,0,-20,0"
+                                        Margin="0"
                                         HorizontalContentAlignment="Stretch"
                                         Background="Transparent"
                                         BorderThickness="0"
                                         ItemsSource="{Binding CurrentDevices}"
                                         ScrollViewer.CanContentScroll="False"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         SelectedItemChanged="ListDevices_SelectedItemChanged"
                                         KeyDown="ListDevices_KeyDown"
                                         VirtualizingPanel.IsVirtualizing="False"
@@ -2032,9 +2031,9 @@
 
                                         <TreeView.ContextMenu>
                                             <ContextMenu Opened="ListDevicesContextMenu_Opened" Style="{StaticResource DarkContextMenu}">
-                                                <MenuItem x:Name="MenuListDeleteAllMissing" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="IndianRed">
+                                                <MenuItem x:Name="MenuListDeleteAllMissing" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="{DynamicResource DangerBrush}">
                                                     <MenuItem.Icon>
-                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource DangerBrush}" Width="13" Height="13" />
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
@@ -2053,6 +2052,21 @@
                                                 <Setter Property="Background" Value="Transparent" />
                                                 <Setter Property="BorderThickness" Value="0" />
                                                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="TreeViewItem">
+                                                            <StackPanel>
+                                                                <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="Stretch" />
+                                                                <ItemsPresenter x:Name="ItemsHost" Margin="14,0,0,0" Visibility="Collapsed" />
+                                                            </StackPanel>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsExpanded" Value="True">
+                                                                    <Setter TargetName="ItemsHost" Property="Visibility" Value="Visible" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
                                                 <Setter Property="Visibility">
                                                     <Setter.Value>
                                                         <MultiBinding Converter="{StaticResource DeviceFilterVisibilityConverter}">
@@ -2065,9 +2079,9 @@
                                                 <Style.Resources>
                                                     <!-- Nullify default highlight brushes so our card layout handles highlights -->
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#F2F2F2" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource TextPrimaryColor}" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent" />
-                                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#F2F2F2" />
+                                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{StaticResource TextPrimaryColor}" />
                                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                                                 </Style.Resources>
                                             </Style>
@@ -2091,19 +2105,19 @@
                                                                             Background="Transparent"
                                                                             BorderBrush="Transparent"
                                                                             BorderThickness="1"
-                                                                            CornerRadius="6"
+                                                                            CornerRadius="{DynamicResource RadiusControl}"
                                                                             SnapsToDevicePixels="True">
                                                                         <ContentPresenter x:Name="Content"
                                                                                           HorizontalAlignment="Center"
                                                                                           VerticalAlignment="Center"
-                                                                                          Opacity="0.6"/>
+                                                                                          Opacity="0.65"/>
                                                                     </Border>
                                                                     <ControlTemplate.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource FillControlHover}"/>
                                                                         </Trigger>
                                                                         <Trigger Property="IsChecked" Value="True">
-                                                                            <Setter TargetName="Bd" Property="Background" Value="#1F60CDFF"/>
+                                                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentSelectedFill}"/>
                                                                             <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
                                                                             <Setter TargetName="Content" Property="Opacity" Value="1.0"/>
                                                                         </Trigger>
@@ -2130,9 +2144,9 @@
                                                         x:Name="DeviceRowCard"
                                                         tutorials:Tutorial.TargetId="Devices.Item.FirstAvailable"
                                                         Margin="0,2,0,2"
-                                                        Padding="8,7"
-                                                        CornerRadius="8"
-                                                        HorizontalAlignment="Left">
+                                                        Padding="10,8"
+                                                        CornerRadius="{DynamicResource RadiusCard}"
+                                                        HorizontalAlignment="Stretch">
                                                         <Border.ContextMenu>
                                                             <ContextMenu Opened="DeviceContextMenu_Opened"
                                                                          DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
@@ -2168,60 +2182,51 @@
                                                                     </MenuItem.Style>
                                                                 </MenuItem>
                                                                 <Separator x:Name="SepMissingDevices" Style="{StaticResource DarkSeparator}" Visibility="Collapsed" />
-                                                                <MenuItem x:Name="MenuDeleteMissingDevice" Click="Device_DeleteMissing_Click" Header="{DynamicResource UiDeleteMissingDevice}" Foreground="IndianRed" Visibility="Collapsed">
+                                                                <MenuItem x:Name="MenuDeleteMissingDevice" Click="Device_DeleteMissing_Click" Header="{DynamicResource UiDeleteMissingDevice}" Foreground="{DynamicResource DangerBrush}" Visibility="Collapsed">
                                                                     <MenuItem.Icon>
-                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource DangerBrush}" Width="13" Height="13" />
                                                                     </MenuItem.Icon>
                                                                 </MenuItem>
-                                                                <MenuItem x:Name="MenuDeleteAllMissingDevices" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="IndianRed" Visibility="Collapsed">
+                                                                <MenuItem x:Name="MenuDeleteAllMissingDevices" Click="Device_DeleteAllMissing_Click" Header="Delete all missing devices" Foreground="{DynamicResource DangerBrush}" Visibility="Collapsed">
                                                                     <MenuItem.Icon>
-                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" Width="13" Height="13" />
+                                                                        <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource DangerBrush}" Width="13" Height="13" />
                                                                     </MenuItem.Icon>
                                                                 </MenuItem>
                                                             </ContextMenu>
                                                         </Border.ContextMenu>
-                                                        <Border.Width>
-                                                            <MultiBinding Converter="{StaticResource DeviceTreeItemWidthConverter}" ConverterParameter="36,26,220">
-                                                                <Binding ElementName="ListDevices" Path="ActualWidth" />
-                                                                <Binding RelativeSource="{RelativeSource AncestorType=TreeViewItem}" />
-                                                            </MultiBinding>
-                                                        </Border.Width>
-                                                        <Border.Effect>
-                                                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.45" />
-                                                        </Border.Effect>
                                                         <Border.Style>
                                                             <Style TargetType="Border">
-                                                                <Setter Property="Background" Value="{DynamicResource Surface}" />
-                                                                <Setter Property="BorderBrush" Value="#1A1F26" />
+                                                                <Setter Property="Background" Value="{DynamicResource FillControl}" />
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
                                                                 <Setter Property="BorderThickness" Value="1" />
                                                                 <Style.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="{DynamicResource SurfaceHover}" />
-                                                                        <Setter Property="BorderBrush" Value="#2D3542" />
+                                                                        <Setter Property="Background" Value="{DynamicResource FillControlHover}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource StrokeDefault}" />
                                                                     </Trigger>
                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                        <Setter Property="Opacity" Value="0.65" />
-                                                                        <Setter Property="Background" Value="#121418" />
-                                                                        <Setter Property="BorderBrush" Value="#161A20" />
+                                                                        <Setter Property="Opacity" Value="0.62" />
+                                                                        <Setter Property="Background" Value="{DynamicResource SurfaceMissing}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                        <Setter Property="Background" Value="#14223C" />
-                                                                        <Setter Property="BorderBrush" Value="#1C2D47" />
+                                                                        <Setter Property="Background" Value="{DynamicResource SurfaceGroup}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource StrokeGroup}" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=Tag}" Value="DropInto">
-                                                                        <Setter Property="Background" Value="#263B5B" />
-                                                                        <Setter Property="BorderBrush" Value="#FF60CDFF" />
+                                                                        <Setter Property="Background" Value="{DynamicResource AccentHoverFill}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True">
-                                                                        <Setter Property="Background" Value="#1F60CDFF" />
-                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                                                        <Setter Property="Background" Value="{DynamicResource AccentSelectedFill}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentBorderSubtle}" />
                                                                     </DataTrigger>
                                                                     <MultiDataTrigger>
                                                                         <MultiDataTrigger.Conditions>
                                                                             <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="True" />
                                                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True" />
                                                                         </MultiDataTrigger.Conditions>
-                                                                        <Setter Property="Background" Value="#2D60CDFF" />
+                                                                        <Setter Property="Background" Value="{DynamicResource AccentHoverFill}" />
                                                                         <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
                                                                     </MultiDataTrigger>
                                                                 </Style.Triggers>
@@ -2240,7 +2245,7 @@
                                                                     HorizontalAlignment="Left" 
                                                                     Background="{DynamicResource Accent}" 
                                                                     CornerRadius="1.5" 
-                                                                    Margin="-12,-8,0,-8">
+                                                                    Margin="-10,2,0,2">
                                                                 <Border.Style>
                                                                     <Style TargetType="Border">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -2256,11 +2261,11 @@
                                                             <Border
                                                                 x:Name="DropIntoOverlay"
                                                                 Grid.ColumnSpan="3"
-                                                                Margin="-6,-5,-6,-5"
-                                                                Background="#1660CDFF"
-                                                                BorderBrush="#AA60CDFF"
+                                                                Margin="-8,-6,-8,-6"
+                                                                Background="{DynamicResource AccentSelectedFill}"
+                                                                BorderBrush="{DynamicResource Accent}"
                                                                 BorderThickness="1"
-                                                                CornerRadius="10"
+                                                                CornerRadius="{DynamicResource RadiusCard}"
                                                                 IsHitTestVisible="False">
                                                                 <Border.Style>
                                                                     <Style TargetType="Border">
@@ -2277,15 +2282,12 @@
                                                             <Border
                                                                 x:Name="DropBeforeRail"
                                                                 Grid.ColumnSpan="3"
-                                                                Height="3"
-                                                                Margin="-8,-11,-8,0"
+                                                                Height="2"
+                                                                Margin="-6,-10,-6,0"
                                                                 VerticalAlignment="Top"
                                                                 Background="{DynamicResource Accent}"
-                                                                CornerRadius="2"
+                                                                CornerRadius="1"
                                                                 IsHitTestVisible="False">
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect BlurRadius="10" Color="#60CDFF" Opacity="0.8" ShadowDepth="0" />
-                                                                </Border.Effect>
                                                                 <Border.Style>
                                                                     <Style TargetType="Border">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -2301,15 +2303,12 @@
                                                             <Border
                                                                 x:Name="DropAfterRail"
                                                                 Grid.ColumnSpan="3"
-                                                                Height="3"
-                                                                Margin="-8,0,-8,-11"
+                                                                Height="2"
+                                                                Margin="-6,0,-6,-10"
                                                                 VerticalAlignment="Bottom"
                                                                 Background="{DynamicResource Accent}"
-                                                                CornerRadius="2"
+                                                                CornerRadius="1"
                                                                 IsHitTestVisible="False">
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect BlurRadius="10" Color="#60CDFF" Opacity="0.8" ShadowDepth="0" />
-                                                                </Border.Effect>
                                                                 <Border.Style>
                                                                     <Style TargetType="Border">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -2327,10 +2326,12 @@
                                                                     x:Name="IconBorder"
                                                                     Width="36"
                                                                     Height="36"
-                                                                    Background="#35FFFFFF"
-                                                                    CornerRadius="8"
+                                                                    Background="{DynamicResource FillControlHover}"
+                                                                    BorderBrush="{DynamicResource StrokeSubtle}"
+                                                                    BorderThickness="1"
+                                                                    CornerRadius="{DynamicResource RadiusCard}"
                                                                     Padding="0"
-                                                                    Margin="0,0,8,0"
+                                                                    Margin="0,0,10,0"
                                                                     VerticalAlignment="Center"
                                                                     Cursor="Hand"
                                                                     ToolTip="{DynamicResource UiChangeIcon}"
@@ -2437,11 +2438,9 @@
                                                                     <Border
                                                                         Grid.Column="2"
                                                                         Margin="6,0,0,0"
-                                                                        Padding="5,1"
-                                                                        CornerRadius="3"
-                                                                        Background="#302E9BD6"
-                                                                        BorderBrush="#602E9BD6"
-                                                                        BorderThickness="1"
+                                                                        Padding="6,1"
+                                                                        CornerRadius="{DynamicResource RadiusControl}"
+                                                                        Background="{DynamicResource InfoTintBrush}"
                                                                         VerticalAlignment="Center"
                                                                         ToolTip="{DynamicResource UiBadgeOilRigTooltip}"
                                                                         Visibility="{Binding HasOilRigBadge, Converter={StaticResource Vis}}">
@@ -2449,12 +2448,12 @@
                                                                             Text="{Binding OilRigBadge}"
                                                                             FontSize="{DynamicResource TypeCaption}"
                                                                             FontWeight="SemiBold"
-                                                                            Foreground="#7FD3FF" />
+                                                                            Foreground="{DynamicResource InfoBlueBrush}" />
                                                                     </Border>
                                                                     <ui:SymbolIcon
                                                                         Grid.Column="0"
                                                                         Symbol="Warning20"
-                                                                        Foreground="#F04747"
+                                                                        Foreground="{DynamicResource DangerBrush}"
                                                                         Margin="0,0,6,0"
                                                                         VerticalAlignment="Center">
                                                                         <ui:SymbolIcon.Style>
@@ -2472,7 +2471,7 @@
                                                                         <TextBlock
                                                                             x:Name="TxtDeviceNameView"
                                                                             VerticalAlignment="Center"
-                                                                            FontSize="12"
+                                                                            FontSize="13"
                                                                             FontWeight="SemiBold"
                                                                             Foreground="{DynamicResource TextPrimary}"
                                                                             TextTrimming="CharacterEllipsis"
@@ -2522,55 +2521,56 @@
                                                                 </Grid>
 
                                                                 <WrapPanel Grid.Row="1"
-                                                                           Margin="0,3,0,0"
+                                                                           Margin="0,4,0,0"
                                                                            Orientation="Horizontal">
                                                                     <TextBlock
                                                                         Margin="0,2,8,0"
                                                                         VerticalAlignment="Center"
                                                                         FontSize="{DynamicResource TypeCaption}"
                                                                         Foreground="{DynamicResource TextSubtle}"
+                                                                        Typography.NumeralAlignment="Tabular"
                                                                         Text="{Binding EntityId, StringFormat=#\{0\}}" />
 
                                                                     <Border
                                                                     Margin="0,0,6,0"
-                                                                    Padding="7,2"
+                                                                    Padding="6,1.5"
                                                                     VerticalAlignment="Center"
-                                                                    CornerRadius="7"
+                                                                    CornerRadius="{DynamicResource RadiusControl}"
                                                                     BorderThickness="1">
                                                                     <Border.Style>
                                                                         <Style TargetType="Border">
-                                                                            <Setter Property="Background" Value="#1AFFFFFF" />
-                                                                            <Setter Property="BorderBrush" Value="#1EFFFFFF" />
+                                                                            <Setter Property="Background" Value="{DynamicResource FillControl}" />
+                                                                            <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
                                                                             <Style.Triggers>
                                                                                 <!--  ON / ACTIVE / ONLINE Status (Grün)  -->
                                                                                 <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                    <Setter Property="Background" Value="#1A4EB887" />
-                                                                                    <Setter Property="BorderBrush" Value="#334EB887" />
+                                                                                    <Setter Property="Background" Value="{DynamicResource SuccessTintBrush}" />
+                                                                                    <Setter Property="BorderBrush" Value="Transparent" />
                                                                                 </DataTrigger>
 
                                                                                 <!--  Storage Monitor & Others: Immer grün wenn da  -->
                                                                                 <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                                    <Setter Property="Background" Value="#1A4EB887" />
-                                                                                    <Setter Property="BorderBrush" Value="#334EB887" />
+                                                                                    <Setter Property="Background" Value="{DynamicResource SuccessTintBrush}" />
+                                                                                    <Setter Property="BorderBrush" Value="Transparent" />
                                                                                 </DataTrigger>
 
                                                                                 <!--  MISSING / DISCONNECTED (Rot)  -->
                                                                                 <DataTrigger Binding="{Binding IsMissing}" Value="True">
-                                                                                    <Setter Property="Background" Value="#1AF04747" />
-                                                                                    <Setter Property="BorderBrush" Value="#33F04747" />
+                                                                                    <Setter Property="Background" Value="{DynamicResource DangerTintBrush}" />
+                                                                                    <Setter Property="BorderBrush" Value="Transparent" />
                                                                                 </DataTrigger>
                                                                                 
                                                                                 <!--  Group  -->
                                                                                 <DataTrigger Binding="{Binding IsGroup}" Value="True">
-                                                                                    <Setter Property="Background" Value="#1A60CDFF" />
-                                                                                    <Setter Property="BorderBrush" Value="#3360CDFF" />
+                                                                                    <Setter Property="Background" Value="{DynamicResource AccentTintBrush}" />
+                                                                                    <Setter Property="BorderBrush" Value="Transparent" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </Border.Style>
 
                                                                     <TextBlock
-                                                                        FontSize="10"
+                                                                        FontSize="{DynamicResource TypeBadge}"
                                                                         FontWeight="SemiBold">
                                                                         <TextBlock.Style>
                                                                             <Style TargetType="TextBlock">
@@ -2579,20 +2579,20 @@
                                                                                 <Style.Triggers>
                                                                                     <!--  ON Status colors (Grün)  -->
                                                                                     <DataTrigger Binding="{Binding IsOn}" Value="True">
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </DataTrigger>
                                                                                     <!--  Storage Monitor color  -->
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="StorageMonitor">
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </DataTrigger>
                                                                                     <DataTrigger Binding="{Binding Kind}" Value="Storage Monitor">
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </DataTrigger>
 
                                                                                     <!--  MISSING  -->
                                                                                     <DataTrigger Binding="{Binding IsMissing}" Value="True">
                                                                                         <Setter Property="Text" Value="{DynamicResource Offline}" />
-                                                                                        <Setter Property="Foreground" Value="#F04747" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
                                                                                     </DataTrigger>
 
                                                                                     <!--  Smart Switch  -->
@@ -2608,7 +2608,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource On}" />
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
@@ -2616,7 +2616,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource On}" />
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Smart Alarm  -->
@@ -2632,7 +2632,7 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource Active}" />
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </MultiDataTrigger>
                                                                                     <MultiDataTrigger>
                                                                                         <MultiDataTrigger.Conditions>
@@ -2640,13 +2640,13 @@
                                                                                             <Condition Binding="{Binding IsOn}" Value="True" />
                                                                                         </MultiDataTrigger.Conditions>
                                                                                         <Setter Property="Text" Value="{DynamicResource Active}" />
-                                                                                        <Setter Property="Foreground" Value="#4EB887" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}" />
                                                                                     </MultiDataTrigger>
 
                                                                                     <!--  Group  -->
                                                                                     <DataTrigger Binding="{Binding IsGroup}" Value="True">
                                                                                         <Setter Property="Text" Value="{DynamicResource Group}" />
-                                                                                        <Setter Property="Foreground" Value="#60CDFF" />
+                                                                                        <Setter Property="Foreground" Value="{DynamicResource Accent}" />
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>
@@ -2656,13 +2656,13 @@
 
                                                                     <Border
                                                                         Margin="0,0,6,0"
-                                                                        Padding="6,2"
-                                                                        MaxWidth="112"
+                                                                        Padding="6,1.5"
+                                                                        MaxWidth="118"
                                                                         VerticalAlignment="Center"
-                                                                        Background="#142D6CDF"
-                                                                        BorderBrush="#403B82F6"
+                                                                        Background="{DynamicResource FillControl}"
+                                                                        BorderBrush="{DynamicResource StrokeSubtle}"
                                                                         BorderThickness="1"
-                                                                        CornerRadius="7"
+                                                                        CornerRadius="{DynamicResource RadiusControl}"
                                                                         Cursor="Hand"
                                                                         MouseLeftButtonDown="SwitchCommandPill_MouseLeftButtonDown"
                                                                         ToolTip="{DynamicResource UiDoubleClickToEditCommand}">
@@ -2693,14 +2693,16 @@
                                                                                 </StackPanel.Style>
                                                                                 <TextBlock
                                                                                     Margin="0,0,4,0"
-                                                                                    FontSize="8.5"
-                                                                                    FontWeight="Bold"
-                                                                                    Foreground="#B7C9FF"
+                                                                                    FontSize="{DynamicResource TypeBadge}"
+                                                                                    FontWeight="SemiBold"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Foreground="{DynamicResource Accent}"
                                                                                     Text="{DynamicResource UiCMD}" />
                                                                                 <TextBlock
-                                                                                    FontSize="10"
+                                                                                    FontSize="{DynamicResource TypeBadge}"
                                                                                     FontWeight="SemiBold"
-                                                                                    Foreground="#8AB4FF"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Foreground="{DynamicResource TextSecondary}"
                                                                                     TextTrimming="CharacterEllipsis">
                                                                                     <TextBlock.Text>
                                                                                         <MultiBinding Converter="{StaticResource SwitchCommandDisplayConverter}">
@@ -2719,8 +2721,8 @@
                                                                                 VerticalContentAlignment="Center"
                                                                                 Background="Transparent"
                                                                                 BorderThickness="0"
-                                                                                CaretBrush="#F8FAFC"
-                                                                                Foreground="#E5EDFF"
+                                                                                CaretBrush="{DynamicResource TextPrimary}"
+                                                                                Foreground="{DynamicResource TextPrimary}"
                                                                                 FontSize="{DynamicResource TypeCaption}"
                                                                                 FontWeight="SemiBold"
                                                                                 LostFocus="TxtSwitchCommand_LostFocus"
@@ -2751,13 +2753,13 @@
 
                                                                     <Border
                                                                         Margin="0,0,6,0"
-                                                                        Padding="6,2"
+                                                                        Padding="6,1.5"
                                                                         MaxWidth="138"
                                                                         VerticalAlignment="Center"
-                                                                        Background="#22FACC15"
-                                                                        BorderBrush="#80FACC15"
+                                                                        Background="{DynamicResource FillControl}"
+                                                                        BorderBrush="{DynamicResource StrokeDefault}"
                                                                         BorderThickness="1"
-                                                                        CornerRadius="7">
+                                                                        CornerRadius="{DynamicResource RadiusControl}">
                                                                         <Border.Visibility>
                                                                             <MultiBinding Converter="{StaticResource DeviceHotkeyDisplayConverter}">
                                                                                 <Binding />
@@ -2767,9 +2769,9 @@
                                                                         </Border.Visibility>
                                                                         <StackPanel Orientation="Horizontal">
                                                                             <TextBlock
-                                                                                FontSize="10"
+                                                                                FontSize="{DynamicResource TypeBadge}"
                                                                                 FontWeight="SemiBold"
-                                                                                Foreground="#FDE68A"
+                                                                                Foreground="{DynamicResource StatusWarning}"
                                                                                 TextTrimming="CharacterEllipsis">
                                                                                 <TextBlock.Text>
                                                                                 <MultiBinding Converter="{StaticResource DeviceHotkeyDisplayConverter}">
@@ -3138,8 +3140,9 @@
                                                             <!--  Spalte 3: Toggle NUR für Gruppen  -->
                                                             <ui:Button
                                                                  Grid.Column="2"
-                                                                 Width="60"
-                                                                 Height="22"
+                                                                 MinWidth="60"
+                                                                 Height="26"
+                                                                 Padding="10,0"
                                                                  Margin="8,0,34,0"
                                                                  HorizontalAlignment="Left"
                                                                  VerticalAlignment="Center"
@@ -3149,23 +3152,22 @@
                                                                  <ui:Button.Style>
                                                                      <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                                                          <Setter Property="Visibility" Value="Collapsed" />
-                                                                         <Setter Property="Foreground" Value="White" />
-                                                                         <Setter Property="Background" Value="#D97706" />
-                                                                         <Setter Property="BorderBrush" Value="#D97706" />
-                                                                         <Setter Property="CornerRadius" Value="11" />
-                                                                         <Setter Property="FontSize" Value="10" />
+                                                                         <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+                                                                         <Setter Property="Background" Value="{DynamicResource FillControlHover}" />
+                                                                         <Setter Property="BorderBrush" Value="{DynamicResource StrokeDefault}" />
+                                                                         <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}" />
+                                                                         <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
                                                                          <Setter Property="FontWeight" Value="SemiBold" />
                                                                          <Setter Property="Cursor" Value="Hand" />
                                                                          <Style.Triggers>
                                                                              <Trigger Property="IsMouseOver" Value="True">
-                                                                                 <Setter Property="Background" Value="#F59E0B" />
-                                                                                 <Setter Property="BorderBrush" Value="#F59E0B" />
-                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                                 <Setter Property="Background" Value="{DynamicResource AccentSelectedFill}" />
+                                                                                 <Setter Property="BorderBrush" Value="{DynamicResource AccentBorderSubtle}" />
+                                                                                 <Setter Property="Foreground" Value="{DynamicResource Accent}" />
                                                                              </Trigger>
                                                                              <Trigger Property="IsPressed" Value="True">
-                                                                                 <Setter Property="Background" Value="#B45309" />
-                                                                                 <Setter Property="BorderBrush" Value="#B45309" />
-                                                                                 <Setter Property="Foreground" Value="White" />
+                                                                                 <Setter Property="Background" Value="{DynamicResource AccentHoverFill}" />
+                                                                                 <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
                                                                              </Trigger>
                                                                              <MultiDataTrigger>
                                                                                  <MultiDataTrigger.Conditions>
@@ -3192,8 +3194,8 @@
                                                                     <Style TargetType="ToggleButton">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                                         <Setter Property="Cursor" Value="Hand" />
-                                                                        <Setter Property="Background" Value="#16FFFFFF" />
-                                                                        <Setter Property="BorderBrush" Value="#28FFFFFF" />
+                                                                        <Setter Property="Background" Value="{DynamicResource FillControl}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource StrokeSubtle}" />
                                                                         <Setter Property="BorderThickness" Value="1" />
                                                                         <Setter Property="Foreground" Value="{DynamicResource TextSubtle}" />
                                                                         <Setter Property="Template">
@@ -3204,7 +3206,7 @@
                                                                                         Background="{TemplateBinding Background}"
                                                                                         BorderBrush="{TemplateBinding BorderBrush}"
                                                                                         BorderThickness="{TemplateBinding BorderThickness}"
-                                                                                        CornerRadius="7">
+                                                                                        CornerRadius="{DynamicResource RadiusControl}">
                                                                                         <ui:SymbolIcon
                                                                                             x:Name="ChevronIcon"
                                                                                             HorizontalAlignment="Center"
@@ -3215,15 +3217,15 @@
                                                                                     </Border>
                                                                                     <ControlTemplate.Triggers>
                                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="#2860CDFF" />
-                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="#6060CDFF" />
-                                                                                            <Setter Property="Foreground" Value="White" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="{DynamicResource FillControlHover}" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="{DynamicResource StrokeDefault}" />
+                                                                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
                                                                                         </Trigger>
                                                                                         <Trigger Property="IsChecked" Value="True">
                                                                                             <Setter TargetName="ChevronIcon" Property="Symbol" Value="ChevronDown20" />
-                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="#1F60CDFF" />
-                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="#5060CDFF" />
-                                                                                            <Setter Property="Foreground" Value="#FF8DDFFF" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="Background" Value="{DynamicResource AccentSelectedFill}" />
+                                                                                            <Setter TargetName="ChevronSurface" Property="BorderBrush" Value="{DynamicResource AccentBorderSubtle}" />
+                                                                                            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
                                                                                         </Trigger>
                                                                                     </ControlTemplate.Triggers>
                                                                                 </ControlTemplate>
@@ -4773,7 +4775,7 @@
                         x:Name="CompactSidebarRail"
                         Width="64"
                         HorizontalAlignment="Left"
-                        Background="#FF14181D">
+                        Background="{DynamicResource FillInset}">
                         <Grid.Resources>
                             <conv:RandomRustIconConverter x:Key="RandomRustIconConverter" />
                             <Style x:Key="SidebarRailButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
@@ -4886,7 +4888,7 @@
                             Grid.RowSpan="3"
                             Width="1"
                             HorizontalAlignment="Right"
-                            Background="#24FFFFFF" />
+                            Background="{DynamicResource StrokeSubtle}" />
 
                         <ui:Button
                             Grid.Row="0"
@@ -4901,15 +4903,6 @@
                             Click="BtnCloudAccount_Click"
                             ToolTip="{DynamicResource UiAccountMenu}">
                             <Grid Width="44" Height="44">
-                                <Ellipse
-                                    Width="42"
-                                    Height="42"
-                                    Fill="#66E8612C"
-                                    Visibility="{Binding IsPremium, Converter={StaticResource BoolToVisibility}}">
-                                    <Ellipse.Effect>
-                                        <BlurEffect Radius="8" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
                                 <Border
                                     Width="40"
                                     Height="40"
@@ -5440,8 +5433,8 @@
                         tutorials:Tutorial.TargetId="Map.Toolbar"
                         Margin="-12,-12,-12,0"
                         Padding="16,8"
-                        Background="{DynamicResource SurfaceAlt}"
-                        BorderBrush="{DynamicResource CardBorder}"
+                        Background="{DynamicResource Surface}"
+                        BorderBrush="{DynamicResource StrokeSubtle}"
                         BorderThickness="0,0,0,1">
                         <Grid x:Name="MapToolbarLayout" Loaded="MapToolbar_Loaded" SizeChanged="MapToolbar_SizeChanged">
                             <Grid.RowDefinitions>
@@ -5459,10 +5452,10 @@
                                     x:Name="MapQuickFilters"
                                     Margin="0,0,8,0"
                                     VerticalAlignment="Center"
-                                    Background="#AA16181C"
-                                    BorderBrush="#30FFFFFF"
+                                    Background="{DynamicResource FillInset}"
+                                    BorderBrush="{DynamicResource StrokeSubtle}"
                                     BorderThickness="1"
-                                    CornerRadius="7">
+                                    CornerRadius="{DynamicResource RadiusCard}">
                                     <Border.Resources>
                                         <Style x:Key="MapFilterToggle" TargetType="CheckBox" BasedOn="{StaticResource PillToggleButton}">
                                             <Setter Property="MinHeight" Value="32" />
@@ -7051,13 +7044,10 @@
                                 Margin="8,0,0,0"
                                 Padding="2"
                                 VerticalAlignment="Center"
-                                Background="#16191E"
-                                BorderBrush="#3AFFFFFF"
+                                Background="{DynamicResource FillInset}"
+                                BorderBrush="{DynamicResource StrokeSubtle}"
                                 BorderThickness="1"
-                                CornerRadius="8">
-                                <Border.Effect>
-                                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.4" Color="Black" />
-                                </Border.Effect>
+                                CornerRadius="{DynamicResource RadiusCard}">
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <Style TargetType="Button">
@@ -7066,7 +7056,7 @@
                                             <Setter Property="Background" Value="Transparent" />
                                             <Setter Property="BorderBrush" Value="Transparent" />
                                             <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="Foreground" Value="#B8C0CC" />
+                                            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
                                             <Setter Property="FontSize" Value="{DynamicResource TypeCaption}" />
                                             <Setter Property="FontWeight" Value="SemiBold" />
                                             <Setter Property="Cursor" Value="Hand" />
@@ -7094,7 +7084,7 @@
                                                                 <Setter TargetName="Segment" Property="Opacity" Value="0.68" />
                                                             </Trigger>
                                                             <Trigger Property="IsEnabled" Value="False">
-                                                                <Setter Property="Foreground" Value="#68717D" />
+                                                                <Setter Property="Foreground" Value="{DynamicResource TextCaption}" />
                                                                 <Setter TargetName="Segment" Property="Opacity" Value="0.6" />
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
@@ -7109,11 +7099,11 @@
                                         Click="BtnView2D_Click"
                                         ToolTip="{DynamicResource UiShowThe2DMap}"
                                         AutomationProperties.Name="{DynamicResource UiShow2DMap}"
-                                        Background="#2B6278"
-                                        BorderBrush="#557FA5B5"
-                                        Foreground="White"
+                                        Background="{DynamicResource AccentHoverFill}"
+                                        BorderBrush="{DynamicResource Accent}"
+                                        Foreground="{DynamicResource TextPrimary}"
                                         Content="{DynamicResource UiText2D}" />
-                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource WhiteA20}" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource StrokeSubtle}" />
                                     <Button
                                         x:Name="BtnOpen3DMap"
                                         tutorials:Tutorial.TargetId="Map.Open3D"
@@ -7123,7 +7113,7 @@
                                         MouseLeave="BtnOpen3DMap_MouseLeave"
                                         AutomationProperties.Name="{DynamicResource UiShowLocal3DMap}"
                                         Content="3D" />
-                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource WhiteA20}" />
+                                    <Border Width="1" Height="14" VerticalAlignment="Center" Background="{DynamicResource StrokeSubtle}" />
                                     <Button
                                         x:Name="BtnMiniMap"
                                         Width="46"
@@ -7145,17 +7135,7 @@
                                 Click="BtnResetMap_Click"
                                 ToolTip="{DynamicResource UiFitMapToView}"
                                 AutomationProperties.Name="{DynamicResource UiFitMapToView}">
-                                <Path
-                                    Width="16"
-                                    Height="16"
-                                    Data="M9,3 L3,3 L3,9 M15,3 L21,3 L21,9 M21,15 L21,21 L15,21 M9,21 L3,21 L3,15"
-                                    Fill="Transparent"
-                                    Stroke="White"
-                                    StrokeEndLineCap="Round"
-                                    StrokeLineJoin="Round"
-                                    StrokeStartLineCap="Round"
-                                    StrokeThickness="1.8"
-                                    Stretch="Uniform" />
+                                <ui:SymbolIcon Symbol="ArrowMaximize20" FontSize="16" Foreground="{DynamicResource TextPrimary}" />
                             </ui:Button>
 
                             <Border Width="1" Height="18" Margin="8,0,4,0" VerticalAlignment="Center" Background="{DynamicResource CardBorder}" />
@@ -7431,15 +7411,15 @@
                             Visibility="{Binding IsConnectionLoading, Converter={StaticResource BoolToVisibility}}">
                             <Border MaxWidth="360" Margin="24" Padding="28"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Background="#B81B252D" BorderBrush="#405E7480" BorderThickness="1" CornerRadius="16">
+                                    Background="{DynamicResource SurfaceHudElevated}" BorderBrush="{DynamicResource StrokeDefault}" BorderThickness="1" CornerRadius="14">
                                 <StackPanel>
-                                    <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="#F2F5F7"
+                                    <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
                                                Text="{Binding BusyText}" TextAlignment="Center" TextWrapping="Wrap"
                                                AutomationProperties.LiveSetting="Polite" />
-                                    <TextBlock Margin="0,10,0,22" FontSize="13" Foreground="#CBD5DB"
+                                    <TextBlock Margin="0,10,0,22" FontSize="{DynamicResource TypeBody}" Foreground="{DynamicResource TextSecondary}"
                                                Text="{DynamicResource MayTakeAMoment}" TextAlignment="Center" TextWrapping="Wrap" />
                                     <ProgressBar Height="4" IsIndeterminate="True"
-                                                 Foreground="#F45135" Background="#33F2F5F7"
+                                                 Foreground="{DynamicResource Accent}" Background="{DynamicResource TrackBrush}"
                                                  AutomationProperties.Name="Connecting to server" />
                                 </StackPanel>
                             </Border>
@@ -7465,10 +7445,10 @@
                                 Padding="24"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Background="#B81B252D"
-                                BorderBrush="#405E7480"
+                                Background="#D914171C"
+                                BorderBrush="{DynamicResource CardBorder}"
                                 BorderThickness="1"
-                                CornerRadius="16">
+                                CornerRadius="14">
                                 <Border.Effect><DropShadowEffect BlurRadius="32" ShadowDepth="8" Opacity="0.3" /></Border.Effect>
                                 <Border.Style>
                                     <Style TargetType="Border">
@@ -7601,8 +7581,8 @@
                                 <ui:Card
                                     x:Name="ServerHudCard"
                                     Padding="0"
-                                    Background="#B312171D"
-                                    BorderBrush="#42FFFFFF"
+                                    Background="{DynamicResource SurfaceHud}"
+                                    BorderBrush="{DynamicResource StrokeHud}"
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
                                     Width="292"
@@ -7618,15 +7598,15 @@
                                             AutomationProperties.Name="{DynamicResource UiExpandServerDetails}">
                                             <CheckBox.Template>
                                                 <ControlTemplate TargetType="CheckBox">
-                                                    <Border x:Name="HudHeader" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="7">
+                                                    <Border x:Name="HudHeader" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="9">
                                                         <ContentPresenter VerticalAlignment="Center" />
                                                     </Border>
                                                     <ControlTemplate.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="HudHeader" Property="Background" Value="#18FFFFFF" />
+                                                            <Setter TargetName="HudHeader" Property="Background" Value="{DynamicResource FillControlHover}" />
                                                         </Trigger>
                                                         <Trigger Property="IsChecked" Value="True">
-                                                            <Setter TargetName="HudHeader" Property="Background" Value="#0FFFFFFF" />
+                                                            <Setter TargetName="HudHeader" Property="Background" Value="{DynamicResource FillControl}" />
                                                         </Trigger>
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>
@@ -7639,20 +7619,20 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{Binding DayNightColor}" Text="{Binding DayNightIcon}" ToolTip="{Binding TimeUntilNextPhase}" />
-                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" Text="{Binding ServerTime}" ToolTip="{Binding TimeUntilNextPhase}" />
+                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Typography.NumeralAlignment="Tabular" Text="{Binding ServerTime}" ToolTip="{Binding TimeUntilNextPhase}" />
                                                 <StackPanel Grid.Column="2" Margin="16,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="{DynamicResource TextMutedBrush}" Symbol="People20" />
-                                                    <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerPlayers}" />
+                                                    <ui:SymbolIcon Margin="0,0,5,0" FontSize="14" Foreground="{DynamicResource TextSecondary}" Symbol="People20" />
+                                                    <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Typography.NumeralAlignment="Tabular" Text="{Binding ServerPlayers}" />
                                                 </StackPanel>
                                                 <Grid Grid.Column="3" Width="18" Margin="8,0,0,0">
-                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" Symbol="ChevronRight20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibilityInv}}" />
-                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}" Symbol="ChevronDown20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}" />
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextSecondary}" Symbol="ChevronRight20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibilityInv}}" />
+                                                    <ui:SymbolIcon VerticalAlignment="Center" Foreground="{DynamicResource TextSecondary}" Symbol="ChevronDown20" Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}" />
                                                 </Grid>
                                             </Grid>
                                         </CheckBox>
 
                                         <StackPanel Visibility="{Binding IsChecked, ElementName=ServerHudToggle, Converter={StaticResource BoolToVisibility}}">
-                                            <Border BorderBrush="#24FFFFFF" BorderThickness="0,1,0,0">
+                                            <Border BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,1,0,0">
                                                 <StackPanel Margin="10,7">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
@@ -7661,13 +7641,13 @@
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextMutedBrush}" Symbol="Clock20" />
-                                                            <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="#AAB4C2" Text="{Binding TimeUntilNextPhase}" />
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextSecondary}" Symbol="Clock20" />
+                                                            <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSecondary}" Typography.NumeralAlignment="Tabular" Text="{Binding TimeUntilNextPhase}" />
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="1" Margin="14,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextMutedBrush}" Symbol="Hourglass20" />
-                                                            <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextMutedBrush}" Text="{DynamicResource Queue}" />
-                                                            <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="White" Text="{Binding ServerQueue}" />
+                                                            <ui:SymbolIcon Margin="0,0,5,0" FontSize="13" Foreground="{DynamicResource TextSecondary}" Symbol="Hourglass20" />
+                                                            <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSecondary}" Text="{DynamicResource Queue}" />
+                                                            <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Typography.NumeralAlignment="Tabular" Text="{Binding ServerQueue}" />
                                                         </StackPanel>
                                                         <ui:Button
                                                             x:Name="BtnShowOnline"
@@ -7681,9 +7661,9 @@
                                                             ToolTip="{DynamicResource ShowOnlinePlayers}" />
                                                     </Grid>
                                                     <StackPanel Margin="0,6,0,0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <ui:SymbolIcon Margin="0,0,5,0" FontSize="12" Foreground="#6F7B8B" Symbol="Calendar20" />
-                                                        <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" FontSize="10" FontWeight="SemiBold" Foreground="#6F7B8B" Text="{DynamicResource Wipe}" />
-                                                        <TextBlock MaxWidth="218" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="#BFC7D2" Text="{Binding ServerWipe}" TextTrimming="CharacterEllipsis" />
+                                                        <ui:SymbolIcon Margin="0,0,5,0" FontSize="12" Foreground="{DynamicResource TextSubtle}" Symbol="Calendar20" />
+                                                        <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" FontSize="{DynamicResource TypeBadge}" FontWeight="SemiBold" Foreground="{DynamicResource TextSubtle}" Text="{DynamicResource Wipe}" />
+                                                        <TextBlock MaxWidth="218" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSecondary}" Text="{Binding ServerWipe}" TextTrimming="CharacterEllipsis" />
                                                     </StackPanel>
                                                 </StackPanel>
                                             </Border>
@@ -8368,8 +8348,8 @@
                                     x:Name="SubscriptionDock"
                                     Margin="0,6,0,0"
                                     Padding="6"
-                                    Background="#AA16181C"
-                                    BorderBrush="{DynamicResource WhiteA40}"
+                                    Background="{DynamicResource SurfaceHud}"
+                                    BorderBrush="{DynamicResource StrokeHud}"
                                     BorderThickness="1"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
@@ -8396,7 +8376,7 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </ui:Button.Style>
-                                            <ui:SymbolIcon Symbol="Edit24" Foreground="White" FontSize="18" />
+                                            <ui:SymbolIcon Symbol="Edit24" Foreground="{DynamicResource TextPrimary}" FontSize="18" />
                                         </ui:Button>
                                     </StackPanel>
                                 </ui:Card>
@@ -8407,37 +8387,24 @@
                                 Margin="8,0,0,0"
                                 Padding="0"
                                 Height="38"
-                                Background="#AA16181C"
-                                BorderBrush="{DynamicResource WhiteA40}"
+                                Background="{DynamicResource SurfaceHud}"
+                                BorderBrush="{DynamicResource StrokeHud}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top">
+                                <ui:Card.Style>
+                                    <Style TargetType="ui:Card" BasedOn="{StaticResource {x:Type ui:Card}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFollowing}" Value="True">
+                                                <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:Card.Style>
                                 <Grid>
-                                    <!--  Active Glow  -->
-                                    <Ellipse
-                                        Width="32"
-                                        Height="32"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Fill="#4000C8FF">
-                                        <Ellipse.Effect>
-                                            <BlurEffect Radius="15" />
-                                        </Ellipse.Effect>
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsFollowing}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-
                                     <ui:Button
                                         x:Name="BtnFollowPlayer"
                                         Height="36"
-                                        Padding="4,0"
+                                        Padding="6,0"
                                         Appearance="Transparent"
                                         Click="BtnFollowPlayer_Click"
                                         IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
@@ -8446,23 +8413,22 @@
                                             <!--  Avatar or Default Icon  -->
                                             <Grid Width="24" Height="24">
                                                 <!--  Default Icon (Placeholder)  -->
-                                                <TextBlock
+                                                <ui:SymbolIcon
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
-                                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource TextMutedBrush}"
-                                                    Text="&#xE77B;">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
+                                                    FontSize="15"
+                                                    Foreground="{DynamicResource TextSecondary}"
+                                                    Symbol="Person20">
+                                                    <ui:SymbolIcon.Style>
+                                                        <Style TargetType="ui:SymbolIcon">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsFollowing}" Value="True">
                                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                                    </ui:SymbolIcon.Style>
+                                                </ui:SymbolIcon>
 
                                                 <!--  Real Avatar  -->
                                                 <Image
@@ -8484,32 +8450,20 @@
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsFollowing}" Value="True">
                                                                     <Setter Property="Visibility" Value="Visible" />
-                                                                    <Setter Property="Effect">
-                                                                        <Setter.Value>
-                                                                            <DropShadowEffect
-                                                                                BlurRadius="8"
-                                                                                Opacity="0.8"
-                                                                                ShadowDepth="0"
-                                                                                Color="Cyan" />
-                                                                        </Setter.Value>
-                                                                    </Setter>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
                                                 </Image>
-
-                                                <!--  Active Icon Overlay (small dot or similar if needed)  -->
                                             </Grid>
 
-                                            <TextBlock
+                                            <ui:SymbolIcon
                                                 x:Name="IconFollow"
                                                 Margin="4,0,0,0"
                                                 VerticalAlignment="Center"
-                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                                FontSize="{DynamicResource TypeCaption}"
-                                                Foreground="{DynamicResource TextMutedBrush}"
-                                                Text="&#xE70D;" />
+                                                FontSize="12"
+                                                Foreground="{DynamicResource TextSecondary}"
+                                                Symbol="ChevronDown20" />
                                         </StackPanel>
                                         <ui:Button.ContextMenu>
                                             <ContextMenu x:Name="MenuFollowPlayer" Style="{StaticResource DarkContextMenu}">
@@ -8525,32 +8479,31 @@
                                 Margin="8,0,0,0"
                                 Padding="0"
                                 Height="38"
-                                Background="#AA16181C"
-                                BorderBrush="{DynamicResource WhiteA40}"
+                                Background="{DynamicResource SurfaceHud}"
+                                BorderBrush="{DynamicResource StrokeHud}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top">
                                 <Grid>
                                     <ui:Button
                                         x:Name="BtnToggleMonumentsPanel"
                                         Height="36"
-                                        Padding="4,0"
+                                        Padding="6,0"
                                         Appearance="Transparent"
                                         Click="BtnToggleMonumentsPanel_Click"
                                         IsEnabled="{Binding Selected.IsFullConnected, FallbackValue=False}"
                                         ToolTip="{DynamicResource UiToggleMonumentList}">
                                         <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
-                                            <TextBlock
-                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                                FontSize="14"
-                                                Foreground="{DynamicResource TextMutedBrush}"
-                                                Text="&#xE707;" 
+                                            <ui:SymbolIcon
+                                                FontSize="15"
+                                                Foreground="{DynamicResource TextSecondary}"
+                                                Symbol="Location20"
                                                 VerticalAlignment="Center"/>
                                             <TextBlock
                                                 Text="{DynamicResource Monuments}"
-                                                Margin="6,0,4,0"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Foreground="White"
+                                                Margin="6,0,2,0"
+                                                FontSize="{DynamicResource TypeCaption}"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextPrimary}"
                                                 VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </ui:Button>
@@ -8562,8 +8515,8 @@
                                 Margin="8,0,0,0"
                                 Padding="0"
                                 Height="38"
-                                Background="#AA16181C"
-                                BorderBrush="{DynamicResource WhiteA40}"
+                                Background="{DynamicResource SurfaceHud}"
+                                BorderBrush="{DynamicResource StrokeHud}"
                                 BorderThickness="1"
                                 VerticalAlignment="Top"
                                 Visibility="Collapsed">
@@ -8571,15 +8524,15 @@
                                     <ui:Button
                                         x:Name="BtnWipeDeathMarkers"
                                         Height="36"
-                                        Padding="4,0"
+                                        Padding="6,0"
                                         Appearance="Transparent"
                                         Click="BtnWipeDeathMarkers_Click"
                                         ToolTip="{DynamicResource WipeDeathMarkers}">
                                         <StackPanel Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center">
                                             <Grid Width="14" Height="16" Margin="0,0,4,0">
-                                                <Path Width="14" Height="16" Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="IndianRed" Stretch="Uniform" Stroke="Black" StrokeThickness="1" />
+                                                <Path Width="14" Height="16" Data="M20,0 C31,0 40,9 40,20 C40,33 20,56 20,56 C20,56 0,33 0,20 C0,9 9,0 20,0 Z" Fill="{DynamicResource DangerBrush}" Stretch="Uniform" Stroke="{DynamicResource AppBg}" StrokeThickness="1" />
                                             </Grid>
-                                            <ui:SymbolIcon Symbol="Delete24" Foreground="IndianRed" FontSize="14" />
+                                            <ui:SymbolIcon Symbol="Delete24" Foreground="{DynamicResource DangerBrush}" FontSize="14" />
                                         </StackPanel>
                                     </ui:Button>
                                 </Grid>
@@ -8607,10 +8560,10 @@
                                 HorizontalAlignment="Right"
                                 Margin="0,10,0,0"
                                 Padding="8"
-                                Background="#AA16181C"
-                                BorderBrush="{DynamicResource WhiteA40}"
+                                Background="{DynamicResource SurfaceHud}"
+                                BorderBrush="{DynamicResource StrokeHud}"
                                 BorderThickness="1"
-                                CornerRadius="12"
+                                CornerRadius="{DynamicResource RadiusHud}"
                                 Appearance="Transparent"
                                 Click="BtnCustomTimer_Click"
                                 ToolTip="{DynamicResource HoverCustomTimer}">
@@ -8618,7 +8571,7 @@
                             </ui:Button>
                             
                             <Popup x:Name="PopupCustomTimer" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=BtnCustomTimer}" Placement="Left" HorizontalOffset="-10">
-                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="#AA16181C" BorderBrush="{DynamicResource WhiteA40}" BorderThickness="1">
+                                <ui:Card Margin="0,0,10,10" Padding="16" MinWidth="320" MaxWidth="360" Background="{DynamicResource SurfaceHudElevated}" BorderBrush="{DynamicResource StrokeHud}" BorderThickness="1">
                                     <ui:Card.Resources>
                                         <Style x:Key="WpfUiToggleButtonStyle" TargetType="ToggleButton">
                                             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
@@ -10168,12 +10121,12 @@
                                     x:Name="BtnChatToggleBorder"
                                     Grid.Row="1"
                                     Width="160"
-                                    Height="26"
+                                    Height="28"
                                     HorizontalAlignment="Left"
-                                    Background="#16181C"
-                                    BorderBrush="{DynamicResource WhiteA40}"
+                                    Background="{DynamicResource SurfaceHud}"
+                                    BorderBrush="{DynamicResource StrokeHud}"
                                     BorderThickness="1,1,1,0"
-                                    CornerRadius="8,8,0,0">
+                                    CornerRadius="{DynamicResource RadiusOverlayTop}">
                                     <Button
                                         x:Name="BtnChatToggle"
                                         Padding="0"
@@ -10191,31 +10144,32 @@
                                                 <Border
                                                     x:Name="border"
                                                     Background="{TemplateBinding Background}"
-                                                    CornerRadius="8,8,0,0">
+                                                    CornerRadius="{DynamicResource RadiusOverlayTop}">
                                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="border" Property="Background" Value="#30FFFFFF" />
+                                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource FillControlHover}" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Button.Template>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock
+                                            <ui:SymbolIcon
                                                 Margin="0,0,6,0"
                                                 VerticalAlignment="Center"
-                                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                                FontSize="12"
-                                                Text="&#xE8F2;" />
+                                                FontSize="13"
+                                                Foreground="{DynamicResource TextSecondary}"
+                                                Symbol="Chat20" />
                                             <TextBlock
                                                 VerticalAlignment="Center"
                                                 FontSize="{DynamicResource TypeCaption}"
                                                 FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextPrimary}"
                                                 Text="{DynamicResource TeamTab}" />
                                             <!-- Bottom Dock Unread Badge -->
-                                            <Border x:Name="BadgeUnreadDock" Visibility="Collapsed" Background="#FF3FD7FF" CornerRadius="7" Padding="4,0" Margin="6,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock x:Name="TxtUnreadDock" FontSize="8.5" FontWeight="Bold" Foreground="#FF0A0D14" Text="0" />
+                                            <Border x:Name="BadgeUnreadDock" Visibility="Collapsed" Background="{DynamicResource Accent}" CornerRadius="7" Padding="5,0" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="TxtUnreadDock" FontSize="{DynamicResource TypeBadge}" FontWeight="Bold" Foreground="{DynamicResource SurfaceDeepBrush}" Text="0" />
                                             </Border>
                                         </StackPanel>
                                     </Button>
@@ -10231,10 +10185,10 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
-                            Background="#F515171C"
-                            BorderBrush="#2EFFFFFF"
+                            Background="{DynamicResource SurfaceHudElevated}"
+                            BorderBrush="{DynamicResource StrokeHud}"
                             BorderThickness="1"
-                            CornerRadius="10"
+                            CornerRadius="{DynamicResource RadiusHud}"
                             Visibility="Collapsed">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="18" ShadowDepth="3" Direction="270" Opacity="0.5" Color="Black" />
@@ -10244,10 +10198,10 @@
                                     <StackPanel.Resources>
                                         <!--  Hotkey number — bottom-right of each tool, dark chip for legibility  -->
                                         <Style x:Key="ToolHotkeyBadge" TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="10" />
+                                            <Setter Property="FontSize" Value="{DynamicResource TypeBadge}" />
                                             <Setter Property="FontWeight" Value="Bold" />
-                                            <Setter Property="Foreground" Value="#F2FFFFFF" />
-                                            <Setter Property="Background" Value="#D2101116" />
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+                                            <Setter Property="Background" Value="{DynamicResource FillInset}" />
                                             <Setter Property="Padding" Value="3,0,3,1" />
                                             <Setter Property="HorizontalAlignment" Value="Right" />
                                             <Setter Property="VerticalAlignment" Value="Bottom" />
@@ -10257,23 +10211,23 @@
 
                                         <!--  Modern flat tool button — hover glow independent of the code-driven active state  -->
                                         <Style TargetType="Button">
-                                            <Setter Property="Background" Value="#14FFFFFF" />
+                                            <Setter Property="Background" Value="{DynamicResource FillControl}" />
                                             <Setter Property="BorderBrush" Value="Transparent" />
                                             <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
                                             <Setter Property="Cursor" Value="Hand" />
                                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="bd" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <Border x:Name="bd" CornerRadius="{DynamicResource RadiusCard}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                                             <Grid>
-                                                                <Border x:Name="hover" CornerRadius="7" Background="#1EFFFFFF" Opacity="0" />
+                                                                <Border x:Name="hover" CornerRadius="7" Background="{DynamicResource FillControlHover}" Opacity="0" />
                                                                 <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 <!--  Hotkey number pinned to the button's bottom-right corner (from Tag)  -->
-                                                                <Border x:Name="badge" Background="#F20E0F13" CornerRadius="3" Padding="2.5,0" MinWidth="11" Height="11"
+                                                                <Border x:Name="badge" Background="{DynamicResource FillInset}" CornerRadius="3" Padding="3,0" MinWidth="12" Height="12"
                                                                         HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,1,1" IsHitTestVisible="False">
-                                                                    <TextBlock Text="{TemplateBinding Tag}" FontSize="8.5" FontWeight="Bold" Foreground="#F2FFFFFF"
+                                                                    <TextBlock Text="{TemplateBinding Tag}" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"
                                                                                HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LineHeight="11" />
                                                                 </Border>
                                                             </Grid>
@@ -10282,7 +10236,7 @@
                                                             <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="hover" Property="Opacity" Value="1" /></Trigger>
                                                             <Trigger Property="IsPressed" Value="True">
                                                                 <Setter TargetName="hover" Property="Opacity" Value="1" />
-                                                                <Setter TargetName="hover" Property="Background" Value="#33FFFFFF" />
+                                                                <Setter TargetName="hover" Property="Background" Value="{DynamicResource WhiteA22}" />
                                                             </Trigger>
                                                             <Trigger Property="Tag" Value="{x:Null}"><Setter TargetName="badge" Property="Visibility" Value="Collapsed" /></Trigger>
                                                         </ControlTemplate.Triggers>
@@ -10670,10 +10624,10 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
-                            Background="#F214161B"
-                            BorderBrush="#2EFFFFFF"
+                            Background="{DynamicResource SurfaceHudElevated}"
+                            BorderBrush="{DynamicResource StrokeHud}"
                             BorderThickness="1"
-                            CornerRadius="11"
+                            CornerRadius="{DynamicResource RadiusHud}"
                             Visibility="Collapsed">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="20" ShadowDepth="4" Direction="270" Opacity="0.5" Color="Black" />
@@ -10683,7 +10637,7 @@
                                     <Setter Property="Background" Value="Transparent" />
                                     <Setter Property="BorderThickness" Value="0" />
                                     <Setter Property="Cursor" Value="Hand" />
-                                    <Setter Property="Foreground" Value="#FFE6EAF2" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
                                     <Setter Property="Width" Value="26" />
                                     <Setter Property="Height" Value="26" />
                                     <Setter Property="Template">
@@ -10694,7 +10648,7 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Bd" Property="Background" Value="#26FFFFFF" />
+                                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource FillControlHover}" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
@@ -10717,15 +10671,15 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" VerticalAlignment="Center"
-                                               Text="{DynamicResource RoutesTitle}" Foreground="#FFF4F6FA"
+                                               Text="{DynamicResource RoutesTitle}" Foreground="{DynamicResource TextPrimary}"
                                                FontSize="13" FontWeight="SemiBold" />
                                     <Button Grid.Column="1" Style="{StaticResource RouteIconBtn}"
                                             Click="BtnRouteAdd_Click" ToolTip="{DynamicResource RoutesAdd}">
-                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE710;" FontSize="14" />
+                                        <ui:SymbolIcon Symbol="Add20" FontSize="14" />
                                     </Button>
                                     <Button Grid.Column="2" Style="{StaticResource RouteIconBtn}"
                                             Click="BtnRoutesClose_Click" ToolTip="{DynamicResource RoutesClose}">
-                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" />
+                                        <ui:SymbolIcon Symbol="Dismiss24" FontSize="14" />
                                     </Button>
                                 </Grid>
 
@@ -10752,7 +10706,7 @@
                                                                  VerticalAlignment="Center" Fill="{Binding Swatch}" />
 
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="{Binding Name}" Foreground="#FFF4F6FA" FontSize="12"
+                                                            <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}"
                                                                        FontWeight="{Binding NameWeight}" TextTrimming="CharacterEllipsis" />
                                                             <TextBlock Text="{Binding Measurement}" Foreground="{DynamicResource TextMutedBrush}"
                                                                        FontSize="{DynamicResource TypeCaption}" TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
@@ -10768,7 +10722,7 @@
                                                             <Button Style="{StaticResource RouteIconBtn}" Width="24" Height="24"
                                                                     Tag="{Binding}" Click="BtnRouteDelete_Click"
                                                                     ToolTip="{DynamicResource RoutesDelete}">
-                                                                <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" />
+                                                                <ui:SymbolIcon Symbol="Delete24" FontSize="12" />
                                                             </Button>
                                                         </StackPanel>
                                                     </Grid>
@@ -10781,7 +10735,7 @@
                                 <!--  Naming a new route. Inline, because a dialog for one field is a dialog too many.  -->
                                 <StackPanel Grid.Row="2" x:Name="RouteNameRow" Visibility="Collapsed" Margin="0,8,0,0">
                                     <TextBox x:Name="TxtRouteName" MaxLength="40" Background="{DynamicResource WhiteA22}"
-                                             Foreground="#FFF4F6FA" BorderBrush="#3AFFFFFF" BorderThickness="1"
+                                             Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource StrokeDefault}" BorderThickness="1"
                                              Padding="6,4" KeyDown="TxtRouteName_KeyDown" />
                                     <TextBlock Text="{DynamicResource RoutesNameHint}" Foreground="{DynamicResource TextMutedBrush}"
                                                FontSize="{DynamicResource TypeCaption}" TextWrapping="Wrap" Margin="0,4,0,0" />
@@ -10803,10 +10757,10 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Panel.ZIndex="9000"
-                            Background="#F214161B"
-                            BorderBrush="#2EFFFFFF"
+                            Background="{DynamicResource SurfaceHudElevated}"
+                            BorderBrush="{DynamicResource StrokeHud}"
                             BorderThickness="1"
-                            CornerRadius="11"
+                            CornerRadius="{DynamicResource RadiusHud}"
                             Visibility="Collapsed">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="20" ShadowDepth="4" Direction="270" Opacity="0.5" Color="Black" />
@@ -10819,14 +10773,14 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="CheckBox">
-                                                <Border x:Name="box" Width="16" Height="16" CornerRadius="4" Background="#18FFFFFF" BorderBrush="#4DFFFFFF" BorderThickness="1.2">
-                                                    <TextBlock x:Name="chk" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE73E;" FontSize="{DynamicResource TypeCaption}" Foreground="#0C0D11" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+                                                <Border x:Name="box" Width="16" Height="16" CornerRadius="{DynamicResource RadiusControl}" Background="{DynamicResource FillControlHover}" BorderBrush="{DynamicResource StrokeStrong}" BorderThickness="1.2">
+                                                    <ui:SymbolIcon x:Name="chk" Symbol="Checkmark20" FontSize="11" Foreground="{DynamicResource SurfaceDeepBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="box" Property="BorderBrush" Value="#8060CDFF" /></Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource Accent}" /></Trigger>
                                                     <Trigger Property="IsChecked" Value="True">
-                                                        <Setter TargetName="box" Property="Background" Value="#60CDFF" />
-                                                        <Setter TargetName="box" Property="BorderBrush" Value="#60CDFF" />
+                                                        <Setter TargetName="box" Property="Background" Value="{DynamicResource Accent}" />
+                                                        <Setter TargetName="box" Property="BorderBrush" Value="{DynamicResource Accent}" />
                                                         <Setter TargetName="chk" Property="Visibility" Value="Visible" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -10849,8 +10803,8 @@
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="b" Property="Background" Value="#22FFFFFF" /></Trigger>
-                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="b" Property="Background" Value="#33FFFFFF" /></Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="b" Property="Background" Value="{DynamicResource FillControlHover}" /></Trigger>
+                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="b" Property="Background" Value="{DynamicResource WhiteA22}" /></Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -10872,8 +10826,8 @@
                                                     <ContentPresenter />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="rb" Property="Background" Value="#16FFFFFF" /></Trigger>
-                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="rb" Property="Background" Value="#24FFFFFF" /></Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="rb" Property="Background" Value="{DynamicResource FillControlHover}" /></Trigger>
+                                                    <Trigger Property="IsPressed" Value="True"><Setter TargetName="rb" Property="Background" Value="{DynamicResource WhiteA22}" /></Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -10881,8 +10835,8 @@
                                 </Style>
                                 <!--  Group / ungroup chip  -->
                                 <Style x:Key="LyrChip" TargetType="Button">
-                                    <Setter Property="Background" Value="#16FFFFFF" />
-                                    <Setter Property="BorderBrush" Value="#2EFFFFFF" />
+                                    <Setter Property="Background" Value="{DynamicResource FillControl}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource StrokeDefault}" />
                                     <Setter Property="BorderThickness" Value="1" />
                                     <Setter Property="Cursor" Value="Hand" />
                                     <Setter Property="Padding" Value="11,4" />
@@ -10894,7 +10848,7 @@
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="c" Property="Background" Value="#28FFFFFF" /></Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="c" Property="Background" Value="{DynamicResource FillControlHover}" /></Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -10913,11 +10867,11 @@
                                 <!--  Header  -->
                                 <Grid Margin="14,11,10,9">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE81E;" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                        <TextBlock Margin="9,0,0,0" VerticalAlignment="Center" FontSize="13.5" FontWeight="SemiBold" Foreground="White" Text="Layers" />
+                                        <ui:SymbolIcon Symbol="Filter20" FontSize="15" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                        <TextBlock Margin="9,0,0,0" VerticalAlignment="Center" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="Layers" />
                                     </StackPanel>
                                     <Button Style="{StaticResource LyrIconBtn}" HorizontalAlignment="Right" Click="CloseLayersPanel_Click" ToolTip="Close">
-                                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE711;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <ui:SymbolIcon Symbol="Dismiss24" FontSize="12" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Button>
                                 </Grid>
 
@@ -10925,21 +10879,21 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="13,0,13,9">
                                     <Button Style="{StaticResource LyrChip}" Margin="0,0,6,0" Click="GroupCheckedLayers_Click" ToolTip="Group the ticked layers into one">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE8B7;" FontSize="12" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
-                                            <TextBlock Margin="6,0,0,0" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="White" Text="Group" />
+                                            <ui:SymbolIcon Symbol="Folder20" FontSize="13" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" />
+                                            <TextBlock Margin="6,0,0,0" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" Text="Group" />
                                         </StackPanel>
                                     </Button>
                                     <Button Style="{StaticResource LyrChip}" Click="UngroupCheckedLayers_Click" ToolTip="Ungroup the ticked group(s)">
-                                        <TextBlock FontSize="{DynamicResource TypeCaption}" Foreground="#C8C8C8" Text="Ungroup" />
+                                        <TextBlock FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextSecondary}" Text="Ungroup" />
                                     </Button>
                                 </StackPanel>
 
-                                <Border Grid.Row="2" Height="1" Background="#16FFFFFF" Margin="13,0,13,2" />
+                                <Border Grid.Row="2" Height="1" Background="{DynamicResource StrokeSubtle}" Margin="13,0,13,2" />
 
                                 <!--  List  -->
                                 <Grid Grid.Row="3">
                                     <TextBlock x:Name="LayersEmptyHint" Margin="18,16" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
-                                               Foreground="#8A8A8A" FontSize="{DynamicResource TypeCaption}" Text="Nothing drawn yet. Add markers, text or drawings and they'll show up here." />
+                                               Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Text="Nothing drawn yet. Add markers, text or drawings and they'll show up here." />
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8,4,8,10">
                                         <ItemsControl x:Name="LayersList">
                                             <ItemsControl.GroupStyle>
@@ -10948,13 +10902,13 @@
                                                         <DataTemplate>
                                                             <Grid Margin="6,10,2,4">
                                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                    <TextBlock FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="#9AA6B2" Text="{Binding Name}" />
-                                                                    <Border Margin="8,0,0,0" Background="#1EFFFFFF" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
-                                                                        <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="#B8C2CC" Text="{Binding ItemCount}" />
+                                                                    <TextBlock FontSize="{DynamicResource TypeCaption}" FontWeight="Bold" Foreground="{DynamicResource TextSecondary}" Text="{Binding Name}" />
+                                                                    <Border Margin="8,0,0,0" Background="{DynamicResource FillControlHover}" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
+                                                                        <TextBlock FontSize="{DynamicResource TypeBadge}" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondary}" Text="{Binding ItemCount}" />
                                                                     </Border>
                                                                 </StackPanel>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Width="22" Height="20" HorizontalAlignment="Right" Click="LayerGroupToggle_Click" ToolTip="Show / hide this group">
-                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="{DynamicResource TypeCaption}" Foreground="#8A929C" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <ui:SymbolIcon Symbol="Eye20" FontSize="13" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </Grid>
                                                         </DataTemplate>
@@ -10973,18 +10927,18 @@
                                                             </Grid.ColumnDefinitions>
                                                             <CheckBox Style="{StaticResource LyrCheck}" VerticalAlignment="Center" Margin="0,0,9,0" IsChecked="{Binding IsSelectedInPanel, Mode=TwoWay}" ToolTip="Tick to group" />
                                                             <Image Grid.Column="1" Width="18" Height="18" VerticalAlignment="Center" Source="{Binding Preview}" Visibility="{Binding HasPreview, Converter={StaticResource BoolToVisibility}}" />
-                                                            <Border Grid.Column="1" Width="13" Height="13" CornerRadius="7" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{Binding Swatch}" BorderBrush="#40000000" BorderThickness="1"
+                                                            <Border Grid.Column="1" Width="13" Height="13" CornerRadius="7" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{Binding Swatch}" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="1"
                                                                     Visibility="{Binding HasNoPreview, Converter={StaticResource BoolToVisibility}}" />
-                                                            <TextBlock Grid.Column="2" Margin="9,0" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                                                            <TextBlock Grid.Column="2" Margin="9,0" VerticalAlignment="Center" FontSize="{DynamicResource TypeCaption}" Foreground="{DynamicResource TextPrimary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
                                                             <StackPanel Grid.Column="3" Orientation="Horizontal">
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerVisibility_Click" ToolTip="Show / hide">
-                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" Foreground="#9AA0A8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <ui:SymbolIcon Symbol="Eye20" FontSize="13" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerEditText_Click" ToolTip="Edit text" Visibility="{Binding IsText, Converter={StaticResource BoolToVisibility}}">
-                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE70F;" FontSize="12" Foreground="#B0B0B0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <ui:SymbolIcon Symbol="Edit20" FontSize="12" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                                 <Button Style="{StaticResource LyrIconBtn}" Click="LayerDelete_Click" ToolTip="Delete">
-                                                                    <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" Foreground="#E08585" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                    <ui:SymbolIcon Symbol="Delete24" FontSize="12" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                                 </Button>
                                                             </StackPanel>
                                                         </Grid>
@@ -11005,8 +10959,10 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Bottom"
                             Panel.ZIndex="9000"
-                            Background="#801E1E1E"
-                            CornerRadius="6"
+                            Background="{DynamicResource SurfaceHud}"
+                            BorderBrush="{DynamicResource StrokeHud}"
+                            BorderThickness="1"
+                            CornerRadius="{DynamicResource RadiusCard}"
                             Visibility="Collapsed">
                             <StackPanel
                                 x:Name="OverlayTeamStack"
@@ -11023,13 +10979,14 @@
                         x:Name="LogPanel"
                         tutorials:Tutorial.TargetId="Diagnostics.Logs"
                         Grid.Row="2"
+                        Margin="0,8,0,0"
                         Height="200">
                         <Border
-                            Padding="8"
-                            Background="#1F2026"
-                            BorderBrush="#454953"
+                            Padding="10,8"
+                            Background="{DynamicResource FillInset}"
+                            BorderBrush="{DynamicResource StrokeSubtle}"
                             BorderThickness="1"
-                            CornerRadius="6">
+                            CornerRadius="{DynamicResource RadiusCard}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -11044,17 +11001,19 @@
 
                                     <ui:TextBox
                                         x:Name="TxtLogFilter"
-                                        Height="36"
+                                        Height="32"
                                         ClearButtonEnabled="True"
+                                        FontSize="{DynamicResource TypeCaption}"
                                         PlaceholderText="{DynamicResource UiFilterLogs}"
                                         TextChanged="TxtLogFilter_TextChanged" />
 
                                     <ui:Button
                                         x:Name="BtnToggleLogExpand"
                                         Grid.Column="1"
-                                        Height="36"
+                                        Height="32"
                                         Margin="6,0,0,0"
                                         Padding="12,0"
+                                        Appearance="Secondary"
                                         Click="BtnToggleLogExpand_Click"
                                         Content="{DynamicResource UiExpand}" />
                                 </Grid>

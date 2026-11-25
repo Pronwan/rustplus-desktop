@@ -829,12 +829,14 @@ namespace RustPlusDesk.Views
         private static void SetMapViewButtonState(System.Windows.Controls.Control button, bool active)
         {
             button.Background = active
-                ? new SolidColorBrush(Color.FromRgb(0x2B, 0x62, 0x78))
+                ? (Brush?)Application.Current.TryFindResource("AccentHoverFill") ?? new SolidColorBrush(Color.FromArgb(0x2B, 0x60, 0xCD, 0xFF))
                 : Brushes.Transparent;
             button.BorderBrush = active
-                ? new SolidColorBrush(Color.FromArgb(0x55, 0x7F, 0xA5, 0xB5))
+                ? (Brush?)Application.Current.TryFindResource("Accent") ?? new SolidColorBrush(Color.FromRgb(0x60, 0xCD, 0xFF))
                 : Brushes.Transparent;
-            button.Foreground = active ? Brushes.White : new SolidColorBrush(Color.FromRgb(0xB8, 0xC0, 0xCC));
+            button.Foreground = active
+                ? (Brush?)Application.Current.TryFindResource("TextPrimary") ?? Brushes.White
+                : (Brush?)Application.Current.TryFindResource("TextSecondary") ?? new SolidColorBrush(Color.FromRgb(0xA3, 0xAD, 0xBD));
         }
 
         private void BtnToggleHeatmapGate_Click(object sender, RoutedEventArgs e)

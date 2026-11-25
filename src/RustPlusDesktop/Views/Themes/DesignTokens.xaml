@@ -10,15 +10,18 @@
     -->
 
     <!-- Type ramp. 12 is the smallest size for regular text; use SemiBold for titles, Regular for the rest. -->
+    <sys:Double x:Key="TypeBadge">11</sys:Double>
     <sys:Double x:Key="TypeCaption">12</sys:Double>
     <sys:Double x:Key="TypeBody">14</sys:Double>
     <sys:Double x:Key="TypeSubtitle">16</sys:Double>
     <sys:Double x:Key="TypeTitle">20</sys:Double>
     <sys:Double x:Key="TypeDisplay">28</sys:Double>
 
-    <!-- Shape. 4 for controls inside a page (buttons, inputs, list rows), 8 for containers and overlays. -->
+    <!-- Shape. 4 for controls inside a page (buttons, inputs, list rows), 8 for cards/overlays, 10 for floating map HUDs. -->
     <CornerRadius x:Key="RadiusControl">4</CornerRadius>
+    <CornerRadius x:Key="RadiusCard">8</CornerRadius>
     <CornerRadius x:Key="RadiusOverlay">8</CornerRadius>
+    <CornerRadius x:Key="RadiusHud">10</CornerRadius>
     <CornerRadius x:Key="RadiusOverlayTop">8,8,0,0</CornerRadius>
 
     <!-- Color roles on top of the App.xaml palette. -->
@@ -26,13 +29,27 @@
     <SolidColorBrush x:Key="FillControlHover" Color="#18FFFFFF" />
     <SolidColorBrush x:Key="FillControlPressed" Color="#0AFFFFFF" />
     <SolidColorBrush x:Key="FillInset" Color="#14171C" />
+    <SolidColorBrush x:Key="SurfaceHover" Color="#252A33" />
+    <SolidColorBrush x:Key="SurfaceMissing" Color="#121418" />
+    <SolidColorBrush x:Key="SurfaceGroup" Color="#14223C" />
+    <SolidColorBrush x:Key="SurfaceHud" Color="#D914171C" />
+    <SolidColorBrush x:Key="SurfaceHudElevated" Color="#F0181B1F" />
     <SolidColorBrush x:Key="SurfaceOverlay" Color="#F2181B1F" />
     <SolidColorBrush x:Key="StrokeSubtle" Color="#1AFFFFFF" />
+    <SolidColorBrush x:Key="StrokeHud" Color="#24FFFFFF" />
     <SolidColorBrush x:Key="StrokeDefault" Color="#28FFFFFF" />
     <SolidColorBrush x:Key="StrokeStrong" Color="#40FFFFFF" />
+    <SolidColorBrush x:Key="StrokeGroup" Color="#1C2D47" />
+    <SolidColorBrush x:Key="AccentSelectedFill" Color="#1F60CDFF" />
+    <SolidColorBrush x:Key="AccentHoverFill" Color="#2B60CDFF" />
+    <SolidColorBrush x:Key="AccentBorderSubtle" Color="#4D60CDFF" />
     <SolidColorBrush x:Key="TextSecondary" Color="#A3ADBD" />
+    <SolidColorBrush x:Key="TextCaption" Color="#5A6475" />
+    <SolidColorBrush x:Key="AccentGreen" Color="#4EB887" />
+    <SolidColorBrush x:Key="AccentRed" Color="#F04747" />
     <SolidColorBrush x:Key="StatusWarning" Color="#F2C14E" />
     <SolidColorBrush x:Key="StatusSuccess" Color="#6CCB8A" />
+    <SolidColorBrush x:Key="StatusDangerText" Color="#FF8A80" />
 
     <!-- Motion (see Helpers/Motion.cs for code-driven animation). -->
     <Duration x:Key="MotionFaster">0:0:0.083</Duration>
