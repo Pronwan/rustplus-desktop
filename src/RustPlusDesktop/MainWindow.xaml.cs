@@ -5536,8 +5536,8 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         finally { _pairingStopPending = false; }
     }
     private const int MaxLogLines = 2000;
-    private const double CollapsedLogHeight = 200;
-    private const double ExpandedLogHeight = 420;
+    private const double CollapsedLogHeight = 37;
+    private const double ExpandedLogHeight = 240;
     private bool _isLogExpanded;
     private readonly List<string> _logLines = new();
     private static readonly List<string> sPendingLogs = new();
@@ -5553,6 +5553,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                 foreach (var pl in sPendingLogs) AddLogLine(pl);
                 sPendingLogs.Clear();
                 RefreshLogText();
+                UpdateLogHeaderPreview();
             }
         }
     }
@@ -5584,6 +5585,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
                     TxtLog.AppendText(formatted + Environment.NewLine);
                     TxtLog.ScrollToEnd();
                 }
+                UpdateLogHeaderPreview();
             }
         });
     }
@@ -5615,17 +5617,60 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         TxtLog.ScrollToEnd();
     }
 
+    private void UpdateLogHeaderPreview()
+    {
+        if (TxtLogCount != null)
+        {
+            TxtLogCount.Text = _logLines.Count.ToString();
+        }
+        if (BtnClearLogs != null)
+        {
+            BtnClearLogs.Visibility = _logLines.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+        if (TxtLatestLogPreview != null)
+        {
+            if (_logLines.Count == 0)
+            {
+                TxtLatestLogPreview.Text = "...";
+                TxtLatestLogPreview.SetResourceReference(TextBlock.ForegroundProperty, "TextMuted");
+            }
+            else
+            {
+                string latest = _logLines[^1].Replace('\r', ' ').Replace('\n', ' ').Trim();
+                TxtLatestLogPreview.Text = latest;
+                TxtLatestLogPreview.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
+            }
+        }
+    }
+
     private void TxtLogFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
+        if (!_isLogExpanded && !string.IsNullOrWhiteSpace(TxtLogFilter?.Text))
+        {
+            SetLogExpanded(true);
+        }
         RefreshLogText();
     }
 
-    private void BtnToggleLogExpand_Click(object sender, RoutedEventArgs e)
+    private void BtnClearLogs_Click(object sender, RoutedEventArgs e)
     {
-        _isLogExpanded = !_isLogExpanded;
+        _logLines.Clear();
+        if (TxtLog != null) TxtLog.Text = string.Empty;
+        UpdateLogHeaderPreview();
+    }
+
+    private void BtnToggleLogExpand_Click(object sender, RoutedEventArgs e) => SetLogExpanded(!_isLogExpanded);
+
+    private void SetLogExpanded(bool expanded)
+    {
+        _isLogExpanded = expanded;
         if (LogPanel != null) LogPanel.Height = _isLogExpanded ? ExpandedLogHeight : CollapsedLogHeight;
+        Visibility logVisibility = _isLogExpanded ? Visibility.Visible : Visibility.Collapsed;
+        if (LogOutputBorder != null) LogOutputBorder.Visibility = logVisibility;
+        if (TxtLog != null) TxtLog.Visibility = logVisibility;
+        if (BtnLatestLogPreview != null) BtnLatestLogPreview.Visibility = _isLogExpanded ? Visibility.Collapsed : Visibility.Visible;
         if (BtnToggleLogExpand != null) BtnToggleLogExpand.Content = _isLogExpanded ? RustPlusDesk.Properties.Resources.GetString("CodeUiCollapse") : RustPlusDesk.Properties.Resources.GetString("UiExpand");
-        TxtLog?.ScrollToEnd();
+        if (_isLogExpanded) TxtLog?.ScrollToEnd();
     }
 
     static readonly JsonSerializerOptions JsonOpt = new()
@@ -8549,7 +8594,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         }
         if (WebViewHost != null)
         {
-            WebViewHost.Margin = new Thickness(-12, 0, -12, TrackingService.HideConsole ? -12 : 8);
+            WebViewHost.Margin = new Thickness(-12, 0, -12, TrackingService.HideConsole ? -12 : 0);
         }
 
         if (ColSidebar != null)

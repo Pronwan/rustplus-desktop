@@ -412,14 +412,14 @@
         <Border
             Grid.Row="0"
             Background="{DynamicResource AppBg}"
-            BorderBrush="{DynamicResource WhiteA1A}"
+            BorderBrush="{DynamicResource StrokeSubtle}"
             BorderThickness="0,0,0,1">
             <ui:TitleBar
                 x:Name="AppTitleBar"
                 Height="48"
                 Title="{DynamicResource AppTitle}"
                 Background="Transparent"
-                Foreground="White">
+                Foreground="{DynamicResource TextPrimary}">
                 <ui:TitleBar.Resources>
                     <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
                         <Setter Property="Height" Value="48" />
@@ -438,12 +438,71 @@
                 </ui:TitleBar.Icon>
                 <ui:TitleBar.Header>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <!--  Active server & connection context pill (stays visible even when the rail is collapsed)  -->
+                    <Border
+                        MaxWidth="220"
+                        Height="30"
+                        Margin="0,9,6,9"
+                        Padding="10,0"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource FillControl}"
+                        BorderBrush="{DynamicResource StrokeSubtle}"
+                        BorderThickness="1"
+                        CornerRadius="{DynamicResource RadiusCard}">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Selected}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="7" Height="7" Margin="0,0,7,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="{DynamicResource DangerBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected.IsConnected}" Value="True"><Setter Property="Fill" Value="{DynamicResource Accent}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.IsFullConnected}" Value="True"><Setter Property="Fill" Value="{DynamicResource SuccessTextBrush}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsConnectionLoading}" Value="True"><Setter Property="Fill" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSoftConnecting}" Value="True"><Setter Property="Fill" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.HasConnectionIssue}" Value="True"><Setter Property="Fill" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.IsReconnecting}" Value="True"><Setter Property="Fill" Value="{DynamicResource StatusWarning}" /></DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected.IsAccessDenied}" Value="True"><Setter Property="Fill" Value="{DynamicResource WarnOrangeBrush}" /></DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="{DynamicResource TypeCaption}"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource TextPrimary}"
+                                TextTrimming="CharacterEllipsis">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding Selected.Name}" />
+                                        <Setter Property="ToolTip" Value="{Binding Selected.Name}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChecked, ElementName=BtnAbbreviateNames}" Value="True">
+                                                <Setter Property="Text" Value="{DynamicResource UiSERVERHIDDEN}" />
+                                                <Setter Property="ToolTip" Value="{DynamicResource UiSERVERHIDDEN}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
                     <ui:Button
                         x:Name="BtnDiscord"
                         tutorials:Tutorial.TargetId="Navigation.Discord"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
+                        Width="34"
+                        Height="34"
+                        Margin="2,7"
                         Padding="0"
                         Appearance="Transparent"
                         Click="BtnDiscord_Click"
@@ -456,9 +515,9 @@
                     </ui:Button>
                     <ui:Button
                         x:Name="BtnCloudPortal"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
+                        Width="34"
+                        Height="34"
+                        Margin="2,7"
                         Padding="0"
                         Appearance="Transparent"
                         Click="BtnCloudPortal_Click"
@@ -471,9 +530,9 @@
                     </ui:Button>
                     <ui:Button
                         x:Name="BtnPatchNotes"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
+                        Width="34"
+                        Height="34"
+                        Margin="2,7"
                         Padding="0"
                         Appearance="Transparent"
                         Click="BtnPatchNotes_Click"
@@ -481,32 +540,34 @@
                         ToolTip="{DynamicResource PatchNotes}" />
                     <ui:Button
                         x:Name="BtnTrafficMonitor"
-                        Height="36"
-                        Margin="2,6"
-                        Padding="6,0"
+                        Height="34"
+                        Margin="2,7"
+                        Padding="8,0"
                         Appearance="Transparent"
                         Click="BtnTrafficMonitor_Click"
                         ToolTip="Network Traffic &amp; Bandwidth Monitor">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="DataUsage24" Foreground="{DynamicResource Accent}" FontSize="15" Margin="0,0,5,0" />
+                            <ui:SymbolIcon Symbol="DataUsage24" Foreground="{DynamicResource Accent}" FontSize="15" Margin="0,0,6,0" />
                             <!--  Fixed width so the title bar does not jitter as the rate changes.  -->
                             <TextBlock x:Name="TxtTrafficBadge"
                                        Width="104"
                                        FontSize="{DynamicResource TypeCaption}"
-                                       Foreground="#CCCCCC"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       Typography.NumeralAlignment="Tabular"
                                        VerticalAlignment="Center"
                                        TextAlignment="Left"
                                        Text="{Binding Source={x:Static services:NetworkTrafficMonitor.Instance}, Path=BandwidthSummaryBadge}" />
                         </StackPanel>
                     </ui:Button>
+                    <Border Width="1" Height="18" Margin="4,0" VerticalAlignment="Center" Background="{DynamicResource StrokeSubtle}" />
                     <!--  Notification centre. A bell with an unread badge, opening a dropdown of the
                           same inbox the dashboard and the client share. -->
                     <Grid VerticalAlignment="Center">
                         <ui:Button
                             x:Name="BtnTopNotifications"
-                            Width="36"
-                            Height="36"
-                            Margin="2,6"
+                            Width="34"
+                            Height="34"
+                            Margin="2,7"
                             Padding="0"
                             Appearance="Transparent"
                             Click="BtnTopNotifications_Click"
@@ -515,14 +576,15 @@
                         <Border x:Name="TopNotifBadge" Visibility="Collapsed"
                                 IsHitTestVisible="False"
                                 HorizontalAlignment="Right" VerticalAlignment="Top"
-                                Margin="0,6,2,0" MinWidth="15" Height="15" CornerRadius="7.5"
-                                Background="{DynamicResource DangerBrush}" Padding="3,0">
-                            <TextBlock x:Name="TopNotifBadgeText" Foreground="White" FontSize="9"
+                                Margin="0,6,2,0" MinWidth="16" Height="16" CornerRadius="8"
+                                Background="{DynamicResource DangerBrush}" Padding="4,0">
+                            <TextBlock x:Name="TopNotifBadgeText" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeBadge}"
+                                       Typography.NumeralAlignment="Tabular"
                                        FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <Popup x:Name="NotificationsPopup" PlacementTarget="{Binding ElementName=BtnTopNotifications}"
                                Placement="Bottom" HorizontalOffset="-420" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                            <Border Width="440" Background="#FF0C1116" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="12" Margin="8,6,8,8">
+                            <Border Width="440" Background="{DynamicResource SurfaceHudElevated}" BorderBrush="{DynamicResource StrokeHud}" BorderThickness="1" CornerRadius="12" Margin="8,6,8,8">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.5" Color="Black" />
                                 </Border.Effect>
@@ -543,7 +605,7 @@
                                             <ItemsControl x:Name="TopNotificationsList" Margin="12,0,12,4">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Background="#FF141C24" BorderBrush="#26FFFFFF" BorderThickness="1" CornerRadius="8" Margin="0,0,0,8">
+                                                        <Border Background="{DynamicResource FillControl}" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}" Margin="0,0,0,8">
                                                             <Grid>
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition Height="Auto" />
@@ -559,10 +621,10 @@
                                                                                 <ColumnDefinition Width="*" />
                                                                             </Grid.ColumnDefinitions>
                                                                             <Ellipse Width="7" Height="7" Fill="{Binding Dot}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,6,0,0" />
-                                                                            <TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="#FFF4F6FA" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                                            <TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="{DynamicResource TextPrimary}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
                                                                         </Grid>
-                                                                        <TextBlock Text="{Binding Body}" Foreground="#FFBAC4D0" FontSize="13" LineHeight="19" TextWrapping="Wrap" Margin="16,8,0,0" />
-                                                                        <TextBlock Text="{Binding When}" Foreground="#FF98A5B5" FontSize="{DynamicResource TypeCaption}" Margin="16,10,0,0" />
+                                                                        <TextBlock Text="{Binding Body}" Foreground="{DynamicResource TextSecondary}" FontSize="13" LineHeight="19" TextWrapping="Wrap" Margin="16,8,0,0" />
+                                                                        <TextBlock Text="{Binding When}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Margin="16,10,0,0" />
                                                                     </StackPanel>
                                                                 </ui:Button>
                                                                 <ui:Button Grid.Row="1" Visibility="{Binding CtaVisibility}" Content="{Binding CtaLabel}" Appearance="Primary"
@@ -570,7 +632,7 @@
                                                                            Tag="{Binding}" Click="NotificationCta_Click" />
                                                                 <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Transparent" Padding="0" Width="32" Height="32" Margin="0,8,8,0"
                                                                            Tag="{Binding}" Click="NotificationDismiss_Click" ToolTip="Dismiss notification" AutomationProperties.Name="Dismiss notification">
-                                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="#FFA8B2BF" FontSize="16" />
+                                                                    <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextSecondary}" FontSize="16" />
                                                                 </ui:Button>
                                                             </Grid>
                                                         </Border>
@@ -578,13 +640,13 @@
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
                                             <StackPanel x:Name="TopNotificationsEmpty" HorizontalAlignment="Center" Margin="24,48" Visibility="Collapsed">
-                                                <ui:SymbolIcon Symbol="MailInbox24" FontSize="32" Foreground="#FF98A5B5" HorizontalAlignment="Center" />
-                                                <TextBlock Text="{DynamicResource AppNotificationsEmpty}" Foreground="#FFF4F6FA" FontSize="15" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,6" />
-                                                <TextBlock Text="{DynamicResource AppNotificationsEmptyHint}" Foreground="#FFA8B2BF" FontSize="13" TextAlignment="Center" />
+                                                <ui:SymbolIcon Symbol="MailInbox24" FontSize="32" Foreground="{DynamicResource TextSubtle}" HorizontalAlignment="Center" />
+                                                <TextBlock Text="{DynamicResource AppNotificationsEmpty}" Foreground="{DynamicResource TextPrimary}" FontSize="15" FontWeight="SemiBold" TextAlignment="Center" Margin="0,16,0,6" />
+                                                <TextBlock Text="{DynamicResource AppNotificationsEmptyHint}" Foreground="{DynamicResource TextSecondary}" FontSize="13" TextAlignment="Center" />
                                             </StackPanel>
                                         </Grid>
                                     </ScrollViewer>
-                                    <Border Grid.Row="2" BorderBrush="#26FFFFFF" BorderThickness="0,1,0,0" Padding="12,10">
+                                    <Border Grid.Row="2" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,1,0,0" Padding="12,10">
                                         <Grid>
                                             <Grid.Style>
                                                 <Style TargetType="Grid">
@@ -608,36 +670,36 @@
                     <ui:Button
                         x:Name="BtnSettings"
                         tutorials:Tutorial.TargetId="Navigation.Settings"
-                        Width="36"
-                        Height="36"
-                        Margin="2,6"
+                        Width="34"
+                        Height="34"
+                        Margin="2,7"
                         Padding="0"
                         Appearance="Transparent"
                         Click="BtnSettings_Click"
                         Icon="{ui:SymbolIcon Symbol=Settings24}"
                         ToolTip="{DynamicResource Settings}" />
                     <Border
-                        Height="36"
+                        Height="34"
                         tutorials:Tutorial.TargetId="Updates.Status"
-                        Margin="6,6,8,6"
+                        Margin="4,7,8,7"
                         HorizontalAlignment="Right"
                         BorderThickness="1"
-                        CornerRadius="8">
+                        CornerRadius="{DynamicResource RadiusCard}">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Background" Value="Transparent" />
                                 <Setter Property="BorderBrush" Value="Transparent" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsUpdateStatusExpanded}" Value="True">
-                                        <Setter Property="Background" Value="#181D22" />
-                                        <Setter Property="BorderBrush" Value="#2AFFFFFF" />
+                                        <Setter Property="Background" Value="{DynamicResource FillControl}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource StrokeDefault}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsUpdateAvailable}" Value="True">
-                                        <Setter Property="Background" Value="#162F37" />
-                                        <Setter Property="BorderBrush" Value="#6600CCFF" />
+                                        <Setter Property="Background" Value="{DynamicResource AccentSelectedFill}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentBorderSubtle}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsDownloadingUpdate}" Value="True">
-                                        <Setter Property="Background" Value="#122A31" />
+                                        <Setter Property="Background" Value="{DynamicResource AccentHoverFill}" />
                                         <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -655,7 +717,7 @@
                                 Grid.Column="3"
                                 AutomationProperties.Name="Manage 3D models"
                                 MinWidth="34"
-                                Height="34"
+                                Height="32"
                                 Padding="7,3"
                                 Appearance="Transparent"
                                 Click="BtnModelDownload_Click"
@@ -669,7 +731,7 @@
                                 x:Name="BtnCheckUpdates"
                                 tutorials:Tutorial.TargetId="Updates.Check"
                                 MinWidth="34"
-                                Height="34"
+                                Height="32"
                                 Padding="7,3"
                                 Appearance="Transparent"
                                 Click="BtnCheckUpdates_Click"
@@ -689,7 +751,7 @@
                                             Margin="0,-3,-4,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
-                                            Fill="#62D38B"
+                                            Fill="{DynamicResource AccentGreen}"
                                             Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVisibility}}" />
                                     </Grid>
                                     <Grid
@@ -708,27 +770,29 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="{DynamicResource TypeCaption}"
                                                 FontWeight="SemiBold"
-                                                Foreground="White"
+                                                Foreground="{DynamicResource TextPrimary}"
                                                 Text="{Binding UpdateStatusText}" />
                                             <TextBlock
                                                 Margin="8,0,0,0"
                                                 HorizontalAlignment="Right"
                                                 FontSize="{DynamicResource TypeCaption}"
-                                                Foreground="#CCFFFFFF"
+                                                Foreground="{DynamicResource TextSecondary}"
+                                                Typography.NumeralAlignment="Tabular"
                                                 Text="{Binding UpdateDownloadPercentage}"
                                                 Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
                                         </DockPanel>
                                         <TextBlock
                                             Grid.Row="1"
                                             HorizontalAlignment="Right"
-                                            FontSize="8"
-                                            Foreground="#99FFFFFF"
+                                            FontSize="{DynamicResource TypeBadge}"
+                                            Foreground="{DynamicResource TextSubtle}"
+                                            Typography.NumeralAlignment="Tabular"
                                             Text="{Binding UpdateDownloadSpeed}"
                                             Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
                                         <ProgressBar
                                             Grid.Row="2"
                                             Height="3"
-                                            Margin="0,1,0,0"
+                                            Margin="0,2,0,0"
                                             IsIndeterminate="{Binding IsUpdateProcessing}"
                                             Value="{Binding UpdateDownloadProgress}"
                                             Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BoolToVisibility}}" />
@@ -743,7 +807,7 @@
                                 Appearance="Transparent"
                                 Click="PauseResumeDownload_Click"
                                 Content="{Binding PauseResumeButtonText}"
-                                FontSize="10"
+                                FontSize="{DynamicResource TypeBadge}"
                                 Visibility="{Binding CanControlUpdateDownload, Converter={StaticResource BoolToVisibility}}" />
                             <ui:Button
                                 Grid.Column="2"
@@ -771,10 +835,10 @@
                                     MaxWidth="320"
                                     Margin="10"
                                     Padding="16"
-                                    Background="{DynamicResource ApplicationBackgroundBrush}"
-                                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                                    Background="{DynamicResource SurfaceHudElevated}"
+                                    BorderBrush="{DynamicResource StrokeHud}"
                                     BorderThickness="1"
-                                    CornerRadius="8">
+                                    CornerRadius="{DynamicResource RadiusCard}">
                                     <Border.Effect>
                                         <DropShadowEffect
                                             BlurRadius="18"
@@ -788,7 +852,7 @@
                                             <ui:SymbolIcon
                                                 Margin="0,0,8,0"
                                                 VerticalAlignment="Center"
-                                                Foreground="#62D38B"
+                                                Foreground="{DynamicResource AccentGreen}"
                                                 Symbol="CheckmarkCircle24" />
                                             <TextBlock
                                                 VerticalAlignment="Center"
@@ -864,7 +928,7 @@
                 Margin="0,0,0,0"
                 Padding="0"
                 Background="{DynamicResource Surface}"
-                BorderBrush="{DynamicResource WhiteA1A}"
+                BorderBrush="{DynamicResource StrokeSubtle}"
                 BorderThickness="0,0,1,0"
                 ClipToBounds="True"
                 CornerRadius="0"
@@ -873,8 +937,8 @@
                 TextElement.FontFamily="Segoe UI Variable Display, Segoe UI">
                 <Border.Effect>
                     <DropShadowEffect
-                        BlurRadius="24"
-                        Opacity="0.35"
+                        BlurRadius="20"
+                        Opacity="0.18"
                         ShadowDepth="0"
                         Color="#000000" />
                 </Border.Effect>
@@ -1548,11 +1612,15 @@
                             x:Name="BtnSupport"
                             tutorials:Tutorial.TargetId="Account.Support"
                             Grid.Column="0"
-                            Margin="0,0,10,0"
-                            Background="#991A1A00"
-                            BorderBrush="#80FFD166"
+                            Height="32"
+                            Margin="0,0,8,0"
+                            Padding="10,0"
+                            Background="{DynamicResource FillControl}"
+                            BorderBrush="{DynamicResource StrokeDefault}"
                             Click="BtnSupport_Click"
-                            Foreground="#FFD166"
+                            Foreground="{DynamicResource StatusWarning}"
+                            FontSize="{DynamicResource TypeCaption}"
+                            FontWeight="SemiBold"
                             Icon="{ui:SymbolIcon Symbol=Heart24}"
                             AutomationProperties.Name="{DynamicResource UiSupportRustPlusDesk}">
                             <ui:Button.Style>
@@ -1577,7 +1645,7 @@
                                     Width="32"
                                     Height="32"
                                     Padding="0"
-                                    Appearance="Secondary"
+                                    Appearance="Transparent"
                                     Click="BtnLanguageSettings_Click"
                                     ToolTip="{DynamicResource SelectLanguage}">
                                     <Image
@@ -1609,7 +1677,7 @@
                             Width="32"
                             Height="32"
                             Padding="0"
-                            Appearance="Secondary"
+                            Appearance="Transparent"
                             Click="BtnTutorials_Click"
                             Icon="{ui:SymbolIcon Symbol=BookQuestionMark24}"
                             ToolTip="{DynamicResource Tutorials.Center.Title}"
@@ -1619,16 +1687,16 @@
                         <!--  Achievements, with an unread count that clears once the list
                               has been opened. The badge overhangs the corner, so it never
                               changes the button's footprint.  -->
-                        <Grid Grid.Column="3" Margin="6,0,0,0">
+                        <Grid Grid.Column="3" Margin="4,0,0,0">
                             <ui:Button
                                 x:Name="BtnAchievements"
                                 Width="32"
                                 Height="32"
                                 Padding="0"
-                                Appearance="Secondary"
+                                Appearance="Transparent"
                                 Click="BtnAchievements_Click"
                                 Icon="{ui:SymbolIcon Symbol=Trophy24}"
-                                Foreground="#FFD27A1E"
+                                Foreground="{DynamicResource StatusWarning}"
                                 ToolTip="{DynamicResource AchievementsTitle}"
                                 AutomationProperties.Name="{DynamicResource AchievementsTitle}" />
 
@@ -1640,15 +1708,16 @@
                                     Height="16"
                                     Padding="4,0"
                                     CornerRadius="8"
-                                    Background="#FFE03131"
+                                    Background="{DynamicResource DangerBrush}"
                                     IsHitTestVisible="False"
                                     Visibility="Collapsed">
                                 <TextBlock x:Name="TxtAchievementBadge"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
-                                           FontSize="9"
+                                           FontSize="{DynamicResource TypeBadge}"
+                                           Typography.NumeralAlignment="Tabular"
                                            FontWeight="Bold"
-                                           Foreground="White" />
+                                           Foreground="{DynamicResource TextPrimary}" />
                             </Border>
                         </Grid>
                     </Grid>
@@ -5105,7 +5174,7 @@
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
                         SnapsToDevicePixels="True"
-                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderBrush="{DynamicResource StrokeSubtle}"
                         BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
@@ -5114,68 +5183,53 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <!-- Glassy Capsule-like Premium Header -->
-                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
-                                        <GradientStop Color="#002D3540" Offset="1.0"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <Grid Margin="12,10,12,10">
+                            <!-- Header aligned to PanelHeader tokens -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,0,0,1" Padding="14,12">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="&#x1F4B0;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Margin="0,1,0,0" />
-                                        </StackPanel>
+                                    <Border Grid.Column="0" Width="36" Height="36" Margin="0,0,12,0"
+                                            Background="{DynamicResource AccentTintBrush}"
+                                            BorderBrush="{DynamicResource AccentBorderSubtle}"
+                                            BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}">
+                                        <ui:SymbolIcon Symbol="Money24" FontSize="18" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource ProfitTrades}" FontSize="{DynamicResource TypeSubtitle}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Text="{DynamicResource ArbitrageOpportunities}" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="0,1,0,0" />
                                     </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button x:Name="BtnRefreshProfitTrades" Content="&#x27F3;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="16" Margin="0,0,6,0" ToolTip="{DynamicResource Refresh}" />
-                                        <Button x:Name="BtnCloseProfitTrades" Content="&#x2715;" Style="{DynamicResource GhostButton}" Width="30" Height="30" Padding="0" FontSize="13" Foreground="{DynamicResource TextSubtle}" />
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <ui:Button x:Name="BtnRefreshProfitTrades" Appearance="Transparent" Width="32" Height="32" Padding="0" Margin="0,0,4,0" Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" ToolTip="{DynamicResource Refresh}" />
+                                        <ui:Button x:Name="BtnCloseProfitTrades" Appearance="Transparent" Width="32" Height="32" Padding="0" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="{DynamicResource Close}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
 
-                            <!-- Modern User-Friendly Filter Controls (Search + Min Profit) -->
-                            <Border Grid.Row="1" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1" Padding="12,8">
+                            <!-- Filter Controls (Search + Min Profit) -->
+                            <Border Grid.Row="1" Background="{DynamicResource FillInset}" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,0,0,1" Padding="12,8">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="3*" />
                                         <ColumnDefinition Width="2*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Search input -->
-                                    <Border Grid.Column="0"
-                                            Background="#14171C"
-                                            BorderBrush="{DynamicResource WhiteA25}"
-                                            BorderThickness="1"
-                                            CornerRadius="6"
-                                            Height="32"
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Center">
-                                        <ui:TextBox
-                                            x:Name="TxtProfitSearch"
-                                            PlaceholderText="{DynamicResource UiSearchItemsEGSulfur}"
-                                            TextChanged="TxtProfitSearch_TextChanged"
-                                            Icon="Search24"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Foreground="White"
-                                            FontSize="12"
-                                            VerticalAlignment="Stretch"
-                                            VerticalContentAlignment="Center"
-                                            Padding="6,0,6,0" />
-                                    </Border>
+                                    <ui:TextBox
+                                        x:Name="TxtProfitSearch"
+                                        Grid.Column="0"
+                                        Height="32"
+                                        Margin="0,0,8,0"
+                                        PlaceholderText="{DynamicResource UiSearchItemsEGSulfur}"
+                                        TextChanged="TxtProfitSearch_TextChanged"
+                                        Icon="Search24"
+                                        FontSize="{DynamicResource TypeCaption}"
+                                        VerticalContentAlignment="Center" />
 
-                                    <!-- Min Profit ComboBox -->
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <TextBlock Text="{DynamicResource UiMinProfit}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{DynamicResource UiMinProfit}" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="0,0,6,0" VerticalAlignment="Center" />
                                         <ComboBox x:Name="CmbMinProfit" SelectionChanged="CmbMinProfit_SelectionChanged" Height="32" Width="100" FontSize="{DynamicResource TypeCaption}">
                                             <ComboBoxItem Content="{DynamicResource UiShowAll}" Tag="0" IsSelected="True"/>
                                             <ComboBoxItem Content="&#x2265; 10" Tag="10"/>
@@ -5200,7 +5254,7 @@
                         Visibility="Collapsed"
                         UseLayoutRounding="True"
                         SnapsToDevicePixels="True"
-                        BorderBrush="{DynamicResource CardBorder}"
+                        BorderBrush="{DynamicResource StrokeSubtle}"
                         BorderThickness="1,0,0,0">
                         <Grid ClipToBounds="True">
                             <Grid.RowDefinitions>
@@ -5210,32 +5264,30 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <!-- Glassy Capsule-like Premium Header -->
-                            <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#1A2D3540" Offset="0.0"/>
-                                        <GradientStop Color="#002D3540" Offset="1.0"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <Grid Margin="12,10,12,10">
+                            <!-- Header aligned to PanelHeader tokens -->
+                            <Border Grid.Row="0" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="0,0,0,1" Padding="14,12">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="&#x1F501;" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{DynamicResource BuyXForY}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock Text="{DynamicResource UiOptimalMultiHopTradePathfinder}" Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Margin="0,1,0,0" />
-                                        </StackPanel>
+                                    <Border Grid.Column="0" Width="36" Height="36" Margin="0,0,12,0"
+                                            Background="{DynamicResource AccentTintBrush}"
+                                            BorderBrush="{DynamicResource AccentBorderSubtle}"
+                                            BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}">
+                                        <ui:SymbolIcon Symbol="ArrowSwap24" FontSize="18" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource BuyXForY}" FontSize="{DynamicResource TypeSubtitle}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                                        <TextBlock Text="{DynamicResource UiOptimalMultiHopTradePathfinder}" Foreground="{DynamicResource TextSecondary}" FontSize="{DynamicResource TypeCaption}" Margin="0,1,0,0" />
                                     </StackPanel>
-                                    <ui:Button x:Name="BtnCloseBuyXForY" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4" Appearance="Transparent" Icon="{ui:SymbolIcon Symbol=Dismiss24}" />
+                                    <ui:Button x:Name="BtnCloseBuyXForY" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="32" Height="32" Padding="0" Appearance="Transparent" Icon="{ui:SymbolIcon Symbol=Dismiss24}" ToolTip="{DynamicResource Close}" />
                                 </Grid>
                             </Border>
 
-                            <!-- Glassy Form Input Controls -->
+                            <!-- Form Input Controls -->
                             <Grid Grid.Row="1" Margin="12,10,12,8" HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
@@ -5248,7 +5300,7 @@
                                     <ui:TextBox
                                         x:Name="BuyXForY_WantTb"
                                         Height="34"
-                                        FontSize="12"
+                                        FontSize="{DynamicResource TypeCaption}"
                                         PlaceholderText="{DynamicResource UiWantItemEGBlue}"
                                         Icon="Target24"
                                         VerticalAlignment="Stretch"
@@ -5266,10 +5318,10 @@
                                         MaxHeight="200"
                                         PopupAnimation="Fade">
                                         <Border
-                                            Background="#16191E"
-                                            BorderBrush="#35FFFFFF"
+                                            Background="{DynamicResource SurfaceHudElevated}"
+                                            BorderBrush="{DynamicResource StrokeHud}"
                                             BorderThickness="1"
-                                            CornerRadius="6">
+                                            CornerRadius="{DynamicResource RadiusCard}">
                                             <ListBox
                                                 x:Name="LstAutocomplete_Want"
                                                 Background="Transparent"
@@ -5281,7 +5333,7 @@
                                                         <Border Padding="6,4" Background="Transparent">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                                                             </StackPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -5296,7 +5348,7 @@
                                     <ui:TextBox
                                         x:Name="BuyXForY_PayTb"
                                         Height="34"
-                                        FontSize="12"
+                                        FontSize="{DynamicResource TypeCaption}"
                                         PlaceholderText="{DynamicResource UiPayItemEGCloth}"
                                         Icon="Money24"
                                         VerticalAlignment="Stretch"
@@ -5314,10 +5366,10 @@
                                         MaxHeight="200"
                                         PopupAnimation="Fade">
                                         <Border
-                                            Background="#16191E"
-                                            BorderBrush="#35FFFFFF"
+                                            Background="{DynamicResource SurfaceHudElevated}"
+                                            BorderBrush="{DynamicResource StrokeHud}"
                                             BorderThickness="1"
-                                            CornerRadius="6">
+                                            CornerRadius="{DynamicResource RadiusCard}">
                                             <ListBox
                                                 x:Name="LstAutocomplete_Pay"
                                                 Background="Transparent"
@@ -5329,7 +5381,7 @@
                                                         <Border Padding="6,4" Background="Transparent">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Image Width="16" Height="16" Margin="0,0,8,0" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality" />
-                                                                <TextBlock Text="{Binding Display}" Foreground="White" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
+                                                                <TextBlock Text="{Binding Display}" Foreground="{DynamicResource TextPrimary}" FontSize="{DynamicResource TypeCaption}" VerticalAlignment="Center" />
                                                             </StackPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -5348,8 +5400,8 @@
                                     Margin="6,0,0,0"
                                     Padding="14,0"
                                     Height="34"
-                                    FontSize="12"
-                                    FontWeight="Bold"
+                                    FontSize="{DynamicResource TypeCaption}"
+                                    FontWeight="SemiBold"
                                     Cursor="Hand"
                                     VerticalAlignment="Center" />
                             </Grid>
@@ -5362,17 +5414,17 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Left Preview Box: Items to Get -->
-                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
+                                <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource FillInset}" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}" Padding="8">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="Bold" Margin="4,0,0,4" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IWantToGet}" Foreground="{DynamicResource Accent}" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Margin="2,0,0,4" />
                                         <ListBox x:Name="BuyXForY_WantPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
 
                                 <!-- Right Preview Box: Items to Pay -->
-                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="6">
+                                <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource FillInset}" BorderBrush="{DynamicResource StrokeSubtle}" BorderThickness="1" CornerRadius="{DynamicResource RadiusCard}" Padding="8">
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="10" FontWeight="Bold" Margin="4,0,0,4" />
+                                        <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ICanPayWith}" Foreground="{DynamicResource Accent}" FontSize="{DynamicResource TypeCaption}" FontWeight="SemiBold" Margin="2,0,0,4" />
                                         <ListBox x:Name="BuyXForY_PayPreview" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingStackPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" />
                                     </DockPanel>
                                 </Border>
@@ -10979,53 +11031,150 @@
                         x:Name="LogPanel"
                         tutorials:Tutorial.TargetId="Diagnostics.Logs"
                         Grid.Row="2"
-                        Margin="0,8,0,0"
-                        Height="200">
+                        Margin="-12,0,-12,-12"
+                        Height="37">
                         <Border
-                            Padding="10,8"
+                            Padding="12,5"
                             Background="{DynamicResource FillInset}"
                             BorderBrush="{DynamicResource StrokeSubtle}"
-                            BorderThickness="1"
-                            CornerRadius="{DynamicResource RadiusCard}">
+                            BorderThickness="0,1,0,0"
+                            CornerRadius="0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <Grid Margin="0,0,0,6">
+                                <Grid Height="26">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <ui:TextBox
-                                        x:Name="TxtLogFilter"
-                                        Height="32"
-                                        ClearButtonEnabled="True"
-                                        FontSize="{DynamicResource TypeCaption}"
-                                        PlaceholderText="{DynamicResource UiFilterLogs}"
-                                        TextChanged="TxtLogFilter_TextChanged" />
+                                    <ui:Button
+                                        Padding="4,2"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Appearance="Transparent"
+                                        BorderThickness="0"
+                                        Click="BtnToggleLogExpand_Click"
+                                        Cursor="Hand">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="{DynamicResource Accent}"
+                                                Symbol="WindowConsole20" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="{DynamicResource TypeCaption}"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource TextPrimary}"
+                                                Text="Logs" />
+                                            <Border
+                                                x:Name="LogCountBadge"
+                                                Margin="7,0,0,0"
+                                                Padding="6,1"
+                                                VerticalAlignment="Center"
+                                                Background="{DynamicResource FillControl}"
+                                                BorderBrush="{DynamicResource StrokeSubtle}"
+                                                BorderThickness="1"
+                                                CornerRadius="{DynamicResource RadiusFull}">
+                                                <TextBlock
+                                                    x:Name="TxtLogCount"
+                                                    FontSize="{DynamicResource TypeBadge}"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource TextSecondary}"
+                                                    Text="0"
+                                                    Typography.NumeralAlignment="Tabular" />
+                                            </Border>
+                                        </StackPanel>
+                                    </ui:Button>
 
                                     <ui:Button
-                                        x:Name="BtnToggleLogExpand"
+                                        x:Name="BtnLatestLogPreview"
                                         Grid.Column="1"
-                                        Height="32"
-                                        Margin="6,0,0,0"
-                                        Padding="12,0"
-                                        Appearance="Secondary"
+                                        Margin="8,0,12,0"
+                                        Padding="6,2"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Appearance="Transparent"
+                                        BorderThickness="0"
                                         Click="BtnToggleLogExpand_Click"
-                                        Content="{DynamicResource UiExpand}" />
+                                        Cursor="Hand">
+                                        <TextBlock
+                                            x:Name="TxtLatestLogPreview"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Cascadia Mono, Consolas"
+                                            FontSize="{DynamicResource TypeCaption}"
+                                            Foreground="{DynamicResource TextMuted}"
+                                            Text="..."
+                                            TextTrimming="CharacterEllipsis" />
+                                    </ui:Button>
+
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <ui:TextBox
+                                            x:Name="TxtLogFilter"
+                                            Width="220"
+                                            Height="26"
+                                            Padding="8,0"
+                                            ClearButtonEnabled="True"
+                                            FontSize="{DynamicResource TypeCaption}"
+                                            PlaceholderText="{DynamicResource UiFilterLogs}"
+                                            TextChanged="TxtLogFilter_TextChanged" />
+
+                                        <ui:Button
+                                            x:Name="BtnClearLogs"
+                                            Width="26"
+                                            Height="26"
+                                            Margin="6,0,0,0"
+                                            Padding="0"
+                                            Appearance="Transparent"
+                                            Click="BtnClearLogs_Click"
+                                            Icon="{ui:SymbolIcon Delete24}"
+                                            ToolTip="Clear logs"
+                                            Visibility="Collapsed" />
+
+                                        <ui:Button
+                                            x:Name="BtnToggleLogExpand"
+                                            Height="26"
+                                            Margin="6,0,0,0"
+                                            Padding="10,0"
+                                            Appearance="Secondary"
+                                            Click="BtnToggleLogExpand_Click"
+                                            Content="{DynamicResource UiExpand}"
+                                            FontSize="{DynamicResource TypeCaption}" />
+                                    </StackPanel>
                                 </Grid>
 
-                                <TextBox
-                                    x:Name="TxtLog"
+                                <Border
+                                    x:Name="LogOutputBorder"
                                     Grid.Row="1"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    IsReadOnly="True"
-                                    TextWrapping="Wrap"
-                                    VerticalScrollBarVisibility="Auto" />
+                                    Margin="0,7,0,3"
+                                    Padding="8,6"
+                                    Background="{DynamicResource AppBg}"
+                                    BorderBrush="{DynamicResource StrokeSubtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="{DynamicResource RadiusCard}"
+                                    Visibility="Collapsed">
+                                    <TextBox
+                                        x:Name="TxtLog"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        FontFamily="Cascadia Mono, Consolas"
+                                        FontSize="{DynamicResource TypeCaption}"
+                                        Foreground="{DynamicResource TextSecondary}"
+                                        IsReadOnly="True"
+                                        TextWrapping="Wrap"
+                                        VerticalScrollBarVisibility="Auto"
+                                        Visibility="Collapsed" />
+                                </Border>
                             </Grid>
                         </Border>
                     </Grid>
@@ -11319,19 +11468,13 @@
 
             <!-- Upload Consent Overlay -->
             <Grid x:Name="UploadConsentOverlay" Visibility="Collapsed" Background="#C0000000" Grid.ColumnSpan="3" Panel.ZIndex="10000">
-                <Border Background="{DynamicResource SurfaceAlt}" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" CornerRadius="8" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="450">
+                <Border Background="{DynamicResource SurfaceHudElevated}" BorderBrush="{DynamicResource StrokeHud}" BorderThickness="1" CornerRadius="{DynamicResource RadiusHud}" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="450">
                     <StackPanel>
-                        <TextBlock Text="{DynamicResource UploadConsentTitle}" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
-                        <TextBlock Text="{DynamicResource UploadConsentText}" TextWrapping="Wrap" Margin="0,0,0,16" LineHeight="20"/>
+                        <TextBlock Text="{DynamicResource UploadConsentTitle}" FontWeight="SemiBold" FontSize="18" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,10"/>
+                        <TextBlock Text="{DynamicResource UploadConsentText}" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,18" LineHeight="20"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="{DynamicResource Decline}" Margin="0,0,8,0" Padding="16,6" Click="BtnDeclineUploadConsent_Click" Background="#404040" Foreground="White" BorderThickness="0" Cursor="Hand">
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="4"/>
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                            <ui:Button Content="{DynamicResource Accept}" Appearance="Primary" Padding="24,6" Click="BtnAcceptUploadConsent_Click" Cursor="Hand" />
+                            <ui:Button Content="{DynamicResource Decline}" Appearance="Secondary" Margin="0,0,8,0" Padding="16,6" Click="BtnDeclineUploadConsent_Click" />
+                            <ui:Button Content="{DynamicResource Accept}" Appearance="Primary" Padding="24,6" Click="BtnAcceptUploadConsent_Click" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
