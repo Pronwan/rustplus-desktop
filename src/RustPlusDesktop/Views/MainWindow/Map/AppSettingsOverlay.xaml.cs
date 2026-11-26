@@ -203,6 +203,7 @@ namespace RustPlusDesk.Views
                 Section("alert-templates", "alert-templates", "CustomAlertsHeader", "Chat Alert Templates", "chat alert templates messages oil rig crate alarm deep sea shop cargo event heli player tracking online offline death respawn", SectionChatAlertTemplates),
                 Section("ai-companion", "ai-companion", "AiCompanionTitle", "AI Companion", "ai companion openai gemini openrouter anthropic claude gpt voice tts hotkey audio prompt llm answers recording push talk", SectionAiCompanion),
                 Section("maintenance", "system", "MaintenanceTitle", "Maintenance", "reset app data backup restore maintenance", SectionMaintenance),
+                Section("developer", "system", "DevSettingsTitle", "Developer Sandbox", "dev developer fake pairing mock test server switch alarm storage chat team clan global sandbox", SectionDeveloper),
                 Section("credits", "system", "CreditsTitle", "Credits", "credits rustmaps icons legal", SectionCredits)
             };
 
@@ -1180,7 +1181,8 @@ namespace RustPlusDesk.Views
 
             try
             {
-                IEnumerable<ServerProfile> activeServers = ParentWindow?.ViewModel?.Servers ?? (IEnumerable<ServerProfile>)Array.Empty<ServerProfile>();
+                IEnumerable<ServerProfile> activeServers = (ParentWindow?.ViewModel?.Servers ?? (IEnumerable<ServerProfile>)Array.Empty<ServerProfile>())
+                    .Where(s => !s.IsFakeSandbox);
                 var result = await Services.Auth.SupabaseCloudCleanupService.PurgeOrphanedCloudDataAsync(activeServers, steamId);
 
                 if (result.Success)
@@ -1222,6 +1224,58 @@ namespace RustPlusDesk.Views
         {
             RustPlusDesk.Views.MainWindow.StartIconManualDownload();
             ParentWindow?.ShowInfoSnackbar("Icon Pack", "Checking and downloading missing icons...", WpfUi.ControlAppearance.Info);
+        }
+
+        private void BtnDevSeedSampleKit_Click(object sender, RoutedEventArgs e)
+        {
+            ParentWindow?.SeedFakeStarterKit();
+        }
+
+        private void BtnDevClearFakeData_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var (serversRemoved, devicesRemoved) = ParentWindow.ClearFakeSandboxData();
+            ParentWindow.ShowInfoSnackbar(
+                "Developer Sandbox",
+                $"Removed {serversRemoved} fake server(s) and {devicesRemoved} fake device(s).",
+                WpfUi.ControlAppearance.Info);
+        }
+
+        private void BtnDevAddFakeServer_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            var server = ParentWindow.AddFakeServerPairing(TxtDevFakeServerName?.Text);
+            TxtDevFakeServerName?.Clear();
+            ParentWindow.ShowInfoSnackbar("Developer Sandbox", $"Fake server '{server.Name}' paired.", WpfUi.ControlAppearance.Success);
+        }
+
+        private void BtnDevAddFakeDevice_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            string kind = (CmbDevFakeDeviceKind?.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "SmartSwitch";
+            var dev = ParentWindow.AddFakeDevicePairing(kind, TxtDevFakeDeviceName?.Text);
+            TxtDevFakeDeviceName?.Clear();
+            ParentWindow.ShowInfoSnackbar("Developer Sandbox", $"Fake device '{dev.PureName}' ({dev.Kind}) paired.", WpfUi.ControlAppearance.Success);
+        }
+
+        private void BtnDevTriggerFakeAlarm_Click(object sender, RoutedEventArgs e)
+        {
+            ParentWindow?.TriggerFakeAlarm();
+        }
+
+        private void BtnDevAddFakeChat_Click(object sender, RoutedEventArgs e)
+        {
+            if (ParentWindow == null) return;
+            string tag = (CmbDevFakeChatChannel?.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Team";
+            var channel = tag switch
+            {
+                "Clan" => MainWindow.ChatChannel.Clan,
+                "Global" => MainWindow.ChatChannel.Global,
+                _ => MainWindow.ChatChannel.Team,
+            };
+            ParentWindow.AddFakeChatMessage(channel, TxtDevFakeChatAuthor?.Text, TxtDevFakeChatMessage?.Text);
+            TxtDevFakeChatMessage?.Clear();
+            ParentWindow.ShowInfoSnackbar("Developer Sandbox", $"Simulated {channel} chat message added.", WpfUi.ControlAppearance.Info);
         }
 
         private void BtnBackupData_Click(object sender, RoutedEventArgs e)
@@ -2222,7 +2276,7 @@ namespace RustPlusDesk.Views
             var vm = ParentWindow?.DataContext as RustPlusDesk.ViewModels.MainViewModel;
             if (vm?.Servers != null)
             {
-                foreach (var s in vm.Servers)
+                foreach (var s in vm.Servers.Where(s => !s.IsFakeSandbox))
                 {
                     if (!string.IsNullOrEmpty(s.Host) && s.Port > 0)
                     {
@@ -2395,7 +2449,7 @@ namespace RustPlusDesk.Views
                     return;
                 }
 
-                var serverProfile = vm.Servers.FirstOrDefault(s => s.PlatformServerKey == serverKey);
+                var serverProfile = vm.Servers.FirstOrDefault(s => !s.IsFakeSandbox && s.PlatformServerKey == serverKey);
                 if (serverProfile != null)
                 {
                     if (Services.Cloud.CloudBackend.UsePlatform)

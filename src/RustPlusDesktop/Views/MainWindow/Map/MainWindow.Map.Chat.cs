@@ -853,7 +853,7 @@ public partial class MainWindow
         AppendChatIfNew(m, ChatChannel.Clan, isHistorical: false);
     }
 
-    private bool AppendChatIfNew(TeamChatMessage m, ChatChannel channel, bool isHistorical = false)
+    private bool AppendChatIfNew(TeamChatMessage m, ChatChannel channel, bool isHistorical = false, bool skipDiscordRelay = false)
     {
         var log = channel == ChatChannel.Clan ? _clanChatHistoryLog : _chatHistoryLog;
 
@@ -934,7 +934,7 @@ public partial class MainWindow
                     isAutomated = _recentAutomatedMessages.Remove(m.Text);
                 }
 
-                if (!isAutomated)
+                if (!isAutomated && !skipDiscordRelay)
                 {
                     string emoji = channel == ChatChannel.Clan ? "🏰" : "💬";
                     _ = DiscordBotListenerService.Instance.SendNotificationAsync("chat", $"{emoji} **{m.Author}**: {m.Text}");
@@ -1123,7 +1123,7 @@ public partial class MainWindow
         // from here exactly when somebody is most likely to be looking for people to play with.
         var connected = _rust is RustPlusClientReal && (_vm.Selected?.IsConnected ?? false);
 
-        if (!connected)
+        if (!connected && !IsDevChatSandboxActive)
         {
             if (!GlobalLaneAvailable)
             {
@@ -1138,30 +1138,33 @@ public partial class MainWindow
             return;
         }
 
-        var real = (RustPlusClientReal)_rust!;
+        if (connected)
+        {
+            var real = (RustPlusClientReal)_rust!;
 
-        try
-        {
-            real.TeamChatReceived -= Real_TeamChatReceived;
-            real.TeamChatReceived += Real_TeamChatReceived;
-            await real.PrimeTeamChatAsync();
-        }
-        catch (InvalidOperationException)
-        {
-            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
-            return;
-        }
-        catch (Exception ex)
-        {
-            AppendLog("PrimeChat failed: " + ex.Message);
-            ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.ChatNotAvailable, WpfUi.ControlAppearance.Danger);
-            return;
-        }
+            try
+            {
+                real.TeamChatReceived -= Real_TeamChatReceived;
+                real.TeamChatReceived += Real_TeamChatReceived;
+                await real.PrimeTeamChatAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.PleaseConnectFirst, WpfUi.ControlAppearance.Info);
+                return;
+            }
+            catch (Exception ex)
+            {
+                AppendLog("PrimeChat failed: " + ex.Message);
+                ShowInfoSnackbar(Properties.Resources.SnackbarTitleChat, Properties.Resources.ChatNotAvailable, WpfUi.ControlAppearance.Danger);
+                return;
+            }
 
-        _ = PrimeClanChatIfNeededAsync(real).ContinueWith(t =>
-        {
-            if (t.Exception != null) AppendLog("PrimeClanChat failed: " + t.Exception.InnerException?.Message);
-        }, TaskScheduler.Default);
+            _ = PrimeClanChatIfNeededAsync(real).ContinueWith(t =>
+            {
+                if (t.Exception != null) AppendLog("PrimeClanChat failed: " + t.Exception.InnerException?.Message);
+            }, TaskScheduler.Default);
+        }
 
         _displayedMessagesCount = 20;
         _clanDisplayedMessagesCount = 20;
@@ -1196,9 +1199,12 @@ public partial class MainWindow
             ShowChatOverlayCard();
         }
 
+        if (!connected) return;
+
+        var connectedReal = (RustPlusClientReal)_rust!;
         try
         {
-            var history = await real.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
+            var history = await connectedReal.GetTeamChatHistoryAsync(_lastChatTsForCurrentServer, limit: 120);
             if (history != null && history.Count > 0)
             {
                 bool anyNew = false;
@@ -1351,7 +1357,24 @@ public partial class MainWindow
         try
         {
             if (destination.Lane == ChatChannel.Global)
-                (sent, error) = await SendGlobalChatAsync(text, destination);
+            {
+                if (!Services.Cloud.CloudAuthManager.IsAuthenticated && _devFakeGlobalChatEnabled)
+                {
+                    InjectFakeGlobalMessage("You (Dev)", text, isMine: true);
+                    sent = true;
+                }
+                else
+                {
+                    (sent, error) = await SendGlobalChatAsync(text, destination);
+                }
+            }
+            else if (IsDevChatSandboxActive && !(_rust is RustPlusClientReal && (_vm.Selected?.IsConnected ?? false)))
+            {
+                ulong senderSteam = _mySteamId != 0 ? _mySteamId : 76561198000000001UL;
+                var echo = new TeamChatMessage(DateTime.UtcNow, "You (Dev)", senderSteam, text);
+                AppendChatIfNew(echo, destination.Lane, isHistorical: false, skipDiscordRelay: true);
+                sent = true;
+            }
             else
             {
                 sent = await SendChatReliableAsync(text, destination.Lane);

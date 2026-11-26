@@ -603,6 +603,15 @@ public partial class MainWindow
         var requestedProfile = _vm.Selected;
         int requestedSelectionVersion = _mapSelectionVersion;
         if (requestedProfile == null) return false;
+        if (requestedProfile.IsFakeSandbox)
+        {
+            if (!silent)
+            {
+                AppendLog($"[DEV] '{requestedProfile.Name}' is a fake sandbox server — running UI locally without Rust+ socket.");
+                ShowInfoSnackbar("Developer Sandbox", $"'{requestedProfile.Name}' is a fake pairing server (local UI testing only).", WpfUi.ControlAppearance.Info);
+            }
+            return false;
+        }
         _vm.IsFullConnectRequested = true;
         if (showBusy && HasMapImage) _vm.IsConnectionLoading = false;
 

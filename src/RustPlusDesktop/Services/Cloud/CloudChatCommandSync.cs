@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -36,7 +36,7 @@ namespace RustPlusDesk.Services.Cloud
         public static async Task SyncAsync(ServerProfile profile, string serverKey)
         {
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return;
-            if (profile == null || string.IsNullOrWhiteSpace(serverKey)) return;
+            if (profile == null || profile.IsFakeSandbox || ServerProfile.IsFakeSandboxServerKey(serverKey) || string.IsNullOrWhiteSpace(serverKey)) return;
 
             var payload = BuildPayload(profile, serverKey);
             var signature = System.Text.Json.JsonSerializer.Serialize(payload).GetHashCode();
@@ -114,7 +114,7 @@ namespace RustPlusDesk.Services.Cloud
             };
 
             // The rig answers only where an alarm is set up as its trigger, as in the app.
-            if (profile.AllDevices.Any(d => !string.IsNullOrEmpty(d.OilRigTriggerTarget)))
+            if (profile.AllDevices.Any(d => !d.IsFakeSandbox && !string.IsNullOrEmpty(d.OilRigTriggerTarget)))
                 words["oilrig"] = profile.CmdOilRig;
 
             // Only the words the user actually set. Sending empty keys would let a
@@ -123,11 +123,16 @@ namespace RustPlusDesk.Services.Cloud
                 .Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
                 .ToDictionary(kv => kv.Key, kv => kv.Value!);
 
+            var fakeEntityIds = profile.AllDevices
+                .Where(d => d.IsFakeSandbox && d.EntityId != 0)
+                .Select(d => d.EntityId)
+                .ToHashSet();
+
             // Switch commands, and the per-cupboard upkeep commands: the cloud tells them apart by
             // the device they point at.
             var mappings = profile.SwitchCommandMappings
                 .Concat(profile.UpkeepCommandMappings)
-                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Command) && m.EntityId != 0)
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Command) && m.EntityId != 0 && !fakeEntityIds.Contains(m.EntityId))
                 .Select(m => new { command = m.Command, entity_id = m.EntityId })
                 .ToList();
 

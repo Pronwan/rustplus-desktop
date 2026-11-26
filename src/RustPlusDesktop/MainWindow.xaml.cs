@@ -350,7 +350,7 @@ public partial class MainWindow : WpfUi.FluentWindow
                     await RefreshPremiumProfileSnapshotAsync();
                 }
 
-                if (!TrackingService.CloudSyncEnabled || _vm.Selected == null) return;
+                if (!TrackingService.CloudSyncEnabled || _vm.Selected == null || _vm.Selected.IsFakeSandbox) return;
 
                 // Upload our own device snapshot every 10 seconds (4 ticks of 2.5s).
                 // Teammate overlays are pulled by the overlay poller only while selected/visible.
@@ -5129,7 +5129,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
         if (ReferenceEquals(_vm.Selected, prof))
             RescaleStorageFromCache(prof);
 
-        if (await Services.Cloud.CloudServerModifiersSync.PushAsync(prof))
+        if (!prof.IsFakeSandbox && await Services.Cloud.CloudServerModifiersSync.PushAsync(prof))
             _vm.Save();
     }
 
@@ -5242,6 +5242,16 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
 
             if (ReferenceEquals(_vm.Selected, prof)) _vm.Selected = null;
             // Its old pairing notifications must not recreate it on the next history sync.
+            if (prof.IsFakeSandbox)
+            {
+                _vm.Servers.Remove(prof);
+                if (TrackingService.LastSelectedServerKey == prof.MatchKey)
+                    TrackingService.LastSelectedServerKey = "";
+                _vm.Save();
+                AppendLog($"[DEV] Fake server deleted locally (no cloud cleanup): {prof.Name}");
+                return;
+            }
+
             RemovedServerStore.MarkRemoved(prof);
             _vm.Servers.Remove(prof);
             if (TrackingService.LastSelectedServerKey == prof.MatchKey)
@@ -5632,7 +5642,7 @@ private sealed record MarkerRef(System.Windows.Shapes.Ellipse Dot, double U_DIP,
             if (_logLines.Count == 0)
             {
                 TxtLatestLogPreview.Text = "...";
-                TxtLatestLogPreview.SetResourceReference(TextBlock.ForegroundProperty, "TextMuted");
+                TxtLatestLogPreview.SetResourceReference(TextBlock.ForegroundProperty, "TextMutedBrush");
             }
             else
             {

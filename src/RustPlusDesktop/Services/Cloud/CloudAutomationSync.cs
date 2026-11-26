@@ -32,7 +32,7 @@ namespace RustPlusDesk.Services.Cloud
         public static async Task SyncAsync(ServerProfile profile, string serverKey)
         {
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return;
-            if (profile == null || string.IsNullOrWhiteSpace(serverKey)) return;
+            if (profile == null || profile.IsFakeSandbox || ServerProfile.IsFakeSandboxServerKey(serverKey) || string.IsNullOrWhiteSpace(serverKey)) return;
 
             object payload;
             try

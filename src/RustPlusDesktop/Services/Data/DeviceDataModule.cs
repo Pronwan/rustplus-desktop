@@ -15,6 +15,9 @@ namespace RustPlusDesk.Services.Data
         private static ulong _lastSyncedSteamId;
 
         public static ExportedDeviceDto MapDeviceToDto(SmartDevice d)
+            => MapDeviceToDto(d, excludeFakeSandbox: false);
+
+        public static ExportedDeviceDto MapDeviceToDto(SmartDevice d, bool excludeFakeSandbox)
         {
             var dto = new ExportedDeviceDto
             {
@@ -34,7 +37,8 @@ namespace RustPlusDesk.Services.Data
                 dto.Children = new List<ExportedDeviceDto>();
                 foreach (var child in d.Children)
                 {
-                    dto.Children.Add(MapDeviceToDto(child));
+                    if (excludeFakeSandbox && child.IsFakeSandbox) continue;
+                    dto.Children.Add(MapDeviceToDto(child, excludeFakeSandbox));
                 }
             }
 
@@ -177,9 +181,17 @@ namespace RustPlusDesk.Services.Data
 
         public static async Task<int> UploadDevicesSnapshotAsync(string serverKey, ulong steamId, IEnumerable<SmartDevice> devices, OverlaySaveData? canvasOverlay, bool explicitWipe = false)
         {
+            if (ServerProfile.IsFakeSandboxServerKey(serverKey))
+            {
+                return 0;
+            }
+
             var dtoList = new List<ExportedDeviceDto>();
             foreach (var d in devices)
-                dtoList.Add(MapDeviceToDto(d));
+            {
+                if (d.IsFakeSandbox) continue;
+                dtoList.Add(MapDeviceToDto(d, excludeFakeSandbox: true));
+            }
 
             // Wipe protection: never upload empty device list unless this is an intentional delete.
             if (dtoList.Count == 0 && !explicitWipe)

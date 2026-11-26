@@ -88,6 +88,9 @@ public class SmartDevice : INotifyPropertyChanged
         set { if (_isGroup != value) { _isGroup = value; OnProp(); OnProp(nameof(HasGroupSwitches)); } }
     }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool IsFakeSandbox { get; set; }
+
     public DateTime LastPolledAt { get; set; } = DateTime.MinValue;
 
     private double? _pairedX;

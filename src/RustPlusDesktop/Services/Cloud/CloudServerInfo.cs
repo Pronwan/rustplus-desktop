@@ -29,7 +29,7 @@ namespace RustPlusDesk.Services.Cloud
         public static async Task ReportOnceAsync(string serverKey, string? name, int mapSize, DateTime? wipeAt)
         {
             if (!CloudBackend.UsePlatform) return;
-            if (string.IsNullOrWhiteSpace(serverKey)) return;
+            if (string.IsNullOrWhiteSpace(serverKey) || Models.ServerProfile.IsFakeSandboxServerKey(serverKey)) return;
             if (!CloudAuthManager.IsAuthenticated) return;
             if (!Reported.TryAdd(serverKey, 0)) return;
 
@@ -63,8 +63,8 @@ namespace RustPlusDesk.Services.Cloud
         public static async Task EnsurePairedOnceAsync(string serverKey, string? host, int port, string? name, string? playerToken, ulong steamId)
         {
             if (!CloudBackend.UsePlatform) return;
-            if (string.IsNullOrWhiteSpace(serverKey)) return;
-            if (string.IsNullOrWhiteSpace(host)) return;
+            if (string.IsNullOrWhiteSpace(serverKey) || Models.ServerProfile.IsFakeSandboxServerKey(serverKey)) return;
+            if (string.IsNullOrWhiteSpace(host) || string.Equals(host, Models.ServerProfile.FakeSandboxHost, StringComparison.OrdinalIgnoreCase)) return;
             if (!CloudAuthManager.IsAuthenticated) return;
             if (string.IsNullOrWhiteSpace(playerToken)) return;
             if (steamId == 0) return;

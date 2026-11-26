@@ -97,6 +97,12 @@ namespace RustPlusDesk.Services.Cloud
         /// </summary>
         public static async Task<string?> PairServerAsync(string steamId, string host, int port, string? name, string playerToken, string? serverKey = null, string? facepunchId = null)
         {
+            if (string.Equals(host, Models.ServerProfile.FakeSandboxHost, StringComparison.OrdinalIgnoreCase)
+                || Models.ServerProfile.IsFakeSandboxServerKey(serverKey))
+            {
+                return null;
+            }
+
             // No address for a server paired by Facepunch's id alone: its "companion-socket" host is a
             // stand-in, and sent as one it lands on a row every such server shares.
             var realHost = !string.IsNullOrWhiteSpace(host) && !host.Contains("companion-socket", StringComparison.OrdinalIgnoreCase) && port > 0;

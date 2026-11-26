@@ -1119,8 +1119,17 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
         dev.IsToggleBusy = true;
         int attempts = 0;
         bool success = false;
+        bool isFake = dev.IsFakeSandbox || (_vm?.Selected?.IsFakeSandbox == true);
         try
         {
+            if (isFake)
+            {
+                dev.IsOn = on;
+                _vm?.Save();
+                AppendLog($"[DEV] Simulated switch #{dev.EntityId} ({dev.PureName}) -> {(on ? "ON" : "OFF")}");
+                return;
+            }
+
             if (!await EnsureConnectedAsync())
             {
                 RevertSkippedToggle(dev, on);
@@ -1180,7 +1189,10 @@ private async void DeviceToggle_Click(object sender, RoutedEventArgs e)
                 _ = Task.Delay(500).ContinueWith(_ => _globalToggleBusy = false);
             }
 
-            VerifyToggleSoon(dev);
+            if (!isFake)
+            {
+                VerifyToggleSoon(dev);
+            }
         }
     }
 
@@ -2115,13 +2127,32 @@ public List<ExportedDeviceDto> Devices { get; set; } = new();
         var profile = _vm.Selected;
         if (profile?.Devices == null)
             throw new InvalidOperationException("No devices in current profile.");
+        if (profile.IsFakeSandbox)
+            return 0;
 
+        var realDevices = profile.Devices.Where(d => !d.IsFakeSandbox).ToList();
         var canvasOverlay = BuildCurrentOverlaySaveDataForMe();
-        var synced = await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, profile.Devices, canvasOverlay, explicitWipe);
+        var synced = await DeviceDataModule.UploadDevicesSnapshotAsync(GetServerKey(), _mySteamId, realDevices, canvasOverlay, explicitWipe);
         if (synced > 0)
             MarkDevicesCloudSynced(synced);
 
         return synced;
+    }
+
+    private void Device_TriggerFakeAlarm_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.DataContext is SmartDevice dev)
+        {
+            TriggerFakeAlarm(dev);
+        }
+    }
+
+    private void BtnTriggerFakeAlarm_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.DataContext is SmartDevice dev)
+        {
+            TriggerFakeAlarm(dev);
+        }
     }
 
     private ExportedDeviceDto MapDeviceToDto(SmartDevice d)

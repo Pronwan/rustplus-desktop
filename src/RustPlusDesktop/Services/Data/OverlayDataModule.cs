@@ -62,6 +62,7 @@ namespace RustPlusDesk.Services.Data
         /// <param name="explicitWipe">If true, an empty overlay is intentionally uploaded (e.g. trash button).</param>
         public static async Task<bool> UploadOverlayAsync(string serverKey, ulong steamId, OverlaySaveData data, bool explicitWipe = false)
         {
+            if (Models.ServerProfile.IsFakeSandboxServerKey(serverKey)) return false;
             if (!Cloud.CloudAuth.IsCloudAvailable) return false;
             if (!TrackingService.CloudSyncEnabled || !TrackingService.UploadConsentGiven) return false;
             if (!await Auth.SupabaseAuthManager.EnsureFreshSessionAsync()) return false;

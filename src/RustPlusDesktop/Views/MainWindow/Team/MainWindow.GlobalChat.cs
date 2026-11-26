@@ -91,8 +91,8 @@ public partial class MainWindow
     {
         EnsureGlobalChatTickerWired();
 
-        var show = _socialAvailable
-            && Services.Cloud.CloudAuthManager.IsAuthenticated
+        var show = ((_socialAvailable && Services.Cloud.CloudAuthManager.IsAuthenticated)
+                    || _devFakeGlobalChatEnabled)
             && !Controls.Chat.GlobalChatTicker.IsHidden;
 
         GlobalChatTickerStrip.Visibility = show ? Visibility.Visible : Visibility.Collapsed;

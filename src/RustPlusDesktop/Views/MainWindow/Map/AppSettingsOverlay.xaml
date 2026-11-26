@@ -2161,6 +2161,89 @@
                     </StackPanel>
                 </ui:Card>
                 </StackPanel>
+
+                <!-- Developer Sandbox Section -->
+                <StackPanel x:Name="SectionDeveloper">
+                <ui:TextBlock Text="Developer Sandbox" Style="{StaticResource SectionTitle}" Foreground="{DynamicResource Accent}" />
+                <ui:Card Style="{StaticResource SettingsNativeCard}">
+                    <StackPanel>
+                        <ui:TextBlock Text="Add fake server pairings, smart devices, and chat messages that act like real items for local UI testing." Foreground="{DynamicResource TextSubtle}" FontSize="{DynamicResource TypeCaption}" Margin="0,0,0,12" TextWrapping="Wrap" />
+
+                        <!-- Quick Sample Kit & Clear -->
+                        <Grid Margin="0,0,0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button x:Name="BtnDevSeedSampleKit" Grid.Column="0" Content="Pair Sample Kit (Server + Devices + Chats)" Appearance="Primary" Icon="{ui:SymbolIcon Symbol=DeveloperBoard24}" HorizontalAlignment="Stretch" Height="34" Click="BtnDevSeedSampleKit_Click" />
+                            <ui:Button x:Name="BtnDevClearFakeData" Grid.Column="1" Content="Clear Fake Data" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Delete24}" Height="34" Margin="8,0,0,0" Padding="12,0" Click="BtnDevClearFakeData_Click" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Fake Server Pairing -->
+                        <ui:TextBlock Text="Fake Server Pairing" Style="{StaticResource SettingsSubheader}" Margin="0,0,0,6" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox x:Name="TxtDevFakeServerName" Grid.Column="0" Height="32" PlaceholderText="Server name (optional, e.g. [DEV] EU Main)" />
+                            <ui:Button x:Name="BtnDevAddFakeServer" Grid.Column="1" Content="Pair Fake Server" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Add20}" Height="32" Margin="8,0,0,0" Padding="12,0" Click="BtnDevAddFakeServer_Click" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Fake Device Pairing -->
+                        <ui:TextBlock Text="Fake Device Pairing (Selected Server)" Style="{StaticResource SettingsSubheader}" Margin="0,0,0,6" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CmbDevFakeDeviceKind" Grid.Column="0" Height="32" SelectedIndex="0" Margin="0,0,8,0">
+                                <ComboBoxItem Content="Smart Switch" Tag="SmartSwitch" />
+                                <ComboBoxItem Content="Smart Alarm" Tag="SmartAlarm" />
+                                <ComboBoxItem Content="Storage Monitor" Tag="StorageMonitor" />
+                            </ComboBox>
+                            <ui:TextBox x:Name="TxtDevFakeDeviceName" Grid.Column="1" Height="32" PlaceholderText="Device name (optional)" />
+                        </Grid>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:Button x:Name="BtnDevAddFakeDevice" Grid.Column="0" Content="Pair Fake Device" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=AddCircle24}" HorizontalAlignment="Stretch" Height="32" Click="BtnDevAddFakeDevice_Click" />
+                            <ui:Button x:Name="BtnDevTriggerFakeAlarm" Grid.Column="1" Content="Trigger Fake Alarm" Appearance="Caution" Icon="{ui:SymbolIcon Symbol=Alert24}" Height="32" Margin="8,0,0,0" Padding="12,0" Click="BtnDevTriggerFakeAlarm_Click" />
+                        </Grid>
+
+                        <Border Style="{StaticResource SettingsRowDivider}" />
+
+                        <!-- Fake Chat Simulation -->
+                        <ui:TextBlock Text="Fake Chat Message" Style="{StaticResource SettingsSubheader}" Margin="0,0,0,6" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CmbDevFakeChatChannel" Grid.Column="0" Height="32" SelectedIndex="0" Margin="0,0,8,0">
+                                <ComboBoxItem Content="Team Chat" Tag="Team" />
+                                <ComboBoxItem Content="Clan Chat" Tag="Clan" />
+                                <ComboBoxItem Content="Global Chat" Tag="Global" />
+                            </ComboBox>
+                            <ui:TextBox x:Name="TxtDevFakeChatAuthor" Grid.Column="1" Height="32" PlaceholderText="Sender name (optional)" />
+                        </Grid>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox x:Name="TxtDevFakeChatMessage" Grid.Column="0" Height="32" PlaceholderText="Message text (optional)" />
+                            <ui:Button x:Name="BtnDevAddFakeChat" Grid.Column="1" Content="Send Fake Chat" Appearance="Secondary" Icon="{ui:SymbolIcon Symbol=Chat24}" Height="32" Margin="8,0,0,0" Padding="12,0" Click="BtnDevAddFakeChat_Click" />
+                        </Grid>
+                    </StackPanel>
+                </ui:Card>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
             </Grid>

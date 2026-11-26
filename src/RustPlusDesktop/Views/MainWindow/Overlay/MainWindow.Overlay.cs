@@ -1405,7 +1405,7 @@ private bool _overlayToolsVisible = false;
         SaveOwnOverlayToJson();
 
         // 4. Expliziten Wipe in die Cloud pushen (explicitWipe=true umgeht den Wipe-Schutz)
-        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
+        if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable && _vm.Selected?.IsFakeSandbox != true)
         {
             var sk  = GetServerKey();
             var sid = _mySteamId;
@@ -1414,7 +1414,10 @@ private bool _overlayToolsVisible = false;
             if (_vm.Selected?.Devices != null)
             {
                 foreach (var dev in _vm.Selected.Devices)
-                    emptyWithDevices.Devices.Add(MapDeviceToDto(dev));
+                {
+                    if (!dev.IsFakeSandbox)
+                        emptyWithDevices.Devices.Add(MapDeviceToDto(dev));
+                }
             }
             _ = Task.Run(async () =>
             {
@@ -1957,6 +1960,7 @@ private bool _overlayToolsVisible = false;
     {
         try
         {
+            if (_vm.Selected?.IsFakeSandbox == true) return;
             if (!_ownCloudRestoreReady)
             {
                 AppendLog("[overlay/cloud] Upload skipped until cloud restore is complete.");
@@ -1978,7 +1982,7 @@ private bool _overlayToolsVisible = false;
             data.Devices.Clear();
             if (_vm.Selected?.Devices != null)
             {
-                foreach (var dev in _vm.Selected.Devices)
+                foreach (var dev in _vm.Selected.Devices.Where(d => !d.IsFakeSandbox))
                 {
                     data.Devices.Add(MapDeviceToDto(dev));
                 }
@@ -2710,7 +2714,7 @@ private bool _overlayToolsVisible = false;
             var overlayByteSize = OverlayDataModule.CalculateUncompressedSize(data);
 
             // 4) Debounced Cloud upload if enabled (anon key works, no Discord needed)
-            if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable)
+            if (TrackingService.CloudSyncEnabled && Services.Cloud.CloudAuth.IsCloudAvailable && _vm.Selected?.IsFakeSandbox != true)
             {
                 if (IsOverlaySyncLimitExceeded(overlayByteSize))
                     return;

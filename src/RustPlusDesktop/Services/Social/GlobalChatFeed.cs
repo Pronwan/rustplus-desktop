@@ -471,6 +471,74 @@ public static class GlobalChatFeed
         foreach (var room in stale) _ = CatchUpAsync(room);
     }
 
+    /// <summary>
+    /// Injects a synthetic chat line for local UI testing without requiring a cloud socket.
+    /// </summary>
+    public static void InjectDevMessage(Models.ChatLine line)
+    {
+        if (line == null) return;
+        var room = string.IsNullOrWhiteSpace(line.Room) ? DefaultRoom : line.Room;
+
+        lock (Gate)
+        {
+            var state = State(room);
+            state.Loaded = true;
+            if (state.Lines.Any(l => string.Equals(l.Id, line.Id, StringComparison.Ordinal))) return;
+
+            state.Lines.Add(line);
+            Trim(state);
+            state.LastArrivalUtc = DateTime.UtcNow;
+
+            if (!line.IsMine)
+            {
+                state.Unseen++;
+                if (line.MentionsMe) state.UnseenMentions++;
+            }
+        }
+
+        Raise(() =>
+        {
+            RoomChanged?.Invoke(room);
+            LineArrived?.Invoke(line);
+            if (!line.IsMine)
+            {
+                UnseenChanged?.Invoke(room);
+                if (line.MentionsMe) MentionArrived?.Invoke(line);
+            }
+        });
+    }
+
+    /// <summary>
+    /// Removes all synthetic dev lines added via <see cref="InjectDevMessage"/>.
+    /// </summary>
+    public static void ClearDevMessages()
+    {
+        var touched = new List<string>();
+
+        lock (Gate)
+        {
+            foreach (var (room, state) in Rooms)
+            {
+                if (state.Lines.RemoveAll(l => l.Id.StartsWith("dev-", StringComparison.Ordinal)) > 0)
+                {
+                    state.Unseen = 0;
+                    state.UnseenMentions = 0;
+                    touched.Add(room);
+                }
+            }
+        }
+
+        if (touched.Count == 0) return;
+        Raise(() =>
+        {
+            foreach (var room in touched)
+            {
+                RoomChanged?.Invoke(room);
+                UnseenChanged?.Invoke(room);
+            }
+        });
+    }
+
     // ── Plumbing ────────────────────────────────────────────────────────────
 
     /// <summary>

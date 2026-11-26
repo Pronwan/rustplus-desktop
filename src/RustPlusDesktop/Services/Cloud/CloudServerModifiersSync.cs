@@ -22,7 +22,7 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>Sends this server's modifiers to the platform; true when it took them.</summary>
         public static async Task<bool> PushAsync(ServerProfile profile)
         {
-            if (profile == null) return false;
+            if (profile == null || profile.IsFakeSandbox) return false;
             if (!CloudBackend.UsePlatform || !CloudAuthManager.IsAuthenticated) return false;
 
             var key = profile.PlatformServerKey;
@@ -52,7 +52,7 @@ namespace RustPlusDesk.Services.Cloud
         /// <summary>Sends every server whose modifiers changed here and did not reach the platform.</summary>
         public static async Task RetryPendingAsync(IEnumerable<ServerProfile> profiles)
         {
-            foreach (var profile in profiles.Where(p => p.ModifiersPushPending).ToList())
+            foreach (var profile in profiles.Where(p => !p.IsFakeSandbox && p.ModifiersPushPending).ToList())
                 await PushAsync(profile);
         }
 

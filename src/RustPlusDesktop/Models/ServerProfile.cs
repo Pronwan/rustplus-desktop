@@ -108,6 +108,17 @@ public class ServerProfile : INotifyPropertyChanged
         }
     }
 
+    public const string FakeSandboxHost = "dev-sandbox.local";
+
+    public static bool IsFakeSandboxServerKey(string? key) =>
+        !string.IsNullOrWhiteSpace(key) &&
+        (key.StartsWith(FakeSandboxHost + "-", StringComparison.OrdinalIgnoreCase) ||
+         key.StartsWith(FakeSandboxHost + "_", StringComparison.OrdinalIgnoreCase) ||
+         key.StartsWith("dev-sandbox-", StringComparison.OrdinalIgnoreCase));
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool IsFakeSandbox { get; set; }
+
     // Stable identity used to remember the last selected server across restarts.
     // PlayerToken is deliberately excluded so a re-pair on the same server still matches.
     public string MatchKey => !string.IsNullOrWhiteSpace(ServerId)

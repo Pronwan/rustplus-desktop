@@ -26,7 +26,7 @@ public partial class MainWindow
     /// the time somebody has this app open.
     /// </summary>
     private bool GlobalLaneAvailable =>
-        _socialAvailable && Services.Cloud.CloudAuthManager.IsAuthenticated;
+        (_socialAvailable && Services.Cloud.CloudAuthManager.IsAuthenticated) || _devFakeGlobalChatEnabled;
 
     /// <summary>
     /// Subscribes the lane to the feed, once.

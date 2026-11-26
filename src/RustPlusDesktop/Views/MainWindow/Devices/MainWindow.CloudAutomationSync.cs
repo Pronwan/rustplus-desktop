@@ -62,7 +62,7 @@ public partial class MainWindow
     private async void PushDevicesToCloudNow()
     {
         var profile = _vm?.Selected;
-        if (profile == null) return;
+        if (profile == null || profile.IsFakeSandbox) return;
 
         try
         {
@@ -81,7 +81,7 @@ public partial class MainWindow
     private void SyncCloudAutomations()
     {
         var profile = _vm?.Selected;
-        if (profile == null || string.IsNullOrWhiteSpace(profile.ServerKey)) return;
+        if (profile == null || profile.IsFakeSandbox || string.IsNullOrWhiteSpace(profile.ServerKey)) return;
 
         _ = CloudAutomationSync.SyncAsync(profile, profile.ServerKey);
         // The command words and the door-code choice follow every save too, not only a reconnect:
