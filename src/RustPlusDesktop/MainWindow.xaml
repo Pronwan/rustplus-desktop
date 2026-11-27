@@ -4569,6 +4569,11 @@
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom"
                                     Orientation="Horizontal">
+                                    <ui:Button x:Name="BtnSeenPlayers" Margin="0,0,8,0"
+                                               Appearance="Secondary" Padding="14,8"
+                                               Icon="{ui:SymbolIcon Symbol=PeopleSearch24}"
+                                               ToolTip="{DynamicResource SeenPlayersTip}"
+                                               Content="{DynamicResource SeenPlayers}" />
                                     <ui:Button x:Name="BtnAddCam" tutorials:Tutorial.TargetId="Cameras.Add"
                                                Appearance="Primary" Padding="14,8"
                                                Icon="{ui:SymbolIcon Symbol=CameraAdd24}"

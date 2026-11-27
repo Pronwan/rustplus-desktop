@@ -68,6 +68,24 @@ jobs:
           token: ${{ secrets.AUTH_SUBMODULE_TOKEN || secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
           path: vendor/RustPlus.Auth
 
+      # The private HD camera module, at the commit the submodule pointer names (a release builds exactly what
+      # was committed). Required: without it the app would silently ship without HD / 3D cameras.
+      - name: Resolve the HD camera module commit
+        id: hdcams
+        shell: bash
+        run: |
+          sha=$(git ls-tree HEAD vendor/HdCameras | awk '{print $3}')
+          if [ -z "$sha" ]; then echo "::error::vendor/HdCameras is not a submodule in this commit."; exit 1; fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout HD cameras (Private Submodule)
+        uses: actions/checkout@v4
+        with:
+          repository: 'Pronwan/hd-cameras'
+          ref: ${{ steps.hdcams.outputs.sha }}
+          token: ${{ secrets.HD_CAMERAS_TOKEN || secrets.MAP_PARSER_TOKEN }}
+          path: vendor/HdCameras
+
       - name: Checkout MapParser
         uses: actions/checkout@v4
         with:

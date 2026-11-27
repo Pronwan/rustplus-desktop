@@ -42,8 +42,27 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
     private string CamDisplayName(string id)
         => _cameraNames != null && _cameraNames.TryGetValue(id, out var n) && !string.IsNullOrWhiteSpace(n) ? n : id;
 
+    /// <summary>The selected server profile's name; camera sightings are filed under it.</summary>
+    internal string? CurrentServerProfileName => _vm.Selected?.Name;
+
+    /// <summary>The selected server's parsed 3D map folder (it may not hold a parse yet).</summary>
+    internal string? CurrentParsedMapFolder
+    {
+        get
+        {
+            var p = _vm.Selected;
+            if (p == null) return null;
+            try { return Map3DLocalBuildService.GetPreparedFolderPath(p, p.RustMapsMapId); } catch { return null; }
+        }
+    }
+
     private void InitCameraUi()
     {
+        BtnSeenPlayers.Click += (_, __) =>
+        {
+            var w = new RustPlusDesk.Views.SeenPlayersWindow(CurrentServerProfileName, CamDisplayName) { Owner = this };
+            w.Show();
+        };
         BtnAddCam.Click += (_, __) =>
         {
             AddCamErr.IsOpen = false;
@@ -504,6 +523,9 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         };
         DockPanel.SetDock(camIcon, Dock.Left);
         nameLine.Children.Add(camIcon);
+        var seenTag = BuildSeenPlayersTag(id);
+        DockPanel.SetDock(seenTag, Dock.Right);
+        nameLine.Children.Add(seenTag);
         nameLine.Children.Add(new TextBlock
         {
             Text = display, FontWeight = FontWeights.SemiBold, FontSize = 14,
@@ -592,6 +614,54 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
         return new Wpf.Ui.Controls.Card { Margin = new Thickness(0, 0, 0, 10), Padding = new Thickness(10), Content = root };
     }
 
+    // ----- Seen players: a name tag on each camera card -----
+
+    private readonly List<(string Id, TextBlock Count)> _seenTags = new();
+    private bool _seenTagsHooked;
+
+    // A small pill at the top right of a camera card: how many names this camera has seen. Opens the list for it.
+    private FrameworkElement BuildSeenPlayersTag(string id)
+    {
+        if (!_seenTagsHooked)
+        {
+            _seenTagsHooked = true;
+            CameraSeenPlayers.Changed += () => Dispatcher.BeginInvoke(new Action(RefreshSeenTags));
+        }
+        var subtle = TryFindResource("TextSubtle") as Brush ?? Brushes.Gray;
+        var count = new TextBlock { FontSize = 11.5, FontWeight = FontWeights.SemiBold, VerticalAlignment = VerticalAlignment.Center };
+        var row = new StackPanel { Orientation = Orientation.Horizontal };
+        row.Children.Add(new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.PeopleSearch24, FontSize = 13, Foreground = subtle,
+            Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center
+        });
+        row.Children.Add(count);
+        var tag = new Border
+        {
+            Child = row, Padding = new Thickness(8, 2, 8, 2), CornerRadius = new CornerRadius(10),
+            Background = new SolidColorBrush(Color.FromArgb(0x22, 0xFF, 0xFF, 0xFF)),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(0x30, 0xFF, 0xFF, 0xFF)), BorderThickness = new Thickness(1),
+            Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center,
+            Cursor = System.Windows.Input.Cursors.Hand,
+            ToolTip = Properties.Resources.GetString("SeenPlayersTip"),
+        };
+        tag.MouseLeftButtonUp += (_, e) =>
+        {
+            e.Handled = true;
+            new RustPlusDesk.Views.SeenPlayersWindow(CurrentServerProfileName, CamDisplayName, id) { Owner = this }.Show();
+        };
+        _seenTags.RemoveAll(t => t.Id == id);
+        _seenTags.Add((id, count));
+        count.Text = CameraSeenPlayers.DistinctNames(CurrentServerProfileName, id).ToString();
+        return tag;
+    }
+
+    private void RefreshSeenTags()
+    {
+        var server = CurrentServerProfileName;
+        foreach (var (id, count) in _seenTags) count.Text = CameraSeenPlayers.DistinctNames(server, id).ToString();
+    }
+
     private void EnsureCamThumbPolling()
     {
         _camThumbTimer ??= new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
@@ -602,7 +672,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
 
     // Grabs a single thumbnail by briefly opening a native camera session, letting a few frames
     // accumulate (the image sharpens over successive frames), then disposing it.
-    private static async Task<(byte[]? png, int w, int h, string kind)> GrabCameraSnapshotAsync(RustPlusClientReal real, string id)
+    private static async Task<(byte[]? png, int w, int h, string kind)> GrabCameraSnapshotAsync(RustPlusClientReal real, string id, string? server = null)
     {
         CameraSession? session = null;
         try
@@ -610,6 +680,14 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(12));
             session = await real.CreateCameraSessionAsync(id, cts.Token);
             session.TargetFps = 15;
+#if HD_CAMERAS
+            // The thumbnail glance counts as looking: names it catches go to the seen-players log too.
+            if (server != null)
+                session.PlayersSeen += names =>
+                {
+                    try { CameraSeenPlayers.Record(server, id, names.Select(n => (n, false)), DateTime.UtcNow); } catch { }
+                };
+#endif
 
             var kind = session.IsDrone ? "Drone"
                      : session.IsAutoTurret ? "Auto-turret"
@@ -663,7 +741,7 @@ internal readonly HashSet<string> _camBusy = new(StringComparer.OrdinalIgnoreCas
             var status = FindTagged(cont, id + "|status");
             var typeTb = FindTagged(cont, id + "|type");
 
-            var (png, fw, fh, kind) = await GrabCameraSnapshotAsync(real, id);
+            var (png, fw, fh, kind) = await GrabCameraSnapshotAsync(real, id, CurrentServerProfileName);
             if (png != null)
             {
                 var bi = new BitmapImage();

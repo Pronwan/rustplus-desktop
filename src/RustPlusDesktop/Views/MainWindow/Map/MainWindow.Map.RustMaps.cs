@@ -496,11 +496,47 @@ namespace RustPlusDesk.Views
             // An offline map is the file it was imported from. A live server's saved path is only
             // the map of some earlier parse: it may be last wipe's, so it has to prove itself.
             bool offlineOnly = IsOfflineOnlyProfile(profile);
+
+            // Local first: an existing parse, the saved map and the Rust install's maps folder. The server's level file
+            // (the one the web companion's HD camera loads; byte for byte the map Rust saves locally, under another
+            // name) is only downloaded when none of those matches this wipe. It still has to match the monuments.
             var result = await Map3DLocalBuildService.PrepareAsync(
                 profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
                 pickedMapPath: offlineOnly ? savedMapPath : null,
                 knownMapPath: offlineOnly ? null : savedMapPath);
             if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
+
+#if HD_CAMERAS
+            if (result.NeedsManualMapSelection && !offlineOnly && _rust is RustPlusClientReal levelClient)
+            {
+                string? levelPath = null;
+                try
+                {
+                    var levelUrl = await levelClient.GetLevelUrlAsync();
+                    if (!string.IsNullOrEmpty(levelUrl))
+                    {
+                        bool cached = File.Exists(RustPlusDesk.Services.Map.LevelMapDownloadService.CachePath(levelUrl));
+                        AppendLog(cached
+                            ? $"{logPrefix} No local map matched; using the server's level file from the cache."
+                            : $"{logPrefix} No local map matched; downloading the server's level file...");
+                        levelPath = await RustPlusDesk.Services.Map.LevelMapDownloadService.GetAsync(levelUrl);
+                        if (levelPath == null) AppendLog($"{logPrefix} Could not download the server's level file.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"{logPrefix} Level file download failed ({ex.Message}).");
+                }
+                if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
+                if (levelPath != null)
+                {
+                    result = await Map3DLocalBuildService.PrepareAsync(
+                        profile, texture, profile.RustMapsMapId, references, effectiveWorldSize,
+                        pickedMapPath: null, knownMapPath: levelPath);
+                    if (selectionVersion != _mapSelectionVersion || !ReferenceEquals(_vm.Selected, profile)) return null;
+                }
+            }
+#endif
 
             if (result.NeedsManualMapSelection)
             {

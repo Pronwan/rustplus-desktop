@@ -30,7 +30,7 @@ namespace RustPlusDesk.Services;
 
 
 
-public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
+public sealed partial class RustPlusClientReal : IRustPlusClient, IDisposable
 {
     private RustPlus? _api;
     private readonly Action<string> _log;
@@ -797,10 +797,26 @@ public sealed class RustPlusClientReal : IRustPlusClient, IDisposable
         if (string.IsNullOrWhiteSpace(cameraId)) throw new ArgumentException("cameraId required", nameof(cameraId));
         if (_api is null || _connectionCurrent is null) throw new InvalidOperationException("Not connected.");
 
+#if HD_CAMERAS
+        // The map tab's connection as a second source for the ground colours.
+        async Task<RustPlusApi.Data.ServerMap?> MainMap(CancellationToken c)
+        {
+            var api = _api;
+            if (api is null) return null;
+            var r = await api.GetMapAsync(c).ConfigureAwait(false);
+            return r.IsSuccess ? r.Data : null;
+        }
+
+        return await RustPlusDesk.Services.Camera.CameraSession
+            .StartAsync(_connectionCurrent, cameraId, ct, MainMap)
+            .ConfigureAwait(false);
+#else
         return await RustPlusDesk.Services.Camera.CameraSession
             .StartAsync(_connectionCurrent, cameraId, ct)
             .ConfigureAwait(false);
+#endif
     }
+
 
 
 

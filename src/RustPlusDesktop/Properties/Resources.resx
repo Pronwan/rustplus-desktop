@@ -9296,4 +9296,58 @@ The answer itself was unaffected. If the model name is the problem, change it un
   <data name="BlocksCount" xml:space="preserve">
     <value>{0} blocked</value>
   </data>
+  <data name="CameraViewModeLabel" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="CameraViewModeTip" xml:space="preserve">
+    <value>Standard shows the camera&apos;s LiDAR points like the Rust+ app. 3D Lite puts the points over the real terrain of the map and shows trees and players as models.</value>
+  </data>
+  <data name="CameraViewStandard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="CameraViewLite" xml:space="preserve">
+    <value>3D Lite</value>
+  </data>
+  <data name="SeenPlayers" xml:space="preserve">
+    <value>Seen players</value>
+  </data>
+  <data name="SeenPlayersTip" xml:space="preserve">
+    <value>Players your cameras have seen by name, with date and time</value>
+  </data>
+  <data name="SeenPlayersHint" xml:space="preserve">
+    <value>Cameras only send a player&apos;s real name once they are close; players further away are not listed.</value>
+  </data>
+  <data name="SeenPlayersAllServers" xml:space="preserve">
+    <value>All servers</value>
+  </data>
+  <data name="SeenPlayersName" xml:space="preserve">
+    <value>Player</value>
+  </data>
+  <data name="SeenPlayersCamera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="SeenPlayersWhen" xml:space="preserve">
+    <value>Seen at</value>
+  </data>
+  <data name="SeenPlayersFor" xml:space="preserve">
+    <value>For</value>
+  </data>
+  <data name="SeenPlayersServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="SeenPlayersEmpty" xml:space="preserve">
+    <value>No players seen yet. Open a camera; names show up here once someone comes close enough.</value>
+  </data>
+  <data name="SeenPlayersClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="SeenPlayersClearConfirm" xml:space="preserve">
+    <value>Clear the seen players of this server?</value>
+  </data>
+  <data name="SeenPlayersClearAllConfirm" xml:space="preserve">
+    <value>Clear the seen players of all servers?</value>
+  </data>
+  <data name="SeenPlayersTeam" xml:space="preserve">
+    <value>(team)</value>
+  </data>
 </root>

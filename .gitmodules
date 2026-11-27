@@ -1,3 +1,8 @@
 [submodule "Submodules/RustPlus.Auth"]
 	path = vendor/RustPlus.Auth
 	url = https://github.com/JawadYzbk/rustplus-auth-private.git
+[submodule "vendor/HdCameras"]
+	path = vendor/HdCameras
+	url = https://github.com/Pronwan/hd-cameras.git
+	shallow = true
+	branch = main

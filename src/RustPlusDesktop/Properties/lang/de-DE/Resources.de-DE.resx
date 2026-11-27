@@ -8461,4 +8461,58 @@ Die Antwort selbst war nicht betroffen. Falls der Modellname das Problem ist, ä
   <data name="ChatCmdOilRigCrateUnlockedAgo" xml:space="preserve">
     <value>{0}: Crate vor {1} geöffnet</value>
   </data>
+  <data name="CameraViewModeLabel" xml:space="preserve">
+    <value>Ansicht</value>
+  </data>
+  <data name="CameraViewModeTip" xml:space="preserve">
+    <value>Standard zeigt die LiDAR-Punkte der Kamera wie die Rust+-App. 3D Lite legt die Punkte über das echte Gelände der Karte und zeigt Bäume und Spieler als Modelle.</value>
+  </data>
+  <data name="CameraViewStandard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="CameraViewLite" xml:space="preserve">
+    <value>3D Lite</value>
+  </data>
+  <data name="SeenPlayers" xml:space="preserve">
+    <value>Gesehene Spieler</value>
+  </data>
+  <data name="SeenPlayersTip" xml:space="preserve">
+    <value>Spieler, die deine Kameras mit Namen gesehen haben, mit Datum und Uhrzeit</value>
+  </data>
+  <data name="SeenPlayersHint" xml:space="preserve">
+    <value>Kameras senden den echten Namen erst, wenn ein Spieler nah genug ist; weiter entfernte Spieler erscheinen hier nicht.</value>
+  </data>
+  <data name="SeenPlayersAllServers" xml:space="preserve">
+    <value>Alle Server</value>
+  </data>
+  <data name="SeenPlayersName" xml:space="preserve">
+    <value>Spieler</value>
+  </data>
+  <data name="SeenPlayersCamera" xml:space="preserve">
+    <value>Kamera</value>
+  </data>
+  <data name="SeenPlayersWhen" xml:space="preserve">
+    <value>Gesehen am</value>
+  </data>
+  <data name="SeenPlayersFor" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="SeenPlayersServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="SeenPlayersEmpty" xml:space="preserve">
+    <value>Noch keine Spieler gesehen. Öffne eine Kamera; Namen erscheinen hier, sobald jemand nah genug kommt.</value>
+  </data>
+  <data name="SeenPlayersClear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="SeenPlayersClearConfirm" xml:space="preserve">
+    <value>Gesehene Spieler dieses Servers löschen?</value>
+  </data>
+  <data name="SeenPlayersClearAllConfirm" xml:space="preserve">
+    <value>Gesehene Spieler aller Server löschen?</value>
+  </data>
+  <data name="SeenPlayersTeam" xml:space="preserve">
+    <value>(Team)</value>
+  </data>
 </root>

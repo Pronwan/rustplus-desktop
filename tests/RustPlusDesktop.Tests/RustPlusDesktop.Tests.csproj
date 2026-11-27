@@ -18,4 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\RustPlusDesktop\RustPlusDesk.csproj" />
   </ItemGroup>
+
+  <!-- Private HD camera tests (vendor/HdCameras), only when the module is there. -->
+  <PropertyGroup>
+    <HdCamerasTestsProps>$(MSBuildThisFileDirectory)..\..\vendor\HdCameras\HdCameras.Tests.props</HdCamerasTestsProps>
+  </PropertyGroup>
+  <Import Project="$(HdCamerasTestsProps)" Condition="Exists('$(HdCamerasTestsProps)')" />
 </Project>

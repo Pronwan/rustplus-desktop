@@ -1,0 +1,99 @@
+<ui:FluentWindow x:Class="RustPlusDesk.Views.SeenPlayersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="{DynamicResource SeenPlayers}" Width="640" Height="520"
+        MinWidth="420" MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowCornerPreference="Round"
+        WindowBackdropType="Mica"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimary}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Height="42" Title="{DynamicResource SeenPlayers}"
+                     ShowMinimize="False" ShowMaximize="True"
+                     Background="Transparent" Foreground="{DynamicResource TextPrimary}">
+            <ui:TitleBar.Icon>
+                <ui:SymbolIcon Symbol="PeopleSearch24" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <!-- Hint + filter -->
+        <Grid Grid.Row="1" Margin="16,0,16,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{DynamicResource SeenPlayersHint}" TextWrapping="Wrap" FontSize="12"
+                       Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center"/>
+            <CheckBox x:Name="ChkAllServers" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center"
+                      Content="{DynamicResource SeenPlayersAllServers}"/>
+        </Grid>
+
+        <Border Grid.Row="2" Margin="16,0,16,0" CornerRadius="8" BorderThickness="1"
+                BorderBrush="{DynamicResource CardBorder}" Background="#08FFFFFF">
+            <Grid>
+                <ListView x:Name="List" BorderThickness="0" Background="Transparent"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.View>
+                        <GridView>
+                            <!-- Header row in the app's dark style (the default WPF header is a light bar). -->
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextSubtle}"/>
+                                    <Setter Property="FontSize" Value="11.5"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="IsHitTestVisible" Value="False"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GridViewColumnHeader">
+                                                <Border Background="#14FFFFFF" BorderBrush="#22FFFFFF" BorderThickness="0,0,0,1"
+                                                        Padding="12,8,8,8">
+                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Header="{DynamicResource SeenPlayersName}" Width="170">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{Binding NameBrush}"/>
+                                            <TextBlock Text="{Binding TeamLabel}" Margin="6,0,0,0" FontSize="11"
+                                                       Foreground="{DynamicResource TextSubtle}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="{DynamicResource SeenPlayersCamera}" Width="110" DisplayMemberBinding="{Binding Camera}"/>
+                            <GridViewColumn Header="{DynamicResource SeenPlayersWhen}" Width="150" DisplayMemberBinding="{Binding When}"/>
+                            <GridViewColumn Header="{DynamicResource SeenPlayersFor}" Width="80" DisplayMemberBinding="{Binding Duration}"/>
+                            <GridViewColumn x:Name="ColServer" Header="{DynamicResource SeenPlayersServer}" Width="0" DisplayMemberBinding="{Binding Server}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <TextBlock x:Name="TxtEmpty" Text="{DynamicResource SeenPlayersEmpty}" TextWrapping="Wrap" TextAlignment="Center"
+                           MaxWidth="320" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSubtle}" Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="16,10,16,16">
+            <ui:Button x:Name="BtnClear" Appearance="Secondary" Padding="14,8" Margin="0,0,8,0"
+                       Icon="{ui:SymbolIcon Symbol=Delete24}" Content="{DynamicResource SeenPlayersClear}"/>
+            <ui:Button x:Name="BtnClose" Appearance="Primary" Padding="14,8" Content="{DynamicResource Close}"/>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>
