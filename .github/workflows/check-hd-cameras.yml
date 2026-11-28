@@ -1,0 +1,62 @@
+# Checks that Actions can fetch the private HD camera module with HD_CAMERAS_TOKEN (the way release.yml does)
+# and that the app builds with it. No release, no artifacts.
+#
+# The logs of this public repository are public: nothing here lists or prints the module's files, and the build
+# only reports errors.
+name: Check HD camera module
+
+on:
+  push:
+    branches: [feat/camera-module]
+    paths:
+      - vendor/HdCameras
+      - .gitmodules
+      - .github/workflows/check-hd-cameras.yml
+      - .github/workflows/release.yml
+      - src/RustPlusDesktop/RustPlusDesk.csproj
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout rustplus-desktop
+        uses: actions/checkout@v4
+
+      - name: Resolve the HD camera module commit
+        id: hdcams
+        shell: bash
+        run: |
+          sha=$(git ls-tree HEAD vendor/HdCameras | awk '{print $3}')
+          if [ -z "$sha" ]; then echo "::error::vendor/HdCameras is not a submodule in this commit."; exit 1; fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      # Only HD_CAMERAS_TOKEN here (no fallback): this checks that exact secret.
+      - name: Checkout HD cameras (Private Submodule)
+        uses: actions/checkout@v4
+        with:
+          repository: 'Pronwan/hd-cameras'
+          ref: ${{ steps.hdcams.outputs.sha }}
+          token: ${{ secrets.HD_CAMERAS_TOKEN }}
+          path: vendor/HdCameras
+
+      - name: Module is in place
+        shell: bash
+        run: |
+          test -f vendor/HdCameras/HdCameras.props || { echo "::error::HdCameras.props missing after checkout."; exit 1; }
+          echo "HD camera module checked out at ${{ steps.hdcams.outputs.sha }}."
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Build the app with the module
+        shell: pwsh
+        run: |
+          dotnet build src/RustPlusDesktop/RustPlusDesk.csproj -c Release -p:SkipGeneticsLabBuild=true -v q -clp:ErrorsOnly -nologo
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          echo "Build with the HD camera module succeeded."
