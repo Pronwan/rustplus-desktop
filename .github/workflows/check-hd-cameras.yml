@@ -26,6 +26,15 @@ jobs:
       - name: Checkout rustplus-desktop
         uses: actions/checkout@v4
 
+      # The app does not compile without it (as in release.yml).
+      - name: Checkout RustPlus.Auth (Private Submodule)
+        uses: actions/checkout@v4
+        with:
+          repository: 'JawadYzbk/rustplus-auth-private'
+          ref: 'main'
+          token: ${{ secrets.AUTH_SUBMODULE_TOKEN || secrets.MAP_PARSER_TOKEN || secrets.GITHUB_TOKEN }}
+          path: vendor/RustPlus.Auth
+
       - name: Resolve the HD camera module commit
         id: hdcams
         shell: bash
